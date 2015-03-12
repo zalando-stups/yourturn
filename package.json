@@ -1,0 +1,19 @@
+{
+  "name": "zalando-stups-yourturn",
+  "version": "0.0.0",
+  "description": "The Zalando Developer Console",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zalando-stups/yourturn.git"
+  },
+  "author": "",
+  "license": "Apache 2.0",
+  "bugs": {
+    "url": "https://github.com/zalando-stups/yourturn/issues"
+  },
+  "homepage": "https://github.com/zalando-stups/yourturn"
+}
