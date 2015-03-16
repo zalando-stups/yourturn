@@ -6,7 +6,8 @@ module.exports = {
     module: {
         loaders: [
             // { test: /\.jsx$/, exclude: /node_modules/, loaders: ['babel-loader', 'jsx-loader'] }
-            { test: /\.jsx$/, exclude: /node_modules/, loader: 'jsx-loader' }
+            { test: /\.jsx$/, exclude: /node_modules/, loader: 'jsx-loader?harmony' },
+            { test: /\.js$/, exclude: /node_modules/, loader: 'babel-loader' }
         ]
     }
 };
