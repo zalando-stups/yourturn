@@ -20,7 +20,8 @@ module.exports = {
     resolve: {
         extensions: ['', '.js', '.jsx', '.scss'],
         alias: {
-            asset: path.resolve(__dirname, './src/asset/')
+            asset: path.resolve(__dirname, './src/asset/'),
+            app: path.resolve(__dirname, './src/app/')
         }
     },
     module: {

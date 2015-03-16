@@ -1,6 +1,5 @@
 import React from 'react';
-// TODO this kinda sucks. Is there a way to prevent this?
-import App from '../../src/app/App.jsx';
+import App from 'app/App.jsx';
 
 describe('The test test', () => {
     it('should work', () => {
