@@ -8,10 +8,15 @@ This will be the Zalando Developer Console someday.
     npm install -g gulp
     # install dependencies of your turn
     npm install
+
+## Usage
+
     # start the webpack dev server
     npm start
     # start automatic linting and BrowserSync
     gulp watch
+
+On `localhost:3001` you now have a auto-updating and syncing-across-browsers version of "your turn".
 
 ## License
 
