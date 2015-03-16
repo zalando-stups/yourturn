@@ -1,13 +1,14 @@
-var webpackConfig = require('./webpack.config');
+var webpackConfig = require('./webpack.config'),
+    path = require('path');
 
 module.exports = function(config) {
   config.set({
 
     // base path that will be used to resolve all patterns (eg. files, exclude)
-    basePath: '',
+    basePath: './',
 
     plugins: [
-        'karma-babel-preprocessor',
+        'karma-webpack',
         'karma-mocha',
         'karma-chai',
         'karma-story-reporter',
@@ -18,17 +19,16 @@ module.exports = function(config) {
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
     frameworks: ['mocha', 'chai'],
 
-    // webpack: webpackConfig,
+    webpack: webpackConfig,
 
     files: [
-        'node_modules/karma-babel-preprocessor/node_modules/babel-core/browser-polyfill.js',
         'test/**/*.test.js'
     ],
 
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-        'test/**/*.test.js': ['babel']
+        'test/**/*.test.js': ['webpack']
     },
 
     // test results reporter to use
