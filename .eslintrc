@@ -1,0 +1,25 @@
+{
+    "ecmaFeatures": {
+        "arrowFunctions": true,
+        "blockBindings": true,
+        "classes": true,
+        "destructuring": true,
+        "jsx": true,
+        "modules": true,
+        "templateStrings": true
+    },
+    "rules": {
+        "quotes": [1, "single"],
+        // never did i understand why there should be a newline
+        "eol-last": 0,
+        "new-cap": 0,
+        "strict": [ 2, "global" ],
+        // https://github.com/eslint/eslint/issues/1978
+        "no-unused-vars": 1,
+        "no-undef": 0,
+        // without spaces JSX gets unwieldy to read
+        "no-multi-spaces": 0,
+        // i like to separate my own funcs from React's
+        "no-underscore-dangle": 0
+    }
+}

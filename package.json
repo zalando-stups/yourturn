@@ -15,5 +15,20 @@
   "bugs": {
     "url": "https://github.com/zalando-stups/yourturn/issues"
   },
-  "homepage": "https://github.com/zalando-stups/yourturn"
+  "homepage": "https://github.com/zalando-stups/yourturn",
+  "dependencies": {
+    "immutable": "3.6.4",
+    "react": "0.13.0"
+  },
+  "devDependencies": {
+    "babel-core": "4.7.9",
+    "babel-loader": "4.1.0",
+    "browser-sync": "2.2.3",
+    "gulp": "3.8.11",
+    "gulp-eslint": "0.7.0",
+    "gulp-util": "3.0.4",
+    "jsx-loader": "0.12.2",
+    "react-hot-loader": "1.2.3",
+    "webpack": "1.7.3"
+  }
 }
