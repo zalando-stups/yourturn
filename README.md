@@ -2,7 +2,18 @@
 
 This will be the Zalando Developer Console someday.
 
-# License
+## Installation
+
+    # install gulp if you haven't already
+    npm install -g gulp
+    # install dependencies of your turn
+    npm install
+    # start the webpack dev server
+    npm start
+    # start automatic linting and BrowserSync
+    gulp watch
+
+## License
 
 Copyright 2015 Zalando SE
 
