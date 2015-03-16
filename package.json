@@ -27,8 +27,8 @@
     "gulp": "3.8.11",
     "gulp-eslint": "0.7.0",
     "gulp-util": "3.0.4",
-    "jsx-loader": "0.12.2",
     "react-hot-loader": "1.2.3",
-    "webpack": "1.7.3"
+    "webpack": "1.7.3",
+    "webpack-dev-server": "^1.7.0"
   }
 }
