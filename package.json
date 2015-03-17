@@ -19,7 +19,8 @@
   "homepage": "https://github.com/zalando-stups/yourturn",
   "dependencies": {
     "immutable": "3.6.4",
-    "react": "0.13.0"
+    "react": "0.12.2",
+    "react-router": "0.12.4"
   },
   "devDependencies": {
     "autoprefixer-loader": "1.2.0",

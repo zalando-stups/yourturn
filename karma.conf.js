@@ -19,16 +19,17 @@ module.exports = function(config) {
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
     frameworks: ['mocha', 'chai'],
 
+    // insert webpack config
     webpack: webpackConfig,
 
+    // load only test files, source files will magically be found by webpack
     files: [
-        'test/**/*.test.js'
+        'lib/**/*.test.js'
     ],
 
-    // preprocess matching files before serving them to the browser
-    // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
+    // webpack preprocessor will create one entrypoint for each test
     preprocessors: {
-        'test/**/*.test.js': ['webpack']
+        'lib/**/*.test.js': ['webpack']
     },
 
     // test results reporter to use
@@ -44,7 +45,7 @@ module.exports = function(config) {
 
     // level of logging
     // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
-    logLevel: config.LOG_DEBUG,
+    logLevel: config.LOG_INFO,
 
 
     // enable / disable watching file and executing tests whenever any file changes
@@ -53,9 +54,7 @@ module.exports = function(config) {
     // If browser does not capture in given timeout [ms], kill it
     captureTimeout: 60000,
 
-
-    // start these browsers
-    // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
+    // drop chrome once phantomjs 2 is available
     browsers: ['Chrome'],
 
 
