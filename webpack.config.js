@@ -6,7 +6,7 @@ module.exports = {
     entry: [
         'webpack-dev-server/client?http://localhost:3000',
         'webpack/hot/only-dev-server',
-        './src/app/bootstrap.jsx'   // entrypoint to resolve dependencies
+        './lib/application/src/bootstrap-application.jsx'   // entrypoint to resolve dependencies
     ],
     output: {
         path: __dirname + '/dist/',
@@ -21,8 +21,8 @@ module.exports = {
     resolve: {
         extensions: ['', '.js', '.jsx', '.scss'],
         alias: {
-            asset: path.resolve(__dirname, './src/asset/'),
-            app: path.resolve(__dirname, './src/app/')
+            common: path.resolve(__dirname, './lib/common/'),
+            application: path.resolve(__dirname, './lib/application/')
         }
     },
     module: {

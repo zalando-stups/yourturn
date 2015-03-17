@@ -1,6 +1,6 @@
 import React from 'react';
 
-import 'asset/scss/app.scss';
+import 'common/asset/scss/application.scss';
 
 export default React.createClass({
     getInitialState: function() {

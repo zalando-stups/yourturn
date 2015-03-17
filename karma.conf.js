@@ -22,13 +22,13 @@ module.exports = function(config) {
     webpack: webpackConfig,
 
     files: [
-        'test/**/*.test.js'
+        'lib/**/*.test.js'
     ],
 
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-        'test/**/*.test.js': ['webpack']
+        'lib/**/*.test.js': ['webpack']
     },
 
     // test results reporter to use
