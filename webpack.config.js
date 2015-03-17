@@ -4,10 +4,12 @@ var webpack = require('webpack'),
 module.exports = {
     devtool: 'eval',    // write source-map here if we want source maps
     entry: [
+        /* react hot loader */
         'webpack-dev-server/client?http://localhost:3000',
         'webpack/hot/only-dev-server',
+        /* react hot loader end */
         './lib/yourturn/src/bootstrap-yourturn.jsx'   // entrypoint to resolve dependencies
-        // './lib/application/src/bootstrap-application.jsx'
+        // './lib/application/src/bootstrap-application.jsx' // this could be a separate bundle if we like
     ],
     output: {
         path: __dirname + '/dist/',
