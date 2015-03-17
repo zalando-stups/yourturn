@@ -1,13 +1,24 @@
 var gulp = require('gulp'),
     gutil= require('gulp-util'),
     eslint = require('gulp-eslint'),
-    vendorprefix = require('gulp-autoprefixer'),
+    args = require('minimist')(process.argv.slice(2)),
+    del = require( 'del' ),
     browserSync = require('browser-sync'),
     webpack = require('webpack');
 
-gulp.task('pack', function(done) {
+function remove(globs) {
+    return function(done) {
+        del(globs, done);
+    };
+}
+
+gulp.task( 'clean', remove(['dist/**/*']));
+
+gulp.task('pack', ['clean'], function(done) {
+    var webpackConfig = require('./webpack.config');
+
     webpack(
-        require('./webpack.config.js'),
+        webpackConfig,
         function(err, data) {
             if (err) {
                 throw new gutil.PluginError('webpack', err);

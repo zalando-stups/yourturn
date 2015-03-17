@@ -2,11 +2,11 @@ var webpack = require('webpack'),
     path = require('path');
 
 module.exports = {
-    devtool: 'eval',
+    devtool: 'eval',    // write source-map here if we want source maps
     entry: [
         'webpack-dev-server/client?http://localhost:3000',
         'webpack/hot/only-dev-server',
-        './src/app/bootstrap.jsx'
+        './src/app/bootstrap.jsx'   // entrypoint to resolve dependencies
     ],
     output: {
         path: __dirname + '/dist/',
@@ -15,7 +15,8 @@ module.exports = {
     },
     plugins: [
         new webpack.HotModuleReplacementPlugin(),
-        new webpack.NoErrorsPlugin()
+        new webpack.NoErrorsPlugin(),
+        new webpack.optimize.UglifyJsPlugin()
     ],
     resolve: {
         extensions: ['', '.js', '.jsx', '.scss'],
