@@ -1,6 +1,6 @@
 import React from 'react';
-import App from './Application.jsx';
 import Router from 'react-router';
+import YourTurn from './YourTurn.jsx';
 import routes from './routes.jsx';
 
 Router.run(

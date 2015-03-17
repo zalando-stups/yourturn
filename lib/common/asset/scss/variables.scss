@@ -48,6 +48,7 @@ $small-margin-top: 1 * $small-line;
 $small-margin-bottom: 1 * $small-line;
 
 body {
+    text-rendering: optimizeLegibility;
     font-family: $font-sans;
     font-size: $base-font-size;
     line-height: $base-line-height;

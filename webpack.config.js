@@ -6,7 +6,8 @@ module.exports = {
     entry: [
         'webpack-dev-server/client?http://localhost:3000',
         'webpack/hot/only-dev-server',
-        './lib/application/src/bootstrap-application.jsx'   // entrypoint to resolve dependencies
+        './lib/yourturn/src/bootstrap-yourturn.jsx'   // entrypoint to resolve dependencies
+        // './lib/application/src/bootstrap-application.jsx'
     ],
     output: {
         path: __dirname + '/dist/',
