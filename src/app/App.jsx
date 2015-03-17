@@ -2,27 +2,23 @@ import React from 'react';
 
 import 'asset/scss/app.scss';
 
-
-export default class App extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
+export default React.createClass({
+    getInitialState: function() {
+        return {
             count: 0
         };
-    }
-
-    _handleClick() {
+    },
+    _handleClick: function() {
         this.setState({
             count: this.state.count + 1
         });
-    }
-
-    render() {
+    },
+    render: function() {
         return  <div>
                     <h1>Hello World {this.state.count}!</h1>
-                    <button onClick={this._handleClick.bind(this)}>
+                    <button onClick={this._handleClick}>
                         More
                     </button>
                 </div>;
     }
-}
+});
