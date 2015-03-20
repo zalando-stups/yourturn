@@ -1,12 +1,16 @@
 import React from 'react';
+import Sidebar from 'common/src/Sidebar.jsx';
 import Application from 'application/src/Application.jsx';
 
-import 'common/asset/scss/application.scss';
+
+import 'common/asset/scss/yourturn/yourturn.scss';
 
 export default React.createClass({
     render: function() {
-        return  <div>
-                    <h1>Hello YourTurn!</h1>
+        return  <div className="yourturn">
+                    <Sidebar>
+                        Application
+                    </Sidebar>
                     <Application />
                 </div>;
     }

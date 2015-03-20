@@ -18,9 +18,12 @@
   },
   "homepage": "https://github.com/zalando-stups/yourturn",
   "dependencies": {
+    "flummox": "2.13.1",
     "immutable": "3.6.4",
+    "lodash": "3.5.0",
     "react": "0.12.2",
-    "react-router": "0.12.4"
+    "react-router": "0.12.4",
+    "superagent": "1.1.0"
   },
   "devDependencies": {
     "autoprefixer-loader": "1.2.0",
@@ -29,6 +32,7 @@
     "browser-sync": "2.2.4",
     "css-loader": "0.9.1",
     "del": "1.1.1",
+    "express": "4.12.3",
     "gulp": "3.8.11",
     "gulp-autoprefixer": "2.1.0",
     "gulp-eslint": "0.7.0",

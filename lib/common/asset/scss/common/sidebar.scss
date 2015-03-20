@@ -1,0 +1,12 @@
+@import "../variables";
+
+.sidebar {
+    display: flex;
+    flex: 100px 100% auto;
+    flex-direction: column;
+    padding-right: $padding;
+
+    .sidebar-item {
+        padding: $padding-small;
+    }
+}
