@@ -1,14 +1,53 @@
 import React from 'react';
 
-var Placeholder = React.createClass({
+/**
+ * Placeholder element for a single application.
+ */
+let Placeholder = React.createClass({
     render: function() {
-        return  <div className="application" dataPlaceholder>
+        return  <div className="application u-placeholder">
                     <h1>Placeholder</h1>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <th>id</th>
+                                <td>nonsense</td>
+                            </tr>
+                            <tr>
+                                <th>team_id</th>
+                                <td>nonsense</td>
+                            </tr>
+                            <tr>
+                                <th>url</th>
+                                <td>
+                                    nonsense
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>scm_url</th>
+                                <td>nonsense</td>
+                            </tr>
+                            <tr>
+                                <th>documentation_url</th>
+                                <td>placeholder</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>;
     }
 });
 
+/**
+ * The real ApplicationView component.
+ */
 export default React.createClass({
+    propTypes: {
+        applications: React.PropTypes.array.isRequired,
+        application: React.PropTypes.oneOfType([
+            React.PropTypes.string,
+            React.PropTypes.number
+        ])
+    },
     render: function() {
         var app = this.props.applications.get(this.props.application);
         if (!app) {

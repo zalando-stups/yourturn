@@ -32,7 +32,8 @@ module.exports = {
         loaders: [
             { test: /\.jsx$/, exclude: /node_modules/, loaders: ['react-hot', 'babel'] },
             { test: /\.js$/, exclude: /node_modules/, loader: 'babel' },
-            { test: /\.scss$/, exclude: /node_modules/, loaders: ['style', 'css', 'autoprefixer', 'sass'] }
+            { test: /\.scss$/, exclude: /node_modules/, loaders: ['style', 'css', 'autoprefixer', 'sass'] },
+            { test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,   loader: "url?limit=10000&mimetype=application/font-woff" },
         ]
     }
 };

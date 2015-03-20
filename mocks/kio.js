@@ -42,11 +42,16 @@ server.get('/applications', function(req,res) {
                     return applications[k];
                 });
 
-    res.status( 200 ).send( apps );
+    setTimeout( function() {
+        res.status( 200 ).send( apps );
+    }, 3000 );
+    
 });
 
 server.get('/applications/:id', function(req,res){
-    res.status(200).send(applications[req.params.id]);
+    setTimeout( function() {
+        res.status(200).send(applications[req.params.id]);
+    }, 3000 );
 });
 
 server.listen(5000);
