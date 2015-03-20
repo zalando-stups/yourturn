@@ -12,7 +12,9 @@ export default React.createClass({
                             Applications
                         </Link>
                     </Sidebar>
-                    <RouteHandler />
+                    <div className="yourturn-view">
+                        <RouteHandler />
+                    </div>
                 </div>;
     }
 });

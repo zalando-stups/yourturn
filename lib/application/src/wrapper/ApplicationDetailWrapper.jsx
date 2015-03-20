@@ -2,7 +2,7 @@ import React from 'react';
 import {State} from 'react-router';
 import Flux from '../data/Flux';
 import FluxComponent from 'flummox/component';
-import Application from '../views/ApplicationView.jsx';
+import Application from '../views/ApplicationDetailView.jsx';
 import {FLUX_ID} from '../config';
 
 export default React.createClass({

@@ -97,6 +97,17 @@ small {
     font-size: $small-font-size;
 }
 
+a {
+    // beautiful link underlines
+    color: blue;
+    text-decoration: none;
+    background-image: linear-gradient(  to top,
+                                        rgba(0,0,0,0) 6%,
+                                        currentColor 6%,
+                                        currentColor 12%,
+                                        rgba(0,0,0,0) 12%);
+}
+
 
 .u-placeholder {
     font-family: $font-placeholder;

@@ -1,11 +1,13 @@
 import React from 'react';
 
+import 'common/asset/scss/application/application-detail.scss';
+
 /**
  * Placeholder element for a single application.
  */
 let Placeholder = React.createClass({
     render: function() {
-        return  <div className="application u-placeholder">
+        return  <div className="applicationDetail u-placeholder">
                     <h1>Placeholder</h1>
                     <table>
                         <tbody>
@@ -38,7 +40,7 @@ let Placeholder = React.createClass({
 });
 
 /**
- * The real ApplicationView component.
+ * The real ApplicationDetail component.
  */
 export default React.createClass({
     propTypes: {
@@ -54,7 +56,7 @@ export default React.createClass({
             return <Placeholder />;
         }
 
-        return  <div className="application">
+        return  <div className="applicationDetail">
                     <h1>{app.get('name')}</h1>
                     <table>
                         <tbody>

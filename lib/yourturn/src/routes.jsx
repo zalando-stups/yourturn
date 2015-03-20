@@ -7,15 +7,15 @@ import RootPage from './YourTurn.jsx';
  * modularize the router incl passing Flux instance around
  */
 import Application from 'application/src/Application.jsx';
-import ApplicationListView from 'application/src/wrapper/ApplicationListWrapper.jsx';
-import ApplicationView from 'application/src/wrapper/ApplicationWrapper.jsx';
+import ApplicationList from 'application/src/wrapper/ApplicationListWrapper.jsx';
+import ApplicationDetail from 'application/src/wrapper/ApplicationDetailWrapper.jsx';
 
 let routes = (
     <Route name="root" path="/" handler={ RootPage }>
         <DefaultRoute handler={Application} />
         <Route name="application" path="application">
-            <DefaultRoute handler={ApplicationListView} />
-            <Route name="application-detail" path=":id" handler={ApplicationView} />
+            <DefaultRoute handler={ApplicationList} />
+            <Route name="application-detail" path=":id" handler={ApplicationDetail} />
         </Route>
     </Route>
 );
