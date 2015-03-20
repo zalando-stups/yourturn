@@ -17,6 +17,14 @@ var applications = {
         description: 'Test application',
         url: 'https://test.stups.zalan.do',
         scm_url: 'git://github.com/zalando-stups/test'
+    },
+    tzjztjtzj: {
+        id: 'tzjztjtzj',
+        name: 'testy 2',
+        team_id: 'stups',
+        description: 'Test application 2',
+        url: 'https://test2.stups.zalan.do',
+        scm_url: 'git://github.com/zalando-stups/test2'
     }
 };
 
