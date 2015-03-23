@@ -1,11 +1,17 @@
 $font-sans: 'Open Sans', sans-serif;
+$font-placeholder: 'BLOKK';
 
+$mobileBreakpoint: 480px;
 
 $black: #111;
 $gray-dark: #333;
-$gray: #666;
-$gray-light: #aaa;
-$white: #eee;
+$gray: #777;
+$gray-light: #ddd;
+$white: #fff;
+
+$padding-small: 1em;
+$padding: 1.5em;
+$padding-big: 3em;
 
 // TYPOGRAPHY
 $base-font-size: 1.25em;
@@ -55,6 +61,8 @@ body {
     font-weight: 300;
     background: $white;
     color: $black;
+    margin: 0;
+    padding: 0;
 }
 
 h1,
@@ -89,4 +97,32 @@ h4 {
 small {
     line-height: $small-line-height;
     font-size: $small-font-size;
+}
+
+a {
+    // beautiful link underlines
+    color: $black;
+    text-decoration: none;
+    background-image: linear-gradient(  to top,
+                                        rgba(0,0,0,0) 6%,
+                                        currentColor 6%,
+                                        currentColor 12%,
+                                        rgba(0,0,0,0) 12%);
+}
+
+
+.u-placeholder {
+    .u-placeholder-text {
+        font-family: $font-placeholder;
+        color: $gray-light;
+    }
+}
+
+.u-error {
+    border: 1px solid red;
+    border-radius: 5px;
+    text-align: center;
+    h2 {
+        color: red;
+    }
 }

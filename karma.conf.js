@@ -10,14 +10,14 @@ module.exports = function(config) {
     plugins: [
         'karma-webpack',
         'karma-mocha',
-        'karma-chai',
+        'karma-chai-plugins',
         'karma-story-reporter',
         'karma-chrome-launcher'
     ],
 
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-    frameworks: ['mocha', 'chai'],
+    frameworks: ['mocha', 'chai', 'chai-as-promised'],
 
     // insert webpack config
     webpack: webpackConfig,
