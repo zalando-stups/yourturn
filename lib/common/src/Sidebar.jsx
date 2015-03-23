@@ -21,9 +21,11 @@ export default React.createClass({
             children = [ children ];
         }
         return  <aside className='sidebar'>
-                    {children.map( (c, i) =>
-                        <SidebarItem key={i}>{c}</SidebarItem>
-                    )}
+                    <div className='sidebar-content'>
+                        {children.map( (c, i) =>
+                            <SidebarItem key={i}>{c}</SidebarItem>
+                        )}
+                    </div>
                 </aside>;
     }
 });

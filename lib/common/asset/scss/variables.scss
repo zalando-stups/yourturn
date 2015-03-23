@@ -1,13 +1,13 @@
-@import "fonts";
-
 $font-sans: 'Open Sans', sans-serif;
 $font-placeholder: 'BLOKK';
 
+$mobileBreakpoint: 480px;
+
 $black: #111;
 $gray-dark: #333;
-$gray: #666;
-$gray-light: #aaa;
-$white: #eee;
+$gray: #777;
+$gray-light: #ddd;
+$white: #fff;
 
 $padding-small: 1em;
 $padding: 1.5em;
@@ -61,6 +61,8 @@ body {
     font-weight: 300;
     background: $white;
     color: $black;
+    margin: 0;
+    padding: 0;
 }
 
 h1,

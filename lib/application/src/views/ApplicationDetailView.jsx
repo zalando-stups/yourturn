@@ -34,7 +34,7 @@ let Placeholder = React.createClass({
                             </tr>
                         </tbody>
                     </table>
-                    <h4>Description</h4>
+                    <h4 className='applicationDetail-descriptionTitle'>Description</h4>
                     <p className='u-placeholder-text'>
                         This is the description of the application.
                     </p>
@@ -97,7 +97,7 @@ export default React.createClass({
                             </tr>
                         </tbody>
                     </table>
-                    <h4>Description</h4>
+                    <h4 className='applicationDetail-descriptionTitle'>Description</h4>
                     <p>
                         {app.get('description')}
                     </p>

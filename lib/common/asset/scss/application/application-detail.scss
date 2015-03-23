@@ -1,14 +1,16 @@
 @import "../variables";
 
 .applicationDetail {
-    max-width: 760px;
-    margin: 0 auto;
+    .applicationDetail-descriptionTitle {
+        color: $gray;
+    }
     h1 {
-        text-align: center;
+        color: $gray-dark;
     }
     table {
         width: 100%;
         th {
+            color: $gray;
             text-align: left;
         }
     }

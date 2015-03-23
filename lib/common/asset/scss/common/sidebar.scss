@@ -1,10 +1,14 @@
 @import "../variables";
 
 .sidebar {
-    display: flex;
-    flex: 100px 100% auto;
-    flex-direction: column;
+    display: block;
     padding-right: $padding;
+
+    .sidebar-content {
+        display: flex;
+        flex: 100px 100% auto;
+        flex-direction: column;
+    }
 
     .sidebar-item {
         padding: $padding-small;
