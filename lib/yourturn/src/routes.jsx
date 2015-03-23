@@ -12,7 +12,7 @@ import ApplicationDetail from 'application/src/wrapper/ApplicationDetailWrapper.
 
 let routes = (
     <Route name="root" path="/" handler={ RootPage }>
-        <DefaultRoute handler={Application} />
+        <DefaultRoute handler={ApplicationList} />
         <Route name="application" path="application">
             <DefaultRoute handler={ApplicationList} />
             <Route name="application-detail" path=":id" handler={ApplicationDetail} />
