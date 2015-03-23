@@ -60,7 +60,7 @@ export default React.createClass({
         }
 
         if (app instanceof FetchResult) {
-            return app.isPending() ? <Placeholder/> : <HttpError status={app.getResult().status} />;
+            return app.isPending() ? <Placeholder/> : <HttpError error={app.getResult()} />;
         }
 
         return  <div className='applicationDetail'>

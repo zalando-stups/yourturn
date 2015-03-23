@@ -10,15 +10,16 @@ let messages = {
 
 export default React.createClass({
     propTypes: {
-        status: React.PropTypes.number.isRequired
+        error: React.PropTypes.object.isRequired
     },
     render: function() {
-        let {status} = this.props;
+        let {error} = this.props;
         return  <div className='u-error'>
-                    <h2>{status}—{codes[status]}</h2>
-                    <p>
-                        {messages[status]}
-                    </p>
+                    <h2>{error.status ? `${error.status}—${codes[error.status]}` : 'Error' }</h2>
+                    <small>
+                        {messages[error.status]}
+                    </small>
+                    <p>{error.message}</p>
                 </div>;
     }
 });

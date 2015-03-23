@@ -1,5 +1,7 @@
 import React from 'react';
 import {Link} from 'react-router';
+import HttpError from 'common/src/HttpError.jsx';
+import FetchResult from 'common/src/FetchResult';
 
 let Placeholder = React.createClass({
     render: function() {
@@ -17,9 +19,13 @@ export default React.createClass({
     },
     render: function() {
         // TODO this should be done via stateGetter from flummox
-        var apps = this.props.applications.toList().toJS();
+        let {applications} = this.props;
+        if (applications instanceof FetchResult) {
+            return applications.isPending() ? <Placeholder /> : <HttpError error={applications.getResult()} />;
+        }
+        let apps = applications.toList().toJS();
         if (!apps.length) {
-            return <Placeholder />;
+            return <div>There are no applications to display…</div>;
         }
         return  <ul className='applicationList'>
                     {apps
