@@ -1,5 +1,6 @@
 import React from 'react';
-
+import FetchResult from 'common/src/FetchResult';
+import HttpError from 'common/src/HttpError.jsx';
 import 'common/asset/scss/application/application-detail.scss';
 
 /**
@@ -54,6 +55,10 @@ export default React.createClass({
         var app = this.props.applications.get(this.props.application);
         if (!app) {
             return <Placeholder />;
+        }
+
+        if (app instanceof FetchResult) {
+            return app.isPending() ? <Placeholder/> : <HttpError status={app.getResult().status} />;
         }
 
         return  <div className="applicationDetail">
