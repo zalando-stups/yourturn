@@ -13,23 +13,23 @@ let Placeholder = React.createClass({
                     <table>
                         <tbody>
                             <tr>
-                                <th>id</th>
+                                <th>ID</th>
                                 <td className='u-placeholder-text'>nonsense</td>
                             </tr>
                             <tr>
-                                <th>team_id</th>
+                                <th>Team ID</th>
                                 <td className='u-placeholder-text'>nonsense</td>
                             </tr>
                             <tr>
-                                <th>url</th>
+                                <th>URL</th>
                                 <td className='u-placeholder-text'>nonsense</td>
                             </tr>
                             <tr>
-                                <th>scm_url</th>
+                                <th>SCM</th>
                                 <td className='u-placeholder-text'>nonsense</td>
                             </tr>
                             <tr>
-                                <th>documentation_url</th>
+                                <th>Documentation</th>
                                 <td className='u-placeholder-text'>placeholder</td>
                             </tr>
                         </tbody>
@@ -68,15 +68,15 @@ export default React.createClass({
                     <table>
                         <tbody>
                             <tr>
-                                <th>id</th>
+                                <th>ID</th>
                                 <td>{app.get('id')}</td>
                             </tr>
                             <tr>
-                                <th>team_id</th>
+                                <th>Team ID</th>
                                 <td>{app.get('team_id')}</td>
                             </tr>
                             <tr>
-                                <th>url</th>
+                                <th>URL</th>
                                 <td>
                                     <a href={app.get('url')}>
                                         {app.get('url')}
@@ -84,11 +84,11 @@ export default React.createClass({
                                 </td>
                             </tr>
                             <tr>
-                                <th>scm_url</th>
+                                <th>SCM</th>
                                 <td>{app.get('scm_url')}</td>
                             </tr>
                             <tr>
-                                <th>documentation_url</th>
+                                <th>Documentation</th>
                                 <td>
                                     <a href={app.get('documentation_url')}>
                                         {app.get('documentation_url')}
