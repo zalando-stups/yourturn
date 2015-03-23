@@ -2,7 +2,12 @@
 
 .sidebar {
     display: block;
-    padding-right: $padding;
+    margin-right: $padding;
+    box-shadow: inset -1px 0 2px 0px $gray;
+
+    @media( min-width: $mobileBreakpoint ) {
+        height: 100vh;
+    }
 
     .sidebar-content {
         display: flex;
@@ -11,6 +16,16 @@
     }
 
     .sidebar-item {
+        display: block;
         padding: $padding-small;
+        border-bottom: 1px solid $gray;
+
+        &:last-child {
+            border-bottom: none;
+        }
+
+        + .sidebar-item {
+            border-top: 1px solid lighten($gray, 30%);
+        }
     }
 }
