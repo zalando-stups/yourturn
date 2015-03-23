@@ -3,7 +3,7 @@ import {Link} from 'react-router';
 
 let Placeholder = React.createClass({
     render: function() {
-        return  <ul className="applicationList u-placeholder">
+        return  <ul className='applicationList u-placeholder'>
                     <li>Thing</li>
                     <li>Thing</li>
                     <li>Thing</li>
@@ -20,11 +20,11 @@ export default React.createClass({
         if (!apps.length) {
             return <Placeholder />;
         }
-        return  <ul className="applicationList">
+        return  <ul className='applicationList'>
                     {apps.map( app =>
                         <li>
                             <Link
-                                to="application-detail"
+                                to='application-detail'
                                 params={{id: app.id}}
                                 key={app.id}>{app.name}</Link>
                         </li>

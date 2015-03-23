@@ -9,7 +9,7 @@
         "templateStrings": true
     },
     "rules": {
-        "quotes": [1, "single"],
+        "quotes": [2, "single"],
         // never did i understand why there should be a newline
         "eol-last": 0,
         "new-cap": 0,

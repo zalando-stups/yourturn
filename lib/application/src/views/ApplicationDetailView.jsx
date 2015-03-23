@@ -8,31 +8,29 @@ import 'common/asset/scss/application/application-detail.scss';
  */
 let Placeholder = React.createClass({
     render: function() {
-        return  <div className="applicationDetail u-placeholder">
-                    <h1>Placeholder</h1>
+        return  <div className='applicationDetail u-placeholder'>
+                    <h1 className='u-placeholder-text'>Placeholder</h1>
                     <table>
                         <tbody>
                             <tr>
                                 <th>id</th>
-                                <td>nonsense</td>
+                                <td className='u-placeholder-text'>nonsense</td>
                             </tr>
                             <tr>
                                 <th>team_id</th>
-                                <td>nonsense</td>
+                                <td className='u-placeholder-text'>nonsense</td>
                             </tr>
                             <tr>
                                 <th>url</th>
-                                <td>
-                                    nonsense
-                                </td>
+                                <td className='u-placeholder-text'>nonsense</td>
                             </tr>
                             <tr>
                                 <th>scm_url</th>
-                                <td>nonsense</td>
+                                <td className='u-placeholder-text'>nonsense</td>
                             </tr>
                             <tr>
                                 <th>documentation_url</th>
-                                <td>placeholder</td>
+                                <td className='u-placeholder-text'>placeholder</td>
                             </tr>
                         </tbody>
                     </table>
@@ -61,7 +59,7 @@ export default React.createClass({
             return app.isPending() ? <Placeholder/> : <HttpError status={app.getResult().status} />;
         }
 
-        return  <div className="applicationDetail">
+        return  <div className='applicationDetail'>
                     <h1>{app.get('name')}</h1>
                     <table>
                         <tbody>

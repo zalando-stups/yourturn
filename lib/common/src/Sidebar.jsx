@@ -8,7 +8,7 @@ import 'common/asset/scss/common/sidebar.scss';
  */
 var SidebarItem = React.createClass({
     render: function() {
-        return  <div className="sidebar-item">
+        return  <div className='sidebar-item'>
                     {this.props.children}
                 </div>;
     }

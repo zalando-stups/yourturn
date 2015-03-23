@@ -6,13 +6,13 @@ import 'common/asset/scss/yourturn/yourturn.scss';
 
 export default React.createClass({
     render: function() {
-        return  <div className="yourturn">
+        return  <div className='yourturn'>
                     <Sidebar>
-                        <Link to="application">
+                        <Link to='application'>
                             Applications
                         </Link>
                     </Sidebar>
-                    <div className="yourturn-view">
+                    <div className='yourturn-view'>
                         <RouteHandler />
                     </div>
                 </div>;

@@ -110,8 +110,10 @@ a {
 
 
 .u-placeholder {
-    font-family: $font-placeholder;
-    color: $gray-light;
+    .u-placeholder-text {
+        font-family: $font-placeholder;
+        color: $gray-light;
+    }
 }
 
 .u-error {

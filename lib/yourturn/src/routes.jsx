@@ -11,11 +11,11 @@ import ApplicationList from 'application/src/wrapper/ApplicationListWrapper.jsx'
 import ApplicationDetail from 'application/src/wrapper/ApplicationDetailWrapper.jsx';
 
 let routes = (
-    <Route name="root" path="/" handler={ RootPage }>
+    <Route name='root' path='/' handler={ RootPage }>
         <DefaultRoute handler={ApplicationList} />
-        <Route name="application" path="application">
+        <Route name='application' path='application'>
             <DefaultRoute handler={ApplicationList} />
-            <Route name="application-detail" path=":id" handler={ApplicationDetail} />
+            <Route name='application-detail' path=':id' handler={ApplicationDetail} />
         </Route>
     </Route>
 );
