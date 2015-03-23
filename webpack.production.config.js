@@ -4,12 +4,7 @@ var webpack = require('webpack'),
 module.exports = {
     devtool: 'eval',
     entry: [
-        /* react hot loader */
-        'webpack-dev-server/client?http://localhost:3000',
-        'webpack/hot/only-dev-server',
-        /* react hot loader end */
-        './lib/yourturn/src/bootstrap-yourturn.jsx'   // entrypoint to resolve dependencies
-        // './lib/application/src/bootstrap-application.jsx' // this could be a separate bundle if we like
+        './lib/yourturn/src/bootstrap-yourturn.jsx'
     ],
     output: {
         path: __dirname + '/dist/',
@@ -17,11 +12,9 @@ module.exports = {
         publicPath: '/dist/'
     },
     plugins: [
-        new webpack.HotModuleReplacementPlugin(),
-        new webpack.NoErrorsPlugin(),
         new webpack.optimize.UglifyJsPlugin(),
         new webpack.DefinePlugin({
-            ENV_PRODUCTION: false
+            ENV_PRODUCTION: true
         })
     ],
     resolve: {
@@ -33,7 +26,7 @@ module.exports = {
     },
     module: {
         loaders: [
-            { test: /\.jsx$/, exclude: /node_modules/, loaders: ['react-hot', 'babel'] },
+            { test: /\.jsx$/, exclude: /node_modules/, loaders: ['babel'] },
             { test: /\.js$/, exclude: /node_modules/, loader: 'babel' },
             { test: /\.scss$/, exclude: /node_modules/, loaders: ['style', 'css', 'autoprefixer', 'sass'] },
             { test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,   loader: "url?limit=10000&mimetype=application/font-woff" },

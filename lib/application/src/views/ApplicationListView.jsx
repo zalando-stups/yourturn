@@ -37,12 +37,12 @@ export default React.createClass({
                                         1 : 0;
                         })
                         .map( app =>
-                        <li>
-                            <Link
-                                to='application-detail'
-                                params={{id: app.id}}
-                                key={app.id}>{app.name}</Link>
-                        </li>
+                            <li key={app.id}>
+                                <Link
+                                    to='application-detail'
+                                    params={{id: app.id}}
+                                    key={app.id}>{app.name}</Link>
+                            </li>
                     )}
                 </ul>;
     }
