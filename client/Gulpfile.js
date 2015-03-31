@@ -21,7 +21,7 @@ gulp.task( 'clean', remove(['dist/**/*']));
 
 // runs webpack and creates a bundle
 gulp.task('pack', ['clean'], function(done) {
-    var webpackConfig = require('/client/webpack.config');
+    var webpackConfig = require('./webpack.config');
     // here we could override production-specific properties
     webpack(
         webpackConfig,

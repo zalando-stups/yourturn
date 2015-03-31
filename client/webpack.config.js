@@ -5,7 +5,7 @@ module.exports = {
     devtool: 'eval',
     entry: [
         'webpack-dev-server/client?http://0.0.0.0:3000',
-        './application/src/bootstrap'   // entrypoint to resolve dependencies
+        './lib/application/src/bootstrap'   // entrypoint to resolve dependencies
     ],
     output: {
         path: __dirname + '/dist/',
@@ -22,8 +22,8 @@ module.exports = {
     resolve: {
         extensions: ['', '.js', '.scss'],
         alias: {
-            common: path.resolve(__dirname, './common/'),
-            application: path.resolve(__dirname, './application/')
+            common: path.resolve(__dirname, './lib/common/'),
+            application: path.resolve(__dirname, './lib/application/')
         }
     },
     module: {

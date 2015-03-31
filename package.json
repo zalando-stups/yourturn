@@ -4,7 +4,7 @@
   "description": "",
   "scripts": {
     "start": "node client/dev-server.js",
-    "test": "karma start"
+    "test": "karma start --config client/karma.config.js"
   },
   "repository": {
     "type": "git",
@@ -18,7 +18,6 @@
   "homepage": "https://github.com/zalando-stups/yourturn",
   "dependencies": {
     "backbone": "^1.1.2",
-    "backbone.subroute": "^0.4.5",
     "flummox": "^3.3.0",
     "jquery": "^2.1.3",
     "mori": "^0.3.2",
