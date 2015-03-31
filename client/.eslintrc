@@ -4,7 +4,6 @@
         "blockBindings": true,
         "classes": true,
         "destructuring": true,
-        "jsx": true,
         "modules": true,
         "templateStrings": true
     },
@@ -17,10 +16,6 @@
         // https://github.com/eslint/eslint/issues/1978
         "no-unused-vars": 1,
         "no-undef": 0,
-        // without spaces JSX gets unwieldy to read
-        "no-multi-spaces": 0,
-        // i like to separate my own funcs from React's
-        "no-underscore-dangle": 0,
         // in tests they are prevalent
         "no-unused-expressions": 1
     }
