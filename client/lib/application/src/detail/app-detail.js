@@ -3,6 +3,7 @@ import Template from './app-detail.hbs';
 import Flux from 'application/src/flux';
 import FetchResult from 'common/src/fetch-result';
 import ErrorTpl from 'common/src/error.hbs';
+import Placeholder from './placeholder.hbs';
 
 import 'common/asset/scss/application/application.scss';
 
@@ -37,7 +38,7 @@ class AppDetail extends View {
         if (data.app instanceof FetchResult) {
             $el.html(
                 data.app.isPending() ?
-                'Loading...' :
+                Placeholder() :
                 ErrorTpl( data.app.getResult() )
             );
         } else {
