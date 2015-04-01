@@ -30,7 +30,7 @@ class AppRouter extends Router {
         }
         puppeteer.show( new Detail({
             applicationId: id
-        }), 'main' )
+        }), '#yourturn-view' )
     }
 
     /**
@@ -45,7 +45,7 @@ class AppRouter extends Router {
         Flux
         .getActions('application')
         .fetchApplications()
-        .finally( () => puppeteer.show( new List(), 'main' ) );
+        .finally( () => puppeteer.show( new List(), '#yourturn-view' ) );
     }
 }
 

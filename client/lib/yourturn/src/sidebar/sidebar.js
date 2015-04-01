@@ -1,6 +1,6 @@
 import {View} from 'backbone';
 import Template from './sidebar.hbs';
-
+import 'common/asset/scss/sidebar/sidebar.scss';
 
 class SidebarView extends View {
     constructor() {
@@ -9,7 +9,7 @@ class SidebarView extends View {
         };
         this.template = Template;
         this.tagName = 'aside';
-        this.className = 'yourturn-sidebar';
+        this.className = 'sidebar';
         this.events = {
             'click button': 'increase'
         };

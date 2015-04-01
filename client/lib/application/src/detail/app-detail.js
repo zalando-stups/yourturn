@@ -4,12 +4,14 @@ import Flux from 'application/src/flux';
 import FetchResult from 'common/src/fetch-result';
 import ErrorTpl from 'common/src/error.hbs';
 
+import 'common/asset/scss/application/application.scss';
+
 class AppDetail extends View {
     constructor( props ) {
         this._boundRender = this.render.bind( this );
         this.props = props;
         this.store = Flux.getStore('application');
-        this.className = 'youturn-appDetail';
+        this.className = 'applicationDetail';
         this.bind();
         super();        
     }

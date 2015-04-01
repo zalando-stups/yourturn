@@ -4,12 +4,15 @@ import Sidebar from './sidebar/sidebar';
 import Router from './router';
 import AppRouter from 'application/src/router';
 
+import 'common/asset/scss/grid.scss';
+import 'common/asset/scss/yourturn/yourturn.scss';
+
 let sidebar = new Sidebar();
 sidebar.render();
 
 
 $(document).ready( () => {
-    $(document.body).prepend( sidebar.$el );
+    $('#yourturn-sidebar').append( sidebar.$el );
     new Router();
     new AppRouter();
     history.start({
