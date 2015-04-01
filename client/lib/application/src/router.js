@@ -3,41 +3,49 @@ import puppeteer from 'common/src/puppeteer';
 import List from './list/app-list';
 import Detail from './detail/app-detail';
 import Flux from './flux';
+import 'promise.prototype.finally';
 
 let store = Flux.getStore('application');
 
 class AppRouter extends Router {
     constructor() {
         this.routes = {
-            'application':      'listApplications',
-            'application/:id':  'listApplication'
-        }
+            'application': 'listApplications',
+            'application/:id': 'listApplication'
+        };
 
         super();
     }
 
+    /**
+     * Checks if application with id is already in the store,
+     * if not triggers a fetch action. Does not wait to finish and
+     * instructs the Puppeteer to show the DetailView.
+     *
+     * @param  {string} id
+     */
     listApplication(id) {
-        console.log( 'list application', id );
-        let promise;
         if (!store.getApplication(id)) {
-            promise = Flux.getActions('application').fetchApplication(id);
-        } else {
-            promise = Promise.resolve();
+            Flux.getActions('application').fetchApplication(id);
         }
-        promise.then( () => puppeteer.show( new Detail(), 'main' ) );
+        puppeteer.show( new Detail({
+            applicationId: id
+        }), 'main' )
     }
 
+    /**
+     * Triggers a fetch action for all applications (because we
+     * never know if we have all of them already), waits for it,
+     * then shows ListView.
+     * 
+     */
     listApplications() {
         // ensure that the data we need is there
-        let promise;
-        if (!store.getApplications().length) {
-            promise = Flux.getActions('application').fetchApplications();
-        } else {
-            promise = Promise.resolve();
-        }
-
         // then show the view
-        promise.then( () => puppeteer.show( new List(), 'main' ) );
+        Flux
+        .getActions('application')
+        .fetchApplications()
+        .finally( () => puppeteer.show( new List(), 'main' ) );
     }
 }
 

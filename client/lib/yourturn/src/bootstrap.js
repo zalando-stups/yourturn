@@ -9,10 +9,9 @@ sidebar.render();
 
 
 $(document).ready( () => {
-    console.log('bootstrap');
     $(document.body).prepend( sidebar.$el );
-    let router = new Router();
-    new AppRouter('application');
+    new Router();
+    new AppRouter();
     history.start({
         pushState: true
     });

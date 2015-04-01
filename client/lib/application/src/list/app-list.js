@@ -4,6 +4,7 @@ import Flux from 'application/src/flux';
 
 class AppDetail extends View {
     constructor() {
+        this._boundRender = this.render.bind( this );
         this.store = Flux.getStore('application');
         this.data = {
             apps: this.store.getApplications()
@@ -11,7 +12,16 @@ class AppDetail extends View {
         
         this.template = Template;
         this.className = 'youturn-appList';
-        super();        
+        this.bind(),
+        super();
+    }
+
+    bind() {
+        this.store.addListener( 'change', this._boundRender );
+    }
+
+    unbind() {
+        this.store.removeListener( 'change', this._boundRender );
     }
 
     render() {
@@ -20,7 +30,7 @@ class AppDetail extends View {
     }
 
     remove() {
-        console.log( 'remove was called' );
+        this.unbind();
     }
 }
 

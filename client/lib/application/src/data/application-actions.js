@@ -20,6 +20,7 @@ class ApplicationActions extends Actions {
                 .exec()
                 .then( res => res.body )
                 .catch( err => {
+                    err.id = id;
                     throw err;
                 });
     }
