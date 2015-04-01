@@ -5,7 +5,7 @@ module.exports = {
     devtool: 'eval',
     entry: [
         'webpack-dev-server/client?http://0.0.0.0:3000',
-        './lib/application/src/bootstrap'   // entrypoint to resolve dependencies
+        './lib/yourturn/src/bootstrap'   // entrypoint to resolve dependencies
     ],
     output: {
         path: __dirname + '/dist/',

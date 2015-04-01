@@ -36,7 +36,7 @@ gulp.task('pack', ['clean'], function(done) {
 // lints the source code using .eslintrc
 gulp.task('lint', function() {
     return gulp
-            .src(['client/**/*.js'])
+            .src(['lib/**/*.js'])
             .pipe(eslint())
             .pipe(eslint.format())
             .pipe(eslint.failAfterError());
@@ -45,7 +45,7 @@ gulp.task('lint', function() {
 // watches changes in js, lints cocde
 gulp.task('watch:js', function() {
     return  gulp.watch([
-                'client/**/*.js'
+                'lib/**/*.js'
             ],
             ['lint']);
 });
