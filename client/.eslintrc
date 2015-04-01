@@ -1,0 +1,22 @@
+{
+    "ecmaFeatures": {
+        "arrowFunctions": true,
+        "blockBindings": true,
+        "classes": true,
+        "destructuring": true,
+        "modules": true,
+        "templateStrings": true
+    },
+    "rules": {
+        "quotes": [2, "single"],
+        // never did i understand why there should be a newline
+        "eol-last": 0,
+        "new-cap": 0,
+        "strict": [ 2, "global" ],
+        // https://github.com/eslint/eslint/issues/1978
+        "no-unused-vars": 1,
+        "no-undef": 0,
+        // in tests they are prevalent
+        "no-unused-expressions": 1
+    }
+}

@@ -1,0 +1,37 @@
+<h1>{{app.name}}</h1>
+<table>
+    <tbody>
+        <tr>
+            <th>ID</th>
+            <td>{{app.id}}</td>
+        </tr>
+        <tr>
+            <th>Team ID</th>
+            <td>{{app.team_id}}</td>
+        </tr>
+        <tr>
+            <th>URL</th>
+            <td>
+                <a href="{{app.url}}"}>
+                    {{app.url}}
+                </a>
+            </td>
+        </tr>
+        <tr>
+            <th>SCM</th>
+            <td>{{app.scm_url}}</td>
+        </tr>
+        <tr>
+            <th>Documentation</th>
+            <td>
+                <a href={{app.documentation_url}}>
+                    {{app.documentation_url}}
+                </a>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<h4 className='applicationDetail-descriptionTitle'>Description</h4>
+<p>
+    {{app.description}}
+</p>
