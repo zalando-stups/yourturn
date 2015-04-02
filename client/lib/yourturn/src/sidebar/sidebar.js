@@ -13,7 +13,7 @@ class SidebarView extends View {
         this.events = {
             'click button': 'increase'
         };
-        super();        
+        super();
     }
 
     increase() {

@@ -17,6 +17,10 @@
         "no-unused-vars": 1,
         "no-undef": 0,
         // in tests they are prevalent
-        "no-unused-expressions": 1
+        "no-unused-expressions": 1,
+        // backbone works this way unfortunately
+        "no-new": 1,
+        // i actually like that
+        "no-underscore-dangle": 0
     }
 }

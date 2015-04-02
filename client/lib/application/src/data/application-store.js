@@ -28,7 +28,7 @@ class ApplicationStore extends Store {
 
     // intentionally left as noop for now
     beginFetchApplications() {}
-    failFetchApplications(err) {}
+    failFetchApplications() {}
 
     /**
      * Replaces application with `id` with a Pending state.
@@ -43,7 +43,7 @@ class ApplicationStore extends Store {
 
     /**
      * Replaces application with Failed state.
-     * 
+     *
      * @param  {error} err The error passed from the flux action.
      */
     failFetchApplication(err) {
@@ -54,7 +54,7 @@ class ApplicationStore extends Store {
 
     /**
      * Adds applications to store. Overwrites applications with the same id.
-     * 
+     *
      * @param  {array} apps
      */
     receiveApplications( apps ) {
@@ -68,7 +68,7 @@ class ApplicationStore extends Store {
 
     /**
      * Adds single application to store. Just calls `receiveApplications` underneath.
-     * 
+     *
      * @param  {object} app
      */
     receiveApplication( app ) {
@@ -77,7 +77,7 @@ class ApplicationStore extends Store {
 
     /**
      * Returns all applications that are available (as in not Pending or Failed) RIGHT NAO!
-     * 
+     *
      * @return {array} Available applications
      */
     getApplications() {
@@ -88,7 +88,7 @@ class ApplicationStore extends Store {
     /**
      * Returns the application with `id`. Does not care about its state, e.g. whether or not
      * it's Pending or Failed. Returns null if there is no application with this id.
-     * 
+     *
      * @param  {string} id
      * @return {object} The application with this id
      */

@@ -11,7 +11,7 @@ class AppDetail extends BaseView {
     constructor( props ) {
         this.store = Flux.getStore('application');
         this.className = 'applicationDetail';
-        super(props);        
+        super(props);
     }
 
     update() {

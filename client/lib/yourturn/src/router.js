@@ -8,9 +8,7 @@ class YourturnRouter extends Router {
         super();
     }
 
-    home() {
-        console.log( 'at home' );
-    }
+    home() {}
 }
 
 export default YourturnRouter;

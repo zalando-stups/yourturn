@@ -30,14 +30,14 @@ class AppRouter extends Router {
         }
         puppeteer.show( new Detail({
             applicationId: id
-        }), '#yourturn-view' )
+        }), '#yourturn-view' );
     }
 
     /**
      * Triggers a fetch action for all applications (because we
      * never know if we have all of them already), waits for it,
      * then shows ListView.
-     * 
+     *
      */
     listApplications() {
         // ensure that the data we need is there
