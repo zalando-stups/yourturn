@@ -2,36 +2,42 @@ var express = require('express'),
     server = express();
 
 var applications = {
-    uuid123: {
-        id: 'uuid123',
-        name: 'kio',
+    kio: {
+        documentation_url: 'https://github.com/zalando-stups/kio',
+        scm_url: 'https://github.com/zalando-stups/kio.git',
+        service_url: 'https://kio.example.org/',
+        description: 'An application registry to manage application base information.',
+        subtitle: 'STUPS application registry',
+        name: 'Kio',
+        active: true,
         team_id: 'stups',
-        description: 'Application Repository',
-        url: 'https://kio.stups.zalan.do',
-        scm_url: 'git://github.com/zalando-stups/kio'
+        id: 'kio'
     },
-    asdfasdf: {
-        id: 'asdfasdf',
-        name: 'testy',
+    pierone: {
+        documentation_url: 'https://github.com/zalando-stups/pierone',
+        scm_url: 'https://github.com/zalando-stups/pierone.git',
+        service_url: 'https://pierone.example.org/',
+        description: 'A Docker registry compliant repository for Docker images.',
+        subtitle: 'STUPS Docker registry',
+        name: 'Pier One',
+        active: false,
         team_id: 'stups',
-        description: 'Test application',
-        url: 'https://test.stups.zalan.do',
-        scm_url: 'git://github.com/zalando-stups/test'
+        id: 'pierone'
     },
     tzjztjtzj: {
         id: 'tzjztjtzj',
         name: 'testy 2',
         team_id: 'stups',
         description: 'Test application 2',
-        url: 'https://test2.stups.zalan.do',
+        url: 'https://test2.example.org',
         scm_url: 'git://github.com/zalando-stups/test2'
     }
 };
 
 /** enable cors */
 server.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
     next();
 });
 
