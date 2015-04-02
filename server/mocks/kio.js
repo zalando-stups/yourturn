@@ -35,7 +35,7 @@ server.use(function(req, res, next) {
     next();
 });
 
-server.get('/applications', function(req,res) {
+server.get('/apps', function(req,res) {
     var apps = Object
                 .keys( applications )
                 .map( function( k ) {
@@ -48,7 +48,7 @@ server.get('/applications', function(req,res) {
     
 });
 
-server.get('/applications/:id', function(req,res){
+server.get('/apps/:id', function(req,res){
     setTimeout( function() {
         var id = req.params.id;
         if (!applications[id]) {
