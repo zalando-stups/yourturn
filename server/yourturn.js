@@ -19,7 +19,9 @@ function generateEnv() {
 
 function writeEnv() {
     var env = generateEnv();
-    fs.writeFileSync('./dist/env.js', env );
+    console.log('Current working directory', process.cwd());
+    console.log('Current user id', process.getuid());
+    fs.writeFileSync('dist/env.js', env );
 }
 
 writeEnv();

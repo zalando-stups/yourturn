@@ -8,7 +8,7 @@ COPY ./client/index.html /www/
 COPY ./server/yourturn.js /www/
 
 # create env.js as user
-CMD touch /www/dist/env.js && chmod 0666 /www/dist/env.js
+RUN touch /www/dist/env.js && chmod 0666 /www/dist/env.js
 
 # expose and start
 WORKDIR /www/
