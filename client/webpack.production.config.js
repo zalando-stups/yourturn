@@ -26,7 +26,8 @@ module.exports = {
     },
     // prefix everything with YTENV_
     externals: {
-        KIO_BASE_URL: 'YTENV_KIO_BASE_URL'
+        KIO_BASE_URL: 'YTENV_KIO_BASE_URL',
+        TWINTIP_BASE_URL: 'YTENV_TWINTIP_BASE_URL'
     },
     module: {
         loaders: [
