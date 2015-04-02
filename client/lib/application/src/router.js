@@ -27,6 +27,7 @@ class AppRouter extends Router {
     listApplication(id) {
         if (!store.getApplication(id)) {
             Flux.getActions('application').fetchApplication(id);
+            Flux.getActions('api').fetchApi(id);
         }
         puppeteer.show( new Detail({
             applicationId: id

@@ -1,4 +1,5 @@
 import {View} from 'backbone';
+import _ from 'lodash';
 
 /**
  * BaseView for YourTurn.
@@ -23,11 +24,17 @@ class BaseView extends View {
         if (this.store) {
             this.store.on('change', this._boundRender);
         }
+        if (this.stores) {
+            _.forOwn(this.stores, (val,key) => this.stores[key].on('change', this._boundRender));
+        }
     }
 
     unbind() {
         if (this.store) {
             this.store.off('change', this._boundRender);
+        }
+        if (this.stores) {
+            _.forOwn(this.stores, (val,key) => this.stores[key].off('change', this._boundRender));
         }
     }
 

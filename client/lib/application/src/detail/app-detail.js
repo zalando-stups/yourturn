@@ -9,15 +9,21 @@ import 'common/asset/scss/application/application.scss';
 
 class AppDetail extends BaseView {
     constructor( props ) {
-        this.store = Flux.getStore('application');
+        this.stores = {
+            application: Flux.getStore('application'),
+            api: Flux.getStore('api')
+        };
         this.className = 'applicationDetail';
         super(props);
     }
 
     update() {
+        let {applicationId} = this.props;
         this.data = {
-            app: this.store.getApplication( this.props.applicationId )
+            app: this.stores.application.getApplication( applicationId ),
+            api: this.stores.api.getApi( applicationId )
         };
+        this.data.hasApi = this.data.api.status === 'SUCCESS';
     }
 
     render() {
