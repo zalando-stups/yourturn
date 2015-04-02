@@ -23,7 +23,7 @@ class AppDetail extends BaseView {
             app: this.stores.application.getApplication( applicationId ),
             api: this.stores.api.getApi( applicationId )
         };
-        this.data.hasApi = this.data.api.status === 'SUCCESS';
+        this.data.hasApi = this.data.api && this.data.api.status === 'SUCCESS';
     }
 
     render() {
