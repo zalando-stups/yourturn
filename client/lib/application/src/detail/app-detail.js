@@ -1,4 +1,4 @@
-import {View} from 'backbone';
+import BaseView from 'common/src/base-view';
 import Template from './app-detail.hbs';
 import Flux from 'application/src/flux';
 import FetchResult from 'common/src/fetch-result';
@@ -7,22 +7,11 @@ import Placeholder from './placeholder.hbs';
 
 import 'common/asset/scss/application/application.scss';
 
-class AppDetail extends View {
+class AppDetail extends BaseView {
     constructor( props ) {
-        this._boundRender = this.render.bind( this );
-        this.props = props;
         this.store = Flux.getStore('application');
         this.className = 'applicationDetail';
-        this.bind();
-        super();        
-    }
-
-    bind() {
-        this.store.addListener( 'change', this._boundRender );
-    }
-
-    unbind() {
-        this.store.removeListener( 'change', this._boundRender );
+        super(props);
     }
 
     update() {
@@ -32,7 +21,6 @@ class AppDetail extends View {
     }
 
     render() {
-        this.update();
         let {data, $el} = this;
 
         if (data.app instanceof FetchResult) {
@@ -45,10 +33,6 @@ class AppDetail extends View {
             $el.html( Template( data ) );
         }
         return this;
-    }
-
-    remove() {
-        this.unbind();
     }
 }
 

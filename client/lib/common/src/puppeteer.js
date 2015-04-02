@@ -16,7 +16,7 @@ class Puppeteer {
         if (typeof target === 'string' ) {
             el = $(target);
         }
-        el.html( view.render().$el );
+        el.html( view._boundRender().$el );
         this.active = view;
     }
 }

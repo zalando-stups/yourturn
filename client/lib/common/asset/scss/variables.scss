@@ -9,6 +9,7 @@ $gray: #777;
 $gray-light: #ddd;
 $white: #fff;
 
+$padding-tiny: .5em;
 $padding-small: 1em;
 $padding: 1.5em;
 $padding-big: 3em;
@@ -106,8 +107,8 @@ a {
     background-image: linear-gradient(  to top,
                                         rgba(0,0,0,0) 6%,
                                         currentColor 6%,
-                                        currentColor 12%,
-                                        rgba(0,0,0,0) 12%);
+                                        currentColor 10%,
+                                        rgba(0,0,0,0) 10%);
 }
 
 

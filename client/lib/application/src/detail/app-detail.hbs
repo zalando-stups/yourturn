@@ -1,4 +1,14 @@
-<h1>{{app.name}}</h1>
+<h1>{{app.name}}</h1> 
+<h4>
+<span class="applicationDetail-status">
+    {{#if app.active}}
+        <i class="fa fa-lg fa-circle"></i> <strong>Active</strong>
+    {{else}}
+        <i class="fa fa-lg fa-circle-o"></i> <strong>Inactive</strong>
+    {{/if}}
+</span>
+{{ app.subtitle }}</h4>
+
 <table>
     <tbody>
         <tr>
@@ -12,19 +22,23 @@
         <tr>
             <th>URL</th>
             <td>
-                <a href="{{app.url}}"}>
-                    {{app.url}}
+                <a data-external href="{{app.service_url}}"}>
+                    {{app.service_url}}
                 </a>
             </td>
         </tr>
         <tr>
             <th>SCM</th>
-            <td>{{app.scm_url}}</td>
+            <td>
+                <a data-external href="{{app.scm_url}}">
+                    {{app.scm_url}}
+                </a>
+            </td>
         </tr>
         <tr>
             <th>Documentation</th>
             <td>
-                <a href={{app.documentation_url}}>
+                <a data-external href={{app.documentation_url}}>
                     {{app.documentation_url}}
                 </a>
             </td>
