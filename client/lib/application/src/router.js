@@ -18,17 +18,15 @@ class AppRouter extends Router {
     }
 
     /**
-     * Checks if application with id is already in the store,
-     * if not triggers a fetch action. Does not wait to finish and
+     * Fetches the application with `id`. Does not wait to finish and
      * instructs the Puppeteer to show the DetailView.
      *
      * @param  {string} id
      */
     listApplication(id) {
-        if (!store.getApplication(id)) {
-            Flux.getActions('application').fetchApplication(id);
-            Flux.getActions('api').fetchApi(id);
-        }
+        Flux.getActions('application').fetchApplication(id);
+        Flux.getActions('api').fetchApi(id);
+
         puppeteer.show( new Detail({
             applicationId: id
         }), '#yourturn-view' );
