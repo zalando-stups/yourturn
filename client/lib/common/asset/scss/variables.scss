@@ -1,7 +1,7 @@
 $font-sans: 'Open Sans', sans-serif;
 $font-placeholder: 'BLOKK';
 
-$mobileBreakpoint: 480px;
+$mobile-breakpoint: 960px;
 
 $black: #111;
 $gray-dark: #333;
@@ -54,6 +54,12 @@ $small-line-height: $small-line * $small-lines;
 $small-margin-top: 1 * $small-line;
 $small-margin-bottom: 1 * $small-line;
 
+@mixin transition($properties...) {
+    transition-property: $properties;
+    transition-duration: .2s;
+    transition-timing-function: ease;
+}
+
 body {
     text-rendering: optimizeLegibility;
     font-family: $font-sans;
@@ -100,6 +106,17 @@ small {
     font-size: $small-font-size;
 }
 
+input[type="text"],
+input[type="search"] {
+    font-size: $base-font-size;
+    font-family: $font-sans;
+    padding: $padding-tiny;
+    display: inline-block;
+    border: 1px solid $gray-light;
+    border-radius: 2px;
+    vertical-align: middle;
+}
+
 a {
     // beautiful link underlines
     color: $black;
@@ -116,6 +133,44 @@ a {
                                         currentColor 6%,
                                         currentColor 14%,
                                         rgba(0,0,0,0) 14%);
+    }
+}
+
+.btn {
+    @include transition( color, background, border-color );
+    transition-duration: .05s;  // make it responsive
+    display: inline-block;
+    margin-bottom: 0; // For input.btn
+    text-align: center;
+    vertical-align: middle;
+    touch-action: manipulation;
+    cursor: pointer;
+    background-image: none;
+    white-space: nowrap;
+    user-select: none;
+    padding: $padding-tiny;
+    font-size: $base-font-size;
+    border-radius: 2px;
+    border: 1px solid transparent;
+    border-bottom: 3px solid $gray;
+    
+    &.btn-disabled {
+        pointer-events: none;
+        color: $gray-light;
+    }
+    
+    &.btn-default {
+        $border-color: $gray;
+
+        background: $white;
+        color: $gray-dark;
+        border-color: $border-color;
+
+        &:active {
+            border-bottom: 1px solid transparent;
+            border-top: 2px solid $border-color;
+            box-shadow: 0px 1px 7px -5px inset;
+        }
     }
 }
 

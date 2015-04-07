@@ -1,24 +1,32 @@
-import {View} from 'backbone';
+import $ from 'jquery';
+import {history} from 'backbone';
+import BaseView from 'common/src/base-view';
 import Template from './sidebar.hbs';
-import 'common/asset/scss/sidebar/sidebar.scss';
+import 'common/asset/scss/yourturn/sidebar.scss';
 
-class SidebarView extends View {
+class SidebarView extends BaseView {
     constructor() {
-        this.state = {
-            counter: 0
-        };
-        this.template = Template;
+        this.state = {};
         this.tagName = 'aside';
         this.className = 'sidebar';
         this.events = {
-            'click button': 'increase'
+            'click .sidebar-item': 'transition'
         };
         super();
     }
 
-    increase() {
-        this.state.counter += 1;
-        this.render();
+    /**
+     * Checks if this sidebar item has a data-route
+     * attribute. If it does, navigates to this route.
+     */
+    transition(evt) {
+        let $target = $(evt.currentTarget),
+            route = $target.attr('data-route') || false;
+        if (route) {
+            history.navigate(route, {
+                trigger: true
+            });
+        }
     }
 
     render() {

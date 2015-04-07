@@ -5,8 +5,6 @@ import Detail from './detail/app-detail';
 import Flux from './flux';
 import 'promise.prototype.finally';
 
-let store = Flux.getStore('application');
-
 class AppRouter extends Router {
     constructor() {
         this.routes = {

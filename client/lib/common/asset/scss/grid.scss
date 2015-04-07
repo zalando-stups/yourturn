@@ -6,7 +6,7 @@ $gutter: 2em;
     width: 100%;
     display: flex;
 
-    @media( max-width: $mobileBreakpoint ) {
+    @media( max-width: $mobile-breakpoint ) {
         display: block;
         .col-center {
             align-items: center;
@@ -15,20 +15,20 @@ $gutter: 2em;
             align-self: center;
         }
     }
-    @media( min-width: $mobileBreakpoint ) {
+    @media( min-width: $mobile-breakpoint ) {
         flex-direction: row;
     }
 
     &.with-gutter {
         margin-left: -$gutter;
-        @media( max-width: $mobileBreakpoint ) {
+        @media( max-width: $mobile-breakpoint ) {
             margin-left: 0;
         }
 
         > .grid-col {
             padding-left: $gutter;
 
-            @media( max-width: $mobileBreakpoint ) {
+            @media( max-width: $mobile-breakpoint ) {
                 padding-left: 0;
             }
         }
@@ -37,7 +37,7 @@ $gutter: 2em;
     .grid-col {
         @mixin column-size( $size ) {
             flex: 0 0 100%*$size;
-            @media( max-width: $mobileBreakpoint ) {
+            @media( max-width: $mobile-breakpoint ) {
                 width: 100%;
                 display: block;
             }
