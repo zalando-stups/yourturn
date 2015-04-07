@@ -43,6 +43,18 @@
                 </a>
             </td>
         </tr>
+        <tr>
+            <th>API</th>
+            <td>
+                {{#if hasApi}}
+                    <a data-external href="{{app.service_url}}{{api.ui}}">
+                        Version {{api.version}}
+                    </a>
+                {{else}}
+                    No API docs available.
+                {{/if}}
+            </td>
+        </tr>
     </tbody>
 </table>
 <h4 className='applicationDetail-descriptionTitle'>Description</h4>
