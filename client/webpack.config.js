@@ -4,7 +4,7 @@ var webpack = require('webpack'),
 module.exports = {
     devtool: 'eval',
     entry: [
-        'webpack-dev-server/client?http://0.0.0.0:3000',
+        'webpack/hot/dev-server',
         './lib/yourturn/src/bootstrap'   // entrypoint to resolve dependencies
     ],
     output: {
@@ -23,6 +23,7 @@ module.exports = {
         extensions: ['', '.js', '.scss'],
         alias: {
             common: path.resolve(__dirname, './lib/common/'),
+            yourturn: path.resolve(__dirname, './lib/yourturn/'),
             application: path.resolve(__dirname, './lib/application/')
         }
     },
@@ -35,7 +36,7 @@ module.exports = {
             { test: /\.hbs$/, exclude: /node_modules/, loader: 'handlebars' },
             { test: /\.js$/, exclude: /node_modules/, loader: 'babel' },
             { test: /\.scss$/, exclude: /node_modules/, loaders: ['style', 'css', 'autoprefixer', 'sass'] },
-            { test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,   loader: "url?limit=10000&mimetype=application/font-woff" },
+            { test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,   loader: 'url?limit=10000&mimetype=application/font-woff' },
         ]
     }
 };
