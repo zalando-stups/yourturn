@@ -1,8 +1,8 @@
 var express = require('express'),
     server = express();
 
-var apis = {
-    kio: {
+var apis = [
+    {
         ui: '/ui/',
         url: '/swagger.json',
         version: '0.2',
@@ -11,7 +11,7 @@ var apis = {
         status: 'SUCCESS',
         application_id: 'kio'
     },
-    pierone: {
+    {
         ui: '/ui/',
         url: '/swagger.json',
         version: '1.0',
@@ -20,7 +20,7 @@ var apis = {
         status: 'SUCCESS',
         application_id: 'pierone'
     }
-};
+];
 
 /** enable cors */
 server.use(function(req, res, next) {
@@ -29,13 +29,20 @@ server.use(function(req, res, next) {
     next();
 });
 
+server.get('/apis', function(req, res) {
+    res.status(200).send(apis);
+});
+
 server.get('/apis/:id', function(req,res){
     setTimeout( function() {
         var id = req.params.id;
         if (!apis[id]) {
             res.status(404).send();
         } else {
-            res.status(200).send(apis[req.params.id]);
+            var api = apis.filter(function(api) {
+                return api.application_id === id;
+            });
+            res.status(200).send(api[0]);
         }
     }, Math.random() * 2000 );
 });
