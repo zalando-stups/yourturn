@@ -3,6 +3,14 @@ import request from 'common/src/superagent';
 import {Services} from 'common/src/data/services';
 
 class SearchActions extends Actions {
+
+    /**
+     * Does not actually fetch anything, but
+     * triggers a `fetchSearchResultsFrom` for
+     * every known service.
+     *
+     * @param  {String} term
+     */
     fetchSearchResults(term) {
         Object
             .keys(Services)
@@ -13,6 +21,12 @@ class SearchActions extends Actions {
         return term;
     }
 
+    /**
+     * [fetchSearchResultsFrom description]
+     * @param  {String} service The service id as specified in common/data/services.js
+     * @param  {String} term
+     * @return {Promise}         [description]
+     */
     fetchSearchResultsFrom(service, term) {
         return request
                 .get(Services[service].url + Services[service].root)

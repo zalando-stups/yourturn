@@ -19,7 +19,7 @@ class AppRouter extends Router {
      * Fetches the application with `id`. Does not wait to finish and
      * instructs the Puppeteer to show the DetailView.
      *
-     * @param  {string} id
+     * @param  {String} id
      */
     listApplication(id) {
         Flux.getActions('application').fetchApplication(id);
