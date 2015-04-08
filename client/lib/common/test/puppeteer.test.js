@@ -14,6 +14,10 @@ class MockView extends View {
     remove() {
 
     }
+
+    _boundRender() {
+        return this;
+    }
 }
 
 describe('The Puppeteer', () => {

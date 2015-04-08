@@ -1,4 +1,4 @@
-import {Done, Failed, Pending} from 'common/src/FetchResult';
+import {Done, Failed, Pending} from 'common/src/fetch-result';
 
 describe('The FetchResult', () => {
     it('should have the correct result', () => {

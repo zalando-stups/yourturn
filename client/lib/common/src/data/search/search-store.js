@@ -8,7 +8,7 @@ function sortDesc(a, b) {
                     0;
 }
 
-class ApiStore extends Store {
+class SearchStore extends Store {
     constructor(flux) {
         super();
 
@@ -102,4 +102,4 @@ class ApiStore extends Store {
     }
 }
 
-export default ApiStore;
+export default SearchStore;
