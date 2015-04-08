@@ -55,6 +55,11 @@ input[type="search"] {
     border: 1px solid $gray-light;
     border-radius: 2px;
     vertical-align: middle;
+    &:focus {
+        border: 1px solid $gray;
+        outline: none;
+        box-shadow: 0px 0px 5px $gray;
+    }
 }
 
 a {
@@ -107,9 +112,18 @@ a {
         border-color: $border-color;
 
         &:active {
+            outline: none;
             border-bottom: 1px solid transparent;
             border-top: 2px solid $border-color;
             box-shadow: 0px 1px 7px -5px inset;
+            &:focus {
+                box-shadow: none;
+            }
+        }
+
+        &:focus {
+            outline: none;
+            box-shadow: 0px 0px 5px $gray;
         }
     }
 }
