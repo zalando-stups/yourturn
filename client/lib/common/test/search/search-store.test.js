@@ -1,5 +1,5 @@
-window.YTENV_TWINTIP_BASE_URL='localhost';
-window.YTENV_KIO_BASE_URL='localhost';
+window.YTENV_TWINTIP_BASE_URL = 'localhost';
+window.YTENV_KIO_BASE_URL = 'localhost';
 
 import SearchStore from 'common/src/data/search/search-store';
 import SearchActions from 'common/src/data/search/search-actions';
@@ -11,7 +11,6 @@ class MockFlux extends Flummox {
 
         this.createActions('search', SearchActions);
         this.createStore('search', SearchStore, this);
-        
     }
 }
 
