@@ -22,7 +22,8 @@ class SearchActions extends Actions {
     }
 
     /**
-     * [fetchSearchResultsFrom description]
+     * Fetches a search query from the specified service.
+     *
      * @param  {String} service The service id as specified in common/data/services.js
      * @param  {String} term
      * @return {Promise}         [description]

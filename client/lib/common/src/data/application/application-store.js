@@ -97,6 +97,15 @@ class ApplicationStore extends Store {
         let app = _m.get( this.state.applications, id );
         return _m.toJs(app);
     }
+
+    /**
+     * Only for testing!
+     */
+    _empty() {
+        this.setState({
+            applications: _m.hashMap()
+        });
+    }
 }
 
 export default ApplicationStore;
