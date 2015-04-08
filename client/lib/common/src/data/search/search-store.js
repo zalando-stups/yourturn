@@ -2,6 +2,12 @@ import {Store} from 'flummox';
 import {Services, constructLocalUrl} from 'common/src/data/services';
 import _m from 'mori';
 
+function inverseSort(a, b) {
+    return  a < b ? 1 :
+                b < a ? -1 :
+                    0;
+}
+
 class ApiStore extends Store {
     constructor(flux) {
         super();
@@ -28,7 +34,11 @@ class ApiStore extends Store {
     }
 
     beginFetchSearchResultsFrom() {}
-    failFetchSearchResultsFrom() {}
+    failFetchSearchResultsFrom() {
+        // emit change event even though nothing actually changed
+        // so views can render "no results found"
+        this.forceUpdate();
+    }
 
     receiveSearchResultsFrom(results) {
         const TERM = results._term;
@@ -49,7 +59,7 @@ class ApiStore extends Store {
         // append results in seq
         old = _m.into( old, newResults );
         // sort seq by matched_rank
-        old = _m.sortBy( res => _m.get(res, 'matched_rank'), old );
+        old = _m.sortBy( res => _m.get(res, 'matched_rank'), inverseSort, old );
         // PROFIT
         this.setState({
             results: _m.assoc( this.state.results, TERM, old )
@@ -57,7 +67,7 @@ class ApiStore extends Store {
     }
 
     getSearchResults(term) {
-        return _m.toJs( _m.get( this.state.results, term ) );
+        return _m.toJs( _m.get( this.state.results, term ) ) || [];
     }
 
     hasResults(term) {

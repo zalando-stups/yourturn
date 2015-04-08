@@ -6,7 +6,9 @@ import 'common/asset/scss/yourturn/search.scss';
 class SearchView extends BaseView {
     constructor() {
         this.store = Flux.getStore('search');
-        this.state = {};
+        this.state = {
+            term: ''
+        };
         this.className = 'searchView';
         this.events = {
             'click button': 'search',
@@ -17,6 +19,7 @@ class SearchView extends BaseView {
 
     update() {
         this.state.results = this.store.getSearchResults( this.state.term );
+        this.state.noResults = this.state.results.length === 0 && this.state.term.length > 0;
     }
 
     search(evt) {
