@@ -3,6 +3,7 @@ var gulp = require('gulp'),
     eslint = require('gulp-eslint'),
     args = require('minimist')(process.argv.slice(2)),
     del = require( 'del' ),
+    replace = require('gulp-replace'),
     webpack = require('webpack');
 
 /**
@@ -49,6 +50,15 @@ gulp.task('watch:js', function() {
             ],
             ['lint']);
 });
+
+gulp.task('cachebust', function() {
+    return gulp
+                .src('index.html')
+                .pipe( replace('${timestamp}', Date.now()) )
+                .pipe( gulp.dest( 'dist' ) );
+});
+
+gulp.task('build', ['pack', 'cachebust']);
 
 gulp.task('watch', ['watch:js']);
 gulp.task('default', ['watch']);

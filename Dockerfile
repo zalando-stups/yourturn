@@ -4,7 +4,7 @@ RUN npm install express@4.12.3
 
 # copy resources
 COPY ./client/dist/ /www/dist/
-COPY ./client/index.html /www/
+COPY ./client/dist/index.html /www/
 COPY ./server/yourturn.js /www/
 
 # create env.js as user
