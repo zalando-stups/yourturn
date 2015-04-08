@@ -29,7 +29,7 @@ class SearchActions extends Actions {
      */
     fetchSearchResultsFrom(service, term) {
         return request
-                .get(Services[service].url + Services[service].root)
+                .get(`${Services[service].url}${Services[service].root}`)
                 .query({ search: term })
                 .set('Accept', 'application/json')
                 .exec()
