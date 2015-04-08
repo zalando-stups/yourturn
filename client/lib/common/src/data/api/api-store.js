@@ -23,7 +23,7 @@ class ApiStore extends Store {
     /**
      * Replaces API with `id` with a Pending state.
      *
-     * @param  {string} id
+     * @param  {String} id
      */
     beginFetchApi( id ) {
         this.setState({
@@ -57,12 +57,18 @@ class ApiStore extends Store {
      * Returns the API for application with `id`. Does not care about its state, e.g. whether or not
      * it's Pending or Failed.
      *
-     * @param  {string} id
+     * @param  {String} id
      * @return {object} The API with this id
      */
     getApi(id) {
         let api = _m.get( this.state.apis, id );
         return _m.toJs(api);
+    }
+
+    _empty() {
+        this.setState({
+            apis: _m.hashMap()
+        });
     }
 }
 

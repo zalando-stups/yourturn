@@ -4,6 +4,7 @@ import Sidebar from './sidebar/sidebar';
 import Router from './router';
 import AppRouter from 'application/src/router';
 
+import 'common/asset/scss/base.scss';
 import 'common/asset/scss/grid.scss';
 import 'common/asset/scss/yourturn/yourturn.scss';
 

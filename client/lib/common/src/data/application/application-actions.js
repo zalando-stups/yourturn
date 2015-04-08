@@ -1,11 +1,11 @@
 import {Actions} from 'flummox';
 import request from 'common/src/superagent';
-import BASE_URL from 'KIO_BASE_URL';
+import {Services} from 'common/src/data/services';
 
 class ApplicationActions extends Actions {
     fetchApplications() {
         return request
-                .get(`${BASE_URL}/apps`)
+                .get(`${Services.kio.url}${Services.kio.root}`)
                 .set('Accept', 'application/json')
                 .exec()
                 .then( res => res.body );
@@ -13,7 +13,7 @@ class ApplicationActions extends Actions {
 
     fetchApplication(id) {
         return request
-                .get(`${BASE_URL}/apps/${id}`)
+                .get(`${Services.kio.url}${Services.kio.root}/${id}`)
                 .set('Accept', 'application/json')
                 .exec()
                 .then( res => res.body )

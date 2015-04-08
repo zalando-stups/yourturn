@@ -5,8 +5,12 @@
     margin-right: $padding;
     box-shadow: inset -1px 0 2px 0px $gray;
 
-    @media( min-width: $mobileBreakpoint ) {
+    @media( min-width: $mobile-breakpoint ) {
         height: 100vh;
+    }
+
+    @media( max-width: $mobile-breakpoint) {
+        margin-right: 0;
     }
 
     .sidebar-content {
@@ -17,6 +21,7 @@
 
     .sidebar-item {
         display: block;
+        cursor: pointer;
         padding: $padding-small;
         border-bottom: 1px solid $gray;
 
@@ -26,6 +31,19 @@
 
         + .sidebar-item {
             border-top: 1px solid lighten($gray, 30%);
+        }
+
+        i.fa {
+            @include transition(color);
+            color: $gray-light;
+            float: right;
+            font-size: 2em;
+        }
+
+        &:hover {
+            i.fa {
+                color: darken($gray-light, 20%);
+            }
         }
     }
 }

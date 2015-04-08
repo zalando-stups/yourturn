@@ -1,7 +1,7 @@
 $font-sans: 'Open Sans', sans-serif;
 $font-placeholder: 'BLOKK';
 
-$mobileBreakpoint: 480px;
+$mobile-breakpoint: 960px;
 
 $black: #111;
 $gray-dark: #333;
@@ -54,84 +54,8 @@ $small-line-height: $small-line * $small-lines;
 $small-margin-top: 1 * $small-line;
 $small-margin-bottom: 1 * $small-line;
 
-body {
-    text-rendering: optimizeLegibility;
-    font-family: $font-sans;
-    font-size: $base-font-size;
-    line-height: $base-line-height;
-    font-weight: 300;
-    background: $white;
-    color: $black;
-    margin: 0;
-    padding: 0;
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-    font-weight: 700;
-}
-
-h1 {
-    line-height: $h1-line-height;
-    font-size: $h1-font-size;
-}
-
-h2 {
-    line-height: $h2-line-height;
-    font-size: $h2-font-size;
-}
-
-h3 {
-    line-height: $h3-line-height;
-    font-size: $h3-font-size;
-}
-
-h4 {
-    line-height: $h4-line-height;
-    font-size: $h4-font-size;
-}
-
-small {
-    line-height: $small-line-height;
-    font-size: $small-font-size;
-}
-
-a {
-    // beautiful link underlines
-    color: $black;
-    text-decoration: none;
-    background-image: linear-gradient(  to top,
-                                        rgba(0,0,0,0) 6%,
-                                        currentColor 6%,
-                                        currentColor 10%,
-                                        rgba(0,0,0,0) 10%);
-
-    &:hover {
-        background-image: linear-gradient(  to top,
-                                        rgba(0,0,0,0) 6%,
-                                        currentColor 6%,
-                                        currentColor 14%,
-                                        rgba(0,0,0,0) 14%);
-    }
-}
-
-
-.u-placeholder {
-    .u-placeholder-text {
-        font-family: $font-placeholder;
-        color: $gray-light;
-    }
-}
-
-.u-error {
-    border: 1px solid red;
-    border-radius: 5px;
-    text-align: center;
-    h2 {
-        color: red;
-    }
+@mixin transition($properties...) {
+    transition-property: $properties;
+    transition-duration: .2s;
+    transition-timing-function: ease;
 }

@@ -25,7 +25,7 @@ class BaseView extends View {
             this.store.on('change', this._boundRender);
         }
         if (this.stores) {
-            _.forOwn(this.stores, (val,key) => this.stores[key].on('change', this._boundRender));
+            _.forOwn(this.stores, (val, key) => this.stores[key].on('change', this._boundRender));
         }
     }
 
@@ -34,7 +34,7 @@ class BaseView extends View {
             this.store.off('change', this._boundRender);
         }
         if (this.stores) {
-            _.forOwn(this.stores, (val,key) => this.stores[key].off('change', this._boundRender));
+            _.forOwn(this.stores, (val, key) => this.stores[key].off('change', this._boundRender));
         }
     }
 

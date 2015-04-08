@@ -1,7 +1,12 @@
-<ul>
-    {{#each apps}}
-        <li>
-            <a href="application/{{this.id}}">{{this.name}}</a>
-        </li>
-    {{/each}}
-</ul>
+<h3 class="applicationList-headline">Applications</h3>
+{{#if apps.length}}
+    <ul>
+        {{#each apps}}
+            <li>
+                <a href="application/{{this.id}}">{{this.name}}</a>
+            </li>
+        {{/each}}
+    </ul>
+{{else}}
+    No applications to display.
+{{/if}}

@@ -33,7 +33,7 @@ class ApplicationStore extends Store {
     /**
      * Replaces application with `id` with a Pending state.
      *
-     * @param  {string} id
+     * @param  {String} id
      */
     beginFetchApplication( id ) {
         this.setState({
@@ -55,7 +55,7 @@ class ApplicationStore extends Store {
     /**
      * Adds applications to store. Overwrites applications with the same id.
      *
-     * @param  {array} apps
+     * @param  {Array} apps
      */
     receiveApplications( apps ) {
         let newState = apps.reduce(
@@ -78,23 +78,33 @@ class ApplicationStore extends Store {
     /**
      * Returns all applications that are available (as in not Pending or Failed) RIGHT NAO!
      *
-     * @return {array} Available applications
+     * @return {Array} Available applications
      */
     getApplications() {
         let availableApps = _m.filter( app => !(app instanceof FetchResult), _m.vals( this.state.applications ) );
-        return _m.toJs( availableApps ) || [];
+        let sortedApps = _m.sort( a => _m.get(a, 'name'), availableApps);
+        return _m.toJs( sortedApps ) || [];
     }
 
     /**
      * Returns the application with `id`. Does not care about its state, e.g. whether or not
      * it's Pending or Failed. Returns null if there is no application with this id.
      *
-     * @param  {string} id
+     * @param  {String} id
      * @return {object} The application with this id
      */
     getApplication(id) {
         let app = _m.get( this.state.applications, id );
         return _m.toJs(app);
+    }
+
+    /**
+     * Only for testing!
+     */
+    _empty() {
+        this.setState({
+            applications: _m.hashMap()
+        });
     }
 }
 

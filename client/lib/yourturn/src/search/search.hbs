@@ -1,0 +1,30 @@
+<h3>Search</h3>
+<input
+    autofocus="autofocus"
+    value="{{term}}"
+    type="search"
+    aria-label="Enter your search"
+    placeholder="yourturn" />
+<button
+    class="btn btn-default">Search</button>
+
+{{#if results.length}}
+    <h4 class="searchResult-headline">Results for “{{term}}”</h4>
+    <ol>
+        {{#each results}}
+
+        <li>
+            {{#if this._url}}
+                <a data-external href="{{this._url}}">{{this.name}}</a>
+            {{else}}
+                {{this.name}}
+            {{/if}}
+            <small>({{this._source}})</small>
+        </li>
+
+        {{/each}}
+    </ol>
+{{/if}}
+{{#if noResults}}
+    <h4 class="searchResult-headline">No results for “{{term}}”</h4>
+{{/if}}

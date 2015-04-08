@@ -21,6 +21,7 @@ module.exports = {
         extensions: ['', '.js', '.scss'],
         alias: {
             common: path.resolve(__dirname, './lib/common/'),
+            yourturn: path.resolve(__dirname, './lib/yourturn/'),
             application: path.resolve(__dirname, './lib/application/')
         }
     },

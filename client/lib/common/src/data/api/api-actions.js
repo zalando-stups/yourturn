@@ -1,11 +1,11 @@
 import {Actions} from 'flummox';
 import request from 'common/src/superagent';
-import BASE_URL from 'TWINTIP_BASE_URL';
+import {Services} from 'common/src/data/services';
 
 class ApiActions extends Actions {
     fetchApi(id) {
         return request
-                .get(`${BASE_URL}/apis/${id}`)
+                .get(`${Services.twintip.url}${Services.twintip.root}/${id}`)
                 .set('Accept', 'application/json')
                 .exec()
                 .then( res => res.body )

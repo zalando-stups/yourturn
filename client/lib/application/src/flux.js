@@ -1,10 +1,10 @@
 import {Flummox} from 'flummox';
 
-import ApplicationActions from './data/application-actions';
-import ApplicationStore from './data/application-store';
+import ApplicationActions from 'common/src/data/application/application-actions';
+import ApplicationStore from 'common/src/data/application/application-store';
 
-import ApiActions from './data/api-actions';
-import ApiStore from './data/api-store';
+import ApiActions from 'common/src/data/api/api-actions';
+import ApiStore from 'common/src/data/api/api-store';
 
 class AppFlux extends Flummox {
     constructor() {
