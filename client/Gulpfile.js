@@ -53,7 +53,7 @@ gulp.task('watch:js', function() {
 
 gulp.task('cachebust', function() {
     return gulp
-                .src('index.html')
+                .src('index-prod.html')
                 .pipe( replace('${timestamp}', Date.now()) )
                 .pipe( gulp.dest( 'dist' ) );
 });
