@@ -64,6 +64,12 @@ class ApiStore extends Store {
         let api = _m.get( this.state.apis, id );
         return _m.toJs(api);
     }
+
+    _empty() {
+        this.setState({
+            apis: _m.hashMap()
+        });
+    }
 }
 
 export default ApiStore;
