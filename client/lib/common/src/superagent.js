@@ -1,5 +1,5 @@
 import superagent from 'superagent';
-
+import {ImplicitRequest} from 'common/src/oauth';
 /**
  * Just like superagent.end, but returning a promise.
  *
@@ -30,19 +30,31 @@ superagent.Request.prototype.exec = function() {
         let provider = this._oauthProvider;
         // otherwise we need to
         // - check if we have a token for this provider in our storage
-        if (provider.hasToken()) {
+        if (provider.hasAccessToken()) {
             // there is a token and WE WILL USE IT FOR FUCKS SAKE
             // it might be invalid tho
 
             // set appropriate header
-            this.set('Authorization', `Token ${provider.getToken()}`);
+            this.set('Authorization', `Token ${provider.getAccessToken()}`);
             // execute request
             exec
                 .call(this)
                 .then(resolve)  // token was apparently ok
                 .catch();   //FIXME check the error and update token if necessary
+        } else {
+            // no token. we need to request one
+            let authRequest = new ImplicitRequest({
+                client_id: 'testststst',
+                redirect_uri: 'http://localhost:3000/oauth'
+            });
+            authRequest.attemptedRoute = window.location.pathname;
+            let redirectionUri = provider.encodeInUri(authRequest);
+            // remember this request for later when we get a response
+            provider.remember(authRequest);
+            // request is done via redirect to auth provider
+            reject();
+            window.location.href = redirectionUri;
         }
-
 
     });
 };

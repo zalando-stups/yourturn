@@ -29,7 +29,7 @@ describe('superagent', () => {
             id: 'test',
             authorization_url: 'test'
         });
-        provider.setToken('token');
+        provider.setAccessToken('token');
 
         let req = request
                     .get('testlocation')

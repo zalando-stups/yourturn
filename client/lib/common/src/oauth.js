@@ -1,4 +1,5 @@
 import uuid from 'node-uuid';
+import querystring from 'querystring';
 let {localStorage} = window;
 
 function assertPresent(obj, ...fields) {
@@ -54,18 +55,87 @@ class OAuthProvider {
         this.hosts = config.hosts;
         this.authorization_url = config.authorization_url;
         this.store = config.store || new LocalTokenStorage(this.id);
+
+        if (this.authorization_url.endsWith('/') &&
+            !this.authorization_url.includes('?')) {
+            this.authorization_url += this.authorization_url.substring(0, this.authorization_url.length - 1);
+        }
     }
 
-    hasToken() {
-        return this.store.get('token') !== null;
+    remember(request) {
+        if (request.state){
+            return this.store.set(request.state, JSON.stringify(request));
+        }
+        return false;
     }
 
-    getToken() {
-        return this.store.get('token');
+    forget(state) {
+        return this.store.remove(state);
     }
 
-    setToken(token) {
-        return this.store.set('token', token);
+    isExpected(response) {
+        if (response.state) {
+            return this.store.get(response.state) !== null;
+        }
+        return false;
+    }
+
+    hasAccessToken() {
+        return this.store.get('access_token') !== null;
+    }
+
+    getAccessToken() {
+        return this.store.get('access_token');
+    }
+
+    setAccessToken(token) {
+        return this.store.set('access_token', token);
+    }
+
+    hasRefreshToken() {
+        return this.store.get('refresh_token') !== null;
+    }
+
+    getRefreshToken() {
+        return this.store.get('refresh_token');
+    }
+
+    setRefreshToken(token) {
+        return this.store.set('refresh_token', token);
+    }
+
+    encodeInUri(request) {
+        if (request instanceof OAuthImplicitRequest) {
+            return this.authorization_url + '?' + querystring.stringify(request);
+        }
+    }
+
+    decodeFromUri(response) {
+        let parsed = querystring.parse(response);
+        return parsed.error ? new OAuthErrorResponse(parsed) : new OAuthImplicitResponse(parsed);
+    }
+
+    parse(fragment) {
+        let hash = fragment.startsWith('#') ? fragment.substring(1) : fragment;
+        let response = this.decodeFromUri(hash);
+        if (!this.isExpected(response)) {
+            throw new Error('Unexpected OAuth response', response);
+        }
+        // forget request. seems safe, dunno if replay attacks are possible here in principle
+        let request = JSON.parse(this.store.get(response.state));
+        this.forget(response.state);
+
+        if (response instanceof OAuthErrorResponse) {            
+            return response;
+        }
+        // if we expected this response
+        if (response instanceof OAuthImplicitResponse) {
+            // update the tokens
+            this.setAccessToken(response.access_token);
+            this.setRefreshToken(response.refresh_token);
+            return request;
+        }
+        throw new Error('Expected OAuth2 response is neither error nor success. This should not happen.');
     }
 }
 
@@ -80,54 +150,70 @@ class OAuthProvider {
  */
 class OAuthRequest {
     constructor(config) {
-        assertPresent(config, 'client_id');
+        assertPresent(config, 'response_type');
 
         this.config = config;
+        this.response_type = config.response_type;
+        this.scope = config.scope;
+    }
+}
 
-        this.response_type = 'token';
+class OAuthImplicitRequest extends OAuthRequest {
+    constructor(config) {
+        config.response_type = 'token';
+        super(config);
+        assertPresent(config, 'client_id');
         this.client_id = config.client_id;
         this.redirect_uri = config.redirect_uri;
-        this.scope = config.scope;
         this.state = uuid.v4();
     }
 }
 
-class OAuthRequestFactory {
-    constructor(config) {
-        this.config = config;
-    }
-
-    new(overrides) {
-        let config = _.merge(overrides || {}, this.config);
-        return new OAuthRequest(config);
-    }
-}
-
 /**
- * As per RFC 6749, Section 4.2.2
+ * As per RFC 6749
  * ---
  * - access_token: REQUIRED
  * - token_type: REQUIRED
  * - expires_in: RECOMMENDED
  * - scope: OPTIONAL
- * - state: REQUIRED if it was present before (it was)
+ * - refresh_token: OPTIONAL
  */
 class OAuthResponse {
     constructor(response) {
         this.response = response;
-        assertPresent(response, 'access_token', 'token_type', 'state');
+        assertPresent(response, 'access_token', 'token_type');
 
         this.access_token = response.access_token;
         this.token_type = response.token_type;
-        this.state = response.state;
-        this.expires_in = response.expires_in || false;
+        this.refresh_token = response.refresh_token || null;
+        this.expires_in = response.expires_in ? parseInt(response.expires_in) : null;
         this.scope = response.scope;
+    }
+}
+
+class OAuthImplicitResponse extends OAuthResponse {
+    constructor(response) {
+        super(response);
+        assertPresent(response, 'state');
+        this.state = response.state;
+    }
+}
+
+class OAuthErrorResponse {
+    constructor(response) {
+        assertPresent(response, 'error');
+        this.error = response.error;
+    }
+
+    getMessage() {
+        //TODO RFC 6749 Section 4.2.2.1
+        return 'Some error';
     }
 }
 
 export {
     OAuthRequest as Request,
-    OAuthRequestFactory as RequestFactory,
+    OAuthImplicitRequest as ImplicitRequest,
     OAuthProvider as Provider,
     OAuthResponse as Response,
     LocalTokenStorage as LocalTokenStorage
