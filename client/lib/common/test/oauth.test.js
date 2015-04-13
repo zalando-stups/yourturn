@@ -179,7 +179,7 @@ describe('OAuth2', () => {
             expect(() => new ImplicitRequest()).to.throw;
         });
 
-        it('should have a random state', () => {
+        it('should have a state', () => {
             let req = new ImplicitRequest({
                 client_id: 'client'
             });
@@ -191,6 +191,36 @@ describe('OAuth2', () => {
     describe('LocalTokenStorage', () => {
         it('should bail without prefix', () => {
             expect(() => new LocalTokenStorage()).to.throw;
+        });
+    });
+
+    describe('ImplicitResponse', () => {
+        it('should bail without state', () => {
+            expect(() => new ImplicitResponse({
+                token_type: true,
+                access_token: 'access'
+            })).to.throw;
+        });
+    });
+
+    describe('ErrorResponse', () => {
+        it('should bail without state', () => {
+            expect(() => new ErrorResponse({
+                error: 'denied'
+            })).to.throw;
+        });
+        
+        it('should bail without error', () => {
+            expect(() => new ErrorResponse({
+                state: '123'
+            })).to.throw;
+        });
+
+        it('should work with state and error', () => {
+            expect(() => new ErrorResponse({
+                state: '123',
+                error: 'denied'
+            })).to.not.throw;
         });
     });
 

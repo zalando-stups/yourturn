@@ -210,7 +210,8 @@ class OAuthImplicitResponse extends OAuthResponse {
 
 class OAuthErrorResponse {
     constructor(response) {
-        assertPresent(response, 'error');
+        assertPresent(response, 'error', 'state');
+        //TODO maybe check valid errors
         this.error = response.error;
         this.state = response.state;
     }
