@@ -18,6 +18,8 @@ class OAuthTokenStorage {
 
     get(key) {}
     set(key, val) {}
+    remove(key) {}
+    _empty() {}
 }
 
 class LocalTokenStorage extends OAuthTokenStorage {
@@ -69,8 +71,8 @@ class OAuthProvider {
         return false;
     }
 
-    forget(state) {
-        return this.store.remove(state);
+    forget(request) {
+        return this.store.remove(request.state);
     }
 
     isExpected(response) {
@@ -110,12 +112,18 @@ class OAuthProvider {
         }
     }
 
-    decodeFromUri(response) {
-        let parsed = querystring.parse(response);
+    decodeFromUri(fragment) {
+        let parsed = querystring.parse(fragment);
         return parsed.error ? new OAuthErrorResponse(parsed) : new OAuthImplicitResponse(parsed);
     }
 
     parse(fragment) {
+        if (!fragment) {
+            throw new Error('No URL fragement provided.');
+        }
+        if (typeof fragment !== 'string') {
+            throw new Error('URL fragment is not a string.');
+        }
         let hash = fragment.startsWith('#') ? fragment.substring(1) : fragment;
         let response = this.decodeFromUri(hash);
         if (!this.isExpected(response)) {
@@ -123,8 +131,8 @@ class OAuthProvider {
         }
         // forget request. seems safe, dunno if replay attacks are possible here in principle
         let request = JSON.parse(this.store.get(response.state));
-        this.forget(response.state);
-
+        this.forget(request);
+        response.metadata = request.metadata;
         if (response instanceof OAuthErrorResponse) {            
             return response;
         }
@@ -133,7 +141,8 @@ class OAuthProvider {
             // update the tokens
             this.setAccessToken(response.access_token);
             this.setRefreshToken(response.refresh_token);
-            return request;
+            // return the request so that we know 
+            return response;
         }
         throw new Error('Expected OAuth2 response is neither error nor success. This should not happen.');
     }
@@ -203,6 +212,7 @@ class OAuthErrorResponse {
     constructor(response) {
         assertPresent(response, 'error');
         this.error = response.error;
+        this.state = response.state;
     }
 
     getMessage() {
@@ -216,5 +226,7 @@ export {
     OAuthImplicitRequest as ImplicitRequest,
     OAuthProvider as Provider,
     OAuthResponse as Response,
+    OAuthImplicitResponse as ImplicitResponse,
+    OAuthErrorResponse as ErrorResponse,
     LocalTokenStorage as LocalTokenStorage
 };
