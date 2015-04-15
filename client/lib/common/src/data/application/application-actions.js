@@ -1,22 +1,24 @@
 import {Actions} from 'flummox';
 import request from 'common/src/superagent';
 import {Services} from 'common/src/data/services';
-import Provider from 'common/src/oauth-provider';
+import {Provider, RequestConfig} from 'common/src/oauth-provider';
 
 class ApplicationActions extends Actions {
     fetchApplications() {
         return request
                 .get(`${Services.kio.url}${Services.kio.root}`)
-                .set('Accept', 'application/json')
-                .oauth(Provider)
-                .exec()
+                .accept('json')
+                .oauth(Provider, RequestConfig)
+                .exec(req => {
+                    req.metadata.route = window.location.pathname;
+                })
                 .then( res => res.body );
     }
 
     fetchApplication(id) {
         return request
                 .get(`${Services.kio.url}${Services.kio.root}/${id}`)
-                .set('Accept', 'application/json')
+                .accept('json')
                 .exec()
                 .then( res => res.body )
                 .catch( err => {
