@@ -23,8 +23,8 @@
     "lodash": "3.6.0",
     "mori": "0.3.2",
     "promise.prototype.finally": "1.0.1",
-    "superagent-oauth2-client": "0.0.4",
-    "oauth2-client-js": "0.0.4"
+    "superagent-oauth2-client": "0.0.6",
+    "oauth2-client-js": "0.0.6"
   },
   "devDependencies": {
     "autoprefixer-loader": "1.2.0",
