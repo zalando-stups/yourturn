@@ -1,4 +1,4 @@
-# your turn
+# yourturn
 
 This will be the Zalando Developer Console someday.
 
@@ -6,19 +6,23 @@ This will be the Zalando Developer Console someday.
 
     # install gulp if you haven't already
     npm i -g gulp
-    # install dependencies of your turn
+    # install dependencies of yourturn
     npm i
 
-## Usage
+## Development
 
     # start the webpack dev server
     npm start
     # start automatic linting
     gulp watch
 
-On `localhost:3000` you now have a version of "your turn".
+On `localhost:3000` you now have the frontend of yourturn with hot reloading enabled.
 
-To work correctly it needs some external configuration. This is currently done via global variables defined in `env.js` next to `bundle.js`. If you don't have it there, you need to create it.
+yourturn needs some backends to work properly. To start mocks you have to have [docker](https://www.docker.com/) installed as well as [swagger-mock](https://github.com/zalando/swagger-mock). Then just run
+
+    ./server/start.sh
+
+from the root directory. This will spin up two docker containers running the a mocked [kio](https://github.com/zalando-stups/kio) on port 5000 and [twintip](https://github.com/zalando-stups/twintip) on 5001. Make sure to kill them when there are updated APIs. Also note that with boot2docker you have to replace `localhost` with your `boot2docker ip` in `index.html`.
 
 ## License
 

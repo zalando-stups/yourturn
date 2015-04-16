@@ -1,0 +1,225 @@
+swagger: '2.0'
+
+# basic meta information
+info:
+  title: TWINTIP API
+  version: '0.1'
+  description: TWINTIP is STUPS' API definition crawler.
+
+externalDocs:
+  description: STUPS overview
+  url: http://zalando-stups.github.io/
+
+# technical configuration
+basePath: /
+produces:
+- application/json
+consumes:
+- application/json
+
+paths:
+
+  # applications
+
+  '/apis':
+    get:
+      summary: list crawled APIs
+      description: |
+        Lists all crawled APIs.
+      tags:
+        - APIs
+      operationId: 'org.zalando.stups.twintip.storage.api/read-apis'
+      parameters:
+        - name: search
+          in: query
+          description: "Search term for API filtering"
+          required: false
+          type: string
+      responses:
+        200:
+          description: List of all APIs
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/APISummaryRead'
+            example:
+              - application_id: kio
+                status: SUCCESS
+                name: Kio API
+                version: 0.1
+        default:
+          $ref: '#/responses/Error'
+
+  '/apis/{application_id}':
+    get:
+      summary: read API
+      description: |
+        Returns details about one API
+      tags:
+      - APIs
+      operationId: 'org.zalando.stups.twintip.storage.api/read-api'
+      parameters:
+      - $ref: '#/parameters/ApplicationID'
+      responses:
+        200:
+          description: Details of one API
+          schema:
+            $ref: '#/definitions/APIDetailsRead'
+        404:
+          description: Not found
+        default:
+          $ref: '#/responses/Error'
+
+    put:
+      summary: create or update API
+      description: |
+        Creates or updates an API.
+      tags:
+      - APIs
+      operationId: "org.zalando.stups.twintip.storage.api/create-or-update-api!"
+      security:
+      - oauth2:
+        - cn
+      parameters:
+      - $ref: '#/parameters/ApplicationID'
+      - name: apidef
+        in: body
+        description: API details that will be saved.
+        schema:
+          $ref: '#/definitions/APIWrite'
+        required: true
+      responses:
+        201:
+          description: API was saved.
+        default:
+          $ref: '#/responses/Error'
+
+# definitions
+
+parameters:
+  ApplicationID:
+    name: application_id
+    in: path
+    type: string
+    description: ID of the application
+    required: true
+
+responses:
+  Error:
+    description: An error occured.
+    schema:
+      $ref: '#/definitions/Error'
+
+definitions:
+  APISummaryRead:
+    properties:
+      application_id:
+        type: string
+        description: Unique identifier of the application
+      status:
+        type: string
+        description: The current status of the crawling
+      name:
+        type: string
+        description: Name of the API
+      version:
+        type: string
+        description: Version of the API
+      matched_rank:
+        type: float
+        description: Rank of search result for ordering
+      matched_definition:
+        type: string
+        description: Matched definition fragments
+    required:
+      - application_id
+      - status
+      - name
+      - version
+
+  APIDetailsRead:
+    properties:
+      application_id:
+        type: string
+        description: Unique identifier of the application
+      status:
+        type: string
+        description: The current status of the crawling
+      type:
+        type: string
+        description: Type of API definition
+      name:
+        type: string
+        description: Name of the API
+      version:
+        type: string
+        description: Version of the API
+      url:
+        type: string
+        description: URL pointing to the API definition file
+      ui:
+        type: string
+        description: URL pointing to the UI for browsing the API
+      definition:
+        type: string
+        description: The API definition
+    example:
+      application_id: kio
+      status: FETCHED
+      type: SWAGGER-2.0
+      name: Kio
+      version: "0.1"
+      url: https://kio.example.com/swagger.json
+      ui: https://kio.example.com/ui/
+      definition: |
+        {"swagger": "2.0"
+         "foo": "bar"}
+
+  APIWrite:
+    properties:
+      status:
+        type: string
+        description: The current status of the crawling
+      type:
+        type: string
+        description: Type of API definition
+      name:
+        type: string
+        description: Name of the API
+      version:
+        type: string
+        description: Version of the API
+      url:
+        type: string
+        description: URL pointing to the API definition file
+      ui:
+        type: string
+        description: URL pointing to the UI for browsing the API
+      definition:
+        type: string
+        description: The API definition
+    example:
+      status: FETCHED
+      type: SWAGGER-2.0
+      name: Kio
+      version: "0.1"
+      url: https://kio.example.com/swagger.json
+      ui: https://kio.example.com/ui/
+      definition: |
+        {"swagger": "2.0"
+         "foo": "bar"}
+
+  Error:
+    type: object
+    properties:
+      message:
+        type: string
+    example:
+      message: Internal Server Error
+
+securityDefinitions:
+  oauth2:
+    type: oauth2
+    description: OAuth 2.0 access control.
+    scopes:
+      cn: Grants write access to save APIs.
