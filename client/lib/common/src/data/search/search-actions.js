@@ -32,7 +32,7 @@ class SearchActions extends Actions {
         return request
                 .get(`${Services[service].url}${Services[service].root}`)
                 .query({ search: term })
-                .set('Accept', 'application/json')
+                .accept('json')
                 .exec()
                 .then( res => {
                     let body = res.body;

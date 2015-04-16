@@ -3,7 +3,7 @@ import {Services, constructLocalUrl} from 'common/src/data/services';
 import _m from 'mori';
 
 function sortDesc(a, b) {
-    return  a < b ? 1 :
+    return a < b ? 1 :
                 b < a ? -1 :
                     0;
 }

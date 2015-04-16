@@ -5,7 +5,8 @@
         "classes": true,
         "destructuring": true,
         "modules": true,
-        "templateStrings": true
+        "templateStrings": true,
+        "spread": true
     },
     "rules": {
         "quotes": [2, "single"],
@@ -21,6 +22,8 @@
         // backbone works this way unfortunately
         "no-new": 1,
         // i actually like that
-        "no-underscore-dangle": 0
+        "no-underscore-dangle": 0,
+        // e.g. search endpoints offer `matched_rank`
+        "camelcase": 0
     }
 }

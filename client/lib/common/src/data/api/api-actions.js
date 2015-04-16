@@ -6,7 +6,7 @@ class ApiActions extends Actions {
     fetchApi(id) {
         return request
                 .get(`${Services.twintip.url}${Services.twintip.root}/${id}`)
-                .set('Accept', 'application/json')
+                .accept('json')
                 .exec()
                 .then( res => res.body )
                 .catch( err => {
