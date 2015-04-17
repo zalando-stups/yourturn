@@ -1,13 +1,20 @@
 $font-sans: 'Open Sans', sans-serif;
 $font-placeholder: 'BLOKK';
 
+$weight-light: 300;
+$weight-regular: 400;
+$weight-bold: 700;
+
 $mobile-breakpoint: 960px;
 
 $black: #111;
 $gray-dark: #333;
 $gray: #777;
-$gray-light: #ddd;
+$gray-light: #e1dddb;
 $white: #fff;
+$blue: #2c5585;
+$blue-light: #688dd2;
+$red: darken(red, 10%);
 
 $padding-tiny: .5em;
 $padding-small: 1em;

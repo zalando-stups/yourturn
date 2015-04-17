@@ -1,5 +1,5 @@
 import BaseView from 'common/src/base-view';
-import Template from './app-detail.hbs';
+import Template from './application-detail.hbs';
 import Flux from 'application/src/flux';
 import FetchResult from 'common/src/fetch-result';
 import ErrorTpl from 'common/src/error.hbs';

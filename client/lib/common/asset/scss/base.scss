@@ -2,10 +2,11 @@
 
 body {
     text-rendering: optimizeLegibility;
+    font-weight: $weight-regular;
     font-family: $font-sans;
     font-size: $base-font-size;
     line-height: $base-line-height;
-    font-weight: 300;
+    font-weight: $weight-light;
     background: $white;
     color: $black;
     margin: 0;
@@ -18,7 +19,7 @@ h3,
 h4,
 h5,
 h6 {
-    font-weight: 700;
+    font-weight: $weight-bold;
 }
 
 h1 {
@@ -46,10 +47,12 @@ small {
     font-size: $small-font-size;
 }
 
+textarea,
 input[type="text"],
 input[type="search"] {
     font-size: $base-font-size;
     font-family: $font-sans;
+    font-weight: $weight-light;
     padding: $padding-tiny;
     display: inline-block;
     border: 1px solid $gray-light;
@@ -98,10 +101,38 @@ a {
     border-radius: 2px;
     border: 1px solid transparent;
     border-bottom: 3px solid $gray;
+
+    &:focus {
+        outline: none;
+    }
+    &:active {
+        outline: none;
+    }
     
     &.btn-disabled {
         pointer-events: none;
         color: $gray-light;
+    }
+
+    &.btn-primary {
+        $border-color: $gray;
+
+        background: $gray-light;
+        color: $black;
+        border-color: $border-color;
+
+        &:active {
+            border-bottom: 1px solid transparent;
+            border-top: 2px solid $border-color;
+            box-shadow: 0px 1px 7px -5px inset;
+            &:focus {
+                box-shadow: none;
+            }
+        }
+
+        &:focus {
+            box-shadow: 0px 0px 5px $gray;
+        }
     }
     
     &.btn-default {
@@ -112,7 +143,6 @@ a {
         border-color: $border-color;
 
         &:active {
-            outline: none;
             border-bottom: 1px solid transparent;
             border-top: 2px solid $border-color;
             box-shadow: 0px 1px 7px -5px inset;
@@ -122,12 +152,36 @@ a {
         }
 
         &:focus {
-            outline: none;
             box-shadow: 0px 0px 5px $gray;
         }
     }
 }
 
+.form {
+    .form-group {
+        label {
+            font-weight: $weight-regular;
+            display: block;
+        }
+        textarea,
+        input[type="text"],
+        input[type="search"] {
+            width: 100%;
+
+            &:invalid {
+                border: 1px solid $red;
+                &:focus {
+                    border: 1px solid $red;
+                    box-shadow: 0px 0px 5px $red;
+                }
+            }
+        }
+    }
+
+    + .btn-group {
+        padding-top: $padding-small;
+    }
+}
 
 .u-placeholder {
     .u-placeholder-text {

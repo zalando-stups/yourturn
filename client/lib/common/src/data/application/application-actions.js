@@ -23,6 +23,19 @@ class ApplicationActions extends Actions {
                     throw err;
                 });
     }
+
+    saveApplication(app) {
+        return request
+                .put(`${Services.kio.url}${Services.kio.root}/${app.id}`)
+                .type('json')
+                .accept('json')
+                .exec()
+                .then( res => res.body )
+                .catch( err => {
+                    err.id = app.id;
+                    throw err;
+                });
+    }
 }
 
 export default ApplicationActions;

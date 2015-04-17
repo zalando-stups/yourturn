@@ -6,7 +6,9 @@
     box-shadow: inset -1px 0 2px 0px $gray;
 
     @media( min-width: $mobile-breakpoint ) {
-        height: 100vh;
+        height: 100%;
+        position: fixed;
+        min-width: 300px;
     }
 
     @media( max-width: $mobile-breakpoint) {

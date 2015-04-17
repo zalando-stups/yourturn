@@ -1,0 +1,109 @@
+<h3>Create new application</h3>
+<form class="form" name="createAppForm">
+    <div class="form-group">
+        <label for="active">
+            <input
+                required="required"
+                id="active"
+                name="yourturn_app_active"
+                checked="checked"
+                type="checkbox" /> Active
+        </label>
+    </div>
+    <div class="form-group">
+        <label for="team_id">Team ID</label>
+        <input
+            required="required"
+            autofocus="autofocus"
+            placeholder="stups"
+            id="team_id"
+            name="yourturn_app_team_id"
+            type="text" />
+    </div>
+    <div class="form-group">
+        <label for="app_id">Application ID</label>
+        <input
+            required="required"
+            id="app_id"
+            name="yourturn_app_app_id"
+            placeholder="pierone"
+            type="text" />
+    </div>
+    <div class="form-group">
+        <label for="name">Name</label>
+        <input
+            required="required"
+            id="name"
+            name="yourturn_app_name"
+            placeholder="Pier One"
+            type="text" />
+    </div>
+    <div class="form-group">
+        <label for="subtitle">Subtitle</label>
+        <input
+            required="required"
+            maxlength="140"
+            placeholder="The Docker registry"
+            id="subtitle"
+            name="yourturn_app_subtitle"
+            type="text" />
+    </div>
+    <div class="form-group">
+        <label for="service_url">Service URL</label>
+        <input
+            required="required"
+            placeholder="https://pierone.stups.zalan.do"
+            id="service_url"
+            name="yourturn_app_service_url"
+            type="text" />
+    </div>
+    <div class="form-group">
+        <label for="scm_url">SCM URL</label>
+        <input
+            required="required"
+            placeholder="https://github.com/zalando-stups/pierone"
+            id="scm_url"
+            name="yourturn_app_scm_url"
+            type="text" />
+    </div>
+    <div class="form-group">
+        <label for="documentation_url">Documentation URL</label>
+        <input
+            required="required"
+            placeholder="https://github.com/zalando-stups/pierone/docs"
+            id="documentation_url"
+            name="yourturn_app_documentation_url"
+            type="text" />
+    </div>
+    <div class="form-group">
+        <label for="specification_url">Specification URL</label>
+        <input
+            required="required"
+            placeholder="JIRA"
+            id="specification_url"
+            name="yourturn_app_specification_url"
+            type="text" />
+    </div>
+    <div class="form-group">
+        <label for="description">Description</label>
+        <textarea
+            id="description"
+            name="yourturn_app_description"
+            cols="30"
+            rows="10"></textarea>
+
+    </div>
+    <div class="btn-group">
+    <button
+        type="submit"
+        class="btn btn-primary">
+        <i class="fa fa-save"></i> Create
+    </button>
+    <button
+        type="reset"
+        data-action="reset"
+        class="btn btn-default">
+        <i class="fa fa-eraser"></i> Reset
+    </button>
+</div>
+</form>

@@ -24,11 +24,20 @@ class ApplicationStore extends Store {
             this.beginFetchApplication,
             this.receiveApplication,
             this.failFetchApplication);
+
+        this.registerAsync(
+            appActions.saveApplication,
+            this.beginSaveApplication,
+            this.receiveApplication,
+            this.failSaveApplication);
     }
 
     // intentionally left as noop for now
     beginFetchApplications() {}
     failFetchApplications() {}
+
+    beginSaveApplication() {}
+    failSaveApplication() {}
 
     /**
      * Replaces application with `id` with a Pending state.
