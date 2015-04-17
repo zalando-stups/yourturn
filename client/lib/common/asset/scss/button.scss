@@ -30,15 +30,19 @@
     }
 
     &.btn-primary {
-        $border-color: $blue;
-
-        background: $blue-light;
+        @include transition(background, border-color);
+        background: $orange;
         color: $white;
-        border-color: $border-color;
+        border-color: $orange-dark;
+
+        &:hover {
+            background: $orange-dark;
+            border-color: $orange-darker;
+        }
 
         &:active {
             border-bottom: 1px solid transparent;
-            border-top: 2px solid $border-color;
+            border-top: 2px solid $orange-dark;
             box-shadow: 0px 1px 7px -5px inset;
             &:focus {
                 box-shadow: none;
@@ -51,15 +55,20 @@
     }
     
     &.btn-default {
-        $border-color: $gray;
+        @include transition(background, border-color);
 
         background: $white;
         color: $gray-dark;
-        border-color: $border-color;
+        border-color: $gray;
+
+        &:hover {
+            background: $gray-lighter;
+            border-color: $gray-darker;
+        }
 
         &:active {
             border-bottom: 1px solid transparent;
-            border-top: 2px solid $border-color;
+            border-top: 2px solid $gray;
             box-shadow: 0px 1px 7px -5px inset;
             &:focus {
                 box-shadow: none;
