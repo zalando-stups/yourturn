@@ -34,6 +34,12 @@ gulp.task('pack', ['clean'], function(done) {
         });
 });
 
+gulp.task('copy', function() {
+    return gulp
+            .src('stups_favicon.png')
+            .pipe(gulp.dest('dist'));
+});
+
 // lints the source code using .eslintrc
 gulp.task('lint', function() {
     return gulp
@@ -58,7 +64,7 @@ gulp.task('cachebust', function() {
                 .pipe( gulp.dest( 'dist' ) );
 });
 
-gulp.task('build', ['pack', 'cachebust']);
+gulp.task('build', ['pack', 'cachebust', 'copy']);
 
 gulp.task('watch', ['watch:js']);
 gulp.task('default', ['watch']);
