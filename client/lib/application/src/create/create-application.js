@@ -8,12 +8,21 @@ class CreateApp extends BaseView {
     constructor( props ) {
         this.className = 'createApplication';
         this.events = {
-            'submit form': 'save'
+            'submit form': 'save',
+            'keyup #team_id': 'fillServiceUrl',
+            'keyup #app_id': 'fillServiceUrl'
         }
         super(props);
     }
 
     update() {}
+
+    fillServiceUrl() {
+        let {$el} = this;
+        let team_id = $el.find('#team_id').val();
+        let app_id = $el.find('#app_id').val();
+        $el.find('#service_url').val(`${app_id}.${team_id}.zalan.do`);
+    }
 
     save(e) {
         // prevent the form from actually be submitted

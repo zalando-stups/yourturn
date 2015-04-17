@@ -1,5 +1,9 @@
 @import "variables";
 
+* {
+    box-sizing: border-box;
+}
+
 body {
     text-rendering: optimizeLegibility;
     font-weight: $weight-regular;
@@ -115,10 +119,10 @@ a {
     }
 
     &.btn-primary {
-        $border-color: $gray;
+        $border-color: $blue;
 
-        background: $gray-light;
-        color: $black;
+        background: $blue-light;
+        color: $white;
         border-color: $border-color;
 
         &:active {
@@ -159,6 +163,9 @@ a {
 
 .form {
     .form-group {
+        small {
+            color: $gray;
+        }
         label {
             font-weight: $weight-regular;
             display: block;
@@ -182,6 +189,33 @@ a {
         + .form-group {
             padding-top: $padding-small;
         }
+    }
+}
+
+.input-group {
+    width: 100%;
+    display: flex;
+    .input-addon {
+        user-select: none;
+        padding: $padding-tiny;
+        border: 1px solid $gray-light;
+        color: $gray;
+        border-top-left-radius: 2px;
+        border-bottom-left-radius: 2px;
+        border-top-right-radius: 0px;
+        border-bottom-right-radius: 0px;
+        border-right: 0;
+        font-size: $base-font-size;
+        font-family: $font-sans;
+
+        + input {            
+            border-top-left-radius: 0px;
+            border-bottom-left-radius: 0px;
+        }
+    }
+
+    input {
+        flex: 1;
     }
 }
 

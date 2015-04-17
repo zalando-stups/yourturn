@@ -1,36 +1,42 @@
-<h3>Create new application</h3>
+<h2>Create a new application</h2>
 <form class="form" name="createAppForm">
     <div class="form-group">
         <label for="active">
             <input
-                required="required"
                 id="active"
                 name="yourturn_app_active"
                 checked="checked"
-                type="checkbox" /> Active
+                type="checkbox" /> Active application
         </label>
     </div>
     <div class="form-group">
         <label for="team_id">Team ID</label>
+        <small>The ID of the owning team.</small>
         <input
             required="required"
             autofocus="autofocus"
             placeholder="stups"
+            title="Only characters."
+            pattern="[A-Za-z]+"
             id="team_id"
             name="yourturn_app_team_id"
             type="text" />
     </div>
     <div class="form-group">
         <label for="app_id">Application ID</label>
+        <small>The ID of the application.</small>
         <input
             required="required"
             id="app_id"
             name="yourturn_app_app_id"
+            title="Only characters."
+            pattern="[A-Za-z]+"
             placeholder="pierone"
             type="text" />
     </div>
     <div class="form-group">
         <label for="name">Name</label>
+        <small>The full name of your application.</small>
         <input
             required="required"
             id="name"
@@ -40,6 +46,7 @@
     </div>
     <div class="form-group">
         <label for="subtitle">Subtitle</label>
+        <small>A few words on what it is.</small>
         <input
             required="required"
             maxlength="140"
@@ -50,15 +57,20 @@
     </div>
     <div class="form-group">
         <label for="service_url">Service URL</label>
-        <input
-            required="required"
-            placeholder="https://pierone.stups.zalan.do"
-            id="service_url"
-            name="yourturn_app_service_url"
-            type="text" />
+        <small>Where your application will run.</small>
+        <div class="input-group">
+            <div class="input-addon">https://</div>
+            <input
+                required="required"
+                placeholder="pierone.stups.zalan.do"
+                id="service_url"
+                name="yourturn_app_service_url"
+                type="text" />
+        </div>
     </div>
     <div class="form-group">
         <label for="scm_url">SCM URL</label>
+        <small>Where you manage your source code.</small>
         <input
             required="required"
             placeholder="https://github.com/zalando-stups/pierone"
@@ -68,6 +80,7 @@
     </div>
     <div class="form-group">
         <label for="documentation_url">Documentation URL</label>
+        <small>Where your documentation is.</small>
         <input
             required="required"
             placeholder="https://github.com/zalando-stups/pierone/docs"
@@ -77,15 +90,16 @@
     </div>
     <div class="form-group">
         <label for="specification_url">Specification URL</label>
+        <small>Where you manage your tickets.</small>
         <input
-            required="required"
-            placeholder="JIRA"
+            placeholder="http://techjira.zalando.net/projects/pierone"
             id="specification_url"
             name="yourturn_app_specification_url"
             type="text" />
     </div>
     <div class="form-group">
         <label for="description">Description</label>
+        <small>A more elaborate description than subtitle. You can use <a data-external href="http://www.unexpected-vortices.com/sw/rippledoc/quick-markdown-example.html">Markdown</a>.</small>
         <textarea
             id="description"
             name="yourturn_app_description"
@@ -103,7 +117,7 @@
         type="reset"
         data-action="reset"
         class="btn btn-default">
-        <i class="fa fa-eraser"></i> Reset
+        <i class="fa fa-eraser"></i> Clear
     </button>
 </div>
 </form>
