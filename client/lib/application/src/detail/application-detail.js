@@ -4,6 +4,7 @@ import Flux from 'application/src/flux';
 import FetchResult from 'common/src/fetch-result';
 import ErrorTpl from 'common/src/error.hbs';
 import Placeholder from './placeholder.hbs';
+import Markdown from 'common/src/markdown';
 
 import 'common/asset/scss/application/application.scss';
 
@@ -37,6 +38,9 @@ class AppDetail extends BaseView {
             );
         } else {
             $el.html( Template( data ) );
+            $el
+                .find('.applicationDetail-description')
+                .html(Markdown.render(data.app.description));
         }
         return this;
     }
