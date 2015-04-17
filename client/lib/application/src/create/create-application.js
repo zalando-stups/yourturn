@@ -2,6 +2,7 @@ import BaseView from 'common/src/base-view';
 import Template from './create-application.hbs';
 import Flux from 'application/src/flux';
 import {history} from 'backbone';
+import 'common/asset/scss/application/create-application.scss';
 
 class CreateApp extends BaseView {
     constructor( props ) {
@@ -44,11 +45,15 @@ class CreateApp extends BaseView {
         };
 
         console.debug(app);
-        Flux.getActions('application').saveApplication(app);
-        // redirect
-        // we can't import the router directly because circular dependencies ensue
-        // and window.location is ugly and probably aborts the PUT request from before
-        history.navigate(`application/${app.id}`, { trigger: true });
+        Flux
+        .getActions('application')
+        .saveApplication(app)
+        .then(() => {
+            // redirect
+            // we can't import the router directly because circular dependencies ensue
+            // and window.location is ugly and probably aborts the PUT request from before
+            history.navigate(`application/${app.id}`, { trigger: true });
+        });
     }
 
     render() {

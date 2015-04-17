@@ -29,6 +29,7 @@ class ApplicationActions extends Actions {
                 .put(`${Services.kio.url}${Services.kio.root}/${app.id}`)
                 .type('json')
                 .accept('json')
+                .send(app)
                 .exec()
                 .then( res => res.body )
                 .catch( err => {

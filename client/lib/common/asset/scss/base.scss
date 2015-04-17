@@ -176,10 +176,12 @@ a {
                 }
             }
         }
-    }
 
-    + .btn-group {
-        padding-top: $padding-small;
+
+        + .btn-group,
+        + .form-group {
+            padding-top: $padding-small;
+        }
     }
 }
 
