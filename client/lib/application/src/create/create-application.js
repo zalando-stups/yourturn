@@ -17,6 +17,9 @@ class CreateApp extends BaseView {
 
     update() {}
 
+    /**
+     * Autocompletes the service url using the pattern {app}.{team}.zalan.do
+     */
     fillServiceUrl() {
         let {$el} = this;
         let team_id = $el.find('#team_id').val();
@@ -24,6 +27,9 @@ class CreateApp extends BaseView {
         $el.find('#service_url').val(`${app_id}.${team_id}.zalan.do`);
     }
 
+    /**
+     * Saves the application to kio.
+     */
     save(e) {
         // prevent the form from actually be submitted
         e.preventDefault();

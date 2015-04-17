@@ -1,0 +1,73 @@
+@import "variables";
+.btn {
+    @include transition( color, background, border-color );
+    transition-duration: .05s;  // make it responsive
+    display: inline-block;
+    margin-bottom: 0; // For input.btn
+    text-align: center;
+    vertical-align: middle;
+    touch-action: manipulation;
+    cursor: pointer;
+    background-image: none;
+    white-space: nowrap;
+    user-select: none;
+    padding: $padding-tiny;
+    font-size: $base-font-size;
+    border-radius: 2px;
+    border: 1px solid transparent;
+    border-bottom: 3px solid $gray;
+
+    &:focus {
+        outline: none;
+    }
+    &:active {
+        outline: none;
+    }
+    
+    &.btn-disabled {
+        pointer-events: none;
+        color: $gray-light;
+    }
+
+    &.btn-primary {
+        $border-color: $blue;
+
+        background: $blue-light;
+        color: $white;
+        border-color: $border-color;
+
+        &:active {
+            border-bottom: 1px solid transparent;
+            border-top: 2px solid $border-color;
+            box-shadow: 0px 1px 7px -5px inset;
+            &:focus {
+                box-shadow: none;
+            }
+        }
+
+        &:focus {
+            box-shadow: 0px 0px 5px $gray;
+        }
+    }
+    
+    &.btn-default {
+        $border-color: $gray;
+
+        background: $white;
+        color: $gray-dark;
+        border-color: $border-color;
+
+        &:active {
+            border-bottom: 1px solid transparent;
+            border-top: 2px solid $border-color;
+            box-shadow: 0px 1px 7px -5px inset;
+            &:focus {
+                box-shadow: none;
+            }
+        }
+
+        &:focus {
+            box-shadow: 0px 0px 5px $gray;
+        }
+    }
+}
