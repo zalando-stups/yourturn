@@ -40,7 +40,7 @@ class CreateApp extends BaseView {
             id = $el.find('#app_id').val(),
             name = $el.find('#name').val(),
             subtitle = $el.find('#subtitle').val(),
-            service_url = $el.find('#service_url').val(),
+            service_url = 'https://' + $el.find('#service_url').val(),
             scm_url = $el.find('#scm_url').val(),
             documentation_url = $el.find('#documentation_url').val(),
             specification_url = $el.find('#specification_url').val(),
