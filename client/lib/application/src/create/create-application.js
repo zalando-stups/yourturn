@@ -52,9 +52,9 @@ class CreateApp extends BaseView {
     /**
      * Saves the application to kio.
      */
-    save(e) {
+    save(evt) {
         // prevent the form from actually be submitted
-        e.preventDefault();
+        evt.preventDefault();
         let {$el} = this;
         // gather data from dom
         let active = !!$el.find('#active:checked').length,

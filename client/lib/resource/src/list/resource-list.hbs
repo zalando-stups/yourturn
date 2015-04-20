@@ -1,0 +1,17 @@
+<h2>Resources</h2>
+<div>
+    <a href="/resource/create" class="btn btn-default">
+        <i class="fa fa-plus"></i> Create
+    </a>
+</div>
+{{#if resources.length}}
+    <ul>
+        {{#each resources}}
+            <li>
+                <a href="resource/{{this}}">{{this}}</a>
+            </li>
+        {{/each}}
+    </ul>
+{{else}}
+    No resources to display.
+{{/if}}

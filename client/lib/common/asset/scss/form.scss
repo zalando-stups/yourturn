@@ -1,5 +1,10 @@
 @import "variables";
 
+input[disabled="disabled"],
+label.form-disabled {
+    color: $gray;
+}
+
 textarea,
 input[type="url"],
 input[type="text"],

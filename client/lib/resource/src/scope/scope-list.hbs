@@ -1,0 +1,27 @@
+<h2>“{{resourceId}}” scopes</h2>
+<form name="scopeForm">
+    <div class="form-group">
+        <input
+            id="scope_id"
+            name="yourturn_scope_id"
+            required="required"
+            placeholder="read"
+            type="text" />
+        <button
+            type="submit"
+            class="btn btn-default">
+            <i class="fa fa-plus"></i> Add
+        </button>
+    </div>
+</form>
+{{#if scopes.length}}
+    <ul>
+        {{#each scopes}}
+            <li>
+                <a href="resource/{{resourceId}}/{{this}}">{{this}}</a>
+            </li>
+        {{/each}}
+    </ul>
+{{else}}
+    No scopes to display.
+{{/if}}
