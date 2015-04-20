@@ -1,18 +1,29 @@
 import {Router} from 'backbone';
 import puppeteer from 'common/src/puppeteer';
-import List from './list/app-list';
-import Detail from './detail/app-detail';
+import List from './list/application-list';
+import Detail from './detail/application-detail';
+import Create from './create/create-application';
 import Flux from './flux';
 import 'promise.prototype.finally';
 
 class AppRouter extends Router {
     constructor() {
         this.routes = {
+            'application/create': 'createApplication',
             'application': 'listApplications',
             'application/:id': 'listApplication'
         };
 
         super();
+    }
+
+    createApplication() {
+        Flux
+        .getActions('application')
+        .fetchApplications()
+        .finally(() => {
+            puppeteer.show(new Create(), '#yourturn-view');
+        });
     }
 
     /**

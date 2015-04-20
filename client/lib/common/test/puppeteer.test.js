@@ -1,5 +1,5 @@
+/* globals sinon, expect */
 import puppeteer from 'common/src/puppeteer';
-import $ from 'jquery';
 import {View} from 'backbone';
 
 class MockView extends View {

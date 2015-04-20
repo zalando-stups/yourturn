@@ -1,13 +1,32 @@
 $font-sans: 'Open Sans', sans-serif;
 $font-placeholder: 'BLOKK';
 
-$mobile-breakpoint: 960px;
+$weight-light: 300;
+$weight-regular: 400;
+$weight-bold: 700;
 
-$black: #111;
-$gray-dark: #333;
-$gray: #777;
-$gray-light: #ddd;
-$white: #fff;
+$mobile-breakpoint: 960px;
+$content-width-regular: 760px;
+
+
+$black:                   #111;
+$gray-darker:             #1e1e1e;
+$gray-dark:               #323232;
+$gray:                    #707070;
+$gray-light:              #8f8f8f;
+$gray-lighter:            #d7d7d7;
+$white:                   #fff;
+$blue:                    #2c5585;
+$blue-light:              #688dd2;
+// orange
+$orange-lightest:         #FFEBD5;
+$orange-lighter:          #f9c79c;
+$orange-light:            #F5A360;
+$orange:                  #f08532;
+$orange-dark:             #ce5909;
+$orange-darker:           #a43900;
+$red:                     darken(red, 10%);
+$green:                   green;
 
 $padding-tiny: .5em;
 $padding-small: 1em;

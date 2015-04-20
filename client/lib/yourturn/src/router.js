@@ -24,6 +24,8 @@ class YourturnRouter extends Router {
         } catch(err) {
             // this means we can't decide if the response is an error or success
             // or it was not expected. in either case we should do something.
+            //
+            // this is left empty intentionally for now
         }
         if (response) {
             //TODO some kind of error hint might be cool

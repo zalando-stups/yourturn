@@ -1,3 +1,4 @@
+/* globals expect */
 import {Done, Failed, Pending} from 'common/src/fetch-result';
 
 describe('The FetchResult', () => {

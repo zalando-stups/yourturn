@@ -4,6 +4,7 @@ var gulp = require('gulp'),
     args = require('minimist')(process.argv.slice(2)),
     del = require( 'del' ),
     replace = require('gulp-replace'),
+    rename = require('gulp-rename'),
     webpack = require('webpack');
 
 /**
@@ -31,7 +32,14 @@ gulp.task('pack', ['clean'], function(done) {
                 throw new gutil.PluginError('webpack', err);
             }
             gutil.log('[webpack]', data.toString());
+            done();
         });
+});
+
+gulp.task('copy', function() {
+    return gulp
+            .src('stups_favicon.png')
+            .pipe(gulp.dest('dist'));
 });
 
 // lints the source code using .eslintrc
@@ -55,10 +63,11 @@ gulp.task('cachebust', function() {
     return gulp
                 .src('index-prod.html')
                 .pipe( replace('${timestamp}', Date.now()) )
+                .pipe( rename('index.html') )
                 .pipe( gulp.dest( 'dist' ) );
 });
 
-gulp.task('build', ['pack', 'cachebust']);
+gulp.task('build', ['pack', 'cachebust', 'copy']);
 
 gulp.task('watch', ['watch:js']);
 gulp.task('default', ['watch']);

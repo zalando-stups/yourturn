@@ -1,0 +1,89 @@
+@import "variables";
+
+textarea,
+input[type="url"],
+input[type="text"],
+input[type="search"] {
+    font-size: $base-font-size;
+    font-family: $font-sans;
+    font-weight: $weight-light;
+    padding: $padding-tiny;
+    display: inline-block;
+    border: 1px solid $gray-light;
+    border-radius: 2px;
+    vertical-align: middle;
+    &:focus {
+        border: 1px solid $gray;
+        outline: none;
+        box-shadow: 0px 0px 5px $gray;
+    }
+}
+
+.form {
+    .form-group {
+        small {
+            color: $gray;
+        }
+        label {
+            font-weight: $weight-regular;
+            display: block;
+        }
+        textarea,
+        input[type="url"],
+        input[type="text"],
+        input[type="search"] {
+            width: 100%;
+
+            &:invalid,
+            &.invalid {
+                border: 1px solid $red;
+                &:focus {
+                    border: 1px solid $red;
+                    box-shadow: 0px 0px 5px $red;
+                }
+            }
+
+            &:valid,
+            &.valid {
+                border: 1px solid $green;
+                &:focus {
+                    border: 1px solid $green;
+                    box-shadow: 0px 0px 5px $green;
+                }
+            }
+        }
+
+
+        + .btn-group,
+        + .form-group {
+            padding-top: $padding-small;
+        }
+    }
+
+    .input-group {
+        width: 100%;
+        display: flex;
+        .input-addon {
+            user-select: none;
+            padding: $padding-tiny;
+            border: 1px solid $gray-light;
+            color: $gray;
+            border-top-left-radius: 2px;
+            border-bottom-left-radius: 2px;
+            border-top-right-radius: 0px;
+            border-bottom-right-radius: 0px;
+            border-right: 0;
+            font-size: $base-font-size;
+            font-family: $font-sans;
+
+            + input {            
+                border-top-left-radius: 0px;
+                border-bottom-left-radius: 0px;
+            }
+        }
+
+        input {
+            flex: 1;
+        }
+    }
+}

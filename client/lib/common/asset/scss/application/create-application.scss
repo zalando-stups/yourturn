@@ -1,0 +1,14 @@
+@import "../variables";
+
+.createApplication {
+    max-width: $content-width-regular;
+
+    .createApplication-applicationId {
+        .input-addon {
+            flex: 0 0 2em;
+        }
+        .is-available {
+            display: none;
+        }
+    }
+}

@@ -55,6 +55,6 @@ export {
     PendingResult as Pending,
     FailedResult as Failed,
     DoneResult as Done
-}
+};
 
 export default FetchResult;
