@@ -2,6 +2,7 @@ import BaseView from 'common/src/base-view';
 import Template from './create-application.hbs';
 import Flux from 'application/src/flux';
 import {history} from 'backbone';
+import {constructLocalUrl} from 'common/src/data/services';
 import 'common/asset/scss/application/create-application.scss';
 
 class CreateApp extends BaseView {
@@ -10,12 +11,33 @@ class CreateApp extends BaseView {
         this.events = {
             'submit form': 'save',
             'keyup #team_id': 'fillServiceUrl',
-            'keyup #app_id': 'fillServiceUrl'
-        }
+            'keyup #app_id': 'handleAppId'
+        };
         super(props);
     }
 
-    update() {}
+    handleAppId() {
+        this.checkAppIdAvailability();
+        this.fillServiceUrl();
+    }
+
+    /**
+     * Checks the application store if an app with this ID
+     * already exists. Shows or hides according input-addon.
+     */
+    checkAppIdAvailability() {
+        let $appInput = this.$el.find('#app_id');
+        let app_id = $appInput.val();
+        if (Flux.getStore('application').getApplication(app_id)) {
+            $appInput[0].setCustomValidity('App ID already exists.');
+            this.$el.find('.is-taken').show();
+            this.$el.find('.is-available').hide();
+        } else {
+            $appInput[0].setCustomValidity('');
+            this.$el.find('.is-taken').hide();
+            this.$el.find('.is-available').show();
+        }
+    }
 
     /**
      * Autocompletes the service url using the pattern {app}.{team}.zalan.do
@@ -59,7 +81,6 @@ class CreateApp extends BaseView {
             description: description
         };
 
-        console.debug(app);
         Flux
         .getActions('application')
         .saveApplication(app)
@@ -67,7 +88,7 @@ class CreateApp extends BaseView {
             // redirect
             // we can't import the router directly because circular dependencies ensue
             // and window.location is ugly and probably aborts the PUT request from before
-            history.navigate(`application/${app.id}`, { trigger: true });
+            history.navigate(constructLocalUrl('kio', app.id), { trigger: true });
         });
     }
 

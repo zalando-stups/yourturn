@@ -18,8 +18,12 @@ class AppRouter extends Router {
     }
 
     createApplication() {
-        console.log('new app');
-        puppeteer.show(new Create(), '#yourturn-view');
+        Flux
+        .getActions('application')
+        .fetchApplications()
+        .finally(() => {
+            puppeteer.show(new Create(), '#yourturn-view');
+        });
     }
 
     /**

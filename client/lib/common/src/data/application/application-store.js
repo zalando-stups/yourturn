@@ -104,7 +104,7 @@ class ApplicationStore extends Store {
      */
     getApplication(id) {
         let app = _m.get( this.state.applications, id );
-        return _m.toJs(app);
+        return app ? _m.toJs(app) : false;
     }
 
     /**

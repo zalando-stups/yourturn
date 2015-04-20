@@ -25,14 +25,22 @@
     <div class="form-group">
         <label for="app_id">Application ID</label>
         <small>The ID of the application.</small>
-        <input
-            required="required"
-            id="app_id"
-            name="yourturn_app_app_id"
-            title="Only characters."
-            pattern="[A-Za-z]+"
-            placeholder="pierone"
-            type="text" />
+        <div class="input-group">
+            <div class="input-addon">
+                <i  title="App ID is available."
+                    class="fa fa-check is-available"></i>
+                <i  title="App ID is already taken."
+                    class="fa fa-close is-taken"></i>
+            </div>
+            <input
+                required="required"
+                id="app_id"
+                name="yourturn_app_app_id"
+                title="Only characters."
+                pattern="[A-Za-z]+"
+                placeholder="pierone"
+                type="text" />
+        </div>
     </div>
     <div class="form-group">
         <label for="name">Name</label>
@@ -65,7 +73,7 @@
                 placeholder="pierone.stups.zalan.do"
                 id="service_url"
                 name="yourturn_app_service_url"
-                type="text" />
+                type="url" />
         </div>
     </div>
     <div class="form-group">
@@ -76,7 +84,7 @@
             placeholder="https://github.com/zalando-stups/pierone"
             id="scm_url"
             name="yourturn_app_scm_url"
-            type="text" />
+            type="url" />
     </div>
     <div class="form-group">
         <label for="documentation_url">Documentation URL</label>
@@ -86,7 +94,7 @@
             placeholder="https://github.com/zalando-stups/pierone/docs"
             id="documentation_url"
             name="yourturn_app_documentation_url"
-            type="text" />
+            type="url" />
     </div>
     <div class="form-group">
         <label for="specification_url">Specification URL</label>
@@ -95,7 +103,7 @@
             placeholder="http://techjira.zalando.net/projects/pierone"
             id="specification_url"
             name="yourturn_app_specification_url"
-            type="text" />
+            type="url" />
     </div>
     <div class="form-group">
         <label for="description">Description</label>

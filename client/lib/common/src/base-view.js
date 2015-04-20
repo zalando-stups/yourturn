@@ -29,6 +29,8 @@ class BaseView extends View {
         }
     }
 
+    update() {}
+
     unbind() {
         if (this.store) {
             this.store.off('change', this._boundRender);

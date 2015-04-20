@@ -1,7 +1,6 @@
 import {Store} from 'flummox';
 import _m from 'mori';
 import {Pending, Failed} from 'common/src/fetch-result';
-import FetchResult from 'common/src/fetch-result';
 
 class ApiStore extends Store {
     constructor(flux) {

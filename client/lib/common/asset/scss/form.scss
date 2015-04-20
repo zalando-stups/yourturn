@@ -1,5 +1,24 @@
 @import "variables";
 
+textarea,
+input[type="url"],
+input[type="text"],
+input[type="search"] {
+    font-size: $base-font-size;
+    font-family: $font-sans;
+    font-weight: $weight-light;
+    padding: $padding-tiny;
+    display: inline-block;
+    border: 1px solid $gray-light;
+    border-radius: 2px;
+    vertical-align: middle;
+    &:focus {
+        border: 1px solid $gray;
+        outline: none;
+        box-shadow: 0px 0px 5px $gray;
+    }
+}
+
 .form {
     .form-group {
         small {
@@ -10,15 +29,26 @@
             display: block;
         }
         textarea,
+        input[type="url"],
         input[type="text"],
         input[type="search"] {
             width: 100%;
 
-            &:invalid {
+            &:invalid,
+            &.invalid {
                 border: 1px solid $red;
                 &:focus {
                     border: 1px solid $red;
                     box-shadow: 0px 0px 5px $red;
+                }
+            }
+
+            &:valid,
+            &.valid {
+                border: 1px solid $green;
+                &:focus {
+                    border: 1px solid $green;
+                    box-shadow: 0px 0px 5px $green;
                 }
             }
         }

@@ -1,3 +1,4 @@
+/* globals expect */
 window.YTENV_TWINTIP_BASE_URL = 'localhost';
 window.YTENV_KIO_BASE_URL = 'localhost';
 

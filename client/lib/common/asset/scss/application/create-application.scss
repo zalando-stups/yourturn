@@ -2,4 +2,8 @@
 
 .createApplication {
     max-width: $content-width-regular;
+
+    .is-available {
+        display: none;
+    }
 }

@@ -53,24 +53,6 @@ small {
     font-size: $small-font-size;
 }
 
-textarea,
-input[type="text"],
-input[type="search"] {
-    font-size: $base-font-size;
-    font-family: $font-sans;
-    font-weight: $weight-light;
-    padding: $padding-tiny;
-    display: inline-block;
-    border: 1px solid $gray-light;
-    border-radius: 2px;
-    vertical-align: middle;
-    &:focus {
-        border: 1px solid $gray;
-        outline: none;
-        box-shadow: 0px 0px 5px $gray;
-    }
-}
-
 a {
     // beautiful link underlines
     color: $black;
@@ -88,6 +70,10 @@ a {
                                         currentColor 14%,
                                         rgba(0,0,0,0) 14%);
     }
+}
+
+.u-text-center {
+    text-align: center;
 }
 
 .u-placeholder {
