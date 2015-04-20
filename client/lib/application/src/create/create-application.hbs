@@ -22,7 +22,7 @@
             name="yourturn_app_team_id"
             type="text" />
     </div>
-    <div class="form-group">
+    <div class="form-group createApplication-applicationId">
         <label for="app_id">Application ID</label>
         <small>The ID of the application.</small>
         <div class="input-group">
@@ -36,8 +36,8 @@
                 required="required"
                 id="app_id"
                 name="yourturn_app_app_id"
-                title="Only characters."
-                pattern="[A-Za-z]+"
+                title="Starts with character, may end with digit, may have dashes in between."
+                pattern="[A-Za-z][A-Za-z0-9\-]*[A-Za-z0-9]"
                 placeholder="pierone"
                 type="text" />
         </div>
@@ -56,7 +56,6 @@
         <label for="subtitle">Subtitle</label>
         <small>A few words on what it is.</small>
         <input
-            required="required"
             maxlength="140"
             placeholder="The Docker registry"
             id="subtitle"
@@ -70,18 +69,19 @@
             <div class="input-addon">https://</div>
             <input
                 required="required"
+                title="Only characters, numbers or dashes with at least one dot in between."
+                pattern="([A-Za-z][A-Za-z0-9\-]*[A-Za-z0-9])+(\.([A-Za-z][A-Za-z0-9\-]*[A-Za-z0-9]))*\.\w+"
                 placeholder="pierone.stups.zalan.do"
                 id="service_url"
                 name="yourturn_app_service_url"
-                type="url" />
+                type="text" />
         </div>
     </div>
     <div class="form-group">
         <label for="scm_url">SCM URL</label>
         <small>Where you manage your source code.</small>
         <input
-            required="required"
-            placeholder="https://github.com/zalando-stups/pierone"
+            placeholder="https://github.com/zalando-stups/pierone.git"
             id="scm_url"
             name="yourturn_app_scm_url"
             type="url" />
@@ -90,7 +90,6 @@
         <label for="documentation_url">Documentation URL</label>
         <small>Where your documentation is.</small>
         <input
-            required="required"
             placeholder="https://github.com/zalando-stups/pierone/docs"
             id="documentation_url"
             name="yourturn_app_documentation_url"
@@ -100,7 +99,7 @@
         <label for="specification_url">Specification URL</label>
         <small>Where you manage your tickets.</small>
         <input
-            placeholder="http://techjira.zalando.net/projects/pierone"
+            placeholder="https://github.com/zalando-stups/pierone/issues"
             id="specification_url"
             name="yourturn_app_specification_url"
             type="url" />

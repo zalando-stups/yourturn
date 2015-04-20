@@ -3,7 +3,12 @@
 .createApplication {
     max-width: $content-width-regular;
 
-    .is-available {
-        display: none;
+    .createApplication-applicationId {
+        .input-addon {
+            flex: 0 0 2em;
+        }
+        .is-available {
+            display: none;
+        }
     }
 }
