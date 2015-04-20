@@ -89,6 +89,10 @@ class CreateApp extends BaseView {
             // we can't import the router directly because circular dependencies ensue
             // and window.location is ugly and probably aborts the PUT request from before
             history.navigate(constructLocalUrl('kio', app.id), { trigger: true });
+        })
+        .catch(e => {
+            // FIXME with notification
+            console.error(e);
         });
     }
 
