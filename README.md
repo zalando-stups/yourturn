@@ -20,9 +20,9 @@ On `localhost:3000` you now have the frontend of yourturn with hot reloading ena
 
 yourturn needs some backends to work properly. To start mocks you have to have [docker](https://www.docker.com/) installed as well as [swagger-mock](https://github.com/zalando/swagger-mock). Then just run
 
-    ./server/start.sh
+    ./server/start-docker.sh
 
-from the root directory. This will spin up two docker containers running the a mocked [kio](https://github.com/zalando-stups/kio) on port 5000 and [twintip](https://github.com/zalando-stups/twintip) on 5001. Make sure to kill them when there are updated APIs. Also note that with boot2docker you have to replace `localhost` with your `boot2docker ip` in `index.html`.
+from the root directory. This will spin up two docker containers running a mocked [kio](https://github.com/zalando-stups/kio) on port 5000 and [twintip](https://github.com/zalando-stups/twintip) on 5001. Make sure to kill them when there are updated APIs. Also note that with boot2docker you have to replace `localhost` with your `boot2docker ip` in `index.html`.
 
 ## License
 
