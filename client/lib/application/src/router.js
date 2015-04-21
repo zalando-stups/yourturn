@@ -15,7 +15,7 @@ class AppRouter extends Router {
             'application/create': 'createApplication',
             'application': 'listApplications',
             'application/detail/:id': 'listApplication',
-            'application/edit/:id': 'editApplication'
+            'application/edit/:id': 'editApplication',
             'application/detail/:id/version': 'listApplicationVersions'
         };
 

@@ -35,8 +35,9 @@ class CreateApp extends BaseView {
                 edit: this.props.edit,
                 app: this.store.getApplication(this.props.applicationId)
             };
-            if (!(this.data.app instanceof FetchResult)) {
-                this.data.app.service_url = this.data.app.service_url.substring('https://'.length);
+            let {app} = this.data;
+            if (!(app instanceof FetchResult) && app.service_url) {
+                app.service_url = app.service_url.substring('https://'.length);
             }
         }
     }

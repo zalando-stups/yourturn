@@ -13,10 +13,18 @@
                     name="yourturn_app_active"
                     type="checkbox" /> Active application
             {{else}}
-                <input
-                    id="active"
-                    name="yourturn_app_active"
-                    type="checkbox" /> Active application
+                {{#if edit}}
+                    <input
+                        id="active"
+                        name="yourturn_app_active"
+                        type="checkbox" /> Active application
+                {{else}}
+                    <input
+                        id="active"
+                        checked="checked"
+                        name="yourturn_app_active"
+                        type="checkbox" /> Active application
+                {{/if}}
             {{/if}}
         </label>
     </div>
@@ -155,12 +163,6 @@
         type="submit"
         class="btn btn-primary">
         <i class="fa fa-save"></i> Save
-    </button>
-    <button
-        type="reset"
-        data-action="reset"
-        class="btn btn-default">
-        <i class="fa fa-eraser"></i> Clear
     </button>
 </div>
 </form>
