@@ -5,7 +5,7 @@ import Flux from 'application/src/flux';
 class AppVersion extends BaseView {
     constructor( props ) {
         this.stores = {
-            application: Flux.getStore('application'),
+            application: Flux.getStore('application')
         };
         this.className = 'applicationVersion';
         super(props);
@@ -14,7 +14,8 @@ class AppVersion extends BaseView {
     update() {
         let {applicationId} = this.props;
         this.data = {
-            versions: this.stores.application.getApplicationVersions( applicationId ),
+            app: applicationId,
+            versions: this.stores.application.getApplicationVersions( applicationId )
         };
     }
 
