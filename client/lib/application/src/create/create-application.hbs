@@ -38,22 +38,38 @@
         <label for="app_id">Application ID</label>
         <small>The ID of the application.</small>
         <div class="input-group">
-            <div class="input-addon">
-                <i  title="App ID is available."
-                    class="fa fa-check is-available"></i>
-                <i  title="App ID is already taken."
-                    class="fa fa-close is-taken"></i>
-            </div>
-            <input
-                required="required"
-                id="app_id"
-                disabled={{app.id}}
-                value="{{app.id}}"
-                name="yourturn_app_app_id"
-                title="Starts with character, may end with digit, may have dashes in between."
-                pattern="[A-Za-z][A-Za-z0-9\-]*[A-Za-z0-9]"
-                placeholder="pierone"
-                type="text" />
+            {{#if edit}}
+                <div class="input-addon">
+                    <i  title="App ID is available."
+                        class="fa fa-check is-available"></i>
+                </div>
+
+                <input
+                    required="required"
+                    id="app_id"
+                    disabled="disabled"
+                    value="{{app.id}}"
+                    name="yourturn_app_app_id"
+                    title="Starts with character, may end with digit, may have dashes in between."
+                    pattern="[A-Za-z][A-Za-z0-9\-]*[A-Za-z0-9]"
+                    placeholder="pierone"
+                    type="text" />
+            {{else}}
+                <div class="input-addon">
+                    <i  title="App ID is available."
+                        class="fa fa-check is-available"></i>
+                    <i  title="App ID is already taken."
+                        class="fa fa-close is-taken"></i>
+                </div>
+                <input
+                    required="required"
+                    id="app_id"
+                    name="yourturn_app_app_id"
+                    title="Starts with character, may end with digit, may have dashes in between."
+                    pattern="[A-Za-z][A-Za-z0-9\-]*[A-Za-z0-9]"
+                    placeholder="pierone"
+                    type="text" />
+            {{/if}}
         </div>
     </div>
     <div class="form-group">
@@ -62,7 +78,7 @@
         <input
             required="required"
             id="name"
-            value={{app.name}}
+            value="{{app.name}}"
             name="yourturn_app_name"
             placeholder="Pier One"
             type="text" />
@@ -74,7 +90,7 @@
             maxlength="140"
             placeholder="The Docker registry"
             id="subtitle"
-            value={{app.subtitle}}
+            value="{{app.subtitle}}"
             name="yourturn_app_subtitle"
             type="text" />
     </div>
@@ -89,7 +105,7 @@
                 pattern="([A-Za-z][A-Za-z0-9\-]*[A-Za-z0-9])+(\.([A-Za-z][A-Za-z0-9\-]*[A-Za-z0-9]))*\.\w+"
                 placeholder="pierone.stups.zalan.do"
                 id="service_url"
-                value={{app.service_url}}
+                value="{{app.service_url}}"
                 name="yourturn_app_service_url"
                 type="text" />
         </div>
@@ -100,7 +116,7 @@
         <input
             placeholder="https://github.com/zalando-stups/pierone.git"
             id="scm_url"
-            value={{app.scm_url}}
+            value="{{app.scm_url}}"
             name="yourturn_app_scm_url"
             type="url" />
     </div>
@@ -110,7 +126,7 @@
         <input
             placeholder="https://github.com/zalando-stups/pierone/docs"
             id="documentation_url"
-            value={{app.documentation_url}}
+            value="{{app.documentation_url}}"
             name="yourturn_app_documentation_url"
             type="url" />
     </div>

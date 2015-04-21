@@ -119,6 +119,8 @@ class CreateApp extends BaseView {
     render() {
         this.$el.html(Template(this.data));
         if (this.props.edit) {
+            this.$el.find('.is-taken').hide();
+        } else {
             this.checkAppIdAvailability();
         }
     }
