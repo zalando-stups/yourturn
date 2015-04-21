@@ -11,7 +11,7 @@ class AppRouter extends Router {
         this.routes = {
             'application/create': 'createApplication',
             'application': 'listApplications',
-            'application/:id': 'listApplication'
+            'application/detail/:id': 'listApplication'
         };
 
         super();
