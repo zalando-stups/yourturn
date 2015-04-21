@@ -1,10 +1,10 @@
 import BaseView from 'common/src/base-view';
-import Template from './create-application.hbs';
+import Template from './application-form.hbs';
 import Flux from 'application/src/flux';
 import {history} from 'backbone';
 import {constructLocalUrl} from 'common/src/data/services';
 import FetchResult from 'common/src/fetch-result';
-import 'common/asset/scss/application/create-application.scss';
+import 'common/asset/scss/application/application-form.scss';
 
 class CreateApp extends BaseView {
     constructor(props) {
