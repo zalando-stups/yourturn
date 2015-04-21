@@ -3,6 +3,7 @@ import puppeteer from 'common/src/puppeteer';
 import List from './list/application-list';
 import Detail from './detail/application-detail';
 import Create from './create/create-application';
+import VersionList from './version-list/application-version';
 import Flux from './flux';
 import 'promise.prototype.finally';
 
@@ -11,7 +12,8 @@ class AppRouter extends Router {
         this.routes = {
             'application/create': 'createApplication',
             'application': 'listApplications',
-            'application/:id': 'listApplication'
+            'application/:id': 'listApplication',
+            'application/:id/version': 'listApplicationVersions'
         };
 
         super();
@@ -54,6 +56,20 @@ class AppRouter extends Router {
         .getActions('application')
         .fetchApplications()
         .finally( () => puppeteer.show( new List(), '#yourturn-view' ) );
+    }
+
+    /**
+     * Fetches the application with `id`. Does not wait to finish and
+     * instructs the Puppeteer to show the VersionView.
+     *
+     * @param  {String} id
+     */
+    listApplicationVersions(id) {
+        Flux.getActions('application').fetchApplicationVersions(id);
+
+        puppeteer.show( new VersionList({
+            applicationId: id
+        }), '#yourturn-view' );
     }
 }
 

@@ -37,6 +37,18 @@ class ApplicationActions extends Actions {
                     throw err;
                 });
     }
+
+    fetchApplicationVersions(id) {
+        return request
+                .get(`${Services.kio.url}${Services.kio.root}/${id}/versions`)
+                .accept('json')
+                .exec()
+                .then( res => res.body )
+                .catch( err => {
+                    err.id = id;
+                    throw err;
+                });
+    }
 }
 
 export default ApplicationActions;

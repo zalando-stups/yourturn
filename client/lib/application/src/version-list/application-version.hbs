@@ -1,0 +1,13 @@
+<h2>{{app.name}} Versions</h2>
+
+{{#if versions.length}}
+    <ul>
+        {{#each versions}}
+            <li>
+                <a href="version/{{this.id}}">{{this.id}}</a>
+            </li>
+        {{/each}}
+    </ul>
+{{else}}
+    No versions to display.
+{{/if}}
