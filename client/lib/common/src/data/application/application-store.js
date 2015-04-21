@@ -10,7 +10,8 @@ class ApplicationStore extends Store {
         const appActions = flux.getActions('application');
 
         this.state = {
-            applications: _m.hashMap()
+            applications: _m.hashMap(),
+            versions: _m.hashMap()
         };
 
         this.registerAsync(
@@ -30,6 +31,13 @@ class ApplicationStore extends Store {
             this.beginSaveApplication,
             this.receiveApplication,
             this.failSaveApplication);
+
+        this.registerAsync(
+            appActions.fetchApplicationVersions,
+            this.beginFetchApplicationVersions,
+            this.receiveApplicationVersions,
+            this.failFetchApplications);
+
     }
 
     // intentionally left as noop for now
@@ -38,6 +46,9 @@ class ApplicationStore extends Store {
 
     beginSaveApplication() {}
     failSaveApplication() {}
+
+    beginFetchApplicationVersions() {}
+    failFetchApplicationVersions() {}
 
     /**
      * Replaces application with `id` with a Pending state.
@@ -76,6 +87,27 @@ class ApplicationStore extends Store {
     }
 
     /**
+     * Adds application versions to store.
+     *
+     * @param  {Array} apps
+     */
+    receiveApplicationVersions( versions ) {
+        let newState = versions.reduce(
+                            (map, ver) => {
+                                let app = _m.get(map, ver.application_id);
+                                if (!app) {
+                                    app = _m.hashMap();
+                                }
+                                app = _m.assoc(app, ver.id, _m.toClj(ver));
+                                return _m.assoc(map, ver.application_id, app);
+                            },
+                            this.state.versions);
+        this.setState({
+            versions: newState
+        });
+    }
+
+    /**
      * Adds single application to store. Just calls `receiveApplications` underneath.
      *
      * @param  {object} app
@@ -106,6 +138,18 @@ class ApplicationStore extends Store {
         let app = _m.get( this.state.applications, id );
         return app ? _m.toJs(app) : false;
     }
+
+    /**
+     * Returns all versions for a given application
+     *
+     * @return {Array} Available applications
+     */
+    getApplicationVersions(id) {
+        let versions = _m.vals(_m.get(this.state.versions, id)),
+            sorted = _m.sort(v => _m.get(v, 'id'), versions);
+        return _m.toJs( sorted ) || [];
+    }
+
 
     /**
      * Only for testing!
