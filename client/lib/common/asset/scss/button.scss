@@ -24,6 +24,7 @@
     }
     &:active {
         outline: none;
+        border-bottom: 3px solid transparent;
     }
     
     &.btn-disabled {
@@ -43,7 +44,7 @@
         }
 
         &:active {
-            border-bottom: 1px solid transparent;
+            border-bottom: 3px solid transparent;
             border-top: 2px solid $orange-dark;
             box-shadow: 0px 1px 7px -5px inset;
             &:focus {
@@ -69,7 +70,7 @@
         }
 
         &:active {
-            border-bottom: 1px solid transparent;
+            border-bottom: 3px solid transparent;
             border-top: 2px solid $gray;
             box-shadow: 0px 1px 7px -5px inset;
             &:focus {

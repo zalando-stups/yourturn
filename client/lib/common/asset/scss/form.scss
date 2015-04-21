@@ -1,6 +1,12 @@
 @import "variables";
 
+input[disabled="disabled"],
+label.form-disabled {
+    color: $gray;
+}
+
 textarea,
+select,
 input[type="url"],
 input[type="text"],
 input[type="search"] {
@@ -51,6 +57,10 @@ input[type="search"] {
                     box-shadow: 0px 0px 5px $green;
                 }
             }
+        }
+
+        select {
+            display: block;
         }
 
 

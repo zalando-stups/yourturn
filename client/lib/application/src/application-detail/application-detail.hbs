@@ -63,9 +63,15 @@
                 {{/if}}
             </td>
         </tr>
+        <tr>
+            <th>Versions</th>
+            <td>
+                <a href="/application/detail/{{app.id}}/version">All</a>
+            </td>
+        </tr>
     </tbody>
 </table>
 <h4 class="applicationDetail-descriptionTitle">Description</h4>
-<p class="applicationDetail-description">
+<p data-action="markdown">
     {{app.description}}
 </p>

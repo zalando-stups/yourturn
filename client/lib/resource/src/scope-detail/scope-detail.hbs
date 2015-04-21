@@ -1,0 +1,35 @@
+<h2>{{resourceId}}_{{scope.id}}</h2>
+<a
+    class="btn-btn-default"
+    href="/resource/detail/{{resourceId}}">
+    <i class="fa fa-chevron-left"></i> Back to {{resourceId}}
+</a>
+<table>
+    <tbody>
+        <tr>
+            <th>ID</th>
+            <td>{{scope.id}}</td>
+        </tr>
+        <tr>
+            <th>Summary</th>
+            <td>{{scope.summary}}</td>
+        </tr>
+        <tr>
+            <th>Criticality</th>
+            <td>{{scope.criticality}}</td>
+        </tr>
+        <tr>
+            <th>Resource Owner Scope</th>
+            <td>
+                {{#if scope.ownerScope}}
+                    <i class="fa fa-check-square"></i>
+                {{else}}
+                    <i class="fa fa-square-o"></i>
+                {{/if}}
+            </td>
+        </tr>
+    </tbody>
+</table>
+<p data-action="markdown">
+    {{scope.description}}
+</p>

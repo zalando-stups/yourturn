@@ -37,6 +37,46 @@ var applications = {
     }
 };
 
+var versions = {
+    kio: [
+        {
+            "id": "1.0",
+            "application_id": "kio",
+            "artifact": "docker://stups/kio:1.0"
+        },
+        {
+            "id": "0.9",
+            "application_id": "kio",
+            "artifact": "docker//stups/kio:0.9"
+        },
+        {
+            "id": "0.9-beta",
+            "application_id": "kio",
+            "artifact": "docker//stups/kio:0.9-beta"
+        },
+        {
+            "id": "0.9-alpha",
+            "application_id": "kio",
+            "artifact": "docker//stups/kio:0.9-alpha"
+        }
+    ]
+};
+
+var kio_versions = {
+    1: {
+      "id": "2",
+      "application_id": "kio",
+      "artifact": "docker://stups/kio:1.0",
+      "notes": "version 1.0 of Kio"
+    },
+    2: {
+      "id": "1",
+      "application_id": "kio",
+      "artifact": "docker://stups/kio:0.9",
+      "notes": "version 0.9 of kio"
+    }
+}
+
 /** enable cors */
 server.use(function(req, res, next) {
     res.header('Access-Control-Allow-Origin', '*');
@@ -55,7 +95,6 @@ server.get('/apps', function(req,res) {
     setTimeout( function() {
         res.status( 200 ).send( apps );
     }, Math.random() * 2000 );
-    
 });
 
 server.get('/apps/:id', function(req,res){
@@ -75,5 +114,29 @@ server.put('/apps/:id', function(req, res) {
         res.status(200).send(req.body);
     }, Math.random() * 2000 );
 });
+
+server.get('/apps/:id/versions', function(req, res) {
+    setTimeout( function() {
+        var id = req.params.id;
+        if (!versions[id]) {
+            res.status(404).send();
+        } else {
+            res.status(200).send(versions[req.params.id]);
+        }
+    }, Math.random() * 2000 );
+});
+
+server.get('/apps/:id/versions/:ver', function(req, res) {
+    setTimeout( function() {
+        var id = req.params.id;
+        var ver = req.params.ver;
+        if (id !== 'kio' || !kio_versions[ver]) {
+            res.status(404).send();
+        } else {
+            res.status(200).send(versions[req.params.id]);
+        }
+    }, Math.random() * 2000 );
+});
+
 
 server.listen(5000);

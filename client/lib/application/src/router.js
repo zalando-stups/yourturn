@@ -1,18 +1,22 @@
 import {Router} from 'backbone';
 import puppeteer from 'common/src/puppeteer';
-import List from './list/application-list';
-import Detail from './detail/application-detail';
-import Create from './create/create-application';
+import List from './application-list/application-list';
+import Detail from './application-detail/application-detail';
+import Create from './create-application/create-application';
+import VersionList from './version-list/application-version';
 import Flux from './flux';
 import 'promise.prototype.finally';
+
+const MAIN_VIEW_ID = '#yourturn-view';
 
 class AppRouter extends Router {
     constructor() {
         this.routes = {
             'application/create': 'createApplication',
             'application': 'listApplications',
-            'application/:id': 'listApplication',
+            'application/detail/:id': 'listApplication',
             'application/edit/:id': 'editApplication'
+            'application/detail/:id/version': 'listApplicationVersions'
         };
 
         super();
@@ -23,7 +27,7 @@ class AppRouter extends Router {
         .getActions('application')
         .fetchApplications()
         .finally(() => {
-            puppeteer.show(new Create(), '#yourturn-view');
+            puppeteer.show(new Create(), MAIN_VIEW_ID);
         });
     }
 
@@ -51,7 +55,7 @@ class AppRouter extends Router {
 
         puppeteer.show( new Detail({
             applicationId: id
-        }), '#yourturn-view' );
+        }), MAIN_VIEW_ID );
     }
 
     /**
@@ -66,7 +70,21 @@ class AppRouter extends Router {
         Flux
         .getActions('application')
         .fetchApplications()
-        .finally( () => puppeteer.show( new List(), '#yourturn-view' ) );
+        .finally( () => puppeteer.show( new List(), MAIN_VIEW_ID ) );
+    }
+
+    /**
+     * Fetches the application version with `id`. Does not wait to finish and
+     * instructs the Puppeteer to show the VersionView.
+     *
+     * @param  {String} id
+     */
+    listApplicationVersions(id) {
+        Flux.getActions('application').fetchApplicationVersions(id);
+
+        puppeteer.show( new VersionList({
+            applicationId: id
+        }), '#yourturn-view' );
     }
 }
 

@@ -1,12 +1,13 @@
 <h2 class="applicationList-headline">Applications</h2>
 <div>
-    <a href="application/create" class="btn btn-default"><i class="fa fa-plus"></i> Create</a>
+    <a href="application/create" class="btn btn-default">
+    <i class="fa fa-plus"></i> Create Application</a>
 </div>
 {{#if apps.length}}
     <ul>
         {{#each apps}}
             <li>
-                <a href="application/{{this.id}}">{{this.name}}</a>
+                <a href="application/detail/{{this.id}}">{{this.name}}</a>
             </li>
         {{/each}}
     </ul>
