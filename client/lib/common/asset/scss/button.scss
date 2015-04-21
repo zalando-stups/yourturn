@@ -3,6 +3,10 @@
     @include transition( color, background, border-color );
     transition-duration: .05s;  // make it responsive
     display: inline-block;
+    font-weight: $weight-light;
+    font-family: $font-sans;
+    font-size: inherit;
+    line-height: inherit;
     margin-bottom: 0; // For input.btn
     text-align: center;
     vertical-align: middle;
@@ -12,9 +16,6 @@
     white-space: nowrap;
     user-select: none;
     padding: $padding-tiniest $padding-tiny;
-    font-size: $base-font-size;
-    font-weight: $weight-light;
-    font-family: $font-sans;
     border-radius: 2px;
     border: 1px solid transparent;
     border-bottom: 3px solid $gray;

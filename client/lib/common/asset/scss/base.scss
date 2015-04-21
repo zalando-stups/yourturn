@@ -72,9 +72,15 @@ a {
     }
 }
 
+table {
+    th {
+        font-weight: $weight-bold;
+    }
+}
+
 ul {
-    font-size: $base-font-size;
-    line-height: $base-line-height;
+    font-size: inherit;
+    line-height: inherit;
 }
 
 .u-text-center {
