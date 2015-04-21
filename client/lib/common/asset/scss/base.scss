@@ -72,6 +72,11 @@ a {
     }
 }
 
+ul {
+    font-size: $base-font-size;
+    line-height: $base-line-height;
+}
+
 .u-text-center {
     text-align: center;
 }
