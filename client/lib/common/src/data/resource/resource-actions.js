@@ -2,11 +2,11 @@ import {Actions} from 'flummox';
 
 class ResourceActions extends Actions {
 
-    addResource(resource) {
+    saveResource(resource) {
         return resource;
     }
 
-    addScope(resource, scope) {
+    saveScope(resource, scope) {
         return [resource, scope];
     }
 }

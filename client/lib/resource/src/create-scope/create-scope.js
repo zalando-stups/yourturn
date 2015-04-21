@@ -8,7 +8,7 @@ class CreateScope extends BaseView {
         this.actions = Flux.getActions('resource');
         this.className = 'createScope';
         this.events = {
-            'submit': 'addScope'
+            'submit': 'save'
         };
         super(props);
     }
@@ -19,8 +19,13 @@ class CreateScope extends BaseView {
         };
     }
 
-    addScope(e) {
+    /**
+     * Saves the scope to the resource store.
+     */
+    save(e) {
         e.preventDefault();
+        // gather data from DOM
+        // validity is ensured by the browser
         let {resourceId} = this.props,
             {$el} = this,
             scope_id = $el.find('#scope_id').val(),
@@ -29,6 +34,7 @@ class CreateScope extends BaseView {
             scope_summary = $el.find('#scope_summary').val(),
             scope_description = $el.find('#scope_description').val();
 
+        // construct the scope itself
         let scope = {
             id: scope_id,
             criticality: scope_criticality,
@@ -37,7 +43,9 @@ class CreateScope extends BaseView {
             description: scope_description
         };
 
-        this.actions.addScope(resourceId, scope);
+        // send it off to the store
+        this.actions.saveScope(resourceId, scope);
+        // redirect back to the resource detail view
         history.navigate(`resource/${resourceId}`, { trigger: true });
     }
 
