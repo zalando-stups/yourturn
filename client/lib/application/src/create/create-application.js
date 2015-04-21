@@ -3,22 +3,42 @@ import Template from './create-application.hbs';
 import Flux from 'application/src/flux';
 import {history} from 'backbone';
 import {constructLocalUrl} from 'common/src/data/services';
+import FetchResult from 'common/src/fetch-result';
 import 'common/asset/scss/application/create-application.scss';
 
 class CreateApp extends BaseView {
-    constructor( props ) {
+    constructor(props) {
         this.className = 'createApplication';
         this.events = {
             'submit form': 'save',
             'keyup #team_id': 'fillServiceUrl',
             'keyup #app_id': 'handleAppId'
         };
+        if (props && props.edit) {
+            this.store = Flux.getStore('application');
+        } else {
+            props = {
+                edit: false
+            };
+        }
         super(props);
     }
 
     handleAppId() {
         this.checkAppIdAvailability();
         this.fillServiceUrl();
+    }
+
+    update() {
+        if (this.props.edit) {
+            this.data = {
+                edit: this.props.edit,
+                app: this.store.getApplication(this.props.applicationId)
+            };
+            if (!(this.data.app instanceof FetchResult)) {
+                this.data.app.service_url = this.data.app.service_url.substring('https://'.length);
+            }
+        }
     }
 
     /**
@@ -52,9 +72,9 @@ class CreateApp extends BaseView {
     /**
      * Saves the application to kio.
      */
-    save(e) {
+    save(evt) {
         // prevent the form from actually be submitted
-        e.preventDefault();
+        evt.preventDefault();
         let {$el} = this;
         // gather data from dom
         let active = !!$el.find('#active:checked').length,
@@ -97,7 +117,10 @@ class CreateApp extends BaseView {
     }
 
     render() {
-        this.$el.html(Template());
+        this.$el.html(Template(this.data));
+        if (this.props.edit) {
+            this.checkAppIdAvailability();
+        }
     }
 }
 

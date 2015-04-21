@@ -11,7 +11,8 @@ class AppRouter extends Router {
         this.routes = {
             'application/create': 'createApplication',
             'application': 'listApplications',
-            'application/:id': 'listApplication'
+            'application/:id': 'listApplication',
+            'application/edit/:id': 'editApplication'
         };
 
         super();
@@ -23,6 +24,18 @@ class AppRouter extends Router {
         .fetchApplications()
         .finally(() => {
             puppeteer.show(new Create(), '#yourturn-view');
+        });
+    }
+
+    editApplication(id) {
+        Flux
+        .getActions('application')
+        .fetchApplication(id)
+        .finally(() => {
+            puppeteer.show( new Create({
+                applicationId: id,
+                edit: true
+            }), '#yourturn-view');
         });
     }
 
