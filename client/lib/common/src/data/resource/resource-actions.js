@@ -6,8 +6,8 @@ class ResourceActions extends Actions {
         return resource;
     }
 
-    addScope(resource, name) {
-        return [resource, name];
+    addScope(resource, scope) {
+        return [resource, scope];
     }
 }
 

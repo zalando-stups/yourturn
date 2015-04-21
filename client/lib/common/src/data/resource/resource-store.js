@@ -8,7 +8,8 @@ class ResourceStore extends Store {
         const resourceActions = flux.getActions('resource');
 
         this.state = {
-            resources: _m.hashMap()
+            resources: _m.hashMap(),
+            scopes: _m.hashMap()
         };
 
         this.register(
@@ -21,8 +22,13 @@ class ResourceStore extends Store {
 
     receiveResource(resource) {
         this.setState({
-            resources: _m.assoc(this.state.resources, resource.id, _m.hashMap())
+            resources: _m.assoc(this.state.resources, resource.id, _m.toClj(resource))
         });
+    }
+
+    getResource(resourceId) {
+        let resource = _m.get(this.state.resources, resourceId);
+        return resource ? _m.toJs(resource) : false;
     }
 
     getResources() {
@@ -30,16 +36,28 @@ class ResourceStore extends Store {
         return entries ? _m.toJs(entries) : [];
     }
 
-    getScopes(resource) {
-        let entries = _m.keys(_m.get(this.state.resources, resource));
-        return entries ? _m.toJs(entries) : {};
+    getScope(resourceId, scopeId) {
+        let scopes = _m.get(this.state.scopes, resourceId);
+        if (scopes) {
+            let scope = _m.get(scopes, scopeId);
+            return scope ? _m.toJs(scope) : false;
+        }
     }
 
-    receiveScope([resource, name]) {
-        let scopes = _m.get(this.state.resources, resource);
-        scopes = _m.assoc(scopes, name, true);
+    getScopes(resourceId) {
+        let entries = _m.keys(_m.get(this.state.scopes, resourceId));
+
+        return entries ? _m.toJs(entries) : [];
+    }
+
+    receiveScope([resourceId, scope]) {
+        let scopes = _m.get(this.state.scopes, resourceId);
+        if (!scopes) {
+            scopes = _m.hashMap();
+        }
+        scopes = _m.assoc(scopes, scope.id, _m.toClj(scope));
         this.setState({
-            resources: _m.assoc(this.state.resources, resource, scopes)
+            scopes: _m.assoc(this.state.scopes, resourceId, scopes)
         });
     }
 }

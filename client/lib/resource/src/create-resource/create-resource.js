@@ -5,7 +5,7 @@ import Template from './create-resource.hbs';
 import Flux from 'resource/src/flux';
 // import 'common/asset/scss/resource/resource-list.scss';
 
-class ResourceList extends BaseView {
+class CreateResource extends BaseView {
     constructor() {
         this.actions = Flux.getActions('resource');
         this.className = 'createResource';
@@ -55,4 +55,4 @@ class ResourceList extends BaseView {
     }
 }
 
-export default ResourceList;
+export default CreateResource;
