@@ -6,6 +6,8 @@ import Create from './create/create-application';
 import Flux from './flux';
 import 'promise.prototype.finally';
 
+const MAIN_VIEW_ID = '#yourturn-view';
+
 class AppRouter extends Router {
     constructor() {
         this.routes = {
@@ -22,7 +24,7 @@ class AppRouter extends Router {
         .getActions('application')
         .fetchApplications()
         .finally(() => {
-            puppeteer.show(new Create(), '#yourturn-view');
+            puppeteer.show(new Create(), MAIN_VIEW_ID);
         });
     }
 
@@ -38,7 +40,7 @@ class AppRouter extends Router {
 
         puppeteer.show( new Detail({
             applicationId: id
-        }), '#yourturn-view' );
+        }), MAIN_VIEW_ID );
     }
 
     /**
@@ -53,7 +55,7 @@ class AppRouter extends Router {
         Flux
         .getActions('application')
         .fetchApplications()
-        .finally( () => puppeteer.show( new List(), '#yourturn-view' ) );
+        .finally( () => puppeteer.show( new List(), MAIN_VIEW_ID ) );
     }
 }
 
