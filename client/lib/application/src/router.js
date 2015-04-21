@@ -1,8 +1,8 @@
 import {Router} from 'backbone';
 import puppeteer from 'common/src/puppeteer';
-import List from './list/application-list';
-import Detail from './detail/application-detail';
-import Create from './create/create-application';
+import List from './application-list/application-list';
+import Detail from './application-detail/application-detail';
+import Create from './create-application/create-application';
 import VersionList from './version-list/application-version';
 import Flux from './flux';
 import 'promise.prototype.finally';
