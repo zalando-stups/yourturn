@@ -46,7 +46,7 @@ class CreateScope extends BaseView {
         // send it off to the store
         this.actions.saveScope(resourceId, scope);
         // redirect back to the resource detail view
-        history.navigate(`resource/${resourceId}`, { trigger: true });
+        history.navigate(`resource/detail/${resourceId}`, { trigger: true });
     }
 
     render() {

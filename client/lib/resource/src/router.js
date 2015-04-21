@@ -15,9 +15,9 @@ class ResourceRouter extends Router {
         this.routes = {
             'resource': 'listResources',
             'resource/create': 'createResource',
-            'resource/:id': 'listResource',
-            'resource/:id/create': 'createScope',
-            'resource/:id/:scope': 'listScope'
+            'resource/detail/:id': 'listResource',
+            'resource/detail/:id/create': 'createScope',
+            'resource/detail/:id/scope/:scope': 'listScope'
         };
 
         super();

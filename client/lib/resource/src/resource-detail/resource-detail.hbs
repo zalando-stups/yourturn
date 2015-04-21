@@ -1,6 +1,6 @@
 <h2>{{resource.name}}</h2>
 <div>
-    <a href="/resource/{{resource.id}}/create" class="btn btn-default">
+    <a href="/resource/detail/{{resource.id}}/create" class="btn btn-default">
         <i class="fa fa-plus"></i> Create scope
     </a>
 </div>
@@ -33,7 +33,7 @@
     <ul>
         {{#each scopes}}
             <li>
-                <a href="/resource/{{../resource.id}}/{{this}}">{{this}}</a>
+                <a href="/resource/detail/{{../resource.id}}/scope/{{this}}">{{this}}</a>
             </li>
         {{/each}}
     </ul>

@@ -56,7 +56,7 @@ class CreateResource extends BaseView {
         // save the resource
         this.actions.saveResource(resource);
         // redirect to detail view of the newly created resource
-        history.navigate(`resource/${resource.id}`, { trigger: true });
+        history.navigate(`resource/detail/${resource.id}`, { trigger: true });
     }
 
     render() {

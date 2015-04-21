@@ -20,7 +20,7 @@ function constructUrl(serviceId, entityId) {
 
 function constructLocalUrl(serviceId, entityId) {
     if (serviceId === 'kio') {
-        return `application/${entityId}`;
+        return `application/detail/${entityId}`;
     }
     return false;
 }

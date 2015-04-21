@@ -7,7 +7,6 @@ import 'common/asset/scss/resource/resource-detail.scss';
 class ResourceDetail extends BaseView {
     constructor(props) {
         this.store = Flux.getStore('resource');
-        this.actions = Flux.getActions('resource');
         this.className = 'resourceDetail';
         super(props);
     }

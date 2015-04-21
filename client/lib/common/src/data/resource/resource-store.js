@@ -13,10 +13,10 @@ class ResourceStore extends Store {
         };
 
         this.register(
-            resourceActions.addResource,
+            resourceActions.saveResource,
             this.receiveResource);
         this.register(
-            resourceActions.addScope,
+            resourceActions.saveScope,
             this.receiveScope);
     }
 
