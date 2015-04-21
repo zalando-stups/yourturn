@@ -72,6 +72,17 @@ a {
     }
 }
 
+table {
+    th {
+        font-weight: $weight-bold;
+    }
+}
+
+ul {
+    font-size: inherit;
+    line-height: inherit;
+}
+
 .u-text-center {
     text-align: center;
 }

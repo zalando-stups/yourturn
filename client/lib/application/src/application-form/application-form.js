@@ -1,24 +1,45 @@
 import BaseView from 'common/src/base-view';
-import Template from './create-application.hbs';
+import Template from './application-form.hbs';
 import Flux from 'application/src/flux';
 import {history} from 'backbone';
 import {constructLocalUrl} from 'common/src/data/services';
-import 'common/asset/scss/application/create-application.scss';
+import FetchResult from 'common/src/fetch-result';
+import 'common/asset/scss/application/application-form.scss';
 
 class CreateApp extends BaseView {
-    constructor( props ) {
+    constructor(props) {
         this.className = 'createApplication';
         this.events = {
             'submit form': 'save',
             'keyup #team_id': 'fillServiceUrl',
             'keyup #app_id': 'handleAppId'
         };
+        if (props && props.edit) {
+            this.store = Flux.getStore('application');
+        } else {
+            props = {
+                edit: false
+            };
+        }
         super(props);
     }
 
     handleAppId() {
         this.checkAppIdAvailability();
         this.fillServiceUrl();
+    }
+
+    update() {
+        if (this.props.edit) {
+            this.data = {
+                edit: this.props.edit,
+                app: this.store.getApplication(this.props.applicationId)
+            };
+            let {app} = this.data;
+            if (!(app instanceof FetchResult) && app.service_url) {
+                app.service_url = app.service_url.substring('https://'.length);
+            }
+        }
     }
 
     /**
@@ -97,7 +118,12 @@ class CreateApp extends BaseView {
     }
 
     render() {
-        this.$el.html(Template());
+        this.$el.html(Template(this.data));
+        if (this.props.edit) {
+            this.$el.find('.is-taken').hide();
+        } else {
+            this.checkAppIdAvailability();
+        }
     }
 }
 

@@ -1,13 +1,22 @@
-<h1>{{app.name}}</h1> 
+<h1>{{app.name}}</h1>
+
+<div class="btn-group">
+    <a href="application/edit/{{app.id}}" class="btn btn-primary">
+        <i class="fa fa-pencil"></i> Edit
+    </a>
+</div>
+
 <h4>
-<span class="applicationDetail-status">
-    {{#if app.active}}
-        <i class="fa fa-lg fa-circle"></i> <strong>Active</strong>
-    {{else}}
-        <i class="fa fa-lg fa-circle-o"></i> <strong>Inactive</strong>
-    {{/if}}
-</span>
-{{ app.subtitle }}</h4>
+    <span class="applicationDetail-status">
+        {{#if app.active}}
+            <i class="fa fa-lg fa-circle"></i> <strong>Active</strong>
+        {{else}}
+            <i class="fa fa-lg fa-circle-o"></i> <strong>Inactive</strong>
+        {{/if}}
+    </span>
+    {{ app.subtitle }}
+</h4>
+
 
 <table>
     <tbody>
@@ -58,7 +67,7 @@
         <tr>
             <th>Versions</th>
             <td>
-                <a href="/application/{{app.id}}/version">All</a>
+                <a href="application/detail/{{app.id}}/version">All</a>
             </td>
         </tr>
     </tbody>

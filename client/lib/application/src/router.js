@@ -2,7 +2,7 @@ import {Router} from 'backbone';
 import puppeteer from 'common/src/puppeteer';
 import List from './application-list/application-list';
 import Detail from './application-detail/application-detail';
-import Create from './create-application/create-application';
+import AppForm from './application-form/application-form';
 import VersionList from './version-list/application-version';
 import Flux from './flux';
 import 'promise.prototype.finally';
@@ -12,10 +12,11 @@ const MAIN_VIEW_ID = '#yourturn-view';
 class AppRouter extends Router {
     constructor() {
         this.routes = {
-            'application/create': 'createApplication',
             'application': 'listApplications',
-            'application/:id': 'listApplication',
-            'application/:id/version': 'listApplicationVersions'
+            'application/create': 'createApplication',
+            'application/edit/:id': 'editApplication',
+            'application/detail/:id': 'listApplication',
+            'application/detail/:id/version': 'listApplicationVersions'
         };
 
         super();
@@ -26,7 +27,19 @@ class AppRouter extends Router {
         .getActions('application')
         .fetchApplications()
         .finally(() => {
-            puppeteer.show(new Create(), MAIN_VIEW_ID);
+            puppeteer.show(new AppForm(), MAIN_VIEW_ID);
+        });
+    }
+
+    editApplication(id) {
+        Flux
+        .getActions('application')
+        .fetchApplication(id)
+        .finally(() => {
+            puppeteer.show( new AppForm({
+                applicationId: id,
+                edit: true
+            }), '#yourturn-view');
         });
     }
 

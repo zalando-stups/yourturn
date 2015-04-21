@@ -10,10 +10,11 @@ select,
 input[type="url"],
 input[type="text"],
 input[type="search"] {
-    font-size: $base-font-size;
+    font-size: inherit;
+    line-height: inherit;
     font-family: $font-sans;
     font-weight: $weight-light;
-    padding: $padding-tiny;
+    padding: $padding-tiniest $padding-tiny;
     display: inline-block;
     border: 1px solid $gray-light;
     border-radius: 2px;
@@ -75,7 +76,7 @@ input[type="search"] {
         display: flex;
         .input-addon {
             user-select: none;
-            padding: $padding-tiny;
+            padding: $padding-tiniest $padding-tiny;
             border: 1px solid $gray-light;
             color: $gray;
             border-top-left-radius: 2px;
@@ -83,7 +84,8 @@ input[type="search"] {
             border-top-right-radius: 0px;
             border-bottom-right-radius: 0px;
             border-right: 0;
-            font-size: $base-font-size;
+            font-size: inherit;
+            line-height: inherit;
             font-family: $font-sans;
 
             + input {            
