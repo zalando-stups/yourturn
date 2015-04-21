@@ -3,6 +3,8 @@ import Search from 'yourturn/src/search/search';
 import puppeteer from 'common/src/puppeteer';
 import {Provider} from 'common/src/oauth-provider';
 
+const MAIN_VIEW_ID = '#yourturn-view';
+
 class YourturnRouter extends Router {
     constructor() {
         this.routes = {
@@ -14,7 +16,7 @@ class YourturnRouter extends Router {
     }
 
     search() {
-        puppeteer.show(new Search(), '#yourturn-view');
+        puppeteer.show(new Search(), MAIN_VIEW_ID);
     }
 
     oauth() {
