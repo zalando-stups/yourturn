@@ -61,7 +61,7 @@ class AppRouter extends Router {
     }
 
     /**
-     * Fetches the application with `id`. Does not wait to finish and
+     * Fetches the application version with `id`. Does not wait to finish and
      * instructs the Puppeteer to show the VersionView.
      *
      * @param  {String} id
