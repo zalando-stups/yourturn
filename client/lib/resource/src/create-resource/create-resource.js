@@ -9,23 +9,9 @@ class CreateResource extends BaseView {
         this.actions = Flux.getActions('resource');
         this.className = 'createResource';
         this.events = {
-            'submit': 'save',
-            'change input[type="checkbox"]': 'checkResourceOwnerValidity'
+            'submit': 'save'
         };
         super();
-    }
-
-    /**
-     * Checks if at least one of the checkboxes was selected and sets
-     * customValidity on the first.
-     */
-    checkResourceOwnerValidity() {
-        let isAnySelected = this.$el.find('input:checked').length > 0;
-        if (isAnySelected) {
-            this.$el.find('input[type="checkbox"]')[0].setCustomValidity('');
-        } else {
-            this.$el.find('input[type="checkbox"]')[0].setCustomValidity('Resource must have at least one owner.');
-        }
     }
 
     /**
@@ -61,9 +47,6 @@ class CreateResource extends BaseView {
 
     render() {
         this.$el.html(Template(this.data));
-        // check validity of checkboxes
-        // otherwise they would be considered valid from the beginning
-        this.checkResourceOwnerValidity();
         return this;
     }
 }
