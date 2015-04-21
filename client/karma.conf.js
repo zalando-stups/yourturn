@@ -1,6 +1,12 @@
 var webpackConfig = require('./webpack.config'),
     path = require('path');
 
+webpackConfig.module.postLoaders = [{
+    test: /\.js$/,
+    exclude: /(node_modules|test)\//,
+    loader: 'istanbul-instrumenter'
+}];
+
 module.exports = function(config) {
   config.set({
 
@@ -9,6 +15,7 @@ module.exports = function(config) {
 
     plugins: [
         'karma-webpack',
+        'karma-coverage',
         'karma-mocha',
         'karma-chai-plugins',
         'karma-story-reporter',
@@ -35,7 +42,12 @@ module.exports = function(config) {
     // test results reporter to use
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: [ 'story' ],
+    reporters: [ 'story', 'coverage' ],
+
+    coverageReporter: {
+        type: 'lcov',
+        dir: 'coverage/'
+    },
 
     // web server port
     port: 9876,
@@ -49,7 +61,7 @@ module.exports = function(config) {
 
 
     // enable / disable watching file and executing tests whenever any file changes
-    autoWatch: true,
+    autoWatch: false,
 
     // If browser does not capture in given timeout [ms], kill it
     captureTimeout: 60000,
@@ -60,6 +72,6 @@ module.exports = function(config) {
 
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
-    singleRun: false
+    singleRun: true
   });
 };
