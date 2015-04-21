@@ -2,6 +2,7 @@ import $ from 'jquery';
 import {history} from 'backbone';
 import Sidebar from './sidebar/sidebar';
 import Router from './router';
+import ResourceRouter from 'resource/src/router';
 import AppRouter from 'application/src/router';
 
 import 'common/asset/scss/base.scss';
@@ -15,6 +16,7 @@ sidebar.render();
 $(document).ready( () => {
     $('#yourturn-sidebar').append( sidebar.$el );
     new Router();
+    new ResourceRouter();
     new AppRouter();
     history.start({
         pushState: true

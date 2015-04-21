@@ -26,7 +26,8 @@ module.exports = {
         alias: {
             common: path.resolve(__dirname, './lib/common/'),
             yourturn: path.resolve(__dirname, './lib/yourturn/'),
-            application: path.resolve(__dirname, './lib/application/')
+            application: path.resolve(__dirname, './lib/application/'),
+            resource: path.resolve(__dirname, './lib/resource/')
         }
     },
     // prefix everything with YTENV_

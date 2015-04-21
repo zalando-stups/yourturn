@@ -1,0 +1,82 @@
+<h2>Create a new resource</h2>
+<form class="form" name="resourceForm">
+    <div class="form-group">
+        <label for="resource_id">Resource ID</label>
+        <small>The ID of the resource</small>
+        <input
+            id="resource_id"
+            autofocus="autofocus"
+            pattern="\w+"
+            name="yourturn_resource_id"
+            required="required"
+            placeholder="customer"
+            type="text" />
+    </div>
+    <div class="form-group">
+        <label for="resource_name">Resource Name</label>
+        <small>The name of the resource</small>
+        <input
+            id="resource_name"
+            name="yourturn_resource_name"
+            required="required"
+            placeholder="Customer"
+            type="text" />
+    </div>
+    <div class="form-group">
+        <label>Resource Owner</label>
+        <small>Who owns this resource?</small>
+        <label for="nobody">
+            <input
+                name="yourturn_resource_owner_nobody"
+                id="nobody"
+                type="checkbox" /> Nobody
+        </label>
+        <label for="employee">
+            <input
+                name="yourturn_resource_owner_employee"
+                id="employee"
+                type="checkbox" /> Employee
+        </label>
+        <label for="team">
+            <input
+                name="yourturn_resource_owner_team"
+                id="team"
+                type="checkbox" /> Delivery Team
+        </label>
+        <label class="form-disabled" for="customer">
+            <input
+                disabled="disabled"
+                name="yourturn_resource_owner_customer"
+                id="customer"
+                type="checkbox" /> Customer
+        </label>
+        <label class="form-disabled" for="brands">
+            <input
+                disabled="disabled"
+                name="yourturn_resource_owner_brands"
+                id="brands"
+                type="checkbox" /> Brands
+        </label>
+    </div>
+    <div class="form-group">
+        <label for="resource_description">Resource Description</label>
+        <small>An elaborate description. You can use <a data-external href="http://www.unexpected-vortices.com/sw/rippledoc/quick-markdown-example.html">Markdown</a>.</small>
+        <textarea
+            id="resource_description"
+            name="yourturn_resource_description"
+            cols="30"
+            rows="10"></textarea>
+    </div>
+    <div class="btn-group">
+        <button
+            type="submit"
+            class="btn btn-primary">
+            <i class="fa fa-save"></i> Save
+        </button>
+        <button
+            type="reset"
+            class="btn btn-default">
+            <i class="fa fa-eraser"></i> Clear
+        </button>
+    </div>
+</form>
