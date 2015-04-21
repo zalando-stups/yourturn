@@ -1,6 +1,19 @@
 <div class="applicationDetail u-placeholder">
-    <h1 class="u-placeholder-text">title</h1> 
-    <h4 class="u-placeholder-text">subtitle</h4>
+    <h1 class="u-placeholder-text">application</h1>
+
+    <div class="btn-group">
+        <a href="application/edit/{{app.id}}" class="btn btn-default btn-disabled">
+            <i class="fa fa-pencil"></i> Edit
+        </a>
+    </div>
+
+    <h4>
+        <span class="applicationDetail-status">
+            
+                <i class="fa fa-lg fa-circle-o"></i> <strong>Inactive</strong>
+        </span>
+        <span class="u-placeholder-text">{{ app.subtitle }}</span>
+    </h4>
 
     <table>
         <tbody>
@@ -34,6 +47,12 @@
                 <th>API</th>
                 <td class="u-placeholder-text">
                     apidocumentation
+                </td>
+            </tr>
+            <tr>
+                <th>Versions</th>
+                <td>
+                    All
                 </td>
             </tr>
         </tbody>
