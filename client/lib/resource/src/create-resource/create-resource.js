@@ -51,6 +51,8 @@ class CreateResource extends BaseView {
 
     render() {
         this.$el.html(Template(this.data));
+        // check validity of checkboxes
+        this.checkResourceOwnerValidity();
         return this;
     }
 }

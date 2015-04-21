@@ -25,7 +25,7 @@ class CreateScope extends BaseView {
             {$el} = this,
             scope_id = $el.find('#scope_id').val(),
             scope_criticality = parseInt($el.find('#scope_criticality>option:selected').first().val(), 10),
-            scope_ownerScope = $el.find('#scope_ownerScope:selected').length > 0,
+            scope_ownerScope = $el.find('#scope_ownerScope:checked').length > 0,
             scope_summary = $el.find('#scope_summary').val(),
             scope_description = $el.find('#scope_description').val();
 

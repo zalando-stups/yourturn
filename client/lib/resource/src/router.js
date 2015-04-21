@@ -4,8 +4,11 @@ import ResourceList from './resource-list/resource-list';
 import CreateResource from './create-resource/create-resource';
 import ResouceDetail from './resource-detail/resource-detail';
 import CreateScope from './create-scope/create-scope';
+import ScopeDetail from './scope-detail/scope-detail';
 import Flux from './flux';
 import 'promise.prototype.finally';
+
+const MAIN_VIEW_ID = '#yourturn-view';
 
 class ResourceRouter extends Router {
     constructor() {
@@ -13,30 +16,38 @@ class ResourceRouter extends Router {
             'resource': 'listResources',
             'resource/create': 'createResource',
             'resource/:id': 'listResource',
-            'resource/:id/create': 'createScope'
+            'resource/:id/create': 'createScope',
+            'resource/:id/:scope': 'listScope'
         };
 
         super();
     }
 
     listResources() {
-        puppeteer.show(new ResourceList(), '#yourturn-view');
+        puppeteer.show(new ResourceList(), MAIN_VIEW_ID);
     }
 
     createResource() {
-        puppeteer.show(new CreateResource(), '#yourturn-view');
+        puppeteer.show(new CreateResource(), MAIN_VIEW_ID);
     }
 
-    listResource(id) {
+    listResource(resourceId) {
         puppeteer.show(new ResouceDetail({
-            resourceId: id
-        }), '#yourturn-view');
+            resourceId: resourceId
+        }), MAIN_VIEW_ID);
     }
 
-    createScope(id) {
+    createScope(resourceId) {
         puppeteer.show(new CreateScope({
-            resourceId: id
-        }), '#yourturn-view');
+            resourceId: resourceId
+        }), MAIN_VIEW_ID);
+    }
+
+    listScope(resourceId, scopeId) {
+        puppeteer.show(new ScopeDetail({
+            resourceId: resourceId,
+            scopeId: scopeId
+        }), MAIN_VIEW_ID);
     }
 }
 

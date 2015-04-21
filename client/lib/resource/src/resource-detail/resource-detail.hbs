@@ -33,13 +33,14 @@
     <ul>
         {{#each scopes}}
             <li>
-                <a href="/resource/{{../resource.id}}/{{this.id}}">{{this.id}}</a>
+                <a href="/resource/{{../resource.id}}/{{this}}">{{this}}</a>
             </li>
         {{/each}}
     </ul>
 {{else}}
     No scopes to display.
 {{/if}}
+<h4 class="resourceDetail-descriptionTitle">Description</h4>
 <p data-action="markdown">
     {{resource.description}}
 </p>
