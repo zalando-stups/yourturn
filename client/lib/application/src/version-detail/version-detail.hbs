@@ -1,0 +1,25 @@
+<h1>{{ver.application_id}} {{ver.id}}</h1>
+
+<div class="btn-group">
+    <a href="application/detail/{{ver.application_id}}/version" class="btn btn-default">
+        <i class="fa fa-chevron-left"></i> Back to all {{ver.application_id}} versions
+    </a>
+</div>
+
+
+<table>
+    <tbody>
+        <tr>
+            <th>ID</th>
+            <td>{{ver.id}}</td>
+        </tr>
+        <tr>
+            <th>Artifact</th>
+            <td>{{ver.artifact}}</td>
+        </tr>
+    </tbody>
+</table>
+<h4 class="applicationDetail-descriptionTitle">Notes</h4>
+<p data-action="markdown">
+    {{ver.notes}}
+</p>

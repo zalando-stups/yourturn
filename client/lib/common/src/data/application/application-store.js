@@ -38,6 +38,12 @@ class ApplicationStore extends Store {
             this.receiveApplicationVersions,
             this.failFetchApplications);
 
+        this.registerAsync(
+            appActions.fetchApplicationVersion,
+            this.beginFetchApplicationVersion,
+            this.receiveApplicationVersion,
+            this.failFetchApplicationVersion);
+
     }
 
     // intentionally left as noop for now
@@ -62,6 +68,20 @@ class ApplicationStore extends Store {
     }
 
     /**
+     * Replaces application with `id` and version `ver` with a Pending state.
+     *
+     * @param  {String} id
+     * @param  {String} ver
+     */
+    beginFetchApplicationVersion( id, ver ) {
+        let updatedApp =  _m.assoc( _m.get(this.state.versions, id) || _m.hashMap(), ver, new Pending() )
+        this.setState({
+            versions: _m.assoc(this.state.versions, id, updatedApp)
+        });
+    }
+
+
+    /**
      * Replaces application with Failed state.
      *
      * @param  {error} err The error passed from the flux action.
@@ -69,6 +89,17 @@ class ApplicationStore extends Store {
     failFetchApplication(err) {
         this.setState({
             applications: _m.assoc( this.state.applications, err.id, new Failed( err ) )
+        });
+    }
+
+    /**
+     * Replaces application version with Failed state.
+     *
+     * @param  {error} err The error passed from the flux action.
+     */
+    failFetchApplicationVersion(err) {
+        this.setState({
+            versions: _m.assoc( this.state.versions, err.ver, new Failed( err ) )
         });
     }
 
@@ -89,7 +120,7 @@ class ApplicationStore extends Store {
     /**
      * Adds application versions to store.
      *
-     * @param  {Array} apps
+     * @param  {Array} versions
      */
     receiveApplicationVersions( versions ) {
         let newState = versions.reduce(
@@ -115,6 +146,16 @@ class ApplicationStore extends Store {
     receiveApplication( app ) {
         this.receiveApplications([ app ]);
     }
+
+    /**
+     * Adds single application version to store. Just calls `receiveApplicationVersions` underneath.
+     *
+     * @param  {object} ver
+     */
+    receiveApplicationVersion( ver ) {
+        this.receiveApplicationVersions([ ver ]);
+    }
+
 
     /**
      * Returns all applications that are available (as in not Pending or Failed) RIGHT NAO!
@@ -148,6 +189,23 @@ class ApplicationStore extends Store {
         let versions = _m.vals(_m.get(this.state.versions, id)),
             sorted = _m.sort(v => _m.get(v, 'id'), versions);
         return _m.toJs( sorted ) || [];
+    }
+
+
+    /**
+     * Returns the application version with `id`. Does not care about its state, e.g. whether or not
+     * it's Pending or Failed. Returns null if there is no version with this id.
+     *
+     * @param  {String} id
+     * @param  {String} ver
+     * @return {object} The application version with this id and ver
+     */
+    getApplicationVersion(id, ver) {
+        let app = _m.get( this.state.versions, id );
+        if (app) {
+            let version = _m.get(app, ver);
+            return version ? _m.toJs(version) : false;
+        }
     }
 
 

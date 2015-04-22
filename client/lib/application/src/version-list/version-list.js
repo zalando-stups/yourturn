@@ -1,5 +1,5 @@
 import BaseView from 'common/src/base-view';
-import Template from './application-version.hbs';
+import Template from './version-list.hbs';
 import Flux from 'application/src/flux';
 
 class AppVersion extends BaseView {
