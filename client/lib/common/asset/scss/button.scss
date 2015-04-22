@@ -16,7 +16,7 @@
     white-space: nowrap;
     user-select: none;
     padding: $padding-tiniest $padding-tiny;
-    border-radius: 2px;
+    border-radius: $border-radius;
     border: 1px solid transparent;
     border-bottom: 3px solid $gray;
 

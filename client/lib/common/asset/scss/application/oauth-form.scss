@@ -1,0 +1,9 @@
+@import "../variables";
+
+.oAuthForm {
+    h6 {
+        margin-top: $padding-tiny;
+        margin-bottom: $padding-small;
+        color: $gray;
+    }
+}

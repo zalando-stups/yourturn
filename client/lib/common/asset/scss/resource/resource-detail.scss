@@ -1,6 +1,7 @@
 @import "../variables";
 
 .resourceDetail {
+    max-width: $content-width-regular;
     .resourceDetail-scopeTitle,
     .resourceDetail-descriptionTitle {
         color: $gray;
@@ -20,13 +21,7 @@
             ul {
                 margin: 0;
                 padding-left: 0;
-                list-style-type: none;
-
-                li {
-                    &:before {
-                        content: '✓'
-                    }
-                }
+                list-style-type: disc;
             }
         }
     }   

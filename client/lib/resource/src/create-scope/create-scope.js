@@ -2,6 +2,8 @@ import {history} from 'backbone';
 import BaseView from 'common/src/base-view';
 import Template from './create-scope.hbs';
 import Flux from 'resource/src/flux';
+import Criticality from 'common/src/data/resource/scope-criticality';
+import 'common/asset/scss/resource/create-scope.scss';
 
 class CreateScope extends BaseView {
     constructor(props) {
@@ -9,16 +11,22 @@ class CreateScope extends BaseView {
         this.store = Flux.getStore('resource');
         this.className = 'createScope';
         this.events = {
-            'submit': 'save'
+            'submit': 'save',
+            'keyup #scope_id': 'syncScopeId'
         };
         super(props);
+    }
+
+ syncScopeId() {
+        this.$el.find('[data-action="sync-with-scope-id"]').text(this.$el.find('#scope_id').val());
     }
 
     update() {
         let resource = this.store.getResource(this.props.resourceId);
         this.data = {
             resource: resource,
-            resourceHasOwner: resource.owners.length > 0
+            resourceHasOwner: resource.owners.length > 0,
+            criticalities: Criticality
         };
     }
 
@@ -32,7 +40,7 @@ class CreateScope extends BaseView {
         let {resourceId} = this.props,
             {$el} = this,
             scope_id = $el.find('#scope_id').val(),
-            scope_criticality = parseInt($el.find('#scope_criticality>option:selected').first().val(), 10),
+            scope_criticality = parseInt($el.find('[name="yourturn_scope_criticality"]:checked').val(), 10),
             scope_ownerScope = $el.find('#scope_ownerScope:checked').length > 0,
             scope_summary = $el.find('#scope_summary').val(),
             scope_description = $el.find('#scope_description').val();

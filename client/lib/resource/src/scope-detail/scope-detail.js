@@ -2,6 +2,7 @@ import BaseView from 'common/src/base-view';
 import Template from './scope-detail.hbs';
 import Flux from 'resource/src/flux';
 import Markdown from 'common/src/markdown';
+import Criticality from 'common/src/data/resource/scope-criticality';
 import 'common/asset/scss/resource/scope-detail.scss';
 
 class ScopeDetail extends BaseView {
@@ -13,10 +14,13 @@ class ScopeDetail extends BaseView {
     }
 
     update() {
+        let scope = this.store.getScope(this.props.resourceId, this.props.scopeId);
         this.data = {
             resourceId: this.props.resourceId,
-            scope: this.store.getScope(this.props.resourceId, this.props.scopeId)
+            scope: scope,
+            scopeCriticality: Criticality[scope.criticality]
         };
+
     }
 
     render() {

@@ -102,3 +102,27 @@ ul {
         color: red;
     }
 }
+
+.u-info {
+    color: $white;
+    background: $blue-light;
+    border: 1px solid $blue;
+    border-radius: $border-radius;
+    padding: $padding-tiny $padding-small;
+    margin: $padding-small 0;
+    max-width: 600px;
+
+    > :first-child {
+        &:before {
+            content: '\f05a';
+            font-family: 'FontAwesome';
+            font-size: 200%;
+            display: block;
+            text-align: center;
+            float: right;
+            height: 2em;
+            margin-left: 1em
+        }
+
+    }
+}

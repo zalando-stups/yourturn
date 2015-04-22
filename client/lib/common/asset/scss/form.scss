@@ -17,7 +17,7 @@ input[type="search"] {
     padding: $padding-tiniest $padding-tiny;
     display: inline-block;
     border: 1px solid $gray-light;
-    border-radius: 2px;
+    border-radius: $border-radius;
     vertical-align: middle;
     &:focus {
         border: 1px solid $gray;
@@ -28,17 +28,17 @@ input[type="search"] {
 
 .form {
     .form-group {
-        small {
+        > small {
             color: $gray;
         }
-        label {
+        > label {
             font-weight: $weight-regular;
             display: block;
         }
-        textarea,
-        input[type="url"],
-        input[type="text"],
-        input[type="search"] {
+        > textarea,
+        > input[type="url"],
+        > input[type="text"],
+        > input[type="search"] {
             width: 100%;
 
             &:invalid,
@@ -60,8 +60,16 @@ input[type="search"] {
             }
         }
 
-        select {
+        > select {
             display: block;
+        }
+
+        > p {
+            margin: 0;
+            max-width: 400px;
+            + p {
+                margin-top: $padding-tiny;
+            }
         }
 
 

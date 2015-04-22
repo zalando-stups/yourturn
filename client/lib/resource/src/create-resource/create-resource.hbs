@@ -1,30 +1,31 @@
-<h2>Create a new resource</h2>
+<h2>Create a new resource type</h2>
 <form class="form" name="resourceForm">
     <div class="form-group">
-        <label for="resource_id">Resource ID</label>
-        <small>The ID of the resource</small>
+        <label for="resource_id">Resource Type ID</label>
+        <small>The ID of the resource type</small>
         <input
             id="resource_id"
             autofocus="autofocus"
-            pattern="\w+"
+            pattern="[a-z][a-z_]*[a-z]"
+            title="Only lowercase characters with underscores in between."
             name="yourturn_resource_id"
             required="required"
-            placeholder="customer"
+            placeholder="sales_order"
             type="text" />
     </div>
     <div class="form-group">
-        <label for="resource_name">Resource Name</label>
-        <small>The name of the resource</small>
+        <label for="resource_name">Resource Type Name</label>
+        <small>The name of the resource type</small>
         <input
             id="resource_name"
             name="yourturn_resource_name"
             required="required"
-            placeholder="Customer"
+            placeholder="Sales Order"
             type="text" />
     </div>
     <div class="form-group">
         <label>Resource Owner</label>
-        <small>Who owns this resource?</small>
+        <small>Who owns the resource? Who can grant access to the resource? For now it’s okay to not have any resource owner.</small>
         <label for="employees">
             <input
                 name="yourturn_resource_owner_employee"
@@ -42,19 +43,19 @@
                 disabled="disabled"
                 name="yourturn_resource_owner_customer"
                 id="customers"
-                type="checkbox" /> Customers
+                type="checkbox" /> Customers (available later this year)
         </label>
         <label class="form-disabled" for="brands">
             <input
                 disabled="disabled"
                 name="yourturn_resource_owner_brands"
                 id="brands"
-                type="checkbox" /> Brands
+                type="checkbox" /> Brands (available later this year)
         </label>
     </div>
     <div class="form-group">
-        <label for="resource_description">Resource Description</label>
-        <small>An elaborate description. You can use <a data-external href="http://www.unexpected-vortices.com/sw/rippledoc/quick-markdown-example.html">Markdown</a>.</small>
+        <label for="resource_description">Resource Type Description</label>
+        <small>An elaborate description with examples of what kind of data this resource type includes. You can use <a data-external href="http://www.unexpected-vortices.com/sw/rippledoc/quick-markdown-example.html">Markdown</a>.</small>
         <textarea
             id="resource_description"
             name="yourturn_resource_description"

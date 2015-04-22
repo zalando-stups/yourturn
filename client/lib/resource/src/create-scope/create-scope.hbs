@@ -1,4 +1,4 @@
-<h2>Create new scope for {{resource.id}}</h2>
+<h2>Create new scope for {{resource.name}}</h2>
 <form class="form" name="scopeForm">
     <div class="form-group">
         <label for="scope_id">Scope ID</label>
@@ -12,39 +12,6 @@
             required="required"
             placeholder="read"
             type="text" />
-        
-    </div>
-    <div class="form-group">
-        <label for="scope_criticality">Scope Criticality Level</label>
-        <small>How sensitive is the data you get access to?</small>
-        <select
-            name="yourturn_scope_criticality"
-            id="scope_criticality">
-            <option value="1" selected="selected">1—Internal Tools &amp; Prototypes</option>
-            <option value="2">2—Audit-relevant Applications</option>
-            <option value="3">3—Non-essential Applications</option>
-            <option value="4">4—PCI DSS</option>
-        </select>
-    </div>
-    <div class="form-group">
-        {{#if resourceHasOwner}}
-            <label for="scope_ownerScope">
-                <input
-                    id="scope_ownerScope"
-                    name="yourturn_scope_ownerScope"
-                    type="checkbox" /> Resource Owner Scope
-            </label>
-            <small>This scope can be granted by {{#each resource.owners}}<span>{{this}}</span>{{/each}} to applications.</small>
-        {{else}}
-            <label class="form-disabled" for="scope_ownerScope">
-                <input
-                    id="scope_ownerScope"
-                    disabled="disabled"
-                    name="yourturn_scope_ownerScope"
-                    type="checkbox" /> Resource Owner Scope
-            </label>
-            <small>The resource doesn’t have an owner, so this scope cannot be a Resource Owner Scope.</small>
-        {{/if}}
     </div>
     <div class="form-group">
         <label for="scope_summary">Summary</label>
@@ -54,6 +21,112 @@
             id="scope_summary"
             maxlength="140"
             type="text" />
+    </div>
+    <div class="form-group">
+        <label>Scope Criticality Level</label>
+        <small>How sensitive is the data you get access to?</small>
+        {{#each criticalities}}
+            <label>
+                <input
+                    value="{{@key}}"
+                    name="yourturn_scope_criticality"
+                    type="radio" /> {{this.name}}
+            </label>
+            <small>{{this.example}}</small>
+        {{/each}}
+    </div>
+    <div class="form-group">
+        {{#if resourceHasOwner}}
+            <label>Scope Type</label>
+            <small>Which of these scope types applies?</small>
+            <div class="grid">
+                <div class="grid-col">
+                    <label>
+                        <input
+                            id="scope_ownerScope"
+                            required="required"
+                            value="scope_ownerScope"
+                            name="yourturn_scope_ownerScope"
+                            type="radio" /> Resource Owner Scope
+                    </label>
+                </div>
+                <div class="grid-col">
+                    <p>
+                        <small>{{#each resource.owners}}<strong>{{this}}</strong>{{/each}} can grant <strong data-action="sync-with-scope-id" /> access on his <strong>{{resource.name}}</strong> data to applications.</small>
+                    </p>
+                    <p>
+                        <small>A Resource Owner Scope can be granted by the resource owners to others. The resource owner automatically has the permission to grant this scope without further actions. Resource Owner Scopes always authorize only in the context of the resource owner’s resources.</small>
+                    </p>
+                    <p>
+                        <small>For instance: A customer can grant an application <strong>read</strong> access to <strong>his</strong> sales order data.</small>
+                    </p>
+                </div>
+            </div>
+            <div class="grid">
+                <div class="grid-col">
+                    <label for="scope_appScope">
+                        <input
+                            id="scope_appScope"
+                            value="scope_appScope"
+                            name="yourturn_scope_appScope"
+                            type="radio" /> Application Scope
+                    </label>
+                </div>
+                <div class="grid-col">
+                    <p>
+                        <small>An application can get <strong data-action="sync-with-scope-id" /> access to <strong>{{resource.name}}</strong> data.
+                    </p>
+                    <p>
+                         Normally Application Scopes are not bound to the context of a resource owner. By default neither applications nor resource owners have this scope. It has to be assigned manually in an application’s OAuth configuration.</small>
+                    </p>
+                    <p>
+                        <small>For instance: An analytics application can get <strong>read_all</strong> access to all sales order data without consent of the resource owners.</small>
+                    </p>
+                </div>
+            </div>
+        {{else}}
+            <label>Scope Type</label>
+            <small>Which of these scope types applies?</small>
+            <div class="grid">
+                <div class="grid-col">
+                    <label class="form-disabled">
+                        <input
+                            id="scope_ownerScope"
+                            disabled="disabled"
+                            required="required"
+                            value="scope_ownerScope"
+                            name="yourturn_scope_ownerScope"
+                            type="radio" /> Resource Owner Scope
+                    </label>
+                </div>
+                <div class="grid-col">
+                    <small>Nobody owns {{resource.name}} data.</small>
+                </div>
+            </div>
+            <div class="grid">
+                <div class="grid-col">
+                    <label for="scope_appScope">
+                        <input
+                            id="scope_appScope"
+                            checked="checked"
+                            value="scope_appScope"
+                            name="yourturn_scope_appScope"
+                            type="radio" /> Application Scope
+                    </label>
+                </div>
+                <div class="grid-col">
+                    <p>
+                        <small>An application can get <strong data-action="sync-with-scope-id" /> access to <strong>{{resource.name}}</strong> data.
+                    </p>
+                    <p>
+                         Normally Application Scopes are not bound to the context of a resource owner. By default neither applications nor resource owners have this scope. It has to be assigned manually in an application’s OAuth configuration.</small>
+                    </p>
+                    <p>
+                        <small>For instance: An analytics application can get <strong>read_all</strong> access to all sales order data without consent of the resource owners.</small>
+                    </p>
+                </div>
+            </div>
+        {{/if}}
     </div>
     <div class="form-group">
         <label for="scope_description">Scope Description</label>

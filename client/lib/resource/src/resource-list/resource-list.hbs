@@ -1,7 +1,12 @@
-<h2>Resources</h2>
+<h2>Resource Types</h2>
+<div class="u-info">
+    <p>
+        An example of a resource is <em>one</em> sales order of a customer. The resource type of it would be <em>“sales order”</em>. Another example for resource types is <em>“customer information”</em> where the resource would be the master data of <em>one</em> customer.
+    </p>
+</div>
 <div class="btn-group">
-    <a href="resource/create" class="btn btn-default">
-        <i class="fa fa-plus"></i> Create resource
+    <a href="resource/create" class="btn btn-primary">
+        <i class="fa fa-plus"></i> Create resource type
     </a>
 </div>
 {{#if resources.length}}
@@ -13,5 +18,5 @@
         {{/each}}
     </ul>
 {{else}}
-    No resources to display.
+    No resources.
 {{/if}}

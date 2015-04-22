@@ -59,6 +59,16 @@ class ResourceStore extends Store {
     }
 
     /**
+     * Receives a single scope and saves it in the store.
+     *
+     * @param  {string} resourceId ID of the owning resource
+     * @param  {obj} scope The scope itself
+     */
+    receiveScope([resourceId, scope]) {
+        this.receiveScopes([resourceId, [scope]]);
+    }
+
+    /**
      * Receives a single resource and saves it. Other resources
      * with the same ID are overwritten.
      *
@@ -88,7 +98,7 @@ class ResourceStore extends Store {
      */
     getResources() {
         let entries = _m.keys(this.state.resources);
-        entries = _m.sort(e => _m.get(e, 'id'), entries);
+        entries = _m.sortBy(e => _m.get(e, 'id'), entries);
         return entries ? _m.toJs(entries) : [];
     }
 
@@ -111,39 +121,22 @@ class ResourceStore extends Store {
     }
 
     /**
-     * Returns IDs of all the scopes for this resource.
+     * Returns all the scopes for this resource.
      *
      * @param  {string} resourceId ID of the resource
      * @return {array} Empty array if there are not scopes.
      */
     getScopes(resourceId) {
-        let entries = _m.keys(_m.get(this.state.scopes, resourceId));
-        entries = _m.sort(e => _m.get('id', e), entries);
+        let entries = _m.vals(_m.get(this.state.scopes, resourceId));
+        entries = _m.sortBy(e => _m.get('id', e), entries);
         return entries ? _m.toJs(entries) : [];
     }
 
     getAllScopes() {
         let entries = _m.map(res => _m.vals(_m.get(res, 1)), this.state.scopes);
         entries = _m.flatten(entries);
-        entries = _m.sort(e => _m.get('id', e), entries);
+        entries = _m.sortBy(e => _m.get('id', e), entries);
         return entries ? _m.toJs(entries) : [];
-    }
-
-    /**
-     * Receives a single scope and saves it in the store.
-     *
-     * @param  {string} resourceId ID of the owning resource
-     * @param  {obj} scope The scope itself
-     */
-    receiveScope([resourceId, scope]) {
-        let scopes = _m.get(this.state.scopes, resourceId);
-        if (!scopes) {
-            scopes = _m.hashMap();
-        }
-        scopes = _m.assoc(scopes, scope.id, _m.toClj(scope));
-        this.setState({
-            scopes: _m.assoc(this.state.scopes, resourceId, scopes)
-        });
     }
 }
 
