@@ -13,11 +13,31 @@ class ResourceStore extends Store {
         };
 
         this.register(
-            resourceActions.saveResource,
+            resourceActions.fetchResource,
             this.receiveResource);
         this.register(
-            resourceActions.saveScope,
+            resourceActions.fetchResources,
+            this.receiveResources);
+        this.register(
+            resourceActions.fetchScope,
             this.receiveScope);
+        this.register(
+            resourceActions.fetchScopes,
+            this.receiveScopes);
+    }
+
+    receiveScopes([resourceId, scopes]) {
+        //TODO not good
+        scopes.forEach(scope => {
+            this.receiveScope([resourceId, scope]);
+        });
+    }
+
+    receiveResources(resources) {
+        resources.forEach(resource => {
+            //TODO not good, too many events
+            this.receiveResource(resource);
+        });
     }
 
     /**

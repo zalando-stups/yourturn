@@ -3,6 +3,7 @@ import puppeteer from 'common/src/puppeteer';
 import List from './application-list/application-list';
 import Detail from './application-detail/application-detail';
 import AppForm from './application-form/application-form';
+import OAuthForm from './oauth-form/oauth-form';
 import VersionList from './version-list/application-version';
 import Flux from './flux';
 import 'promise.prototype.finally';
@@ -16,7 +17,8 @@ class AppRouter extends Router {
             'application/create': 'createApplication',
             'application/edit/:id': 'editApplication',
             'application/detail/:id': 'listApplication',
-            'application/detail/:id/version': 'listApplicationVersions'
+            'application/detail/:id/version': 'listApplicationVersions',
+            'application/oauth/:id': 'configureOAuth'
         };
 
         super();
@@ -39,8 +41,14 @@ class AppRouter extends Router {
             puppeteer.show( new AppForm({
                 applicationId: id,
                 edit: true
-            }), '#yourturn-view');
+            }), MAIN_VIEW_ID);
         });
+    }
+
+    configureOAuth(id) {
+        puppeteer.show(new OAuthForm({
+            applicationId: id
+        }), MAIN_VIEW_ID);
     }
 
     /**
@@ -84,7 +92,7 @@ class AppRouter extends Router {
 
         puppeteer.show( new VersionList({
             applicationId: id
-        }), '#yourturn-view' );
+        }), MAIN_VIEW_ID );
     }
 }
 
