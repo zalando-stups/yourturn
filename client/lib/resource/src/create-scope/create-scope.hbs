@@ -1,4 +1,4 @@
-<h2>Create new scope for {{resourceId}}</h2>
+<h2>Create new scope for {{resource.id}}</h2>
 <form class="form" name="scopeForm">
     <div class="form-group">
         <label for="scope_id">Scope ID</label>
@@ -20,20 +20,31 @@
         <select
             name="yourturn_scope_criticality"
             id="scope_criticality">
-            <option value="1" selected="selected">1—none</option>
-            <option value="2">2—??</option>
-            <option value="3">3—???</option>
-            <option value="4">4—PCI</option>
+            <option value="1" selected="selected">1—Internal Tools &amp; Prototypes</option>
+            <option value="2">2—Audit-relevant Applications</option>
+            <option value="3">3—Non-essential Applications</option>
+            <option value="4">4—PCI DSS</option>
         </select>
     </div>
     <div class="form-group">
-        <label for="scope_ownerScope">
-            <input
-                name="yourturn_scope_ownerScope"
-                id="scope_ownerScope"
-                type="checkbox" /> Resource Owner Scope
-        </label>
-        <small>Resource Owner Scopes are automatically granted to Resource Owners.</small>
+        {{#if resourceHasOwner}}
+            <label for="scope_ownerScope">
+                <input
+                    id="scope_ownerScope"
+                    name="yourturn_scope_ownerScope"
+                    type="checkbox" /> Resource Owner Scope
+            </label>
+            <small>This scope can be granted by {{#each resource.owners}}<span>{{this}}</span>{{/each}} to applications.</small>
+        {{else}}
+            <label class="form-disabled" for="scope_ownerScope">
+                <input
+                    id="scope_ownerScope"
+                    disabled="disabled"
+                    name="yourturn_scope_ownerScope"
+                    type="checkbox" /> Resource Owner Scope
+            </label>
+            <small>The resource doesn’t have an owner, so this scope cannot be a Resource Owner Scope.</small>
+        {{/if}}
     </div>
     <div class="form-group">
         <label for="scope_summary">Summary</label>

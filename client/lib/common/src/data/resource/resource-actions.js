@@ -26,6 +26,19 @@ class ResourceActions extends Actions {
                 .map(key => JSON.parse(localStorage.getItem(key)));
     }
 
+    fetchAllScopes() {
+        let scopes = Object
+                        .keys(localStorage)
+                        .filter(key => key.startsWith('resource'))
+                        .filter(key => key.split('.').length === 3)
+                        .map(key => {
+                            let val = JSON.parse(localStorage.getItem(key));
+                            val.resourceId = key.split('.')[1];
+                            return val;
+                        });
+        return scopes;
+    }
+
     fetchScopes(resourceId) {
         let scopes = Object
                         .keys(localStorage)

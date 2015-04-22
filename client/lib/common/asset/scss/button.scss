@@ -30,7 +30,10 @@
     
     &.btn-disabled {
         pointer-events: none;
-        color: $gray-light;
+        background: $gray-light !important;
+        color: $white !important;
+        border-color: $gray !important;
+        border-width: 1px;
     }
 
     &.btn-primary {

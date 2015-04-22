@@ -55,6 +55,7 @@ class ResourceRouter extends Router {
      * @param  {string} resourceId ID of the resource to add this scope to.
      */
     createScope(resourceId) {
+        Flux.getActions('resource').fetchResource(resourceId);
         puppeteer.show(new CreateScope({
             resourceId: resourceId
         }), MAIN_VIEW_ID);

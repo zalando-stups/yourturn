@@ -5,12 +5,18 @@ import Flux from 'application/src/flux';
 class OAuthForm extends BaseView {
     constructor(props) {
         this.className = 'applicationOAuth';
+        this.store = Flux.getStore('resource');
         super(props);
     }
 
     update() {
+        let scopes = this.store.getAllScopes();
+
         this.data = {
-            applicationId: this.props.applicationId
+            applicationId: this.props.applicationId,
+            scopes: scopes,
+            ownerScopes: scopes.filter(s => s.ownerScope),
+            nonOwnerScopes: scopes.filter(s => !s.ownerScope)
         };
     }
 

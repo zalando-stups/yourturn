@@ -1,5 +1,9 @@
-<h2>{{applicationId}}</h2>
-
+<h2>OAuth config for {{applicationId}}</h2>
+<div class="btn-group">
+    <a href="/application/detail/{{applicationId}}" class="btn btn-default">
+        <i class="fa fa-chevron-left"></i> Back to {{applicationId}}
+    </a>
+</div>
 <form name="oauthForm" class="form">
     <div class="form-group">
         <label for="oauth_redirect_uri">Redirect URI</label>
@@ -10,6 +14,28 @@
             type="url" />
     </div>
     <div class="form-group">
-        
+        <label>Client Scopes</label>
+        <small>{{applicationId}} can ask for these scopes to be granted:</small>
+        {{#each scopes}}
+            <label>
+                <input
+                    type="checkbox" /> {{this.resourceId}}_{{this.id}}
+            </label>
+        {{/each}}
+    </div>
+    <div class="form-group">
+        <label for="">Application Scopes</label>
+        <small>The {{applicationId}} application can grant these scopes:</small>
+        {{#each nonOwnerScopes}}
+            <label>
+                <input
+                    type="checkbox" /> {{this.resourceId}}_{{this.id}}
+            </label>
+        {{/each}}
+    </div>
+    <div class="btn-group">
+        <button class="btn btn-primary btn-disabled">
+            <i class="fa fa-save"></i> Save
+        </button>
     </div>
 </form>

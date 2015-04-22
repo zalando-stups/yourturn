@@ -46,6 +46,7 @@ class AppRouter extends Router {
     }
 
     configureOAuth(id) {
+        Flux.getActions('resource').fetchAllScopes();
         puppeteer.show(new OAuthForm({
             applicationId: id
         }), MAIN_VIEW_ID);

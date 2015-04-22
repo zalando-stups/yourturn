@@ -6,6 +6,7 @@ import Flux from 'resource/src/flux';
 class CreateScope extends BaseView {
     constructor(props) {
         this.actions = Flux.getActions('resource');
+        this.store = Flux.getStore('resource');
         this.className = 'createScope';
         this.events = {
             'submit': 'save'
@@ -14,8 +15,10 @@ class CreateScope extends BaseView {
     }
 
     update() {
+        let resource = this.store.getResource(this.props.resourceId);
         this.data = {
-            resourceId: this.props.resourceId
+            resource: resource,
+            resourceHasOwner: resource.owners.length > 0
         };
     }
 

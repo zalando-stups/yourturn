@@ -24,19 +24,37 @@ class ResourceStore extends Store {
         this.register(
             resourceActions.fetchScopes,
             this.receiveScopes);
+        this.register(
+            resourceActions.fetchAllScopes,
+            this.receiveAllScopes);
+    }
+
+    receiveAllScopes(scopes) {
+        let state = scopes.reduce((map, scp) => {
+            let resource = _m.get(map, scp.resourceId) || _m.hashMap();
+            resource = _m.assoc(resource, scp.id, _m.toClj(scp));
+            return _m.assoc(map, scp.resourceId, resource);
+        }, this.state.scopes);
+        this.setState({
+            scopes: state
+        });
     }
 
     receiveScopes([resourceId, scopes]) {
-        //TODO not good
-        scopes.forEach(scope => {
-            this.receiveScope([resourceId, scope]);
+        let state = scopes.reduce((map, scp) => {
+            let resource = _m.get(map, resourceId) || _m.hashMap();
+            resource = _m.assoc(resource, scp.id, _m.toClj(scp));
+            return _m.assoc(map, resourceId, resource);
+        }, this.state.scopes);
+        this.setState({
+            scopes: state
         });
     }
 
     receiveResources(resources) {
-        resources.forEach(resource => {
-            //TODO not good, too many events
-            this.receiveResource(resource);
+        let state = resources.reduce((map, res) => _m.assoc(map, res.id, _m.toClj(res)), this.state.resources);
+        this.setState({
+            resources: state
         });
     }
 
@@ -70,6 +88,7 @@ class ResourceStore extends Store {
      */
     getResources() {
         let entries = _m.keys(this.state.resources);
+        entries = _m.sort(e => _m.get(e, 'id'), entries);
         return entries ? _m.toJs(entries) : [];
     }
 
@@ -99,7 +118,14 @@ class ResourceStore extends Store {
      */
     getScopes(resourceId) {
         let entries = _m.keys(_m.get(this.state.scopes, resourceId));
+        entries = _m.sort(e => _m.get('id', e), entries);
+        return entries ? _m.toJs(entries) : [];
+    }
 
+    getAllScopes() {
+        let entries = _m.map(res => _m.vals(_m.get(res, 1)), this.state.scopes);
+        entries = _m.flatten(entries);
+        entries = _m.sort(e => _m.get('id', e), entries);
         return entries ? _m.toJs(entries) : [];
     }
 
