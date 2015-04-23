@@ -33,7 +33,6 @@ module.exports = {
     // prefix everything with YTENV_
     externals: {
         KIO_BASE_URL: 'YTENV_KIO_BASE_URL',
-        TWINTIP_BASE_URL: 'YTENV_TWINTIP_BASE_URL'
         TWINTIP_BASE_URL: 'YTENV_TWINTIP_BASE_URL',
         DOCKER_REGISTRY: 'YTENV_DOCKER_REGISTRY',
         SERVICE_URL_TLD: 'YTENV_SERVICE_URL_TLD'

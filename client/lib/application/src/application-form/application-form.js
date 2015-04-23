@@ -8,9 +8,9 @@ import {constructLocalUrl} from 'common/src/data/services';
 import FetchResult from 'common/src/fetch-result';
 import 'common/asset/scss/application/application-form.scss';
 
-class CreateApp extends BaseView {
+class ApplicationForm extends BaseView {
     constructor(props) {
-        this.className = 'createApplication';
+        this.className = 'applicationForm';
         this.events = {
             'submit form': 'save',
             'keyup #team_id': 'fillServiceUrl',
@@ -135,4 +135,4 @@ class CreateApp extends BaseView {
     }
 }
 
-export default CreateApp;
+export default ApplicationForm;
