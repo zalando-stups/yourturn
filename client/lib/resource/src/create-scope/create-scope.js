@@ -43,6 +43,7 @@ class CreateScope extends BaseView {
             scope_criticality = parseInt($el.find('[name="yourturn_scope_criticality"]:checked').val(), 10),
             scope_ownerScope = $el.find('#scope_ownerScope:checked').length > 0,
             scope_summary = $el.find('#scope_summary').val(),
+            scope_information = $el.find('#scope_information').val(),
             scope_description = $el.find('#scope_description').val();
 
         // construct the scope itself
@@ -51,6 +52,7 @@ class CreateScope extends BaseView {
             criticality: scope_criticality,
             ownerScope: scope_ownerScope,
             summary: scope_summary,
+            information: scope_information,
             description: scope_description
         };
 

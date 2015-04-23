@@ -23,6 +23,15 @@
             type="text" />
     </div>
     <div class="form-group">
+        <label for="scope_summary">User Information</label>
+        <small>This will be shown to the user on the consent screen. “The application would like to…”</small>
+        <input
+            name="yourturn_scope_information"
+            id="scope_information"
+            maxlength="140"
+            type="text" />
+    </div>
+    <div class="form-group">
         <label>Scope Criticality Level</label>
         <small>How sensitive is the data you get access to?</small>
         {{#each criticalities}}
