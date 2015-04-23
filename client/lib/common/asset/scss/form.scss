@@ -28,17 +28,17 @@ input[type="search"] {
 
 .form {
     .form-group {
-        > small {
+        small {
             color: $gray;
         }
-        > label {
+        label {
             font-weight: $weight-regular;
             display: block;
         }
-        > textarea,
-        > input[type="url"],
-        > input[type="text"],
-        > input[type="search"] {
+        textarea,
+        input[type="url"],
+        input[type="text"],
+        input[type="search"] {
             width: 100%;
 
             &:invalid,
@@ -60,11 +60,11 @@ input[type="search"] {
             }
         }
 
-        > select {
+        select {
             display: block;
         }
 
-        > p {
+        p {
             margin: 0;
             max-width: 400px;
             + p {
