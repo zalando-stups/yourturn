@@ -15,7 +15,7 @@
             <td>{{resource.name}}</td>
         </tr>
         <tr>
-            <th>Owners</th>
+            <th>Resource Owners</th>
             <td>
                 <ul>
                     {{#each resource.owners}}
@@ -28,18 +28,35 @@
         </tr>
     </tbody>
 </table>
-<h4 class="resourceDetail-scopeTitle">Scopes</h4>
-{{#if scopes.length}}
-    <ul>
-        {{#each scopes}}
+
+<div class="grid with-gutter">
+    <div class="grid-col">
+        <h4 class="resourceDetail-appScopeTitle">Application Scopes</h4>
+        {{#each appScopes}}
             <li>
-                <a href="resource/detail/{{../resource.id}}/scope/{{this}}">{{this}}</a>
+                <a href="resource/detail/{{../resource.id}}/scope/{{this.id}}">
+                    {{this.id}}
+                </a>
             </li>
+        {{else}}
+            No application scopes.
         {{/each}}
-    </ul>
-{{else}}
-    No scopes to display.
-{{/if}}
+    </div>
+    <div class="grid-col">
+        <h4 class="resourceDetail-ownerScopeTitle">Resource Owner Scopes</h4>
+        <ul>
+            {{#each ownerScopes}}
+                <li>
+                    <a href="resource/detail/{{../resource.id}}/scope/{{this.id}}">
+                        {{this.id}}
+                    </a>
+                </li>
+            {{else}}
+                No resource owner scopes.
+            {{/each}}
+        </ul>
+    </div>
+</div>
 <h4 class="resourceDetail-descriptionTitle">Description</h4>
 <p data-action="markdown">
     {{resource.description}}

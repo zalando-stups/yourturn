@@ -12,9 +12,12 @@ class ResourceDetail extends BaseView {
     }
 
     update() {
+        let scopes = this.store.getScopes(this.props.resourceId);
         this.data = {
             resource: this.store.getResource(this.props.resourceId),
-            scopes: this.store.getScopes(this.props.resourceId)
+            scopes: scopes,
+            ownerScopes: scopes.filter(s => s.ownerScope),
+            appScopes: scopes.filter(s => !s.ownerScope)
         };
     }
 

@@ -13,11 +13,59 @@ class ResourceStore extends Store {
         };
 
         this.register(
-            resourceActions.saveResource,
+            resourceActions.fetchResource,
             this.receiveResource);
         this.register(
-            resourceActions.saveScope,
+            resourceActions.fetchResources,
+            this.receiveResources);
+        this.register(
+            resourceActions.fetchScope,
             this.receiveScope);
+        this.register(
+            resourceActions.fetchScopes,
+            this.receiveScopes);
+        this.register(
+            resourceActions.fetchAllScopes,
+            this.receiveAllScopes);
+    }
+
+    receiveAllScopes(scopes) {
+        let state = scopes.reduce((map, scp) => {
+            let resource = _m.get(map, scp.resourceId) || _m.hashMap();
+            resource = _m.assoc(resource, scp.id, _m.toClj(scp));
+            return _m.assoc(map, scp.resourceId, resource);
+        }, this.state.scopes);
+        this.setState({
+            scopes: state
+        });
+    }
+
+    receiveScopes([resourceId, scopes]) {
+        let state = scopes.reduce((map, scp) => {
+            let resource = _m.get(map, resourceId) || _m.hashMap();
+            resource = _m.assoc(resource, scp.id, _m.toClj(scp));
+            return _m.assoc(map, resourceId, resource);
+        }, this.state.scopes);
+        this.setState({
+            scopes: state
+        });
+    }
+
+    receiveResources(resources) {
+        let state = resources.reduce((map, res) => _m.assoc(map, res.id, _m.toClj(res)), this.state.resources);
+        this.setState({
+            resources: state
+        });
+    }
+
+    /**
+     * Receives a single scope and saves it in the store.
+     *
+     * @param  {string} resourceId ID of the owning resource
+     * @param  {obj} scope The scope itself
+     */
+    receiveScope([resourceId, scope]) {
+        this.receiveScopes([resourceId, [scope]]);
     }
 
     /**
@@ -50,6 +98,7 @@ class ResourceStore extends Store {
      */
     getResources() {
         let entries = _m.keys(this.state.resources);
+        entries = _m.sortBy(e => _m.get(e, 'id'), entries);
         return entries ? _m.toJs(entries) : [];
     }
 
@@ -72,32 +121,22 @@ class ResourceStore extends Store {
     }
 
     /**
-     * Returns IDs of all the scopes for this resource.
+     * Returns all the scopes for this resource.
      *
      * @param  {string} resourceId ID of the resource
      * @return {array} Empty array if there are not scopes.
      */
     getScopes(resourceId) {
-        let entries = _m.keys(_m.get(this.state.scopes, resourceId));
-
+        let entries = _m.vals(_m.get(this.state.scopes, resourceId));
+        entries = _m.sortBy(e => _m.get('id', e), entries);
         return entries ? _m.toJs(entries) : [];
     }
 
-    /**
-     * Receives a single scope and saves it in the store.
-     *
-     * @param  {string} resourceId ID of the owning resource
-     * @param  {obj} scope The scope itself
-     */
-    receiveScope([resourceId, scope]) {
-        let scopes = _m.get(this.state.scopes, resourceId);
-        if (!scopes) {
-            scopes = _m.hashMap();
-        }
-        scopes = _m.assoc(scopes, scope.id, _m.toClj(scope));
-        this.setState({
-            scopes: _m.assoc(this.state.scopes, resourceId, scopes)
-        });
+    getAllScopes() {
+        let entries = _m.map(res => _m.vals(_m.get(res, 1)), this.state.scopes);
+        entries = _m.flatten(entries);
+        entries = _m.sortBy(e => _m.get('id', e), entries);
+        return entries ? _m.toJs(entries) : [];
     }
 }
 

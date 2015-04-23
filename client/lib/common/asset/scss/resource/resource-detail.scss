@@ -1,7 +1,10 @@
 @import "../variables";
 
 .resourceDetail {
-    .resourceDetail-scopeTitle,
+    max-width: $content-width-regular;
+    
+    .resourceDetail-appScopeTitle,
+    .resourceDetail-ownerScopeTitle,
     .resourceDetail-descriptionTitle {
         color: $gray;
     }
@@ -20,13 +23,7 @@
             ul {
                 margin: 0;
                 padding-left: 0;
-                list-style-type: none;
-
-                li {
-                    &:before {
-                        content: '✓'
-                    }
-                }
+                list-style-type: disc;
             }
         }
     }   

@@ -16,7 +16,7 @@
     white-space: nowrap;
     user-select: none;
     padding: $padding-tiniest $padding-tiny;
-    border-radius: 2px;
+    border-radius: $border-radius;
     border: 1px solid transparent;
     border-bottom: 3px solid $gray;
 
@@ -30,7 +30,10 @@
     
     &.btn-disabled {
         pointer-events: none;
-        color: $gray-light;
+        background: $gray-light !important;
+        color: $white !important;
+        border-color: $gray !important;
+        border-width: 1px;
     }
 
     &.btn-primary {
