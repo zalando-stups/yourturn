@@ -21,6 +21,7 @@ class VersionDetail extends BaseView {
         let {applicationId} = this.props,
             {versionId} = this.props;
         this.data = {
+            applicationId: applicationId,
             version: this.stores.application.getApplicationVersion( applicationId, versionId )
         };
     }
@@ -31,7 +32,7 @@ class VersionDetail extends BaseView {
         if (data.version instanceof FetchResult) {
             $el.html(
                 data.version.isPending() ?
-                Placeholder() :
+                Placeholder(data) :
                 ErrorTpl( data.version.getResult() )
             );
         } else {

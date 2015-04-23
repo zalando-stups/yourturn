@@ -1,9 +1,11 @@
+/** global Promise */
 import {Router} from 'backbone';
 import puppeteer from 'common/src/puppeteer';
 import List from './application-list/application-list';
 import Detail from './application-detail/application-detail';
 import AppForm from './application-form/application-form';
 import OAuthForm from './oauth-form/oauth-form';
+import VersionForm from './version-form/version-form';
 import VersionList from './version-list/version-list';
 import VersionDetail from './version-detail/version-detail';
 import Flux from './flux';
@@ -20,7 +22,8 @@ class AppRouter extends Router {
             'application/edit/:id': 'editApplication',
             'application/detail/:id': 'listApplication',
             'application/detail/:id/version': 'listApplicationVersions',
-            'application/detail/:id/version/:ver': 'listApplicationVersion'
+            'application/detail/:id/version/create': 'createApplicationVersion',
+            'application/detail/:id/version/detail/:ver': 'listApplicationVersion'
         };
 
         super();
@@ -35,16 +38,41 @@ class AppRouter extends Router {
         });
     }
 
+    createApplicationVersion(applicationId) {
+        // we probably already have this app, so check
+        let combinedPromise,
+            versions = Flux.getActions('application').fetchApplicationVersions(applicationId),
+            app = Flux.getStore('application').getApplication(applicationId);
+
+        if (app) {
+            combinedPromise = versions;
+        } else {
+            combinedPromise = Promise.all([
+                Flux.getActions('application').fetchApplication(applicationId),
+                versions
+            ]);
+        }
+        
+        combinedPromise
+        .then(() => {
+            puppeteer.show(new VersionForm({
+                applicationId: applicationId
+            }), MAIN_VIEW_ID);
+        });
+        //TODO catch, show error that no such app exists
+    }
+
     editApplication(id) {
         Flux
         .getActions('application')
         .fetchApplication(id)
-        .finally(() => {
+        .then(() => {
             puppeteer.show( new AppForm({
                 applicationId: id,
                 edit: true
             }), MAIN_VIEW_ID);
         });
+        //TODO catch, show error that no such app exists
     }
 
     configureOAuth(id) {
@@ -57,6 +85,7 @@ class AppRouter extends Router {
                 applicationId: id
             }), MAIN_VIEW_ID);
         });
+        //TODO catch, show error that no such app exists
     }
 
     /**

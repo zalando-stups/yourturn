@@ -1,5 +1,5 @@
 import {Store} from 'flummox';
-import {Services, constructLocalUrl} from 'common/src/data/services';
+import {Services, getLocalUrlForService} from 'common/src/data/services';
 import _m from 'mori';
 
 function sortDesc(a, b) {
@@ -68,7 +68,7 @@ class SearchStore extends Store {
             res => _m.assoc(
                         res,
                         '_url',
-                        constructLocalUrl(SOURCE, _m.get( res, Services[SOURCE].id ))),
+                        getLocalUrlForService(SOURCE, _m.get( res, Services[SOURCE].id ))),
             newResults);
         // append results in seq
         old = _m.into( old, newResults );

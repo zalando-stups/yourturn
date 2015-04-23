@@ -126,10 +126,7 @@ class ApplicationStore extends Store {
     receiveApplicationVersions( versions ) {
         let newState = versions.reduce(
                             (map, ver) => {
-                                let app = _m.get(map, ver.application_id);
-                                if (!app) {
-                                    app = _m.hashMap();
-                                }
+                                let app = _m.get(map, ver.application_id) || _m.hashMap();
                                 app = _m.assoc(app, ver.id, _m.toClj(ver));
                                 return _m.assoc(map, ver.application_id, app);
                             },
@@ -188,8 +185,9 @@ class ApplicationStore extends Store {
      */
     getApplicationVersions(id) {
         let versions = _m.vals(_m.get(this.state.versions, id)),
-            sorted = _m.sort(v => _m.get(v, 'id'), versions);
-        return _m.toJs( sorted ) || [];
+            sorted = _m.sort(v => _m.get(v, 'id'), versions),
+            filtered = _m.filter(v => !(v instanceof FetchResult), sorted);
+        return _m.toJs( filtered ) || [];
     }
 
 

@@ -38,44 +38,29 @@ var applications = {
 };
 
 var versions = {
-    kio: [
-        {
+    kio: {
+        "1": {
             "id": "1",
             "application_id": "kio",
             "artifact": "docker://stups/kio:1.0"
         },
-        {
+        "0.9": {
             "id": "0.9",
             "application_id": "kio",
             "artifact": "docker//stups/kio:0.9"
         },
-        {
+        "0.9-beta": {
             "id": "0.9-beta",
             "application_id": "kio",
             "artifact": "docker//stups/kio:0.9-beta"
         },
-        {
+        "0.9-alpha": {
             "id": "0.9-alpha",
             "application_id": "kio",
             "artifact": "docker//stups/kio:0.9-alpha"
         }
-    ]
-};
-
-var kio_versions = {
-    "1": {
-      "id": "1",
-      "application_id": "kio",
-      "artifact": "docker://stups/kio:1.0",
-      "notes": "version 1 of Kio"
-    },
-    "0.9": {
-      "id": "0.9",
-      "application_id": "kio",
-      "artifact": "docker://stups/kio:0.9",
-      "notes": "version 0.9 of kio"
     }
-}
+};
 
 /** enable cors */
 server.use(function(req, res, next) {
@@ -118,10 +103,15 @@ server.put('/apps/:id', function(req, res) {
 server.get('/apps/:id/versions', function(req, res) {
     setTimeout( function() {
         var id = req.params.id;
-        if (!versions[id]) {
+        if (id !== 'kio') {
             res.status(404).send();
         } else {
-            res.status(200).send(versions[req.params.id]);
+            var list = Object
+                        .keys(versions.kio)
+                        .map(function(key) {
+                            return versions.kio[key];
+                        });
+            res.status(200).send(list);
         }
     }, Math.random() * 2000 );
 });
@@ -130,10 +120,23 @@ server.get('/apps/:id/versions/:ver', function(req, res) {
     setTimeout( function() {
         var id = req.params.id;
         var ver = req.params.ver;
-        if (id !== 'kio' || !kio_versions[ver]) {
+        if (id !== 'kio' || !versions.kio[ver]) {
             res.status(404).send();
         } else {
-            res.status(200).send(kio_versions[ver]);
+            res.status(200).send(versions.kio[ver]);
+        }
+    }, Math.random() * 2000 );
+});
+
+server.put('/apps/:id/versions/:ver', function(req, res) {
+    setTimeout( function() {
+        var id = req.params.id;
+        var ver = req.params.ver;
+        if (id !== 'kio') {
+            res.status(404).send();
+        } else {
+            versions.kio[ver] = req.body;
+            res.status(200).send(req.body);
         }
     }, Math.random() * 2000 );
 });
