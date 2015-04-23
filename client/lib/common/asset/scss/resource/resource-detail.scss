@@ -2,7 +2,9 @@
 
 .resourceDetail {
     max-width: $content-width-regular;
-    .resourceDetail-scopeTitle,
+    
+    .resourceDetail-appScopeTitle,
+    .resourceDetail-ownerScopeTitle,
     .resourceDetail-descriptionTitle {
         color: $gray;
     }
