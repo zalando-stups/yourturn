@@ -1,7 +1,7 @@
 @import "../variables";
 
-.applicationDetail {
-    .applicationDetail-descriptionTitle {
+.versionDetail {
+    .versionDetail-notesTitle {
         color: $gray;
     }
     h1 {
@@ -15,7 +15,7 @@
         }
     }
 
-    .applicationDetail-status {
+    .versionDetail-status {
           padding: $padding-tiny;
           border: 3px solid $gray-dark;
           border-radius: 5px;

@@ -3,7 +3,8 @@ import puppeteer from 'common/src/puppeteer';
 import List from './application-list/application-list';
 import Detail from './application-detail/application-detail';
 import AppForm from './application-form/application-form';
-import VersionList from './version-list/application-version';
+import VersionList from './version-list/version-list';
+import VersionDetail from './version-detail/version-detail';
 import Flux from './flux';
 import 'promise.prototype.finally';
 
@@ -16,7 +17,8 @@ class AppRouter extends Router {
             'application/create': 'createApplication',
             'application/edit/:id': 'editApplication',
             'application/detail/:id': 'listApplication',
-            'application/detail/:id/version': 'listApplicationVersions'
+            'application/detail/:id/version': 'listApplicationVersions',
+            'application/detail/:id/version/:ver': 'listApplicationVersion'
         };
 
         super();
@@ -74,7 +76,7 @@ class AppRouter extends Router {
     }
 
     /**
-     * Fetches the application version with `id`. Does not wait to finish and
+     * Fetches all versions for an application with `id`. Does not wait to finish and
      * instructs the Puppeteer to show the VersionView.
      *
      * @param  {String} id
@@ -85,6 +87,22 @@ class AppRouter extends Router {
         puppeteer.show( new VersionList({
             applicationId: id
         }), '#yourturn-view' );
+    }
+
+    /**
+     * Fetches details for version `ver` from an application with `id`. Does not wait to finish and
+     * instructs the Puppeteer to show the VersionDetailView.
+     *
+     * @param  {String} id
+     * @param  {String} ver
+     */
+    listApplicationVersion(id, ver) {
+        Flux.getActions('application').fetchApplicationVersion(id, ver);
+
+        puppeteer.show( new VersionDetail({
+            applicationId: id,
+            versionId: ver
+        }), MAIN_VIEW_ID );
     }
 }
 
