@@ -19,11 +19,17 @@ class VersionForm extends BaseView {
         super(props);
     }
 
+    /**
+     * Checks availability of version id and fills deployment artifact.
+     */
     handleVersionId() {
         this.checkVersionAvailability();
         this.fillDeploymentArtifact();
     }
 
+    /**
+     * Fills deployment artifact according to schema [docker registry]/[app team]/[app id]:[version].
+     */
     fillDeploymentArtifact() {
         let $idInput = this.$el.find('#version_id');
         let version_id = $idInput.val();
@@ -31,6 +37,9 @@ class VersionForm extends BaseView {
         this.$el.find('#version_artifactName').val(name);
     }
 
+    /**
+     * Checks if a version with the current id is already in the store. Sets icons accordingly.
+     */
     checkVersionAvailability() {
         let $idInput = this.$el.find('#version_id');
         let version_id = $idInput.val();
@@ -45,6 +54,9 @@ class VersionForm extends BaseView {
         }
     }
 
+    /**
+     * Reads data from view, creates a save action.
+     */
     save(evt) {
         evt.preventDefault();
 
