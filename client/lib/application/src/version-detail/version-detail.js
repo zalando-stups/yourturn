@@ -11,7 +11,7 @@ import 'common/asset/scss/application/application-detail.scss';
 class VersionDetail extends BaseView {
     constructor( props ) {
         this.stores = {
-            application: Flux.getStore('application'),
+            application: Flux.getStore('application')
         };
         this.className = 'applicationDetail';
         super(props);
@@ -21,25 +21,24 @@ class VersionDetail extends BaseView {
         let {applicationId} = this.props,
             {versionId} = this.props;
         this.data = {
-            ver: this.stores.application.getApplicationVersion( applicationId, versionId )
+            version: this.stores.application.getApplicationVersion( applicationId, versionId )
         };
-        console.log('ver', this.data.ver);
     }
 
     render() {
         let {data, $el} = this;
 
-        if (data.ver instanceof FetchResult) {
+        if (data.version instanceof FetchResult) {
             $el.html(
-                data.ver.isPending() ?
+                data.version.isPending() ?
                 Placeholder() :
-                ErrorTpl( data.ver.getResult() )
+                ErrorTpl( data.version.getResult() )
             );
         } else {
             $el.html( Template( data ) );
             $el
                 .find('[data-action="markdown"]')
-                .html(Markdown.render(data.ver.notes));
+                .html(Markdown.render(data.version.notes));
         }
         return this;
     }

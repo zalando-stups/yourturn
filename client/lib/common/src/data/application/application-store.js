@@ -74,7 +74,7 @@ class ApplicationStore extends Store {
      * @param  {String} ver
      */
     beginFetchApplicationVersion( id, ver ) {
-        let updatedApp =  _m.assoc( _m.get(this.state.versions, id) || _m.hashMap(), ver, new Pending() )
+        let updatedApp = _m.assoc( _m.get(this.state.versions, id) || _m.hashMap(), ver, new Pending() );
         this.setState({
             versions: _m.assoc(this.state.versions, id, updatedApp)
         });

@@ -1,8 +1,8 @@
-<h1>{{ver.application_id}} {{ver.id}}</h1>
+<h1>{{version.application_id}} {{version.id}}</h1>
 
 <div class="btn-group">
-    <a href="application/detail/{{ver.application_id}}/version" class="btn btn-default">
-        <i class="fa fa-chevron-left"></i> Back to all {{ver.application_id}} versions
+    <a href="application/detail/{{version.application_id}}/version" class="btn btn-default">
+        <i class="fa fa-chevron-left"></i> Back to all {{version.application_id}} versions
     </a>
 </div>
 
@@ -11,15 +11,15 @@
     <tbody>
         <tr>
             <th>ID</th>
-            <td>{{ver.id}}</td>
+            <td>{{version.id}}</td>
         </tr>
         <tr>
             <th>Artifact</th>
-            <td>{{ver.artifact}}</td>
+            <td>{{version.artifact}}</td>
         </tr>
     </tbody>
 </table>
 <h4 class="applicationDetail-descriptionTitle">Notes</h4>
 <p data-action="markdown">
-    {{ver.notes}}
+    {{version.notes}}
 </p>
