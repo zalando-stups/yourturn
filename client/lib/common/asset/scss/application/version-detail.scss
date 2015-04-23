@@ -1,0 +1,24 @@
+@import "../variables";
+
+.versionDetail {
+    .versionDetail-notesTitle {
+        color: $gray;
+    }
+    h1 {
+        color: $gray-dark;
+    }
+    table {
+        width: 100%;
+        th {
+            color: $gray;
+            text-align: left;
+        }
+    }
+
+    .versionDetail-status {
+          padding: $padding-tiny;
+          border: 3px solid $gray-dark;
+          border-radius: 5px;
+          margin-right: $padding-small;
+    }
+}

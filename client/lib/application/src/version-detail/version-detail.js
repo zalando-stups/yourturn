@@ -6,14 +6,14 @@ import ErrorTpl from 'common/src/error.hbs';
 import Placeholder from './placeholder.hbs';
 import Markdown from 'common/src/markdown';
 
-import 'common/asset/scss/application/application-detail.scss';
+import 'common/asset/scss/application/version-detail.scss';
 
 class VersionDetail extends BaseView {
     constructor( props ) {
         this.stores = {
             application: Flux.getStore('application')
         };
-        this.className = 'applicationDetail';
+        this.className = 'versionDetail';
         super(props);
     }
 
