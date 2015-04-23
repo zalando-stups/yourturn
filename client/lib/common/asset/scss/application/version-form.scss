@@ -1,9 +1,8 @@
 @import "../variables";
 
-.applicationForm {
+.versionForm {
     max-width: $content-width-regular;
-
-    .applicationForm-applicationId {
+    .versionForm-versionId {
         .input-addon {
             flex: 0 0 2em;
         }

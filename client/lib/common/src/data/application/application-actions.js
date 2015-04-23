@@ -62,6 +62,21 @@ class ApplicationActions extends Actions {
                     throw err;
                 });
     }
+
+    saveApplicationVersion(version) {
+        return request
+                .put(`${Services.kio.url}${Services.kio.root}/${version.application_id}/versions/${version.id}`)
+                .type('json')
+                .accept('json')
+                .send(version)
+                .exec()
+                .then(res => res.body)
+                .catch(err => {
+                    err.applicationId = version.application_id;
+                    err.version_id = version.id;
+                    throw err;
+                });
+    };
 }
 
 export default ApplicationActions;

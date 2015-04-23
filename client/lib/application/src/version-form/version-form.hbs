@@ -1,0 +1,61 @@
+<h2>Create a new version for {{application.name}}</h2>
+<form class="form" name="createAppVersionForm">
+    <div class="form-group">
+        <label>Application</label>
+        <input
+            disabled="disabled"
+            value="{{application.id}}"
+            type="text" />
+    </div>
+    <div class="form-group versionForm-versionId">
+        <label for="version_id">Version ID</label>
+        <small>For instance <a data-external href="http://semver.org/">semantic versioning</a> or a codename like “pretty-squirrel”.</small>
+        <div class="input-group">
+            <div class="input-addon">
+                <i  title="Version ID is available."
+                    class="fa fa-check is-available"></i>
+                <i  title="Version ID is already taken."
+                    class="fa fa-close is-taken"></i>
+            </div>
+            <input
+                autofocus="autofocus"
+                required="required"
+                placeholder="0.0.1"
+                title="Characters and numbers with dots, dashes or underscores in between."
+                pattern="[A-Za-z0-9]([A-Za-z0-9\._-]*[A-Za-z0-9])?"
+                type="text"
+                name="yourturn_version_id"
+                id="version_id" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="version_artifact">Deployment Artifact</label>
+        <small>This is the tag of your Docker image.</small>
+        <div class="input-group">
+            <div class="input-addon">
+                Docker
+            </div>
+            <input
+                name="yourturn_version_artifactName"
+                id="version_artifactName"
+                type="text" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="description">Notes</label>
+        <small>A more elaborate description of what the version contains. You can use <a data-external href="http://www.unexpected-vortices.com/sw/rippledoc/quick-markdown-example.html">Markdown</a>.</small>
+        <textarea
+            id="version_notes"
+            placeholder="Fixes serious CSS race condition."
+            name="yourturn_version_notes"
+            cols="30"
+            rows="10"></textarea>
+    </div>
+    <div class="btn-group">
+        <button
+            type="submit"
+            class="btn btn-primary">
+            <i class="fa fa-save"></i> Save
+        </button>
+    </div>
+</form>
