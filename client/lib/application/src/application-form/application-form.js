@@ -2,6 +2,7 @@ import BaseView from 'common/src/base-view';
 import Template from './application-form.hbs';
 import Flux from 'application/src/flux';
 import GlobalFlux from 'yourturn/src/flux';
+import SERVICE_URL_TLD from 'SERVICE_URL_TLD';
 import {history} from 'backbone';
 import {constructLocalUrl} from 'common/src/data/services';
 import FetchResult from 'common/src/fetch-result';
@@ -62,13 +63,13 @@ class CreateApp extends BaseView {
     }
 
     /**
-     * Autocompletes the service url using the pattern {app}.{team}.zalan.do
+     * Autocompletes the service url using the pattern {app}.{team}.{tld}
      */
     fillServiceUrl() {
         let {$el} = this;
         let team_id = $el.find('#team_id').val();
         let app_id = $el.find('#app_id').val();
-        $el.find('#service_url').val(`${app_id}.${team_id}.zalan.do`);
+        $el.find('#service_url').val(`${app_id}.${team_id}.${SERVICE_URL_TLD}`);
     }
 
     /**
