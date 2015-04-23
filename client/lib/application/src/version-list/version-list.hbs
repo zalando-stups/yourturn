@@ -1,7 +1,7 @@
 <h2>{{app}} Versions</h2>
 
 <div class="btn-group">
-    <a href="application/detail/{{app}}" class="btn btn-default">
+    <a href="/application/detail/{{app}}" class="btn btn-default">
         <i class="fa fa-chevron-left"></i> Back to {{app}}
     </a>
 </div>
@@ -10,7 +10,7 @@
     <ul>
         {{#each versions}}
             <li>
-                <a href="application/detail/{{this.application_id}}/version/{{this.id}}">{{this.id}}</a>
+                <a href="/application/detail/{{this.application_id}}/version/detail/{{this.id}}">{{this.id}}</a>
             </li>
         {{/each}}
     </ul>
