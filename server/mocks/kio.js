@@ -40,7 +40,7 @@ var applications = {
 var versions = {
     kio: [
         {
-            "id": "1.0",
+            "id": "1",
             "application_id": "kio",
             "artifact": "docker://stups/kio:1.0"
         },
@@ -63,14 +63,14 @@ var versions = {
 };
 
 var kio_versions = {
-    1: {
-      "id": "2",
+    "1": {
+      "id": "1",
       "application_id": "kio",
       "artifact": "docker://stups/kio:1.0",
-      "notes": "version 1.0 of Kio"
+      "notes": "version 1 of Kio"
     },
-    2: {
-      "id": "1",
+    "0.9": {
+      "id": "0.9",
       "application_id": "kio",
       "artifact": "docker://stups/kio:0.9",
       "notes": "version 0.9 of kio"
@@ -133,7 +133,7 @@ server.get('/apps/:id/versions/:ver', function(req, res) {
         if (id !== 'kio' || !kio_versions[ver]) {
             res.status(404).send();
         } else {
-            res.status(200).send(versions[req.params.id]);
+            res.status(200).send(kio_versions[ver]);
         }
     }, Math.random() * 2000 );
 });

@@ -1,6 +1,7 @@
 import BaseView from 'common/src/base-view';
 import Template from './application-form.hbs';
 import Flux from 'application/src/flux';
+import GlobalFlux from 'yourturn/src/flux';
 import {history} from 'backbone';
 import {constructLocalUrl} from 'common/src/data/services';
 import FetchResult from 'common/src/fetch-result';
@@ -111,9 +112,15 @@ class CreateApp extends BaseView {
             // and window.location is ugly and probably aborts the PUT request from before
             history.navigate(constructLocalUrl('kio', app.id), { trigger: true });
         })
-        .catch(e => {
+        .catch(() => {
             // FIXME with notification
-            console.error(e);
+            let verb = this.props.edit ? 'update' : 'create';
+            GlobalFlux
+            .getActions('notification')
+            .addNotification([
+                `Could not ${verb} application ${app.name}.`,
+                'error'
+            ]);
         });
     }
 

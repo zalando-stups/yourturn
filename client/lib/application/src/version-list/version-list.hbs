@@ -10,7 +10,7 @@
     <ul>
         {{#each versions}}
             <li>
-                {{this.id}}
+                <a href="application/detail/{{this.application_id}}/version/{{this.id}}">{{this.id}}</a>
             </li>
         {{/each}}
     </ul>

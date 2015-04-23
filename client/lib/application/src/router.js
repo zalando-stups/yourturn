@@ -3,8 +3,13 @@ import puppeteer from 'common/src/puppeteer';
 import List from './application-list/application-list';
 import Detail from './application-detail/application-detail';
 import AppForm from './application-form/application-form';
+<<<<<<< HEAD
 import OAuthForm from './oauth-form/oauth-form';
 import VersionList from './version-list/application-version';
+=======
+import VersionList from './version-list/version-list';
+import VersionDetail from './version-detail/version-detail';
+>>>>>>> master
 import Flux from './flux';
 import 'promise.prototype.finally';
 
@@ -15,10 +20,11 @@ class AppRouter extends Router {
         this.routes = {
             'application': 'listApplications',
             'application/create': 'createApplication',
+            'application/oauth/:id': 'configureOAuth',
             'application/edit/:id': 'editApplication',
             'application/detail/:id': 'listApplication',
             'application/detail/:id/version': 'listApplicationVersions',
-            'application/oauth/:id': 'configureOAuth'
+            'application/detail/:id/version/:ver': 'listApplicationVersion'
         };
 
         super();
@@ -88,7 +94,7 @@ class AppRouter extends Router {
     }
 
     /**
-     * Fetches the application version with `id`. Does not wait to finish and
+     * Fetches all versions for an application with `id`. Does not wait to finish and
      * instructs the Puppeteer to show the VersionView.
      *
      * @param  {String} id
@@ -98,6 +104,22 @@ class AppRouter extends Router {
 
         puppeteer.show( new VersionList({
             applicationId: id
+        }), MAIN_VIEW_ID );
+    }
+
+    /**
+     * Fetches details for version `ver` from an application with `id`. Does not wait to finish and
+     * instructs the Puppeteer to show the VersionDetailView.
+     *
+     * @param  {String} id
+     * @param  {String} ver
+     */
+    listApplicationVersion(id, ver) {
+        Flux.getActions('application').fetchApplicationVersion(id, ver);
+
+        puppeteer.show( new VersionDetail({
+            applicationId: id,
+            versionId: ver
         }), MAIN_VIEW_ID );
     }
 }
