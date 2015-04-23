@@ -98,9 +98,9 @@ class ApplicationStore extends Store {
      * @param  {error} err The error passed from the flux action.
      */
     failFetchApplicationVersion(err) {
-        let updatedVer =  _m.assoc( _m.get(this.state.versions, err.id), err.ver, new Failed( err ) );
+        let updatedVer = _m.assoc( _m.get(this.state.versions, err.id), err.ver, new Failed( err ) );
         this.setState({
-            versions:  _m.assoc(this.state.versions, err.id, updatedVer)
+            versions: _m.assoc(this.state.versions, err.id, updatedVer)
         });
     }
 
