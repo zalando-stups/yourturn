@@ -121,6 +121,7 @@ class AppRouter extends Router {
      */
     listApplication(id) {
         APP_ACTIONS.fetchApplication(id);
+        APP_ACTIONS.fetchApplicationVersions(id);
         Flux.getActions('api').fetchApi(id);
 
         puppeteer.show( new Detail({

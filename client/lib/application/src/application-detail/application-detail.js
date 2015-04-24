@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import BaseView from 'common/src/base-view';
 import Template from './application-detail.hbs';
 import Flux from 'application/src/flux';
@@ -21,8 +22,10 @@ class AppDetail extends BaseView {
     update() {
         let {applicationId} = this.props;
         this.data = {
+            applicationId: applicationId,
             app: this.stores.application.getApplication( applicationId ),
-            api: this.stores.api.getApi( applicationId )
+            api: this.stores.api.getApi( applicationId ),
+            versions: _.take(this.stores.application.getApplicationVersions(applicationId), 3)
         };
         this.data.hasApi = this.data.api && this.data.api.status === 'SUCCESS';
     }
@@ -33,11 +36,11 @@ class AppDetail extends BaseView {
         if (data.app instanceof FetchResult) {
             $el.html(
                 data.app.isPending() ?
-                Placeholder() :
-                ErrorTpl( data.app.getResult() )
+                Placeholder(data) :
+                ErrorTpl(data.app.getResult())
             );
         } else {
-            $el.html( Template( data ) );
+            $el.html(Template(data));
             $el
                 .find('[data-action="markdown"]')
                 .html(Markdown.render(data.app.description));

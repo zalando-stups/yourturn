@@ -1,11 +1,14 @@
 <h1>{{app.name}}</h1>
 
 <div class="btn-group">
-    <a href="/application/edit/{{app.id}}" class="btn btn-primary">
+    <a href="/application/edit/{{app.id}}" class="btn btn-default">
         <i class="fa fa-pencil"></i> Edit
     </a>
     <a href="/application/oauth/{{app.id}}" class="btn btn-default">
         <i class="fa fa-plug"></i> Configure OAuth
+    </a>
+    <a href="/application/detail/{{app.id}}/version" class="btn btn-primary">
+        <i class="fa fa-list"></i> Versions
     </a>
 </div>
 
@@ -68,9 +71,13 @@
             </td>
         </tr>
         <tr>
-            <th>Versions</th>
+            <th>Most recent versions</th>
             <td>
-                <a href="/application/detail/{{app.id}}/version">All</a>
+                <ul>
+                {{#each versions}}
+                    <li><a href="/application/detail/{{../app.id}}/version/detail/{{this.id}}">{{this.id}}</a></li>            
+                {{/each}}
+                </ul>
             </td>
         </tr>
     </tbody>
