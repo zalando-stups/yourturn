@@ -7,6 +7,7 @@ import 'common/asset/scss/application/approval-form.scss';
 class ApprovalForm extends BaseView {
     constructor(props) {
         this.store = Flux.getStore('application');
+        this.actions = Flux.getActions('application');
         this.className = 'approvalForm';
         this.events = {
             'submit': 'save',
@@ -38,7 +39,9 @@ class ApprovalForm extends BaseView {
             notes: notes
         };
 
-        Flux.getActions('application').saveApproval(approval);
+        this.actions
+        .saveApproval(approval)
+        .then(() => this.actions.fetchApprovals(applicationId, versionId));
     }
 
     update() {

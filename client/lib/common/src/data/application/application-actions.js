@@ -31,7 +31,7 @@ class ApplicationActions extends Actions {
                 .accept('json')
                 .send(app)
                 .exec()
-                .then( res => res.body )
+                .then()
                 .catch( err => {
                     err.id = app.id;
                     throw err;
@@ -70,7 +70,7 @@ class ApplicationActions extends Actions {
                 .accept('json')
                 .send(version)
                 .exec()
-                .then(res => res.body)
+                .then()
                 .catch(err => {
                     err.applicationId = version.application_id;
                     err.version_id = version.id;
@@ -98,7 +98,7 @@ class ApplicationActions extends Actions {
                 .accept('json')
                 .send(approval)
                 .exec()
-                .then(res => res.body);
+                .then();
     }
 }
 

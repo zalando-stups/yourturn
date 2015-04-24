@@ -28,12 +28,6 @@ class ApplicationStore extends Store {
             this.failFetchApplication);
 
         this.registerAsync(
-            appActions.saveApplication,
-            this.beginSaveApplication,
-            this.receiveApplication,
-            this.failSaveApplication);
-
-        this.registerAsync(
             appActions.fetchApplicationVersions,
             this.beginFetchApplicationVersions,
             this.receiveApplicationVersions,
@@ -50,21 +44,11 @@ class ApplicationStore extends Store {
             this.beginFetchApprovals,
             this.receiveApprovals,
             this.failFetchApprovals);
-
-        this.registerAsync(
-            appActions.saveApproval,
-            this.beginFetchApprovals,
-            this.receiveApproval,
-            this.failFetchApprovals);
-
     }
 
     // intentionally left as noop for now
     beginFetchApplications() {}
     failFetchApplications() {}
-
-    beginSaveApplication() {}
-    failSaveApplication() {}
 
     beginFetchApplicationVersions() {}
     failFetchApplicationVersions() {}

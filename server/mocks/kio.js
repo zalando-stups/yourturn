@@ -114,7 +114,7 @@ server.get('/apps/:id', function(req,res){
 server.put('/apps/:id', function(req, res) {
     setTimeout( function() {
         applications[req.body.id] = req.body;
-        res.status(200).send(req.body);
+        res.status(200).send();
     }, Math.random() * 2000 );
 });
 
@@ -154,7 +154,7 @@ server.put('/apps/:id/versions/:ver', function(req, res) {
             res.status(404).send();
         } else {
             versions.kio[ver] = req.body;
-            res.status(200).send(req.body);
+            res.status(200).send();
         }
     }, Math.random() * 2000 );
 });
@@ -181,9 +181,13 @@ server.post('/apps/:id/versions/:ver/approvals', function(req, res) {
             var approval = req.body;
             approval.created_at = '2015-04-25T17:25:00';
             approval.application_id = id;
+            approval.user_id = 'test_user';
             approval.version_id = ver;
-            approvals.kio[ver].push(req.body);
-            res.status(200).send(req.body);
+            if (!approvals.kio[ver]) {
+                approvals.kio[ver] = [];
+            };
+            approvals.kio[ver].push(approval);
+            res.status(200).send();
         }
     }, Math.random() * 2000 );
 });
