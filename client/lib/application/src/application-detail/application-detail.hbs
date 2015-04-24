@@ -13,16 +13,13 @@
 </div>
 
 <h4>
-    <span class="applicationDetail-status">
-        {{#if app.active}}
-            <i class="fa fa-lg fa-circle"></i> <strong>Active</strong>
-        {{else}}
-            <i class="fa fa-lg fa-circle-o"></i> <strong>Inactive</strong>
-        {{/if}}
-    </span>
+    {{#unless app.active}}
+        <span class="applicationDetail-status">
+            <i class="fa fa-lg fa-circle-o"></i> Inactive
+        </span>
+    {{/unless}}
     {{ app.subtitle }}
 </h4>
-
 
 <table>
     <tbody>
