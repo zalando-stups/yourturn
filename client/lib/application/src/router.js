@@ -14,8 +14,7 @@ import 'promise.prototype.finally';
 
 const MAIN_VIEW_ID = '#yourturn-view',
       APP_ACTIONS = Flux.getActions('application'),
-      APP_STORE = Flux.getStore('application'),
-      SPINNER = $('<i class="fa fa-spin fa-circle-notch-o" />');
+      APP_STORE = Flux.getStore('application');
 
 class AppRouter extends Router {
     constructor() {
