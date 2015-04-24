@@ -179,7 +179,7 @@ server.post('/apps/:id/versions/:ver/approvals', function(req, res) {
             res.status(404).send();
         } else {
             var approval = req.body;
-            approval.created_at = '2015-04-25T17:25:00';
+            approval.approved_at = '2015-04-25T17:25:00';
             approval.application_id = id;
             approval.user_id = 'test_user';
             approval.version_id = ver;

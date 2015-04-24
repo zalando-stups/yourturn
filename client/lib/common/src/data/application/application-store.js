@@ -208,11 +208,15 @@ class ApplicationStore extends Store {
     }
 
     receiveApprovals(approvals) {
+        function getKey(apr) {
+            return `${apr.user_id}.${apr.approved_at}.${apr.approval_type}`;
+        }
+
         let newState = approvals.reduce(
                             (map, approval) => {
                                 let app = _m.get(map, approval.application_id) || _m.hashMap();
-                                let version = _m.get(app, approval.version_id) || _m.vector();
-                                version = _m.conj(version, _m.toClj(approval));
+                                let version = _m.get(app, approval.version_id) || _m.hashMap();
+                                version = _m.assoc(version, getKey(approval), _m.toClj(approval));
                                 app = _m.assoc(app, approval.version_id, version);
                                 return _m.assoc(map, approval.application_id, app);
                             },
@@ -227,7 +231,7 @@ class ApplicationStore extends Store {
     }
 
     getApprovals(applicationId, versionId) {
-        let approvals = _m.toJs(_m.getIn(this.state.approvals, [applicationId, versionId])) || [];
+        let approvals = _m.toJs(_m.vals(_m.getIn(this.state.approvals, [applicationId, versionId]))) || [];
         return approvals.sort((a, b) => a.created_at > b.created_at ? -1 : b.created_at > a.created_at ? 1 : 0);
     }
 
