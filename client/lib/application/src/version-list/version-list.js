@@ -15,7 +15,7 @@ class AppVersion extends BaseView {
 
     update() {
         let {applicationId} = this.props,
-            application = this.stores.application.getApplication(applicationId); 
+            application = this.stores.application.getApplication(applicationId);
         this.data = {
             applicationId: applicationId,
             application: application instanceof FetchResult ? false : application,
