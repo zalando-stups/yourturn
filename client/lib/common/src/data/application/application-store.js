@@ -11,7 +11,8 @@ class ApplicationStore extends Store {
 
         this.state = {
             applications: _m.hashMap(),
-            versions: _m.hashMap()
+            versions: _m.hashMap(),
+            approvals: _m.hashMap()
         };
 
         this.registerAsync(
@@ -44,6 +45,18 @@ class ApplicationStore extends Store {
             this.receiveApplicationVersion,
             this.failFetchApplicationVersion);
 
+        this.registerAsync(
+            appActions.fetchApprovals,
+            this.beginFetchApprovals,
+            this.receiveApprovals,
+            this.failFetchApprovals);
+
+        this.registerAsync(
+            appActions.saveApproval,
+            this.beginFetchApprovals,
+            this.receiveApproval,
+            this.failFetchApprovals);
+
     }
 
     // intentionally left as noop for now
@@ -55,6 +68,9 @@ class ApplicationStore extends Store {
 
     beginFetchApplicationVersions() {}
     failFetchApplicationVersions() {}
+
+    beginFetchApprovals() {}
+    failFetchApprovals() {}
 
     /**
      * Replaces application with `id` with a Pending state.
@@ -205,6 +221,30 @@ class ApplicationStore extends Store {
             let version = _m.get(app, ver);
             return version ? _m.toJs(version) : false;
         }
+    }
+
+    receiveApprovals(approvals) {
+        let newState = approvals.reduce(
+                            (map, approval) => {
+                                let app = _m.get(map, approval.application_id) || _m.hashMap();
+                                let version = _m.get(app, approval.version_id) || _m.vector();
+                                version = _m.conj(version, _m.toClj(approval));
+                                app = _m.assoc(app, approval.version_id, version);
+                                return _m.assoc(map, approval.application_id, app);
+                            },
+                            this.state.approvals);
+        this.setState({
+            approvals: newState
+        });
+    }
+
+    receiveApproval(approval) {
+        this.receiveApprovals([approval]);
+    }
+
+    getApprovals(applicationId, versionId) {
+        let approvals = _m.toJs(_m.getIn(this.state.approvals, [applicationId, versionId])) || [];
+        return approvals.sort((a, b) => a.created_at > b.created_at ? -1 : b.created_at > a.created_at ? 1 : 0);
     }
 
 

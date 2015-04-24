@@ -77,6 +77,29 @@ class ApplicationActions extends Actions {
                     throw err;
                 });
     };
+
+    fetchApprovals(applicationId, versionId) {
+        return request
+                .get(`${Services.kio.url}${Services.kio.root}/${applicationId}/versions/${versionId}/approvals`)
+                .accept('json')
+                .exec()
+                .then(res => res.body)
+                .catch(err => {
+                    err.applicationId = applicationId;
+                    err.versionId = versionId;
+                    throw err;
+                });
+    }
+
+    saveApproval(approval) {
+        return request
+                .post(`${Services.kio.url}${Services.kio.root}/${approval.application_id}/versions/${approval.version_id}/approvals`)
+                .type('json')
+                .accept('json')
+                .send(approval)
+                .exec()
+                .then(res => res.body);
+    }
 }
 
 export default ApplicationActions;

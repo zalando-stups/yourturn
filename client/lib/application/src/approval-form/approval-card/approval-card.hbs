@@ -1,0 +1,16 @@
+<header>
+    <div class="grid">
+        <span class="approvalCard-approvalType grid-col"><i class="fa fa-check"></i> {{approval.approval_type}}</span>
+        <span class="grid-col">from <strong>{{approval.user_id}}</strong></span>
+        <span>{{#if approval.notes}}<i class="fa fa-comment"></i>{{/if}}</span>
+    </div>
+    
+    
+    
+</header>
+<div class="approvalCard-details">
+    <h4>{{approval.created_at}}</h4>
+    <div class="approvalCard-notes">
+        {{approval.notes}}
+    </div>
+</div>

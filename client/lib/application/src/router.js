@@ -8,6 +8,7 @@ import OAuthForm from './oauth-form/oauth-form';
 import VersionForm from './version-form/version-form';
 import VersionList from './version-list/version-list';
 import VersionDetail from './version-detail/version-detail';
+import ApprovalForm from './approval-form/approval-form';
 import Flux from './flux';
 import 'promise.prototype.finally';
 
@@ -26,10 +27,22 @@ class AppRouter extends Router {
             'application/detail/:id/version': 'listApplicationVersions',
             'application/detail/:id/version/create': 'createApplicationVersion',
             'application/detail/:id/version/detail/:ver': 'listApplicationVersion',
-            'application/detail/:id/version/edit/:ver': 'editApplicationVersion'
+            'application/detail/:id/version/edit/:ver': 'editApplicationVersion',
+            'application/detail/:id/version/approve/:ver': 'approveApplicationVersion'
         };
 
         super();
+    }
+
+    approveApplicationVersion(applicationId, versionId) {
+        APP_ACTIONS.fetchApplication(applicationId);
+        APP_ACTIONS.fetchApplicationVersion(applicationId, versionId);
+        APP_ACTIONS.fetchApprovals(applicationId, versionId);
+
+        puppeteer.show(new ApprovalForm({
+            applicationId: applicationId,
+            versionId: versionId
+        }), MAIN_VIEW_ID);
     }
 
     createApplication() {
