@@ -9,6 +9,12 @@
         th {
             color: $gray;
             text-align: left;
+            vertical-align: top;
+        }
+        td {
+            ul {
+                margin-top: 0;
+            }
         }
     }
 
