@@ -14,7 +14,8 @@ import 'promise.prototype.finally';
 
 const MAIN_VIEW_ID = '#yourturn-view',
       APP_ACTIONS = Flux.getActions('application'),
-      APP_STORE = Flux.getStore('application');
+      APP_STORE = Flux.getStore('application'),
+      SPINNER = $('<i class="fa fa-spin fa-circle-notch-o" />');
 
 class AppRouter extends Router {
     constructor() {
@@ -35,14 +36,24 @@ class AppRouter extends Router {
     }
 
     approveApplicationVersion(applicationId, versionId) {
-        APP_ACTIONS.fetchApplication(applicationId);
-        APP_ACTIONS.fetchApplicationVersion(applicationId, versionId);
+        let promises = [];
+        if (!APP_STORE.getApplication(applicationId)) {
+            promises.push(APP_ACTIONS.fetchApplication(applicationId));
+        }
+        if (!APP_STORE.getApplicationVersion(applicationId, versionId)) {
+            promises.push(APP_ACTIONS.fetchApplicationVersion(applicationId, versionId));
+        }
+
         APP_ACTIONS.fetchApprovals(applicationId, versionId);
 
-        puppeteer.show(new ApprovalForm({
-            applicationId: applicationId,
-            versionId: versionId
-        }), MAIN_VIEW_ID);
+        Promise
+        .all(promises)
+        .then(() => {
+            puppeteer.show(new ApprovalForm({
+                applicationId: applicationId,
+                versionId: versionId
+            }), MAIN_VIEW_ID);
+        });
     }
 
     createApplication() {
