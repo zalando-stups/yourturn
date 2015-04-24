@@ -54,6 +54,9 @@ class ApprovalForm extends BaseView {
 
     render() {
         this.$el.html(Template(this.data));
+        this.$el.find('#approval_user').focus();
+
+        // render approval list
         let $list = this.$el.find('.approvalForm-approvalList');
         $list.children().remove();
         this.data.approvals.forEach(a => {
