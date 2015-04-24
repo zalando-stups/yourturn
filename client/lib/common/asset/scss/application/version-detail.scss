@@ -1,6 +1,9 @@
 @import "../variables";
 
 .versionDetail {
+    .versionDetail-versionId {
+        color: $gray-light;
+    }
     .versionDetail-notesTitle {
         color: $gray;
     }

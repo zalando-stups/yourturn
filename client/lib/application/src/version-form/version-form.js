@@ -16,6 +16,7 @@ class VersionForm extends BaseView {
             'keyup #version_id': 'handleVersionId',
             'submit': 'save'
         };
+        props.edit = props.edit || false;
         super(props);
     }
 
@@ -43,8 +44,8 @@ class VersionForm extends BaseView {
     checkVersionAvailability() {
         let $idInput = this.$el.find('#version_id');
         let version_id = $idInput.val();
-        if (this.store.getApplicationVersion(this.props.applicationId, version_id)) {
-            $idInput[0].setCustomValidity('Version ID already exists.');
+        if (this.store.getApplicationVersion(this.props.applicationId, version_id) && version_id !== this.props.versionId) {
+            $idInput[0].setCustomValidity('Version already exists.');
             this.$el.find('.is-taken').show();
             this.$el.find('.is-available').hide();
         } else {
@@ -63,16 +64,18 @@ class VersionForm extends BaseView {
         // gather data
         let {$el} = this,
             version_id = $el.find('#version_id').val(),
-            version_artifact = 'docker://' + $el.find('#version_artifactName').val(),
+            version_artifact = $el.find('#version_artifactName').val(),
             version_notes = $el.find('#version_notes').val();
 
         let version = {
             application_id: this.data.application.id,
             id: version_id,
-            artifact: version_artifact,
+            artifact: version_artifact ? 'docker://' + version_artifact : '',
             notes: version_notes
         };
 
+
+        let verb = this.props.edit ? 'update' : 'create';
         this
         .actions
         .saveApplicationVersion(version)
@@ -82,20 +85,38 @@ class VersionForm extends BaseView {
         .catch(() => {
             GlobalFlux
             .getActions('notification')
-            .addNotification([`Could not save version ${version.id} for ${this.data.application.name}.`, 'error']);
+            .addNotification([`Could not ${verb} version ${version.id} for ${this.data.application.name}.`, 'error']);
         });
     }
 
     update() {
+        let {applicationId, versionId, edit} = this.props;
         this.data = {
-            application: this.store.getApplication(this.props.applicationId)
+            applicationId: applicationId,
+            versionId: versionId,
+            edit: edit,
+            application: this.store.getApplication(applicationId)
         };
+        if (edit) {
+            this.data.version = this.store.getApplicationVersion(applicationId, versionId);
+            this.data.version.artifact = this.data.version.artifact ?
+                                            this.data.version.artifact.substring('docker://'.length) :
+                                            '';
+        }
     }
 
 
     render() {
-        this.$el.html(Template(this.data));
-        this.handleVersionId();
+        let {edit} = this.props,
+            {data, $el} = this;
+
+        $el.html(Template(data));
+
+        if (edit) {
+            this.checkVersionAvailability();
+        } else {
+            this.handleVersionId();
+        }
     }
 }
 

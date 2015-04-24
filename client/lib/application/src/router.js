@@ -11,7 +11,9 @@ import VersionDetail from './version-detail/version-detail';
 import Flux from './flux';
 import 'promise.prototype.finally';
 
-const MAIN_VIEW_ID = '#yourturn-view';
+const MAIN_VIEW_ID = '#yourturn-view',
+      APP_ACTIONS = Flux.getActions('application'),
+      APP_STORE = Flux.getStore('application');
 
 class AppRouter extends Router {
     constructor() {
@@ -23,15 +25,15 @@ class AppRouter extends Router {
             'application/detail/:id': 'listApplication',
             'application/detail/:id/version': 'listApplicationVersions',
             'application/detail/:id/version/create': 'createApplicationVersion',
-            'application/detail/:id/version/detail/:ver': 'listApplicationVersion'
+            'application/detail/:id/version/detail/:ver': 'listApplicationVersion',
+            'application/detail/:id/version/edit/:ver': 'editApplicationVersion'
         };
 
         super();
     }
 
     createApplication() {
-        Flux
-        .getActions('application')
+        APP_ACTIONS
         .fetchApplications()
         .finally(() => {
             puppeteer.show(new AppForm(), MAIN_VIEW_ID);
@@ -40,20 +42,21 @@ class AppRouter extends Router {
 
     createApplicationVersion(applicationId) {
         // we probably already have this app, so check
-        let combinedPromise,
-            versions = Flux.getActions('application').fetchApplicationVersions(applicationId),
-            app = Flux.getStore('application').getApplication(applicationId);
+        let promises = [],
+            versions = APP_ACTIONS.fetchApplicationVersions(applicationId),
+            app = APP_STORE.getApplication(applicationId);
 
         if (app) {
-            combinedPromise = versions;
+            promises = [app];
         } else {
-            combinedPromise = Promise.all([
-                Flux.getActions('application').fetchApplication(applicationId),
+            promises = [
+                APP_ACTIONS.fetchApplication(applicationId),
                 versions
-            ]);
+            ];
         }
-        
-        combinedPromise
+
+        Promise
+        .all(promises)
         .then(() => {
             puppeteer.show(new VersionForm({
                 applicationId: applicationId
@@ -62,9 +65,32 @@ class AppRouter extends Router {
         //TODO catch, show error that no such app exists
     }
 
+    editApplicationVersion(applicationId, versionId) {
+        // we probably already have this app, so check
+        let promises = [],
+            version = APP_STORE.getApplicationVersion(applicationId, versionId),
+            app = APP_STORE.getApplication(applicationId);
+
+        if (!app) {
+            promises.push(APP_ACTIONS.fetchApplication(applicationId));
+        }
+        if (!version) {
+            promises.push(APP_ACTIONS.fetchApplicationVersion(applicationId, versionId));
+        }
+        Promise
+        .all(promises)
+        .then(() => {
+            puppeteer.show(new VersionForm({
+                applicationId: applicationId,
+                versionId: versionId,
+                edit: true
+            }), MAIN_VIEW_ID);
+        });
+        //TODO catch, show error that no such app exists
+    }
+
     editApplication(id) {
-        Flux
-        .getActions('application')
+        APP_ACTIONS
         .fetchApplication(id)
         .then(() => {
             puppeteer.show( new AppForm({
@@ -76,8 +102,7 @@ class AppRouter extends Router {
     }
 
     configureOAuth(id) {
-        Flux
-        .getActions('application')
+        APP_ACTIONS
         .fetchApplication(id)
         .then(() => {
             Flux.getActions('resource').fetchAllScopes();
@@ -95,7 +120,7 @@ class AppRouter extends Router {
      * @param  {String} id
      */
     listApplication(id) {
-        Flux.getActions('application').fetchApplication(id);
+        APP_ACTIONS.fetchApplication(id);
         Flux.getActions('api').fetchApi(id);
 
         puppeteer.show( new Detail({
@@ -112,8 +137,7 @@ class AppRouter extends Router {
     listApplications() {
         // ensure that the data we need is there
         // then show the view
-        Flux
-        .getActions('application')
+        APP_ACTIONS
         .fetchApplications()
         .finally( () => puppeteer.show( new List(), MAIN_VIEW_ID ) );
     }
@@ -125,7 +149,10 @@ class AppRouter extends Router {
      * @param  {String} id
      */
     listApplicationVersions(id) {
-        Flux.getActions('application').fetchApplicationVersions(id);
+        if (!APP_STORE.getApplication(id)) {
+            APP_ACTIONS.fetchApplication(id);
+        }
+        APP_ACTIONS.fetchApplicationVersions(id);
 
         puppeteer.show( new VersionList({
             applicationId: id
@@ -140,7 +167,11 @@ class AppRouter extends Router {
      * @param  {String} ver
      */
     listApplicationVersion(id, ver) {
-        Flux.getActions('application').fetchApplicationVersion(id, ver);
+        if (!APP_STORE.getApplication(id)) {
+            APP_ACTIONS.fetchApplication(id);
+        }
+
+        APP_ACTIONS.fetchApplicationVersion(id, ver);
 
         puppeteer.show( new VersionDetail({
             applicationId: id,
