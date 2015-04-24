@@ -14,19 +14,6 @@
         <h4>Add approval</h4>
             <form class="form" name="approvalForm">
                 <div class="form-group">
-                    <label for="approval_user">User ID</label>
-                    <small>Your platform login.</small>
-                    <input
-                        id="approval_user"
-                        pattern="\S+"
-                        autofocus="autofocus"
-                        title="No whitespaces please."
-                        placeholder="npiccolotto"
-                        required="required"
-                        name="yourturn_approval_user"
-                        type="text" />
-                </div>
-                <div class="form-group">
                     <label for="approval_type">Approval Type</label>
                     <small>What specifically do you approve?</small>
                     <select
@@ -47,7 +34,8 @@
                         <input
                             id="approval_custom_type"
                             name="yourturn_approval_custom_type"
-                            pattern="[a-zA-Z]+"
+                            placeholder="CUSTOM_TYPE"
+                            pattern="[a-zA-Z_][a-zA-Z]*[a-zA-Z]"
                             title="Only characters"
                             type="text" />
                 </div>
