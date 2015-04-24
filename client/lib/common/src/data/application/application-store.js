@@ -11,7 +11,8 @@ class ApplicationStore extends Store {
 
         this.state = {
             applications: _m.hashMap(),
-            versions: _m.hashMap()
+            versions: _m.hashMap(),
+            approvals: _m.hashMap()
         };
 
         this.registerAsync(
@@ -27,12 +28,6 @@ class ApplicationStore extends Store {
             this.failFetchApplication);
 
         this.registerAsync(
-            appActions.saveApplication,
-            this.beginSaveApplication,
-            this.receiveApplication,
-            this.failSaveApplication);
-
-        this.registerAsync(
             appActions.fetchApplicationVersions,
             this.beginFetchApplicationVersions,
             this.receiveApplicationVersions,
@@ -44,17 +39,22 @@ class ApplicationStore extends Store {
             this.receiveApplicationVersion,
             this.failFetchApplicationVersion);
 
+        this.registerAsync(
+            appActions.fetchApprovals,
+            this.beginFetchApprovals,
+            this.receiveApprovals,
+            this.failFetchApprovals);
     }
 
     // intentionally left as noop for now
     beginFetchApplications() {}
     failFetchApplications() {}
 
-    beginSaveApplication() {}
-    failSaveApplication() {}
-
     beginFetchApplicationVersions() {}
     failFetchApplicationVersions() {}
+
+    beginFetchApprovals() {}
+    failFetchApprovals() {}
 
     /**
      * Replaces application with `id` with a Pending state.
@@ -162,7 +162,7 @@ class ApplicationStore extends Store {
      */
     getApplications() {
         let availableApps = _m.filter( app => !(app instanceof FetchResult), _m.vals( this.state.applications ) );
-        let sortedApps = _m.sort( a => _m.get(a, 'name'), availableApps);
+        let sortedApps = _m.sortBy( a => _m.get(a, 'name'), availableApps);
         return _m.toJs( sortedApps ) || [];
     }
 
@@ -205,6 +205,32 @@ class ApplicationStore extends Store {
             let version = _m.get(app, ver);
             return version ? _m.toJs(version) : false;
         }
+    }
+
+    receiveApprovals(approvals) {
+        function getKey(apr) {
+            return `${apr.user_id}.${apr.approved_at}.${apr.approval_type}`;
+        }
+
+        let newState = approvals.reduce(
+                            (map, approval) => {
+                                // convert to timestamp
+                                approval.timestamp = Date.parse(approval.approved_at);
+                                let app = _m.get(map, approval.application_id) || _m.hashMap();
+                                let version = _m.get(app, approval.version_id) || _m.hashMap();
+                                version = _m.assoc(version, getKey(approval), _m.toClj(approval));
+                                app = _m.assoc(app, approval.version_id, version);
+                                return _m.assoc(map, approval.application_id, app);
+                            },
+                            this.state.approvals);
+        this.setState({
+            approvals: newState
+        });
+    }
+
+    getApprovals(applicationId, versionId) {
+        let approvals = _m.toJs(_m.vals(_m.getIn(this.state.approvals, [applicationId, versionId]))) || [];
+        return approvals.sort((a, b) => a.approved_at < b.approved_at ? -1 : b.approved_at < a.approved_at ? 1 : 0);
     }
 
 

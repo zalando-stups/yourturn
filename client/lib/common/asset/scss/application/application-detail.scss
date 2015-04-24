@@ -4,9 +4,6 @@
     .applicationDetail-descriptionTitle {
         color: $gray;
     }
-    h1 {
-        color: $gray-dark;
-    }
     table {
         width: 100%;
         th {
@@ -22,9 +19,12 @@
     }
 
     .applicationDetail-status {
-          padding: $padding-tiny;
-          border: 3px solid $gray-dark;
-          border-radius: 5px;
-          margin-right: $padding-small;
+        padding: 5px;
+        border: 3px solid $gray-dark;
+        border-radius: 5px;
+        margin-right: $padding-small;
+        font-weight: 700;
+        user-select: none;
+        cursor: default;
     }
 }

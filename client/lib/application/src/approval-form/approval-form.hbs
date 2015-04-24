@@ -1,0 +1,61 @@
+<h2>{{applicationId}} <span class="approvalForm-versionId">{{versionId}}</span> approvals</h2>
+<div class="btn-group">
+    <a href="/application/detail/{{applicationId}}/version/detail/{{versionId}}" class="btn btn-default">
+        <i class="fa fa-chevron-left"></i> Back to {{applicationId}} {{versionId}}
+    </a>
+</div>
+<div class="grid with-gutter">
+    <div class="grid-col col-1-2">
+        <h4>Existing approvals</h4>
+        <div class="approvalForm-approvalList">
+        </div>
+    </div>
+    <div class="grid-col col-1-2">
+        <h4>Add approval</h4>
+            <form class="form" name="approvalForm">
+                <div class="form-group">
+                    <label for="approval_type">Approval Type</label>
+                    <small>What specifically do you approve?</small>
+                    <select
+                        name="yourturn_approval_type"
+                        placeholder="TESTED, SPEC, DEPLOY or custom entry"
+                        id="approval_type"
+                        type="text">
+                        <option value="SPEC">Specification</option>
+                        <option value="TESTED">Test</option>
+                        <option value="DEPLOY">Deploy</option>
+                    </select>
+                    <small>or</small>
+                        <label>
+                            <input
+                                id="approval_custom"
+                                type="checkbox" /> Custom: 
+                        </label>
+                        <input
+                            id="approval_custom_type"
+                            name="yourturn_approval_custom_type"
+                            placeholder="CUSTOM_TYPE"
+                            pattern="[a-zA-Z_][a-zA-Z]*[a-zA-Z]"
+                            title="Only characters"
+                            type="text" />
+                </div>
+                <div class="form-group">
+                    <label for="approval_notes">Notes</label>
+                    <small>You can use <a data-external href="http://www.unexpected-vortices.com/sw/rippledoc/quick-markdown-example.html">Markdown</a>.</small>
+                    <textarea
+                        id="approval_notes"
+                        name="yourturn_approval_notes"
+                        placeholder="I swear by the life of my firstborn that {{applicationId}} {{versionId}} is properly tested."
+                        cols="30"
+                        rows="10"></textarea>
+                </div>
+                <div class="btn-group">
+                    <button
+                        type="submit"
+                        class="btn btn-primary">
+                        <i class="fa fa-save"></i> Save
+                    </button>
+                </div>
+            </form>
+    </div>
+</div>

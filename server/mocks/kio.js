@@ -62,6 +62,24 @@ var versions = {
     }
 };
 
+var approvals = {
+    kio: {
+        "1": [{
+            "application_id": "kio",
+            "version_id": "1",
+            "approval_type": "TESTED",
+            "user_id": "npiccolotto",
+            "approved_at": "2015-04-25T16:25:00"
+        }, {
+            "application_id": "kio",
+            "version_id": "1",
+            "approval_type": "TESTED",
+            "user_id": "tobi",
+            "approved_at": "2015-04-25T16:40:00"
+        }]
+    }
+};
+
 /** enable cors */
 server.use(function(req, res, next) {
     res.header('Access-Control-Allow-Origin', '*');
@@ -96,7 +114,7 @@ server.get('/apps/:id', function(req,res){
 server.put('/apps/:id', function(req, res) {
     setTimeout( function() {
         applications[req.body.id] = req.body;
-        res.status(200).send(req.body);
+        res.status(200).send();
     }, Math.random() * 2000 );
 });
 
@@ -136,7 +154,40 @@ server.put('/apps/:id/versions/:ver', function(req, res) {
             res.status(404).send();
         } else {
             versions.kio[ver] = req.body;
-            res.status(200).send(req.body);
+            res.status(200).send();
+        }
+    }, Math.random() * 2000 );
+});
+
+server.get('/apps/:id/versions/:ver/approvals', function(req, res) {
+    setTimeout( function() {
+        var id = req.params.id;
+        var ver = req.params.ver;
+        if (id !== 'kio') {
+            res.status(404).send();
+        } else {
+            res.status(200).send(approvals.kio[ver]);
+        }
+    }, Math.random() * 2000 );
+});
+
+server.post('/apps/:id/versions/:ver/approvals', function(req, res) {
+    setTimeout( function() {
+        var id = req.params.id;
+        var ver = req.params.ver;
+        if (id !== 'kio') {
+            res.status(404).send();
+        } else {
+            var approval = req.body;
+            approval.approved_at = '2015-04-25T17:25:00';
+            approval.application_id = id;
+            approval.user_id = 'test_user';
+            approval.version_id = ver;
+            if (!approvals.kio[ver]) {
+                approvals.kio[ver] = [];
+            };
+            approvals.kio[ver].push(approval);
+            res.status(200).send();
         }
     }, Math.random() * 2000 );
 });

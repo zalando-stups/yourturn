@@ -31,7 +31,7 @@ class ApplicationActions extends Actions {
                 .accept('json')
                 .send(app)
                 .exec()
-                .then( res => res.body )
+                .then()
                 .catch( err => {
                     err.id = app.id;
                     throw err;
@@ -70,13 +70,36 @@ class ApplicationActions extends Actions {
                 .accept('json')
                 .send(version)
                 .exec()
-                .then(res => res.body)
+                .then()
                 .catch(err => {
                     err.applicationId = version.application_id;
                     err.version_id = version.id;
                     throw err;
                 });
     };
+
+    fetchApprovals(applicationId, versionId) {
+        return request
+                .get(`${Services.kio.url}${Services.kio.root}/${applicationId}/versions/${versionId}/approvals`)
+                .accept('json')
+                .exec()
+                .then(res => res.body)
+                .catch(err => {
+                    err.applicationId = applicationId;
+                    err.versionId = versionId;
+                    throw err;
+                });
+    }
+
+    saveApproval(approval) {
+        return request
+                .post(`${Services.kio.url}${Services.kio.root}/${approval.application_id}/versions/${approval.version_id}/approvals`)
+                .type('json')
+                .accept('json')
+                .send(approval)
+                .exec()
+                .then();
+    }
 }
 
 export default ApplicationActions;
