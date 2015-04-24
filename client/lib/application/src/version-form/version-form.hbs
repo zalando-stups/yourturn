@@ -1,4 +1,15 @@
-<h2>Create a new version for {{application.name}}</h2>
+{{#if edit}}
+    <h2>Edit {{application.name}} {{version.id}}</h2>
+{{else}}
+    <h2>Create a new version for {{application.name}}</h2>
+{{/if}}
+
+<div class="btn-group">
+    <a href="/application/detail/{{application.id}}/version" class="btn btn-default">
+        <i class="fa fa-chevron-left"></i> Back to {{application.name}} versions
+    </a>
+</div>
+
 <form class="form" name="createAppVersionForm">
     <div class="form-group">
         <label>Application</label>
@@ -14,13 +25,14 @@
             <div class="input-addon">
                 <i  title="Version ID is available."
                     class="fa fa-check is-available"></i>
-                <i  title="Version ID is already taken."
+                <i  title="Version already exists."
                     class="fa fa-close is-taken"></i>
             </div>
             <input
                 autofocus="autofocus"
                 required="required"
                 placeholder="0.0.1"
+                value="{{version.id}}"
                 title="Characters and numbers with dots, dashes or underscores in between."
                 pattern="[A-Za-z0-9]([A-Za-z0-9\._-]*[A-Za-z0-9])?"
                 type="text"
@@ -34,8 +46,9 @@
         <div class="input-group">
             <div class="input-addon">
                 Docker
-            </div>
+            </div>            
             <input
+                value="{{version.artifact}}"
                 name="yourturn_version_artifactName"
                 id="version_artifactName"
                 type="text" />
@@ -49,7 +62,7 @@
             placeholder="Fixes serious CSS race condition."
             name="yourturn_version_notes"
             cols="30"
-            rows="10"></textarea>
+            rows="10">{{version.notes}}</textarea>
     </div>
     <div class="btn-group">
         <button

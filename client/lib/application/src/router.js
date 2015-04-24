@@ -23,7 +23,8 @@ class AppRouter extends Router {
             'application/detail/:id': 'listApplication',
             'application/detail/:id/version': 'listApplicationVersions',
             'application/detail/:id/version/create': 'createApplicationVersion',
-            'application/detail/:id/version/detail/:ver': 'listApplicationVersion'
+            'application/detail/:id/version/detail/:ver': 'listApplicationVersion',
+            'application/detail/:id/version/edit/:ver': 'editApplicationVersion'
         };
 
         super();
@@ -40,23 +41,50 @@ class AppRouter extends Router {
 
     createApplicationVersion(applicationId) {
         // we probably already have this app, so check
-        let combinedPromise,
+        let promises = [],
             versions = Flux.getActions('application').fetchApplicationVersions(applicationId),
             app = Flux.getStore('application').getApplication(applicationId);
 
         if (app) {
-            combinedPromise = versions;
+            promises = [app];
         } else {
-            combinedPromise = Promise.all([
+            promises = [
                 Flux.getActions('application').fetchApplication(applicationId),
                 versions
-            ]);
+            ];
         }
-        
-        combinedPromise
+
+        Promise
+        .all(promises)
         .then(() => {
             puppeteer.show(new VersionForm({
                 applicationId: applicationId
+            }), MAIN_VIEW_ID);
+        });
+        //TODO catch, show error that no such app exists
+    }
+
+    editApplicationVersion(applicationId, versionId) {
+        // we probably already have this app, so check
+        let appActions = Flux.getActions('application'),
+            appStore = Flux.getStore('application'),
+            promises = [],
+            version = appStore.getApplicationVersion(applicationId, versionId),
+            app = appStore.getApplication(applicationId);
+
+        if (!app) {
+            promises.push(appActions.fetchApplication(applicationId));
+        }
+        if (!version) {
+            promises.push(appActions.fetchApplicationVersion(applicationId, versionId));
+        }
+        Promise
+        .all(promises)
+        .then(() => {
+            puppeteer.show(new VersionForm({
+                applicationId: applicationId,
+                versionId: versionId,
+                edit: true
             }), MAIN_VIEW_ID);
         });
         //TODO catch, show error that no such app exists
