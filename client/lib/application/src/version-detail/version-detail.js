@@ -19,11 +19,13 @@ class VersionDetail extends BaseView {
 
     update() {
         let {applicationId, versionId} = this.props,
-            version = this.stores.application.getApplicationVersion( applicationId, versionId );
+            application = this.stores.application.getApplication(applicationId),
+            version = this.stores.application.getApplicationVersion(applicationId, versionId);
         this.data = {
             applicationId: applicationId,
             versionId: versionId,
-            version: version
+            version: version,
+            application: application instanceof FetchResult ? false : application
         };
     }
 

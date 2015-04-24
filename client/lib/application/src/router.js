@@ -149,6 +149,9 @@ class AppRouter extends Router {
      * @param  {String} id
      */
     listApplicationVersions(id) {
+        if (!APP_STORE.getApplication(id)) {
+            APP_ACTIONS.fetchApplication(id);
+        }
         APP_ACTIONS.fetchApplicationVersions(id);
 
         puppeteer.show( new VersionList({

@@ -1,6 +1,7 @@
 import BaseView from 'common/src/base-view';
 import Template from './version-list.hbs';
 import Flux from 'application/src/flux';
+import FetchResult from 'common/src/fetch-result';
 import 'common/asset/scss/application/version-list.scss';
 
 class AppVersion extends BaseView {
@@ -13,10 +14,12 @@ class AppVersion extends BaseView {
     }
 
     update() {
-        let {applicationId} = this.props;
+        let {applicationId} = this.props,
+            application = this.stores.application.getApplication(applicationId); 
         this.data = {
-            app: applicationId,
-            versions: this.stores.application.getApplicationVersions( applicationId )
+            applicationId: applicationId,
+            application: application instanceof FetchResult ? false : application,
+            versions: this.stores.application.getApplicationVersions(applicationId)
         };
     }
 
