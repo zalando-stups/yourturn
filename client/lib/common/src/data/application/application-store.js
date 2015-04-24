@@ -214,6 +214,8 @@ class ApplicationStore extends Store {
 
         let newState = approvals.reduce(
                             (map, approval) => {
+                                // convert to timestamp
+                                approval.timestamp = Date.parse(approval.approved_at);
                                 let app = _m.get(map, approval.application_id) || _m.hashMap();
                                 let version = _m.get(app, approval.version_id) || _m.hashMap();
                                 version = _m.assoc(version, getKey(approval), _m.toClj(approval));
@@ -226,13 +228,9 @@ class ApplicationStore extends Store {
         });
     }
 
-    receiveApproval(approval) {
-        this.receiveApprovals([approval]);
-    }
-
     getApprovals(applicationId, versionId) {
         let approvals = _m.toJs(_m.vals(_m.getIn(this.state.approvals, [applicationId, versionId]))) || [];
-        return approvals.sort((a, b) => a.created_at > b.created_at ? -1 : b.created_at > a.created_at ? 1 : 0);
+        return approvals.sort((a, b) => a.approved_at < b.approved_at ? -1 : b.approved_at < a.approved_at ? 1 : 0);
     }
 
 
