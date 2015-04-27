@@ -98,7 +98,7 @@ class ResourceStore extends Store {
      */
     getResources() {
         let entries = _m.keys(this.state.resources);
-        entries = _m.sortBy(e => _m.get(e, 'id').toLowerCase(), entries);
+        entries = _m.sortBy(e => _m.get(e, 'id'), entries);
         return entries ? _m.toJs(entries) : [];
     }
 
@@ -128,14 +128,14 @@ class ResourceStore extends Store {
      */
     getScopes(resourceId) {
         let entries = _m.vals(_m.get(this.state.scopes, resourceId));
-        entries = _m.sortBy(e => _m.get('id', e).toLowerCase(), entries);
+        entries = _m.sortBy(e => _m.get(e, 'id').toLowerCase(), entries);
         return entries ? _m.toJs(entries) : [];
     }
 
     getAllScopes() {
         let entries = _m.map(res => _m.vals(_m.get(res, 1)), this.state.scopes);
         entries = _m.flatten(entries);
-        entries = _m.sortBy(e => _m.get('id', e).toLowerCase(), entries);
+        entries = _m.sortBy(e => _m.get(e, 'id').toLowerCase(), entries);
         return entries ? _m.toJs(entries) : [];
     }
 }
