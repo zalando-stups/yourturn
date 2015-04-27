@@ -230,7 +230,7 @@ class ApplicationStore extends Store {
 
     getApprovals(applicationId, versionId) {
         let approvals = _m.toJs(_m.vals(_m.getIn(this.state.approvals, [applicationId, versionId]))) || [];
-        return approvals.sort((a, b) => a.approved_at < b.approved_at ? -1 : b.approved_at < a.approved_at ? 1 : 0);
+        return approvals.sort((a, b) => a.timestamp < b.timestamp ? -1 : b.timestamp < a.timestamp ? 1 : 0);
     }
 
 
