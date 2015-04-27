@@ -33,6 +33,13 @@
         padding: 0 $padding-tiny;
     }
 
+    .approvalCard-time {
+        margin-top: $small-margin-top;
+        margin-bottom: $small-margin-bottom;
+        line-height: $base-line-height;
+        color: $gray;
+    }
+
     .approvalCard-details {
         display: none;
     }
