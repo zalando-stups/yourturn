@@ -6,13 +6,14 @@ import 'common/asset/scss/yourturn/sidebar.scss';
 
 class SidebarView extends BaseView {
     constructor() {
+        super({
+            tagName: 'aside',
+            className: 'sidebar',
+            events: {
+                'click .sidebar-item': 'transition'
+            }
+        });
         this.state = {};
-        this.tagName = 'aside';
-        this.className = 'sidebar';
-        this.events = {
-            'click .sidebar-item': 'transition'
-        };
-        super();
     }
 
     /**

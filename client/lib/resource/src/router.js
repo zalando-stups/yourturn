@@ -12,15 +12,15 @@ const MAIN_VIEW_ID = '#yourturn-view';
 
 class ResourceRouter extends Router {
     constructor() {
-        this.routes = {
-            'resource': 'listResources',
-            'resource/create': 'createResource',
-            'resource/detail/:id': 'listResource',
-            'resource/detail/:id/create': 'createScope',
-            'resource/detail/:id/scope/:scope': 'listScope'
-        };
-
-        super();
+        super({
+            routes: {
+                'resource': 'listResources',
+                'resource/create': 'createResource',
+                'resource/detail/:id': 'listResource',
+                'resource/detail/:id/create': 'createScope',
+                'resource/detail/:id/scope/:scope': 'listScope'
+            }
+        });
     }
 
     /**

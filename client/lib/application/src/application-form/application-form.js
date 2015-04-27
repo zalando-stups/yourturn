@@ -10,18 +10,15 @@ import 'common/asset/scss/application/application-form.scss';
 
 class ApplicationForm extends BaseView {
     constructor(props) {
-        this.className = 'applicationForm';
-        this.events = {
+        props = props || { edit: false };
+        props.className = 'applicationForm';
+        props.events = {
             'submit form': 'save',
             'keyup #team_id': 'fillServiceUrl',
             'keyup #app_id': 'handleAppId'
         };
-        if (props && props.edit) {
-            this.store = Flux.getStore('application');
-        } else {
-            props = {
-                edit: false
-            };
+        if (props.edit) {
+            props.store = Flux.getStore('application');
         }
         super(props);
     }

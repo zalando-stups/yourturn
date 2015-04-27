@@ -1,10 +1,10 @@
 var webpackConfig = require('./webpack.config'),
     path = require('path');
 
-webpackConfig.module.postLoaders = [{
+webpackConfig.module.preLoaders = [{
     test: /\.js$/,
     exclude: /(node_modules|test)\//,
-    loader: 'istanbul-instrumenter'
+    loader: 'isparta-instrumenter'
 }];
 
 module.exports = function(config) {
@@ -19,9 +19,10 @@ module.exports = function(config) {
         'karma-mocha',
         'karma-chai-plugins',
         'karma-story-reporter',
-        'karma-chrome-launcher'
+        'karma-chrome-launcher',
+        'karma-phantomjs2-launcher'
     ],
-
+    browserNoActivityTimeout: 60000,
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
     frameworks: ['mocha', 'chai', 'chai-as-promised', 'sinon-chai'],
@@ -59,15 +60,15 @@ module.exports = function(config) {
     // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
     logLevel: config.LOG_DEBUG,
 
-
     // enable / disable watching file and executing tests whenever any file changes
     autoWatch: false,
 
     // If browser does not capture in given timeout [ms], kill it
     captureTimeout: 60000,
 
-    // drop chrome once phantomjs 2 is available
-    browsers: ['Chrome'],
+    // use phantomjs 2 for now
+    // put on travis as soon as it’s officially available
+    browsers: ['PhantomJS2'],
 
 
     // Continuous Integration mode

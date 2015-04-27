@@ -11,11 +11,11 @@ import 'common/asset/scss/application/application-detail.scss';
 
 class AppDetail extends BaseView {
     constructor( props ) {
-        this.stores = {
+        props.className = 'applicationDetail';
+        props.stores = {
             application: Flux.getStore('application'),
             api: Flux.getStore('api')
         };
-        this.className = 'applicationDetail';
         super(props);
     }
 

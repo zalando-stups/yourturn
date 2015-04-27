@@ -7,14 +7,14 @@ import 'common/asset/scss/resource/create-scope.scss';
 
 class CreateScope extends BaseView {
     constructor(props) {
-        this.actions = Flux.getActions('resource');
-        this.store = Flux.getStore('resource');
-        this.className = 'createScope';
-        this.events = {
+        props.className = 'createScope';
+        props.events = {
             'submit': 'save',
             'keyup #scope_id': 'syncScopeId'
         };
+        props.store = Flux.getStore('resource');
         super(props);
+        this.actions = Flux.getActions('resource');
     }
 
  syncScopeId() {

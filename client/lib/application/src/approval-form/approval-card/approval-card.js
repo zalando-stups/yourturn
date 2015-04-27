@@ -8,14 +8,14 @@ const DATE_FORMAT = 'MMMM Do YYYY, h:mm:ss a';
 
 class ApprovalCard extends BaseView {
     constructor(props) {
-        this.className = 'approvalCard';
-        this.state = {
-            toggled: false
-        };
-        this.events = {
+        props.className = 'approvalCard';
+        props.events = {
             'click': 'toggleDetails'
         };
         super(props);
+        this.state = {
+            toggled: false
+        };
     }
 
     toggleDetails() {

@@ -2,7 +2,7 @@
 import {Store} from 'flummox';
 import _m from 'mori';
 
-var lastId = 1;
+var lastId = 0;
 
 class NotificationStore extends Store {
     constructor(flux) {
@@ -64,6 +64,12 @@ class NotificationStore extends Store {
      */
     getNotifications() {
         return _m.toJs(this.state.notifications);
+    }
+
+    _empty() {
+        this.setState({
+            notifications: _m.vector()
+        });
     }
 }
 

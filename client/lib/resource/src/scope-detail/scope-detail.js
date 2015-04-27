@@ -7,10 +7,10 @@ import 'common/asset/scss/resource/scope-detail.scss';
 
 class ScopeDetail extends BaseView {
     constructor(props) {
-        this.store = Flux.getStore('resource');
-        this.actions = Flux.getActions('resource');
-        this.className = 'scopeDetail';
+        props.className = 'scopeDetail';
+        props.store = Flux.getStore('resource');
         super(props);
+        this.actions = Flux.getActions('resource');
     }
 
     update() {

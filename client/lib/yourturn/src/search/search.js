@@ -5,16 +5,17 @@ import 'common/asset/scss/yourturn/search.scss';
 
 class SearchView extends BaseView {
     constructor() {
-        this.store = Flux.getStore('search');
+        super({
+            className: 'searchView',
+            events: {
+                'click button': 'search',
+                'keyup input': 'search'
+            },
+            store: Flux.getStore('search')
+        });
         this.state = {
             term: ''
         };
-        this.className = 'searchView';
-        this.events = {
-            'click button': 'search',
-            'keyup input': 'search'
-        };
-        super();
     }
 
     update() {

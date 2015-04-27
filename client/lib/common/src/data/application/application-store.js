@@ -1,4 +1,5 @@
 import {Store} from 'flummox';
+import _ from 'lodash';
 import _m from 'mori';
 import {Pending, Failed} from 'common/src/fetch-result';
 import FetchResult from 'common/src/fetch-result';
@@ -105,6 +106,15 @@ class ApplicationStore extends Store {
     }
 
     /**
+     * Adds single application to store. Just calls `receiveApplications` underneath.
+     *
+     * @param  {object} app
+     */
+    receiveApplication( app ) {
+        this.receiveApplications([ app ]);
+    }
+
+    /**
      * Adds applications to store. Overwrites applications with the same id.
      *
      * @param  {Array} apps
@@ -112,9 +122,9 @@ class ApplicationStore extends Store {
     receiveApplications( apps ) {
         let newState = apps.reduce(
                             (map, app) => _m.assoc( map, app.id, _m.toClj( app )),
-                            _m.hashMap() );
+                            this.state.applications );
         this.setState({
-            applications: _m.merge( this.state.applications, newState )
+            applications: newState
         });
     }
 
@@ -137,15 +147,6 @@ class ApplicationStore extends Store {
     }
 
     /**
-     * Adds single application to store. Just calls `receiveApplications` underneath.
-     *
-     * @param  {object} app
-     */
-    receiveApplication( app ) {
-        this.receiveApplications([ app ]);
-    }
-
-    /**
      * Adds single application version to store. Just calls `receiveApplicationVersions` underneath.
      *
      * @param  {object} ver
@@ -162,8 +163,7 @@ class ApplicationStore extends Store {
      */
     getApplications() {
         let availableApps = _m.filter( app => !(app instanceof FetchResult), _m.vals( this.state.applications ) );
-        let sortedApps = _m.sortBy( a => _m.get(a, 'name').toLowerCase(), availableApps);
-        return _m.toJs( sortedApps ) || [];
+        return _.sortBy(_m.toJs(availableApps) || [], a => a.name ? a.name.toLowerCase() : null);
     }
 
     /**
@@ -185,9 +185,11 @@ class ApplicationStore extends Store {
      */
     getApplicationVersions(id) {
         let versions = _m.vals(_m.get(this.state.versions, id)),
-            sorted = _m.sortBy(v => _m.get(v, 'id').toLowerCase(), versions),
-            filtered = _m.filter(v => !(v instanceof FetchResult), sorted);
-        return _m.toJs( filtered ) || [];
+            filtered = _m.filter(v => !(v instanceof FetchResult), versions);
+        return _.chain(_m.toJs( filtered ) || [])
+                .sortBy(v => v.id ? v.id.toLowerCase() : null)
+                .reverse()
+                .value();
     }
 
 
@@ -239,7 +241,9 @@ class ApplicationStore extends Store {
      */
     _empty() {
         this.setState({
-            applications: _m.hashMap()
+            applications: _m.hashMap(),
+            versions: _m.hashMap(),
+            approvals: _m.hashMap()
         });
     }
 }

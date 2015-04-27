@@ -16,7 +16,7 @@ class MockFlux extends Flummox {
 }
 
 describe('The search store', () => {
-    let store,
+    var store,
         flux = new MockFlux();
 
     beforeEach(() => {

@@ -9,15 +9,15 @@ import 'common/asset/scss/application/version-form.scss';
 
 class VersionForm extends BaseView {
     constructor(props) {
-        this.className = 'versionForm';
-        this.store = Flux.getStore('application');
-        this.actions = Flux.getActions('application');
-        this.events = {
+        props.edit = props.edit || false;
+        props.className = 'versionForm';
+        props.events = {
             'keyup #version_id': 'handleVersionId',
             'submit': 'save'
         };
-        props.edit = props.edit || false;
+        props.store = Flux.getStore('application');
         super(props);
+        this.actions = Flux.getActions('application');
     }
 
     /**
