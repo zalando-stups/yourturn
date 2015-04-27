@@ -5,12 +5,12 @@ import 'common/asset/scss/application/oauth-form.scss';
 
 class OAuthForm extends BaseView {
     constructor(props) {
-        this.className = 'oAuthForm';
+        props.className = 'oAuthForm';
+        super(props);
         this.stores = {
             resource: Flux.getStore('resource'),
             application: Flux.getStore('application')
         };
-        super(props);
     }
 
     update() {

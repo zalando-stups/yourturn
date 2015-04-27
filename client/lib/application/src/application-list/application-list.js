@@ -5,9 +5,10 @@ import 'common/asset/scss/application/application-list.scss';
 
 class AppDetail extends BaseView {
     constructor() {
+        super({
+            className: 'applicationList'
+        });
         this.store = Flux.getStore('application');
-        this.className = 'applicationList';
-        super();
     }
 
     update() {

@@ -10,11 +10,11 @@ import 'common/asset/scss/application/version-detail.scss';
 
 class VersionDetail extends BaseView {
     constructor( props ) {
+        props.className = 'versionDetail';
+        super(props);
         this.stores = {
             application: Flux.getStore('application')
         };
-        this.className = 'versionDetail';
-        super(props);
     }
 
     update() {

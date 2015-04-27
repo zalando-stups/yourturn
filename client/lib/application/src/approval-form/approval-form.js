@@ -6,14 +6,14 @@ import 'common/asset/scss/application/approval-form.scss';
 
 class ApprovalForm extends BaseView {
     constructor(props) {
-        this.store = Flux.getStore('application');
-        this.actions = Flux.getActions('application');
-        this.className = 'approvalForm';
-        this.events = {
+        props.className = 'approvalForm';
+        props.events = {
             'submit': 'save',
             'keyup #approval_custom_type': 'checkCustomType'
         };
         super(props);
+        this.store = Flux.getStore('application');
+        this.actions = Flux.getActions('application');
     }
 
     checkCustomType() {
