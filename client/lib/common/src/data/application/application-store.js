@@ -162,7 +162,7 @@ class ApplicationStore extends Store {
      */
     getApplications() {
         let availableApps = _m.filter( app => !(app instanceof FetchResult), _m.vals( this.state.applications ) );
-        let sortedApps = _m.sortBy( a => _m.get(a, 'name'), availableApps);
+        let sortedApps = _m.sortBy( a => _m.get(a, 'name').toLowerCase(), availableApps);
         return _m.toJs( sortedApps ) || [];
     }
 
@@ -185,7 +185,7 @@ class ApplicationStore extends Store {
      */
     getApplicationVersions(id) {
         let versions = _m.vals(_m.get(this.state.versions, id)),
-            sorted = _m.sort(v => _m.get(v, 'id'), versions),
+            sorted = _m.sortBy(v => _m.get(v, 'id').toLowerCase(), versions),
             filtered = _m.filter(v => !(v instanceof FetchResult), sorted);
         return _m.toJs( filtered ) || [];
     }
@@ -230,7 +230,7 @@ class ApplicationStore extends Store {
 
     getApprovals(applicationId, versionId) {
         let approvals = _m.toJs(_m.vals(_m.getIn(this.state.approvals, [applicationId, versionId]))) || [];
-        return approvals.sort((a, b) => a.approved_at < b.approved_at ? -1 : b.approved_at < a.approved_at ? 1 : 0);
+        return approvals.sort((a, b) => a.timestamp < b.timestamp ? -1 : b.timestamp < a.timestamp ? 1 : 0);
     }
 
 
