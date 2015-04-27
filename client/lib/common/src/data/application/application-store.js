@@ -185,7 +185,7 @@ class ApplicationStore extends Store {
      */
     getApplicationVersions(id) {
         let versions = _m.vals(_m.get(this.state.versions, id)),
-            sorted = _m.sort(v => _m.get(v, 'id'), versions),
+            sorted = _m.sortBy(v => _m.get(v, 'id').toLowerCase(), versions),
             filtered = _m.filter(v => !(v instanceof FetchResult), sorted);
         return _m.toJs( filtered ) || [];
     }
