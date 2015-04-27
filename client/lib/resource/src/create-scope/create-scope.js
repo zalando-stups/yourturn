@@ -12,9 +12,9 @@ class CreateScope extends BaseView {
             'submit': 'save',
             'keyup #scope_id': 'syncScopeId'
         };
+        props.store = Flux.getStore('resource');
         super(props);
         this.actions = Flux.getActions('resource');
-        this.store = Flux.getStore('resource');
     }
 
  syncScopeId() {

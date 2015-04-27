@@ -11,13 +11,18 @@ import _ from 'lodash';
 class BaseView extends View {
     constructor(props) {
         super(props);
-        this.props = props;
+        this.store = props.store || undefined;
+        this.stores = props.stores || undefined;
         this._boundRender = () => {
             this.update();
             this.render();
             return this;
         };
         this.bind();
+
+        props.store = null;
+        props.stores = null;
+        this.props = props;
     }
 
     bind() {

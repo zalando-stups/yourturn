@@ -7,10 +7,10 @@ import 'common/asset/scss/application/version-list.scss';
 class AppVersion extends BaseView {
     constructor( props ) {
         props.className = 'versionList';
-        super(props);
-        this.stores = {
+        props.stores = {
             application: Flux.getStore('application')
         };
+        super(props);
     }
 
     update() {

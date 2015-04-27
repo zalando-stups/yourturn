@@ -7,8 +7,8 @@ import 'common/asset/scss/resource/resource-detail.scss';
 class ResourceDetail extends BaseView {
     constructor(props) {
         props.className = 'resourceDetail';
+        props.store = Flux.getStore('resource');
         super(props);
-        this.store = Flux.getStore('resource');
     }
 
     update() {

@@ -15,8 +15,8 @@ class VersionForm extends BaseView {
             'keyup #version_id': 'handleVersionId',
             'submit': 'save'
         };
+        props.store = Flux.getStore('application');
         super(props);
-        this.store = Flux.getStore('application');
         this.actions = Flux.getActions('application');
     }
 

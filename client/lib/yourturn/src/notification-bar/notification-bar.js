@@ -8,11 +8,11 @@ class NotificationBar extends BaseView {
     constructor() {
         super({
             className: 'notificationBar',
+            store: Flux.getStore('notification'),
             events: {
                 'click li': 'dismissNotification'
             }
         });
-        this.store = Flux.getStore('notification');
         this.actions = Flux.getActions('notification');
     }
 

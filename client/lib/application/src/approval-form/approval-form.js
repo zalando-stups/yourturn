@@ -11,8 +11,8 @@ class ApprovalForm extends BaseView {
             'submit': 'save',
             'keyup #approval_custom_type': 'checkCustomType'
         };
+        props.store = Flux.getStore('application');
         super(props);
-        this.store = Flux.getStore('application');
         this.actions = Flux.getActions('application');
     }
 

@@ -10,9 +10,9 @@ class SearchView extends BaseView {
             events: {
                 'click button': 'search',
                 'keyup input': 'search'
-            }
+            },
+            store: Flux.getStore('search')
         });
-        this.store = Flux.getStore('search');
         this.state = {
             term: ''
         };
