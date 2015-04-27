@@ -13,6 +13,13 @@ module.exports = {
         publicPath: '/dist/'
     },
     plugins: [
+        new webpack.optimize.DedupePlugin(),
+        new webpack.optimize.UglifyJsPlugin(),
+        new webpack.PrefetchPlugin('remarkable'),
+        new webpack.PrefetchPlugin('moment'),
+        new webpack.PrefetchPlugin('common/src/superagent'),
+        new webpack.NormalModuleReplacementPlugin(/underscore/, 'common/src/lodash.custom'),
+        new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /en/),
         new webpack.NoErrorsPlugin(),
         new ExtractTextPlugin('style.css', {
             allChunks: true

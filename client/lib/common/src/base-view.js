@@ -1,5 +1,5 @@
 import {View} from 'backbone';
-import _ from 'lodash';
+import _ from 'common/src/lodash.custom';
 
 /**
  * BaseView for YourTurn.
