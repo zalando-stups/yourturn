@@ -14,6 +14,7 @@ module.exports = {
     },
     plugins: [
         new webpack.HotModuleReplacementPlugin(),
+        new webpack.NormalModuleReplacementPlugin(/underscore/, 'lodash'),
         new webpack.NoErrorsPlugin(),
         new webpack.DefinePlugin({
             ENV_PRODUCTION: false
