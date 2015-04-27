@@ -7,12 +7,13 @@ import 'common/asset/scss/resource/create-resource.scss';
 
 class CreateResource extends BaseView {
     constructor() {
+        super({
+            className: 'createResource',
+            events: {
+                'submit': 'save'
+            }
+        });
         this.actions = Flux.getActions('resource');
-        this.className = 'createResource';
-        this.events = {
-            'submit': 'save'
-        };
-        super();
     }
 
     /**

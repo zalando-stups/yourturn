@@ -4,10 +4,11 @@ import Flux from 'resource/src/flux';
 
 class ResourceList extends BaseView {
     constructor() {
+        super({
+            className: 'resourceList'
+        });
         this.store = Flux.getStore('resource');
         this.actions = Flux.getActions('resource');
-        this.className = 'resourceList';
-        super();
     }
 
     update() {
