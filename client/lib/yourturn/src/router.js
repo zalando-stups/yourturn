@@ -7,12 +7,13 @@ const MAIN_VIEW_ID = '#yourturn-view';
 
 class YourturnRouter extends Router {
     constructor() {
-        this.routes = {
-            '': 'search',
-            'search': 'search',
-            'oauth': 'oauth'
-        };
-        super();
+        super({
+            routes: {
+                '': 'search',
+                'search': 'search',
+                'oauth': 'oauth'
+            }
+        });
     }
 
     search() {

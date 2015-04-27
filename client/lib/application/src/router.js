@@ -18,20 +18,20 @@ const MAIN_VIEW_ID = '#yourturn-view',
 
 class AppRouter extends Router {
     constructor() {
-        this.routes = {
-            'application': 'listApplications',
-            'application/create': 'createApplication',
-            'application/oauth/:id': 'configureOAuth',
-            'application/edit/:id': 'editApplication',
-            'application/detail/:id': 'listApplication',
-            'application/detail/:id/version': 'listApplicationVersions',
-            'application/detail/:id/version/create': 'createApplicationVersion',
-            'application/detail/:id/version/detail/:ver': 'listApplicationVersion',
-            'application/detail/:id/version/edit/:ver': 'editApplicationVersion',
-            'application/detail/:id/version/approve/:ver': 'approveApplicationVersion'
-        };
-
-        super();
+        super({
+            routes: {
+                'application': 'listApplications',
+                'application/create': 'createApplication',
+                'application/oauth/:id': 'configureOAuth',
+                'application/edit/:id': 'editApplication',
+                'application/detail/:id': 'listApplication',
+                'application/detail/:id/version': 'listApplicationVersions',
+                'application/detail/:id/version/create': 'createApplicationVersion',
+                'application/detail/:id/version/detail/:ver': 'listApplicationVersion',
+                'application/detail/:id/version/edit/:ver': 'editApplicationVersion',
+                'application/detail/:id/version/approve/:ver': 'approveApplicationVersion'
+            }
+        });
     }
 
     approveApplicationVersion(applicationId, versionId) {

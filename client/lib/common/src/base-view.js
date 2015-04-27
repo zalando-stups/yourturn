@@ -10,6 +10,7 @@ import _ from 'lodash';
  */
 class BaseView extends View {
     constructor(props) {
+        super(props);
         this.props = props;
         this._boundRender = () => {
             this.update();
@@ -17,7 +18,6 @@ class BaseView extends View {
             return this;
         };
         this.bind();
-        super();
     }
 
     bind() {

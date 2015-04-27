@@ -6,13 +6,14 @@ import 'common/asset/scss/yourturn/notification-bar.scss';
 
 class NotificationBar extends BaseView {
     constructor() {
+        super({
+            className: 'notificationBar',
+            events: {
+                'click li': 'dismissNotification'
+            }
+        });
         this.store = Flux.getStore('notification');
         this.actions = Flux.getActions('notification');
-        this.className = 'notificationBar';
-        this.events = {
-            'click li': 'dismissNotification'
-        };
-        super();
     }
 
     /**
