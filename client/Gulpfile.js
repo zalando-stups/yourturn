@@ -3,9 +3,46 @@ var gulp = require('gulp'),
     eslint = require('gulp-eslint'),
     args = require('minimist')(process.argv.slice(2)),
     del = require( 'del' ),
+    shell = require('gulp-shell'),
     replace = require('gulp-replace'),
     rename = require('gulp-rename'),
     webpack = require('webpack');
+
+var LODASH_FUNCS = [
+        // own
+        'chain',
+        'sortBy',
+        'reverse',
+        'take',
+        'forOwn',
+        'value',
+        // backbone
+        'once',
+        'keys',
+        'uniqueId',
+        'isEmpty',
+        'extend',
+        'defaults',
+        'clone',
+        'escape',
+        'isEqual',
+        'has',
+        'isObject',
+        'result',
+        'each',
+        'isArray',
+        'isString',
+        'matches',
+        'bind',
+        'invoke',
+        'isFunction',
+        'pick',
+        'isRegExp',
+        'map',
+        'bindAll',
+        'any'
+    ],
+    LODASH_INCLUDE = 'include=' + LODASH_FUNCS.join(',');
 
 /**
  * Deletes files or directories
@@ -21,8 +58,13 @@ function remove(globs) {
 // removes the output folder
 gulp.task( 'clean', remove(['dist/**/*']));
 
+// custom lodash build
+gulp.task('lodash', shell.task([
+    'lodash modern ' + LODASH_INCLUDE + ' -d -o lib/common/src/lodash.custom.js'
+]));
+
 // runs webpack and creates a bundle
-gulp.task('pack', ['clean'], function(done) {
+gulp.task('pack', ['clean', 'lodash'], function(done) {
     var webpackConfig = require('./webpack.production.config');
     // here we could override production-specific properties
     webpack(

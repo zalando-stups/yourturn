@@ -17,8 +17,8 @@ module.exports = {
         new webpack.optimize.UglifyJsPlugin(),
         new webpack.PrefetchPlugin('remarkable'),
         new webpack.PrefetchPlugin('moment'),
-        new webpack.PrefetchPlugin('superagent'),
-        new webpack.NormalModuleReplacementPlugin(/underscore/, 'lodash'),
+        new webpack.PrefetchPlugin('common/src/superagent'),
+        new webpack.NormalModuleReplacementPlugin(/underscore/, 'common/src/lodash.custom'),
         new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /en/),
         new webpack.NoErrorsPlugin(),
         new ExtractTextPlugin('style.css', {
