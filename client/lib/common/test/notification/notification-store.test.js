@@ -1,9 +1,7 @@
 /* globals expect */
-
 import NotificationStore from 'common/src/data/notification/notification-store';
 import NotificationActions from 'common/src/data/notification/notification-actions';
 import {Flummox} from 'flummox';
-import {Pending, Failed} from 'common/src/fetch-result';
 
 const FLUX_ID = 'notification';
 
@@ -17,13 +15,11 @@ class MockFlux extends Flummox {
 }
 
 describe('The notification store', () => {
-    let store,
-        actions,
+    var store,
         flux = new MockFlux();
 
     beforeEach(() => {
         store = flux.getStore(FLUX_ID);
-        actions = flux.getActions(FLUX_ID);
     });
 
     afterEach(() => {

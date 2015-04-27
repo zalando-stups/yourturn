@@ -241,7 +241,9 @@ class ApplicationStore extends Store {
      */
     _empty() {
         this.setState({
-            applications: _m.hashMap()
+            applications: _m.hashMap(),
+            versions: _m.hashMap(),
+            approvals: _m.hashMap()
         });
     }
 }

@@ -10,7 +10,7 @@ import 'common/asset/scss/application/application-form.scss';
 
 class ApplicationForm extends BaseView {
     constructor(props) {
-        props = props || { edit: false };
+        props = props || { edit: false };
         props.className = 'applicationForm';
         props.events = {
             'submit form': 'save',
