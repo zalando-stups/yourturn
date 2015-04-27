@@ -162,7 +162,7 @@ class ApplicationStore extends Store {
      */
     getApplications() {
         let availableApps = _m.filter( app => !(app instanceof FetchResult), _m.vals( this.state.applications ) );
-        let sortedApps = _m.sortBy( a => _m.get(a, 'name'), availableApps);
+        let sortedApps = _m.sortBy( a => _m.get(a, 'name').toLowerCase(), availableApps);
         return _m.toJs( sortedApps ) || [];
     }
 
