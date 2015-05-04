@@ -1,14 +1,15 @@
 import {Actions} from 'flummox';
 import request from 'common/src/superagent';
 import {Services} from 'common/src/data/services';
-// import {Provider, RequestConfig} from 'common/src/oauth-provider';
+import {Provider, RequestConfig, saveRoute} from 'common/src/oauth-provider';
 
 class ApplicationActions extends Actions {
     fetchApplications() {
         return request
                 .get(`${Services.kio.url}${Services.kio.root}`)
                 .accept('json')
-                .exec()
+                .oauth(Provider, RequestConfig)
+                .exec(saveRoute)
                 .then( res => res.body );
     }
 
@@ -16,7 +17,8 @@ class ApplicationActions extends Actions {
         return request
                 .get(`${Services.kio.url}${Services.kio.root}/${id}`)
                 .accept('json')
-                .exec()
+                .oauth(Provider, RequestConfig)
+                .exec(saveRoute)
                 .then( res => res.body )
                 .catch( err => {
                     err.id = id;
@@ -30,7 +32,8 @@ class ApplicationActions extends Actions {
                 .type('json')
                 .accept('json')
                 .send(app)
-                .exec()
+                .oauth(Provider, RequestConfig)
+                .exec(saveRoute)
                 .then()
                 .catch( err => {
                     err.id = app.id;
@@ -42,7 +45,8 @@ class ApplicationActions extends Actions {
         return request
                 .get(`${Services.kio.url}${Services.kio.root}/${id}/versions`)
                 .accept('json')
-                .exec()
+                .oauth(Provider, RequestConfig)
+                .exec(saveRoute)
                 .then( res => res.body )
                 .catch( err => {
                     err.id = id;
@@ -54,7 +58,8 @@ class ApplicationActions extends Actions {
         return request
                 .get(`${Services.kio.url}${Services.kio.root}/${id}/versions/${ver}`)
                 .accept('json')
-                .exec()
+                .oauth(Provider, RequestConfig)
+                .exec(saveRoute)
                 .then( res => res.body )
                 .catch( err => {
                     err.id = id;
@@ -69,7 +74,8 @@ class ApplicationActions extends Actions {
                 .type('json')
                 .accept('json')
                 .send(version)
-                .exec()
+                .oauth(Provider, RequestConfig)
+                .exec(saveRoute)
                 .then()
                 .catch(err => {
                     err.applicationId = version.application_id;
@@ -82,7 +88,8 @@ class ApplicationActions extends Actions {
         return request
                 .get(`${Services.kio.url}${Services.kio.root}/${applicationId}/versions/${versionId}/approvals`)
                 .accept('json')
-                .exec()
+                .oauth(Provider, RequestConfig)
+                .exec(saveRoute)
                 .then(res => res.body)
                 .catch(err => {
                     err.applicationId = applicationId;
@@ -96,8 +103,8 @@ class ApplicationActions extends Actions {
                 .post(`${Services.kio.url}${Services.kio.root}/${approval.application_id}/versions/${approval.version_id}/approvals`)
                 .type('json')
                 .accept('json')
-                .send(approval)
-                .exec()
+                .oauth(Provider, RequestConfig)
+                .exec(saveRoute)
                 .then();
     }
 }

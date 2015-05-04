@@ -22,11 +22,11 @@
     "jquery": "2.1.3",
     "moment": "2.10.2",
     "mori": "0.3.2",
-    "oauth2-client-js": "0.0.6",
+    "oauth2-client-js": "0.0.8",
     "promise.prototype.finally": "1.0.1",
     "remarkable": "1.6.0",
     "superagent": "zalando/superagent#d9cc9f5615466d08c6b39793a2e0056540a8f5f5",
-    "superagent-oauth2-client": "0.0.6"
+    "superagent-oauth2-client": "0.0.8"
   },
   "devDependencies": {
     "autoprefixer-loader": "1.2.0",
