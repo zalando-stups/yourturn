@@ -33,7 +33,7 @@ class YourturnRouter extends Router {
         }
         if (response) {
             if (response instanceof Error) {
-                return NOTIFICATIONS.addNotification('OAuth: ' + response.error + ' ' + response.error_description, 'error');
+                return NOTIFICATIONS.addNotification('OAuth: ' + response.error + ' ' + response.getMessage(), 'error');
             }
             history.navigate(response.metadata.route || '/', { trigger: true });
         }
