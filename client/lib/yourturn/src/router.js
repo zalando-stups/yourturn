@@ -28,15 +28,11 @@ class YourturnRouter extends Router {
         try {
             response = Provider.parse(window.location.hash);
         } catch(err) {
-            // this means we can't decide if the response is an error or success
-            // or it was not expected. in either case we should do something.
-            //
-            // this is left empty intentionally for now
             NOTIFICATIONS.addNotification('OAuth: Unexpected response. This should not happen.', 'error');
         }
         if (response) {
             if (response instanceof Error) {
-                return NOTIFICATIONS.addNotification('OAuth: ' + response.error + '— ' + response.error_description, 'error');
+                return NOTIFICATIONS.addNotification('OAuth: ' + response.error + ' ' + response.error_description, 'error');
             }
             history.navigate(response.metadata.route || '/', { trigger: true });
         }
