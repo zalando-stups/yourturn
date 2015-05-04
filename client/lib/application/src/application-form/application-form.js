@@ -115,10 +115,10 @@ class ApplicationForm extends BaseView {
             let verb = this.props.edit ? 'update' : 'create';
             GlobalFlux
             .getActions('notification')
-            .addNotification([
+            .addNotification(
                 `Could not ${verb} application ${app.name}.`,
                 'error'
-            ]);
+            );
         });
     }
 

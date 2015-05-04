@@ -85,7 +85,7 @@ class VersionForm extends BaseView {
         .catch(() => {
             GlobalFlux
             .getActions('notification')
-            .addNotification([`Could not ${verb} version ${version.id} for ${this.data.application.name}.`, 'error']);
+            .addNotification(`Could not ${verb} version ${version.id} for ${this.data.application.name}.`, 'error');
         });
     }
 
