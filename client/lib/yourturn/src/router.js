@@ -29,6 +29,7 @@ class YourturnRouter extends Router {
             response = Provider.parse(window.location.hash);
         } catch(err) {
             NOTIFICATIONS.addNotification('OAuth: Unexpected response. This should not happen.', 'error');
+            return history.navigate(response.metadata.route || '/', { trigger: true });
         }
         if (response) {
             if (response instanceof Error) {
