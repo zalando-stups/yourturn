@@ -1,7 +1,7 @@
 import {Actions} from 'flummox';
 import request from 'common/src/superagent';
 import {Services} from 'common/src/data/services';
-import {Provider, RequestConfig, saveRoute} from 'common/src/oauth-provider';
+// import {Provider, RequestConfig, saveRoute} from 'common/src/oauth-provider';
 
 class SearchActions extends Actions {
 
@@ -34,8 +34,8 @@ class SearchActions extends Actions {
                 .get(`${Services[service].url}${Services[service].root}`)
                 .query({ search: term })
                 .accept('json')
-                .oauth(Provider, RequestConfig)
-                .exec(saveRoute)
+                // .oauth(Provider, RequestConfig)
+                // .exec(saveRoute)
                 .then( res => {
                     let body = res.body;
                     body._term = term;
