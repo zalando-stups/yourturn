@@ -7,10 +7,18 @@ class OAuthForm extends BaseView {
     constructor(props) {
         props.className = 'oAuthForm';
         props.stores = {
+            oauth: Flux.getStore('oauth'),
             resource: Flux.getStore('resource'),
             application: Flux.getStore('application')
         };
+        props.events = {
+            'submit': 'save'
+        };
         super(props);
+    }
+
+    save(evt) {
+        evt.preventDefault();
     }
 
     update() {
@@ -20,7 +28,8 @@ class OAuthForm extends BaseView {
             application: this.stores.application.getApplication(this.props.applicationId),
             scopes: scopes,
             ownerScopes: scopes.filter(s => s.ownerScope),
-            nonOwnerScopes: scopes.filter(s => !s.ownerScope)
+            nonOwnerScopes: scopes.filter(s => !s.ownerScope),
+            oauth: this.stores.oauth.getOAuthConfig(this.props.applicationId)
         };
     }
 

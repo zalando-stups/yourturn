@@ -1,6 +1,7 @@
 /* globals expect */
 window.YTENV_TWINTIP_BASE_URL = 'localhost';
 window.YTENV_KIO_BASE_URL = 'localhost';
+window.YTENV_MINT_BASE_URL = 'localhost';
 
 import SearchStore from 'common/src/data/search/search-store';
 import SearchActions from 'common/src/data/search/search-actions';

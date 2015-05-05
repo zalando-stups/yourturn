@@ -6,9 +6,12 @@
 </div>
 <form name="oauthForm" class="form">
     <div class="form-group">
-        <label for="oauth_redirect_uri">Redirect URI</label>
+        <label for="oauth_redirect_url">Redirect URL</label>
         <small>Where you expect users to come back to after logging in.</small>
         <input
+            {{#if oauth.redirect_url}}
+            value="{{oauth.redirect_url}}"
+            {{/if}}
             id="oauth_redirect_uri"
             name="yourturn_oauth_redirect_uri"
             type="url" />
@@ -53,7 +56,9 @@
         </label>
     </div>
     <div class="btn-group">
-        <button class="btn btn-primary">
+        <button
+            type="submit"
+            class="btn btn-primary">
             <i class="fa fa-save"></i> Save
         </button>
     </div>

@@ -14,7 +14,12 @@ var apps = {
         last_synced: '2015-01-01T12:42:41Z',
         has_problems: false,
         redirect_url: 'http://example.com/oauth',
-        accounts: []
+        accounts: [{
+            id: '1239847235987',
+            type: 'aws'
+        }],
+        scopes: [
+        ]
     }
 };
 

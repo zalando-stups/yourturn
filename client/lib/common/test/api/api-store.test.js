@@ -1,6 +1,7 @@
 /* globals expect */
 window.YTENV_TWINTIP_BASE_URL = 'localhost';
 window.YTENV_KIO_BASE_URL = 'localhost';
+window.YTENV_MINT_BASE_URL = 'localhost';
 
 import ApiStore from 'common/src/data/api/api-store';
 import ApiActions from 'common/src/data/api/api-actions';

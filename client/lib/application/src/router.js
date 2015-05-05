@@ -13,6 +13,7 @@ import Flux from './flux';
 import 'promise.prototype.finally';
 
 const MAIN_VIEW_ID = '#yourturn-view',
+      OAUTH_ACTIONS = Flux.getActions('oauth'),
       APP_ACTIONS = Flux.getActions('application'),
       APP_STORE = Flux.getStore('application');
 
@@ -125,8 +126,10 @@ class AppRouter extends Router {
     }
 
     configureOAuth(id) {
-        APP_ACTIONS
-        .fetchApplication(id)
+        Promise.all([
+            OAUTH_ACTIONS.fetchOAuthConfig(id),
+            APP_ACTIONS.fetchApplication(id)
+        ])
         .then(() => {
             Flux.getActions('resource').fetchAllScopes();
             puppeteer.show(new OAuthForm({

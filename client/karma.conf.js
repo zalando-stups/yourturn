@@ -3,7 +3,7 @@ var webpackConfig = require('./webpack.config'),
 
 webpackConfig.module.preLoaders = [{
     test: /\.js$/,
-    exclude: /(node_modules|test)\//,
+    exclude: /(node_modules|test|lodash)\//,
     loader: 'isparta-instrumenter'
 }];
 
@@ -22,7 +22,7 @@ module.exports = function(config) {
         'karma-chrome-launcher',
         'karma-phantomjs2-launcher'
     ],
-    browserNoActivityTimeout: 60000,
+    browserNoActivityTimeout: 1200000,
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
     frameworks: ['mocha', 'chai', 'chai-as-promised', 'sinon-chai'],
@@ -64,7 +64,7 @@ module.exports = function(config) {
     autoWatch: false,
 
     // If browser does not capture in given timeout [ms], kill it
-    captureTimeout: 60000,
+    captureTimeout: 30000,
 
     // use phantomjs 2 for now
     // put on travis as soon as it’s officially available

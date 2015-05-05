@@ -1,6 +1,6 @@
 import TWINTIP_BASE_URL from 'TWINTIP_BASE_URL';
 import KIO_BASE_URL from 'KIO_BASE_URL';
-
+import MINT_BASE_URL from 'MINT_BASE_URL';
 const SERVICES = {
     kio: {
         url: KIO_BASE_URL,
@@ -11,6 +11,11 @@ const SERVICES = {
         url: TWINTIP_BASE_URL,
         root: '/apis',
         id: 'application_id'
+    },
+    mint: {
+        url: MINT_BASE_URL,
+        root: '/apps',
+        id: 'id'
     }
 };
 
