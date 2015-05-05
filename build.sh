@@ -1,5 +1,6 @@
 #!/bin/bash
 
+npm install
 cd client
 gulp build
 cd ..
