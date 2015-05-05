@@ -10,10 +10,29 @@ class CreateResource extends BaseView {
         super({
             className: 'createResource',
             events: {
-                'submit': 'save'
+                'submit': 'save',
+                'keyup #resource_id': 'checkResourceIdAvailability'
             }
         });
         this.actions = Flux.getActions('resource');
+    }
+
+    /**
+     * Checks the resource store if a resource with this ID
+     * already exists. Shows or hides according input-addon.
+     */
+    checkResourceIdAvailability() {
+        let $resourceInput = this.$el.find('#resource_id');
+        let resource_id = $resourceInput.val();
+        if (Flux.getStore('resource').getResource(resource_id)) {
+            $resourceInput[0].setCustomValidity('Resource ID already exists.');
+            this.$el.find('.is-taken').show();
+            this.$el.find('.is-available').hide();
+        } else {
+            $resourceInput[0].setCustomValidity('');
+            this.$el.find('.is-taken').hide();
+            this.$el.find('.is-available').show();
+        }
     }
 
     /**
@@ -49,6 +68,7 @@ class CreateResource extends BaseView {
 
     render() {
         this.$el.html(Template(this.data));
+        this.checkResourceIdAvailability();
         return this;
     }
 }

@@ -1,29 +1,57 @@
 /** global window **/
 import {Actions} from 'flummox';
 let {localStorage} = window;
+import request from 'common/src/superagent';
+import {Services} from 'common/src/data/services';
 
 class ResourceActions extends Actions {
 
     saveResource(resource) {
-        localStorage.setItem(`resource.${resource.id}`, JSON.stringify(resource));
-        return resource;
+        return request
+                .put(`${Services.essentials.url}${Services.essentials.root}/${resource.id}`)
+                .type('json')
+                .accept('json')
+                .send(resource)
+                .exec()
+                .then()
+                .catch( err => {
+                    err.id = resource.id;
+                    throw err;
+                });
     }
 
     saveScope(resourceId, scope) {
-        localStorage.setItem(`resource.${resourceId}.${scope.id}`, JSON.stringify(scope));
-        return [resourceId, scope];
+        return request
+                .put(`${Services.essentials.url}${Services.essentials.root}/${resourceId}/scopes/${scope.id}`)
+                .type('json')
+                .accept('json')
+                .send(scope)
+                .exec()
+                .then( [resourceId, scope] )
+                .catch( err => {
+                    err.id = scope.id;
+                    throw err;
+                });
     }
 
     fetchResource(resourceId) {
-        return JSON.parse(localStorage.getItem(`resource.${resourceId}`));
+        return request
+                .get(`${Services.essentials.url}${Services.essentials.root}/${resourceId}`)
+                .accept('json')
+                .exec()
+                .then( res => res.body )
+                .catch( err => {
+                    err.id = resourceId;
+                    throw err;
+                });
     }
 
     fetchResources() {
-        return Object
-                .keys(localStorage)
-                .filter(key => key.startsWith('resource'))
-                .filter(key => key.split('.').length === 2)
-                .map(key => JSON.parse(localStorage.getItem(key)));
+        return request
+                .get(`${Services.essentials.url}${Services.essentials.root}`)
+                .accept('json')
+                .exec()
+                .then( res => res.body );
     }
 
     fetchAllScopes() {
@@ -40,18 +68,25 @@ class ResourceActions extends Actions {
     }
 
     fetchScopes(resourceId) {
-        let scopes = Object
-                        .keys(localStorage)
-                        .filter(key => key.startsWith(`resource.${resourceId}`))
-                        .filter(key => key.split('.').length === 3)
-                        .map(key => JSON.parse(localStorage.getItem(key)));
-        return [resourceId, scopes];
+        return request
+                .get(`${Services.essentials.url}${Services.essentials.root}/${resourceId}/scopes`)
+                .accept('json')
+                .exec()
+                .then( res => [resourceId, res.body] );
     }
 
     fetchScope(resourceId, scopeId) {
-        let scope = JSON.parse(localStorage.getItem(`resource.${resourceId}.${scopeId}`));
-        return [resourceId, scope];
+        return request
+                .get(`${Services.essentials.url}${Services.essentials.root}/${resourceId}/scopes/${scopeId}`)
+                .accept('json')
+                .exec()
+                .then( res => [resourceId, res.body] )
+                .catch( err => {
+                    err.id = resourceId;
+                    throw err;
+                });
     }
+
 }
 
 export default ResourceActions;

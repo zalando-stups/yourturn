@@ -114,7 +114,7 @@ server.get('/apps/:id', function(req,res){
 server.put('/apps/:id', function(req, res) {
     setTimeout( function() {
         applications[req.body.id] = req.body;
-        res.status(200).send();
+        res.status(200).send(req.body);
     }, Math.random() * 2000 );
 });
 
