@@ -22,7 +22,7 @@ module.exports = function(config) {
         'karma-chrome-launcher',
         'karma-phantomjs2-launcher'
     ],
-    browserNoActivityTimeout: 60000,
+    browserNoActivityTimeout: 1200000,
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
     frameworks: ['mocha', 'chai', 'chai-as-promised', 'sinon-chai'],

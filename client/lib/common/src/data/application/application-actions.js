@@ -26,9 +26,9 @@ class ApplicationActions extends Actions {
                 });
     }
 
-    saveApplication(app) {
+    saveApplication(id, app) {
         return request
-                .put(`${Services.kio.url}${Services.kio.root}/${app.id}`)
+                .put(`${Services.kio.url}${Services.kio.root}/${id}`)
                 .type('json')
                 .accept('json')
                 .send(app)
@@ -36,7 +36,7 @@ class ApplicationActions extends Actions {
                 .exec(saveRoute)
                 .then()
                 .catch( err => {
-                    err.id = app.id;
+                    err.id = id;
                     throw err;
                 });
     }
