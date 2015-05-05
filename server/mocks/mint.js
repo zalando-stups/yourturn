@@ -18,8 +18,10 @@ var apps = {
             id: '1239847235987',
             type: 'aws'
         }],
-        scopes: [
-        ]
+        scopes: [{
+            resourceId: 'sales_order',
+            id: 'create'
+        }]
     }
 };
 

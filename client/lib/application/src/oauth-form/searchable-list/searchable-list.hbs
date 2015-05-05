@@ -1,0 +1,25 @@
+<input
+    data-action="filter"
+    placeholder="customer"
+    value="{{search}}"
+    type="search" />
+<small>Showing {{filtered_size}} of {{total_size}} items.</small>
+<ul>
+    {{#each filtered}}
+    <li><strong>{{@key}}</strong></li>
+    <ul>
+        {{#each this}}
+            <li>
+                <label>
+                    <input
+                        id="{{this.resourceId}}.{{this.id}}"
+                        {{#contains @root/selected this.fullId}}
+                            checked="checked"
+                        {{/contains}}
+                        type="checkbox" /> {{this.id}}
+                </label>
+            </li>
+        {{/each}}
+    </ul>
+    {{/each}}
+</ul>

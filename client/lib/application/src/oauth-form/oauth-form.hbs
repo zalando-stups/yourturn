@@ -19,26 +19,12 @@
     <div class="form-group">
         <label>Resource Owner Scopes</label>
         <small>{{application.name}} can ask the resource owners for these scopes to be granted:</small>
-        {{#each scopes}}
-            <label>
-                <input
-                    type="checkbox" /> {{this.resourceId}}.{{this.id}}
-            </label>
-        {{else}}
-            No scopes available.
-        {{/each}}
+        
     </div>
     <div class="form-group">
         <label>Application Scopes</label>
         <small>{{application.name}} has the permission to access data with these scopes:</small>
-        {{#each nonOwnerScopes}}
-            <label>
-                <input
-                    type="checkbox" /> {{this.resourceId}}.{{this.id}}
-            </label>
-        {{else}}
-            No scopes available.
-        {{/each}}
+        <div data-action="appscope-list"></div>
     </div>
     <div class="form-group">
         <label>Credential Distribution</label>

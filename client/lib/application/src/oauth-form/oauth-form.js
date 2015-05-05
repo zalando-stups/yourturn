@@ -1,6 +1,7 @@
 import BaseView from 'common/src/base-view';
 import Template from './oauth-form.hbs';
 import Flux from 'application/src/flux';
+import SearchableList from './searchable-list/searchable-list';
 import 'common/asset/scss/application/oauth-form.scss';
 
 class OAuthForm extends BaseView {
@@ -19,6 +20,13 @@ class OAuthForm extends BaseView {
 
     save(evt) {
         evt.preventDefault();
+        let appscopes = this.appscopeList
+                            .getSelection()
+                            .map(s => s.split('.'))
+                            .map(([resourceId, id]) => ({
+                                resourceId: resourceId,
+                                id: id
+                            }));
     }
 
     update() {
@@ -35,6 +43,13 @@ class OAuthForm extends BaseView {
 
     render() {
         this.$el.html(Template(this.data));
+        this.appscopeList = new SearchableList({
+            items: this.data.scopes,
+            selected: this.data.oauth.scopes.map(s => `${s.resourceId}.${s.id}`)
+        });
+        this.$el
+            .find('[data-action="appscope-list"]')
+            .html(this.appscopeList.render().$el);
         return this;
     }
 }
