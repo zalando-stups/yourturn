@@ -1,5 +1,5 @@
 import {Store} from 'flummox';
-import _ from 'common/src/lodash.custom';
+import _ from 'lodash';
 import _m from 'mori';
 import {Pending, Failed} from 'common/src/fetch-result';
 import FetchResult from 'common/src/fetch-result';

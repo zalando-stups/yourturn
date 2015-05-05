@@ -1,7 +1,7 @@
 /**
  * @license
  * lodash 3.7.0 (Custom Build) <https://lodash.com/>
- * Build: `lodash modern include="chain,sortBy,reverse,take,forOwn,value,once,keys,uniqueId,isEmpty,extend,defaults,clone,escape,isEqual,has,isObject,result,each,isArray,isString,matches,bind,invoke,isFunction,pick,isRegExp,map,bindAll,any" -d -o lib/common/src/lodash.custom.js`
+ * Build: `lodash modern include="chain,filter,flatten,forOwn,groupBy,reverse,sortBy,take,value,values,once,keys,uniqueId,isEmpty,extend,defaults,clone,escape,isEqual,has,isObject,result,each,isArray,isString,matches,bind,invoke,isFunction,pick,isRegExp,map,bindAll,any" -d -o lib/common/src/lodash.custom.js`
  * Copyright 2012-2015 The Dojo Foundation <http://dojofoundation.org/>
  * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
  * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
@@ -728,6 +728,30 @@
   }
 
   /**
+   * A specialized version of `_.filter` for arrays without support for callback
+   * shorthands and `this` binding.
+   *
+   * @private
+   * @param {Array} array The array to iterate over.
+   * @param {Function} predicate The function invoked per iteration.
+   * @returns {Array} Returns the new filtered array.
+   */
+  function arrayFilter(array, predicate) {
+    var index = -1,
+        length = array.length,
+        resIndex = -1,
+        result = [];
+
+    while (++index < length) {
+      var value = array[index];
+      if (predicate(value, index, array)) {
+        result[++resIndex] = value;
+      }
+    }
+    return result;
+  }
+
+  /**
    * A specialized version of `_.map` for arrays without support for callback
    * shorthands and `this` binding.
    *
@@ -974,6 +998,25 @@
    * @returns {Array|Object|string} Returns `collection`.
    */
   var baseEach = createBaseEach(baseForOwn);
+
+  /**
+   * The base implementation of `_.filter` without support for callback
+   * shorthands and `this` binding.
+   *
+   * @private
+   * @param {Array|Object|string} collection The collection to iterate over.
+   * @param {Function} predicate The function invoked per iteration.
+   * @returns {Array} Returns the new filtered array.
+   */
+  function baseFilter(collection, predicate) {
+    var result = [];
+    baseEach(collection, function(value, index, collection) {
+      if (predicate(value, index, collection)) {
+        result.push(value);
+      }
+    });
+    return result;
+  }
 
   /**
    * The base implementation of `_.flatten` with added support for restricting
@@ -1466,6 +1509,27 @@
   }
 
   /**
+   * The base implementation of `_.values` and `_.valuesIn` which creates an
+   * array of `object` property values corresponding to the property names
+   * of `props`.
+   *
+   * @private
+   * @param {Object} object The object to query.
+   * @param {Array} props The property names to get values for.
+   * @returns {Object} Returns the array of property values.
+   */
+  function baseValues(object, props) {
+    var index = -1,
+        length = props.length,
+        result = Array(length);
+
+    while (++index < length) {
+      result[index] = object[props[index]];
+    }
+    return result;
+  }
+
+  /**
    * The base implementation of `wrapperValue` which returns the result of
    * performing a sequence of actions on the unwrapped `value`, where each
    * successive action is supplied the return value of the previous.
@@ -1619,6 +1683,41 @@
       result[pad + holders[holdersIndex]] = args[argsIndex++];
     }
     return result;
+  }
+
+  /**
+   * Creates a function that aggregates a collection, creating an accumulator
+   * object composed from the results of running each element in the collection
+   * through an iteratee.
+   *
+   * **Note:** This function is used to create `_.countBy`, `_.groupBy`, `_.indexBy`,
+   * and `_.partition`.
+   *
+   * @private
+   * @param {Function} setter The function to set keys and values of the accumulator object.
+   * @param {Function} [initializer] The function to initialize the accumulator object.
+   * @returns {Function} Returns the new aggregator function.
+   */
+  function createAggregator(setter, initializer) {
+    return function(collection, iteratee, thisArg) {
+      var result = initializer ? initializer() : {};
+      iteratee = getCallback(iteratee, thisArg, 3);
+
+      if (isArray(collection)) {
+        var index = -1,
+            length = collection.length;
+
+        while (++index < length) {
+          var value = collection[index];
+          setter(result, value, iteratee(value, index, collection), collection);
+        }
+      } else {
+        baseEach(collection, function(value, key, collection) {
+          setter(result, value, iteratee(value, key, collection), collection);
+        });
+      }
+      return result;
+    };
   }
 
   /**
@@ -2670,6 +2769,34 @@
   /*------------------------------------------------------------------------*/
 
   /**
+   * Flattens a nested array. If `isDeep` is `true` the array is recursively
+   * flattened, otherwise it is only flattened a single level.
+   *
+   * @static
+   * @memberOf _
+   * @category Array
+   * @param {Array} array The array to flatten.
+   * @param {boolean} [isDeep] Specify a deep flatten.
+   * @param- {Object} [guard] Enables use as a callback for functions like `_.map`.
+   * @returns {Array} Returns the new flattened array.
+   * @example
+   *
+   * _.flatten([1, [2, 3, [4]]]);
+   * // => [1, 2, 3, [4]]
+   *
+   * // using `isDeep`
+   * _.flatten([1, [2, 3, [4]]], true);
+   * // => [1, 2, 3, 4]
+   */
+  function flatten(array, isDeep, guard) {
+    var length = array ? array.length : 0;
+    if (guard && isIterateeCall(array, isDeep, guard)) {
+      isDeep = false;
+    }
+    return length ? baseFlatten(array, isDeep) : [];
+  }
+
+  /**
    * Gets the last element of `array`.
    *
    * @static
@@ -2977,6 +3104,61 @@
   /*------------------------------------------------------------------------*/
 
   /**
+   * Iterates over elements of `collection`, returning an array of all elements
+   * `predicate` returns truthy for. The predicate is bound to `thisArg` and
+   * invoked with three arguments: (value, index|key, collection).
+   *
+   * If a property name is provided for `predicate` the created `_.property`
+   * style callback returns the property value of the given element.
+   *
+   * If a value is also provided for `thisArg` the created `_.matchesProperty`
+   * style callback returns `true` for elements that have a matching property
+   * value, else `false`.
+   *
+   * If an object is provided for `predicate` the created `_.matches` style
+   * callback returns `true` for elements that have the properties of the given
+   * object, else `false`.
+   *
+   * @static
+   * @memberOf _
+   * @alias select
+   * @category Collection
+   * @param {Array|Object|string} collection The collection to iterate over.
+   * @param {Function|Object|string} [predicate=_.identity] The function invoked
+   *  per iteration.
+   * @param {*} [thisArg] The `this` binding of `predicate`.
+   * @returns {Array} Returns the new filtered array.
+   * @example
+   *
+   * _.filter([4, 5, 6], function(n) {
+   *   return n % 2 == 0;
+   * });
+   * // => [4, 6]
+   *
+   * var users = [
+   *   { 'user': 'barney', 'age': 36, 'active': true },
+   *   { 'user': 'fred',   'age': 40, 'active': false }
+   * ];
+   *
+   * // using the `_.matches` callback shorthand
+   * _.pluck(_.filter(users, { 'age': 36, 'active': true }), 'user');
+   * // => ['barney']
+   *
+   * // using the `_.matchesProperty` callback shorthand
+   * _.pluck(_.filter(users, 'active', false), 'user');
+   * // => ['fred']
+   *
+   * // using the `_.property` callback shorthand
+   * _.pluck(_.filter(users, 'active'), 'user');
+   * // => ['barney']
+   */
+  function filter(collection, predicate, thisArg) {
+    var func = isArray(collection) ? arrayFilter : baseFilter;
+    predicate = getCallback(predicate, thisArg, 3);
+    return func(collection, predicate);
+  }
+
+  /**
    * Iterates over elements of `collection` invoking `iteratee` for each element.
    * The `iteratee` is bound to `thisArg` and invoked with three arguments:
    * (value, index|key, collection). Iteratee functions may exit iteration early
@@ -3007,6 +3189,56 @@
    * // => logs each value-key pair and returns the object (iteration order is not guaranteed)
    */
   var forEach = createForEach(arrayEach, baseEach);
+
+  /**
+   * Creates an object composed of keys generated from the results of running
+   * each element of `collection` through `iteratee`. The corresponding value
+   * of each key is an array of the elements responsible for generating the key.
+   * The `iteratee` is bound to `thisArg` and invoked with three arguments:
+   * (value, index|key, collection).
+   *
+   * If a property name is provided for `iteratee` the created `_.property`
+   * style callback returns the property value of the given element.
+   *
+   * If a value is also provided for `thisArg` the created `_.matchesProperty`
+   * style callback returns `true` for elements that have a matching property
+   * value, else `false`.
+   *
+   * If an object is provided for `iteratee` the created `_.matches` style
+   * callback returns `true` for elements that have the properties of the given
+   * object, else `false`.
+   *
+   * @static
+   * @memberOf _
+   * @category Collection
+   * @param {Array|Object|string} collection The collection to iterate over.
+   * @param {Function|Object|string} [iteratee=_.identity] The function invoked
+   *  per iteration.
+   * @param {*} [thisArg] The `this` binding of `iteratee`.
+   * @returns {Object} Returns the composed aggregate object.
+   * @example
+   *
+   * _.groupBy([4.2, 6.1, 6.4], function(n) {
+   *   return Math.floor(n);
+   * });
+   * // => { '4': [4.2], '6': [6.1, 6.4] }
+   *
+   * _.groupBy([4.2, 6.1, 6.4], function(n) {
+   *   return this.floor(n);
+   * }, Math);
+   * // => { '4': [4.2], '6': [6.1, 6.4] }
+   *
+   * // using the `_.property` callback shorthand
+   * _.groupBy(['one', 'two', 'three'], 'length');
+   * // => { '3': ['one', 'two'], '5': ['three'] }
+   */
+  var groupBy = createAggregator(function(result, value, key) {
+    if (hasOwnProperty.call(result, key)) {
+      result[key].push(value);
+    } else {
+      result[key] = [value];
+    }
+  });
 
   /**
    * Invokes the method at `path` on each element in `collection`, returning
@@ -4098,6 +4330,35 @@
     return isFunction(result) ? result.call(object) : result;
   }
 
+  /**
+   * Creates an array of the own enumerable property values of `object`.
+   *
+   * **Note:** Non-object values are coerced to objects.
+   *
+   * @static
+   * @memberOf _
+   * @category Object
+   * @param {Object} object The object to query.
+   * @returns {Array} Returns the array of property values.
+   * @example
+   *
+   * function Foo() {
+   *   this.a = 1;
+   *   this.b = 2;
+   * }
+   *
+   * Foo.prototype.c = 3;
+   *
+   * _.values(new Foo);
+   * // => [1, 2] (iteration order is not guaranteed)
+   *
+   * _.values('hi');
+   * // => ['h', 'i']
+   */
+  function values(object) {
+    return baseValues(object, keys(object));
+  }
+
   /*------------------------------------------------------------------------*/
 
   /**
@@ -4455,9 +4716,12 @@
   lodash.chain = chain;
   lodash.constant = constant;
   lodash.defaults = defaults;
+  lodash.filter = filter;
+  lodash.flatten = flatten;
   lodash.forEach = forEach;
   lodash.forOwn = forOwn;
   lodash.functions = functions;
+  lodash.groupBy = groupBy;
   lodash.invoke = invoke;
   lodash.keys = keys;
   lodash.keysIn = keysIn;
@@ -4472,6 +4736,7 @@
   lodash.take = take;
   lodash.tap = tap;
   lodash.thru = thru;
+  lodash.values = values;
 
   // Add aliases.
   lodash.collect = map;
@@ -4479,6 +4744,7 @@
   lodash.extend = assign;
   lodash.iteratee = callback;
   lodash.methods = functions;
+  lodash.select = filter;
 
   // Add functions to `lodash.prototype`.
   mixin(lodash, lodash);

@@ -11,11 +11,15 @@ var gulp = require('gulp'),
 var LODASH_FUNCS = [
         // own
         'chain',
-        'sortBy',
-        'reverse',
-        'take',
+        'filter',
+        'flatten',
         'forOwn',
+        'groupBy',
+        'reverse',
+        'sortBy',
+        'take',
         'value',
+        'values',
         // backbone
         'once',
         'keys',

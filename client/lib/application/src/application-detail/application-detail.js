@@ -1,4 +1,4 @@
-import _ from 'common/src/lodash.custom';
+import _ from 'lodash';
 import BaseView from 'common/src/base-view';
 import Template from './application-detail.hbs';
 import Flux from 'application/src/flux';
