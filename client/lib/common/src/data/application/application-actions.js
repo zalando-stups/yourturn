@@ -10,7 +10,7 @@ class ApplicationActions extends Actions {
                 .accept('json')
                 .oauth(Provider, RequestConfig)
                 .exec(saveRoute)
-                .then( res => res.body );
+                .then(res => res.body);
     }
 
     fetchApplication(id) {
@@ -19,8 +19,8 @@ class ApplicationActions extends Actions {
                 .accept('json')
                 .oauth(Provider, RequestConfig)
                 .exec(saveRoute)
-                .then( res => res.body )
-                .catch( err => {
+                .then(res => res.body)
+                .catch(err => {
                     err.id = id;
                     throw err;
                 });
@@ -35,7 +35,7 @@ class ApplicationActions extends Actions {
                 .oauth(Provider, RequestConfig)
                 .exec(saveRoute)
                 .then(res => res.body)
-                .catch( err => {
+                .catch(err => {
                     err.id = id;
                     throw err;
                 });
@@ -47,8 +47,8 @@ class ApplicationActions extends Actions {
                 .accept('json')
                 .oauth(Provider, RequestConfig)
                 .exec(saveRoute)
-                .then( res => res.body )
-                .catch( err => {
+                .then(res => res.body)
+                .catch(err => {
                     err.id = id;
                     throw err;
                 });
@@ -60,8 +60,8 @@ class ApplicationActions extends Actions {
                 .accept('json')
                 .oauth(Provider, RequestConfig)
                 .exec(saveRoute)
-                .then( res => res.body )
-                .catch( err => {
+                .then(res => res.body)
+                .catch(err => {
                     err.id = id;
                     err.ver = ver;
                     throw err;
@@ -76,7 +76,7 @@ class ApplicationActions extends Actions {
                 .send(version)
                 .oauth(Provider, RequestConfig)
                 .exec(saveRoute)
-                .then()
+                .then(res => res.body)
                 .catch(err => {
                     err.applicationId = applicationId;
                     err.version_id = versionId;
@@ -105,7 +105,12 @@ class ApplicationActions extends Actions {
                 .accept('json')
                 .oauth(Provider, RequestConfig)
                 .exec(saveRoute)
-                .then();
+                .then(res => res.body)
+                .catch(err => {
+                    err.applicationId = applicationId;
+                    err.versionId = versionId;
+                    throw err;
+                });
     }
 }
 
