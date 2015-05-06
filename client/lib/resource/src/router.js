@@ -35,6 +35,7 @@ class ResourceRouter extends Router {
      * Shows form to create a new resource
      */
     createResource() {
+        Flux.getActions('resource').fetchResources();
         puppeteer.show(new CreateResource(), MAIN_VIEW_ID);
     }
 
@@ -56,6 +57,7 @@ class ResourceRouter extends Router {
      */
     createScope(resourceId) {
         Flux.getActions('resource').fetchResource(resourceId);
+        Flux.getActions('resource').fetchScopes(resourceId);
         puppeteer.show(new CreateScope({
             resourceId: resourceId
         }), MAIN_VIEW_ID);
