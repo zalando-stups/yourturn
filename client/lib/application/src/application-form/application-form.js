@@ -91,7 +91,6 @@ class ApplicationForm extends BaseView {
         let app = {
             active: active,
             team_id: team_id,
-            id: id,
             name: name,
             subtitle: subtitle,
             service_url: service_url,
@@ -103,22 +102,21 @@ class ApplicationForm extends BaseView {
 
         Flux
         .getActions('application')
-        .saveApplication(app)
+        .saveApplication(id, app)
         .then(() => {
             // redirect
             // we can't import the router directly because circular dependencies ensue
             // and window.location is ugly and probably aborts the PUT request from before
-            history.navigate(constructLocalUrl('application', [app.id]), { trigger: true });
+            history.navigate(constructLocalUrl('application', [id]), { trigger: true });
         })
         .catch(() => {
-            // FIXME with notification
             let verb = this.props.edit ? 'update' : 'create';
             GlobalFlux
             .getActions('notification')
-            .addNotification([
+            .addNotification(
                 `Could not ${verb} application ${app.name}.`,
                 'error'
-            ]);
+            );
         });
     }
 

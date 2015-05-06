@@ -2,7 +2,10 @@ import {Router, history} from 'backbone';
 import Search from 'yourturn/src/search/search';
 import puppeteer from 'common/src/puppeteer';
 import {Provider} from 'common/src/oauth-provider';
+import {Error} from 'oauth2-client-js';
+import Flux from './flux';
 
+const NOTIFICATIONS = Flux.getActions('notification');
 const MAIN_VIEW_ID = '#yourturn-view';
 
 class YourturnRouter extends Router {
@@ -25,13 +28,13 @@ class YourturnRouter extends Router {
         try {
             response = Provider.parse(window.location.hash);
         } catch(err) {
-            // this means we can't decide if the response is an error or success
-            // or it was not expected. in either case we should do something.
-            //
-            // this is left empty intentionally for now
+            NOTIFICATIONS.addNotification('OAuth: Unexpected response. This should not happen.', 'error');
+            return history.navigate('/', { trigger: true });
         }
         if (response) {
-            //TODO some kind of error hint might be cool
+            if (response instanceof Error) {
+                return NOTIFICATIONS.addNotification('OAuth: ' + response.error + ' ' + response.getMessage(), 'error');
+            }
             history.navigate(response.metadata.route || '/', { trigger: true });
         }
     }

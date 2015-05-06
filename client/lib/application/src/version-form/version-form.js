@@ -69,7 +69,6 @@ class VersionForm extends BaseView {
 
         let version = {
             application_id: this.data.application.id,
-            id: version_id,
             artifact: version_artifact ? 'docker://' + version_artifact : '',
             notes: version_notes
         };
@@ -78,14 +77,14 @@ class VersionForm extends BaseView {
         let verb = this.props.edit ? 'update' : 'create';
         this
         .actions
-        .saveApplicationVersion(version)
+        .saveApplicationVersion(this.data.applicationId, version_id, version)
         .then(() => {
-            history.navigate(constructLocalUrl('application-version', [version.application_id, version.id]), { trigger: true });
+            history.navigate(constructLocalUrl('application-version', [this.data.applicationId, version_id]), { trigger: true });
         })
         .catch(() => {
             GlobalFlux
             .getActions('notification')
-            .addNotification([`Could not ${verb} version ${version.id} for ${this.data.application.name}.`, 'error']);
+            .addNotification(`Could not ${verb} version ${version.id} for ${this.data.application.name}.`, 'error');
         });
     }
 

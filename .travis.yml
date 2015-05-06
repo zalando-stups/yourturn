@@ -1,0 +1,4 @@
+language: node_js
+node_js:
+  - 'iojs'
+script: "cd client && ../node_modules/webpack/bin/webpack.js --config webpack.test.config.js && ../node_modules/istanbul/lib/cli.js cover ../node_modules/mocha/bin/_mocha --report lcovonly -- -r mocha-globals.js dist/test.js && cat ./coverage/lcov.info | ../node_modules/coveralls/bin/coveralls.js"
