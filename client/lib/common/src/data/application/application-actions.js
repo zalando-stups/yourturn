@@ -34,7 +34,7 @@ class ApplicationActions extends Actions {
                 .send(app)
                 .oauth(Provider, RequestConfig)
                 .exec(saveRoute)
-                .then()
+                .then(res => res.body)
                 .catch( err => {
                     err.id = id;
                     throw err;
@@ -68,9 +68,9 @@ class ApplicationActions extends Actions {
                 });
     }
 
-    saveApplicationVersion(version) {
+    saveApplicationVersion(applicationId, versionId, version) {
         return request
-                .put(`${Services.kio.url}${Services.kio.root}/${version.application_id}/versions/${version.id}`)
+                .put(`${Services.kio.url}${Services.kio.root}/${applicationId}/versions/${versionId}`)
                 .type('json')
                 .accept('json')
                 .send(version)
@@ -78,8 +78,8 @@ class ApplicationActions extends Actions {
                 .exec(saveRoute)
                 .then()
                 .catch(err => {
-                    err.applicationId = version.application_id;
-                    err.version_id = version.id;
+                    err.applicationId = applicationId;
+                    err.version_id = versionId;
                     throw err;
                 });
     };
@@ -98,9 +98,9 @@ class ApplicationActions extends Actions {
                 });
     }
 
-    saveApproval(approval) {
+    saveApproval(applicationId, versionId, approval) {
         return request
-                .post(`${Services.kio.url}${Services.kio.root}/${approval.application_id}/versions/${approval.version_id}/approvals`)
+                .post(`${Services.kio.url}${Services.kio.root}/${applicationId}/versions/${versionId}/approvals`)
                 .type('json')
                 .accept('json')
                 .oauth(Provider, RequestConfig)

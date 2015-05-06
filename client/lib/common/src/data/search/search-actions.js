@@ -35,7 +35,7 @@ class SearchActions extends Actions {
                 .query({ search: term })
                 .accept('json')
                 // .oauth(Provider, RequestConfig)
-                // .exec(saveRoute)
+                .exec()
                 .then( res => {
                     let body = res.body;
                     body._term = term;

@@ -163,7 +163,8 @@ class AppRouter extends Router {
         // then show the view
         APP_ACTIONS
         .fetchApplications()
-        .finally( () => puppeteer.show( new List(), MAIN_VIEW_ID ) );
+        .then( () => puppeteer.show( new List(), MAIN_VIEW_ID ) );
+        //TODO catch, notificatoin
     }
 
     /**

@@ -9,7 +9,7 @@ class ApiActions extends Actions {
                 .get(`${Services.twintip.url}${Services.twintip.root}/${id}`)
                 .accept('json')
                 // .oauth(Provider, RequestConfig)
-                // .exec(saveRoute)
+                .exec()
                 .then( res => res.body )
                 .catch( err => {
                     err.id = id;

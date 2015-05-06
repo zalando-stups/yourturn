@@ -110,7 +110,6 @@ class ApplicationForm extends BaseView {
             history.navigate(constructLocalUrl('application', [id]), { trigger: true });
         })
         .catch(() => {
-            // FIXME with notification
             let verb = this.props.edit ? 'update' : 'create';
             GlobalFlux
             .getActions('notification')
