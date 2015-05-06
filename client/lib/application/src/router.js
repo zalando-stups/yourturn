@@ -9,6 +9,7 @@ import VersionForm from './version-form/version-form';
 import VersionList from './version-list/version-list';
 import VersionDetail from './version-detail/version-detail';
 import ApprovalForm from './approval-form/approval-form';
+import Error from 'common/src/error.hbs';
 import Flux from './flux';
 import 'promise.prototype.finally';
 
@@ -52,13 +53,14 @@ class AppRouter extends Router {
                 applicationId: applicationId,
                 versionId: versionId
             }), MAIN_VIEW_ID);
-        });
+        })
+        .catch(e => puppeteer.show(Error(e), MAIN_VIEW_ID));;
     }
 
     createApplication() {
         APP_ACTIONS
         .fetchApplications()
-        .finally(() => {
+        .then(() => {
             puppeteer.show(new AppForm(), MAIN_VIEW_ID);
         });
     }
@@ -77,15 +79,14 @@ class AppRouter extends Router {
                 versions
             ];
         }
-
         Promise
         .all(promises)
         .then(() => {
             puppeteer.show(new VersionForm({
                 applicationId: applicationId
             }), MAIN_VIEW_ID);
-        });
-        //TODO catch, show error that no such app exists
+        })
+        .catch(e => puppeteer.show(Error(e), MAIN_VIEW_ID));
     }
 
     editApplicationVersion(applicationId, versionId) {
@@ -108,8 +109,8 @@ class AppRouter extends Router {
                 versionId: versionId,
                 edit: true
             }), MAIN_VIEW_ID);
-        });
-        //TODO catch, show error that no such app exists
+        })
+        .catch(e => puppeteer.show(Error(e), MAIN_VIEW_ID));
     }
 
     editApplication(id) {
@@ -120,8 +121,8 @@ class AppRouter extends Router {
                 applicationId: id,
                 edit: true
             }), MAIN_VIEW_ID);
-        });
-        //TODO catch, show error that no such app exists
+        })
+        .catch(e => puppeteer.show(Error(e), MAIN_VIEW_ID));
     }
 
     configureOAuth(id) {
@@ -132,8 +133,8 @@ class AppRouter extends Router {
             puppeteer.show(new OAuthForm({
                 applicationId: id
             }), MAIN_VIEW_ID);
-        });
-        //TODO catch, show error that no such app exists
+        })
+        .catch(e => puppeteer.show(Error(e), MAIN_VIEW_ID));
     }
 
     /**
@@ -163,12 +164,12 @@ class AppRouter extends Router {
         // then show the view
         APP_ACTIONS
         .fetchApplications()
-        .then( () => puppeteer.show( new List(), MAIN_VIEW_ID ) );
-        //TODO catch, notificatoin
+        .then(() => puppeteer.show( new List(), MAIN_VIEW_ID ) )
+        .catch(e => puppeteer.show(Error(e), MAIN_VIEW_ID));
     }
 
     /**
-     * Fetches all versions for an application with `id`. Does not wait to finish and
+     * Fetches all versions for an application with `id`. Waits to finish and
      * instructs the Puppeteer to show the VersionView.
      *
      * @param  {String} id
@@ -177,11 +178,14 @@ class AppRouter extends Router {
         if (!APP_STORE.getApplication(id)) {
             APP_ACTIONS.fetchApplication(id);
         }
-        APP_ACTIONS.fetchApplicationVersions(id);
-
-        puppeteer.show( new VersionList({
-            applicationId: id
-        }), MAIN_VIEW_ID );
+        APP_ACTIONS
+        .fetchApplicationVersions(id)
+        .then(() => {
+            puppeteer.show( new VersionList({
+                applicationId: id
+            }), MAIN_VIEW_ID );
+        })
+        .catch(e => puppeteer.show(Error(e), MAIN_VIEW_ID));
     }
 
     /**

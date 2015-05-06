@@ -145,7 +145,7 @@ server.get('/apps/:id/versions/:ver', function(req, res) {
         if (versions[id][ver]) {
             return res.status(200).send(versions[id][ver]);
         }
-        return res.status(404);
+        return res.status(404).send();
     }, Math.random() * 2000 );
 });
 
