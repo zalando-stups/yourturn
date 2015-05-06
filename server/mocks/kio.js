@@ -113,7 +113,9 @@ server.get('/apps/:id', function(req,res){
 
 server.put('/apps/:id', function(req, res) {
     setTimeout( function() {
-        applications[req.params.id] = req.body;
+        var id = req.params.id;
+        req.body.id = id;
+        applications[id] = req.body;
         res.status(200).send();
     }, Math.random() * 2000 );
 });
@@ -121,16 +123,18 @@ server.put('/apps/:id', function(req, res) {
 server.get('/apps/:id/versions', function(req, res) {
     setTimeout( function() {
         var id = req.params.id;
-        if (id !== 'kio') {
-            res.status(404).send();
-        } else {
-            var list = Object
-                        .keys(versions.kio)
-                        .map(function(key) {
-                            return versions.kio[key];
-                        });
-            res.status(200).send(list);
+        if (applications[id]) {
+            if (versions[id]) {
+                var list = Object
+                    .keys(versions[id])
+                    .map(function(key) {
+                        return versions[id][key];
+                    });
+                return res.status(200).send(list);
+            }
+            return res.status(200).send([]);
         }
+        return res.status(404).send();
     }, Math.random() * 2000 );
 });
 
@@ -138,11 +142,10 @@ server.get('/apps/:id/versions/:ver', function(req, res) {
     setTimeout( function() {
         var id = req.params.id;
         var ver = req.params.ver;
-        if (id !== 'kio' || !versions.kio[ver]) {
-            res.status(404).send();
-        } else {
-            res.status(200).send(versions.kio[ver]);
+        if (versions[id][ver]) {
+            return res.status(200).send(versions[id][ver]);
         }
+        return res.status(404);
     }, Math.random() * 2000 );
 });
 
@@ -150,12 +153,16 @@ server.put('/apps/:id/versions/:ver', function(req, res) {
     setTimeout( function() {
         var id = req.params.id;
         var ver = req.params.ver;
-        if (id !== 'kio') {
-            res.status(404).send();
-        } else {
-            versions.kio[ver] = req.body;
-            res.status(200).send();
+        if (applications[id]) {
+            if (!versions[id]) {
+                versions[id] = {};
+            }
+            versions[id][ver] = req.body;
+            versions[id][ver].application_id = id;
+            versions[id][ver].id = ver;
+            return res.status(200).send();
         }
+        return res.status(404).send();
     }, Math.random() * 2000 );
 });
 
@@ -163,11 +170,13 @@ server.get('/apps/:id/versions/:ver/approvals', function(req, res) {
     setTimeout( function() {
         var id = req.params.id;
         var ver = req.params.ver;
-        if (id !== 'kio') {
-            res.status(404).send();
-        } else {
-            res.status(200).send(approvals.kio[ver]);
+        if (approvals[id] && approvals[id][ver]) {
+            return res.status(200).send(approvals[id][ver]);
         }
+        if (applications[id] && versions[id] && versions[id][ver]) {
+            return res.status(200).send([]);
+        }
+        return res.status(404).send();
     }, Math.random() * 2000 );
 });
 
@@ -175,20 +184,20 @@ server.post('/apps/:id/versions/:ver/approvals', function(req, res) {
     setTimeout( function() {
         var id = req.params.id;
         var ver = req.params.ver;
-        if (id !== 'kio') {
-            res.status(404).send();
-        } else {
-            var approval = req.body;
-            approval.approved_at = '2015-04-25T17:25:00';
-            approval.application_id = id;
-            approval.user_id = 'test_user';
-            approval.version_id = ver;
-            if (!approvals.kio[ver]) {
-                approvals.kio[ver] = [];
-            };
-            approvals.kio[ver].push(approval);
-            res.status(200).send();
+        if (!approvals[id]) {
+            approvals[id] = {};
         }
+        if (!approvals[id][ver]) {
+            approvals[id][ver] = [];
+        }
+
+        var approval = req.body;
+        approval.application_id = id;
+        approval.version_id = ver;
+        approval.approved_at = '2015-04-25T17:25:00';
+        approval.user_id = 'test_user';
+        approvals[id][ver].push(approval);
+        res.status(200).send();
     }, Math.random() * 2000 );
 });
 
