@@ -1,3 +1,6 @@
+/**
+ * Creates a bundle for use in production.
+ */
 var webpack = require('webpack'),
     ExtractTextPlugin = require('extract-text-webpack-plugin'),
     path = require('path');
