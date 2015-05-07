@@ -7,6 +7,7 @@ var webpack = require('webpack'),
 
 module.exports = {
     devtool: 'eval',
+    bail: true, // break on error
     entry: [
         './lib/yourturn/src/bootstrap'   // entrypoint to resolve dependencies
     ],
