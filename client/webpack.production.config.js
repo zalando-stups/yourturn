@@ -22,6 +22,7 @@ module.exports = {
         new webpack.PrefetchPlugin('remarkable'),
         new webpack.PrefetchPlugin('moment'),
         new webpack.PrefetchPlugin('common/src/superagent'),
+        new webpack.NormalModuleReplacementPlugin(/^lodash$/, 'common/src/lodash.custom'),
         new webpack.NormalModuleReplacementPlugin(/underscore/, 'common/src/lodash.custom'),
         new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /en/),
         new webpack.NoErrorsPlugin(),

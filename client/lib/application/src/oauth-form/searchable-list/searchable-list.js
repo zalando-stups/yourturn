@@ -7,7 +7,7 @@ function filterItems(search) {
     return i => search
                 .split(' ')
                 .map(s => i.id.indexOf(s) >= 0 || i.resourceId.indexOf(s) >= 0)
-                .some(i => i);
+                .some(id => id);
 }
 
 class SearchableList extends BaseView {
@@ -51,7 +51,7 @@ class SearchableList extends BaseView {
             search: this.state.search,
             selected: this.state.selected,
             total_size: this.props.items.length,
-            filtered:  _.chain(this.props.items)
+            filtered: _.chain(this.props.items)
                         .filter(filterItems(this.state.search))
                         .groupBy('resourceId')
                         .forEach(i => {
