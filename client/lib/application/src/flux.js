@@ -30,4 +30,4 @@ class AppFlux extends Flummox {
     }
 }
 
-export default new AppFlux();
+export default AppFlux;

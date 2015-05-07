@@ -1,5 +1,5 @@
 /**
- * Development configuration
+ * Creates a test bundle in dist that will be fed to mocha.
  */
 var webpack = require('webpack'),
     path = require('path');
@@ -7,21 +7,23 @@ var webpack = require('webpack'),
 module.exports = {
     devtool: 'eval',
     entry: [
-        'webpack/hot/dev-server',
-        './lib/yourturn/src/bootstrap'   // entrypoint to resolve dependencies
+        // entrypoint to resolve dependencies
+        './lib/application/test/bootstrap',
+        './lib/common/test/bootstrap'
     ],
+    target: 'node',
+    node: {
+        __dirname: true     // fix for superagent
+    },
     output: {
         path: __dirname + '/dist/',
-        filename: 'bundle.js',
+        filename: 'test.js',
         publicPath: '/dist/'
     },
     plugins: [
-        new webpack.HotModuleReplacementPlugin(),
-        new webpack.NormalModuleReplacementPlugin(/^underscore$/, 'common/src/lodash.custom'),
-        new webpack.NormalModuleReplacementPlugin(/^lodash$/, 'common/src/lodash.custom'),
-        new webpack.NoErrorsPlugin(),
         new webpack.DefinePlugin({
-            ENV_PRODUCTION: false
+            'ENV_PRODUCTION': false,
+            'global.GENTLY': false  // fix for superagent
         })
     ],
     resolve: {
@@ -54,8 +56,9 @@ module.exports = {
         loaders: [
             { test: /\.hbs$/, exclude: /node_modules/, loader: 'handlebars' },
             { test: /\.js$/, exclude: /node_modules/, loader: 'babel' },
-            { test: /\.scss$/, exclude: /node_modules/, loaders: ['style', 'css', 'autoprefixer', 'sass'] },
-            { test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,   loader: 'url?limit=10000&mimetype=application/font-woff' }
+            { test: /\.scss$/, exclude: /node_modules/, loaders: ['null'] },
+            { test: /\.woff(\?v=\d+\.\d+\.\d+)?$/, loader: 'null' },
+            { test: /\.json$/, loader: 'json' }
         ]
     }
 };

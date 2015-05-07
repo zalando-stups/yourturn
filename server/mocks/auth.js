@@ -16,7 +16,7 @@ server.get('/auth', function(req,res) {
         if (!req.query.response_type || !req.query.client_id) {
             error = { error: 'invalid_request', state: req.query.state };
         }
-        else if (req.query.client_id !== 'test' ) {
+        else if (req.query.client_id !== 'stups_yourturn' ) {
             error = { error: 'access_denied', state: req.query.state };
         }
         else {

@@ -1,39 +1,42 @@
 import {Actions} from 'flummox';
 import request from 'common/src/superagent';
 import {Services} from 'common/src/data/services';
-// import {Provider, RequestConfig} from 'common/src/oauth-provider';
+import {Provider, RequestConfig, saveRoute} from 'common/src/oauth-provider';
 
 class ApplicationActions extends Actions {
     fetchApplications() {
         return request
                 .get(`${Services.kio.url}${Services.kio.root}`)
                 .accept('json')
-                .exec()
-                .then( res => res.body );
+                .oauth(Provider, RequestConfig)
+                .exec(saveRoute)
+                .then(res => res.body);
     }
 
     fetchApplication(id) {
         return request
                 .get(`${Services.kio.url}${Services.kio.root}/${id}`)
                 .accept('json')
-                .exec()
-                .then( res => res.body )
-                .catch( err => {
+                .oauth(Provider, RequestConfig)
+                .exec(saveRoute)
+                .then(res => res.body)
+                .catch(err => {
                     err.id = id;
                     throw err;
                 });
     }
 
-    saveApplication(app) {
+    saveApplication(id, app) {
         return request
-                .put(`${Services.kio.url}${Services.kio.root}/${app.id}`)
+                .put(`${Services.kio.url}${Services.kio.root}/${id}`)
                 .type('json')
                 .accept('json')
                 .send(app)
-                .exec()
-                .then()
-                .catch( err => {
-                    err.id = app.id;
+                .oauth(Provider, RequestConfig)
+                .exec(saveRoute)
+                .then(res => res.body)
+                .catch(err => {
+                    err.id = id;
                     throw err;
                 });
     }
@@ -42,9 +45,10 @@ class ApplicationActions extends Actions {
         return request
                 .get(`${Services.kio.url}${Services.kio.root}/${id}/versions`)
                 .accept('json')
-                .exec()
-                .then( res => res.body )
-                .catch( err => {
+                .oauth(Provider, RequestConfig)
+                .exec(saveRoute)
+                .then(res => res.body)
+                .catch(err => {
                     err.id = id;
                     throw err;
                 });
@@ -54,26 +58,28 @@ class ApplicationActions extends Actions {
         return request
                 .get(`${Services.kio.url}${Services.kio.root}/${id}/versions/${ver}`)
                 .accept('json')
-                .exec()
-                .then( res => res.body )
-                .catch( err => {
+                .oauth(Provider, RequestConfig)
+                .exec(saveRoute)
+                .then(res => res.body)
+                .catch(err => {
                     err.id = id;
                     err.ver = ver;
                     throw err;
                 });
     }
 
-    saveApplicationVersion(version) {
+    saveApplicationVersion(applicationId, versionId, version) {
         return request
-                .put(`${Services.kio.url}${Services.kio.root}/${version.application_id}/versions/${version.id}`)
+                .put(`${Services.kio.url}${Services.kio.root}/${applicationId}/versions/${versionId}`)
                 .type('json')
                 .accept('json')
                 .send(version)
-                .exec()
-                .then()
+                .oauth(Provider, RequestConfig)
+                .exec(saveRoute)
+                .then(res => res.body)
                 .catch(err => {
-                    err.applicationId = version.application_id;
-                    err.version_id = version.id;
+                    err.applicationId = applicationId;
+                    err.version_id = versionId;
                     throw err;
                 });
     };
@@ -82,7 +88,8 @@ class ApplicationActions extends Actions {
         return request
                 .get(`${Services.kio.url}${Services.kio.root}/${applicationId}/versions/${versionId}/approvals`)
                 .accept('json')
-                .exec()
+                .oauth(Provider, RequestConfig)
+                .exec(saveRoute)
                 .then(res => res.body)
                 .catch(err => {
                     err.applicationId = applicationId;
@@ -91,14 +98,20 @@ class ApplicationActions extends Actions {
                 });
     }
 
-    saveApproval(approval) {
+    saveApproval(applicationId, versionId, approval) {
         return request
-                .post(`${Services.kio.url}${Services.kio.root}/${approval.application_id}/versions/${approval.version_id}/approvals`)
+                .post(`${Services.kio.url}${Services.kio.root}/${applicationId}/versions/${versionId}/approvals`)
                 .type('json')
                 .accept('json')
                 .send(approval)
-                .exec()
-                .then();
+                .oauth(Provider, RequestConfig)
+                .exec(saveRoute)
+                .then(res => res.body)
+                .catch(err => {
+                    err.applicationId = applicationId;
+                    err.versionId = versionId;
+                    throw err;
+                });
     }
 }
 

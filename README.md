@@ -1,5 +1,7 @@
 # yourturn
 
+[![Build Status](https://travis-ci.org/zalando-stups/yourturn.svg?branch=master)](https://travis-ci.org/zalando-stups/yourturn) [![Coverage Status](https://coveralls.io/repos/zalando-stups/yourturn/badge.svg?branch=master)](https://coveralls.io/r/zalando-stups/yourturn?branch=master)
+
 This will be the Zalando Developer Console someday.
 
 ## Installation

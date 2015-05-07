@@ -47,7 +47,7 @@ describe('The notification store', () => {
 
     it('should delete old notifications', done => {
         store.receiveNotification(['Test message']);
-        window.setTimeout(() => {
+        setTimeout(() => {
             store.deleteOldNotifications(300);
             expect(store.getNotifications().length).to.equal(0);
             done();

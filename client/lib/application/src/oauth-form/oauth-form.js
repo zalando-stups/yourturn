@@ -1,16 +1,16 @@
 import BaseView from 'common/src/base-view';
 import Template from './oauth-form.hbs';
-import Flux from 'application/src/flux';
 import SearchableList from './searchable-list/searchable-list';
+
 import 'common/asset/scss/application/oauth-form.scss';
 
 class OAuthForm extends BaseView {
     constructor(props) {
         props.className = 'oAuthForm';
         props.stores = {
-            oauth: Flux.getStore('oauth'),
-            resource: Flux.getStore('resource'),
-            application: Flux.getStore('application')
+            oauth: props.flux.getStore('oauth'),
+            resource: props.flux.getStore('resource'),
+            application: props.flux.getStore('application')
         };
         props.events = {
             'submit': 'save'

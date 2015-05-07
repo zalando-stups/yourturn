@@ -6,7 +6,7 @@ class Puppeteer {
     }
 
     show( view, target ) {
-        if (this.active) {
+        if (this.active && typeof this.active.remove === 'function') {
             this.active.remove();
         }
         let el;
@@ -16,7 +16,12 @@ class Puppeteer {
         if (typeof target === 'string' ) {
             el = $(target);
         }
-        el.html( view._boundRender().$el );
+        if (typeof view === 'object') {
+            el.html( view._boundRender().$el );
+        }
+        if (typeof view === 'string') {
+            el.html(view);
+        }
         this.active = view;
     }
 }

@@ -1,13 +1,12 @@
 import BaseView from 'common/src/base-view';
 import Template from './application-list.hbs';
-import Flux from 'application/src/flux';
 import 'common/asset/scss/application/application-list.scss';
 
 class AppDetail extends BaseView {
-    constructor() {
+    constructor(props) {
         super({
             className: 'applicationList',
-            store: Flux.getStore('application')
+            store: props.flux.getStore('application')
         });
     }
 

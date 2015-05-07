@@ -2,7 +2,7 @@ import {Actions} from 'flummox';
 
 class NotificationActions extends Actions {
 
-    addNotification([message, type]) {
+    addNotification(message, type) {
         return [message, type];
     }
 
