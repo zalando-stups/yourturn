@@ -1,6 +1,5 @@
 import BaseView from 'common/src/base-view';
 import Template from './version-form.hbs';
-import GlobalFlux from 'yourturn/src/flux';
 import {history} from 'backbone';
 import {constructLocalUrl} from 'common/src/data/services';
 import DOCKER_REGISTRY from 'DOCKER_REGISTRY';
@@ -81,8 +80,8 @@ class VersionForm extends BaseView {
             history.navigate(constructLocalUrl('application-version', [this.data.applicationId, version_id]), { trigger: true });
         })
         .catch(() => {
-            GlobalFlux
-            .getActions('notification')
+            this.props
+            .notificationActions
             .addNotification(`Could not ${verb} version ${version.id} for ${this.data.application.name}.`, 'error');
         });
     }

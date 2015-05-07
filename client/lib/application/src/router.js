@@ -19,7 +19,7 @@ const MAIN_VIEW_ID = '#yourturn-view',
       APP_STORE = APP_FLUX.getStore('application');
 
 class AppRouter extends Router {
-    constructor() {
+    constructor(props) {
         super({
             routes: {
                 'application': 'listApplications',
@@ -34,6 +34,7 @@ class AppRouter extends Router {
                 'application/detail/:id/version/approve/:ver': 'approveApplicationVersion'
             }
         });
+        this.globalFlux = props.globalFlux;
     }
 
     approveApplicationVersion(applicationId, versionId) {
@@ -113,7 +114,8 @@ class AppRouter extends Router {
                 applicationId: applicationId,
                 versionId: versionId,
                 edit: true,
-                flux: APP_FLUX
+                flux: APP_FLUX,
+                notificationActions: this.globalFlux.getActions('notification')
             }), MAIN_VIEW_ID);
         })
         .catch(e => puppeteer.show(Error(e), MAIN_VIEW_ID));
@@ -126,7 +128,8 @@ class AppRouter extends Router {
             puppeteer.show( new AppForm({
                 applicationId: id,
                 edit: true,
-                flux: APP_FLUX
+                flux: APP_FLUX,
+                notificationActions: this.globalFlux.getActions('notification')
             }), MAIN_VIEW_ID);
         })
         .catch(e => puppeteer.show(Error(e), MAIN_VIEW_ID));

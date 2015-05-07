@@ -18,4 +18,4 @@ class YourturnFlux extends Flummox {
     }
 }
 
-export default new YourturnFlux();
+export default YourturnFlux;

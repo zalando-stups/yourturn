@@ -1,6 +1,5 @@
 import BaseView from 'common/src/base-view';
 import Template from './application-form.hbs';
-import GlobalFlux from 'yourturn/src/flux';
 import SERVICE_URL_TLD from 'SERVICE_URL_TLD';
 import {history} from 'backbone';
 import {constructLocalUrl} from 'common/src/data/services';
@@ -110,8 +109,9 @@ class ApplicationForm extends BaseView {
         })
         .catch(() => {
             let verb = this.props.edit ? 'update' : 'create';
-            GlobalFlux
-            .getActions('notification')
+            this
+            .props
+            .notificationActions
             .addNotification(
                 `Could not ${verb} application ${app.name}.`,
                 'error'
