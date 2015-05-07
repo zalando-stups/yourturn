@@ -1,4 +1,4 @@
-import $ from 'jquery';
+/* globals expect */
 import {Flummox} from 'flummox';
 import ApplicationStore from 'common/src/data/application/application-store';
 import ApplicationActions from 'common/src/data/application/application-actions';
