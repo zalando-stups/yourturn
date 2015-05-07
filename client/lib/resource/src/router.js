@@ -70,6 +70,7 @@ class ResourceRouter extends Router {
      */
     listScope(resourceId, scopeId) {
         Flux.getActions('resource').fetchScope(resourceId, scopeId);
+        Flux.getActions('resource').fetchScopeApplications(resourceId, scopeId);
         puppeteer.show(new ScopeDetail({
             resourceId: resourceId,
             scopeId: scopeId

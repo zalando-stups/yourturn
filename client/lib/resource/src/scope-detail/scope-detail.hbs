@@ -34,6 +34,25 @@
                 {{/if}}
             </td>
         </tr>
+        <tr>
+            <th>Applications</th>
+            <td>
+                <ul>
+                    {{#each applications}}
+                        <li>
+                            <a href="/application/detail/{{this.id}}">
+                                {{this.id}}
+                            </a>
+                        </li>
+                    {{else}}
+                    No applications with this scope.
+                    {{/each}}
+                </ul>
+            </td>
+        </tr>
+    </div>
+
+
     </tbody>
 </table>
 <h4 class="scopeDetail-descriptionTitle">Description</h4>

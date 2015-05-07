@@ -1,5 +1,6 @@
 import {Store} from 'flummox';
 import _m from 'mori';
+import _ from 'common/src/lodash.custom';
 
 class ResourceStore extends Store {
     constructor(flux) {
@@ -9,25 +10,57 @@ class ResourceStore extends Store {
 
         this.state = {
             resources: _m.hashMap(),
-            scopes: _m.hashMap()
+            scopes: _m.hashMap(),
+            applications: _m.hashMap()
         };
 
-        this.register(
+        this.registerAsync(
             resourceActions.fetchResource,
-            this.receiveResource);
-        this.register(
+            this.beginFetchResource,
+            this.receiveResource,
+            this.failFetchResource);
+        this.registerAsync(
             resourceActions.fetchResources,
-            this.receiveResources);
-        this.register(
+            this.beginFetchResources,
+            this.receiveResources,
+            this.failFetchResources);
+        this.registerAsync(
             resourceActions.fetchScope,
-            this.receiveScope);
-        this.register(
+            this.beginFetchScope,
+            this.receiveScope,
+            this.failFetchScope);
+        this.registerAsync(
             resourceActions.fetchScopes,
-            this.receiveScopes);
-        this.register(
+            this.beginFetchScopes,
+            this.receiveScopes,
+            this.failFetchScopes);
+        this.registerAsync(
             resourceActions.fetchAllScopes,
-            this.receiveAllScopes);
+            this.beginFetchAllScopes,
+            this.receiveAllScopes,
+            this.failFetchAllScopes);
+        this.registerAsync(
+            resourceActions.fetchScopeApplications,
+            this.beginFetchApplications,
+            this.receiveScopeApplications,
+            this.failFetchScopeApplications);
     }
+
+    // intentionally left as noop for now
+    beginFetchResource() {}
+    failFetchResource() {}
+
+    beginFetchResources() {}
+    failFetchResources() {}
+
+    beginFetchScope() {}
+    failFetchScope() {}
+
+    beginFetchScopes() {}
+    failFetchScopes() {}
+
+    beginFetchScopeApplications() {}
+    failFetchScopeApplications() {}
 
     receiveAllScopes(scopes) {
         let state = scopes.reduce((map, scp) => {
@@ -77,6 +110,12 @@ class ResourceStore extends Store {
     receiveResource(resource) {
         this.setState({
             resources: _m.assoc(this.state.resources, resource.id, _m.toClj(resource))
+        });
+    }
+
+    receiveScopeApplications([id, applications]) {
+        this.setState({
+            applications: _m.assoc(this.state.applications, id, _m.toClj(applications))
         });
     }
 
@@ -137,6 +176,18 @@ class ResourceStore extends Store {
         entries = _m.flatten(entries);
         entries = _m.sortBy(e => _m.get(e, 'id').toLowerCase(), entries);
         return entries ? _m.toJs(entries) : [];
+    }
+
+    /**
+     * Returns all the applications for a given scope.
+     *
+     * @param  {string} resourceId ID of the resource
+     * @param  {string} scopeId ID of the scope
+     * @return {array} Empty array if there are no applications with this scope.
+     */
+    getScopeApplications(resourceId, scopeId) {
+        var apps = _m.get(this.state.applications, `${resourceId}.${scopeId}`, _m.vector());
+        return _.sortBy(_m.toJs(apps), a => a.id ? a.id.toLowerCase() : null);
     }
 }
 

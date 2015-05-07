@@ -3,6 +3,7 @@ import {history} from 'backbone';
 import BaseView from 'common/src/base-view';
 import Template from './create-resource.hbs';
 import Flux from 'resource/src/flux';
+import GlobalFlux from 'yourturn/src/flux';
 import 'common/asset/scss/resource/create-resource.scss';
 
 class CreateResource extends BaseView {
@@ -61,9 +62,19 @@ class CreateResource extends BaseView {
         };
 
         // save the resource
-        this.actions.saveResource(resource);
-        // redirect to detail view of the newly created resource
-        history.navigate(`resource/detail/${resource.id}`, { trigger: true });
+        this.actions.saveResource(resource)
+            .then(() => {
+                // redirect to detail view of the newly created resource
+                history.navigate(`resource/detail/${resource.id}`, { trigger: true });
+            })
+            .catch(() => {
+                GlobalFlux
+                .getActions('notification')
+                .addNotification(
+                    `Could not save resource ${resource.id}.`,
+                    'error'
+                );
+            });
     }
 
     render() {

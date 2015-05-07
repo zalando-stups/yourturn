@@ -87,6 +87,18 @@ class ResourceActions extends Actions {
                 });
     }
 
+    fetchScopeApplications(resourceId, scopeId) {
+        return request
+                .get(`${Services.mint.url}${Services.mint.root}`)
+                .query({
+                    resource_type_id: resourceId,
+                    scope_id: scopeId
+                })
+                .accept('json')
+                .exec()
+                .then( res => [`${resourceId}.${scopeId}`, res.body] );
+    }
+
 }
 
 export default ResourceActions;

@@ -54,7 +54,7 @@ class AppRouter extends Router {
                 versionId: versionId
             }), MAIN_VIEW_ID);
         })
-        .catch(e => puppeteer.show(Error(e), MAIN_VIEW_ID));;
+        .catch(e => puppeteer.show(Error(e), MAIN_VIEW_ID));
     }
 
     createApplication() {

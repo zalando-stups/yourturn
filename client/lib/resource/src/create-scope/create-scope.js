@@ -2,6 +2,7 @@ import {history} from 'backbone';
 import BaseView from 'common/src/base-view';
 import Template from './create-scope.hbs';
 import Flux from 'resource/src/flux';
+import GlobalFlux from 'yourturn/src/flux';
 import Criticality from 'common/src/data/resource/scope-criticality';
 import 'common/asset/scss/resource/create-scope.scss';
 
@@ -81,9 +82,19 @@ class CreateScope extends BaseView {
         };
 
         // send it off to the store
-        this.actions.saveScope(resourceId, scope);
-        // redirect back to the resource detail view
-        history.navigate(`resource/detail/${resourceId}`, { trigger: true });
+        this.actions.saveScope(resourceId, scope)
+            .then(() => {
+                // redirect back to the resource detail view
+                history.navigate(`resource/detail/${resourceId}`, { trigger: true });
+            })
+            .catch(() => {
+                GlobalFlux
+                .getActions('notification')
+                .addNotification(
+                    `Could not save scope ${scope_id} for resource ${resourceId}.`,
+                    'error'
+                );
+            });
     }
 
     render() {

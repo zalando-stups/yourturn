@@ -21,6 +21,7 @@ class AppFlux extends Flummox {
 
         this.createActions( 'resource', ResourceActions );
         this.createStore( 'resource', ResourceStore, this );
+
     }
 }
 
