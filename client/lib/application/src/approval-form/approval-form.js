@@ -33,14 +33,12 @@ class ApprovalForm extends BaseView {
             notes = $el.find('#approval_notes').val();
 
         let approval = {
-            application_id: applicationId,
-            version_id: versionId,
             approval_type: approval_type,
             notes: notes
         };
 
         this.actions
-        .saveApproval(approval)
+        .saveApproval(applicationId, versionId, approval)
         .then(() => this.actions.fetchApprovals(applicationId, versionId));
     }
 

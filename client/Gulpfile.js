@@ -87,7 +87,7 @@ gulp.task('copy', function() {
 // lints the source code using .eslintrc
 gulp.task('lint', function() {
     return gulp
-            .src(['lib/**/*.js'])
+            .src(['lib/**/*.js', '!lib/common/src/lodash.custom.js'])
             .pipe(eslint())
             .pipe(eslint.format())
             .pipe(eslint.failAfterError());

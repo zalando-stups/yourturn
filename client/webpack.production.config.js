@@ -1,3 +1,6 @@
+/**
+ * Creates a bundle for use in production.
+ */
 var webpack = require('webpack'),
     ExtractTextPlugin = require('extract-text-webpack-plugin'),
     path = require('path');
@@ -39,6 +42,10 @@ module.exports = {
     },
     // prefix everything with YTENV_
     externals: {
+        OAUTH_CLIENT_ID: 'YTENV_OAUTH_CLIENT_ID',
+        OAUTH_AUTH_URL: 'YTENV_OAUTH_AUTH_URL',
+        OAUTH_REDIRECT_URI: 'YTENV_OAUTH_REDIRECT_URI',
+        OAUTH_SCOPES: 'YTENV_OAUTH_SCOPES',
         KIO_BASE_URL: 'YTENV_KIO_BASE_URL',
         TWINTIP_BASE_URL: 'YTENV_TWINTIP_BASE_URL',
         ESSENTIALS_BASE_URL: 'YTENV_ESSENTIALS_BASE_URL',
