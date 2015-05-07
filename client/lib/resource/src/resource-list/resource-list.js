@@ -1,14 +1,13 @@
 import BaseView from 'common/src/base-view';
 import Template from './resource-list.hbs';
-import Flux from 'resource/src/flux';
 
 class ResourceList extends BaseView {
-    constructor() {
+    constructor(props) {
         super({
             className: 'resourceList',
-            store: Flux.getStore('resource')
+            store: props.flux.getStore('resource')
         });
-        this.actions = Flux.getActions('resource');
+        this.actions = props.flux.getActions('resource');
     }
 
     update() {

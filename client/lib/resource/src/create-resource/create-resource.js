@@ -2,18 +2,17 @@ import $ from 'jquery';
 import {history} from 'backbone';
 import BaseView from 'common/src/base-view';
 import Template from './create-resource.hbs';
-import Flux from 'resource/src/flux';
 import 'common/asset/scss/resource/create-resource.scss';
 
 class CreateResource extends BaseView {
-    constructor() {
+    constructor(props) {
         super({
             className: 'createResource',
             events: {
                 'submit': 'save'
             }
         });
-        this.actions = Flux.getActions('resource');
+        this.actions = props.flux.getActions('resource');
     }
 
     /**
