@@ -1,14 +1,13 @@
 import BaseView from 'common/src/base-view';
 import Template from './oauth-form.hbs';
-import Flux from 'application/src/flux';
 import 'common/asset/scss/application/oauth-form.scss';
 
 class OAuthForm extends BaseView {
     constructor(props) {
         props.className = 'oAuthForm';
         props.stores = {
-            resource: Flux.getStore('resource'),
-            application: Flux.getStore('application')
+            resource: props.flux.getStore('resource'),
+            application: props.flux.getStore('application')
         };
         super(props);
     }
