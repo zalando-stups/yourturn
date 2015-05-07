@@ -84,23 +84,6 @@ gulp.task('copy', function() {
             .pipe(gulp.dest('dist'));
 });
 
-// lints the source code using .eslintrc
-gulp.task('lint', function() {
-    return gulp
-            .src(['lib/**/*.js', '!lib/common/src/lodash.custom.js'])
-            .pipe(eslint())
-            .pipe(eslint.format())
-            .pipe(eslint.failAfterError());
-});
-
-// watches changes in js, lints cocde
-gulp.task('watch:js', function() {
-    return  gulp.watch([
-                'lib/**/*.js'
-            ],
-            ['lint']);
-});
-
 gulp.task('cachebust', function() {
     return gulp
                 .src('index-prod.html')

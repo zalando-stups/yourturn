@@ -7,6 +7,7 @@ var webpack = require('webpack'),
 
 module.exports = {
     devtool: 'eval',
+    bail: true, // break on error
     entry: [
         './lib/yourturn/src/bootstrap'   // entrypoint to resolve dependencies
     ],
@@ -51,7 +52,14 @@ module.exports = {
         DOCKER_REGISTRY: 'YTENV_DOCKER_REGISTRY',
         SERVICE_URL_TLD: 'YTENV_SERVICE_URL_TLD'
     },
+    eslint: {
+        configFile: './.eslintrc',
+        failOnError: true
+    },
     module: {
+        preLoaders: [
+            { test: /\.js$/, exclude: /(node_modules|lodash)/, loader: 'eslint' }
+        ],
         loaders: [
             { test: /\.hbs$/, exclude: /node_modules/, loader: 'handlebars' },
             { test: /\.js$/, exclude: /node_modules/, loader: 'babel' },

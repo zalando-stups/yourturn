@@ -7,7 +7,9 @@ var webpack = require('webpack'),
 module.exports = {
     devtool: 'eval',
     entry: [
-        './lib/common/test/bootstrap'   // entrypoint to resolve dependencies
+        // entrypoint to resolve dependencies
+        './lib/application/test/bootstrap',
+        './lib/common/test/bootstrap'
     ],
     target: 'node',
     node: {
@@ -43,9 +45,15 @@ module.exports = {
         DOCKER_REGISTRY: 'YTENV_DOCKER_REGISTRY',
         SERVICE_URL_TLD: 'YTENV_SERVICE_URL_TLD'
     },
+    eslint: {
+        configFile: './.eslintrc'
+    },
     module: {
+        preLoaders: [
+            { test: /\.js$/, exclude: /(node_modules|lodash)/, loader: 'eslint' }
+        ],
         loaders: [
-            { test: /\.hbs$/, exclude: /node_modules/, loader: 'null' },
+            { test: /\.hbs$/, exclude: /node_modules/, loader: 'handlebars' },
             { test: /\.js$/, exclude: /node_modules/, loader: 'babel' },
             { test: /\.scss$/, exclude: /node_modules/, loaders: ['null'] },
             { test: /\.woff(\?v=\d+\.\d+\.\d+)?$/, loader: 'null' },
