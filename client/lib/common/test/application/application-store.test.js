@@ -1,7 +1,4 @@
 /* globals expect */
-window.YTENV_TWINTIP_BASE_URL = 'localhost';
-window.YTENV_KIO_BASE_URL = 'localhost';
-
 import ApplicationStore from 'common/src/data/application/application-store';
 import ApplicationActions from 'common/src/data/application/application-actions';
 import {Flummox} from 'flummox';
