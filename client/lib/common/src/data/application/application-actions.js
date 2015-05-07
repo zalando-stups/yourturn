@@ -103,6 +103,7 @@ class ApplicationActions extends Actions {
                 .post(`${Services.kio.url}${Services.kio.root}/${applicationId}/versions/${versionId}/approvals`)
                 .type('json')
                 .accept('json')
+                .send(approval)
                 .oauth(Provider, RequestConfig)
                 .exec(saveRoute)
                 .then(res => res.body)

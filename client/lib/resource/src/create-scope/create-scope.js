@@ -1,7 +1,6 @@
 import {history} from 'backbone';
 import BaseView from 'common/src/base-view';
 import Template from './create-scope.hbs';
-import Flux from 'resource/src/flux';
 import Criticality from 'common/src/data/resource/scope-criticality';
 import 'common/asset/scss/resource/create-scope.scss';
 
@@ -12,9 +11,9 @@ class CreateScope extends BaseView {
             'submit': 'save',
             'keyup #scope_id': 'syncScopeId'
         };
-        props.store = Flux.getStore('resource');
+        props.store = props.flux.getStore('resource');
         super(props);
-        this.actions = Flux.getActions('resource');
+        this.actions = props.flux.getActions('resource');
     }
 
  syncScopeId() {

@@ -1,19 +1,18 @@
 import $ from 'jquery';
 import BaseView from 'common/src/base-view';
 import Template from './notification-bar.hbs';
-import Flux from '../flux';
 import 'common/asset/scss/yourturn/notification-bar.scss';
 
 class NotificationBar extends BaseView {
-    constructor() {
+    constructor(props) {
         super({
             className: 'notificationBar',
-            store: Flux.getStore('notification'),
+            store: props.flux.getStore('notification'),
             events: {
                 'click li': 'dismissNotification'
             }
         });
-        this.actions = Flux.getActions('notification');
+        this.actions = props.flux.getActions('notification');
     }
 
     /**
