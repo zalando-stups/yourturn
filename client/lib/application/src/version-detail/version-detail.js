@@ -1,6 +1,5 @@
 import BaseView from 'common/src/base-view';
 import Template from './version-detail.hbs';
-import Flux from 'application/src/flux';
 import FetchResult from 'common/src/fetch-result';
 import ErrorTpl from 'common/src/error.hbs';
 import Placeholder from './placeholder.hbs';
@@ -12,7 +11,7 @@ class VersionDetail extends BaseView {
     constructor( props ) {
         props.className = 'versionDetail';
         props.stores = {
-            application: Flux.getStore('application')
+            application: props.flux.getStore('application')
         };
         super(props);
     }

@@ -14,8 +14,9 @@ import Flux from './flux';
 import 'promise.prototype.finally';
 
 const MAIN_VIEW_ID = '#yourturn-view',
-      APP_ACTIONS = Flux.getActions('application'),
-      APP_STORE = Flux.getStore('application');
+      APP_FLUX = new Flux(),
+      APP_ACTIONS = APP_FLUX.getActions('application'),
+      APP_STORE = APP_FLUX.getStore('application');
 
 class AppRouter extends Router {
     constructor() {
@@ -51,17 +52,20 @@ class AppRouter extends Router {
         .then(() => {
             puppeteer.show(new ApprovalForm({
                 applicationId: applicationId,
-                versionId: versionId
+                versionId: versionId,
+                flux: APP_FLUX
             }), MAIN_VIEW_ID);
         })
-        .catch(e => puppeteer.show(Error(e), MAIN_VIEW_ID));;
+        .catch(e => puppeteer.show(Error(e), MAIN_VIEW_ID));
     }
 
     createApplication() {
         APP_ACTIONS
         .fetchApplications()
         .then(() => {
-            puppeteer.show(new AppForm(), MAIN_VIEW_ID);
+            puppeteer.show(new AppForm({
+                flux: APP_FLUX
+            }), MAIN_VIEW_ID);
         });
     }
 
@@ -83,7 +87,8 @@ class AppRouter extends Router {
         .all(promises)
         .then(() => {
             puppeteer.show(new VersionForm({
-                applicationId: applicationId
+                applicationId: applicationId,
+                flux: APP_FLUX
             }), MAIN_VIEW_ID);
         })
         .catch(e => puppeteer.show(Error(e), MAIN_VIEW_ID));
@@ -107,7 +112,8 @@ class AppRouter extends Router {
             puppeteer.show(new VersionForm({
                 applicationId: applicationId,
                 versionId: versionId,
-                edit: true
+                edit: true,
+                flux: APP_FLUX
             }), MAIN_VIEW_ID);
         })
         .catch(e => puppeteer.show(Error(e), MAIN_VIEW_ID));
@@ -119,7 +125,8 @@ class AppRouter extends Router {
         .then(() => {
             puppeteer.show( new AppForm({
                 applicationId: id,
-                edit: true
+                edit: true,
+                flux: APP_FLUX
             }), MAIN_VIEW_ID);
         })
         .catch(e => puppeteer.show(Error(e), MAIN_VIEW_ID));
@@ -129,9 +136,10 @@ class AppRouter extends Router {
         APP_ACTIONS
         .fetchApplication(id)
         .then(() => {
-            Flux.getActions('resource').fetchAllScopes();
+            APP_FLUX.getActions('resource').fetchAllScopes();
             puppeteer.show(new OAuthForm({
-                applicationId: id
+                applicationId: id,
+                flux: APP_FLUX
             }), MAIN_VIEW_ID);
         })
         .catch(e => puppeteer.show(Error(e), MAIN_VIEW_ID));
@@ -146,10 +154,11 @@ class AppRouter extends Router {
     listApplication(id) {
         APP_ACTIONS.fetchApplication(id);
         APP_ACTIONS.fetchApplicationVersions(id);
-        Flux.getActions('api').fetchApi(id);
+        APP_FLUX.getActions('api').fetchApi(id);
 
         puppeteer.show( new Detail({
-            applicationId: id
+            applicationId: id,
+            flux: APP_FLUX
         }), MAIN_VIEW_ID );
     }
 
@@ -164,7 +173,9 @@ class AppRouter extends Router {
         // then show the view
         APP_ACTIONS
         .fetchApplications()
-        .then(() => puppeteer.show( new List(), MAIN_VIEW_ID ) )
+        .then(() => puppeteer.show( new List({
+            flux: APP_FLUX
+        }), MAIN_VIEW_ID ) )
         .catch(e => puppeteer.show(Error(e), MAIN_VIEW_ID));
     }
 
@@ -182,7 +193,8 @@ class AppRouter extends Router {
         .fetchApplicationVersions(id)
         .then(() => {
             puppeteer.show( new VersionList({
-                applicationId: id
+                applicationId: id,
+                flux: APP_FLUX
             }), MAIN_VIEW_ID );
         })
         .catch(e => puppeteer.show(Error(e), MAIN_VIEW_ID));
@@ -204,7 +216,8 @@ class AppRouter extends Router {
 
         puppeteer.show( new VersionDetail({
             applicationId: id,
-            versionId: ver
+            versionId: ver,
+            flux: APP_FLUX
         }), MAIN_VIEW_ID );
     }
 }

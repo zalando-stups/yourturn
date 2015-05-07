@@ -1,6 +1,5 @@
 import BaseView from 'common/src/base-view';
 import Template from './version-form.hbs';
-import Flux from 'application/src/flux';
 import GlobalFlux from 'yourturn/src/flux';
 import {history} from 'backbone';
 import {constructLocalUrl} from 'common/src/data/services';
@@ -15,9 +14,9 @@ class VersionForm extends BaseView {
             'keyup #version_id': 'handleVersionId',
             'submit': 'save'
         };
-        props.store = Flux.getStore('application');
+        props.store = props.flux.getStore('application');
         super(props);
-        this.actions = Flux.getActions('application');
+        this.actions = props.flux.getActions('application');
     }
 
     /**
