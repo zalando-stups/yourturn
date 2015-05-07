@@ -164,7 +164,9 @@ class AppRouter extends Router {
         // then show the view
         APP_ACTIONS
         .fetchApplications()
-        .then(() => puppeteer.show( new List(), MAIN_VIEW_ID ) )
+        .then(() => puppeteer.show( new List({
+            flux: Flux
+        }), MAIN_VIEW_ID ) )
         .catch(e => puppeteer.show(Error(e), MAIN_VIEW_ID));
     }
 

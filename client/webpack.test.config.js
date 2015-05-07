@@ -7,7 +7,9 @@ var webpack = require('webpack'),
 module.exports = {
     devtool: 'eval',
     entry: [
-        './lib/common/test/bootstrap'   // entrypoint to resolve dependencies
+        // entrypoint to resolve dependencies
+        './lib/application/test/bootstrap',
+        './lib/common/test/bootstrap'
     ],
     target: 'node',
     node: {
@@ -45,7 +47,7 @@ module.exports = {
     },
     module: {
         loaders: [
-            { test: /\.hbs$/, exclude: /node_modules/, loader: 'null' },
+            { test: /\.hbs$/, exclude: /node_modules/, loader: 'handlebars' },
             { test: /\.js$/, exclude: /node_modules/, loader: 'babel' },
             { test: /\.scss$/, exclude: /node_modules/, loaders: ['null'] },
             { test: /\.woff(\?v=\d+\.\d+\.\d+)?$/, loader: 'null' },
