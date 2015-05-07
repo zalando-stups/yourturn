@@ -42,12 +42,18 @@ module.exports = {
         DOCKER_REGISTRY: 'YTENV_DOCKER_REGISTRY',
         SERVICE_URL_TLD: 'YTENV_SERVICE_URL_TLD'
     },
+    eslint: {
+        configFile: './.eslintrc'
+    },
     module: {
+        preLoaders: [
+            { test: /\.js$/, exclude: /(node_modules|lodash)/, loader: 'eslint' }
+        ],
         loaders: [
             { test: /\.hbs$/, exclude: /node_modules/, loader: 'handlebars' },
             { test: /\.js$/, exclude: /node_modules/, loader: 'babel' },
             { test: /\.scss$/, exclude: /node_modules/, loaders: ['style', 'css', 'autoprefixer', 'sass'] },
-            { test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,   loader: 'url?limit=10000&mimetype=application/font-woff' },
+            { test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,   loader: 'url?limit=10000&mimetype=application/font-woff' }
         ]
     }
 };
