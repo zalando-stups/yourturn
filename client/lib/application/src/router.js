@@ -65,7 +65,8 @@ class AppRouter extends Router {
         .fetchApplications()
         .then(() => {
             puppeteer.show(new AppForm({
-                flux: APP_FLUX
+                flux: APP_FLUX,
+                notificationActions: this.globalFlux.getActions('notification')
             }), MAIN_VIEW_ID);
         });
     }
@@ -89,7 +90,8 @@ class AppRouter extends Router {
         .then(() => {
             puppeteer.show(new VersionForm({
                 applicationId: applicationId,
-                flux: APP_FLUX
+                flux: APP_FLUX,
+                notificationActions: this.globalFlux.getActions('notification')
             }), MAIN_VIEW_ID);
         })
         .catch(e => puppeteer.show(Error(e), MAIN_VIEW_ID));
