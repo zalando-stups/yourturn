@@ -26,6 +26,17 @@ class OAuthStore extends Store {
     }
 
     failFetchOAuthConfig(err) {
+        if (err.status === 404) {
+            this.setState({
+                applications: _m.assoc(this.state.applications, err.id, _m.toClj({
+                                    scopes: [],
+                                    s3_buckets: [],
+                                    is_client_confidential: false,
+                                    redirect_url: ''
+                                }))
+            });
+            return;
+        }
         this.setState({
             applications: _m.assoc(this.state.applications, err.id, new Failed(err))
         });
@@ -38,10 +49,10 @@ class OAuthStore extends Store {
     }
 
     /**
-     * Returns OAuth configuration for application with `id`. False otherwise.
+     * Returns OAuth configuration for application with `id`. Empty config otherwise.
      *
      * @param  {String} applicationId ID of the application
-     * @return {Object|false} False if unavailable.
+     * @return {Object|false} Empty configuration if unavailable.
      */
     getOAuthConfig(applicationId) {
         let config = _m.get(this.state.applications, applicationId);

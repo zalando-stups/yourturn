@@ -89,21 +89,22 @@ class OAuthForm extends BaseView {
     }
 
     render() {
-        if (this.data.oauth instanceof FetchResult) {
+        let {oauth} = this.data;
+        if (oauth instanceof FetchResult && oauth.isPending()) {
             this.$el.html(Placeholder(this.data));
             return this;
         }
         this.$el.html(Template(this.data));
         this.appscopeList = new SearchableList({
             items: this.data.appScopes,
-            selected: this.data.oauth.scopes.map(s => `${s.resource_type_id}.${s.scope_id}`)
+            selected: oauth.scopes.map(s => `${s.resource_type_id}.${s.scope_id}`)
         });
         this.ownerscopeList = new SearchableList({
             items: this.data.ownerScopes,
-            selected: this.data.oauth.scopes.map(s => `${s.resource_type_id}.${s.scope_id}`)
+            selected: oauth.scopes.map(s => `${s.resource_type_id}.${s.scope_id}`)
         });
         this.bucketList = new EditableList({
-            items: this.data.oauth.s3_buckets,
+            items: oauth.s3_buckets,
             itemName: 'bucket'
         });
         this.$el
