@@ -13,17 +13,25 @@ class ApplicationForm extends BaseView {
         props.events = {
             'submit form': 'save',
             'keyup #team_id': 'fillServiceUrl',
-            'keyup #app_id': 'handleAppId'
+            'keyup #app_id': 'handleAppId',
+            'keyup #service_url': 'deactivateAutocomplete'
         };
         if (props.edit) {
             props.store = props.flux.getStore('application');
         }
+        this.state = {
+            autocompleteServiceUrl: true
+        };
         super(props);
     }
 
     handleAppId() {
         this.checkAppIdAvailability();
         this.fillServiceUrl();
+    }
+
+    deactivateAutocomplete() {
+        this.state.autocompleteServiceUrl = false;
     }
 
     update() {
@@ -61,6 +69,9 @@ class ApplicationForm extends BaseView {
      * Autocompletes the service url using the pattern {app}.{team}.{tld}
      */
     fillServiceUrl() {
+        if (!this.state.autocompleteServiceUrl) {
+            return;
+        }
         let {$el} = this;
         let team_id = $el.find('#team_id').val();
         let app_id = $el.find('#app_id').val();
