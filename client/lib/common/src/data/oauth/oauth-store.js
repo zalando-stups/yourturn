@@ -29,6 +29,8 @@ class OAuthStore extends Store {
         if (err.status === 404) {
             this.setState({
                 applications: _m.assoc(this.state.applications, err.id, _m.toClj({
+                                    scopes: [],
+                                    s3_buckets: [],
                                     is_client_confidential: false,
                                     redirect_url: ''
                                 }))

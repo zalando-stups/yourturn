@@ -18,6 +18,8 @@ class OAuthActions extends Actions {
     }
 
     saveOAuthConfig(applicationId, config) {
+        config.scopes = config.scopes.length ? config.scopes : undefined;
+        config.s3_buckets = config.s3_buckets.length ? config.s3_buckets : undefined;
         return request
                     .put(`${Services.mint.url}${Services.mint.root}/${applicationId}`)
                     .accept('json')
