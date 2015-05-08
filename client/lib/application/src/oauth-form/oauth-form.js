@@ -69,7 +69,7 @@ class OAuthForm extends BaseView {
             .props
             .notificationActions
             .addNotification(
-                'Could not save OAuth configuration for ' + applicationId,
+                'Could not save OAuth configuration for ' + applicationId + '. ' + e.message,
                 'error');
         });
     }

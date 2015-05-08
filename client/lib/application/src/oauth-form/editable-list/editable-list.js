@@ -1,6 +1,5 @@
 import BaseView from 'common/src/base-view';
 import Template from './editable-list.hbs';
-import _ from 'lodash';
 import 'common/asset/scss/application/editable-list.scss';
 
 
@@ -18,14 +17,14 @@ class EditableList extends BaseView {
         super(props);
         this.state = {
             input: '',
-            items: props.items || []
+            items: props.items || []
         };
     }
 
     /**
      * Keeps track of the current input to not lose it on re-render.
      */
-    updateInputState(e) {
+    updateInputState() {
         let $input = this.$el.find('input').first(),
             input = $input.val();
         this.state.input = input;
@@ -69,7 +68,7 @@ class EditableList extends BaseView {
         this.state.items = this.state.items.filter((i, idx, items) => items.lastIndexOf(i) === idx);
         this.render();
     }
-    
+
     /**
      * Transfer data from state to views.
      */
@@ -85,7 +84,7 @@ class EditableList extends BaseView {
         this.update();
         this.$el.html(Template(this.data));
         this.$el.find('input').focus();
-        
+
         return this;
     }
 }
