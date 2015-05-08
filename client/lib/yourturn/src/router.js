@@ -18,7 +18,9 @@ class YourturnRouter extends Router {
     }
 
     search() {
-        puppeteer.show(new Search(), MAIN_VIEW_ID);
+        puppeteer.show(new Search({
+            flux: this.flux
+        }), MAIN_VIEW_ID);
     }
 
     oauth() {

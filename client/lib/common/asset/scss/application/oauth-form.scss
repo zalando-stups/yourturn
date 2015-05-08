@@ -1,6 +1,7 @@
 @import "../variables";
 
 .oAuthForm {
+    max-width: $content-width-regular;
     h6 {
         margin-top: $padding-tiny;
         margin-bottom: $padding-small;

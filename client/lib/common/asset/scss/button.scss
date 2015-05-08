@@ -60,6 +60,32 @@
             box-shadow: 0px 0px 5px $gray;
         }
     }
+
+    &.btn-danger {
+        @include transition(background, border-color);
+
+        background: $red;
+        color: $white;
+        border-color: darken($red, 10%);
+
+        &:hover {
+            background: darken($red, 10%);
+            border-color: darken($red, 20%);
+        }
+
+        &:active {
+            border-bottom: 3px solid transparent;
+            border-top: 2px solid darken($red, 10%);
+            box-shadow: 0px 1px 7px -5px inset;
+            &:focus {
+                box-shadow: none;
+            }
+        }
+
+        &:focus {
+            box-shadow: 0px 0px 5px $white;
+        }
+    }
     
     &.btn-default {
         @include transition(background, border-color);

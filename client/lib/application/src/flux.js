@@ -9,6 +9,9 @@ import ApiStore from 'common/src/data/api/api-store';
 import ResourceActions from 'common/src/data/resource/resource-actions';
 import ResourceStore from 'common/src/data/resource/resource-store';
 
+import OAuthActions from 'common/src/data/oauth/oauth-actions';
+import OAuthStore from 'common/src/data/oauth/oauth-store';
+
 class AppFlux extends Flummox {
     constructor() {
         super();
@@ -21,6 +24,9 @@ class AppFlux extends Flummox {
 
         this.createActions( 'resource', ResourceActions );
         this.createStore( 'resource', ResourceStore, this );
+
+        this.createActions( 'oauth', OAuthActions );
+        this.createStore( 'oauth', OAuthStore, this );
     }
 }
 
