@@ -15,6 +15,7 @@ var LODASH_FUNCS = [
         'flatten',
         'forOwn',
         'groupBy',
+        'intersection',
         'reverse',
         'sortBy',
         'take',

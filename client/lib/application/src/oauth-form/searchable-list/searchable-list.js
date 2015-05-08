@@ -6,10 +6,15 @@ import 'common/asset/scss/application/searchable-list.scss';
 function filterItems(search) {
     return i => search
                 .split(' ')
-                .map(s => i.id.indexOf(s) >= 0 || i.resourceId.indexOf(s) >= 0)
+                .map(s => i.id.indexOf(s) >= 0 || i.resource_type_id.indexOf(s) >= 0)
                 .some(id => id);
 }
 
+/**
+ * A list control where you select items and can filter. It is
+ * very tied to the notion of resource types and scopes currently,
+ * but this is okay ^_^
+ */
 class SearchableList extends BaseView {
     constructor(props) {
         props.className = 'searchableList';
@@ -24,6 +29,9 @@ class SearchableList extends BaseView {
         };
     }
 
+    /**
+     * Toggles selection of an item.
+     */
     toggle(e) {
         let id = this.$el.find(e.target).attr('id'),
             {selected} = this.state;
@@ -34,6 +42,9 @@ class SearchableList extends BaseView {
         }
     }
 
+    /**
+     * Updates the search term and re-renders.
+     */
     filter() {
         let term = this.$el.find('[data-action="filter"]').val();
         if (term !== this.state.search) {
@@ -42,10 +53,16 @@ class SearchableList extends BaseView {
         }
     }
 
+    /**
+     * Returns all selected items.
+     */
     getSelection() {
-        return this.state.selected;
+        return _.intersection(this.props.items.map(i => `${i.resource_type_id}.${i.id}`), this.state.selected);
     }
 
+    /**
+     * Makes new data available to templates.
+     */
     update() {
         this.data = {
             search: this.state.search,
@@ -53,11 +70,11 @@ class SearchableList extends BaseView {
             total_size: this.props.items.length,
             filtered: _.chain(this.props.items)
                         .filter(filterItems(this.state.search))
-                        .groupBy('resourceId')
+                        .groupBy('resource_type_id')
                         .forEach(i => {
                             Object
                                 .keys(i)
-                                .forEach(k => i[k].fullId = `${i[k].resourceId}.${i[k].id}`);
+                                .forEach(k => i[k].fullId = `${i[k].resource_type_id}.${i[k].id}`);
                         })
                         .value()
         };

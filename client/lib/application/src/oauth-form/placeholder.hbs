@@ -1,0 +1,48 @@
+<div class="oAuthForm u-placeholder">
+    <h2>OAuth config for {{applicationId}}</h2>
+    <div class="btn-group">
+        <a href="/application/detail/{{applicationId}}" class="btn btn-default">
+            <i class="fa fa-chevron-left"></i> Back to {{applicationId}}
+        </a>
+    </div>
+    <form name="oauthForm" class="form">
+        <div class="form-group">
+            <label for="oauth_redirect_url">Redirect URL</label>
+            <small>Where you expect users to come back to after logging in.</small>
+            <input
+                disabled="disabled"
+                id="oauth_redirect_url"
+                name="yourturn_oauth_redirect_url"
+                type="url" />
+        </div>
+        <div class="form-group">
+            <label>
+                <input
+                    disabled="disabled"
+                    id="oauth_is_client_confidential"
+                    name="yourturn_oauth_is_client_confidential"
+                    type="checkbox" /> Client is confidential
+            </label>
+            <small>Confidential clients are allowed to do the OAuth2 Implicit Flow only.</small>
+        </div>
+        <div class="form-group">
+            <label>Resource Owner Scopes</label>
+            <small>{{applicationId}} can ask the resource owners for these scopes to be granted:</small>
+        </div>
+        <div class="form-group">
+            <label>Application Scopes</label>
+            <small>{{applicationId}} has the permission to access data with these scopes:</small>
+        </div>
+        <div class="form-group">
+            <label>Credential Distribution</label>
+            <small>Activate credential distribution into these S3 buckets (<a href="http://docs.aws.amazon.com/AmazonS3/latest/dev/BucketRestrictions.html" data-external>Naming Conventions</a>):</small>
+        </div>
+        <div class="btn-group">
+            <button
+                type="submit"
+                class="btn btn-primary btn-disabled">
+                <i class="fa fa-save"></i> Save
+            </button>
+        </div>
+    </form>
+</div>

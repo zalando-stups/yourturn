@@ -1,7 +1,7 @@
 /**
  * @license
  * lodash 3.7.0 (Custom Build) <https://lodash.com/>
- * Build: `lodash modern include="chain,filter,flatten,forOwn,groupBy,reverse,sortBy,take,value,values,once,keys,uniqueId,isEmpty,extend,defaults,clone,escape,isEqual,has,isObject,result,each,isArray,isString,matches,bind,invoke,isFunction,pick,isRegExp,map,bindAll,any" -d -o lib/common/src/lodash.custom.js`
+ * Build: `lodash modern include="chain,filter,flatten,forOwn,groupBy,intersection,reverse,sortBy,take,value,values,once,keys,uniqueId,isEmpty,extend,defaults,clone,escape,isEqual,has,isObject,result,each,isArray,isString,matches,bind,invoke,isFunction,pick,isRegExp,map,bindAll,any" -d -o lib/common/src/lodash.custom.js`
  * Copyright 2012-2015 The Dojo Foundation <http://dojofoundation.org/>
  * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
  * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
@@ -192,6 +192,30 @@
   }
 
   /**
+   * The base implementation of `_.indexOf` without support for binary searches.
+   *
+   * @private
+   * @param {Array} array The array to search.
+   * @param {*} value The value to search for.
+   * @param {number} fromIndex The index to search from.
+   * @returns {number} Returns the index of the matched value, else `-1`.
+   */
+  function baseIndexOf(array, value, fromIndex) {
+    if (value !== value) {
+      return indexOfNaN(array, fromIndex);
+    }
+    var index = fromIndex - 1,
+        length = array.length;
+
+    while (++index < length) {
+      if (array[index] === value) {
+        return index;
+      }
+    }
+    return -1;
+  }
+
+  /**
    * The base implementation of `_.isFunction` without support for environments
    * with incorrect `typeof` results.
    *
@@ -242,6 +266,28 @@
    */
   function escapeHtmlChar(chr) {
     return htmlEscapes[chr];
+  }
+
+  /**
+   * Gets the index at which the first occurrence of `NaN` is found in `array`.
+   *
+   * @private
+   * @param {Array} array The array to search.
+   * @param {number} fromIndex The index to search from.
+   * @param {boolean} [fromRight] Specify iterating from right to left.
+   * @returns {number} Returns the index of the matched `NaN`, else `-1`.
+   */
+  function indexOfNaN(array, fromIndex, fromRight) {
+    var length = array.length,
+        index = fromIndex + (fromRight ? 0 : -1);
+
+    while ((fromRight ? index-- : ++index < length)) {
+      var other = array[index];
+      if (other !== other) {
+        return index;
+      }
+    }
+    return -1;
   }
 
   /**
@@ -315,6 +361,7 @@
       push = arrayProto.push,
       preventExtensions = isNative(Object.preventExtensions = Object.preventExtensions) && preventExtensions,
       propertyIsEnumerable = objectProto.propertyIsEnumerable,
+      Set = isNative(Set = root.Set) && Set,
       Uint8Array = isNative(Uint8Array = root.Uint8Array) && Uint8Array,
       WeakMap = isNative(WeakMap = root.WeakMap) && WeakMap;
 
@@ -348,6 +395,7 @@
 
   /* Native method references for those with the same name as other `lodash` methods. */
   var nativeIsArray = isNative(nativeIsArray = Array.isArray) && nativeIsArray,
+      nativeCreate = isNative(nativeCreate = Object.create) && nativeCreate,
       nativeKeys = isNative(nativeKeys = Object.keys) && nativeKeys,
       nativeMax = Math.max,
       nativeMin = Math.min,
@@ -355,6 +403,11 @@
 
   /** Used as references for `-Infinity` and `Infinity`. */
   var POSITIVE_INFINITY = Number.POSITIVE_INFINITY;
+
+  /** Used as references for the maximum length and index of an array. */
+  var MAX_ARRAY_LENGTH = Math.pow(2, 32) - 1,
+      MAX_ARRAY_INDEX =  MAX_ARRAY_LENGTH - 1,
+      HALF_MAX_ARRAY_LENGTH = MAX_ARRAY_LENGTH >>> 1;
 
   /** Used as the size, in bytes, of each `Float64Array` element. */
   var FLOAT64_BYTES_PER_ELEMENT = Float64Array ? Float64Array.BYTES_PER_ELEMENT : 0;
@@ -683,6 +736,57 @@
       result[resIndex++] = value;
     }
     return result;
+  }
+
+  /*------------------------------------------------------------------------*/
+
+  /**
+   *
+   * Creates a cache object to store unique values.
+   *
+   * @private
+   * @param {Array} [values] The values to cache.
+   */
+  function SetCache(values) {
+    var length = values ? values.length : 0;
+
+    this.data = { 'hash': nativeCreate(null), 'set': new Set };
+    while (length--) {
+      this.push(values[length]);
+    }
+  }
+
+  /**
+   * Checks if `value` is in `cache` mimicking the return signature of
+   * `_.indexOf` by returning `0` if the value is found, else `-1`.
+   *
+   * @private
+   * @param {Object} cache The cache to search.
+   * @param {*} value The value to search for.
+   * @returns {number} Returns `0` if `value` is found, else `-1`.
+   */
+  function cacheIndexOf(cache, value) {
+    var data = cache.data,
+        result = (typeof value == 'string' || isObject(value)) ? data.set.has(value) : data.hash[value];
+
+    return result ? 0 : -1;
+  }
+
+  /**
+   * Adds `value` to the cache.
+   *
+   * @private
+   * @name push
+   * @memberOf SetCache
+   * @param {*} value The value to cache.
+   */
+  function cachePush(value) {
+    var data = this.data;
+    if (typeof value == 'string' || isObject(value)) {
+      data.set.add(value);
+    } else {
+      data.hash[value] = true;
+    }
   }
 
   /*------------------------------------------------------------------------*/
@@ -1558,6 +1662,79 @@
   }
 
   /**
+   * Performs a binary search of `array` to determine the index at which `value`
+   * should be inserted into `array` in order to maintain its sort order.
+   *
+   * @private
+   * @param {Array} array The sorted array to inspect.
+   * @param {*} value The value to evaluate.
+   * @param {boolean} [retHighest] Specify returning the highest qualified index.
+   * @returns {number} Returns the index at which `value` should be inserted
+   *  into `array`.
+   */
+  function binaryIndex(array, value, retHighest) {
+    var low = 0,
+        high = array ? array.length : low;
+
+    if (typeof value == 'number' && value === value && high <= HALF_MAX_ARRAY_LENGTH) {
+      while (low < high) {
+        var mid = (low + high) >>> 1,
+            computed = array[mid];
+
+        if (retHighest ? (computed <= value) : (computed < value)) {
+          low = mid + 1;
+        } else {
+          high = mid;
+        }
+      }
+      return high;
+    }
+    return binaryIndexBy(array, value, identity, retHighest);
+  }
+
+  /**
+   * This function is like `binaryIndex` except that it invokes `iteratee` for
+   * `value` and each element of `array` to compute their sort ranking. The
+   * iteratee is invoked with one argument; (value).
+   *
+   * @private
+   * @param {Array} array The sorted array to inspect.
+   * @param {*} value The value to evaluate.
+   * @param {Function} iteratee The function invoked per iteration.
+   * @param {boolean} [retHighest] Specify returning the highest qualified index.
+   * @returns {number} Returns the index at which `value` should be inserted
+   *  into `array`.
+   */
+  function binaryIndexBy(array, value, iteratee, retHighest) {
+    value = iteratee(value);
+
+    var low = 0,
+        high = array ? array.length : 0,
+        valIsNaN = value !== value,
+        valIsUndef = value === undefined;
+
+    while (low < high) {
+      var mid = floor((low + high) / 2),
+          computed = iteratee(array[mid]),
+          isReflexive = computed === computed;
+
+      if (valIsNaN) {
+        var setLow = isReflexive || retHighest;
+      } else if (valIsUndef) {
+        setLow = isReflexive && (retHighest || computed !== undefined);
+      } else {
+        setLow = retHighest ? (computed <= value) : (computed < value);
+      }
+      if (setLow) {
+        low = mid + 1;
+      } else {
+        high = mid;
+      }
+    }
+    return nativeMin(high, MAX_ARRAY_INDEX);
+  }
+
+  /**
    * A specialized version of `baseCallback` which only supports `this` binding
    * and specifying the number of arguments to provide to `func`.
    *
@@ -1827,6 +2004,17 @@
     }
     return wrapper;
   }
+
+  /**
+   * Creates a `Set` cache object to optimize linear searches of large arrays.
+   *
+   * @private
+   * @param {Array} [values] The values to cache.
+   * @returns {null|Object} Returns the new cache object if `Set` is supported, else `null`.
+   */
+  var createCache = !(nativeCreate && Set) ? constant(null) : function(values) {
+    return new SetCache(values);
+  };
 
   /**
    * Creates a function that produces an instance of `Ctor` regardless of
@@ -2284,6 +2472,21 @@
       return result;
     };
   }());
+
+  /**
+   * Gets the appropriate "indexOf" function. If the `_.indexOf` method is
+   * customized this function returns the custom method, otherwise it returns
+   * the `baseIndexOf` function. If arguments are provided the chosen function
+   * is invoked with them and its result is returned.
+   *
+   * @private
+   * @returns {Function|number} Returns the chosen function or its result.
+   */
+  function getIndexOf(collection, target, fromIndex) {
+    var result = lodash.indexOf || indexOf;
+    result = result === indexOf ? baseIndexOf : result;
+    return collection ? result(collection, target, fromIndex) : result;
+  }
 
   /**
    * Gets the "length" property value of `object`.
@@ -2794,6 +2997,118 @@
       isDeep = false;
     }
     return length ? baseFlatten(array, isDeep) : [];
+  }
+
+  /**
+   * Gets the index at which the first occurrence of `value` is found in `array`
+   * using `SameValueZero` for equality comparisons. If `fromIndex` is negative,
+   * it is used as the offset from the end of `array`. If `array` is sorted
+   * providing `true` for `fromIndex` performs a faster binary search.
+   *
+   * **Note:** [`SameValueZero`](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-samevaluezero)
+   * comparisons are like strict equality comparisons, e.g. `===`, except that
+   * `NaN` matches `NaN`.
+   *
+   * @static
+   * @memberOf _
+   * @category Array
+   * @param {Array} array The array to search.
+   * @param {*} value The value to search for.
+   * @param {boolean|number} [fromIndex=0] The index to search from or `true`
+   *  to perform a binary search on a sorted array.
+   * @returns {number} Returns the index of the matched value, else `-1`.
+   * @example
+   *
+   * _.indexOf([1, 2, 1, 2], 2);
+   * // => 1
+   *
+   * // using `fromIndex`
+   * _.indexOf([1, 2, 1, 2], 2, 2);
+   * // => 3
+   *
+   * // performing a binary search
+   * _.indexOf([1, 1, 2, 2], 2, true);
+   * // => 2
+   */
+  function indexOf(array, value, fromIndex) {
+    var length = array ? array.length : 0;
+    if (!length) {
+      return -1;
+    }
+    if (typeof fromIndex == 'number') {
+      fromIndex = fromIndex < 0 ? nativeMax(length + fromIndex, 0) : fromIndex;
+    } else if (fromIndex) {
+      var index = binaryIndex(array, value),
+          other = array[index];
+
+      if (value === value ? (value === other) : (other !== other)) {
+        return index;
+      }
+      return -1;
+    }
+    return baseIndexOf(array, value, fromIndex || 0);
+  }
+
+  /**
+   * Creates an array of unique values in all provided arrays using `SameValueZero`
+   * for equality comparisons.
+   *
+   * **Note:** [`SameValueZero`](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-samevaluezero)
+   * comparisons are like strict equality comparisons, e.g. `===`, except that
+   * `NaN` matches `NaN`.
+   *
+   * @static
+   * @memberOf _
+   * @category Array
+   * @param {...Array} [arrays] The arrays to inspect.
+   * @returns {Array} Returns the new array of shared values.
+   * @example
+   * _.intersection([1, 2], [4, 2], [2, 1]);
+   * // => [2]
+   */
+  function intersection() {
+    var args = [],
+        argsIndex = -1,
+        argsLength = arguments.length,
+        caches = [],
+        indexOf = getIndexOf(),
+        isCommon = indexOf == baseIndexOf,
+        result = [];
+
+    while (++argsIndex < argsLength) {
+      var value = arguments[argsIndex];
+      if (isArray(value) || isArguments(value)) {
+        args.push(value);
+        caches.push((isCommon && value.length >= 120) ? createCache(argsIndex && value) : null);
+      }
+    }
+    argsLength = args.length;
+    if (argsLength < 2) {
+      return result;
+    }
+    var array = args[0],
+        index = -1,
+        length = array ? array.length : 0,
+        seen = caches[0];
+
+    outer:
+    while (++index < length) {
+      value = array[index];
+      if ((seen ? cacheIndexOf(seen, value) : indexOf(result, value, 0)) < 0) {
+        argsIndex = argsLength;
+        while (--argsIndex) {
+          var cache = caches[argsIndex];
+          if ((cache ? cacheIndexOf(cache, value) : indexOf(args[argsIndex], value, 0)) < 0) {
+            continue outer;
+          }
+        }
+        if (seen) {
+          seen.push(value);
+        }
+        result.push(value);
+      }
+    }
+    return result;
   }
 
   /**
@@ -4707,6 +5022,9 @@
   LazyWrapper.prototype = baseCreate(baseLodash.prototype);
   LazyWrapper.prototype.constructor = LazyWrapper;
 
+  // Add functions to the `Set` cache.
+  SetCache.prototype.push = cachePush;
+
   // Add functions that return wrapped values when chaining.
   lodash.assign = assign;
   lodash.before = before;
@@ -4722,6 +5040,7 @@
   lodash.forOwn = forOwn;
   lodash.functions = functions;
   lodash.groupBy = groupBy;
+  lodash.intersection = intersection;
   lodash.invoke = invoke;
   lodash.keys = keys;
   lodash.keysIn = keysIn;
@@ -4757,6 +5076,7 @@
   lodash.escapeRegExp = escapeRegExp;
   lodash.has = has;
   lodash.identity = identity;
+  lodash.indexOf = indexOf;
   lodash.isArguments = isArguments;
   lodash.isArray = isArray;
   lodash.isEmpty = isEmpty;

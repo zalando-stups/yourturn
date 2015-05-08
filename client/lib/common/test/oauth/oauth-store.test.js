@@ -1,8 +1,4 @@
 /* globals expect */
-window.YTENV_TWINTIP_BASE_URL = 'localhost';
-window.YTENV_KIO_BASE_URL = 'localhost';
-window.YTENV_MINT_BASE_URL = 'localhost';
-
 import OAuthStore from 'common/src/data/oauth/oauth-store';
 import OAuthActions from 'common/src/data/oauth/oauth-actions';
 import {Flummox} from 'flummox';

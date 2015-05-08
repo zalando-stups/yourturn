@@ -1,8 +1,14 @@
-<input
-    data-action="filter"
-    placeholder="customer"
-    value="{{search}}"
-    type="search" />
+<div class="input-group">
+    <div class="input-addon">
+        Search:
+    </div>
+    <input
+        data-action="filter"
+        placeholder="customer"
+        value="{{search}}"
+        type="search" />
+</div>
+
 <small>Showing {{filtered_size}} of {{total_size}} items.</small>
 <ul>
     {{#each filtered}}
@@ -12,7 +18,7 @@
             <li>
                 <label>
                     <input
-                        id="{{this.resourceId}}.{{this.id}}"
+                        id="{{this.fullId}}"
                         {{#contains @root/selected this.fullId}}
                             checked="checked"
                         {{/contains}}

@@ -138,16 +138,24 @@ class AppRouter extends Router {
         .catch(e => puppeteer.show(Error(e), MAIN_VIEW_ID));
     }
 
+    /**
+     * Displays OAuth configuration view. Fetches OAuth config
+     * from mint, the application from kio and ALL SCOPES
+     * from essentials. This we should change soon.
+     *
+     * @param  {String} id ID of the application
+     */
     configureOAuth(id) {
+        OAUTH_ACTIONS.fetchOAuthConfig(id);
         Promise.all([
-            OAUTH_ACTIONS.fetchOAuthConfig(id),
-            APP_ACTIONS.fetchApplication(id)
+            APP_STORE.getApplication(id) ? Promise.resolve() : APP_ACTIONS.fetchApplication(id),
+            APP_FLUX.getActions('resource').fetchAllScopes()
         ])
         .then(() => {
-            APP_FLUX.getActions('resource').fetchAllScopes();
             puppeteer.show(new OAuthForm({
                 applicationId: id,
-                flux: APP_FLUX
+                flux: APP_FLUX,
+                notificationActions: this.globalFlux.getActions('notification')
             }), MAIN_VIEW_ID);
         })
         .catch(e => puppeteer.show(Error(e), MAIN_VIEW_ID));

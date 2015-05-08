@@ -14,13 +14,12 @@ var apps = {
         last_synced: '2015-01-01T12:42:41Z',
         has_problems: false,
         redirect_url: 'http://example.com/oauth',
-        accounts: [{
-            id: '1239847235987',
-            type: 'aws'
-        }],
+        s3_buckets: [
+            'kio-stups-bucket'
+        ],
         scopes: [{
-            resourceId: 'sales_order',
-            id: 'create'
+            resource_type_id: 'customer',
+            scope_id: 'read_all'
         }]
     }
 };
@@ -28,7 +27,8 @@ var apps = {
 /** enable cors */
 server.use(function(req, res, next) {
     res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    res.header('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
     next();
 });
 

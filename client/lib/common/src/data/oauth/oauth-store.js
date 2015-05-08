@@ -31,12 +31,18 @@ class OAuthStore extends Store {
         });
     }
 
-    receiveOAuthConfig(config) {
+    receiveOAuthConfig([applicationId, config]) {
         this.setState({
-            applications: _m.assoc(this.state.applications, config.id, config)
+            applications: _m.assoc(this.state.applications, applicationId, config)
         });
     }
 
+    /**
+     * Returns OAuth configuration for application with `id`. False otherwise.
+     *
+     * @param  {String} applicationId ID of the application
+     * @return {Object|false} False if unavailable.
+     */
     getOAuthConfig(applicationId) {
         let config = _m.get(this.state.applications, applicationId);
         return config ? _m.toJs(config) : false;
