@@ -83,6 +83,15 @@ gulp.task('pack', ['clean', 'lodash'], function(done) {
         });
 });
 
+// lints the source code using .eslintrc
+gulp.task('lint', function() {
+    return gulp
+            .src(['lib/**/*.js', '!lib/common/src/lodash.custom.js'])
+            .pipe(eslint())
+            .pipe(eslint.format())
+            .pipe(eslint.failAfterError());
+});
+
 gulp.task('copy', function() {
     return gulp
             .src('stups_favicon.png')
