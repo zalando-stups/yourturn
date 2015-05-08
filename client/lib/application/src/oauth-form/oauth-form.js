@@ -82,8 +82,8 @@ class OAuthForm extends BaseView {
         this.data = {
             applicationId: this.props.applicationId,
             application: this.stores.application.getApplication(this.props.applicationId),
-            ownerScopes: scopes.filter(s => s.is_resource_owner_scope),
-            appScopes: scopes.filter(s => !s.is_resource_owner_scope),
+            ownerScopes: scopes.length ? scopes.filter(s => s.is_resource_owner_scope) : [],
+            appScopes: scopes.length ? scopes.filter(s => !s.is_resource_owner_scope) : [],
             oauth: this.stores.oauth.getOAuthConfig(this.props.applicationId)
         };
     }
@@ -97,14 +97,14 @@ class OAuthForm extends BaseView {
         this.$el.html(Template(this.data));
         this.appscopeList = new SearchableList({
             items: this.data.appScopes,
-            selected: oauth.scopes.map(s => `${s.resource_type_id}.${s.scope_id}`)
+            selected: oauth.scopes.length ? oauth.scopes.map(s => `${s.resource_type_id}.${s.scope_id}`) : []
         });
         this.ownerscopeList = new SearchableList({
             items: this.data.ownerScopes,
-            selected: oauth.scopes.map(s => `${s.resource_type_id}.${s.scope_id}`)
+            selected: oauth.scopes.length ? oauth.scopes.map(s => `${s.resource_type_id}.${s.scope_id}`) : []
         });
         this.bucketList = new EditableList({
-            items: oauth.s3_buckets,
+            items: oauth.s3_buckets.length ? oauth.s3_buckets : [],
             itemName: 'bucket'
         });
         this.$el
