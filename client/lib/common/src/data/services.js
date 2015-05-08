@@ -11,7 +11,7 @@ const SERVICES = {
     },
     twintip: {
         url: TWINTIP_BASE_URL,
-        root: '/apis',
+        root: '/apps',
         id: 'application_id'
     },
     mint: {
