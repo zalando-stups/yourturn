@@ -52,8 +52,7 @@ class ScopeForm extends BaseView {
         if (this.props.edit) {
             this.data.edit = this.props.edit;
             this.data.scope = this.store.getScope(this.props.resourceId, this.props.scopeId);
-        };
-        let {scope} = this.data;
+        }
 
     }
 
@@ -88,8 +87,9 @@ class ScopeForm extends BaseView {
                 history.navigate(`resource/detail/${resourceId}`, { trigger: true });
             })
             .catch(() => {
-                let verb = this.props.edit ? 'update': 'create';
-                this.props.notificationActions.addNotification(
+                let verb = this.props.edit ? 'update' : 'create';
+                this.props.notificationActions
+                .addNotification(
                     `Could not ${verb} scope ${scope_id} for resource ${this.data.resource.name}.`,
                     'error'
                 );
