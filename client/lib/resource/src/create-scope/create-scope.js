@@ -1,8 +1,6 @@
 import {history} from 'backbone';
 import BaseView from 'common/src/base-view';
 import Template from './create-scope.hbs';
-import Flux from 'resource/src/flux';
-import GlobalFlux from 'yourturn/src/flux';
 import Criticality from 'common/src/data/resource/scope-criticality';
 import 'common/asset/scss/resource/create-scope.scss';
 
@@ -35,7 +33,7 @@ class CreateScope extends BaseView {
         let {resourceId} = this.props;
         let $scopeInput = this.$el.find('#scope_id');
         let scope_id = $scopeInput.val();
-        if (Flux.getStore('resource').getScope(resourceId, scope_id)) {
+        if (this.props.flux.getStore('resource').getScope(resourceId, scope_id)) {
             $scopeInput[0].setCustomValidity('Custom ID already exists.');
             this.$el.find('.is-taken').show();
             this.$el.find('.is-available').hide();
@@ -88,9 +86,7 @@ class CreateScope extends BaseView {
                 history.navigate(`resource/detail/${resourceId}`, { trigger: true });
             })
             .catch(() => {
-                GlobalFlux
-                .getActions('notification')
-                .addNotification(
+                this.props.notificationActions.addNotification(
                     `Could not save scope ${scope_id} for resource ${this.data.resource.name}.`,
                     'error'
                 );

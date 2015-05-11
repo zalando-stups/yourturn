@@ -2,19 +2,17 @@ import $ from 'jquery';
 import {history} from 'backbone';
 import BaseView from 'common/src/base-view';
 import Template from './create-resource.hbs';
-import Flux from 'resource/src/flux';
-import GlobalFlux from 'yourturn/src/flux';
 import 'common/asset/scss/resource/create-resource.scss';
 
 class CreateResource extends BaseView {
     constructor(props) {
-        super({
-            className: 'createResource',
-            events: {
-                'submit': 'save',
-                'keyup #resource_id': 'checkResourceIdAvailability'
-            }
-        });
+        props.className = 'createResource';
+        props.flux = props.flux;
+        props.events = {
+            'submit': 'save',
+            'keyup #resource_id': 'checkResourceIdAvailability'
+        };
+        super(props);
         this.actions = props.flux.getActions('resource');
     }
 
@@ -25,7 +23,7 @@ class CreateResource extends BaseView {
     checkResourceIdAvailability() {
         let $resourceInput = this.$el.find('#resource_id');
         let resource_id = $resourceInput.val();
-        if (Flux.getStore('resource').getResource(resource_id)) {
+        if (this.props.flux.getStore('resource').getResource(resource_id)) {
             $resourceInput[0].setCustomValidity('Resource ID already exists.');
             this.$el.find('.is-taken').show();
             this.$el.find('.is-available').hide();
@@ -68,9 +66,7 @@ class CreateResource extends BaseView {
                 history.navigate(`resource/detail/${resource.id}`, { trigger: true });
             })
             .catch(() => {
-                GlobalFlux
-                .getActions('notification')
-                .addNotification(
+                this.props.notificationActions.addNotification(
                     `Could not save resource ${resource.name}.`,
                     'error'
                 );

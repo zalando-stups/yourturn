@@ -5,6 +5,7 @@ import CreateResource from './create-resource/create-resource';
 import ResouceDetail from './resource-detail/resource-detail';
 import CreateScope from './create-scope/create-scope';
 import ScopeDetail from './scope-detail/scope-detail';
+import Error from 'common/src/error.hbs';
 import Flux from './flux';
 import 'promise.prototype.finally';
 
@@ -45,7 +46,8 @@ class ResourceRouter extends Router {
         RES_ACTIONS
         .fetchResources()
         .then(() => puppeteer.show(new CreateResource({
-            flux: RES_FLUX
+            flux: RES_FLUX,
+            notificationActions: this.globalFlux.getActions('notification')
         }), MAIN_VIEW_ID) )
         .catch(e => puppeteer.show(Error(e), MAIN_VIEW_ID));
     }
@@ -74,7 +76,8 @@ class ResourceRouter extends Router {
         ])
         .then(() => puppeteer.show(new CreateScope({
             resourceId: resourceId,
-            flux: RES_FLUX
+            flux: RES_FLUX,
+            notificationActions: this.globalFlux.getActions('notification')
         }), MAIN_VIEW_ID) )
         .catch(e => puppeteer.show(Error(e), MAIN_VIEW_ID));
     }
