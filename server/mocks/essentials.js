@@ -120,6 +120,7 @@ server.put('/resource-types/:id/scopes/:scopeId', function(req,res){
     setTimeout( function() {
         var id = req.params.id;
         var scopeId = req.params.scopeId;
+        req.body.id = scopeId;
         if (!resourceScopes[id]) {
             resourceScopes[id] = {};
         }

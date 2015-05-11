@@ -37,16 +37,16 @@ class ResourceActions extends Actions {
                 });
     }
 
-    saveScope(resourceId, scope) {
+    saveScope(resourceId, scopeId, scope) {
         return request
-                .put(`${Services.essentials.url}${Services.essentials.root}/${resourceId}/scopes/${scope.id}`)
+                .put(`${Services.essentials.url}${Services.essentials.root}/${resourceId}/scopes/${scopeId}`)
                 .type('json')
                 .accept('json')
                 .oauth(Provider, RequestConfig)
                 .send(scope)
                 .exec(saveRoute)
                 .catch( err => {
-                    err.id = scope.id;
+                    err.id = scopeId;
                     throw err;
                 });
     }
