@@ -84,6 +84,25 @@ class ApplicationActions extends Actions {
                 });
     };
 
+    fetchApprovalTypes(applicationId) {
+        return request
+                .get(`${Services.kio.url}${Services.kio.root}/${applicationId}/approvals`)
+                .accept('json')
+                .oauth(Provider, RequestConfig)
+                .exec(saveRoute)
+                .then(res => [
+                    applicationId,
+                    // specification, test and deploy always have to be there
+                    (res.body.concat(['SPECIFICATION', 'TEST', 'DEPLOY']))
+                        .filter((i, idx, arr) => arr.lastIndexOf(i) === idx)
+                        .sort()
+                ])
+                .catch(err => {
+                    err.applicationId = applicationId;
+                    throw err;
+                });
+    }
+
     fetchApprovals(applicationId, versionId) {
         return request
                 .get(`${Services.kio.url}${Services.kio.root}/${applicationId}/versions/${versionId}/approvals`)

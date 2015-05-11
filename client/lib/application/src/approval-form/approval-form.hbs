@@ -21,9 +21,9 @@
                         placeholder="TESTED, SPEC, DEPLOY or custom entry"
                         id="approval_type"
                         type="text">
-                        <option value="SPEC">Specification</option>
-                        <option value="TESTED">Test</option>
-                        <option value="DEPLOY">Deploy</option>
+                        {{#each approvalTypes}}
+                            <option value="{{this}}">{{this}}</option>
+                        {{/each}}
                     </select>
                     <small>or</small>
                         <label>
