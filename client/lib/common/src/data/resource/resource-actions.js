@@ -1,6 +1,4 @@
-/** global window **/
 import {Actions} from 'flummox';
-let {localStorage} = window;
 import request from 'common/src/superagent';
 import {Services} from 'common/src/data/services';
 import {Provider, RequestConfig, saveRoute} from 'common/src/oauth-provider';
@@ -28,31 +26,85 @@ class ResourceActions extends Actions {
     // ===== LOCAL STORAGE BELOW ====
 
     saveResource(resource) {
-        localStorage.setItem(`resource.${resource.id}`, JSON.stringify(resource));
-        return resource;
+        return request
+                .put(`${Services.essentials.url}${Services.essentials.root}/${resource.id}`)
+                .type('json')
+                .accept('json')
+                .oauth(Provider, RequestConfig)
+                .send(resource)
+                .exec(saveRoute)
+                .catch( err => {
+                    err.id = resource.id;
+                    throw err;
+                });
     }
 
     saveScope(resourceId, scope) {
-        localStorage.setItem(`resource.${resourceId}.${scope.id}`, JSON.stringify(scope));
-        return [resourceId, scope];
+        return request
+                .put(`${Services.essentials.url}${Services.essentials.root}/${resourceId}/scopes/${scope.id}`)
+                .type('json')
+                .accept('json')
+                .oauth(Provider, RequestConfig)
+                .send(scope)
+                .exec(saveRoute)
+                .catch( err => {
+                    err.id = scope.id;
+                    throw err;
+                });
     }
 
     fetchResource(resourceId) {
-        return JSON.parse(localStorage.getItem(`resource.${resourceId}`));
+        return request
+                .get(`${Services.essentials.url}${Services.essentials.root}/${resourceId}`)
+                .accept('json')
+                .oauth(Provider, RequestConfig)
+                .exec(saveRoute)
+                .then( res => res.body )
+                .catch( err => {
+                    err.id = resourceId;
+                    throw err;
+                });
     }
 
     fetchResources() {
-        return Object
-                .keys(localStorage)
-                .filter(key => key.startsWith('resource'))
-                .filter(key => key.split('.').length === 2)
-                .map(key => JSON.parse(localStorage.getItem(key)));
+        return request
+                .get(`${Services.essentials.url}${Services.essentials.root}`)
+                .accept('json')
+                .oauth(Provider, RequestConfig)
+                .exec(saveRoute)
+                .then( res => res.body );
     }
 
     fetchScope(resourceId, scopeId) {
-        let scope = JSON.parse(localStorage.getItem(`resource.${resourceId}.${scopeId}`));
-        return [resourceId, scope];
+        return request
+                .get(`${Services.essentials.url}${Services.essentials.root}/${resourceId}/scopes/${scopeId}`)
+                .accept('json')
+                .oauth(Provider, RequestConfig)
+                .exec(saveRoute)
+                .then( res => [resourceId, res.body] )
+                .catch( err => {
+                    err.id = resourceId;
+                    throw err;
+                });
     }
+
+    fetchScopeApplications(resourceId, scopeId) {
+        return request
+                .get(`${Services.mint.url}${Services.mint.root}`)
+                .query({
+                    resource_type_id: resourceId,
+                    scope_id: scopeId
+                })
+                .accept('json')
+                .oauth(Provider, RequestConfig)
+                .exec(saveRoute)
+                .then( res => [`${resourceId}.${scopeId}`, res.body] )
+                .catch( err => {
+                    err.id = resourceId;
+                    throw err;
+                });
+    }
+
 }
 
 export default ResourceActions;

@@ -48,7 +48,6 @@ var resourceScopes = {
     }
 };
 
-
 /** enable cors */
 server.use(function(req, res, next) {
     res.header('Access-Control-Allow-Origin', '*');
@@ -64,7 +63,6 @@ server.get('/resource-types', function(req,res) {
             .map( function( k ) {
                 return resourceTypes[k];
             });
-
         res.status( 200 ).send( types );
     }, Math.random() * 2000 );
 });

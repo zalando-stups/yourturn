@@ -32,15 +32,17 @@
 <div class="grid with-gutter">
     <div class="grid-col">
         <h4 class="resourceDetail-appScopeTitle">Application Scopes</h4>
-        {{#each appScopes}}
-            <li>
-                <a href="/resource/detail/{{../resource.id}}/scope/{{this.id}}">
-                    {{this.id}}
-                </a>
-            </li>
-        {{else}}
-            No application scopes.
-        {{/each}}
+        <ul>
+            {{#each appScopes}}
+                <li>
+                    <a href="/resource/detail/{{../resource.id}}/scope/{{this.id}}">
+                        {{this.id}}
+                    </a>
+                </li>
+            {{else}}
+                No application scopes.
+            {{/each}}
+        </ul>
     </div>
     <div class="grid-col">
         <h4 class="resourceDetail-ownerScopeTitle">Resource Owner Scopes</h4>

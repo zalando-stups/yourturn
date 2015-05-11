@@ -65,7 +65,7 @@ gulp.task( 'clean', remove(['dist/**/*']));
 
 // custom lodash build
 gulp.task('lodash', shell.task([
-    'lodash modern ' + LODASH_INCLUDE + ' -d -o lib/common/src/lodash.custom.js'
+    '../node_modules/lodash-cli/bin/lodash modern ' + LODASH_INCLUDE + ' -d -o lib/common/src/lodash.custom.js'
 ]));
 
 // runs webpack and creates a bundle

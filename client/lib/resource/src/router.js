@@ -5,6 +5,7 @@ import CreateResource from './create-resource/create-resource';
 import ResouceDetail from './resource-detail/resource-detail';
 import CreateScope from './create-scope/create-scope';
 import ScopeDetail from './scope-detail/scope-detail';
+import Error from 'common/src/error.hbs';
 import Flux from './flux';
 import 'promise.prototype.finally';
 
@@ -30,19 +31,25 @@ class ResourceRouter extends Router {
      * Lists available resources.
      */
     listResources() {
-        RES_ACTIONS.fetchResources();
-        puppeteer.show(new ResourceList({
+        RES_ACTIONS
+        .fetchResources()
+        .then(() => puppeteer.show(new ResourceList({
             flux: RES_FLUX
-        }), MAIN_VIEW_ID);
+        }), MAIN_VIEW_ID) )
+        .catch(e => puppeteer.show(Error(e), MAIN_VIEW_ID));
     }
 
     /**
      * Shows form to create a new resource
      */
     createResource() {
-        puppeteer.show(new CreateResource({
-            flux: RES_FLUX
-        }), MAIN_VIEW_ID);
+        RES_ACTIONS
+        .fetchResources()
+        .then(() => puppeteer.show(new CreateResource({
+            flux: RES_FLUX,
+            notificationActions: this.globalFlux.getActions('notification')
+        }), MAIN_VIEW_ID) )
+        .catch(e => puppeteer.show(Error(e), MAIN_VIEW_ID));
     }
 
     /**
@@ -63,11 +70,16 @@ class ResourceRouter extends Router {
      * @param  {string} resourceId ID of the resource to add this scope to.
      */
     createScope(resourceId) {
-        RES_ACTIONS.fetchResource(resourceId);
-        puppeteer.show(new CreateScope({
+        Promise.all([
+            RES_ACTIONS.fetchResource(resourceId),
+            RES_ACTIONS.fetchScopes(resourceId)
+        ])
+        .then(() => puppeteer.show(new CreateScope({
             resourceId: resourceId,
-            flux: RES_FLUX
-        }), MAIN_VIEW_ID);
+            flux: RES_FLUX,
+            notificationActions: this.globalFlux.getActions('notification')
+        }), MAIN_VIEW_ID) )
+        .catch(e => puppeteer.show(Error(e), MAIN_VIEW_ID));
     }
 
     /**
@@ -77,6 +89,7 @@ class ResourceRouter extends Router {
      */
     listScope(resourceId, scopeId) {
         RES_ACTIONS.fetchScope(resourceId, scopeId);
+        RES_ACTIONS.fetchScopeApplications(resourceId, scopeId);
         puppeteer.show(new ScopeDetail({
             resourceId: resourceId,
             scopeId: scopeId,

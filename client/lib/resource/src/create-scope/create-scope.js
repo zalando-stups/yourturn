@@ -9,22 +9,46 @@ class CreateScope extends BaseView {
         props.className = 'createScope';
         props.events = {
             'submit': 'save',
-            'keyup #scope_id': 'syncScopeId'
+            'keyup #scope_id': 'handleScopeId'
         };
         props.store = props.flux.getStore('resource');
         super(props);
         this.actions = props.flux.getActions('resource');
     }
 
- syncScopeId() {
+    handleScopeId() {
+        this.syncScopeId();
+        this.checkScopeIdAvailability();
+    }
+
+    syncScopeId() {
         this.$el.find('[data-action="sync-with-scope-id"]').text(this.$el.find('#scope_id').val());
+    }
+
+    /**
+     * Checks the resource store if a scope with this ID
+     * already exists. Shows or hides according input-addon.
+     */
+    checkScopeIdAvailability() {
+        let {resourceId} = this.props;
+        let $scopeInput = this.$el.find('#scope_id');
+        let scope_id = $scopeInput.val();
+        if (this.props.flux.getStore('resource').getScope(resourceId, scope_id)) {
+            $scopeInput[0].setCustomValidity('Custom ID already exists.');
+            this.$el.find('.is-taken').show();
+            this.$el.find('.is-available').hide();
+        } else {
+            $scopeInput[0].setCustomValidity('');
+            this.$el.find('.is-taken').hide();
+            this.$el.find('.is-available').show();
+        }
     }
 
     update() {
         let resource = this.store.getResource(this.props.resourceId);
         this.data = {
             resource: resource,
-            resourceHasOwner: resource.owners.length > 0,
+            resourceHasOwner: resource ? resource.owners.length > 0 : false,
             criticalities: Criticality
         };
     }
@@ -56,13 +80,22 @@ class CreateScope extends BaseView {
         };
 
         // send it off to the store
-        this.actions.saveScope(resourceId, scope);
-        // redirect back to the resource detail view
-        history.navigate(`resource/detail/${resourceId}`, { trigger: true });
+        this.actions.saveScope(resourceId, scope)
+            .then(() => {
+                // redirect back to the resource detail view
+                history.navigate(`resource/detail/${resourceId}`, { trigger: true });
+            })
+            .catch(() => {
+                this.props.notificationActions.addNotification(
+                    `Could not save scope ${scope_id} for resource ${this.data.resource.name}.`,
+                    'error'
+                );
+            });
     }
 
     render() {
         this.$el.html(Template(this.data));
+        this.checkScopeIdAvailability();
         return this;
     }
 }
