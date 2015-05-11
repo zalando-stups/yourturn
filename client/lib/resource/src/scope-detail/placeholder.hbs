@@ -14,45 +14,39 @@
         <tbody>
             <tr>
                 <th>ID</th>
-                <td>{{scope.id}}</td>
+                <td class="u-placeholder-text">Name</td>
             </tr>
             <tr>
                 <th>Summary</th>
-                <td>{{scope.summary}}</td>
+                <td class="u-placeholder-text">Summary of the scope</td>
             </tr>
             <tr>
                 <th>User Information</th>
-                <td>{{scope.information}}</td>
+                <td class="u-placeholder-text">User information for this scope</td>
             </tr>
             <tr>
                 <th>Resource Owner Scope</th>
                 <td>
-                    {{#if scope.ownerScope}}
-                        <i class="fa fa-check-square"></i>
-                    {{else}}
-                        <i class="fa fa-square-o"></i>
-                    {{/if}}
+                    <i class="fa fa-square-o"></i>
                 </td>
             </tr>
             <tr>
                 <th>Applications</th>
                 <td>
                     <ul>
-                        {{#each applications}}
-                            <li>
-                                <a href="/application/detail/{{this.id}}">
-                                    {{this.id}}
-                                </a>
-                            </li>
-                        {{else}}
-                        No applications with this scope.
-                        {{/each}}
+                        <li class="u-placeholder-text">
+                            application 1
+                        </li>
+                        <li class="u-placeholder-text">
+                            app two
+                        </li>
+                        <li class="u-placeholder-text">
+                            app
+                        </li>
+
                     </ul>
                 </td>
             </tr>
-        </div>
-
-
         </tbody>
     </table>
     <h4 class="scopeDetail-descriptionTitle">Description</h4>

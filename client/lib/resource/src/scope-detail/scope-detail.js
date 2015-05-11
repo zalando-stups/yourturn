@@ -3,7 +3,7 @@ import Template from './scope-detail.hbs';
 import Placeholder from './placeholder.hbs';
 import Error from 'common/src/error.hbs';
 import Markdown from 'common/src/markdown';
-import FetchResult from 'common/src/fetch-result'
+import FetchResult from 'common/src/fetch-result';
 import 'common/asset/scss/resource/scope-detail.scss';
 
 class ScopeDetail extends BaseView {
@@ -31,7 +31,7 @@ class ScopeDetail extends BaseView {
             this.$el.html(
                 scope.isPending() ?
                     Placeholder(this.data) :
-                    Error(resource.getResult())
+                    Error(scope.getResult())
             );
             return this;
         }

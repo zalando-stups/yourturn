@@ -58,9 +58,9 @@ class ResourceStore extends Store {
     failFetchScopes() {}
 
     beginFetchScope(resourceId, scopeId) {
-        let scope = _m.assoc( _m.get(this.state.scopes, resourceId) || _m.hashMap(), scopeId, new Pending() );
+        let scope = _m.assocIn( this.state.scopes, [resourceId, scopeId], new Pending() );
         this.setState({
-            scope: _m.assoc(this.state.scopes, scopeId, scope)
+            scopes: scope
         });
     }
 
