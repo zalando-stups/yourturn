@@ -66,7 +66,6 @@ class VersionForm extends BaseView {
             version_notes = $el.find('#version_notes').val();
 
         let version = {
-            application_id: this.data.application.id,
             artifact: version_artifact ? 'docker://' + version_artifact : '',
             notes: version_notes
         };
@@ -82,7 +81,7 @@ class VersionForm extends BaseView {
         .catch(() => {
             this.props
             .notificationActions
-            .addNotification(`Could not ${verb} version ${version.id} for ${this.data.application.name}.`, 'error');
+            .addNotification(`Could not ${verb} version ${version_id} for ${this.data.application.name}.`, 'error');
         });
     }
 
