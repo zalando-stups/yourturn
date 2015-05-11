@@ -42,13 +42,13 @@ class OAuthForm extends BaseView {
                                         scope_id: scope.id
                                     }))
                             );
-        let isConfidential = $el.find('#oauth_is_client_confidential:checked').length !== 0;
+        let isNonConfidential = $el.find('#oauth_is_client_non_confidential:checked').length !== 0;
         let redirectUrl = $el.find('#oauth_redirect_url').val();
         let oauthConfig = {
             s3_buckets: this.data.oauth.s3_buckets,
             scopes: ownerscopes,
             redirect_url: redirectUrl,
-            is_client_confidential: isConfidential
+            is_client_confidential: !isNonConfidential
         };
 
         let {applicationId} = this.props;

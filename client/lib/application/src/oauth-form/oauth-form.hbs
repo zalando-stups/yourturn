@@ -20,11 +20,11 @@
         <label>
             <input
                 {{#unless oauth.is_client_confidential}}
-                checked="checked"
+                    checked="checked"
                 {{/unless}}
-                id="oauth_is_client_confidential"
-                name="yourturn_oauth_is_client_confidential"
-                type="checkbox" /> Client is confidential
+                id="oauth_is_client_non_confidential"
+                name="yourturn_oauth_is_client_non_confidential"
+                type="checkbox" /> Client is non-confidential
         </label>
         <small>Non-confidential clients are only allowed to use the OAuth2 Implicit Flow.</small>
     </div>
