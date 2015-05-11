@@ -5,7 +5,7 @@ import 'common/asset/scss/resource/scope-form.scss';
 
 class ScopeForm extends BaseView {
     constructor(props) {
-        props.className = 'createScope';
+        props.className = 'scopeForm';
         props.events = {
             'submit': 'save',
             'keyup #scope_id': 'handleScopeId'
