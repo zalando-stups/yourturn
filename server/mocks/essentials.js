@@ -10,7 +10,7 @@ var resourceTypes = {
         'name': 'Sales Order',
         'description': 'Sales Orders',
         'resource_owners': [
-            'customer'
+            'employees'
         ]
     },
     'customer': {
@@ -81,7 +81,7 @@ server.get('/resource-types/:id', function(req, res) {
 
 server.put('/resource-types/:id', function(req, res) {
     setTimeout( function() {
-        resourceTypes[req.body.id] = req.body;
+        resourceTypes[req.params.id] = req.body;
         res.status( 200 ).send();
     }, Math.random() * 2000 );
 });

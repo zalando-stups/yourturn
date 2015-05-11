@@ -23,16 +23,16 @@ class ResourceActions extends Actions {
                 .then(res => [resourceId, res.body]);
     }
 
-    saveResource(resource) {
+    saveResource(resourceId, resource) {
         return request
-                .put(`${Services.essentials.url}${Services.essentials.root}/${resource.id}`)
+                .put(`${Services.essentials.url}${Services.essentials.root}/${resourceId}`)
                 .type('json')
                 .accept('json')
                 .oauth(Provider, RequestConfig)
                 .send(resource)
                 .exec(saveRoute)
                 .catch( err => {
-                    err.id = resource.id;
+                    err.id = resourceId;
                     throw err;
                 });
     }
