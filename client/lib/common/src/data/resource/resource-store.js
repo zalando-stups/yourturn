@@ -36,11 +36,6 @@ class ResourceStore extends Store {
             this.receiveScopes,
             this.failFetchScopes);
         this.registerAsync(
-            resourceActions.fetchAllScopes,
-            this.beginFetchAllScopes,
-            this.receiveAllScopes,
-            this.failFetchAllScopes);
-        this.registerAsync(
             resourceActions.fetchScopeApplications,
             this.beginFetchApplications,
             this.receiveScopeApplications,
@@ -48,8 +43,17 @@ class ResourceStore extends Store {
     }
 
     // intentionally left as noop for now
-    beginFetchResource() {}
-    failFetchResource() {}
+    beginFetchResource(resourceId) {
+        this.setState({
+            resources: _m.assoc(this.state.resources, resourceId, new Pending())
+        });
+    }
+
+    failFetchResource(err) {
+        this.setState({
+            resources: _m.assoc(this.state.resources, err.id, new Failed(err))
+        });
+    }
 
     beginFetchResources() {}
     failFetchResources() {}
@@ -72,17 +76,6 @@ class ResourceStore extends Store {
 
     beginFetchScopeApplications() {}
     failFetchScopeApplications() {}
-
-    receiveAllScopes(scopes) {
-        let state = scopes.reduce((map, scp) => {
-            let resource = _m.get(map, scp.resourceId) || _m.hashMap();
-            resource = _m.assoc(resource, scp.id, _m.toClj(scp));
-            return _m.assoc(map, scp.resourceId, resource);
-        }, this.state.scopes);
-        this.setState({
-            scopes: state
-        });
-    }
 
     receiveScopes([resourceId, scopes]) {
         let state = scopes.reduce((map, scp) => {
