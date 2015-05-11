@@ -5,6 +5,7 @@ import List from './application-list/application-list';
 import Detail from './application-detail/application-detail';
 import AppForm from './application-form/application-form';
 import OAuthForm from './oauth-form/oauth-form';
+import AccessForm from './access-form/access-form';
 import VersionForm from './version-form/version-form';
 import VersionList from './version-list/version-list';
 import VersionDetail from './version-detail/version-detail';
@@ -26,6 +27,7 @@ class AppRouter extends Router {
                 'application': 'listApplications',
                 'application/create': 'createApplication',
                 'application/oauth/:id': 'configureOAuth',
+                'application/access-control/:id': 'configureAccess',
                 'application/edit/:id': 'editApplication',
                 'application/detail/:id': 'listApplication',
                 'application/detail/:id/version': 'listApplicationVersions',
@@ -139,7 +141,7 @@ class AppRouter extends Router {
     }
 
     /**
-     * Displays OAuth configuration view. Fetches OAuth config
+     * Displays OAuth client configuration view. Fetches OAuth config
      * from mint, the application from kio and ALL SCOPES
      * from essentials. This we should change soon.
      *
@@ -153,6 +155,29 @@ class AppRouter extends Router {
         ])
         .then(() => {
             puppeteer.show(new OAuthForm({
+                applicationId: id,
+                flux: APP_FLUX,
+                notificationActions: this.globalFlux.getActions('notification')
+            }), MAIN_VIEW_ID);
+        })
+        .catch(e => puppeteer.show(Error(e), MAIN_VIEW_ID));
+    }
+
+    /**
+     * Displays access control configuration view. Fetches OAuth config
+     * from mint, the application from kio and ALL SCOPES
+     * from essentials. This we should change soon.
+     *
+     * @param  {String} id ID of the application
+     */
+    configureAccess(id) {
+        OAUTH_ACTIONS.fetchOAuthConfig(id);
+        Promise.all([
+            APP_STORE.getApplication(id) ? Promise.resolve() : APP_ACTIONS.fetchApplication(id),
+            APP_FLUX.getActions('resource').fetchAllScopes()
+        ])
+        .then(() => {
+            puppeteer.show(new AccessForm({
                 applicationId: id,
                 flux: APP_FLUX,
                 notificationActions: this.globalFlux.getActions('notification')

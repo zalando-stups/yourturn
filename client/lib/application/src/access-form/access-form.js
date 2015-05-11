@@ -1,15 +1,16 @@
 import BaseView from 'common/src/base-view';
-import Template from './oauth-form.hbs';
+import Template from './access-form.hbs';
 import Placeholder from './placeholder.hbs';
 import SearchableList from 'common/src/searchable-list/searchable-list';
+import EditableList from 'common/src/editable-list/editable-list';
 import FetchResult from 'common/src/fetch-result';
 import {history} from 'backbone';
 import {constructLocalUrl} from 'common/src/data/services';
-import 'common/asset/scss/application/oauth-form.scss';
+import 'common/asset/scss/application/access-form.scss';
 
-class OAuthForm extends BaseView {
+class AccessForm extends BaseView {
     constructor(props) {
-        props.className = 'oAuthForm';
+        props.className = 'accessForm';
         props.stores = {
             oauth: props.flux.getStore('oauth'),
             resource: props.flux.getStore('resource'),
@@ -27,8 +28,7 @@ class OAuthForm extends BaseView {
      */
     save(evt) {
         evt.preventDefault();
-        let {$el} = this;
-        let ownerscopes = this.ownerscopeList
+        let appscopes = this.appscopeList
                             .getSelection()
                             .map(s => s.split('.'))
                             .map(([resourceId, id]) => ({
@@ -36,19 +36,18 @@ class OAuthForm extends BaseView {
                                 scope_id: id
                             }))
                             .concat(
-                                this.data.appScopes
-                                .map(scope => ({
+                                this.data.ownerScopes
+                                    .map(scope => ({
                                         resource_type_id: scope.resource_type_id,
                                         scope_id: scope.id
                                     }))
                             );
-        let isConfidential = $el.find('#oauth_is_client_confidential:checked').length !== 0;
-        let redirectUrl = $el.find('#oauth_redirect_url').val();
+        let buckets = this.bucketList.getSelection();
         let oauthConfig = {
-            s3_buckets: this.data.oauth.s3_buckets,
-            scopes: ownerscopes,
-            redirect_url: redirectUrl,
-            is_client_confidential: isConfidential
+            s3_buckets: buckets,
+            scopes: appscopes,
+            redirect_url: this.data.oauth.redirect_url,
+            is_client_confidential: this.data.oauth.is_client_confidential
         };
 
         let {applicationId} = this.props;
@@ -66,7 +65,7 @@ class OAuthForm extends BaseView {
             .props
             .notificationActions
             .addNotification(
-                'Could not save OAuth client configuration for ' + applicationId + '. ' + e.message,
+                'Could not save access control configuration for ' + applicationId + '. ' + e.message,
                 'error');
         });
     }
@@ -92,15 +91,22 @@ class OAuthForm extends BaseView {
             return this;
         }
         this.$el.html(Template(this.data));
-        this.ownerscopeList = new SearchableList({
-            items: this.data.ownerScopes,
+        this.appscopeList = new SearchableList({
+            items: this.data.appScopes,
             selected: oauth.scopes.map(s => `${s.resource_type_id}.${s.scope_id}`)
         });
+        this.bucketList = new EditableList({
+            items: oauth.s3_buckets,
+            itemName: 'bucket'
+        });
         this.$el
-            .find('[data-action="ownerscope-list"]')
-            .html(this.ownerscopeList.render().$el);
+            .find('[data-action="appscope-list"]')
+            .html(this.appscopeList.render().$el);
+        this.$el
+            .find('[data-action="editable-list"]')
+            .html(this.bucketList.render().$el);
         return this;
     }
 }
 
-export default OAuthForm;
+export default AccessForm;
