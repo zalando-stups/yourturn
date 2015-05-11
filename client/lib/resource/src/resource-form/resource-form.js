@@ -22,7 +22,6 @@ class ResourceForm extends BaseView {
      * already exists. Shows or hides according input-addon.
      */
     checkResourceIdAvailability() {
-        console.log(this);
         let $resourceInput = this.$el.find('#resource_id');
         let resource_id = $resourceInput.val();
         if (this.store.getResource(resource_id)) {
@@ -66,7 +65,7 @@ class ResourceForm extends BaseView {
             resource_owners: resource_owners,
             description: resource_description
         };
-        console.log(resource_id, resource);
+        
         // save the resource
         this.actions.saveResource(resource_id, resource)
             .then(() => {
@@ -74,9 +73,8 @@ class ResourceForm extends BaseView {
                 return history.navigate(constructLocalUrl('resource-type', [resource_id]), { trigger: true });
             })
             .catch(e => {
-                console.log(e);
                 this.props.notificationActions.addNotification(
-                    `Could not save resource ${resource.name}.`,
+                    `Could not save resource ${resource.name}. ${e.message}`,
                     'error'
                 );
             });
