@@ -46,6 +46,7 @@ class ApprovalForm extends BaseView {
         this.data = {
             applicationId: applicationId,
             versionId: versionId,
+            approvalTypes: this.store.getApprovalTypes(applicationId),
             approvals: this.store.getApprovals(applicationId, versionId)
         };
     }

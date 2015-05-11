@@ -1,23 +1,46 @@
-<h2>Create a new resource type</h2>
+<h2>
+    {{#if edit}}
+        Edit {{resource.name}}
+    {{else}}
+        Create a new resource type
+    {{/if}}
+</h2>
 <form class="form" name="resourceForm">
     <div class="form-group">
         <label for="resource_id">Resource Type ID</label>
         <small>The ID of the resource type</small>
-        <input
-            id="resource_id"
-            autofocus="autofocus"
-            pattern="[a-z][a-z_]*[a-z]"
-            title="Only lowercase characters with underscores in between."
-            name="yourturn_resource_id"
-            required="required"
-            placeholder="sales_order"
-            type="text" />
+        <div class="input-group">
+            <div class="input-addon">
+                <i  title="Resource ID is available."
+                    class="fa fa-check fa-fw is-available"></i>
+                {{#unless edit}}
+                    <i  title="Resource ID is already taken."
+                        class="fa fa-close fa-fw is-taken"></i>
+                {{/unless}}
+            </div>
+            <input
+                    id="resource_id"
+                    autofocus="autofocus"
+                    {{#if edit}}
+                    value="{{resource.id}}"
+                    disabled="disabled"
+                    {{/if}}
+                    pattern="[a-z][a-z_]*[a-z]"
+                    title="Only lowercase characters with underscores in between."
+                    name="yourturn_resource_id"
+                    required="required"
+                    placeholder="sales_order"
+                    type="text" />  
+        </div>
     </div>
     <div class="form-group">
         <label for="resource_name">Resource Type Name</label>
         <small>The name of the resource type</small>
         <input
             id="resource_name"
+            {{#if edit}}
+            value="{{resource.name}}"
+            {{/if}}
             name="yourturn_resource_name"
             required="required"
             placeholder="Sales Order"
@@ -28,12 +51,22 @@
         <small>Who owns the resource? Who can grant access to the resource? For now it’s okay to not have any resource owner.</small>
         <label for="employees">
             <input
+                {{#if edit}}
+                    {{#contains resource.resource_owners "employees"}}
+                        checked="checked"
+                    {{/contains}}
+                {{/if}}
                 name="yourturn_resource_owner_employee"
                 id="employees"
                 type="checkbox" /> Employees
         </label>
         <label for="applications">
             <input
+                {{#if edit}}
+                    {{#contains resource.resource_owners "applications"}}
+                        checked="checked"
+                    {{/contains}}
+                {{/if}}
                 name="yourturn_resource_owner_application"
                 id="applications"
                 type="checkbox" /> Applications
@@ -60,7 +93,7 @@
             id="resource_description"
             name="yourturn_resource_description"
             cols="30"
-            rows="10"></textarea>
+            rows="10">{{#if edit}}{{resource.description}}{{/if}}</textarea>
     </div>
     <div class="btn-group">
         <button

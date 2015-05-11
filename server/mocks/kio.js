@@ -166,6 +166,12 @@ server.put('/apps/:id/versions/:ver', function(req, res) {
     }, Math.random() * 2000 );
 });
 
+server.get('/apps/:id/approvals', function(req, res) {
+    setTimeout( function() {
+        return res.status(200).send(["MANUAL_TEST"]);
+    }, Math.random() * 2000 );
+});
+
 server.get('/apps/:id/versions/:ver/approvals', function(req, res) {
     setTimeout( function() {
         var id = req.params.id;

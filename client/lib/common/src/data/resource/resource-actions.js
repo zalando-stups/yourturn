@@ -23,32 +23,30 @@ class ResourceActions extends Actions {
                 .then(res => [resourceId, res.body]);
     }
 
-    // ===== LOCAL STORAGE BELOW ====
-
-    saveResource(resource) {
+    saveResource(resourceId, resource) {
         return request
-                .put(`${Services.essentials.url}${Services.essentials.root}/${resource.id}`)
+                .put(`${Services.essentials.url}${Services.essentials.root}/${resourceId}`)
                 .type('json')
                 .accept('json')
                 .oauth(Provider, RequestConfig)
                 .send(resource)
                 .exec(saveRoute)
                 .catch( err => {
-                    err.id = resource.id;
+                    err.id = resourceId;
                     throw err;
                 });
     }
 
-    saveScope(resourceId, scope) {
+    saveScope(resourceId, scopeId, scope) {
         return request
-                .put(`${Services.essentials.url}${Services.essentials.root}/${resourceId}/scopes/${scope.id}`)
+                .put(`${Services.essentials.url}${Services.essentials.root}/${resourceId}/scopes/${scopeId}`)
                 .type('json')
                 .accept('json')
                 .oauth(Provider, RequestConfig)
                 .send(scope)
                 .exec(saveRoute)
                 .catch( err => {
-                    err.id = scope.id;
+                    err.id = scopeId;
                     throw err;
                 });
     }

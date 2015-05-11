@@ -1,0 +1,56 @@
+<div class="scopeDetail u-placeholder">
+    <h2>{{resourceId}}.{{scopeId}}</h2>
+    <div class="btn-group">
+        <a
+            class="btn btn-default"
+            href="/resource/detail/{{resourceId}}">
+            <i class="fa fa-chevron-left"></i> Back to {{resourceId}}
+        </a>
+        <a href="/resource/detail/{{resourceId}}/scope/edit/{{scope.id}}" class="btn btn-default">
+            <i class="fa fa-pencil"></i> Edit
+        </a>
+    </div>
+    <table>
+        <tbody>
+            <tr>
+                <th>ID</th>
+                <td class="u-placeholder-text">Name</td>
+            </tr>
+            <tr>
+                <th>Summary</th>
+                <td class="u-placeholder-text">Summary of the scope</td>
+            </tr>
+            <tr>
+                <th>User Information</th>
+                <td class="u-placeholder-text">User information for this scope</td>
+            </tr>
+            <tr>
+                <th>Resource Owner Scope</th>
+                <td>
+                    <i class="fa fa-square-o"></i>
+                </td>
+            </tr>
+            <tr>
+                <th>Applications</th>
+                <td>
+                    <ul>
+                        <li class="u-placeholder-text">
+                            application 1
+                        </li>
+                        <li class="u-placeholder-text">
+                            app two
+                        </li>
+                        <li class="u-placeholder-text">
+                            app
+                        </li>
+
+                    </ul>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <h4 class="scopeDetail-descriptionTitle">Description</h4>
+    <p data-action="markdown">
+        {{scope.description}}
+    </p>
+</div>

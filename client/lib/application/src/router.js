@@ -48,7 +48,7 @@ class AppRouter extends Router {
         if (!APP_STORE.getApplicationVersion(applicationId, versionId)) {
             promises.push(APP_ACTIONS.fetchApplicationVersion(applicationId, versionId));
         }
-
+        promises.push(APP_ACTIONS.fetchApprovalTypes(applicationId));
         APP_ACTIONS.fetchApprovals(applicationId, versionId);
 
         Promise
