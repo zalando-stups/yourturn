@@ -19,6 +19,7 @@ class ScopeDetail extends BaseView {
         let applications = this.store.getScopeApplications(this.props.resourceId, this.props.scopeId);
         this.data = {
             resourceId: this.props.resourceId,
+            scopeId: this.props.scopeId,
             scope: scope,
             applications: applications
         };

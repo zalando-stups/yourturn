@@ -38,7 +38,9 @@
             name="yourturn_scope_summary"
             id="scope_summary"
             maxlength="140"
-            value="{{scope.summary}}"
+            {{#if edit}}
+                value="{{scope.summary}}"
+            {{/if}}
             type="text" />
     </div>
     <div class="form-group">
