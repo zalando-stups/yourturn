@@ -3,7 +3,7 @@ import puppeteer from 'common/src/puppeteer';
 import ResourceList from './resource-list/resource-list';
 import CreateResource from './create-resource/create-resource';
 import ResouceDetail from './resource-detail/resource-detail';
-import CreateScope from './create-scope/create-scope';
+import ScopeForm from './scope-form/scope-form';
 import ScopeDetail from './scope-detail/scope-detail';
 import Error from 'common/src/error.hbs';
 import Flux from './flux';
@@ -20,8 +20,9 @@ class ResourceRouter extends Router {
                 'resource': 'listResources',
                 'resource/create': 'createResource',
                 'resource/detail/:id': 'listResource',
-                'resource/detail/:id/create': 'createScope',
-                'resource/detail/:id/scope/:scope': 'listScope'
+                'resource/detail/:id/scope/create': 'createScope',
+                'resource/detail/:id/scope/detail/:scope': 'listScope',
+                'resource/detail/:id/scope/edit/:scope': 'editScope'
             }
         });
         this.globalFlux = props.globalFlux;
@@ -74,7 +75,7 @@ class ResourceRouter extends Router {
             RES_ACTIONS.fetchResource(resourceId),
             RES_ACTIONS.fetchScopes(resourceId)
         ])
-        .then(() => puppeteer.show(new CreateScope({
+        .then(() => puppeteer.show(new ScopeForm({
             resourceId: resourceId,
             flux: RES_FLUX,
             notificationActions: this.globalFlux.getActions('notification')
@@ -85,7 +86,7 @@ class ResourceRouter extends Router {
     /**
      * Shows detailed view of this scope.
      * @param  {string} resourceId The ID of the scope’s resource.
-     * @param  {string} scopeId The ID of the scope.
+     * @param  {string} scopeId The ID of the scopes
      */
     listScope(resourceId, scopeId) {
         RES_ACTIONS.fetchScope(resourceId, scopeId);
@@ -95,6 +96,29 @@ class ResourceRouter extends Router {
             scopeId: scopeId,
             flux: RES_FLUX
         }), MAIN_VIEW_ID);
+    }
+
+    /**
+     * Shows form to edit a scope for a resource.
+     * @param  {string} resoueceId ID of the resource this scope belongs to.
+     * @param  {string} scopeId ID of the scope to edit.
+     */
+    editScope(resourceId, scopeId) {
+        Promise.all([
+            RES_ACTIONS.fetchResource(resourceId),
+            RES_ACTIONS.fetchScopes(resourceId)
+        ])
+        .then(() => {
+            puppeteer.show( new ScopeForm({
+                resourceId: resourceId,
+                scopeId: scopeId,
+                edit: true,
+                flux: RES_FLUX,
+                notificationActions: this.globalFlux.getActions('notification')
+            }), MAIN_VIEW_ID);
+        })
+        .catch(e => puppeteer.show(Error(e), MAIN_VIEW_ID));
+
     }
 }
 

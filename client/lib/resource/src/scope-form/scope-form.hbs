@@ -1,17 +1,35 @@
-<h2>Create new scope for {{resource.name}}</h2>
+{{#if edit}}
+    <h2>Edit {{resource.id}}.{{scope.id}}</h2>
+{{else}}
+    <h2>Create new scope for {{resource.name}}</h2>
+{{/if}}
 <form class="form" name="scopeForm">
     <div class="form-group">
         <label for="scope_id">Scope ID</label>
         <small>The ID of the scope.</small>
-        <input
-            id="scope_id"
-            autofocus="autofocus"
-            name="yourturn_scope_id"
-            title="Only characters with underscores in between."
-            pattern="[A-Za-z]\w+[A-Za-z]"
-            required="required"
-            placeholder="read"
-            type="text" />
+        <div class="input-group">
+            <div class="input-addon">
+                <i  title="Scope ID is available."
+                    class="fa fa-check is-available"></i>
+                {{#unless edit}}
+                    <i  title="Scope ID is already taken."
+                        class="fa fa-close is-taken"></i>
+                {{/unless}}
+            </div>
+            <input
+                id="scope_id"
+                autofocus="autofocus"
+                name="yourturn_scope_id"
+                title="Only characters with underscores in between."
+                pattern="[A-Za-z]\w+[A-Za-z]"
+                required="required"
+                placeholder="read"
+                {{#if edit}}
+                    disabled="disabled"
+                    value="{{scope.id}}"
+                {{/if}}
+                type="text" />
+        </div>
     </div>
     <div class="form-group">
         <label for="scope_summary">Summary</label>
@@ -20,6 +38,7 @@
             name="yourturn_scope_summary"
             id="scope_summary"
             maxlength="140"
+            value="{{scope.summary}}"
             type="text" />
     </div>
     <div class="form-group">
@@ -29,20 +48,8 @@
             name="yourturn_scope_information"
             id="scope_information"
             maxlength="140"
+            value="{{scope.information}}"
             type="text" />
-    </div>
-    <div class="form-group">
-        <label>Scope Criticality Level</label>
-        <small>How sensitive is the data you get access to?</small>
-        {{#each criticalities}}
-            <label>
-                <input
-                    value="{{@key}}"
-                    name="yourturn_scope_criticality"
-                    type="radio" /> {{this.name}}
-            </label>
-            <small>{{this.example}}</small>
-        {{/each}}
     </div>
     <div class="form-group">
         {{#if resourceHasOwner}}
@@ -56,6 +63,9 @@
                             required="required"
                             value="scope_ownerScope"
                             name="yourturn_scope_scopeType"
+                            {{#if scope.ownerScope}}
+                                checked="checked"
+                            {{/if}}
                             type="radio" /> Resource Owner Scope
                     </label>
                 </div>
@@ -78,6 +88,10 @@
                             id="scope_appScope"
                             value="scope_appScope"
                             name="yourturn_scope_scopeType"
+                            {{#if scope.ownerScope}}
+                            {{else}}
+                                checked="checked"
+                            {{/if}}
                             type="radio" /> Application Scope
                     </label>
                 </div>
@@ -105,6 +119,9 @@
                             required="required"
                             value="scope_ownerScope"
                             name="yourturn_scope_scopeType"
+                            {{#if scope.ownerScope}}
+                                checked="checked"
+                            {{/if}}
                             type="radio" /> Resource Owner Scope
                     </label>
                 </div>
@@ -120,6 +137,9 @@
                             checked="checked"
                             value="scope_appScope"
                             name="yourturn_scope_scopeType"
+                            {{#unless scope.ownerScope}}
+                                checked="checked"
+                            {{/unless}}
                             type="radio" /> Application Scope
                     </label>
                 </div>
@@ -144,7 +164,7 @@
             id="scope_description"
             name="yourturn_scope_description"
             cols="30"
-            rows="10"></textarea>
+            rows="10">{{scope.description}}</textarea>
     </div>
     <div class="btn-group">
         <button

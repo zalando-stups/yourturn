@@ -1,5 +1,8 @@
 <h2>{{resourceId}}.{{scope.id}}</h2>
 <div class="btn-group">
+    <a href="/resource/detail/{{resourceId}}/scope/edit/{{scope.id}}" class="btn btn-default">
+        <i class="fa fa-pencil"></i> Edit
+    </a>
     <a
         class="btn btn-default"
         href="/resource/detail/{{resourceId}}">
@@ -19,10 +22,6 @@
         <tr>
             <th>User Information</th>
             <td>{{scope.information}}</td>
-        </tr>
-        <tr>
-            <th>Criticality</th>
-            <td>{{scopeCriticality.value}}—{{scopeCriticality.name}}</td>
         </tr>
         <tr>
             <th>Resource Owner Scope</th>

@@ -1,7 +1,6 @@
 import BaseView from 'common/src/base-view';
 import Template from './scope-detail.hbs';
 import Markdown from 'common/src/markdown';
-import Criticality from 'common/src/data/resource/scope-criticality';
 import 'common/asset/scss/resource/scope-detail.scss';
 
 class ScopeDetail extends BaseView {
@@ -18,8 +17,7 @@ class ScopeDetail extends BaseView {
         this.data = {
             resourceId: this.props.resourceId,
             scope: scope,
-            applications: applications,
-            scopeCriticality: Criticality[scope.criticality]
+            applications: applications
         };
 
     }
