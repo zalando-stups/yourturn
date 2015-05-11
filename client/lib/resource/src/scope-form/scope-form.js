@@ -47,7 +47,7 @@ class ScopeForm extends BaseView {
         let resource = this.store.getResource(this.props.resourceId);
         this.data = {
             resource: resource,
-            resourceHasOwner: resource ? resource.owners.length > 0 : false
+            resourceHasOwner: resource ? resource.resource_owners.length > 0 : false
         };
         if (this.props.edit) {
             this.data.edit = this.props.edit;
@@ -73,7 +73,6 @@ class ScopeForm extends BaseView {
 
         // construct the scope itself
         let scope = {
-            id: scope_id,
             ownerScope: scope_ownerScope,
             summary: scope_summary,
             information: scope_information,
@@ -81,7 +80,7 @@ class ScopeForm extends BaseView {
         };
 
         // send it off to the store
-        this.actions.saveScope(resourceId, scope)
+        this.actions.saveScope(resourceId, scope_id, scope)
             .then(() => {
                 // redirect back to the resource detail view
                 history.navigate(`resource/detail/${resourceId}`, { trigger: true });

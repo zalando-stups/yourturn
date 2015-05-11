@@ -2,6 +2,7 @@ import {Store} from 'flummox';
 import _m from 'mori';
 import _ from 'common/src/lodash.custom';
 import {Pending, Failed} from 'common/src/fetch-result';
+import FetchResult from 'common/src/fetch-result';
 
 class ResourceStore extends Store {
     constructor(flux) {
@@ -177,7 +178,7 @@ class ResourceStore extends Store {
      * @return {array} Empty array if there are not scopes.
      */
     getScopes(resourceId) {
-        let entries = _m.vals(_m.get(this.state.scopes, resourceId));
+        let entries = _m.filter( e => !(e instanceof FetchResult), _m.vals(_m.get(this.state.scopes, resourceId)) );
         entries = _m.sortBy(e => _m.get(e, 'id').toLowerCase(), entries);
         return entries ? _m.toJs(entries) : [];
     }
