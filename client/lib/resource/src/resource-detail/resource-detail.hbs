@@ -1,6 +1,9 @@
 <h2>{{resource.name}}</h2>
 <div class="btn-group">
-    <a href="/resource/detail/{{resource.id}}/create" class="btn btn-default">
+    <a href="/resource/edit/{{resource.id}}" class="btn btn-default">
+        <i class="fa fa-pencil"></i> Edit {{resource.name}}
+    </a>
+    <a href="/resource/detail/{{resource.id}}/create" class="btn btn-primary">
         <i class="fa fa-plus"></i> Create scope
     </a>
 </div>
@@ -18,10 +21,12 @@
             <th>Resource Owners</th>
             <td>
                 <ul>
-                    {{#each resource.owners}}
+                    {{#each resource.resource_owners}}
                         <li>
                             {{this}}
                         </li>
+                    {{else}}
+                        Nobody owns {{resource.name}}.
                     {{/each}}
                 </ul>
             </td>

@@ -5,12 +5,12 @@ var express = require('express'),
 server.use(bodyParser.json());
 
 var resourceTypes = {
-    'sales-order': {
-        'id': 'sales-order',
+    'sales_order': {
+        'id': 'sales_order',
         'name': 'Sales Order',
         'description': 'Sales Orders',
         'resource_owners': [
-            'customer'
+            'employees'
         ]
     },
     'customer': {
@@ -21,7 +21,7 @@ var resourceTypes = {
     }
 };
 var resourceScopes = {
-    'sales-order': {
+    'sales_order': {
         'read': {
             'id': 'read',
             'summary': 'Grants read-access to the sales orders of a customer',
@@ -81,7 +81,8 @@ server.get('/resource-types/:id', function(req, res) {
 
 server.put('/resource-types/:id', function(req, res) {
     setTimeout( function() {
-        resourceTypes[req.body.id] = req.body;
+        req.body.id = req.params.id;
+        resourceTypes[req.params.id] = req.body;
         res.status( 200 ).send();
     }, Math.random() * 2000 );
 });

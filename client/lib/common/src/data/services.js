@@ -41,6 +41,8 @@ function constructLocalUrl(module, [entityId, subEntityId]) {
         return `/application/detail/${entityId}`;
     } else if (module === 'application-version') {
         return `/application/detail/${entityId}/version/detail/${subEntityId}`;
+    } else if (module === 'resource-type') {
+        return `/resource/detail/${entityId}`;
     }
     return false;
 }

@@ -1,7 +1,7 @@
 import {Router} from 'backbone';
 import puppeteer from 'common/src/puppeteer';
 import ResourceList from './resource-list/resource-list';
-import CreateResource from './create-resource/create-resource';
+import ResourceForm from './resource-form/resource-form';
 import ResouceDetail from './resource-detail/resource-detail';
 import CreateScope from './create-scope/create-scope';
 import ScopeDetail from './scope-detail/scope-detail';
@@ -20,6 +20,7 @@ class ResourceRouter extends Router {
                 'resource': 'listResources',
                 'resource/create': 'createResource',
                 'resource/detail/:id': 'listResource',
+                'resource/edit/:id': 'editResource',
                 'resource/detail/:id/create': 'createScope',
                 'resource/detail/:id/scope/:scope': 'listScope'
             }
@@ -45,9 +46,25 @@ class ResourceRouter extends Router {
     createResource() {
         RES_ACTIONS
         .fetchResources()
-        .then(() => puppeteer.show(new CreateResource({
+        .then(() => puppeteer.show(new ResourceForm({
             flux: RES_FLUX,
             notificationActions: this.globalFlux.getActions('notification')
+        }), MAIN_VIEW_ID) )
+        .catch(e => puppeteer.show(Error(e), MAIN_VIEW_ID));
+    }
+
+    /**
+     * Shows form to edit a resource
+     * @param  {String} resourceId ID of the resource
+     */
+    editResource(resourceId) {
+        RES_ACTIONS
+        .fetchResource(resourceId)
+        .then(() => puppeteer.show(new ResourceForm({
+            flux: RES_FLUX,
+            notificationActions: this.globalFlux.getActions('notification'),
+            resourceId: resourceId,
+            edit: true
         }), MAIN_VIEW_ID) )
         .catch(e => puppeteer.show(Error(e), MAIN_VIEW_ID));
     }

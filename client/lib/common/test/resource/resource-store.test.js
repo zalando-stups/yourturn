@@ -1,6 +1,7 @@
 /* globals expect */
 import ResourceStore from 'common/src/data/resource/resource-store';
 import ResourceActions from 'common/src/data/resource/resource-actions';
+import FetchResult from 'common/src/fetch-result';
 import {Flummox} from 'flummox';
 
 class MockFlux extends Flummox {
@@ -22,6 +23,23 @@ describe('The resource store', () => {
 
     afterEach(() => {
         store._empty();
+    });
+
+    it('should set a pending fetch result for a resource', () => {
+        store.beginFetchResource('customer');
+        let resource = store.getResource('customer');
+        expect(resource instanceof FetchResult).to.be.true;
+        expect(resource.isPending()).to.be.true;
+    });
+
+    it('should set a failed fetch result for a resource', () => {
+        let err = new Error();
+        err.id = 'customer';
+        store.failFetchResource(err);
+        let resource = store.getResource('customer');
+        console.log(resource);
+        expect(resource instanceof FetchResult).to.be.true;
+        expect(resource.isFailed()).to.be.true;
     });
 
     it('should receive scopes from multiple resources', () => {

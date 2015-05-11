@@ -44,12 +44,12 @@ class VersionForm extends BaseView {
         let version_id = $idInput.val();
         if (this.store.getApplicationVersion(this.props.applicationId, version_id) && version_id !== this.props.versionId) {
             $idInput[0].setCustomValidity('Version already exists.');
-            this.$el.find('.is-taken').show();
-            this.$el.find('.is-available').hide();
+            this.$el.find('.is-taken').css('display', 'inline-block');
+            this.$el.find('.is-available').css('display', 'none');
         } else {
             $idInput[0].setCustomValidity('');
-            this.$el.find('.is-taken').hide();
-            this.$el.find('.is-available').show();
+            this.$el.find('.is-taken').css('display', 'none');
+            this.$el.find('.is-available').css('display', 'inline-block');
         }
     }
 
