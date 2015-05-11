@@ -13,10 +13,10 @@
     <ul>
         {{#each resources}}
             <li>
-                <a href="/resource/detail/{{this}}">{{this}}</a>
+                <a href="/resource/detail/{{this.id}}">{{this.name}}</a>
             </li>
         {{/each}}
     </ul>
 {{else}}
-    No resources.
+    No resource types.
 {{/if}}

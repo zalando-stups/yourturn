@@ -148,8 +148,8 @@ class ResourceStore extends Store {
      * @return {array} An empty array if there are none.
      */
     getResources() {
-        let entries = _m.keys(this.state.resources);
-        entries = _m.sortBy(e => _m.get(e, 'id'), entries);
+        let filtered = _m.filter(e => !(e instanceof FetchResult), _m.vals(this.state.resources));
+        let entries = _m.sortBy(e => _m.get(e, 'name').toLowerCase(), filtered);
         return entries ? _m.toJs(entries) : [];
     }
 

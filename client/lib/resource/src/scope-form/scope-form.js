@@ -47,7 +47,7 @@ class ScopeForm extends BaseView {
         let resource = this.store.getResource(this.props.resourceId);
         this.data = {
             resource: resource,
-            resourceHasOwner: resource ? resource.resource_owners.length > 0 : false
+            resourceHasOwner: resource && resource.resource_owners ? resource.resource_owners.length > 0 : false
         };
         if (this.props.edit) {
             this.data.edit = this.props.edit;

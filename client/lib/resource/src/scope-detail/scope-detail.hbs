@@ -2,7 +2,7 @@
 <div class="btn-group">
     <a
         class="btn btn-default"
-        href="/resource/detail/{{resourceId}}.{{scopeId}}">
+        href="/resource/detail/{{resourceId}}">
         <i class="fa fa-chevron-left"></i> Back to {{resourceId}}
     </a>
     <a href="/resource/detail/{{resourceId}}/scope/edit/{{scope.id}}" class="btn btn-default">
@@ -21,12 +21,12 @@
         </tr>
         <tr>
             <th>User Information</th>
-            <td>{{scope.information}}</td>
+            <td>{{scope.user_information}}</td>
         </tr>
         <tr>
             <th>Resource Owner Scope</th>
             <td>
-                {{#if scope.ownerScope}}
+                {{#if scope.is_resource_owner_scope}}
                     <i class="fa fa-check-square"></i>
                 {{else}}
                     <i class="fa fa-square-o"></i>
