@@ -26,12 +26,12 @@ class ResourceForm extends BaseView {
         let resource_id = $resourceInput.val();
         if (this.store.getResource(resource_id)) {
             $resourceInput[0].setCustomValidity('Resource ID already exists.');
-            this.$el.find('.is-taken').show();
-            this.$el.find('.is-available').hide();
+            this.$el.find('.is-taken').css('display', 'inline-block');
+            this.$el.find('.is-available').css('display', 'none');
         } else {
             $resourceInput[0].setCustomValidity('');
-            this.$el.find('.is-taken').hide();
-            this.$el.find('.is-available').show();
+            this.$el.find('.is-taken').css('display', 'none');
+            this.$el.find('.is-available').css('display', 'inline-block');
         }
     }
 
@@ -83,7 +83,7 @@ class ResourceForm extends BaseView {
     render() {
         this.$el.html(Template(this.data));
         if (this.props.edit) {
-            this.$el.find('.is-taken').hide();
+            this.$el.find('.is-taken').css('display', 'none');
         } else {
             this.checkResourceIdAvailability();
         }

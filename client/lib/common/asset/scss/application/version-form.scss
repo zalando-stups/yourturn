@@ -2,11 +2,7 @@
 
 .versionForm {
     max-width: $content-width-regular;
-    .versionForm-versionId {
-        .input-addon {
-            flex: 0 0 2em;
-        }
-    }
+
     .versionForm-versionHeadline {
         color: $gray-light;
     }

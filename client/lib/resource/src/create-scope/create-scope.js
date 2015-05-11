@@ -35,12 +35,12 @@ class CreateScope extends BaseView {
         let scope_id = $scopeInput.val();
         if (this.props.flux.getStore('resource').getScope(resourceId, scope_id)) {
             $scopeInput[0].setCustomValidity('Custom ID already exists.');
-            this.$el.find('.is-taken').show();
-            this.$el.find('.is-available').hide();
+            this.$el.find('.is-taken').css('display', 'inline-block');
+            this.$el.find('.is-available').css('display', 'none');
         } else {
             $scopeInput[0].setCustomValidity('');
-            this.$el.find('.is-taken').hide();
-            this.$el.find('.is-available').show();
+            this.$el.find('.is-taken').css('display', 'none');
+            this.$el.find('.is-available').css('display', 'inline-block');
         }
     }
 

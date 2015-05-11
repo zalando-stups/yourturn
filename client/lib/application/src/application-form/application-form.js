@@ -56,12 +56,12 @@ class ApplicationForm extends BaseView {
         let app_id = $appInput.val();
         if (this.props.flux.getStore('application').getApplication(app_id)) {
             $appInput[0].setCustomValidity('App ID already exists.');
-            this.$el.find('.is-taken').show();
-            this.$el.find('.is-available').hide();
+            this.$el.find('.is-taken').css('display', 'inline-block');
+            this.$el.find('.is-available').css('display', 'none');
         } else {
             $appInput[0].setCustomValidity('');
-            this.$el.find('.is-taken').hide();
-            this.$el.find('.is-available').show();
+            this.$el.find('.is-taken').css('display', 'none');
+            this.$el.find('.is-available').css('display', 'inline-block');
         }
     }
 
@@ -133,7 +133,7 @@ class ApplicationForm extends BaseView {
     render() {
         this.$el.html(Template(this.data));
         if (this.props.edit) {
-            this.$el.find('.is-taken').hide();
+            this.$el.find('.is-taken').css('display', 'none');
         } else {
             this.checkAppIdAvailability();
         }
