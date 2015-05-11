@@ -1,0 +1,62 @@
+<div class="resourceDetail u-placeholder">
+    <h2>{{resourceId}}.{{scope.id}}</h2>
+    <div class="btn-group">
+        <a href="/resource/detail/{{resourceId}}/scope/edit/{{scope.id}}" class="btn btn-default">
+            <i class="fa fa-pencil"></i> Edit
+        </a>
+        <a
+            class="btn btn-default"
+            href="/resource/detail/{{resourceId}}">
+            <i class="fa fa-chevron-left"></i> Back to {{resourceId}}
+        </a>
+    </div>
+    <table>
+        <tbody>
+            <tr>
+                <th>ID</th>
+                <td>{{scope.id}}</td>
+            </tr>
+            <tr>
+                <th>Summary</th>
+                <td>{{scope.summary}}</td>
+            </tr>
+            <tr>
+                <th>User Information</th>
+                <td>{{scope.information}}</td>
+            </tr>
+            <tr>
+                <th>Resource Owner Scope</th>
+                <td>
+                    {{#if scope.ownerScope}}
+                        <i class="fa fa-check-square"></i>
+                    {{else}}
+                        <i class="fa fa-square-o"></i>
+                    {{/if}}
+                </td>
+            </tr>
+            <tr>
+                <th>Applications</th>
+                <td>
+                    <ul>
+                        {{#each applications}}
+                            <li>
+                                <a href="/application/detail/{{this.id}}">
+                                    {{this.id}}
+                                </a>
+                            </li>
+                        {{else}}
+                        No applications with this scope.
+                        {{/each}}
+                    </ul>
+                </td>
+            </tr>
+        </div>
+
+
+        </tbody>
+    </table>
+    <h4 class="scopeDetail-descriptionTitle">Description</h4>
+    <p data-action="markdown">
+        {{scope.description}}
+    </p>
+</div>

@@ -1,6 +1,7 @@
 import {Store} from 'flummox';
 import _m from 'mori';
 import _ from 'common/src/lodash.custom';
+import {Pending, Failed} from 'common/src/fetch-result';
 
 class ResourceStore extends Store {
     constructor(flux) {
@@ -53,11 +54,21 @@ class ResourceStore extends Store {
     beginFetchResources() {}
     failFetchResources() {}
 
-    beginFetchScope() {}
-    failFetchScope() {}
-
     beginFetchScopes() {}
     failFetchScopes() {}
+
+    beginFetchScope(resourceId, scopeId) {
+        let scope = _m.assoc( _m.get(this.state.scopes, resourceId) || _m.hashMap(), scopeId, new Pending() );
+        this.setState({
+            scope: _m.assoc(this.state.scopes, scopeId, scope)
+        });
+    }
+
+    failFetchScope(err) {
+        this.setState({
+            scopes: _m.assoc(this.state.scopes, err.id, new Failed(err))
+        });
+    }
 
     beginFetchScopeApplications() {}
     failFetchScopeApplications() {}
