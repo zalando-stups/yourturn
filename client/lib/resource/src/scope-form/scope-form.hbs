@@ -90,10 +90,9 @@
                             id="scope_appScope"
                             value="scope_appScope"
                             name="yourturn_scope_scopeType"
-                            {{#if scope.ownerScope}}
-                            {{else}}
+                            {{#unless scope.ownerScope}}
                                 checked="checked"
-                            {{/if}}
+                            {{/unless}}
                             type="radio" /> Application Scope
                     </label>
                 </div>
