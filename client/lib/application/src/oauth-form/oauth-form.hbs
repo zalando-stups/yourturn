@@ -1,4 +1,4 @@
-<h2>OAuth config for {{application.name}}</h2>
+<h2>{{application.name}} OAuth Client</h2>
 <div class="btn-group">
     <a href="/application/detail/{{application.id}}" class="btn btn-default">
         <i class="fa fa-chevron-left"></i> Back to {{application.name}}
@@ -19,9 +19,9 @@
     <div class="form-group">
         <label>
             <input
-                {{#if oauth.is_client_confidential}}
+                {{#unless oauth.is_client_confidential}}
                 checked="checked"
-                {{/if}}
+                {{/unless}}
                 id="oauth_is_client_confidential"
                 name="yourturn_oauth_is_client_confidential"
                 type="checkbox" /> Client is confidential
@@ -33,16 +33,7 @@
         <small>{{application.name}} can ask the resource owners for these scopes to be granted:</small>
         <div data-action="ownerscope-list"></div>
     </div>
-    <div class="form-group">
-        <label>Application Scopes</label>
-        <small>{{application.name}} has the permission to access data with these scopes:</small>
-        <div data-action="appscope-list"></div>
-    </div>
-    <div class="form-group">
-        <label>Credential Distribution</label>
-        <small>Activate credential distribution into these S3 buckets (<a href="http://docs.aws.amazon.com/AmazonS3/latest/dev/BucketRestrictions.html" data-external>Naming Conventions</a>):</small>
-        <div data-action="editable-list"></div>
-    </div>
+    
     <div class="btn-group">
         <button
             type="submit"

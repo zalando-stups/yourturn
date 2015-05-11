@@ -37,7 +37,6 @@ describe('The resource store', () => {
         err.id = 'customer';
         store.failFetchResource(err);
         let resource = store.getResource('customer');
-        console.log(resource);
         expect(resource instanceof FetchResult).to.be.true;
         expect(resource.isFailed()).to.be.true;
     });

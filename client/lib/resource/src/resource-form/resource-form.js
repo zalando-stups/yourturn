@@ -65,16 +65,16 @@ class ResourceForm extends BaseView {
             resource_owners: resource_owners,
             description: resource_description
         };
-        
+
         // save the resource
         this.actions.saveResource(resource_id, resource)
             .then(() => {
                 // redirect to detail view of the resource
                 return history.navigate(constructLocalUrl('resource-type', [resource_id]), { trigger: true });
             })
-            .catch(e => {
+            .catch(err => {
                 this.props.notificationActions.addNotification(
-                    `Could not save resource ${resource.name}. ${e.message}`,
+                    `Could not save resource ${resource.name}. ${err.message}`,
                     'error'
                 );
             });
