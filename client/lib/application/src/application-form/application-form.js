@@ -1,7 +1,5 @@
 import BaseView from 'common/src/base-view';
 import Template from './application-form.hbs';
-import Flux from 'application/src/flux';
-import GlobalFlux from 'yourturn/src/flux';
 import SERVICE_URL_TLD from 'SERVICE_URL_TLD';
 import {history} from 'backbone';
 import {constructLocalUrl} from 'common/src/data/services';
@@ -15,17 +13,25 @@ class ApplicationForm extends BaseView {
         props.events = {
             'submit form': 'save',
             'keyup #team_id': 'fillServiceUrl',
-            'keyup #app_id': 'handleAppId'
+            'keyup #app_id': 'handleAppId',
+            'keyup #service_url': 'deactivateAutocomplete'
         };
         if (props.edit) {
-            props.store = Flux.getStore('application');
+            props.store = props.flux.getStore('application');
         }
+        this.state = {
+            autocompleteServiceUrl: true
+        };
         super(props);
     }
 
     handleAppId() {
         this.checkAppIdAvailability();
         this.fillServiceUrl();
+    }
+
+    deactivateAutocomplete() {
+        this.state.autocompleteServiceUrl = false;
     }
 
     update() {
@@ -48,7 +54,7 @@ class ApplicationForm extends BaseView {
     checkAppIdAvailability() {
         let $appInput = this.$el.find('#app_id');
         let app_id = $appInput.val();
-        if (Flux.getStore('application').getApplication(app_id)) {
+        if (this.props.flux.getStore('application').getApplication(app_id)) {
             $appInput[0].setCustomValidity('App ID already exists.');
             this.$el.find('.is-taken').show();
             this.$el.find('.is-available').hide();
@@ -63,6 +69,9 @@ class ApplicationForm extends BaseView {
      * Autocompletes the service url using the pattern {app}.{team}.{tld}
      */
     fillServiceUrl() {
+        if (!this.state.autocompleteServiceUrl) {
+            return;
+        }
         let {$el} = this;
         let team_id = $el.find('#team_id').val();
         let app_id = $el.find('#app_id').val();
@@ -100,7 +109,7 @@ class ApplicationForm extends BaseView {
             description: description
         };
 
-        Flux
+        this.props.flux
         .getActions('application')
         .saveApplication(id, app)
         .then(() => {
@@ -111,8 +120,9 @@ class ApplicationForm extends BaseView {
         })
         .catch(() => {
             let verb = this.props.edit ? 'update' : 'create';
-            GlobalFlux
-            .getActions('notification')
+            this
+            .props
+            .notificationActions
             .addNotification(
                 `Could not ${verb} application ${app.name}.`,
                 'error'

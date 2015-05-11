@@ -11,18 +11,28 @@ import 'common/asset/scss/base.scss';
 import 'common/asset/scss/grid.scss';
 import 'common/asset/scss/yourturn/yourturn.scss';
 
+const YT_FLUX = new Flux();
+
 let sidebar = new Sidebar();
 sidebar.render();
 
-let notifications = new NotificationBar();
+let notifications = new NotificationBar({
+    flux: YT_FLUX
+});
 notifications.render();
 
 $(document).ready( () => {
     $('#yourturn-sidebar').append(sidebar.$el);
     $('body').prepend(notifications.$el);
-    new Router();
-    new ResourceRouter();
-    new AppRouter();
+    new Router({
+        flux: YT_FLUX
+    });
+    new ResourceRouter({
+        globalFlux: YT_FLUX
+    });
+    new AppRouter({
+        globalFlux: YT_FLUX
+    });
     history.start({
         pushState: true
     });
@@ -32,7 +42,7 @@ $(document).ready( () => {
  * Continually dismiss old notifications.
  */
 setInterval(() => {
-    Flux
+    YT_FLUX
     .getActions('notification')
     .removeNotificationsOlderThan(5000);
 }, 5000 );

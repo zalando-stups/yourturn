@@ -14,13 +14,12 @@ var apps = {
         last_synced: '2015-01-01T12:42:41Z',
         has_problems: false,
         redirect_url: 'http://example.com/oauth',
-        accounts: [{
-            id: '1239847235987',
-            type: 'aws'
-        }],
+        s3_buckets: [
+            'kio-stups-bucket'
+        ],
         scopes: [{
-            resourceId: 'sales_order',
-            id: 'create'
+            resource_type_id: 'customer',
+            scope_id: 'read_all'
         }]
     }
 };

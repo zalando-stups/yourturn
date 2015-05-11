@@ -7,6 +7,7 @@ var webpack = require('webpack'),
 
 module.exports = {
     devtool: 'eval',
+    bail: true, // break on error
     entry: [
         './lib/yourturn/src/bootstrap'   // entrypoint to resolve dependencies
     ],
@@ -21,6 +22,7 @@ module.exports = {
         new webpack.PrefetchPlugin('remarkable'),
         new webpack.PrefetchPlugin('moment'),
         new webpack.PrefetchPlugin('common/src/superagent'),
+        new webpack.NormalModuleReplacementPlugin(/^lodash$/, 'common/src/lodash.custom'),
         new webpack.NormalModuleReplacementPlugin(/underscore/, 'common/src/lodash.custom'),
         new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /en/),
         new webpack.NoErrorsPlugin(),
@@ -48,12 +50,19 @@ module.exports = {
         OAUTH_SCOPES: 'YTENV_OAUTH_SCOPES',
         KIO_BASE_URL: 'YTENV_KIO_BASE_URL',
         TWINTIP_BASE_URL: 'YTENV_TWINTIP_BASE_URL',
-        ESSENTIALS_BASE_URL: 'YTENV_ESSENTIALS_BASE_URL',
         MINT_BASE_URL: 'YTENV_MINT_BASE_URL',
+        ESSENTIALS_BASE_URL: 'YTENV_ESSENTIALS_BASE_URL',
         DOCKER_REGISTRY: 'YTENV_DOCKER_REGISTRY',
         SERVICE_URL_TLD: 'YTENV_SERVICE_URL_TLD'
     },
+    eslint: {
+        configFile: './.eslintrc',
+        failOnError: true
+    },
     module: {
+        preLoaders: [
+            { test: /\.js$/, exclude: /(node_modules|lodash)/, loader: 'eslint' }
+        ],
         loaders: [
             { test: /\.hbs$/, exclude: /node_modules/, loader: 'handlebars' },
             { test: /\.js$/, exclude: /node_modules/, loader: 'babel' },

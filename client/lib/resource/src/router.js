@@ -8,10 +8,12 @@ import ScopeDetail from './scope-detail/scope-detail';
 import Flux from './flux';
 import 'promise.prototype.finally';
 
-const MAIN_VIEW_ID = '#yourturn-view';
+const RES_FLUX = new Flux(),
+      RES_ACTIONS = RES_FLUX.getActions('resource'),
+      MAIN_VIEW_ID = '#yourturn-view';
 
 class ResourceRouter extends Router {
-    constructor() {
+    constructor(props) {
         super({
             routes: {
                 'resource': 'listResources',
@@ -21,14 +23,18 @@ class ResourceRouter extends Router {
                 'resource/detail/:id/scope/:scope': 'listScope'
             }
         });
+        this.globalFlux = props.globalFlux;
     }
 
     /**
      * Lists available resources.
      */
     listResources() {
-        Flux.getActions('resource').fetchResources()
-        .then(() => puppeteer.show(new ResourceList(), MAIN_VIEW_ID) )
+        RES_ACTIONS
+        .fetchResources()
+        .then(() => puppeteer.show(new ResourceList({
+            flux: RES_FLUX
+        }), MAIN_VIEW_ID) )
         .catch(e => puppeteer.show(Error(e), MAIN_VIEW_ID));
     }
 
@@ -36,8 +42,12 @@ class ResourceRouter extends Router {
      * Shows form to create a new resource
      */
     createResource() {
-        Flux.getActions('resource').fetchResources();
-        puppeteer.show(new CreateResource(), MAIN_VIEW_ID);
+        RES_ACTIONS
+        .fetchResources()
+        .then(() => puppeteer.show(new CreateResource({
+            flux: RES_FLUX
+        }), MAIN_VIEW_ID) )
+        .catch(e => puppeteer.show(Error(e), MAIN_VIEW_ID));
     }
 
     /**
@@ -45,10 +55,11 @@ class ResourceRouter extends Router {
      * @param  {string} resourceId ID of the resource in question
      */
     listResource(resourceId) {
-        Flux.getActions('resource').fetchResource(resourceId);
-        Flux.getActions('resource').fetchScopes(resourceId);
+        RES_ACTIONS.fetchResource(resourceId);
+        RES_ACTIONS.fetchScopes(resourceId);
         puppeteer.show(new ResouceDetail({
-            resourceId: resourceId
+            resourceId: resourceId,
+            flux: RES_FLUX
         }), MAIN_VIEW_ID);
     }
 
@@ -58,10 +69,13 @@ class ResourceRouter extends Router {
      */
     createScope(resourceId) {
         Promise.all([
-            Flux.getActions('resource').fetchResource(resourceId),
-            Flux.getActions('resource').fetchScopes(resourceId)
+            RES_ACTIONS.fetchResource(resourceId),
+            RES_ACTIONS.fetchScopes(resourceId)
         ])
-        .then(() => puppeteer.show(new CreateScope({ resourceId: resourceId }), MAIN_VIEW_ID) )
+        .then(() => puppeteer.show(new CreateScope({
+            resourceId: resourceId,
+            flux: RES_FLUX
+        }), MAIN_VIEW_ID) )
         .catch(e => puppeteer.show(Error(e), MAIN_VIEW_ID));
     }
 
@@ -71,11 +85,12 @@ class ResourceRouter extends Router {
      * @param  {string} scopeId The ID of the scope.
      */
     listScope(resourceId, scopeId) {
-        Flux.getActions('resource').fetchScope(resourceId, scopeId);
-        Flux.getActions('resource').fetchScopeApplications(resourceId, scopeId);
+        RES_ACTIONS.fetchScope(resourceId, scopeId);
+        RES_ACTIONS.fetchScopeApplications(resourceId, scopeId);
         puppeteer.show(new ScopeDetail({
             resourceId: resourceId,
-            scopeId: scopeId
+            scopeId: scopeId,
+            flux: RES_FLUX
         }), MAIN_VIEW_ID);
     }
 }

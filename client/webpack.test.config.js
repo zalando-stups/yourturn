@@ -7,7 +7,9 @@ var webpack = require('webpack'),
 module.exports = {
     devtool: 'eval',
     entry: [
-        './lib/common/test/bootstrap'   // entrypoint to resolve dependencies
+        // entrypoint to resolve dependencies
+        './lib/application/test/bootstrap',
+        './lib/common/test/bootstrap'
     ],
     target: 'node',
     node: {
@@ -19,6 +21,7 @@ module.exports = {
         publicPath: '/dist/'
     },
     plugins: [
+        new webpack.NormalModuleReplacementPlugin(/^lodash$/, 'common/src/lodash.custom'),
         new webpack.DefinePlugin({
             'ENV_PRODUCTION': false,
             'global.GENTLY': false  // fix for superagent
@@ -40,12 +43,20 @@ module.exports = {
         OAUTH_SCOPES: 'YTENV_OAUTH_SCOPES',
         KIO_BASE_URL: 'YTENV_KIO_BASE_URL',
         TWINTIP_BASE_URL: 'YTENV_TWINTIP_BASE_URL',
+        MINT_BASE_URL: 'YTENV_MINT_BASE_URL',
+        ESSENTIALS_BASE_URL: 'YTENV_ESSENTIALS_BASE_URL',
         DOCKER_REGISTRY: 'YTENV_DOCKER_REGISTRY',
         SERVICE_URL_TLD: 'YTENV_SERVICE_URL_TLD'
     },
+    eslint: {
+        configFile: './.eslintrc'
+    },
     module: {
+        preLoaders: [
+            { test: /\.js$/, exclude: /(node_modules|lodash)/, loader: 'eslint' }
+        ],
         loaders: [
-            { test: /\.hbs$/, exclude: /node_modules/, loader: 'null' },
+            { test: /\.hbs$/, exclude: /node_modules/, loader: 'handlebars' },
             { test: /\.js$/, exclude: /node_modules/, loader: 'babel' },
             { test: /\.scss$/, exclude: /node_modules/, loaders: ['null'] },
             { test: /\.woff(\?v=\d+\.\d+\.\d+)?$/, loader: 'null' },

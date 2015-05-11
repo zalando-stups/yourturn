@@ -1,18 +1,17 @@
-import Flux from 'yourturn/src/flux';
 import BaseView from 'common/src/base-view';
 import Template from './search.hbs';
 import 'common/asset/scss/yourturn/search.scss';
 
 class SearchView extends BaseView {
-    constructor() {
+    constructor(props) {
         super({
             className: 'searchView',
             events: {
-                'click button': 'search',
-                'keyup input': 'search'
+                'submit': 'search'
             },
-            store: Flux.getStore('search')
+            store: props.flux.getStore('search')
         });
+        this.actions = props.flux.getActions('search');
         this.state = {
             term: ''
         };
@@ -24,20 +23,15 @@ class SearchView extends BaseView {
     }
 
     search(evt) {
-        if (evt.type === 'keyup' && evt.keyCode !== 13) {
-            // return if this is a keyup and another key
-            // than enter was pressed
-            return;
-        }
-        const ACTIONS = Flux.getActions('search');
+        evt.preventDefault();
         let searchTerm = this.$el.find('input').val();
         if (!searchTerm.length) {
-            ACTIONS.clearSearchResults(searchTerm);
+            this.actions.clearSearchResults(searchTerm);
         } else {
             if (this.store.hasResults(searchTerm)) {
-                ACTIONS.clearSearchResults(searchTerm);
+                this.actions.clearSearchResults(searchTerm);
             }
-            ACTIONS.fetchSearchResults(searchTerm);
+            this.actions.fetchSearchResults(searchTerm);
         }
 
         this.state.term = searchTerm;

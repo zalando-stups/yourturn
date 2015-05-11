@@ -1,7 +1,7 @@
 import TWINTIP_BASE_URL from 'TWINTIP_BASE_URL';
 import KIO_BASE_URL from 'KIO_BASE_URL';
-import ESSENTIALS_BASE_URL from 'ESSENTIALS_BASE_URL';
 import MINT_BASE_URL from 'MINT_BASE_URL';
+import ESSENTIALS_BASE_URL from 'ESSENTIALS_BASE_URL';
 
 const SERVICES = {
     kio: {
@@ -11,18 +11,18 @@ const SERVICES = {
     },
     twintip: {
         url: TWINTIP_BASE_URL,
-        root: '/apis',
+        root: '/apps',
         id: 'application_id'
-    },
-    essentials: {
-        url: ESSENTIALS_BASE_URL,
-        root: '/resource-types',
-        id: 'resource_type'
     },
     mint: {
         url: MINT_BASE_URL,
         root: '/apps',
-        id: 'resource_type'
+        id: 'id'
+    },
+    essentials: {
+        url: ESSENTIALS_BASE_URL,
+        root: '/resource-types',
+        id: 'id'
     }
 };
 

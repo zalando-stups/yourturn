@@ -22,6 +22,8 @@ global.window = {
 // these are set by env.js in production
 global.YTENV_TWINTIP_BASE_URL = '';
 global.YTENV_KIO_BASE_URL = '';
+global.YTENV_MINT_BASE_URL = '';
+global.YTENV_ESSENTIALS_BASE_URL = '';
 global.YTENV_OAUTH_CLIENT_ID = '';
 global.YTENV_OAUTH_AUTH_URL = '';
 global.YTENV_OAUTH_REDIRECT_URI = '';

@@ -1,7 +1,6 @@
-import _ from 'common/src/lodash.custom';
+import _ from 'lodash';
 import BaseView from 'common/src/base-view';
 import Template from './application-detail.hbs';
-import Flux from 'application/src/flux';
 import FetchResult from 'common/src/fetch-result';
 import ErrorTpl from 'common/src/error.hbs';
 import Placeholder from './placeholder.hbs';
@@ -13,8 +12,8 @@ class AppDetail extends BaseView {
     constructor( props ) {
         props.className = 'applicationDetail';
         props.stores = {
-            application: Flux.getStore('application'),
-            api: Flux.getStore('api')
+            application: props.flux.getStore('application'),
+            api: props.flux.getStore('api')
         };
         super(props);
     }

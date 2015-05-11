@@ -3,13 +3,10 @@ import Search from 'yourturn/src/search/search';
 import puppeteer from 'common/src/puppeteer';
 import {Provider} from 'common/src/oauth-provider';
 import {Error} from 'oauth2-client-js';
-import Flux from './flux';
-
-const NOTIFICATIONS = Flux.getActions('notification');
 const MAIN_VIEW_ID = '#yourturn-view';
 
 class YourturnRouter extends Router {
-    constructor() {
+    constructor(props) {
         super({
             routes: {
                 '': 'search',
@@ -17,10 +14,13 @@ class YourturnRouter extends Router {
                 'oauth': 'oauth'
             }
         });
+        this.flux = props.flux;
     }
 
     search() {
-        puppeteer.show(new Search(), MAIN_VIEW_ID);
+        puppeteer.show(new Search({
+            flux: this.flux
+        }), MAIN_VIEW_ID);
     }
 
     oauth() {
@@ -28,12 +28,20 @@ class YourturnRouter extends Router {
         try {
             response = Provider.parse(window.location.hash);
         } catch(err) {
-            NOTIFICATIONS.addNotification('OAuth: Unexpected response. This should not happen.', 'error');
+            this.flux
+            .getActions('notification')
+            .addNotification(
+                'OAuth: Unexpected response. This should not happen.',
+                'error');
             return history.navigate('/', { trigger: true });
         }
         if (response) {
             if (response instanceof Error) {
-                return NOTIFICATIONS.addNotification('OAuth: ' + response.error + ' ' + response.getMessage(), 'error');
+                return this.flux
+                            .getActions('notification')
+                            .addNotification(
+                                'OAuth: ' + response.error + ' ' + response.getMessage(),
+                                'error');
             }
             history.navigate(response.metadata.route || '/', { trigger: true });
         }

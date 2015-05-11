@@ -1,10 +1,29 @@
 import {Actions} from 'flummox';
-let {localStorage} = window;
 import request from 'common/src/superagent';
 import {Services} from 'common/src/data/services';
 import {Provider, RequestConfig, saveRoute} from 'common/src/oauth-provider';
 
 class ResourceActions extends Actions {
+
+    fetchAllScopes() {
+        return request
+                .get(`${Services.essentials.url}${Services.essentials.root}`)
+                .accept('json')
+                .oauth(Provider, RequestConfig)
+                .exec(saveRoute)
+                .then(response => Promise.all(response.body.map(res => this.fetchScopes(res.id))));
+    }
+
+    fetchScopes(resourceId) {
+        return request
+                .get(`${Services.essentials.url}${Services.essentials.root}/${resourceId}/scopes`)
+                .accept('json')
+                .oauth(Provider, RequestConfig)
+                .exec(saveRoute)
+                .then(res => [resourceId, res.body]);
+    }
+
+    // ===== LOCAL STORAGE BELOW ====
 
     saveResource(resource) {
         return request
@@ -54,32 +73,6 @@ class ResourceActions extends Actions {
                 .oauth(Provider, RequestConfig)
                 .exec(saveRoute)
                 .then( res => res.body );
-    }
-
-    fetchAllScopes() {
-        let scopes = Object
-                        .keys(localStorage)
-                        .filter(key => key.startsWith('resource'))
-                        .filter(key => key.split('.').length === 3)
-                        .map(key => {
-                            let val = JSON.parse(localStorage.getItem(key));
-                            val.resourceId = key.split('.')[1];
-                            return val;
-                        });
-        return scopes;
-    }
-
-    fetchScopes(resourceId) {
-        return request
-                .get(`${Services.essentials.url}${Services.essentials.root}/${resourceId}/scopes`)
-                .accept('json')
-                .oauth(Provider, RequestConfig)
-                .exec(saveRoute)
-                .then( res => [resourceId, res.body] )
-                .catch( err => {
-                    err.id = resourceId;
-                    throw err;
-                });
     }
 
     fetchScope(resourceId, scopeId) {

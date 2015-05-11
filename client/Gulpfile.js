@@ -11,11 +11,16 @@ var gulp = require('gulp'),
 var LODASH_FUNCS = [
         // own
         'chain',
-        'sortBy',
-        'reverse',
-        'take',
+        'filter',
+        'flatten',
         'forOwn',
+        'groupBy',
+        'intersection',
+        'reverse',
+        'sortBy',
+        'take',
         'value',
+        'values',
         // backbone
         'once',
         'keys',
@@ -78,12 +83,6 @@ gulp.task('pack', ['clean', 'lodash'], function(done) {
         });
 });
 
-gulp.task('copy', function() {
-    return gulp
-            .src('stups_favicon.png')
-            .pipe(gulp.dest('dist'));
-});
-
 // lints the source code using .eslintrc
 gulp.task('lint', function() {
     return gulp
@@ -93,12 +92,10 @@ gulp.task('lint', function() {
             .pipe(eslint.failAfterError());
 });
 
-// watches changes in js, lints cocde
-gulp.task('watch:js', function() {
-    return  gulp.watch([
-                'lib/**/*.js'
-            ],
-            ['lint']);
+gulp.task('copy', function() {
+    return gulp
+            .src('stups_favicon.png')
+            .pipe(gulp.dest('dist'));
 });
 
 gulp.task('cachebust', function() {

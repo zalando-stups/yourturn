@@ -12,4 +12,4 @@ class ResourceFlux extends Flummox {
     }
 }
 
-export default new ResourceFlux();
+export default ResourceFlux;

@@ -76,6 +76,7 @@ class ResourceStore extends Store {
     receiveScopes([resourceId, scopes]) {
         let state = scopes.reduce((map, scp) => {
             let resource = _m.get(map, resourceId) || _m.hashMap();
+            scp.resource_type_id = resourceId;
             resource = _m.assoc(resource, scp.id, _m.toClj(scp));
             return _m.assoc(map, resourceId, resource);
         }, this.state.scopes);
@@ -177,6 +178,11 @@ class ResourceStore extends Store {
         return entries ? _m.toJs(entries) : [];
     }
 
+    /**
+     * Returns all scopes of all resource types.
+     *
+     * @return {Array} Scopes
+     */
     getAllScopes() {
         let entries = _m.map(res => _m.vals(_m.get(res, 1)), this.state.scopes);
         entries = _m.flatten(entries);
@@ -194,6 +200,16 @@ class ResourceStore extends Store {
     getScopeApplications(resourceId, scopeId) {
         var apps = _m.get(this.state.applications, `${resourceId}.${scopeId}`, _m.vector());
         return _.sortBy(_m.toJs(apps), a => a.id ? a.id.toLowerCase() : null);
+    }
+
+    /**
+     * Only for testing!
+     */
+    _empty() {
+        this.state = {
+            resources: _m.hashMap(),
+            scopes: _m.hashMap()
+        };
     }
 }
 

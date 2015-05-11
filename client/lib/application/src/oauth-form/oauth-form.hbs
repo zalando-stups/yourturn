@@ -6,54 +6,47 @@
 </div>
 <form name="oauthForm" class="form">
     <div class="form-group">
-        <label for="oauth_redirect_uri">Redirect URI</label>
+        <label for="oauth_redirect_url">Redirect URL</label>
         <small>Where you expect users to come back to after logging in.</small>
         <input
-            id="oauth_redirect_uri"
-            name="yourturn_oauth_redirect_uri"
+            {{#if oauth.redirect_url}}
+            value="{{oauth.redirect_url}}"
+            {{/if}}
+            id="oauth_redirect_url"
+            name="yourturn_oauth_redirect_url"
             type="url" />
+    </div>
+    <div class="form-group">
+        <label>
+            <input
+                {{#if oauth.is_client_confidential}}
+                checked="checked"
+                {{/if}}
+                id="oauth_is_client_confidential"
+                name="yourturn_oauth_is_client_confidential"
+                type="checkbox" /> Client is confidential
+        </label>
+        <small>Non-confidential clients are only allowed to use the OAuth2 Implicit Flow.</small>
     </div>
     <div class="form-group">
         <label>Resource Owner Scopes</label>
         <small>{{application.name}} can ask the resource owners for these scopes to be granted:</small>
-        {{#each scopes}}
-            <label>
-                <input
-                    type="checkbox" /> {{this.resourceId}}.{{this.id}}
-            </label>
-        {{else}}
-            No scopes available.
-        {{/each}}
+        <div data-action="ownerscope-list"></div>
     </div>
     <div class="form-group">
         <label>Application Scopes</label>
         <small>{{application.name}} has the permission to access data with these scopes:</small>
-        {{#each nonOwnerScopes}}
-            <label>
-                <input
-                    type="checkbox" /> {{this.resourceId}}.{{this.id}}
-            </label>
-        {{else}}
-            No scopes available.
-        {{/each}}
+        <div data-action="appscope-list"></div>
     </div>
     <div class="form-group">
         <label>Credential Distribution</label>
-        <small>Activate credential distribution for these accounts:</small>
-        <h6>Amazon Web Services</h6>
-        <label>
-            <input type="checkbox" /> stups <small>(89257379823523549872345)</small>
-        </label>
-        <label>
-            <input type="checkbox" /> stups-test <small>(2098590257072508527)</small>
-        </label>
-        <h6>Google Compute Engine</h6>
-        <label>
-            <input type="checkbox" /> stups <small>(abfafbaf54135413)</small>
-        </label>
+        <small>Activate credential distribution into these S3 buckets (<a href="http://docs.aws.amazon.com/AmazonS3/latest/dev/BucketRestrictions.html" data-external>Naming Conventions</a>):</small>
+        <div data-action="editable-list"></div>
     </div>
     <div class="btn-group">
-        <button class="btn btn-primary btn-disabled">
+        <button
+            type="submit"
+            class="btn btn-primary">
             <i class="fa fa-save"></i> Save
         </button>
     </div>

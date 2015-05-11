@@ -1,6 +1,5 @@
 import BaseView from 'common/src/base-view';
 import Template from './approval-form.hbs';
-import Flux from 'application/src/flux';
 import ApprovalCard from './approval-card/approval-card';
 import 'common/asset/scss/application/approval-form.scss';
 
@@ -11,9 +10,9 @@ class ApprovalForm extends BaseView {
             'submit': 'save',
             'keyup #approval_custom_type': 'checkCustomType'
         };
-        props.store = Flux.getStore('application');
+        props.store = props.flux.getStore('application');
         super(props);
-        this.actions = Flux.getActions('application');
+        this.actions = props.flux.getActions('application');
     }
 
     checkCustomType() {

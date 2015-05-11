@@ -1,13 +1,16 @@
 <h2>Search</h2>
 
-<input
-    autofocus="autofocus"
-    value="{{term}}"
-    type="search"
-    aria-label="Enter your search"
-    placeholder="yourturn" />
-<button
-    class="btn btn-default">Search</button>
+<form>
+    <input
+        autofocus="autofocus"
+        value="{{term}}"
+        type="search"
+        aria-label="Enter your search"
+        placeholder="yourturn" />
+    <button
+        type="submit"
+        class="btn btn-default">Search</button>
+</form>
 
 {{#if results.length}}
     <h4 class="searchResult-headline">Results for “{{term}}”</h4>

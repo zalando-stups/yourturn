@@ -1,13 +1,12 @@
 import BaseView from 'common/src/base-view';
 import Template from './resource-detail.hbs';
-import Flux from 'resource/src/flux';
 import Markdown from 'common/src/markdown';
 import 'common/asset/scss/resource/resource-detail.scss';
 
 class ResourceDetail extends BaseView {
     constructor(props) {
         props.className = 'resourceDetail';
-        props.store = Flux.getStore('resource');
+        props.store = props.flux.getStore('resource');
         super(props);
     }
 

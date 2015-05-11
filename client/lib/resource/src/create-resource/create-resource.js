@@ -7,7 +7,7 @@ import GlobalFlux from 'yourturn/src/flux';
 import 'common/asset/scss/resource/create-resource.scss';
 
 class CreateResource extends BaseView {
-    constructor() {
+    constructor(props) {
         super({
             className: 'createResource',
             events: {
@@ -15,7 +15,7 @@ class CreateResource extends BaseView {
                 'keyup #resource_id': 'checkResourceIdAvailability'
             }
         });
-        this.actions = Flux.getActions('resource');
+        this.actions = props.flux.getActions('resource');
     }
 
     /**

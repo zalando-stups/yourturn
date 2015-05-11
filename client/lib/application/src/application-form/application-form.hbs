@@ -6,26 +6,18 @@
 <form class="form" name="createAppForm">
     <div class="form-group">
         <label for="active">
-            {{#if app.active}}
-                <input
-                    id="active"
-                    checked="checked"
-                    name="yourturn_app_active"
-                    type="checkbox" /> Active application
-            {{else}}
-                {{#if edit}}
-                    <input
-                        id="active"
-                        name="yourturn_app_active"
-                        type="checkbox" /> Active application
-                {{else}}
-                    <input
-                        id="active"
+            <input
+                id="active"
+                {{#if edit }}
+                    {{#if app.active}}
                         checked="checked"
-                        name="yourturn_app_active"
-                        type="checkbox" /> Active application
+                    {{/if}}
+                {{else}}
+                    checked="checked"
                 {{/if}}
-            {{/if}}
+                name="yourturn_app_active"
+                type="checkbox" /> Active application
+            
         </label>
     </div>
     <div class="form-group">
@@ -46,38 +38,26 @@
         <label for="app_id">Application ID</label>
         <small>The ID of the application.</small>
         <div class="input-group">
-            {{#if edit}}
-                <div class="input-addon">
-                    <i  title="App ID is available."
-                        class="fa fa-check is-available"></i>
-                </div>
-
-                <input
-                    required="required"
-                    id="app_id"
-                    disabled="disabled"
-                    value="{{app.id}}"
-                    name="yourturn_app_app_id"
-                    title="Starts with character, may end with digit, may have dashes in between."
-                    pattern="[A-Za-z][A-Za-z0-9\-]*[A-Za-z0-9]"
-                    placeholder="pierone"
-                    type="text" />
-            {{else}}
-                <div class="input-addon">
-                    <i  title="App ID is available."
-                        class="fa fa-check is-available"></i>
+            <div class="input-addon">
+                <i  title="App ID is available."
+                    class="fa fa-check is-available"></i>
+                {{#unless edit}}
                     <i  title="App ID is already taken."
                         class="fa fa-close is-taken"></i>
-                </div>
-                <input
-                    required="required"
-                    id="app_id"
-                    name="yourturn_app_app_id"
-                    title="Starts with character, may end with digit, may have dashes in between."
-                    pattern="[A-Za-z][A-Za-z0-9\-]*[A-Za-z0-9]"
-                    placeholder="pierone"
-                    type="text" />
-            {{/if}}
+                {{/unless}}
+            </div>
+            <input
+                required="required"
+                id="app_id"
+                {{#if edit}}
+                    disabled="disabled"
+                    value="{{app.id}}"
+                {{/if}}
+                name="yourturn_app_app_id"
+                title="Starts with character, may end with digit, may have dashes in between."
+                pattern="[A-Za-z][A-Za-z0-9\-]*[A-Za-z0-9]"
+                placeholder="pierone"
+                type="text" />
         </div>
     </div>
     <div class="form-group">
