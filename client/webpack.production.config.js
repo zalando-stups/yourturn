@@ -64,7 +64,7 @@ module.exports = {
             { test: /\.js$/, exclude: /(node_modules|lodash)/, loader: 'eslint' }
         ],
         loaders: [
-            { test: /\.hbs$/, exclude: /node_modules/, loader: 'handlebars' },
+            { test: /\.hbs$/, exclude: /node_modules/, loader: 'handlebars?helperDirs[]=' + __dirname + '/lib/common/src/handlebars' },
             { test: /\.js$/, exclude: /node_modules/, loader: 'babel' },
             { test: /\.scss$/, loader: ExtractTextPlugin.extract('style', 'css!autoprefixer!sass') },
             { test: /\.css$/, loader: ExtractTextPlugin.extract('style', 'css') },
