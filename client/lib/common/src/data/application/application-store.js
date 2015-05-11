@@ -13,7 +13,8 @@ class ApplicationStore extends Store {
         this.state = {
             applications: _m.hashMap(),
             versions: _m.hashMap(),
-            approvals: _m.hashMap()
+            approvals: _m.hashMap(),
+            approvalTypes: _m.hashMap()
         };
 
         this.registerAsync(
@@ -45,6 +46,10 @@ class ApplicationStore extends Store {
             this.beginFetchApprovals,
             this.receiveApprovals,
             this.failFetchApprovals);
+
+        this.register(
+            appActions.fetchApprovalTypes,
+            this.receiveApprovalTypes);
     }
 
     // intentionally left as noop for now
@@ -230,6 +235,29 @@ class ApplicationStore extends Store {
         });
     }
 
+    receiveApprovalTypes([applicationId, approvalTypes]) {
+        this.setState({
+            approvalTypes: _m.assoc(this.state.approvalTypes, applicationId, _m.toClj(approvalTypes))
+        });
+    }
+
+    /**
+     * Returns all used approval types in versions of an application.
+     *
+     * @param  {String} applicationId ID of the application
+     * @return {Array}                The used approval types
+     */
+    getApprovalTypes(applicationId) {
+        return _m.toJs(_m.get(this.state.approvalTypes, applicationId, _m.vector()));
+    }
+
+    /**
+     * Returns approvals for an application version.
+     *
+     * @param  {String} applicationId ID of the application
+     * @param  {String} versionId     ID of the version
+     * @return {Array}                Approvals sorted by date asc
+     */
     getApprovals(applicationId, versionId) {
         let approvals = _m.toJs(_m.vals(_m.getIn(this.state.approvals, [applicationId, versionId]))) || [];
         return approvals.sort((a, b) => a.timestamp < b.timestamp ? -1 : b.timestamp < a.timestamp ? 1 : 0);
