@@ -1,6 +1,9 @@
 <h2>{{resource.name}}</h2>
 <div class="btn-group">
-    <a href="/resource/detail/{{resource.id}}/create" class="btn btn-default">
+    <a href="/resource/create" class="btn btn-default">
+        <i class="fa fa-pencil"></i> Edit {{resource.name}}
+    </a>
+    <a href="/resource/detail/{{resource.id}}/create" class="btn btn-primary">
         <i class="fa fa-plus"></i> Create scope
     </a>
 </div>

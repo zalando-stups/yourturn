@@ -23,8 +23,6 @@ class ResourceActions extends Actions {
                 .then(res => [resourceId, res.body]);
     }
 
-    // ===== LOCAL STORAGE BELOW ====
-
     saveResource(resource) {
         return request
                 .put(`${Services.essentials.url}${Services.essentials.root}/${resource.id}`)

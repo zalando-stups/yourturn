@@ -1,6 +1,7 @@
 import {Store} from 'flummox';
 import _m from 'mori';
 import _ from 'common/src/lodash.custom';
+import {Pending, Failed} from 'common/src/fetch-result';
 
 class ResourceStore extends Store {
     constructor(flux) {
@@ -47,8 +48,17 @@ class ResourceStore extends Store {
     }
 
     // intentionally left as noop for now
-    beginFetchResource() {}
-    failFetchResource() {}
+    beginFetchResource(resourceId) {
+        this.setState({
+            resources: _m.assoc(this.state.resources, resourceId, new Pending())
+        });
+    }
+
+    failFetchResource(err) {
+        this.setState({
+            resources: _m.assoc(this.state.resources, err.id, new Failed(err))
+        });
+    }
 
     beginFetchResources() {}
     failFetchResources() {}
