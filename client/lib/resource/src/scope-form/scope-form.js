@@ -73,9 +73,9 @@ class ScopeForm extends BaseView {
 
         // construct the scope itself
         let scope = {
-            ownerScope: scope_ownerScope,
+            is_resource_owner_scope: scope_ownerScope,
             summary: scope_summary,
-            information: scope_information,
+            user_information: scope_information,
             description: scope_description
         };
 
