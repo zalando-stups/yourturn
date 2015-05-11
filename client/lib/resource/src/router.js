@@ -86,7 +86,7 @@ class ResourceRouter extends Router {
     /**
      * Shows detailed view of this scope.
      * @param  {string} resourceId The ID of the scope’s resource.
-     * @param  {string} scopeId The ID of the scopes
+     * @param  {string} scopeId The ID of the scope
      */
     listScope(resourceId, scopeId) {
         RES_ACTIONS.fetchScope(resourceId, scopeId);
