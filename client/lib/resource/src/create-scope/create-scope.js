@@ -91,7 +91,7 @@ class CreateScope extends BaseView {
                 GlobalFlux
                 .getActions('notification')
                 .addNotification(
-                    `Could not save scope ${scope_id} for resource ${resourceId}.`,
+                    `Could not save scope ${scope_id} for resource ${this.data.resource.name}.`,
                     'error'
                 );
             });

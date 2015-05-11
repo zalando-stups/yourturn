@@ -71,7 +71,7 @@ class CreateResource extends BaseView {
                 GlobalFlux
                 .getActions('notification')
                 .addNotification(
-                    `Could not save resource ${resource.id}.`,
+                    `Could not save resource ${resource.name}.`,
                     'error'
                 );
             });

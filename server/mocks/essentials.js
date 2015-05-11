@@ -19,11 +19,10 @@ server.use(function(req, res, next) {
 server.get('/resource-types', function(req,res) {
     setTimeout( function() {
         var types = Object
-            .keys( resourceTypes )
-            .map( function( k ) {
-                return resourceTypes[k];
-            });
-
+                    .keys( resourceTypes )
+                    .map( function( k ) {
+                        return resourceTypes[k];
+                    });
         res.status( 200 ).send( types );
     }, Math.random() * 2000 );
 });

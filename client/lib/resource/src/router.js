@@ -27,8 +27,9 @@ class ResourceRouter extends Router {
      * Lists available resources.
      */
     listResources() {
-        Flux.getActions('resource').fetchResources();
-        puppeteer.show(new ResourceList(), MAIN_VIEW_ID);
+        Flux.getActions('resource').fetchResources()
+        .then(() => puppeteer.show(new ResourceList(), MAIN_VIEW_ID) )
+        .catch(e => puppeteer.show(Error(e), MAIN_VIEW_ID));
     }
 
     /**
@@ -56,11 +57,12 @@ class ResourceRouter extends Router {
      * @param  {string} resourceId ID of the resource to add this scope to.
      */
     createScope(resourceId) {
-        Flux.getActions('resource').fetchResource(resourceId);
-        Flux.getActions('resource').fetchScopes(resourceId);
-        puppeteer.show(new CreateScope({
-            resourceId: resourceId
-        }), MAIN_VIEW_ID);
+        Promise.all([
+            Flux.getActions('resource').fetchResource(resourceId),
+            Flux.getActions('resource').fetchScopes(resourceId)
+        ])
+        .then(() => puppeteer.show(new CreateScope({ resourceId: resourceId }), MAIN_VIEW_ID) )
+        .catch(e => puppeteer.show(Error(e), MAIN_VIEW_ID));
     }
 
     /**

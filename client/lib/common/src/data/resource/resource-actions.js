@@ -1,8 +1,8 @@
-/** global window **/
 import {Actions} from 'flummox';
 let {localStorage} = window;
 import request from 'common/src/superagent';
 import {Services} from 'common/src/data/services';
+import {Provider, RequestConfig, saveRoute} from 'common/src/oauth-provider';
 
 class ResourceActions extends Actions {
 
@@ -11,9 +11,9 @@ class ResourceActions extends Actions {
                 .put(`${Services.essentials.url}${Services.essentials.root}/${resource.id}`)
                 .type('json')
                 .accept('json')
+                .oauth(Provider, RequestConfig)
                 .send(resource)
-                .exec()
-                .then()
+                .exec(saveRoute)
                 .catch( err => {
                     err.id = resource.id;
                     throw err;
@@ -25,9 +25,9 @@ class ResourceActions extends Actions {
                 .put(`${Services.essentials.url}${Services.essentials.root}/${resourceId}/scopes/${scope.id}`)
                 .type('json')
                 .accept('json')
+                .oauth(Provider, RequestConfig)
                 .send(scope)
-                .exec()
-                .then( [resourceId, scope] )
+                .exec(saveRoute)
                 .catch( err => {
                     err.id = scope.id;
                     throw err;
@@ -38,7 +38,8 @@ class ResourceActions extends Actions {
         return request
                 .get(`${Services.essentials.url}${Services.essentials.root}/${resourceId}`)
                 .accept('json')
-                .exec()
+                .oauth(Provider, RequestConfig)
+                .exec(saveRoute)
                 .then( res => res.body )
                 .catch( err => {
                     err.id = resourceId;
@@ -50,7 +51,8 @@ class ResourceActions extends Actions {
         return request
                 .get(`${Services.essentials.url}${Services.essentials.root}`)
                 .accept('json')
-                .exec()
+                .oauth(Provider, RequestConfig)
+                .exec(saveRoute)
                 .then( res => res.body );
     }
 
@@ -71,15 +73,21 @@ class ResourceActions extends Actions {
         return request
                 .get(`${Services.essentials.url}${Services.essentials.root}/${resourceId}/scopes`)
                 .accept('json')
-                .exec()
-                .then( res => [resourceId, res.body] );
+                .oauth(Provider, RequestConfig)
+                .exec(saveRoute)
+                .then( res => [resourceId, res.body] )
+                .catch( err => {
+                    err.id = resourceId;
+                    throw err;
+                });
     }
 
     fetchScope(resourceId, scopeId) {
         return request
                 .get(`${Services.essentials.url}${Services.essentials.root}/${resourceId}/scopes/${scopeId}`)
                 .accept('json')
-                .exec()
+                .oauth(Provider, RequestConfig)
+                .exec(saveRoute)
                 .then( res => [resourceId, res.body] )
                 .catch( err => {
                     err.id = resourceId;
@@ -95,8 +103,13 @@ class ResourceActions extends Actions {
                     scope_id: scopeId
                 })
                 .accept('json')
-                .exec()
-                .then( res => [`${resourceId}.${scopeId}`, res.body] );
+                .oauth(Provider, RequestConfig)
+                .exec(saveRoute)
+                .then( res => [`${resourceId}.${scopeId}`, res.body] )
+                .catch( err => {
+                    err.id = resourceId;
+                    throw err;
+                });
     }
 
 }
