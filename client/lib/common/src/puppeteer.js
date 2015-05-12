@@ -5,19 +5,19 @@ class Puppeteer {
         this.active = false;
     }
 
-    show( view, target ) {
+    show(view, target) {
         if (this.active && typeof this.active.remove === 'function') {
             this.active.remove();
         }
         let el;
-        if (typeof target === 'undefined' ) {
+        if (typeof target === 'undefined') {
             el = $('body');
         }
-        if (typeof target === 'string' ) {
+        if (typeof target === 'string') {
             el = $(target);
         }
         if (typeof view === 'object') {
-            el.html( view._boundRender().$el );
+            el.html(view._boundRender().$el);
         }
         if (typeof view === 'string') {
             el.html(view);

@@ -30,9 +30,9 @@ class VersionForm extends BaseView {
      * Fills deployment artifact according to schema [docker registry]/[app team]/[app id]:[version].
      */
     fillDeploymentArtifact() {
-        let $idInput = this.$el.find('#version_id');
-        let version_id = $idInput.val();
-        let name = `${DOCKER_REGISTRY}/${this.data.application.team_id}/${this.data.application.id}:${version_id}`;
+        let $idInput = this.$el.find('#version_id'),
+            version_id = $idInput.val(),
+            name = `${DOCKER_REGISTRY}/${this.data.application.team_id}/${this.data.application.id}:${version_id}`;
         this.$el.find('#version_artifactName').val(name);
     }
 
@@ -40,9 +40,11 @@ class VersionForm extends BaseView {
      * Checks if a version with the current id is already in the store. Sets icons accordingly.
      */
     checkVersionAvailability() {
-        let $idInput = this.$el.find('#version_id');
-        let version_id = $idInput.val();
-        if (this.store.getApplicationVersion(this.props.applicationId, version_id) && version_id !== this.props.versionId) {
+        let $idInput = this.$el.find('#version_id'),
+            version_id = $idInput.val(),
+            storeVersion = this.store.getApplicationVersion(this.props.applicationId, version_id);
+
+        if (storeVersion && version_id !== this.props.versionId) {
             $idInput[0].setCustomValidity('Version already exists.');
             this.$el.find('.is-taken').css('display', 'inline-block');
             this.$el.find('.is-available').css('display', 'none');
@@ -63,20 +65,26 @@ class VersionForm extends BaseView {
         let {$el} = this,
             version_id = $el.find('#version_id').val(),
             version_artifact = $el.find('#version_artifactName').val(),
-            version_notes = $el.find('#version_notes').val();
+            version_notes = $el.find('#version_notes').val(),
 
-        let version = {
-            artifact: version_artifact ? 'docker://' + version_artifact : '',
-            notes: version_notes
-        };
+            version = {
+                artifact: version_artifact ? 'docker://' + version_artifact : '',
+                notes: version_notes
+            };
 
 
-        let verb = this.props.edit ? 'update' : 'create';
+        var verb = this.props.edit ? 'update' : 'create';
+
         this
         .actions
         .saveApplicationVersion(this.data.applicationId, version_id, version)
         .then(() => {
-            history.navigate(constructLocalUrl('application-version', [this.data.applicationId, version_id]), { trigger: true });
+            history
+            .navigate(
+                constructLocalUrl(
+                    'application-version',
+                    [this.data.applicationId, version_id]),
+                {trigger: true});
         })
         .catch(() => {
             this.props

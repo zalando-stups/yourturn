@@ -14,7 +14,9 @@ class BaseView extends View {
         this.store = props.store || undefined;
         this.stores = props.stores || undefined;
         this._boundRender = () => {
-            this.update();
+            if (typeof this.update === 'function') {
+                this.update();
+            }
             this.render();
             return this;
         };
@@ -33,8 +35,6 @@ class BaseView extends View {
             _.forOwn(this.stores, (val, key) => this.stores[key].on('change', this._boundRender));
         }
     }
-
-    update() {}
 
     unbind() {
         if (this.store) {

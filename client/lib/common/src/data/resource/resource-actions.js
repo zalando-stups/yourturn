@@ -31,7 +31,7 @@ class ResourceActions extends Actions {
                 .oauth(Provider, RequestConfig)
                 .send(resource)
                 .exec(saveRoute)
-                .catch( err => {
+                .catch(err => {
                     err.id = resourceId;
                     throw err;
                 });
@@ -45,7 +45,7 @@ class ResourceActions extends Actions {
                 .oauth(Provider, RequestConfig)
                 .send(scope)
                 .exec(saveRoute)
-                .catch( err => {
+                .catch(err => {
                     err.id = scopeId;
                     throw err;
                 });
@@ -57,8 +57,8 @@ class ResourceActions extends Actions {
                 .accept('json')
                 .oauth(Provider, RequestConfig)
                 .exec(saveRoute)
-                .then( res => res.body )
-                .catch( err => {
+                .then(res => res.body)
+                .catch(err => {
                     err.id = resourceId;
                     throw err;
                 });
@@ -70,7 +70,7 @@ class ResourceActions extends Actions {
                 .accept('json')
                 .oauth(Provider, RequestConfig)
                 .exec(saveRoute)
-                .then( res => res.body );
+                .then(res => res.body);
     }
 
     fetchScope(resourceId, scopeId) {
@@ -79,8 +79,8 @@ class ResourceActions extends Actions {
                 .accept('json')
                 .oauth(Provider, RequestConfig)
                 .exec(saveRoute)
-                .then( res => [resourceId, res.body] )
-                .catch( err => {
+                .then(res => [resourceId, res.body])
+                .catch(err => {
                     err.id = resourceId;
                     throw err;
                 });
@@ -96,8 +96,8 @@ class ResourceActions extends Actions {
                 .accept('json')
                 .oauth(Provider, RequestConfig)
                 .exec(saveRoute)
-                .then( res => [`${resourceId}.${scopeId}`, res.body] )
-                .catch( err => {
+                .then(res => [`${resourceId}.${scopeId}`, res.body])
+                .catch(err => {
                     err.id = resourceId;
                     throw err;
                 });

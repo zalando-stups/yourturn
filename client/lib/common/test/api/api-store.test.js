@@ -36,7 +36,7 @@ describe('The api store', () => {
     it('should insert a pending fetch result placeholder', () => {
         store.beginFetchApi('kio');
         let kio = store.getApi('kio');
-        expect( kio instanceof Pending ).to.be.true;
+        expect(kio instanceof Pending).to.be.true;
     });
 
     it('should insert a failed fetch result placeholder', () => {
@@ -44,6 +44,6 @@ describe('The api store', () => {
         fetchError.id = 'kio';
         store.failFetchApi(fetchError);
         let kio = store.getApi('kio');
-        expect( kio instanceof Failed ).to.be.true;
+        expect(kio instanceof Failed).to.be.true;
     });
 });

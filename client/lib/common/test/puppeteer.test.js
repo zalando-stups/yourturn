@@ -30,20 +30,20 @@ describe('The Puppeteer', () => {
     });
 
     it('should call remove() once on the old element', () => {
-        let oldEl = new MockView();
-        let newEl = new MockView();
-        let spy = sinon.spy( oldEl, 'remove' );
-        puppeteer.show( oldEl );
-        puppeteer.show( newEl );
-        expect( spy ).to.have.been.calledOnce;
+        let oldEl = new MockView(),
+            newEl = new MockView(),
+            spy = sinon.spy(oldEl, 'remove');
+        puppeteer.show(oldEl);
+        puppeteer.show(newEl);
+        expect(spy).to.have.been.calledOnce;
     });
 
     it('should hold a reference to the new view after show', () => {
-        let oldEl = new MockView();
-        let newEl = new MockView();
-        puppeteer.show( oldEl );
-        expect( puppeteer.active ).to.equal( oldEl );
-        puppeteer.show( newEl );
-        expect( puppeteer.active ).to.equal( newEl );
+        let oldEl = new MockView(),
+            newEl = new MockView();
+        puppeteer.show(oldEl);
+        expect(puppeteer.active).to.equal(oldEl);
+        puppeteer.show(newEl);
+        expect(puppeteer.active).to.equal(newEl);
     });
 });

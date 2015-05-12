@@ -64,7 +64,7 @@ describe('The application store', () => {
         it('should insert a pending fetch result placeholder', () => {
             store.beginFetchApplication('kio');
             let kio = store.getApplication('kio');
-            expect( kio instanceof Pending ).to.be.true;
+            expect(kio instanceof Pending).to.be.true;
         });
 
         it('should insert a failed fetch result placeholder', () => {
@@ -72,7 +72,7 @@ describe('The application store', () => {
             fetchError.id = 'kio';
             store.failFetchApplication(fetchError);
             let kio = store.getApplication('kio');
-            expect( kio instanceof Failed ).to.be.true;
+            expect(kio instanceof Failed).to.be.true;
         });
 
         it('should not give out fetch results', () => {
@@ -131,7 +131,7 @@ describe('The application store', () => {
         it('should insert a pending fetch result placeholder', () => {
             store.beginFetchApplicationVersion('kio', '0.12');
             let version = store.getApplicationVersion('kio', '0.12');
-            expect( version instanceof Pending ).to.be.true;
+            expect(version instanceof Pending).to.be.true;
         });
 
         it('should insert a failed fetch result placeholder', () => {
@@ -140,7 +140,7 @@ describe('The application store', () => {
             fetchError.ver = '0.12';
             store.failFetchApplicationVersion(fetchError);
             let kio = store.getApplicationVersion('kio', '0.12');
-            expect( kio instanceof Failed ).to.be.true;
+            expect(kio instanceof Failed).to.be.true;
         });
 
         it('should return an empty array by default', () => {

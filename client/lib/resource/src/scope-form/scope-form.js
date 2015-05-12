@@ -29,9 +29,9 @@ class ScopeForm extends BaseView {
      * already exists. Shows or hides according input-addon.
      */
     checkScopeIdAvailability() {
-        let {resourceId} = this.props;
-        let $scopeInput = this.$el.find('#scope_id');
-        let scope_id = $scopeInput.val();
+        let {resourceId} = this.props,
+            $scopeInput = this.$el.find('#scope_id'),
+            scope_id = $scopeInput.val();
         if (this.props.flux.getStore('resource').getScope(resourceId, scope_id)) {
             $scopeInput[0].setCustomValidity('Custom ID already exists.');
             this.$el.find('.is-taken').css('display', 'inline-block');
@@ -69,21 +69,21 @@ class ScopeForm extends BaseView {
             scope_ownerScope = $el.find('#scope_ownerScope:checked').length > 0,
             scope_summary = $el.find('#scope_summary').val(),
             scope_information = $el.find('#scope_information').val(),
-            scope_description = $el.find('#scope_description').val();
+            scope_description = $el.find('#scope_description').val(),
 
-        // construct the scope itself
-        let scope = {
-            is_resource_owner_scope: scope_ownerScope,
-            summary: scope_summary,
-            user_information: scope_information,
-            description: scope_description
-        };
+            // construct the scope itself
+            scope = {
+                is_resource_owner_scope: scope_ownerScope,
+                summary: scope_summary,
+                user_information: scope_information,
+                description: scope_description
+            };
 
         // send it off to the store
         this.actions.saveScope(resourceId, scope_id, scope)
             .then(() => {
                 // redirect back to the resource detail view
-                history.navigate(`resource/detail/${resourceId}`, { trigger: true });
+                history.navigate(`resource/detail/${resourceId}`, {trigger: true});
             })
             .catch(() => {
                 let verb = this.props.edit ? 'update' : 'create';
