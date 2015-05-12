@@ -34,7 +34,7 @@ describe('The application form view', () => {
 
     beforeEach(() => {
         flux = new MockFlux();
-        actionSpy = sinon.stub(flux.getActions(FLUX), 'saveApplication', function() {
+        actionSpy = sinon.stub(flux.getActions(FLUX), 'saveApplication', function () {
             return Promise.resolve();
         });
     });
