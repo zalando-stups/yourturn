@@ -1,3 +1,4 @@
+/* globals ENV_PRODUCTION */
 import BaseView from 'common/src/base-view';
 import Template from './application-form.hbs';
 import SERVICE_URL_TLD from 'SERVICE_URL_TLD';
@@ -37,7 +38,7 @@ class ApplicationForm extends BaseView {
     update() {
         if (this.props.edit) {
             this.data = {
-                edit: this.props.edit,
+                edit: !!this.props.edit,
                 app: this.store.getApplication(this.props.applicationId)
             };
             let {app} = this.data;
@@ -54,12 +55,17 @@ class ApplicationForm extends BaseView {
     checkAppIdAvailability() {
         let $appInput = this.$el.find('#app_id'),
             app_id = $appInput.val();
+
         if (this.props.flux.getStore('application').getApplication(app_id)) {
-            $appInput[0].setCustomValidity('App ID already exists.');
+            if (ENV_PRODUCTION) {
+                $appInput[0].setCustomValidity('App ID already exists.');
+            }
             this.$el.find('.is-taken').css('display', 'inline-block');
             this.$el.find('.is-available').css('display', 'none');
         } else {
-            $appInput[0].setCustomValidity('');
+            if (ENV_PRODUCTION) {
+                $appInput[0].setCustomValidity('');
+            }
             this.$el.find('.is-taken').css('display', 'none');
             this.$el.find('.is-available').css('display', 'inline-block');
         }
@@ -109,7 +115,9 @@ class ApplicationForm extends BaseView {
                 description: description
             };
 
-        this.props.flux
+        this
+        .props
+        .flux
         .getActions('application')
         .saveApplication(id, app)
         .then(() => {

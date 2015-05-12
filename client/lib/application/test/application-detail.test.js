@@ -17,8 +17,8 @@ class MockFlux extends Flummox {
         this.createActions(APP, ApplicationActions);
         this.createStore(APP, ApplicationStore, this);
 
-        this.createActions('api', ApiActions);
-        this.createStore('api', ApiStore, this);
+        this.createActions(API, ApiActions);
+        this.createStore(API, ApiStore, this);
     }
 }
 

@@ -16,6 +16,7 @@
                     checked="checked"
                 {{/if}}
                 name="yourturn_app_active"
+                data-block="active-checkbox"
                 type="checkbox" /> Active application
             
         </label>
@@ -39,10 +40,12 @@
         <small>The ID of the application.</small>
         <div class="input-group">
             <div class="input-addon">
-                <i  title="App ID is available."
+                <i  data-block="available-symol"
+                    title="App ID is available."
                     class="fa fa-check fa-fw is-available"></i>
                 {{#unless edit}}
-                    <i  title="App ID is already taken."
+                    <i  data-block="taken-symol"
+                        title="App ID is already taken."
                         class="fa fa-close fa-fw is-taken"></i>
                 {{/unless}}
             </div>

@@ -28,3 +28,4 @@ global.YTENV_OAUTH_CLIENT_ID = '';
 global.YTENV_OAUTH_AUTH_URL = '';
 global.YTENV_OAUTH_REDIRECT_URI = '';
 global.YTENV_OAUTH_SCOPES = '';
+global.YTENV_SERVICE_URL_TLD = '';
