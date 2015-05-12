@@ -61,6 +61,7 @@
     "minimist": "1.1.1",
     "mocha": "2.2.1",
     "node-sass": "2.0.1",
+    "node-scm-source": "0.0.1",
     "node-uuid": "1.4.3",
     "null-loader": "0.1.1",
     "raw-loader": "0.5.1",
