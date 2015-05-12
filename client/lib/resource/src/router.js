@@ -37,7 +37,7 @@ class ResourceRouter extends Router {
         .fetchResources()
         .then(() => puppeteer.show(new ResourceList({
             flux: RES_FLUX
-        }), MAIN_VIEW_ID) )
+        }), MAIN_VIEW_ID))
         .catch(e => puppeteer.show(Error(e), MAIN_VIEW_ID));
     }
 
@@ -50,7 +50,7 @@ class ResourceRouter extends Router {
         .then(() => puppeteer.show(new ResourceForm({
             flux: RES_FLUX,
             notificationActions: this.globalFlux.getActions('notification')
-        }), MAIN_VIEW_ID) )
+        }), MAIN_VIEW_ID))
         .catch(e => puppeteer.show(Error(e), MAIN_VIEW_ID));
     }
 
@@ -66,7 +66,7 @@ class ResourceRouter extends Router {
             notificationActions: this.globalFlux.getActions('notification'),
             resourceId: resourceId,
             edit: true
-        }), MAIN_VIEW_ID) )
+        }), MAIN_VIEW_ID))
         .catch(e => puppeteer.show(Error(e), MAIN_VIEW_ID));
     }
 
@@ -96,7 +96,7 @@ class ResourceRouter extends Router {
             resourceId: resourceId,
             flux: RES_FLUX,
             notificationActions: this.globalFlux.getActions('notification')
-        }), MAIN_VIEW_ID) )
+        }), MAIN_VIEW_ID))
         .catch(e => puppeteer.show(Error(e), MAIN_VIEW_ID));
     }
 
@@ -117,7 +117,7 @@ class ResourceRouter extends Router {
 
     /**
      * Shows form to edit a scope for a resource.
-     * @param  {string} resoueceId ID of the resource this scope belongs to.
+     * @param  {string} resourceId ID of the resource this scope belongs to.
      * @param  {string} scopeId ID of the scope to edit.
      */
     editScope(resourceId, scopeId) {
@@ -126,7 +126,7 @@ class ResourceRouter extends Router {
             RES_ACTIONS.fetchScopes(resourceId)
         ])
         .then(() => {
-            puppeteer.show( new ScopeForm({
+            puppeteer.show(new ScopeForm({
                 resourceId: resourceId,
                 scopeId: scopeId,
                 edit: true,

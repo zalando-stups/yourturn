@@ -41,16 +41,15 @@ class AccessForm extends BaseView {
                                         resource_type_id: scope.resource_type_id,
                                         scope_id: scope.id
                                     }))
-                            );
-        let buckets = this.bucketList.getSelection();
-        let oauthConfig = {
-            s3_buckets: buckets,
-            scopes: appscopes,
-            redirect_url: this.data.oauth.redirect_url,
-            is_client_confidential: this.data.oauth.is_client_confidential
-        };
-
-        let {applicationId} = this.props;
+                            ),
+            buckets = this.bucketList.getSelection(),
+            oauthConfig = {
+                s3_buckets: buckets,
+                scopes: appscopes,
+                redirect_url: this.data.oauth.redirect_url,
+                is_client_confidential: this.data.oauth.is_client_confidential
+            },
+            {applicationId} = this.props;
 
         this
         .props
@@ -58,7 +57,7 @@ class AccessForm extends BaseView {
         .getActions('oauth')
         .saveOAuthConfig(applicationId, oauthConfig)
         .then(() => {
-            history.navigate(constructLocalUrl('application', [applicationId]), { trigger: true });
+            history.navigate(constructLocalUrl('application', [applicationId]), {trigger: true});
         })
         .catch(e => {
             this

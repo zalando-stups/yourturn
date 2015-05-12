@@ -18,7 +18,7 @@ class SearchView extends BaseView {
     }
 
     update() {
-        this.state.results = this.store.getSearchResults( this.state.term );
+        this.state.results = this.store.getSearchResults(this.state.term);
         this.state.noResults = this.state.results.length === 0 && this.state.term.length > 0;
     }
 
@@ -38,7 +38,7 @@ class SearchView extends BaseView {
     }
 
     render() {
-        this.$el.html( Template( this.state ) );
+        this.$el.html(Template(this.state));
         return this;
     }
 }

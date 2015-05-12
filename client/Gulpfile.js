@@ -1,6 +1,7 @@
 var gulp = require('gulp'),
     gutil= require('gulp-util'),
     eslint = require('gulp-eslint'),
+    jscs = require('gulp-jscs'),
     args = require('minimist')(process.argv.slice(2)),
     del = require( 'del' ),
     shell = require('gulp-shell'),
@@ -82,6 +83,15 @@ gulp.task('pack', ['clean', 'lodash'], function(done) {
             done();
         });
 });
+
+gulp.task('format', function() {
+    return gulp
+            .src(['lib/**/*.js', '!lib/common/src/lodash.custom.js'])
+            .pipe(jscs({
+                esnext: true,
+                configPath: './.jscsrc'
+            }));
+})
 
 // lints the source code using .eslintrc
 gulp.task('lint', function() {

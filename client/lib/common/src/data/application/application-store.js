@@ -53,23 +53,23 @@ class ApplicationStore extends Store {
     }
 
     // intentionally left as noop for now
-    beginFetchApplications() {}
-    failFetchApplications() {}
+    beginFetchApplications() { }
+    failFetchApplications() { }
 
-    beginFetchApplicationVersions() {}
-    failFetchApplicationVersions() {}
+    beginFetchApplicationVersions() { }
+    failFetchApplicationVersions() { }
 
-    beginFetchApprovals() {}
-    failFetchApprovals() {}
+    beginFetchApprovals() { }
+    failFetchApprovals() { }
 
     /**
      * Replaces application with `id` with a Pending state.
      *
      * @param  {String} id
      */
-    beginFetchApplication( id ) {
+    beginFetchApplication(id) {
         this.setState({
-            applications: _m.assoc( this.state.applications, id, new Pending() )
+            applications: _m.assoc(this.state.applications, id, new Pending())
         });
     }
 
@@ -79,8 +79,8 @@ class ApplicationStore extends Store {
      * @param  {String} id
      * @param  {String} ver
      */
-    beginFetchApplicationVersion( id, ver ) {
-        let updatedApp = _m.assoc( _m.get(this.state.versions, id) || _m.hashMap(), ver, new Pending() );
+    beginFetchApplicationVersion(id, ver) {
+        let updatedApp = _m.assoc(_m.get(this.state.versions, id) || _m.hashMap(), ver, new Pending());
         this.setState({
             versions: _m.assoc(this.state.versions, id, updatedApp)
         });
@@ -94,7 +94,7 @@ class ApplicationStore extends Store {
      */
     failFetchApplication(err) {
         this.setState({
-            applications: _m.assoc( this.state.applications, err.id, new Failed( err ) )
+            applications: _m.assoc(this.state.applications, err.id, new Failed(err))
         });
     }
 
@@ -104,7 +104,7 @@ class ApplicationStore extends Store {
      * @param  {error} err The error passed from the flux action.
      */
     failFetchApplicationVersion(err) {
-        let updatedVer = _m.assoc( _m.get(this.state.versions, err.id), err.ver, new Failed( err ) );
+        let updatedVer = _m.assoc(_m.get(this.state.versions, err.id), err.ver, new Failed(err));
         this.setState({
             versions: _m.assoc(this.state.versions, err.id, updatedVer)
         });
@@ -115,8 +115,8 @@ class ApplicationStore extends Store {
      *
      * @param  {object} app
      */
-    receiveApplication( app ) {
-        this.receiveApplications([ app ]);
+    receiveApplication(app) {
+        this.receiveApplications([app]);
     }
 
     /**
@@ -124,10 +124,10 @@ class ApplicationStore extends Store {
      *
      * @param  {Array} apps
      */
-    receiveApplications( apps ) {
+    receiveApplications(apps) {
         let newState = apps.reduce(
-                            (map, app) => _m.assoc( map, app.id, _m.toClj( app )),
-                            this.state.applications );
+                            (map, app) => _m.assoc(map, app.id, _m.toClj(app)),
+                            this.state.applications);
         this.setState({
             applications: newState
         });
@@ -138,7 +138,7 @@ class ApplicationStore extends Store {
      *
      * @param  {Array} versions
      */
-    receiveApplicationVersions( versions ) {
+    receiveApplicationVersions(versions) {
         let newState = versions.reduce(
                             (map, ver) => {
                                 let app = _m.get(map, ver.application_id) || _m.hashMap();
@@ -156,8 +156,8 @@ class ApplicationStore extends Store {
      *
      * @param  {object} ver
      */
-    receiveApplicationVersion( ver ) {
-        this.receiveApplicationVersions([ ver ]);
+    receiveApplicationVersion(ver) {
+        this.receiveApplicationVersions([ver]);
     }
 
 
@@ -167,7 +167,7 @@ class ApplicationStore extends Store {
      * @return {Array} Available applications
      */
     getApplications() {
-        let availableApps = _m.filter( app => !(app instanceof FetchResult), _m.vals( this.state.applications ) );
+        let availableApps = _m.filter(app => !(app instanceof FetchResult), _m.vals(this.state.applications));
         return _.sortBy(_m.toJs(availableApps) || [], a => a.name ? a.name.toLowerCase() : null);
     }
 
@@ -179,7 +179,7 @@ class ApplicationStore extends Store {
      * @return {object} The application with this id
      */
     getApplication(id) {
-        let app = _m.get( this.state.applications, id );
+        let app = _m.get(this.state.applications, id);
         return app ? _m.toJs(app) : false;
     }
 
@@ -191,7 +191,7 @@ class ApplicationStore extends Store {
     getApplicationVersions(id) {
         let versions = _m.vals(_m.get(this.state.versions, id)),
             filtered = _m.filter(v => !(v instanceof FetchResult), versions);
-        return _.chain(_m.toJs( filtered ) || [])
+        return _.chain(_m.toJs(filtered) || [])
                 .sortBy(v => v.id ? v.id.toLowerCase() : null)
                 .reverse()
                 .value();
@@ -207,7 +207,7 @@ class ApplicationStore extends Store {
      * @return {object} The application version with this id and ver
      */
     getApplicationVersion(id, ver) {
-        let app = _m.get( this.state.versions, id );
+        let app = _m.get(this.state.versions, id);
         if (app) {
             let version = _m.get(app, ver);
             return version ? _m.toJs(version) : false;
@@ -223,8 +223,8 @@ class ApplicationStore extends Store {
                             (map, approval) => {
                                 // convert to timestamp
                                 approval.timestamp = Date.parse(approval.approved_at);
-                                let app = _m.get(map, approval.application_id) || _m.hashMap();
-                                let version = _m.get(app, approval.version_id) || _m.hashMap();
+                                let app = _m.get(map, approval.application_id) || _m.hashMap(),
+                                    version = _m.get(app, approval.version_id) || _m.hashMap();
                                 version = _m.assoc(version, getKey(approval), _m.toClj(approval));
                                 app = _m.assoc(app, approval.version_id, version);
                                 return _m.assoc(map, approval.application_id, app);

@@ -130,7 +130,7 @@ class AppRouter extends Router {
         APP_ACTIONS
         .fetchApplication(id)
         .then(() => {
-            puppeteer.show( new AppForm({
+            puppeteer.show(new AppForm({
                 applicationId: id,
                 edit: true,
                 flux: APP_FLUX,
@@ -197,10 +197,10 @@ class AppRouter extends Router {
         APP_ACTIONS.fetchApplicationVersions(id);
         APP_FLUX.getActions('api').fetchApi(id);
 
-        puppeteer.show( new Detail({
+        puppeteer.show(new Detail({
             applicationId: id,
             flux: APP_FLUX
-        }), MAIN_VIEW_ID );
+        }), MAIN_VIEW_ID);
     }
 
     /**
@@ -214,9 +214,9 @@ class AppRouter extends Router {
         // then show the view
         APP_ACTIONS
         .fetchApplications()
-        .then(() => puppeteer.show( new List({
+        .then(() => puppeteer.show(new List({
             flux: APP_FLUX
-        }), MAIN_VIEW_ID ) )
+        }), MAIN_VIEW_ID))
         .catch(e => puppeteer.show(Error(e), MAIN_VIEW_ID));
     }
 
@@ -233,10 +233,10 @@ class AppRouter extends Router {
         APP_ACTIONS
         .fetchApplicationVersions(id)
         .then(() => {
-            puppeteer.show( new VersionList({
+            puppeteer.show(new VersionList({
                 applicationId: id,
                 flux: APP_FLUX
-            }), MAIN_VIEW_ID );
+            }), MAIN_VIEW_ID);
         })
         .catch(e => puppeteer.show(Error(e), MAIN_VIEW_ID));
     }
@@ -255,11 +255,11 @@ class AppRouter extends Router {
 
         APP_ACTIONS.fetchApplicationVersion(id, ver);
 
-        puppeteer.show( new VersionDetail({
+        puppeteer.show(new VersionDetail({
             applicationId: id,
             versionId: ver,
             flux: APP_FLUX
-        }), MAIN_VIEW_ID );
+        }), MAIN_VIEW_ID);
     }
 }
 

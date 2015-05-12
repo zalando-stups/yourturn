@@ -22,7 +22,7 @@ class SearchStore extends Store {
 
         this.registerAsync(
             searchActions.fetchSearchResultsFrom,
-            this.beginFetchSearchResultsFrom,
+            null,
             this.receiveSearchResultsFrom,
             this.failFetchSearchResultsFrom);
     }
@@ -34,11 +34,10 @@ class SearchStore extends Store {
      */
     clearSearchResults(term) {
         this.setState({
-            results: _m.dissoc( this.state.results, term )
+            results: _m.dissoc(this.state.results, term)
         });
     }
 
-    beginFetchSearchResultsFrom() {}
     failFetchSearchResultsFrom() {
         // emit change event even though nothing actually changed
         // so views can render "no results found"
@@ -53,30 +52,30 @@ class SearchStore extends Store {
      * @param  {Array} results
      */
     receiveSearchResultsFrom(results) {
-        const TERM = results._term;
-        const SOURCE = results._source;
+        const TERM = results._term,
+            SOURCE = results._source,
         // check if term exists in state
-        const EXISTS = _m.get( this.state.results, TERM) !== null;
+            EXISTS = _m.get(this.state.results, TERM) !== null;
         // if not, make it a new seq
-        let old = EXISTS ? _m.get(this.state.results, TERM) : _m.vector();
+        let old = EXISTS ? _m.get(this.state.results, TERM) : _m.vector(),
         // convert results in vector
-        let newResults = _m.toClj(results);
+            newResults = _m.toClj(results);
         // add a _source field so the view can display where this result came from
-        newResults = _m.map(res => _m.assoc(res, '_source', SOURCE), newResults );
+        newResults = _m.map(res => _m.assoc(res, '_source', SOURCE), newResults);
         // add a _url field so that we can link inside yourturn
         newResults = _m.map(
             res => _m.assoc(
                         res,
                         '_url',
-                        getLocalUrlForService(SOURCE, _m.get( res, Services[SOURCE].id ))),
+                        getLocalUrlForService(SOURCE, _m.get(res, Services[SOURCE].id))),
             newResults);
         // append results in seq
-        old = _m.into( old, newResults );
+        old = _m.into(old, newResults);
         // sort seq by matched_rank desc
-        old = _m.sortBy( res => _m.get(res, 'matched_rank'), sortDesc, old );
+        old = _m.sortBy(res => _m.get(res, 'matched_rank'), sortDesc, old);
         // PROFIT
         this.setState({
-            results: _m.assoc( this.state.results, TERM, old )
+            results: _m.assoc(this.state.results, TERM, old)
         });
     }
 
@@ -87,7 +86,7 @@ class SearchStore extends Store {
      * @return {Array} Is empty if no results are available.
      */
     getSearchResults(term) {
-        return _m.toJs( _m.get( this.state.results, term ) ) || [];
+        return _m.toJs(_m.get(this.state.results, term)) || [];
     }
 
     /**

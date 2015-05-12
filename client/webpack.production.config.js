@@ -59,9 +59,13 @@ module.exports = {
         configFile: './.eslintrc',
         failOnError: true
     },
+    jscs: {
+        esnext: true,
+        failOnHint: true
+    },
     module: {
         preLoaders: [
-            { test: /\.js$/, exclude: /(node_modules|lodash)/, loader: 'eslint' }
+            { test: /\.js$/, exclude: /(node_modules|lodash)/, loaders: ['jscs', 'eslint'] }
         ],
         loaders: [
             { test: /\.hbs$/, exclude: /node_modules/, loader: 'handlebars?helperDirs[]=' + __dirname + '/lib/common/src/handlebars' },

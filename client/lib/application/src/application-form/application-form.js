@@ -8,7 +8,7 @@ import 'common/asset/scss/application/application-form.scss';
 
 class ApplicationForm extends BaseView {
     constructor(props) {
-        props = props || { edit: false };
+        props = props || {edit: false};
         props.className = 'applicationForm';
         props.events = {
             'submit form': 'save',
@@ -52,8 +52,8 @@ class ApplicationForm extends BaseView {
      * already exists. Shows or hides according input-addon.
      */
     checkAppIdAvailability() {
-        let $appInput = this.$el.find('#app_id');
-        let app_id = $appInput.val();
+        let $appInput = this.$el.find('#app_id'),
+            app_id = $appInput.val();
         if (this.props.flux.getStore('application').getApplication(app_id)) {
             $appInput[0].setCustomValidity('App ID already exists.');
             this.$el.find('.is-taken').css('display', 'inline-block');
@@ -72,9 +72,9 @@ class ApplicationForm extends BaseView {
         if (!this.state.autocompleteServiceUrl) {
             return;
         }
-        let {$el} = this;
-        let team_id = $el.find('#team_id').val();
-        let app_id = $el.find('#app_id').val();
+        let {$el} = this,
+            team_id = $el.find('#team_id').val(),
+            app_id = $el.find('#app_id').val();
         $el.find('#service_url').val(`${app_id}.${team_id}.${SERVICE_URL_TLD}`);
     }
 
@@ -84,9 +84,9 @@ class ApplicationForm extends BaseView {
     save(evt) {
         // prevent the form from actually be submitted
         evt.preventDefault();
-        let {$el} = this;
+        let {$el} = this,
         // gather data from dom
-        let active = !!$el.find('#active:checked').length,
+            active = !!$el.find('#active:checked').length,
             team_id = $el.find('#team_id').val(),
             id = $el.find('#app_id').val(),
             name = $el.find('#name').val(),
@@ -95,19 +95,19 @@ class ApplicationForm extends BaseView {
             scm_url = $el.find('#scm_url').val(),
             documentation_url = $el.find('#documentation_url').val(),
             specification_url = $el.find('#specification_url').val(),
-            description = $el.find('#description').val();
+            description = $el.find('#description').val(),
 
-        let app = {
-            active: active,
-            team_id: team_id,
-            name: name,
-            subtitle: subtitle,
-            service_url: service_url,
-            scm_url: scm_url,
-            documentation_url: documentation_url,
-            specification_url: specification_url,
-            description: description
-        };
+            app = {
+                active: active,
+                team_id: team_id,
+                name: name,
+                subtitle: subtitle,
+                service_url: service_url,
+                scm_url: scm_url,
+                documentation_url: documentation_url,
+                specification_url: specification_url,
+                description: description
+            };
 
         this.props.flux
         .getActions('application')
@@ -116,7 +116,7 @@ class ApplicationForm extends BaseView {
             // redirect
             // we can't import the router directly because circular dependencies ensue
             // and window.location is ugly and probably aborts the PUT request from before
-            history.navigate(constructLocalUrl('application', [id]), { trigger: true });
+            history.navigate(constructLocalUrl('application', [id]), {trigger: true});
         })
         .catch(() => {
             let verb = this.props.edit ? 'update' : 'create';

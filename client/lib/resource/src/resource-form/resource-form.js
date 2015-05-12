@@ -22,8 +22,8 @@ class ResourceForm extends BaseView {
      * already exists. Shows or hides according input-addon.
      */
     checkResourceIdAvailability() {
-        let $resourceInput = this.$el.find('#resource_id');
-        let resource_id = $resourceInput.val();
+        let $resourceInput = this.$el.find('#resource_id'),
+            resource_id = $resourceInput.val();
         if (this.store.getResource(resource_id)) {
             $resourceInput[0].setCustomValidity('Resource ID already exists.');
             this.$el.find('.is-taken').css('display', 'inline-block');
@@ -53,31 +53,36 @@ class ResourceForm extends BaseView {
             resource_name = $el.find('#resource_name').val(),
             resource_owners = $el
                                 .find('input:checked')
-                                .map(function() {
+                                .map(function () {
                                     return $(this).attr('id');
                                 })
                                 .toArray(),
-            resource_description = $el.find('#resource_description').val();
+            resource_description = $el.find('#resource_description').val(),
 
-        // construct resource
-        let resource = {
-            name: resource_name,
-            resource_owners: resource_owners,
-            description: resource_description
-        };
+            // construct resource
+            resource = {
+                name: resource_name,
+                resource_owners: resource_owners,
+                description: resource_description
+            };
 
         // save the resource
-        this.actions.saveResource(resource_id, resource)
-            .then(() => {
-                // redirect to detail view of the resource
-                return history.navigate(constructLocalUrl('resource-type', [resource_id]), { trigger: true });
-            })
-            .catch(err => {
-                this.props.notificationActions.addNotification(
-                    `Could not save resource ${resource.name}. ${err.message}`,
-                    'error'
-                );
-            });
+        this
+        .actions
+        .saveResource(resource_id, resource)
+        .then(() => {
+            // redirect to detail view of the resource
+            return history.navigate(constructLocalUrl('resource-type', [resource_id]), {trigger: true});
+        })
+        .catch(err => {
+            this
+            .props
+            .notificationActions
+            .addNotification(
+                `Could not save resource ${resource.name}. ${err.message}`,
+                'error'
+            );
+        });
     }
 
     render() {

@@ -15,7 +15,7 @@ class SearchActions extends Actions {
     fetchSearchResults(term) {
         Object
             .keys(Services)
-            .forEach( key => this.fetchSearchResultsFrom(key, term) );
+            .forEach(key => this.fetchSearchResultsFrom(key, term));
     }
 
     clearSearchResults(term) {
@@ -32,11 +32,11 @@ class SearchActions extends Actions {
     fetchSearchResultsFrom(service, term) {
         return request
                 .get(`${Services[service].url}${Services[service].root}`)
-                .query({ search: term })
+                .query({search: term})
                 .accept('json')
                 .oauth(Provider, RequestConfig)
                 .exec(saveRoute)
-                .then( res => {
+                .then(res => {
                     let body = res.body;
                     body._term = term;
                     body._source = service;

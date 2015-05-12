@@ -31,7 +31,7 @@ class SidebarView extends BaseView {
     }
 
     render() {
-        this.$el.html( Template( this.state ) );
+        this.$el.html(Template(this.state));
         return this;
     }
 }

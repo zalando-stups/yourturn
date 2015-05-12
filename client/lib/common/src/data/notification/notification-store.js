@@ -21,8 +21,6 @@ class NotificationStore extends Store {
 
     /**
      * Saves notification.
-     *
-     * @param  {array} The first element is the message, the optional second the type.
      */
     receiveNotification([message, type]) {
         lastId += 1;

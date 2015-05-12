@@ -7,8 +7,8 @@ class ResourceFlux extends Flummox {
     constructor() {
         super();
 
-        this.createActions( 'resource', ResourceActions );
-        this.createStore( 'resource', ResourceStore, this );
+        this.createActions('resource', ResourceActions);
+        this.createStore('resource', ResourceStore, this);
     }
 }
 
