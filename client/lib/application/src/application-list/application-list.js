@@ -17,7 +17,7 @@ class AppDetail extends BaseView {
     }
 
     render() {
-        this.$el.html( Template( this.data ) );
+        this.$el.html(Template(this.data));
         return this;
     }
 }

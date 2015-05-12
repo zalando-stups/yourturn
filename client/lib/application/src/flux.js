@@ -16,17 +16,17 @@ class AppFlux extends Flummox {
     constructor() {
         super();
 
-        this.createActions( 'application', ApplicationActions );
-        this.createStore( 'application', ApplicationStore, this );
+        this.createActions('application', ApplicationActions);
+        this.createStore('application', ApplicationStore, this);
 
-        this.createActions( 'api', ApiActions );
-        this.createStore( 'api', ApiStore, this );
+        this.createActions('api', ApiActions);
+        this.createStore('api', ApiStore, this);
 
-        this.createActions( 'resource', ResourceActions );
-        this.createStore( 'resource', ResourceStore, this );
+        this.createActions('resource', ResourceActions);
+        this.createStore('resource', ResourceStore, this);
 
-        this.createActions( 'oauth', OAuthActions );
-        this.createStore( 'oauth', OAuthStore, this );
+        this.createActions('oauth', OAuthActions);
+        this.createStore('oauth', OAuthStore, this);
     }
 }
 

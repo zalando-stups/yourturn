@@ -9,7 +9,7 @@ import Markdown from 'common/src/markdown';
 import 'common/asset/scss/application/application-detail.scss';
 
 class AppDetail extends BaseView {
-    constructor( props ) {
+    constructor(props) {
         props.className = 'applicationDetail';
         props.stores = {
             application: props.flux.getStore('application'),
@@ -22,8 +22,8 @@ class AppDetail extends BaseView {
         let {applicationId} = this.props;
         this.data = {
             applicationId: applicationId,
-            app: this.stores.application.getApplication( applicationId ),
-            api: this.stores.api.getApi( applicationId ),
+            app: this.stores.application.getApplication(applicationId),
+            api: this.stores.api.getApi(applicationId),
             versions: _.take(this.stores.application.getApplicationVersions(applicationId), 3)
         };
         this.data.hasApi = this.data.api && this.data.api.status === 'SUCCESS';

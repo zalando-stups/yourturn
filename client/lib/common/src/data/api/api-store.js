@@ -24,9 +24,9 @@ class ApiStore extends Store {
      *
      * @param  {String} id
      */
-    beginFetchApi( id ) {
+    beginFetchApi(id) {
         this.setState({
-            apis: _m.assoc( this.state.apis, id, new Pending() )
+            apis: _m.assoc(this.state.apis, id, new Pending())
         });
     }
 
@@ -37,7 +37,7 @@ class ApiStore extends Store {
      */
     failFetchApi(err) {
         this.setState({
-            apis: _m.assoc( this.state.apis, err.id, new Failed( err ) )
+            apis: _m.assoc(this.state.apis, err.id, new Failed(err))
         });
     }
 
@@ -46,9 +46,9 @@ class ApiStore extends Store {
      *
      * @param  {object} api
      */
-    receiveApi( api ) {
+    receiveApi(api) {
         this.setState({
-            apis: _m.assoc( this.state.apis, api.application_id, api )
+            apis: _m.assoc(this.state.apis, api.application_id, api)
         });
     }
 
@@ -60,7 +60,7 @@ class ApiStore extends Store {
      * @return {object} The API with this id
      */
     getApi(id) {
-        let api = _m.get( this.state.apis, id );
+        let api = _m.get(this.state.apis, id);
         return _m.toJs(api);
     }
 

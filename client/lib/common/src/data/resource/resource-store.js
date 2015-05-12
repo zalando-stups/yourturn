@@ -56,14 +56,14 @@ class ResourceStore extends Store {
         });
     }
 
-    beginFetchResources() {}
-    failFetchResources() {}
+    beginFetchResources() { }
+    failFetchResources() { }
 
-    beginFetchScopes() {}
-    failFetchScopes() {}
+    beginFetchScopes() { }
+    failFetchScopes() { }
 
     beginFetchScope(resourceId, scopeId) {
-        let scope = _m.assocIn( this.state.scopes, [resourceId, scopeId], new Pending() );
+        let scope = _m.assocIn(this.state.scopes, [resourceId, scopeId], new Pending());
         this.setState({
             scopes: scope
         });
@@ -75,8 +75,8 @@ class ResourceStore extends Store {
         });
     }
 
-    beginFetchScopeApplications() {}
-    failFetchScopeApplications() {}
+    beginFetchScopeApplications() { }
+    failFetchScopeApplications() { }
 
     receiveScopes([resourceId, scopes]) {
         let state = scopes.reduce((map, scp) => {
@@ -100,8 +100,6 @@ class ResourceStore extends Store {
     /**
      * Receives a single scope and saves it in the store.
      *
-     * @param  {string} resourceId ID of the owning resource
-     * @param  {obj} scope The scope itself
      */
     receiveScope([resourceId, scope]) {
         this.receiveScopes([resourceId, [scope]]);
@@ -122,8 +120,6 @@ class ResourceStore extends Store {
     /**
      * Receives a list of applications that have a Scope
      *
-     * @param  {string} id ID of scope
-     * @param  {object} applications The list of applications
      */
     receiveScopeApplications([id, applications]) {
         this.setState({
@@ -148,8 +144,8 @@ class ResourceStore extends Store {
      * @return {array} An empty array if there are none.
      */
     getResources() {
-        let filtered = _m.filter(e => !(e instanceof FetchResult), _m.vals(this.state.resources));
-        let entries = _m.sortBy(e => _m.get(e, 'name').toLowerCase(), filtered);
+        let filtered = _m.filter(e => !(e instanceof FetchResult), _m.vals(this.state.resources)),
+            entries = _m.sortBy(e => _m.get(e, 'name').toLowerCase(), filtered);
         return entries ? _m.toJs(entries) : [];
     }
 
@@ -178,7 +174,7 @@ class ResourceStore extends Store {
      * @return {array} Empty array if there are not scopes.
      */
     getScopes(resourceId) {
-        let entries = _m.filter( e => !(e instanceof FetchResult), _m.vals(_m.get(this.state.scopes, resourceId)) );
+        let entries = _m.filter(e => !(e instanceof FetchResult), _m.vals(_m.get(this.state.scopes, resourceId)));
         entries = _m.sortBy(e => _m.get(e, 'id').toLowerCase(), entries);
         return entries ? _m.toJs(entries) : [];
     }

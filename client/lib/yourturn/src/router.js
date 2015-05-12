@@ -27,13 +27,13 @@ class YourturnRouter extends Router {
         let response;
         try {
             response = Provider.parse(window.location.hash);
-        } catch(err) {
+        } catch (err) {
             this.flux
             .getActions('notification')
             .addNotification(
                 'OAuth: Unexpected response. This should not happen.',
                 'error');
-            return history.navigate('/', { trigger: true });
+            return history.navigate('/', {trigger: true});
         }
         if (response) {
             if (response instanceof Error) {
@@ -43,7 +43,7 @@ class YourturnRouter extends Router {
                                 'OAuth: ' + response.error + ' ' + response.getMessage(),
                                 'error');
             }
-            history.navigate(response.metadata.route || '/', { trigger: true });
+            history.navigate(response.metadata.route || '/', {trigger: true});
         }
     }
 }

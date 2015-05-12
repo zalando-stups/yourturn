@@ -21,7 +21,7 @@ let notifications = new NotificationBar({
 });
 notifications.render();
 
-$(document).ready( () => {
+$(document).ready(() => {
     $('#yourturn-sidebar').append(sidebar.$el);
     $('body').prepend(notifications.$el);
     new Router({
@@ -45,7 +45,7 @@ setInterval(() => {
     YT_FLUX
     .getActions('notification')
     .removeNotificationsOlderThan(5000);
-}, 5000 );
+}, 5000);
 
 
 /**

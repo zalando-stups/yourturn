@@ -8,7 +8,7 @@ import Markdown from 'common/src/markdown';
 import 'common/asset/scss/application/version-detail.scss';
 
 class VersionDetail extends BaseView {
-    constructor( props ) {
+    constructor(props) {
         props.className = 'versionDetail';
         props.stores = {
             application: props.flux.getStore('application')
@@ -35,10 +35,10 @@ class VersionDetail extends BaseView {
             $el.html(
                 data.version.isPending() ?
                 Placeholder(data) :
-                ErrorTpl( data.version.getResult() )
+                ErrorTpl(data.version.getResult())
             );
         } else {
-            $el.html( Template( data ) );
+            $el.html(Template(data));
             $el
                 .find('[data-action="markdown"]')
                 .html(Markdown.render(data.version.notes));

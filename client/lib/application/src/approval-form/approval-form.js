@@ -29,14 +29,15 @@ class ApprovalForm extends BaseView {
             approval_type = customUsed ?
                                 $el.find('#approval_custom_type').val() :
                                 $el.find('#approval_type option:selected').val(),
-            notes = $el.find('#approval_notes').val();
+            notes = $el.find('#approval_notes').val(),
 
-        let approval = {
-            approval_type: approval_type,
-            notes: notes
-        };
+            approval = {
+                approval_type: approval_type,
+                notes: notes
+            };
 
-        this.actions
+        this
+        .actions
         .saveApproval(applicationId, versionId, approval)
         .then(() => this.actions.fetchApprovals(applicationId, versionId));
     }
@@ -58,8 +59,12 @@ class ApprovalForm extends BaseView {
         // render approval list
         let $list = this.$el.find('.approvalForm-approvalList');
         $list.children().remove();
-        this.data.approvals.forEach(a => {
-            let card = new ApprovalCard({ approval: a});
+
+        this
+        .data
+        .approvals
+        .forEach(a => {
+            let card = new ApprovalCard({approval: a});
             $list.append(card.render().$el);
         });
         return this;

@@ -10,11 +10,11 @@ class YourturnFlux extends Flummox {
     constructor() {
         super();
 
-        this.createActions( 'search', SearchActions );
-        this.createStore( 'search', SearchStore, this );
+        this.createActions('search', SearchActions);
+        this.createStore('search', SearchStore, this);
 
-        this.createActions( 'notification', NotificationActions );
-        this.createStore( 'notification', NotificationStore, this );
+        this.createActions('notification', NotificationActions);
+        this.createStore('notification', NotificationStore, this);
     }
 }
 

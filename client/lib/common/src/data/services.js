@@ -31,7 +31,7 @@ function constructUrl(serviceId, entityId) {
 }
 
 function getLocalUrlForService(serviceId, entityId) {
-    if (serviceId === 'kio' ) {
+    if (serviceId === 'kio') {
         return `/application/detail/${entityId}`;
     }
 }

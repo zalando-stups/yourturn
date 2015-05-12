@@ -85,7 +85,12 @@ class SearchableList extends BaseView {
         this.update();
         this.$el.html(Template(this.data));
         this.$el.find('input[data-action="filter"]').focus();
-        this.$el.find('input[data-action="filter"]')[0].setSelectionRange(this.state.search.length, this.state.search.length);
+
+        this
+        .$el
+        .find('input[data-action="filter"]')[0]
+        .setSelectionRange(this.state.search.length, this.state.search.length);
+
         return this;
     }
 }

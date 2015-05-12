@@ -4,7 +4,7 @@ import FetchResult from 'common/src/fetch-result';
 import 'common/asset/scss/application/version-list.scss';
 
 class AppVersion extends BaseView {
-    constructor( props ) {
+    constructor(props) {
         props.className = 'versionList';
         props.stores = {
             application: props.flux.getStore('application')
@@ -23,7 +23,7 @@ class AppVersion extends BaseView {
     }
 
     render() {
-        this.$el.html( Template( this.data ) );
+        this.$el.html(Template(this.data));
         return this;
     }
 }

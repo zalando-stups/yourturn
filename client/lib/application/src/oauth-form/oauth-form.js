@@ -27,8 +27,8 @@ class OAuthForm extends BaseView {
      */
     save(evt) {
         evt.preventDefault();
-        let {$el} = this;
-        let ownerscopes = this.ownerscopeList
+        let {$el} = this,
+            ownerscopes = this.ownerscopeList
                             .getSelection()
                             .map(s => s.split('.'))
                             .map(([resourceId, id]) => ({
@@ -41,17 +41,16 @@ class OAuthForm extends BaseView {
                                         resource_type_id: scope.resource_type_id,
                                         scope_id: scope.id
                                     }))
-                            );
-        let isNonConfidential = $el.find('#oauth_is_client_non_confidential:checked').length !== 0;
-        let redirectUrl = $el.find('#oauth_redirect_url').val();
-        let oauthConfig = {
-            s3_buckets: this.data.oauth.s3_buckets,
-            scopes: ownerscopes,
-            redirect_url: redirectUrl,
-            is_client_confidential: !isNonConfidential
-        };
-
-        let {applicationId} = this.props;
+                            ),
+            isNonConfidential = $el.find('#oauth_is_client_non_confidential:checked').length !== 0,
+            redirectUrl = $el.find('#oauth_redirect_url').val(),
+            oauthConfig = {
+                s3_buckets: this.data.oauth.s3_buckets,
+                scopes: ownerscopes,
+                redirect_url: redirectUrl,
+                is_client_confidential: !isNonConfidential
+            },
+            {applicationId} = this.props;
 
         this
         .props
@@ -59,7 +58,7 @@ class OAuthForm extends BaseView {
         .getActions('oauth')
         .saveOAuthConfig(applicationId, oauthConfig)
         .then(() => {
-            history.navigate(constructLocalUrl('application', [applicationId]), { trigger: true });
+            history.navigate(constructLocalUrl('application', [applicationId]), {trigger: true});
         })
         .catch(e => {
             this
