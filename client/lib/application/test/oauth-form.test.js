@@ -1,4 +1,4 @@
-/* globals expect, Promise */
+/* globals expect */
 import {Flummox} from 'flummox';
 import ApplicationStore from 'common/src/data/application/application-store';
 import ApplicationActions from 'common/src/data/application/application-actions';
@@ -6,7 +6,7 @@ import OAuthStore from 'common/src/data/oauth/oauth-store';
 import OAuthActions from 'common/src/data/oauth/oauth-actions';
 import ResourceStore from 'common/src/data/resource/resource-store';
 import ResourceActions from 'common/src/data/resource/resource-actions';
-import AccessForm from 'application/src/access-form/access-form';
+import OAuthForm from 'application/src/oauth-form/oauth-form';
 
 const MOCK_KIO = {
     id: 'kio',
@@ -41,7 +41,7 @@ class MockFlux extends Flummox {
     }
 }
 
-describe('The access control form view', () => {
+describe('The oauth form view', () => {
     var flux,
         actionSpy,
         form;
@@ -51,7 +51,7 @@ describe('The access control form view', () => {
         actionSpy = sinon.stub(flux.getActions('oauth'), 'saveOAuthConfig', function() {
             return Promise.resolve();
         }),
-        form = new AccessForm({
+        form = new OAuthForm({
             flux: flux,
             applicationId: 'kio'
         });
@@ -66,6 +66,12 @@ describe('The access control form view', () => {
         flux.getStore('oauth').receiveOAuthConfig(['kio', MOCK_KIO]);
         // not the placeholder
         expect(form.$el.children().first().hasClass('u-placeholder')).to.be.false;
+    });
+
+    it('should check the non-confidentiality checkbox by default', () => {
+        flux.getStore('oauth').receiveOAuthConfig(['kio', MOCK_KIO]);
+        let $box = form.$el.find('[data-block="confidentiality-checkbox"]').first();
+        expect($box.is(':checked')).to.be.false;
     });
 
     it('should call the correct action', function() {
