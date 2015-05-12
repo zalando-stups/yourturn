@@ -59,6 +59,7 @@
     "json-loader": "0.5.1",
     "lodash-cli": "3.7.0",
     "minimist": "1.1.1",
+    "mitm": "1.1.0",
     "mocha": "2.2.1",
     "node-sass": "2.0.1",
     "node-scm-source": "0.0.1",
