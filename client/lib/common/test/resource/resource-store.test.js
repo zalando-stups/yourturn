@@ -60,4 +60,25 @@ describe('The resource store', () => {
         let scopes = store.getAllScopes();
         expect(scopes.length).to.equal(2);
     });
+
+    it('#getResources should not return fetch results', () => {
+        store.receiveResource({
+            id: 'customer'
+        });
+        store.beginFetchResource('sales_order');
+        let resources = store.getResources();
+        expect(resources.length).to.equal(1);
+        expect(resources[0].id).to.equal('customer');
+    });
+
+    it('#getScopes should not return fetch results', () => {
+        store.receiveScope(['customer', [{
+            id: 'read_all'
+        }]]);
+        store.beginFetchScope('customer', 'write_all');
+        let scopes = store.getScopes('customer');
+        expect(scopes.length).to.equal(1);
+        console.log(scopes);
+        expect(scopes[0].id).to.equal('read_all');
+    }); 
 });
