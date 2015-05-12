@@ -4,3 +4,4 @@ import './application-detail.test';
 import './application-form.test';
 import './approval-form.test';
 import './oauth-form.test';
+import './version-detail.test';
