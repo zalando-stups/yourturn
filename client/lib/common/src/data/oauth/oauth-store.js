@@ -19,12 +19,23 @@ class OAuthStore extends Store {
             this.failFetchOAuthConfig);
     }
 
+    /**
+     * Sets a Pending result for the configuration of this application.
+     *
+     * @param  {String} appId ID of the application
+     */
     beginFetchOAuthConfig(appId) {
         this.setState({
             applications: _m.assoc(this.state.applications, appId, new Pending())
         });
     }
 
+    /**
+     * If it failed with a 404, it saves a default configuration
+     * for this application. Otherwise a Failed is saved.
+     *
+     * @param  {Error} err The error
+     */
     failFetchOAuthConfig(err) {
         if (err.status === 404) {
             this.setState({
@@ -42,6 +53,9 @@ class OAuthStore extends Store {
         });
     }
 
+    /**
+     * Receives an oauth configuration for an application.
+     */
     receiveOAuthConfig([applicationId, config]) {
         this.setState({
             applications: _m.assoc(this.state.applications, applicationId, config)
