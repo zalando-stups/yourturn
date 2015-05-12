@@ -21,6 +21,7 @@ module.exports = {
         publicPath: '/dist/'
     },
     plugins: [
+        new webpack.NormalModuleReplacementPlugin(/^underscore$/, 'common/src/lodash.custom'),
         new webpack.NormalModuleReplacementPlugin(/^lodash$/, 'common/src/lodash.custom'),
         new webpack.DefinePlugin({
             'ENV_PRODUCTION': false,
