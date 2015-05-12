@@ -1,4 +1,4 @@
-/* globals expect, Promise */
+/* globals sinon, expect, Promise */
 import {Flummox} from 'flummox';
 import ApplicationStore from 'common/src/data/application/application-store';
 import ApplicationActions from 'common/src/data/application/application-actions';
@@ -50,7 +50,7 @@ describe('The access control form view', () => {
         flux = new MockFlux();
         actionSpy = sinon.stub(flux.getActions('oauth'), 'saveOAuthConfig', function() {
             return Promise.resolve();
-        }),
+        });
         form = new AccessForm({
             flux: flux,
             applicationId: 'kio'

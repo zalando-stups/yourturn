@@ -1,4 +1,4 @@
-/* globals expect */
+/* globals sinon, Promise, expect */
 import {Flummox} from 'flummox';
 import ApplicationStore from 'common/src/data/application/application-store';
 import ApplicationActions from 'common/src/data/application/application-actions';
@@ -50,7 +50,7 @@ describe('The oauth form view', () => {
         flux = new MockFlux();
         actionSpy = sinon.stub(flux.getActions('oauth'), 'saveOAuthConfig', function() {
             return Promise.resolve();
-        }),
+        });
         form = new OAuthForm({
             flux: flux,
             applicationId: 'kio'
@@ -71,7 +71,7 @@ describe('The oauth form view', () => {
     it('should check the non-confidentiality checkbox by default', () => {
         flux.getStore('oauth').receiveOAuthConfig(['kio', MOCK_KIO]);
         let $box = form.$el.find('[data-block="confidentiality-checkbox"]').first();
-        expect($box.is(':checked')).to.be.false;
+        expect($box.is(':checked')).to.be.true;
     });
 
     it('should call the correct action', function() {
