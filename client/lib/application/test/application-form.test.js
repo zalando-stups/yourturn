@@ -1,4 +1,4 @@
-/* globals expect */
+/* globals expect, sinon, Promise */
 import {Flummox} from 'flummox';
 import ApplicationStore from 'common/src/data/application/application-store';
 import ApplicationActions from 'common/src/data/application/application-actions';
@@ -29,10 +29,14 @@ class MockFlux extends Flummox {
 
 describe('The application form view', () => {
     var flux,
+        actionSpy,
         form;
 
     beforeEach(() => {
         flux = new MockFlux();
+        actionSpy = sinon.stub(flux.getActions(FLUX), 'saveApplication', function() {
+            return Promise.resolve();
+        });
     });
 
     describe('in create mode', () => {
@@ -75,12 +79,24 @@ describe('The application form view', () => {
             expect($checkbox.is(':checked')).to.be.false;
         });
 
-        it('should display the taken symbol bc the app exists', () => {
+        it('should display the available symbol', () => {
             flux.getStore(FLUX).receiveApplication(TEST_APP);
-            let $taken = form.$el.find('[data-block="taken-symol"]').first();
-            let $available = form.$el.find('[data-block="available-symol"]').first();
-            expect($taken.css('display')).to.equal('inline-block');
-            expect($available.css('display')).to.equal('none');
+            let $available = form.$el.find('[data-block="available-symbol"]').first();
+            expect($available.length).to.equal(1);
+        });
+
+        it('should disable the ID input', () => {
+            flux.getStore(FLUX).receiveApplication(TEST_APP);
+            let $input = form.$el.find('[data-block="id-input"]').first();
+            expect($input.is(':disabled')).to.be.true;
+        });
+
+        it('should call the correct action', () => {
+            flux.getStore(FLUX).receiveApplication(TEST_APP);
+            let $input = form.$el.find('[data-block="name-input"]').first();
+            $input.val('test');
+            form.$el.find('form').submit();
+            expect(actionSpy.calledOnce).to.be.true;
         });
     });
 
