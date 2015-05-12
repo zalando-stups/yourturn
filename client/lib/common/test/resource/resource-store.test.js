@@ -42,21 +42,40 @@ describe('The resource store', () => {
     });
 
     it('should receive scopes from multiple resources', () => {
-        store.receiveScopes(['customer', [{
+        store.receiveScope(['customer', {
             description: 'Description',
             id: 'read_all',
             is_resource_owner_scope: false,
             summary: 'Grants read-access to all customer data',
             user_information: 'Read all base information'
-        }]]);
-        store.receiveScopes(['sales_order', [{
+        }]);
+        store.receiveScope(['sales_order', {
             id: 'read',
             summary: 'Grants read-access to the sales orders of a customer',
             description: 'Description',
             user_information: 'Read your Zalando orders',
             is_resource_owner_scope: true
-        }]]);
+        }]);
         // they should be there
+        expect(store.getScopes('customer').length).to.equal(1);
+        expect(store.getScopes('sales_order').length).to.equal(1);
+    });
+
+    it('#getAllScopes should return scopes from all resources', () => {
+        store.receiveScope(['customer', {
+            description: 'Description',
+            id: 'read_all',
+            is_resource_owner_scope: false,
+            summary: 'Grants read-access to all customer data',
+            user_information: 'Read all base information'
+        }]);
+        store.receiveScope(['sales_order', {
+            id: 'read',
+            summary: 'Grants read-access to the sales orders of a customer',
+            description: 'Description',
+            user_information: 'Read your Zalando orders',
+            is_resource_owner_scope: true
+        }]);
         let scopes = store.getAllScopes();
         expect(scopes.length).to.equal(2);
     });
@@ -72,13 +91,22 @@ describe('The resource store', () => {
     });
 
     it('#getScopes should not return fetch results', () => {
-        store.receiveScope(['customer', [{
+        store.receiveScope(['customer', {
             id: 'read_all'
-        }]]);
+        }]);
         store.beginFetchScope('customer', 'write_all');
         let scopes = store.getScopes('customer');
         expect(scopes.length).to.equal(1);
-        console.log(scopes);
         expect(scopes[0].id).to.equal('read_all');
-    }); 
+    });
+
+    it('#receiveScopeApplications should save applications', () => {
+        store.receiveScopeApplications(['customer.read', [{
+            id: 'kio'
+        }, {
+            id: 'pierone'
+        }]]);
+        let apps = store.getScopeApplications('customer.read');
+        expect(apps.length).to.equal(2);
+    });
 });

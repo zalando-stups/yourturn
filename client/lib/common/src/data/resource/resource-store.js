@@ -21,21 +21,25 @@ class ResourceStore extends Store {
             this.beginFetchResource,
             this.receiveResource,
             this.failFetchResource);
+
         this.registerAsync(
             resourceActions.fetchResources,
             this.beginFetchResources,
             this.receiveResources,
             this.failFetchResources);
+
         this.registerAsync(
             resourceActions.fetchScope,
             this.beginFetchScope,
             this.receiveScope,
             this.failFetchScope);
+
         this.registerAsync(
             resourceActions.fetchScopes,
             this.beginFetchScopes,
             this.receiveScopes,
             this.failFetchScopes);
+
         this.registerAsync(
             resourceActions.fetchScopeApplications,
             this.beginFetchApplications,
@@ -44,24 +48,41 @@ class ResourceStore extends Store {
     }
 
     // intentionally left as noop for now
+    beginFetchResources() { }
+    failFetchResources() { }
+    beginFetchScopes() { }
+    failFetchScopes() { }
+    beginFetchScopeApplications() { }
+    failFetchScopeApplications() { }
+
+    /**
+     * Sets a Pending result for this resource.
+     *
+     * @param  {String} resourceId ID of the resource
+     */
     beginFetchResource(resourceId) {
         this.setState({
             resources: _m.assoc(this.state.resources, resourceId, new Pending())
         });
     }
 
+    /**
+     * Sets a Failed result for this resource.
+     *
+     * @param  {Error} err Error containing the id of the resource
+     */
     failFetchResource(err) {
         this.setState({
             resources: _m.assoc(this.state.resources, err.id, new Failed(err))
         });
     }
 
-    beginFetchResources() { }
-    failFetchResources() { }
-
-    beginFetchScopes() { }
-    failFetchScopes() { }
-
+    /**
+     * Sets a Pending result for this scope.
+     *
+     * @param  {Object} resourceId ID of the resource
+     * @param  {Object} scopeId    ID of the scope
+     */
     beginFetchScope(resourceId, scopeId) {
         let scope = _m.assocIn(this.state.scopes, [resourceId, scopeId], new Pending());
         this.setState({
@@ -69,27 +90,38 @@ class ResourceStore extends Store {
         });
     }
 
+    /**
+     * Sets a Failed result for this scope.
+     *
+     * @param  {Error} err Error containing the id of the scope.
+     */
     failFetchScope(err) {
         this.setState({
             scopes: _m.assoc(this.state.scopes, err.id, new Failed(err))
         });
     }
 
-    beginFetchScopeApplications() { }
-    failFetchScopeApplications() { }
-
+    /**
+     * Receives scopes for a resource and saves them into the store.
+     */
     receiveScopes([resourceId, scopes]) {
-        let state = scopes.reduce((map, scp) => {
-            let resource = _m.get(map, resourceId) || _m.hashMap();
-            scp.resource_type_id = resourceId;
-            resource = _m.assoc(resource, scp.id, _m.toClj(scp));
-            return _m.assoc(map, resourceId, resource);
-        }, this.state.scopes);
+        let state = scopes
+                    .reduce((map, scp) => {
+                        let resource = _m.get(map, resourceId) || _m.hashMap();
+                        scp.resource_type_id = resourceId;
+                        resource = _m.assoc(resource, scp.id, _m.toClj(scp));
+                        return _m.assoc(map, resourceId, resource);
+                    }, this.state.scopes);
         this.setState({
             scopes: state
         });
     }
 
+    /**
+     * Receives resources and saves them into the store.
+     *
+     * @param  {Array} resources The resources to save.
+     */
     receiveResources(resources) {
         let state = resources.reduce((map, res) => _m.assoc(map, res.id, _m.toClj(res)), this.state.resources);
         this.setState({
@@ -209,7 +241,8 @@ class ResourceStore extends Store {
     _empty() {
         this.state = {
             resources: _m.hashMap(),
-            scopes: _m.hashMap()
+            scopes: _m.hashMap(),
+            applications: _m.hashMap()
         };
     }
 }
