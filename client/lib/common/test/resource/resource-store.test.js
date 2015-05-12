@@ -101,12 +101,12 @@ describe('The resource store', () => {
     });
 
     it('#receiveScopeApplications should save applications', () => {
-        store.receiveScopeApplications(['customer.read', [{
+        store.receiveScopeApplications(['customer', 'read', [{
             id: 'kio'
         }, {
             id: 'pierone'
         }]]);
-        let apps = store.getScopeApplications('customer.read');
+        let apps = store.getScopeApplications('customer', 'read');
         expect(apps.length).to.equal(2);
     });
 });

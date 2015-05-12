@@ -96,7 +96,7 @@ class ResourceActions extends Actions {
                 .accept('json')
                 .oauth(Provider, RequestConfig)
                 .exec(saveRoute)
-                .then(res => [`${resourceId}.${scopeId}`, res.body])
+                .then(res => [resourceId, scopeId, res.body])
                 .catch(err => {
                     err.id = resourceId;
                     throw err;

@@ -153,9 +153,9 @@ class ResourceStore extends Store {
      * Receives a list of applications that have a Scope
      *
      */
-    receiveScopeApplications([id, applications]) {
+    receiveScopeApplications([resourceId, scopeId, applications]) {
         this.setState({
-            applications: _m.assoc(this.state.applications, id, _m.toClj(applications))
+            applications: _m.assoc(this.state.applications, `${resourceId}.${scopeId}`, _m.toClj(applications))
         });
     }
 
