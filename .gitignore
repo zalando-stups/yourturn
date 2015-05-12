@@ -3,4 +3,4 @@ node_modules
 client/dist
 client/coverage
 client/stats.json
-client/common/src/lodash.custom.js
+scm-source.json

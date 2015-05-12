@@ -1,8 +1,10 @@
-var gulp = require('gulp'),
+var fs = require('fs'),
+    gulp = require('gulp'),
     gutil= require('gulp-util'),
     eslint = require('gulp-eslint'),
     jscs = require('gulp-jscs'),
     args = require('minimist')(process.argv.slice(2)),
+    scm = require('node-scm-source'),
     del = require( 'del' ),
     shell = require('gulp-shell'),
     replace = require('gulp-replace'),
@@ -91,7 +93,11 @@ gulp.task('format', function() {
                 esnext: true,
                 configPath: './.jscsrc'
             }));
-})
+});
+
+gulp.task('scm-source', function(done) {
+    fs.writeFile('../scm-source.json', JSON.stringify(scm(), null, 4), done);
+});
 
 // lints the source code using .eslintrc
 gulp.task('lint', function() {
@@ -116,7 +122,7 @@ gulp.task('cachebust', function() {
                 .pipe( gulp.dest( 'dist' ) );
 });
 
-gulp.task('build', ['pack', 'cachebust', 'copy']);
+gulp.task('build', ['pack', 'cachebust', 'copy', 'scm-source']);
 
 gulp.task('watch', ['watch:js']);
 gulp.task('default', ['watch']);
