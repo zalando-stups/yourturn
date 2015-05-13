@@ -34,19 +34,22 @@ class OAuthForm extends BaseView {
                             .map(([resourceId, id]) => ({
                                 resource_type_id: resourceId,
                                 scope_id: id
-                            }))
-                            .concat(
-                                this.data.appScopes
-                                .map(scope => ({
-                                        resource_type_id: scope.resource_type_id,
-                                        scope_id: scope.id
-                                    }))
-                            ),
+                            })),
+            appscopes = this
+                            .data
+                            .oauth
+                            .scopes
+                            .filter(scope => this
+                                                .data
+                                                .scopes
+                                                .some(scp => scp.resource_type_id === scope.resource_type_id &&
+                                                             scp.id === scope.scope_id &&
+                                                             !scp.is_resource_owner_scope)),
             isNonConfidential = $el.find('#oauth_is_client_non_confidential:checked').length !== 0,
             redirectUrl = $el.find('#oauth_redirect_url').val(),
             oauthConfig = {
                 s3_buckets: this.data.oauth.s3_buckets,
-                scopes: ownerscopes,
+                scopes: ownerscopes.concat(appscopes),
                 redirect_url: redirectUrl,
                 is_client_confidential: !isNonConfidential
             },
@@ -78,6 +81,7 @@ class OAuthForm extends BaseView {
         this.data = {
             applicationId: this.props.applicationId,
             application: this.stores.application.getApplication(this.props.applicationId),
+            scopes: scopes,
             ownerScopes: scopes.filter(s => s.is_resource_owner_scope),
             appScopes: scopes.filter(s => !s.is_resource_owner_scope),
             oauth: this.stores.oauth.getOAuthConfig(this.props.applicationId)

@@ -34,18 +34,37 @@ class AccessForm extends BaseView {
                             .map(([resourceId, id]) => ({
                                 resource_type_id: resourceId,
                                 scope_id: id
-                            }))
-                            .concat(
-                                this.data.ownerScopes
-                                    .map(scope => ({
-                                        resource_type_id: scope.resource_type_id,
-                                        scope_id: scope.id
-                                    }))
-                            ),
+                            })),
             buckets = this.bucketList.getSelection(),
-            oauthConfig = {
+
+        // appscopes contains selected application scopes in the
+        // shape of { resource_type_id, scope_id }
+
+        // we cannot just join this into oauth.scopes because
+        // we would never remove unselected scopes
+        
+        // thus we need to identify RO scopes in oauth.scopes
+            ownerscopes = this
+                            .data
+                            .oauth
+                            .scopes
+                            .filter(scope => this
+                                                .data
+                                                .scopes
+                                                .some(scp => scp.resource_type_id === scope.resource_type_id &&
+                                                             scp.id === scope.scope_id &&
+                                                             scp.is_resource_owner_scope));
+        
+
+
+        
+        // we cannot filter oauth.scopes by is_resource_owner_scope
+        // because it is not present there. we do not want to do
+        // a http call for every scope to check
+
+        let oauthConfig = {
                 s3_buckets: buckets,
-                scopes: appscopes,
+                scopes: appscopes.concat(ownerscopes),
                 redirect_url: this.data.oauth.redirect_url,
                 is_client_confidential: this.data.oauth.is_client_confidential
             },
@@ -77,6 +96,7 @@ class AccessForm extends BaseView {
         this.data = {
             applicationId: this.props.applicationId,
             application: this.stores.application.getApplication(this.props.applicationId),
+            scopes: scopes,
             ownerScopes: scopes.filter(s => s.is_resource_owner_scope),
             appScopes: scopes.filter(s => !s.is_resource_owner_scope),
             oauth: this.stores.oauth.getOAuthConfig(this.props.applicationId)
@@ -85,6 +105,7 @@ class AccessForm extends BaseView {
 
     render() {
         let {oauth} = this.data;
+        console.log(oauth.scopes);
         if (oauth instanceof FetchResult && oauth.isPending()) {
             this.$el.html(Placeholder(this.data));
             return this;

@@ -20,8 +20,8 @@ class ResourceDetail extends BaseView {
             resourceId: resourceId,
             resource: this.store.getResource(resourceId),
             scopes: scopes,
-            ownerScopes: scopes.filter(s => s.ownerScope),
-            appScopes: scopes.filter(s => !s.ownerScope)
+            ownerScopes: scopes.filter(s => s.is_resource_owner_scope),
+            appScopes: scopes.filter(s => !s.is_resource_owner_scope)
         };
     }
 
