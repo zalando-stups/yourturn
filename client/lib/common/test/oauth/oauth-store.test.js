@@ -26,9 +26,9 @@ describe('The oauth store', () => {
     });
 
     it('should receive a config', () => {
-        store.receiveOAuthConfig({
+        store.receiveOAuthConfig(['kio', {
             id: 'kio'
-        });
+        }]);
         let kio = store.getOAuthConfig('kio');
         expect(kio).to.not.be.undefined;
         expect(kio instanceof Pending).to.be.false;
