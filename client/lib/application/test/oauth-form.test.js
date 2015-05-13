@@ -48,7 +48,7 @@ describe('The oauth form view', () => {
 
     beforeEach(() => {
         flux = new MockFlux();
-        actionSpy = sinon.stub(flux.getActions('oauth'), 'saveOAuthConfig', function() {
+        actionSpy = sinon.stub(flux.getActions('oauth'), 'saveOAuthConfig', () => {
             return Promise.resolve();
         });
         form = new OAuthForm({
@@ -74,7 +74,7 @@ describe('The oauth form view', () => {
         expect($box.is(':checked')).to.be.true;
     });
 
-    it('should call the correct action', function() {
+    it('should call the correct action', () => {
         flux.getStore('oauth').receiveOAuthConfig(['kio', MOCK_KIO]);
         form.$el.find('form').submit();
         expect(actionSpy.calledOnce).to.be.true;

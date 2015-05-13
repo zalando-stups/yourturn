@@ -48,7 +48,7 @@ describe('The access control form view', () => {
 
     beforeEach(() => {
         flux = new MockFlux();
-        actionSpy = sinon.stub(flux.getActions('oauth'), 'saveOAuthConfig', function() {
+        actionSpy = sinon.stub(flux.getActions('oauth'), 'saveOAuthConfig', () => {
             return Promise.resolve();
         });
         form = new AccessForm({
@@ -68,7 +68,7 @@ describe('The access control form view', () => {
         expect(form.$el.children().first().hasClass('u-placeholder')).to.be.false;
     });
 
-    it('should call the correct action', function() {
+    it('should call the correct action', () => {
         flux.getStore('oauth').receiveOAuthConfig(['kio', MOCK_KIO]);
         form.$el.find('form').submit();
         expect(actionSpy.calledOnce).to.be.true;

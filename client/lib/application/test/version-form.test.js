@@ -55,10 +55,14 @@ describe('The version form view', () => {
                 applicationId: APP_ID,
                 versionId: VER_ID
             });
+            // does not get called automatically because we filled the
+            // store prior to creating the form
+            form.update();
+            form.render();
         });
 
         it('should not have a placeholder', () => {
-            form.render();
+            
             expect(form.$el.find('.u-placeholder').length).to.equal(0);
         });
     });
@@ -73,16 +77,13 @@ describe('The version form view', () => {
                 versionId: VER_ID,
                 edit: true
             });
+            form.update();
+            form.render();
         });
 
         it('should not have a placeholder', () => {
             flux.getStore(FLUX).beginFetchApplicationVersion(APP_ID, VER_ID);
             expect(form.$el.find('.u-placeholder').length).to.equal(0);
-        });
-
-        it('should disable the ID input', () => {
-            let $input = form.$el.find('[data-block="id-input"]').first();
-            expect($input.is(':disabled')).to.be.true;
         });
 
         it('should call the correct action', () => {
