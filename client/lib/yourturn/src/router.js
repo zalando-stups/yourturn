@@ -3,6 +3,8 @@ import Search from 'yourturn/src/search/search';
 import puppeteer from 'common/src/puppeteer';
 import {Provider} from 'common/src/oauth-provider';
 import {Error} from 'oauth2-client-js';
+import LoginHandler from './login';
+
 const MAIN_VIEW_ID = '#yourturn-view';
 
 class YourturnRouter extends Router {
@@ -15,6 +17,7 @@ class YourturnRouter extends Router {
             }
         });
         this.flux = props.flux;
+        this.loginHandler = new LoginHandler(props.flux);
     }
 
     search() {
@@ -43,7 +46,23 @@ class YourturnRouter extends Router {
                                 'OAuth: ' + response.error + ' ' + response.getMessage(),
                                 'error');
             }
-            history.navigate(response.metadata.route || '/', {trigger: true});
+            // successful response with access_token
+            // validate with business logic
+            this.loginHandler
+                .validateResponse(response)
+                .catch(e => {
+                    // delete tokens
+                    Provider.deleteTokens();
+                    this.flux
+                        .getActions('notification')
+                        .addNotification(
+                            'Token validation failed: ' + e.message,
+                            'error');
+                })
+                .then(() => {
+                    // everything's good!
+                    history.navigate(response.metadata.route || '/', {trigger: true});
+                });
         }
     }
 }

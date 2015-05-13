@@ -2,6 +2,7 @@ import TWINTIP_BASE_URL from 'TWINTIP_BASE_URL';
 import KIO_BASE_URL from 'KIO_BASE_URL';
 import MINT_BASE_URL from 'MINT_BASE_URL';
 import ESSENTIALS_BASE_URL from 'ESSENTIALS_BASE_URL';
+import TEAM_BASE_URL from 'TEAM_BASE_URL';
 
 const SERVICES = {
     kio: {
@@ -22,6 +23,11 @@ const SERVICES = {
     essentials: {
         url: ESSENTIALS_BASE_URL,
         root: '/resource-types',
+        id: 'id'
+    },
+    team: {
+        url: TEAM_BASE_URL,
+        root: '/teams',
         id: 'id'
     }
 };
