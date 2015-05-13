@@ -43,6 +43,6 @@ describe('The scope detail view', () => {
 
     it('should contain rendered markdown', () => {
         flux.getStore(RES).receiveScope([RES_ID, TEST_SCP]);
-        expect(detail.$el.find('[data-action="markdown"] h1').length).to.equal(1);
+        expect(detail.$el.find('[data-block="description"] h1').length).to.equal(1);
     });
 });

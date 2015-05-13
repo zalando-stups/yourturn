@@ -43,7 +43,7 @@ describe('The resource detail view', () => {
 
     it('should contain rendered markdown', () => {
         flux.getStore(RES).receiveResource(TEST_RES);
-        expect(detail.$el.find('[data-action="markdown"] h1').length).to.equal(1);
+        expect(detail.$el.find('[data-block="description"] h1').length).to.equal(1);
     });
 
 });
