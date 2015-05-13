@@ -42,7 +42,7 @@ class AccessForm extends BaseView {
 
         // we cannot just join this into oauth.scopes because
         // we would never remove unselected scopes
-        
+
         // thus we need to identify RO scopes in oauth.scopes
             ownerscopes = this
                             .data
@@ -53,16 +53,13 @@ class AccessForm extends BaseView {
                                                 .scopes
                                                 .some(scp => scp.resource_type_id === scope.resource_type_id &&
                                                              scp.id === scope.scope_id &&
-                                                             scp.is_resource_owner_scope));
-        
+                                                             scp.is_resource_owner_scope)),
 
-
-        
         // we cannot filter oauth.scopes by is_resource_owner_scope
         // because it is not present there. we do not want to do
         // a http call for every scope to check
 
-        let oauthConfig = {
+            oauthConfig = {
                 s3_buckets: buckets,
                 scopes: appscopes.concat(ownerscopes),
                 redirect_url: this.data.oauth.redirect_url,
@@ -105,7 +102,6 @@ class AccessForm extends BaseView {
 
     render() {
         let {oauth} = this.data;
-        console.log(oauth.scopes);
         if (oauth instanceof FetchResult && oauth.isPending()) {
             this.$el.html(Placeholder(this.data));
             return this;
