@@ -28,6 +28,7 @@ class OAuthForm extends BaseView {
     save(evt) {
         evt.preventDefault();
         let {$el} = this,
+            scopes = this.stores.resource.getAllScopes(),
             ownerscopes = this.ownerscopeList
                             .getSelection()
                             .map(s => s.split('.'))
@@ -39,10 +40,7 @@ class OAuthForm extends BaseView {
                             .data
                             .oauth
                             .scopes
-                            .filter(scope => this
-                                                .data
-                                                .scopes
-                                                .some(scp => scp.resource_type_id === scope.resource_type_id &&
+                            .filter(scope => scopes.some(scp => scp.resource_type_id === scope.resource_type_id &&
                                                              scp.id === scope.scope_id &&
                                                              !scp.is_resource_owner_scope)),
             isNonConfidential = $el.find('#oauth_is_client_non_confidential:checked').length !== 0,
@@ -81,7 +79,6 @@ class OAuthForm extends BaseView {
         this.data = {
             applicationId: this.props.applicationId,
             application: this.stores.application.getApplication(this.props.applicationId),
-            scopes: scopes,
             ownerScopes: scopes.filter(s => s.is_resource_owner_scope),
             appScopes: scopes.filter(s => !s.is_resource_owner_scope),
             oauth: this.stores.oauth.getOAuthConfig(this.props.applicationId)
