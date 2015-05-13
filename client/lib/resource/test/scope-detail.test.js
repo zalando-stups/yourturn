@@ -26,8 +26,8 @@ describe('The scope detail view', () => {
         flux = new MockFlux();
         detail = new Detail({
             flux: flux,
-               resourceId: RES_ID,
-               scopeId: SCP_ID
+            resourceId: RES_ID,
+            scopeId: SCP_ID
         });
         TEST_SCP = {
             id: 'read',

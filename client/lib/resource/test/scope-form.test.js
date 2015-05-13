@@ -44,8 +44,8 @@ describe('The scope form view', () => {
         beforeEach(() => {
             form = new Form({
                 flux: flux,
-                 resourceId: RES_ID,
-                 edit: true
+                resourceId: RES_ID,
+                edit: true
             });
         });
 
