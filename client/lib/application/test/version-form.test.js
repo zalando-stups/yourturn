@@ -62,7 +62,7 @@ describe('The version form view', () => {
         });
 
         it('should not have a placeholder', () => {
-            
+
             expect(form.$el.find('.u-placeholder').length).to.equal(0);
         });
     });
