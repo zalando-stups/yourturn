@@ -38,6 +38,12 @@ describe('The scope form view', () => {
             expect(form.$el.find('.u-placeholder').length).to.equal(0);
         });
 
+        it('should have application checkbox preselected', () => {
+            form.render();
+            let $checkbox = form.$el.find('[data-block="active-checkbox"]').first();
+            expect($checkbox.is(':checked')).to.be.false;
+        });
+
     });
 
     describe('in edit mode', () => {
