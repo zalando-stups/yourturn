@@ -28,25 +28,26 @@ class OAuthForm extends BaseView {
     save(evt) {
         evt.preventDefault();
         let {$el} = this,
+            scopes = this.stores.resource.getAllScopes(),
             ownerscopes = this.ownerscopeList
                             .getSelection()
                             .map(s => s.split('.'))
                             .map(([resourceId, id]) => ({
                                 resource_type_id: resourceId,
                                 scope_id: id
-                            }))
-                            .concat(
-                                this.data.appScopes
-                                .map(scope => ({
-                                        resource_type_id: scope.resource_type_id,
-                                        scope_id: scope.id
-                                    }))
-                            ),
+                            })),
+            appscopes = this
+                            .data
+                            .oauth
+                            .scopes
+                            .filter(scope => scopes.some(scp => scp.resource_type_id === scope.resource_type_id &&
+                                                             scp.id === scope.scope_id &&
+                                                             !scp.is_resource_owner_scope)),
             isNonConfidential = $el.find('#oauth_is_client_non_confidential:checked').length !== 0,
             redirectUrl = $el.find('#oauth_redirect_url').val(),
             oauthConfig = {
                 s3_buckets: this.data.oauth.s3_buckets,
-                scopes: ownerscopes,
+                scopes: ownerscopes.concat(appscopes),
                 redirect_url: redirectUrl,
                 is_client_confidential: !isNonConfidential
             },
