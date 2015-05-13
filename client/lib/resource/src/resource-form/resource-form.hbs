@@ -11,10 +11,12 @@
         <small>The ID of the resource type</small>
         <div class="input-group">
             <div class="input-addon">
-                <i  title="Resource ID is available."
+                <i  data-block="available-symbol"
+                    title="Resource ID is available."
                     class="fa fa-check fa-fw is-available"></i>
                 {{#unless edit}}
-                    <i  title="Resource ID is already taken."
+                    <i  data-block="taken-symbol"
+                        title="Resource ID is already taken."
                         class="fa fa-close fa-fw is-taken"></i>
                 {{/unless}}
             </div>
@@ -28,6 +30,7 @@
                     pattern="[a-z][a-z_]*[a-z]"
                     title="Only lowercase characters with underscores in between."
                     name="yourturn_resource_id"
+                    data-block="id-input"
                     required="required"
                     placeholder="sales_order"
                     type="text" />  
@@ -42,6 +45,7 @@
             value="{{resource.name}}"
             {{/if}}
             name="yourturn_resource_name"
+            data-block="name-input"
             required="required"
             placeholder="Sales Order"
             type="text" />
