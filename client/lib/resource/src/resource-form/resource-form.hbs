@@ -60,16 +60,16 @@
                 id="employees"
                 type="checkbox" /> Employees
         </label>
-        <label for="applications">
+        <label for="services">
             <input
                 {{#if edit}}
-                    {{#contains resource.resource_owners "applications"}}
+                    {{#contains resource.resource_owners "services"}}
                         checked="checked"
                     {{/contains}}
                 {{/if}}
                 name="yourturn_resource_owner_application"
-                id="applications"
-                type="checkbox" /> Applications
+                id="services"
+                type="checkbox" /> Services
         </label>
         <label class="form-disabled" for="customer">
             <input
