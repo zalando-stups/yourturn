@@ -1,6 +1,7 @@
 import BaseView from 'common/src/base-view';
 import Template from './oauth-form.hbs';
 import Placeholder from './placeholder.hbs';
+import ErrorTpl from 'common/src/error.hbs';
 import SearchableList from 'common/src/searchable-list/searchable-list';
 import FetchResult from 'common/src/fetch-result';
 import {history} from 'backbone';
@@ -87,8 +88,11 @@ class OAuthForm extends BaseView {
 
     render() {
         let {oauth} = this.data;
-        if (oauth instanceof FetchResult && oauth.isPending()) {
-            this.$el.html(Placeholder(this.data));
+        if (oauth instanceof FetchResult) {
+            this.$el.html(
+                oauth.isPending() ?
+                    Placeholder(this.data) :
+                    ErrorTpl(oauth.getResult()));
             return this;
         }
         this.$el.html(Template(this.data));

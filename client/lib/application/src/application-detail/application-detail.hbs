@@ -17,7 +17,9 @@
 
 <h4>
     {{#unless app.active}}
-        <span class="applicationDetail-status">
+        <span
+            data-block="inactive-badge"
+            class="applicationDetail-status">
             <i class="fa fa-lg fa-circle-o"></i> Inactive
         </span>
     {{/unless}}
@@ -83,6 +85,8 @@
     </tbody>
 </table>
 <h4 class="applicationDetail-descriptionTitle">Description</h4>
-<p data-action="markdown">
+<p
+    data-block="description"
+    data-action="markdown">
     {{app.description}}
 </p>

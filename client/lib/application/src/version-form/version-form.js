@@ -1,3 +1,4 @@
+/* globals ENV_PRODUCTION */
 import BaseView from 'common/src/base-view';
 import Template from './version-form.hbs';
 import {history} from 'backbone';
@@ -45,11 +46,15 @@ class VersionForm extends BaseView {
             storeVersion = this.store.getApplicationVersion(this.props.applicationId, version_id);
 
         if (storeVersion && version_id !== this.props.versionId) {
-            $idInput[0].setCustomValidity('Version already exists.');
+            if (ENV_PRODUCTION) {
+                $idInput[0].setCustomValidity('Version already exists.');
+            }
             this.$el.find('.is-taken').css('display', 'inline-block');
             this.$el.find('.is-available').css('display', 'none');
         } else {
-            $idInput[0].setCustomValidity('');
+            if (ENV_PRODUCTION) {
+                $idInput[0].setCustomValidity('');
+            }
             this.$el.find('.is-taken').css('display', 'none');
             this.$el.find('.is-available').css('display', 'inline-block');
         }
@@ -86,10 +91,13 @@ class VersionForm extends BaseView {
                     [this.data.applicationId, version_id]),
                 {trigger: true});
         })
-        .catch(() => {
-            this.props
+        .catch(err => {
+            this
+            .props
             .notificationActions
-            .addNotification(`Could not ${verb} version ${version_id} for ${this.data.application.name}.`, 'error');
+            .addNotification(
+                `Could not ${verb} version ${version_id} for ${this.data.application.name}. ${err.message}`,
+                'error');
         });
     }
 

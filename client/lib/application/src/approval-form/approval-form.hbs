@@ -7,7 +7,9 @@
 <div class="grid with-gutter">
     <div class="grid-col col-1-2">
         <h4>Existing approvals</h4>
-        <div class="approvalForm-approvalList">
+        <div
+            data-block="approval-list"
+            class="approvalForm-approvalList">
         </div>
     </div>
     <div class="grid-col col-1-2">
@@ -17,27 +19,27 @@
                     <label for="approval_type">Approval Type</label>
                     <small>What specifically do you approve?</small>
                     <select
-                        name="yourturn_approval_type"
-                        placeholder="TESTED, SPEC, DEPLOY or custom entry"
                         id="approval_type"
+                        data-block="approvalType-selection"
+                        name="yourturn_approval_type"
                         type="text">
                         {{#each approvalTypes}}
                             <option value="{{this}}">{{this}}</option>
                         {{/each}}
                     </select>
                     <small>or</small>
-                        <label>
-                            <input
-                                id="approval_custom"
-                                type="checkbox" /> Custom: 
-                        </label>
+                    <label>
                         <input
-                            id="approval_custom_type"
-                            name="yourturn_approval_custom_type"
-                            placeholder="CUSTOM_TYPE"
-                            pattern="[a-zA-Z_][a-zA-Z]*[a-zA-Z]"
-                            title="Only characters"
-                            type="text" />
+                            id="approval_custom"
+                            type="checkbox" /> Custom: 
+                    </label>
+                    <input
+                        id="approval_custom_type"
+                        name="yourturn_approval_custom_type"
+                        placeholder="CUSTOM_TYPE"
+                        pattern="[a-zA-Z_][a-zA-Z]*[a-zA-Z]"
+                        title="Only characters"
+                        type="text" />
                 </div>
                 <div class="form-group">
                     <label for="approval_notes">Notes</label>

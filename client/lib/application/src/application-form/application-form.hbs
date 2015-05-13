@@ -16,6 +16,7 @@
                     checked="checked"
                 {{/if}}
                 name="yourturn_app_active"
+                data-block="active-checkbox"
                 type="checkbox" /> Active application
             
         </label>
@@ -39,10 +40,12 @@
         <small>The ID of the application.</small>
         <div class="input-group">
             <div class="input-addon">
-                <i  title="App ID is available."
+                <i  data-block="available-symbol"
+                    title="App ID is available."
                     class="fa fa-check fa-fw is-available"></i>
                 {{#unless edit}}
-                    <i  title="App ID is already taken."
+                    <i  data-block="taken-symbol"
+                        title="App ID is already taken."
                         class="fa fa-close fa-fw is-taken"></i>
                 {{/unless}}
             </div>
@@ -54,6 +57,7 @@
                     value="{{app.id}}"
                 {{/if}}
                 name="yourturn_app_app_id"
+                data-block="id-input"
                 title="Starts with character, may end with digit, may have dashes in between."
                 pattern="[A-Za-z][A-Za-z0-9\-]*[A-Za-z0-9]"
                 placeholder="pierone"
@@ -66,6 +70,7 @@
         <input
             required="required"
             id="name"
+            data-block="name-input"
             value="{{app.name}}"
             name="yourturn_app_name"
             placeholder="Pier One"

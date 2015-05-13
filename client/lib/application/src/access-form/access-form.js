@@ -1,5 +1,6 @@
 import BaseView from 'common/src/base-view';
 import Template from './access-form.hbs';
+import ErrorTpl from 'common/src/error.hbs';
 import Placeholder from './placeholder.hbs';
 import SearchableList from 'common/src/searchable-list/searchable-list';
 import EditableList from 'common/src/editable-list/editable-list';
@@ -99,8 +100,11 @@ class AccessForm extends BaseView {
 
     render() {
         let {oauth} = this.data;
-        if (oauth instanceof FetchResult && oauth.isPending()) {
-            this.$el.html(Placeholder(this.data));
+        if (oauth instanceof FetchResult) {
+            this.$el.html(
+                oauth.isPending() ?
+                    Placeholder(this.data) :
+                    ErrorTpl(oauth.getResult()));
             return this;
         }
         this.$el.html(Template(this.data));
