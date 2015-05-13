@@ -42,7 +42,7 @@ class OAuthStore extends Store {
                 applications: _m.assoc(this.state.applications, err.id, _m.toClj({
                                     scopes: [],
                                     s3_buckets: [],
-                                    is_client_confidential: false,
+                                    is_client_confidential: true,
                                     redirect_url: ''
                                 }))
             });
