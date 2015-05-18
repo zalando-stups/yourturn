@@ -28,8 +28,13 @@ notifications.render();
 
 $(document).ready(() => {
     YT_FLUX
-        .getActions('tokeninfo')
-        .fetchTokenInfo();
+        .getActions('user')
+        .fetchTokenInfo()
+        .then(info => {
+            YT_FLUX
+                .getActions('user')
+                .fetchUserTeams(info.uid);
+        });
     $('#yourturn-sidebar').append(sidebar.$el);
     $('body').prepend(notifications.$el);
     new Router({

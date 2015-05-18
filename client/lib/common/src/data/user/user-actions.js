@@ -1,16 +1,16 @@
 /* globals Date, Promise */
 import {Actions} from 'flummox';
 import request from 'common/src/superagent';
-import {Provider} from 'common/src/oauth-provider';
+import {Provider, RequestConfig, saveRoute} from 'common/src/oauth-provider';
 
-class TokeninfoActions extends Actions {
+class UserActions extends Actions {
     fetchTokenInfo() {
         let token = Provider.getAccessToken();
         if (!token) {
             return Promise.reject();
         }
         return request
-                    .get('/tokeninfo')
+                    .get('http://localhost:8080/tokeninfo')
                     .query({
                         access_token: token
                     })
@@ -34,6 +34,19 @@ class TokeninfoActions extends Actions {
         Provider.deleteTokens();
         return true;
     }
+
+    fetchUserTeams(userId) {
+        return request
+                    .get(`http://localhost:8080/user/${userId}`)
+                    .accept('json')
+                    .oauth(Provider, RequestConfig)
+                    .exec(saveRoute)
+                    .then(res => res.body)
+                    .catch(e => {
+                        e.id = userId;
+                        throw e;
+                    });
+    }
 }
 
-export default TokeninfoActions;
+export default UserActions;

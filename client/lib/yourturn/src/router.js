@@ -56,7 +56,7 @@ class YourturnRouter extends Router {
                 })
                 .catch(e => {
                     // delete tokens
-                    this.flux.getActions('tokeninfo').deleteTokenInfo();
+                    this.flux.getActions('user').deleteTokenInfo();
                     return this.flux
                             .getActions('notification')
                             .addNotification(

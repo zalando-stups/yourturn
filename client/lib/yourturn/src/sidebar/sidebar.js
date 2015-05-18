@@ -17,10 +17,10 @@ class SidebarView extends BaseView {
                 'click [data-action="logout"]': 'logout',
                 'click .sidebar-item': 'transition'
             },
-            store: props.flux.getStore('tokeninfo')
+            store: props.flux.getStore('user')
         });
         this.interval = false;
-        this.actions = props.flux.getActions('tokeninfo');
+        this.actions = props.flux.getActions('user');
     }
 
     /**
@@ -67,7 +67,7 @@ class SidebarView extends BaseView {
         if (this.interval) {
             clearInterval(this.interval);
         }
-        this.interval = setInterval(() => this.$el.html(Template(this.data)), 5000);
+        // this.interval = setInterval(() => this.$el.html(Template(this.data)), 5000);
         return this;
     }
 }

@@ -1,20 +1,20 @@
 /* globals expect */
-import TokeninfoStore from 'common/src/data/tokeninfo/tokeninfo-store';
-import TokeninfoActions from 'common/src/data/tokeninfo/tokeninfo-actions';
+import UserStore from 'common/src/data/user/user-store';
+import UserActions from 'common/src/data/user/user-actions';
 import {Flummox} from 'flummox';
 
-const FLUX = 'tokeninfo';
+const FLUX = 'user';
 
 class MockFlux extends Flummox {
     constructor() {
         super();
 
-        this.createActions(FLUX, TokeninfoActions);
-        this.createStore(FLUX, TokeninfoStore, this);
+        this.createActions(FLUX, UserActions);
+        this.createStore(FLUX, UserStore, this);
     }
 }
 
-describe('The tokeninfo store', () => {
+describe('The user store', () => {
     var store,
         flux = new MockFlux();
 
