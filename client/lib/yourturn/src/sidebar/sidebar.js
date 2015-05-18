@@ -45,7 +45,7 @@ class SidebarView extends BaseView {
     }
 
     refresh() {
-        Provider.deleteTokens();
+        this.logout();
         this.login();
     }
 

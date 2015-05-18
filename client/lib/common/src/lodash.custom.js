@@ -1,6 +1,6 @@
 /**
  * @license
- * lodash 3.7.0 (Custom Build) <https://lodash.com/>
+ * lodash 3.8.0 (Custom Build) <https://lodash.com/>
  * Build: `lodash modern include="chain,filter,flatten,forOwn,groupBy,intersection,reverse,sortBy,take,value,values,once,keys,uniqueId,isEmpty,extend,defaults,clone,escape,isEqual,has,isObject,result,each,isArray,isString,matches,bind,invoke,isFunction,pick,isRegExp,map,bindAll,any" -d -o lib/common/src/lodash.custom.js`
  * Copyright 2012-2015 The Dojo Foundation <http://dojofoundation.org/>
  * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
@@ -13,7 +13,7 @@
   var undefined;
 
   /** Used as the semantic version number. */
-  var VERSION = '3.7.0';
+  var VERSION = '3.8.0';
 
   /** Used to compose bitmasks for wrapper metadata. */
   var BIND_FLAG = 1,
@@ -72,7 +72,7 @@
       reHasUnescapedHtml = RegExp(reUnescapedHtml.source);
 
   /** Used to match property names within property paths. */
-  var reIsDeepProp = /\.|\[(?:[^[\]]+|(["'])(?:(?!\1)[^\n\\]|\\.)*?)\1\]/,
+  var reIsDeepProp = /\.|\[(?:[^[\]]*|(["'])(?:(?!\1)[^\n\\]|\\.)*?\1)\]/,
       reIsPlainProp = /^\w*$/,
       rePropName = /[^.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\n\\]|\\.)*?)\2)\]/g;
 
@@ -164,8 +164,6 @@
    * restricted `window` object, otherwise the `window` object is used.
    */
   var root = freeGlobal || ((freeWindow !== (this && this.window)) && freeWindow) || freeSelf || this;
-
-  /*--------------------------------------------------------------------------*/
 
   /**
    * The base implementation of `compareAscending` which compares values and
@@ -325,8 +323,6 @@
     return result;
   }
 
-  /*--------------------------------------------------------------------------*/
-
   /** Used for native method references. */
   var arrayProto = Array.prototype,
       objectProto = Object.prototype,
@@ -359,7 +355,7 @@
       floor = Math.floor,
       getOwnPropertySymbols = isNative(getOwnPropertySymbols = Object.getOwnPropertySymbols) && getOwnPropertySymbols,
       push = arrayProto.push,
-      preventExtensions = isNative(Object.preventExtensions = Object.preventExtensions) && preventExtensions,
+      preventExtensions = isNative(preventExtensions = Object.preventExtensions) && preventExtensions,
       propertyIsEnumerable = objectProto.propertyIsEnumerable,
       Set = isNative(Set = root.Set) && Set,
       Uint8Array = isNative(Uint8Array = root.Uint8Array) && Uint8Array,
@@ -385,12 +381,19 @@
     //
     // Use `Object.preventExtensions` on a plain object instead of simply using
     // `Object('x')` because Chrome and IE fail to throw an error when attempting
-    // to assign values to readonly indexes of strings in strict mode.
-    var object = { '1': 0 },
-        func = preventExtensions && isNative(func = Object.assign) && func;
-
-    try { func(preventExtensions(object), 'xo'); } catch(e) {}
-    return !object[1] && func;
+    // to assign values to readonly indexes of strings.
+    var func = preventExtensions && isNative(func = Object.assign) && func;
+    try {
+      if (func) {
+        var object = preventExtensions({ '1': 0 });
+        object[0] = 1;
+      }
+    } catch(e) {
+      // Only attempt in strict mode.
+      try { func(object, 'xo'); } catch(e) {}
+      return !object[1] && func;
+    }
+    return false;
   }());
 
   /* Native method references for those with the same name as other `lodash` methods. */
@@ -406,7 +409,7 @@
 
   /** Used as references for the maximum length and index of an array. */
   var MAX_ARRAY_LENGTH = Math.pow(2, 32) - 1,
-      MAX_ARRAY_INDEX =  MAX_ARRAY_LENGTH - 1,
+      MAX_ARRAY_INDEX = MAX_ARRAY_LENGTH - 1,
       HALF_MAX_ARRAY_LENGTH = MAX_ARRAY_LENGTH >>> 1;
 
   /** Used as the size, in bytes, of each `Float64Array` element. */
@@ -423,8 +426,6 @@
 
   /** Used to lookup unminified function names. */
   var realNames = {};
-
-  /*------------------------------------------------------------------------*/
 
   /**
    * Creates a `lodash` object which wraps `value` to enable implicit chaining.
@@ -565,6 +566,7 @@
 
   (function(x) {
     var Ctor = function() { this.x = x; },
+        args = arguments,
         object = { '0': x, 'length': x },
         props = [];
 
@@ -602,13 +604,11 @@
      * @type boolean
      */
     try {
-      support.nonEnumArgs = !propertyIsEnumerable.call(arguments, 1);
+      support.nonEnumArgs = !propertyIsEnumerable.call(args, 1);
     } catch(e) {
       support.nonEnumArgs = true;
     }
   }(1, 0));
-
-  /*------------------------------------------------------------------------*/
 
   /**
    * Creates a lazy wrapper object which wraps `value` to enable lazy evaluation.
@@ -738,8 +738,6 @@
     return result;
   }
 
-  /*------------------------------------------------------------------------*/
-
   /**
    *
    * Creates a cache object to store unique values.
@@ -788,8 +786,6 @@
       data.hash[value] = true;
     }
   }
-
-  /*------------------------------------------------------------------------*/
 
   /**
    * Copies the values of `source` to `array`.
@@ -1128,8 +1124,8 @@
    *
    * @private
    * @param {Array} array The array to flatten.
-   * @param {boolean} isDeep Specify a deep flatten.
-   * @param {boolean} isStrict Restrict flattening to arrays and `arguments` objects.
+   * @param {boolean} [isDeep] Specify a deep flatten.
+   * @param {boolean} [isStrict] Restrict flattening to arrays-like objects.
    * @returns {Array} Returns the new flattened array.
    */
   function baseFlatten(array, isDeep, isStrict) {
@@ -1140,8 +1136,8 @@
 
     while (++index < length) {
       var value = array[index];
-
-      if (isObjectLike(value) && isLength(value.length) && (isArray(value) || isArguments(value))) {
+      if (isObjectLike(value) && isArrayLike(value) &&
+          (isStrict || isArray(value) || isArguments(value))) {
         if (isDeep) {
           // Recursively flatten arrays (susceptible to call stack limits).
           value = baseFlatten(value, isDeep, isStrict);
@@ -1149,7 +1145,6 @@
         var valIndex = -1,
             valLength = value.length;
 
-        result.length += valLength;
         while (++valIndex < valLength) {
           result[++resIndex] = value[valIndex];
         }
@@ -1245,9 +1240,9 @@
         length = path.length;
 
     while (object != null && ++index < length) {
-      var result = object = object[path[index]];
+      object = object[path[index]];
     }
-    return result;
+    return (index && index == length) ? object : undefined;
   }
 
   /**
@@ -1266,8 +1261,7 @@
   function baseIsEqual(value, other, customizer, isLoose, stackA, stackB) {
     // Exit early for identical values.
     if (value === other) {
-      // Treat `+0` vs. `-0` as not equal.
-      return value !== 0 || (1 / value == 1 / other);
+      return true;
     }
     var valType = typeof value,
         othType = typeof other;
@@ -1416,8 +1410,7 @@
    */
   function baseMap(collection, iteratee) {
     var index = -1,
-        length = getLength(collection),
-        result = isLength(length) ? Array(length) : [];
+        result = isArrayLike(collection) ? Array(collection.length) : [];
 
     baseEach(collection, function(value, key, collection) {
       result[++index] = iteratee(value, key, collection);
@@ -1852,12 +1845,12 @@
     while (++argsIndex < argsLength) {
       result[argsIndex] = args[argsIndex];
     }
-    var pad = argsIndex;
+    var offset = argsIndex;
     while (++rightIndex < rightLength) {
-      result[pad + rightIndex] = partials[rightIndex];
+      result[offset + rightIndex] = partials[rightIndex];
     }
     while (++holdersIndex < holdersLength) {
-      result[pad + holders[holdersIndex]] = args[argsIndex++];
+      result[offset + holders[holdersIndex]] = args[argsIndex++];
     }
     return result;
   }
@@ -2339,8 +2332,7 @@
         // Treat `NaN` vs. `NaN` as equal.
         return (object != +object)
           ? other != +other
-          // But, treat `-0` vs. `+0` as not equal.
-          : (object == 0 ? ((1 / object) == (1 / other)) : object == +other);
+          : object == +other;
 
       case regexpTag:
       case stringTag:
@@ -2492,7 +2484,7 @@
    * Gets the "length" property value of `object`.
    *
    * **Note:** This function is used to avoid a [JIT bug](https://bugs.webkit.org/show_bug.cgi?id=142792)
-   * in Safari on iOS 8.1 ARM64.
+   * that affects Safari on at least iOS 8.1-8.3 ARM64.
    *
    * @private
    * @param {Object} object The object to query.
@@ -2632,6 +2624,17 @@
   }
 
   /**
+   * Checks if `value` is array-like.
+   *
+   * @private
+   * @param {*} value The value to check.
+   * @returns {boolean} Returns `true` if `value` is array-like, else `false`.
+   */
+  function isArrayLike(value) {
+    return value != null && isLength(getLength(value));
+  }
+
+  /**
    * Checks if `value` is a valid array-like index.
    *
    * @private
@@ -2659,13 +2662,9 @@
       return false;
     }
     var type = typeof index;
-    if (type == 'number') {
-      var length = getLength(object),
-          prereq = isLength(length) && isIndex(index, length);
-    } else {
-      prereq = type == 'string' && index in object;
-    }
-    if (prereq) {
+    if (type == 'number'
+        ? (isArrayLike(object) && isIndex(index, object.length))
+        : (type == 'string' && index in object)) {
       var other = object[index];
       return value === value ? (value === other) : (other !== other);
     }
@@ -2726,7 +2725,7 @@
    *  equality comparisons, else `false`.
    */
   function isStrictComparable(value) {
-    return value === value && (value === 0 ? ((1 / value) > 0) : !isObject(value));
+    return value === value && !isObject(value);
   }
 
   /**
@@ -2800,7 +2799,7 @@
   }
 
   /**
-   * A specialized version of `_.pick` that picks `object` properties specified
+   * A specialized version of `_.pick` which picks `object` properties specified
    * by `props`.
    *
    * @private
@@ -2825,7 +2824,7 @@
   }
 
   /**
-   * A specialized version of `_.pick` that picks `object` properties `predicate`
+   * A specialized version of `_.pick` which picks `object` properties `predicate`
    * returns truthy for.
    *
    * @private
@@ -2969,8 +2968,6 @@
       : new LodashWrapper(wrapper.__wrapped__, wrapper.__chain__, arrayCopy(wrapper.__actions__));
   }
 
-  /*------------------------------------------------------------------------*/
-
   /**
    * Flattens a nested array. If `isDeep` is `true` the array is recursively
    * flattened, otherwise it is only flattened a single level.
@@ -3001,13 +2998,10 @@
 
   /**
    * Gets the index at which the first occurrence of `value` is found in `array`
-   * using `SameValueZero` for equality comparisons. If `fromIndex` is negative,
-   * it is used as the offset from the end of `array`. If `array` is sorted
-   * providing `true` for `fromIndex` performs a faster binary search.
-   *
-   * **Note:** [`SameValueZero`](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-samevaluezero)
-   * comparisons are like strict equality comparisons, e.g. `===`, except that
-   * `NaN` matches `NaN`.
+   * using [`SameValueZero`](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-samevaluezero)
+   * for equality comparisons. If `fromIndex` is negative, it is used as the offset
+   * from the end of `array`. If `array` is sorted providing `true` for `fromIndex`
+   * performs a faster binary search.
    *
    * @static
    * @memberOf _
@@ -3050,12 +3044,9 @@
   }
 
   /**
-   * Creates an array of unique values in all provided arrays using `SameValueZero`
+   * Creates an array of unique values in all provided arrays using
+   * [`SameValueZero`](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-samevaluezero)
    * for equality comparisons.
-   *
-   * **Note:** [`SameValueZero`](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-samevaluezero)
-   * comparisons are like strict equality comparisons, e.g. `===`, except that
-   * `NaN` matches `NaN`.
    *
    * @static
    * @memberOf _
@@ -3077,7 +3068,7 @@
 
     while (++argsIndex < argsLength) {
       var value = arguments[argsIndex];
-      if (isArray(value) || isArguments(value)) {
+      if (isArrayLike(value)) {
         args.push(value);
         caches.push((isCommon && value.length >= 120) ? createCache(argsIndex && value) : null);
       }
@@ -3163,8 +3154,6 @@
     }
     return baseSlice(array, 0, n < 0 ? 0 : n);
   }
-
-  /*------------------------------------------------------------------------*/
 
   /**
    * Creates a `lodash` object that wraps `value` with explicit method
@@ -3416,8 +3405,6 @@
     return baseWrapperValue(this.__wrapped__, this.__actions__);
   }
 
-  /*------------------------------------------------------------------------*/
-
   /**
    * Iterates over elements of `collection`, returning an array of all elements
    * `predicate` returns truthy for. The predicate is bound to `thisArg` and
@@ -3581,8 +3568,7 @@
     var index = -1,
         isFunc = typeof path == 'function',
         isProp = isKey(path),
-        length = getLength(collection),
-        result = isLength(length) ? Array(length) : [];
+        result = isArrayLike(collection) ? Array(collection.length) : [];
 
     baseEach(collection, function(value) {
       var func = isFunc ? path : (isProp && value != null && value[path]);
@@ -3611,10 +3597,11 @@
    * `_.every`, `_.filter`, `_.map`, `_.mapValues`, `_.reject`, and `_.some`.
    *
    * The guarded methods are:
-   * `ary`, `callback`, `chunk`, `clone`, `create`, `curry`, `curryRight`, `drop`,
-   * `dropRight`, `every`, `fill`, `flatten`, `invert`, `max`, `min`, `parseInt`,
-   * `slice`, `sortBy`, `take`, `takeRight`, `template`, `trim`, `trimLeft`,
-   * `trimRight`, `trunc`, `random`, `range`, `sample`, `some`, `uniq`, and `words`
+   * `ary`, `callback`, `chunk`, `clone`, `create`, `curry`, `curryRight`,
+   * `drop`, `dropRight`, `every`, `fill`, `flatten`, `invert`, `max`, `min`,
+   * `parseInt`, `slice`, `sortBy`, `take`, `takeRight`, `template`, `trim`,
+   * `trimLeft`, `trimRight`, `trunc`, `random`, `range`, `sample`, `some`,
+   * `sum`, `uniq`, and `words`
    *
    * @static
    * @memberOf _
@@ -3776,8 +3763,6 @@
     return baseSortBy(result, compareAscending);
   }
 
-  /*------------------------------------------------------------------------*/
-
   /**
    * Gets the number of milliseconds that have elapsed since the Unix epoch
    * (1 January 1970 00:00:00 UTC).
@@ -3795,8 +3780,6 @@
   var now = nativeNow || function() {
     return new Date().getTime();
   };
-
-  /*------------------------------------------------------------------------*/
 
   /**
    * Creates a function that invokes `func`, with the `this` binding and arguments
@@ -3993,8 +3976,6 @@
     };
   }
 
-  /*------------------------------------------------------------------------*/
-
   /**
    * Creates a clone of `value`. If `isDeep` is `true` nested objects are cloned,
    * otherwise they are assigned by reference. If `customizer` is provided it is
@@ -4076,8 +4057,7 @@
    * // => false
    */
   function isArguments(value) {
-    var length = isObjectLike(value) ? value.length : undefined;
-    return isLength(length) && objToString.call(value) == argsTag;
+    return isObjectLike(value) && isArrayLike(value) && objToString.call(value) == argsTag;
   }
 
   /**
@@ -4131,10 +4111,9 @@
     if (value == null) {
       return true;
     }
-    var length = getLength(value);
-    if (isLength(length) && (isArray(value) || isString(value) || isArguments(value) ||
+    if (isArrayLike(value) && (isArray(value) || isString(value) || isArguments(value) ||
         (isObjectLike(value) && isFunction(value.splice)))) {
-      return !length;
+      return !value.length;
     }
     return !keys(value).length;
   }
@@ -4284,7 +4263,7 @@
    * // => false
    */
   function isRegExp(value) {
-    return (isObjectLike(value) && objToString.call(value) == regexpTag) || false;
+    return isObjectLike(value) && objToString.call(value) == regexpTag;
   }
 
   /**
@@ -4327,8 +4306,6 @@
     return isObjectLike(value) && isLength(value.length) && !!typedArrayTags[objToString.call(value)];
   }
 
-  /*------------------------------------------------------------------------*/
-
   /**
    * Assigns own enumerable properties of source object(s) to the destination
    * object. Subsequent sources overwrite property assignments of previous sources.
@@ -4338,7 +4315,6 @@
    *
    * **Note:** This method mutates `object` and is based on
    * [`Object.assign`](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-object.assign).
-   *
    *
    * @static
    * @memberOf _
@@ -4507,12 +4483,9 @@
    * // => ['0', '1']
    */
   var keys = !nativeKeys ? shimKeys : function(object) {
-    if (object) {
-      var Ctor = object.constructor,
-          length = object.length;
-    }
+    var Ctor = object != null && object.constructor;
     if ((typeof Ctor == 'function' && Ctor.prototype === object) ||
-        (typeof object != 'function' && isLength(length))) {
+        (typeof object != 'function' && isArrayLike(object))) {
       return shimKeys(object);
     }
     return isObject(object) ? nativeKeys(object) : [];
@@ -4674,8 +4647,6 @@
     return baseValues(object, keys(object));
   }
 
-  /*------------------------------------------------------------------------*/
-
   /**
    * Converts the characters "&", "<", ">", '"', "'", and "\`", in `string` to
    * their corresponding HTML entities.
@@ -4737,8 +4708,6 @@
       : string;
   }
 
-  /*------------------------------------------------------------------------*/
-
   /**
    * Creates a function that invokes `func` with the `this` binding of `thisArg`
    * and arguments of the created function. If `func` is a property name the
@@ -4781,7 +4750,9 @@
     if (guard && isIterateeCall(func, thisArg, guard)) {
       thisArg = null;
     }
-    return baseCallback(func, thisArg);
+    return isObjectLike(func)
+      ? matches(func)
+      : baseCallback(func, thisArg);
   }
 
   /**
@@ -5011,8 +4982,6 @@
     return baseToString(prefix) + id;
   }
 
-  /*------------------------------------------------------------------------*/
-
   // Ensure wrappers are instances of `baseLodash`.
   lodash.prototype = baseLodash.prototype;
 
@@ -5068,8 +5037,6 @@
   // Add functions to `lodash.prototype`.
   mixin(lodash, lodash);
 
-  /*------------------------------------------------------------------------*/
-
   // Add functions that return unwrapped values when chaining.
   lodash.clone = clone;
   lodash.escape = escape;
@@ -5107,8 +5074,6 @@
     return source;
   }()), false);
 
-  /*------------------------------------------------------------------------*/
-
   lodash.prototype.sample = function(n) {
     if (!this.__chain__ && n == null) {
       return sample(this.value());
@@ -5117,8 +5082,6 @@
       return sample(value, n);
     });
   };
-
-  /*------------------------------------------------------------------------*/
 
   /**
    * The semantic version number.
@@ -5228,8 +5191,13 @@
 
   LazyWrapper.prototype.slice = function(start, end) {
     start = start == null ? 0 : (+start || 0);
-    var result = start < 0 ? this.takeRight(-start) : this.drop(start);
 
+    var result = this;
+    if (start < 0) {
+      result = this.takeRight(-start);
+    } else if (start) {
+      result = this.drop(start);
+    }
     if (end !== undefined) {
       end = (+end || 0);
       result = end < 0 ? result.dropRight(-end) : result.take(end - start);
@@ -5252,7 +5220,6 @@
 
     lodash.prototype[methodName] = function() {
       var args = arguments,
-          length = args.length,
           chainAll = this.__chain__,
           value = this.__wrapped__,
           isHybrid = !!this.__actions__.length,
@@ -5337,8 +5304,6 @@
   lodash.prototype.head = lodash.prototype.first;
   lodash.prototype.select = lodash.prototype.filter;
   lodash.prototype.tail = lodash.prototype.rest;
-
-  /*--------------------------------------------------------------------------*/
 
   // Some AMD build optimizers like r.js check for condition patterns like the following:
   if (typeof define == 'function' && typeof define.amd == 'object' && define.amd) {
