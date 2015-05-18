@@ -50,18 +50,18 @@ class YourturnRouter extends Router {
             // validate with business logic
             this.loginHandler
                 .validateResponse(response)
+                .then(() => {
+                    // everything's good!
+                    return history.navigate(response.metadata.route || '/', {trigger: true});
+                })
                 .catch(e => {
                     // delete tokens
                     Provider.deleteTokens();
-                    this.flux
-                        .getActions('notification')
-                        .addNotification(
-                            'Token validation failed: ' + e.message,
-                            'error');
-                })
-                .then(() => {
-                    // everything's good!
-                    history.navigate(response.metadata.route || '/', {trigger: true});
+                    return this.flux
+                            .getActions('notification')
+                            .addNotification(
+                                'Token validation failed: ' + e.message,
+                                'error');
                 });
         }
     }

@@ -2,6 +2,7 @@ FROM node:0.12.1
 
 MAINTAINER Zalando SE
 
+RUN npm install superagent@1.2.0
 RUN npm install express@4.12.3
 
 # add scm-source

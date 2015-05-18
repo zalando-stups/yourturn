@@ -1,4 +1,6 @@
 .*.un~
+*.sublime-project
+*.sublime-workspace
 node_modules
 client/dist
 client/coverage
