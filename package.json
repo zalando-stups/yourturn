@@ -26,7 +26,7 @@
     "promise.prototype.finally": "1.0.1",
     "remarkable": "1.6.0",
     "superagent": "1.2.0",
-    "superagent-oauth2-client": "0.0.15"
+    "superagent-oauth2-client": "0.0.17"
   },
   "devDependencies": {
     "autoprefixer-loader": "1.2.0",

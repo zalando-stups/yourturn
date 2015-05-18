@@ -2,7 +2,8 @@ import $ from 'jquery';
 import {history} from 'backbone';
 import BaseView from 'common/src/base-view';
 import Template from './sidebar.hbs';
-import {Provider} from 'common/src/oauth-provider';
+import request from 'common/src/superagent';
+import {Provider, RequestConfig, saveRoute} from 'common/src/oauth-provider';
 import 'common/asset/scss/yourturn/sidebar.scss';
 
 class SidebarView extends BaseView {
@@ -11,6 +12,8 @@ class SidebarView extends BaseView {
             tagName: 'aside',
             className: 'sidebar',
             events: {
+                'click [data-action="login"]': 'login',
+                'click [data-action="refresh"]': 'refresh',
                 'click [data-action="logout"]': 'logout',
                 'click .sidebar-item': 'transition'
             },
@@ -32,6 +35,18 @@ class SidebarView extends BaseView {
                 trigger: true
             });
         }
+    }
+
+    login() {
+        request
+            .get('does.not.matter')
+            .oauth(Provider, RequestConfig)
+            .requestAccessToken(saveRoute);
+    }
+
+    refresh() {
+        Provider.deleteTokens();
+        this.login();
     }
 
     logout() {
