@@ -2,18 +2,20 @@ import $ from 'jquery';
 import {history} from 'backbone';
 import BaseView from 'common/src/base-view';
 import Template from './sidebar.hbs';
+import {Provider} from 'common/src/oauth-provider';
 import 'common/asset/scss/yourturn/sidebar.scss';
 
 class SidebarView extends BaseView {
-    constructor() {
+    constructor(props) {
         super({
             tagName: 'aside',
             className: 'sidebar',
             events: {
                 'click .sidebar-item': 'transition'
-            }
+            },
+            store: props.flux.getStore('tokeninfo')
         });
-        this.state = {};
+        this.interval = false;
     }
 
     /**
@@ -30,8 +32,20 @@ class SidebarView extends BaseView {
         }
     }
 
+    update() {
+        let info = this.store.getTokenInfo(Provider.getAccessToken());
+        console.log(info);
+        this.data = {
+            tokeninfo: info
+        };
+    }
+
     render() {
-        this.$el.html(Template(this.state));
+        this.$el.html(Template(this.data));
+        if (this.interval) {
+            clearInterval(this.interval);
+        }
+        // this.interval = setInterval(() => this.$el.html(Template(this.data)), 5000);
         return this;
     }
 }

@@ -1,7 +1,10 @@
 import $ from 'jquery';
 import {history} from 'backbone';
+import {Provider} from 'common/src/oauth-provider';
+
 import Sidebar from './sidebar/sidebar';
 import NotificationBar from './notification-bar/notification-bar';
+
 import Router from './router';
 import ResourceRouter from 'resource/src/router';
 import AppRouter from 'application/src/router';
@@ -13,7 +16,9 @@ import 'common/asset/scss/yourturn/yourturn.scss';
 
 const YT_FLUX = new Flux();
 
-let sidebar = new Sidebar();
+let sidebar = new Sidebar({
+    flux: YT_FLUX
+});
 sidebar.render();
 
 let notifications = new NotificationBar({
@@ -21,7 +26,13 @@ let notifications = new NotificationBar({
 });
 notifications.render();
 
+
 $(document).ready(() => {
+    if (Provider.getAccessToken()) {
+        YT_FLUX
+        .getActions('tokeninfo')
+        .fetchTokenInfo(Provider.getAccessToken());
+    }
     $('#yourturn-sidebar').append(sidebar.$el);
     $('body').prepend(notifications.$el);
     new Router({

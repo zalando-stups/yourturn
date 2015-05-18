@@ -73,7 +73,8 @@ module.exports = {
             { test: /\.js$/, exclude: /node_modules/, loader: 'babel' },
             { test: /\.scss$/, loader: ExtractTextPlugin.extract('style', 'css!autoprefixer!sass') },
             { test: /\.css$/, loader: ExtractTextPlugin.extract('style', 'css') },
-            { test: /\.woff(\?v=\d+\.\d+\.\d+)?$/, loader: "url?limit=8192&mimetype=application/font-woff" }
+            { test: /\.woff(\?v=\d+\.\d+\.\d+)?$/, loader: "url?limit=8192&mimetype=application/font-woff" },
+            { test: /\.(png|jpg|jpeg|gif)$/, loaders: ['url?limit=8192', 'img']}
         ]
     }
 };

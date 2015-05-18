@@ -2,9 +2,16 @@ var express = require('express'),
     server = express(),
     request = require('superagent'),
     fs = require('fs'),
-    index = fs.readFileSync('./index.html');
+    index = process.env.ENV_TEST ? '' : fs.readFileSync('./index.html');
 
 server.use('/dist', express.static('dist'));
+
+/** enable cors */
+server.use(function(req, res, next) {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+    next();
+});
 
 function generateEnv() {
     var env = '';
@@ -24,9 +31,10 @@ function writeEnv() {
     console.log('Current user id', process.getuid());
     fs.writeFileSync('dist/env.js', env );
 }
-
-writeEnv();
-setInterval( writeEnv, 1000 * 60 * 30 ); // write this every 30 minutes
+if (!process.env.ENV_TEST) {
+    writeEnv();
+    setInterval( writeEnv, 1000 * 60 * 30 ); // write this every 30 minutes
+}
 
 server.get('/teams', function(req, res) {
     request
@@ -64,6 +72,7 @@ server.get('/user/:userId', function(req, res) {
 });
 
 server.get('/tokeninfo', function(req, res) {
+    console.log('requested tokeninfo');
     request
         .get(process.env.YTENV_OAUTH_TOKENINFO_URL)
         .accept('json')

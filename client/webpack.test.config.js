@@ -61,9 +61,10 @@ module.exports = {
         loaders: [
             { test: /\.hbs$/, exclude: /node_modules/, loader: 'handlebars?helperDirs[]=' + __dirname + '/lib/common/src/handlebars' },
             { test: /\.js$/, exclude: /node_modules/, loader: 'babel' },
-            { test: /\.scss$/, exclude: /node_modules/, loaders: ['null'] },
+            { test: /\.scss$/, exclude: /node_modules/, loader: 'null' },
             { test: /\.woff(\?v=\d+\.\d+\.\d+)?$/, loader: 'null' },
-            { test: /\.json$/, loader: 'json' }
+            { test: /\.json$/, loader: 'json' },,
+            { test: /\.(png|jpg|jpeg|gif)$/, loader: 'null'}
         ]
     }
 };

@@ -51,6 +51,7 @@
     "gulp-util": "3.0.4",
     "handlebars": "3.0.3",
     "handlebars-loader": "1.0.2",
+    "img-loader": "1.1.0",
     "isparta-instrumenter-loader": "0.2.1",
     "istanbul": "0.3.13",
     "jscs": "1.13.1",

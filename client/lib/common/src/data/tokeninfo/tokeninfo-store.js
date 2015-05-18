@@ -11,6 +11,10 @@ class TokeninfoStore extends Store {
             tokens: _m.hashMap()
         };
 
+        this.register(
+            tokeninfoActions.deleteTokenInfo,
+            this.deleteTokenInfo);
+
         this.registerAsync(
             tokeninfoActions.fetchTokenInfo,
             null,
@@ -25,7 +29,13 @@ class TokeninfoStore extends Store {
     }
 
     getTokenInfo(token) {
-        return _m.toJs(_m.get(this.state.tokens, token));
+        return _m.toJs(_m.get(this.state.tokens, token, false));
+    }
+
+    deleteTokenInfo(token) {
+        this.setState({
+            tokens: _m.dissoc(this.state.tokens, token)
+        });
     }
 
     _empty() {
