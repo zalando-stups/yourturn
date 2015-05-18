@@ -19,9 +19,9 @@ class LoginHandler {
             var {access_token} = oauthResponse;
             this.actions
                 .tokeninfo
-                .fetchTokenInfo(access_token)
+                .fetchTokenInfo()
                 .then(() => {
-                    let tokeninfo = this.store.tokeninfo.getTokenInfo(access_token);
+                    let tokeninfo = this.store.tokeninfo.getTokenInfo();
                     // 2) validate that uid is present and realm is employees
                     if (!tokeninfo.uid) {
                         return reject(new Error('No uid present on access token.'));

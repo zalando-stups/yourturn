@@ -1,6 +1,5 @@
 import $ from 'jquery';
 import {history} from 'backbone';
-import {Provider} from 'common/src/oauth-provider';
 
 import Sidebar from './sidebar/sidebar';
 import NotificationBar from './notification-bar/notification-bar';
@@ -28,11 +27,9 @@ notifications.render();
 
 
 $(document).ready(() => {
-    if (Provider.getAccessToken()) {
-        YT_FLUX
+    YT_FLUX
         .getActions('tokeninfo')
-        .fetchTokenInfo(Provider.getAccessToken());
-    }
+        .fetchTokenInfo();
     $('#yourturn-sidebar').append(sidebar.$el);
     $('body').prepend(notifications.$el);
     new Router({

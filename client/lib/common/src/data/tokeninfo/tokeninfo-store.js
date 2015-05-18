@@ -8,7 +8,7 @@ class TokeninfoStore extends Store {
         const tokeninfoActions = flux.getActions('tokeninfo');
 
         this.state = {
-            tokens: _m.hashMap()
+            tokeninfo: _m.hashMap()
         };
 
         this.register(
@@ -22,25 +22,25 @@ class TokeninfoStore extends Store {
             null);
     }
 
-    receiveTokenInfo([token, tokeninfo]) {
+    receiveTokenInfo(tokeninfo) {
         this.setState({
-            tokens: _m.assoc(this.state.tokens, token, _m.toClj(tokeninfo))
+            tokeninfo: _m.toClj(tokeninfo)
         });
     }
 
-    getTokenInfo(token) {
-        return _m.toJs(_m.get(this.state.tokens, token, false));
+    getTokenInfo() {
+        return _m.toJs(this.state.tokeninfo);
     }
 
-    deleteTokenInfo(token) {
+    deleteTokenInfo() {
         this.setState({
-            tokens: _m.dissoc(this.state.tokens, token)
+            tokeninfo: false
         });
     }
 
     _empty() {
         this.setState({
-            tokens: _m.hashMap()
+            tokeninfo: _m.hashMap()
         });
     }
 }

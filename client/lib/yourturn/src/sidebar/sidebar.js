@@ -11,11 +11,13 @@ class SidebarView extends BaseView {
             tagName: 'aside',
             className: 'sidebar',
             events: {
+                'click [data-action="logout"]': 'logout',
                 'click .sidebar-item': 'transition'
             },
             store: props.flux.getStore('tokeninfo')
         });
         this.interval = false;
+        this.actions = props.flux.getActions('tokeninfo');
     }
 
     /**
@@ -32,8 +34,14 @@ class SidebarView extends BaseView {
         }
     }
 
+    logout() {
+        this.actions.deleteTokenInfo();
+        this.update();
+        this.render();
+    }
+
     update() {
-        let info = this.store.getTokenInfo(Provider.getAccessToken());
+        let info = this.store.getTokenInfo();
         console.log(info);
         this.data = {
             tokeninfo: info

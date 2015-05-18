@@ -6,19 +6,30 @@
             <span>{{tokeninfo.uid}}</span>
         </div>
         <div class="tokenInfo">
-            <div><small>OAuth Token expires {{{relativeDate tokeninfo.valid_until}}}</small>   </div>
+            <div><small>OAuth Token expires {{{relativeDate tokeninfo.valid_until}}}</small>.</div>
             <div class="btn-group">
-                <button class="btn btn-default">
+                <button
+                    data-action="refresh"
+                    class="btn btn-default">
                     <i class="fa fa-refresh"></i> Refresh
                 </button>
-                <button class="btn btn-default">
-                    <i class="fa fa-trash"></i> Delete
+                <button
+                    data-action="logout"
+                    class="btn btn-default">
+                    <i class="fa fa-sign-out"></i> Logout
                 </button>
             </div>  
         </div>
     {{else}}
-        <div>
-            You are not logged in.
+        <div class="tokenInfo">
+            <div>You are not logged in.</div>
+            <div class="btn-group">
+                <button
+                    data-action="login"
+                    class="btn btn-default">
+                    <i class="fa fa-sign-in"></i> Log in
+                </button>
+            </div>
         </div>
     {{/if}}
     </div>
