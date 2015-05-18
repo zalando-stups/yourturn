@@ -27,10 +27,18 @@ describe('The tokeninfo store', () => {
     });
 
     it('should receive a tokeninfo', () => {
-        store.receiveTokenInfo(['token', {
+        store.receiveTokenInfo({
             uid: 'npiccolotto'
-        }]);
-        let tokeninfo = store.getTokenInfo('token');
+        });
+        let tokeninfo = store.getTokenInfo();
         expect(tokeninfo.uid).to.equal('npiccolotto');
+    });
+
+    it('should delete a tokeninfo', () => {
+        store.receiveTokenInfo({
+            uid: 'npiccolotto'
+        });
+        store.deleteTokenInfo();
+        expect(store.getTokenInfo()).to.be.false;
     });
 });

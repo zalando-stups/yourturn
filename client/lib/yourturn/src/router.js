@@ -49,14 +49,14 @@ class YourturnRouter extends Router {
             // successful response with access_token
             // validate with business logic
             this.loginHandler
-                .validateResponse(response)
+                .validateResponse()
                 .then(() => {
                     // everything's good!
                     return history.navigate(response.metadata.route || '/', {trigger: true});
                 })
                 .catch(e => {
                     // delete tokens
-                    flux.getActions('tokeninfo').deleteTokenInfo();
+                    this.flux.getActions('tokeninfo').deleteTokenInfo();
                     return this.flux
                             .getActions('notification')
                             .addNotification(

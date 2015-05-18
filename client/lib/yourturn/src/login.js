@@ -13,10 +13,9 @@ class LoginHandler {
         };
     }
 
-    validateResponse(oauthResponse) {
+    validateResponse() {
         return new Promise((resolve, reject) => {
             // 1) go to tokeninfo endpoint, get uid
-            var {access_token} = oauthResponse;
             this.actions
                 .tokeninfo
                 .fetchTokenInfo()
