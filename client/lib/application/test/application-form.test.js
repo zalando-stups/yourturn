@@ -2,6 +2,8 @@
 import {Flummox} from 'flummox';
 import ApplicationStore from 'common/src/data/application/application-store';
 import ApplicationActions from 'common/src/data/application/application-actions';
+import UserStore from 'common/src/data/user/user-store';
+import UserActions from 'common/src/data/user/user-actions';
 import AppForm from 'application/src/application-form/application-form';
 
 const FLUX = 'application',
@@ -18,7 +20,7 @@ const FLUX = 'application',
         id: 'kio'
     };
 
-class MockFlux extends Flummox {
+class AppFlux extends Flummox {
     constructor() {
         super();
 
@@ -27,13 +29,24 @@ class MockFlux extends Flummox {
     }
 }
 
+class GlobalFlux extends Flummox {
+    constructor() {
+        super();
+
+        this.createActions('user', UserActions);
+        this.createStore('user', UserStore, this);
+    }
+}
+
 describe('The application form view', () => {
     var flux,
+        globalFlux,
         actionSpy,
         form;
 
     beforeEach(() => {
-        flux = new MockFlux();
+        flux = new AppFlux();
+        globalFlux = new GlobalFlux();
         actionSpy = sinon.stub(flux.getActions(FLUX), 'saveApplication', function () {
             return Promise.resolve();
         });
@@ -42,7 +55,8 @@ describe('The application form view', () => {
     describe('in create mode', () => {
         beforeEach(() => {
             form = new AppForm({
-                flux: flux
+                flux: flux,
+                globalFlux: globalFlux
             });
         });
 
@@ -64,7 +78,8 @@ describe('The application form view', () => {
             form = new AppForm({
                 flux: flux,
                 applicationId: APP_ID,
-                edit: true
+                edit: true,
+                globalFlux: globalFlux
             });
         });
 
