@@ -16,7 +16,6 @@ class TokeninfoActions extends Actions {
                     })
                     .accept('json')
                     .exec()
-                    .then(res => [token, res.body]);
                     .then(res => {
                         let body = res.body;
                         body.valid_until = Date.now() + parseInt(res.body.expires_in, 10) * 1000;
