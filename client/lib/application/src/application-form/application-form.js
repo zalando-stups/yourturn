@@ -23,10 +23,10 @@ class ApplicationForm extends BaseView {
         if (props.edit) {
             props.stores.application = props.flux.getStore('application');
         }
+        super(props);
         this.state = {
             autocompleteServiceUrl: true
         };
-        super(props);
     }
 
     handleAppId() {
