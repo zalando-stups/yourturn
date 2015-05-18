@@ -10,7 +10,7 @@ class UserActions extends Actions {
             return Promise.reject();
         }
         return request
-                    .get('http://localhost:8080/tokeninfo')
+                    .get('/tokeninfo')
                     .query({
                         access_token: token
                     })
@@ -37,7 +37,7 @@ class UserActions extends Actions {
 
     fetchUserTeams(userId) {
         return request
-                    .get(`http://localhost:8080/user/${userId}`)
+                    .get(`/user/${userId}`)
                     .accept('json')
                     .oauth(Provider, RequestConfig)
                     .exec(saveRoute)
