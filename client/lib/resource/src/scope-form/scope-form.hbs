@@ -68,6 +68,9 @@
                             {{#if scope.is_resource_owner_scope}}
                                 checked="checked"
                             {{/if}}
+                            {{#unless edit}}
+                                checked="checked"
+                            {{/unless}}
                             type="radio" /> Resource Owner Scope
                     </label>
                 </div>
@@ -90,9 +93,11 @@
                             id="scope_appScope"
                             value="scope_appScope"
                             name="yourturn_scope_scopeType"
-                            {{#unless scope.is_resource_owner_scope}}
-                                checked="checked"
-                            {{/unless}}
+                            {{#if edit}}
+                                {{#unless scope.is_resource_owner_scope}}
+                                    checked="checked"
+                                {{/unless}}
+                            {{/if}}
                             data-block="active-checkbox"
                             type="radio" /> Application Scope
                     </label>
@@ -124,6 +129,9 @@
                             {{#if scope.is_resource_owner_scope}}
                                 checked="checked"
                             {{/if}}
+                            {{#unless edit}}
+                                checked="checked"
+                            {{/unless}}
                             type="radio" /> Resource Owner Scope
                     </label>
                 </div>
@@ -139,9 +147,11 @@
                             checked="checked"
                             value="scope_appScope"
                             name="yourturn_scope_scopeType"
-                            {{#unless scope.is_resource_owner_scope}}
-                                checked="checked"
-                            {{/unless}}
+                            {{#if edit}}
+                                {{#unless scope.is_resource_owner_scope}}
+                                    checked="checked"
+                                {{/unless}}
+                            {{/if}}
                             type="radio" /> Application Scope
                     </label>
                 </div>
