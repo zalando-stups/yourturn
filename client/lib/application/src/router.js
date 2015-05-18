@@ -69,7 +69,7 @@ class AppRouter extends Router {
         .then(() => {
             puppeteer.show(new AppForm({
                 flux: APP_FLUX,
-                notificationActions: this.globalFlux.getActions('notification')
+                globalFlux: this.globalFlux
             }), MAIN_VIEW_ID);
         });
     }
@@ -134,7 +134,7 @@ class AppRouter extends Router {
                 applicationId: id,
                 edit: true,
                 flux: APP_FLUX,
-                notificationActions: this.globalFlux.getActions('notification')
+                globalFlux: this.globalFlux
             }), MAIN_VIEW_ID);
         })
         .catch(e => puppeteer.show(Error(e), MAIN_VIEW_ID));

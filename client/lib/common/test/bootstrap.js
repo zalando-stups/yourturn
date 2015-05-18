@@ -10,6 +10,4 @@ import './oauth/oauth-store.test';
 import './resource/resource-actions.test';
 import './resource/resource-store.test';
 import './search/search-store.test';
-import './team/team-actions.test';
-import './team/team-store.test';
-import './tokeninfo/tokeninfo-store.test';
+import './user/user-store.test';

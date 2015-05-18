@@ -26,7 +26,7 @@
     "promise.prototype.finally": "1.0.1",
     "remarkable": "1.6.0",
     "superagent": "1.2.0",
-    "superagent-oauth2-client": "0.0.15"
+    "superagent-oauth2-client": "0.0.17"
   },
   "devDependencies": {
     "autoprefixer-loader": "1.2.0",
@@ -51,6 +51,7 @@
     "gulp-util": "3.0.4",
     "handlebars": "3.0.3",
     "handlebars-loader": "1.0.2",
+    "img-loader": "1.1.0",
     "isparta-instrumenter-loader": "0.2.1",
     "istanbul": "0.3.13",
     "jscs": "1.13.1",

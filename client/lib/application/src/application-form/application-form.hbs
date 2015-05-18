@@ -1,7 +1,17 @@
 {{#if edit}}
     <h2>Edit {{app.name}}</h2>
+    <div class="btn-group">
+        <a href="/application/detail/{{app.id}}" class="btn btn-default">
+            <i class="fa fa-chevron-left"></i> Back to {{app.name}}
+        </a>
+    </div>
 {{else}}
     <h2>Create a new application</h2>
+    <div class="btn-group">
+        <a href="/application" class="btn btn-default">
+            <i class="fa fa-chevron-left"></i> Back to applications
+        </a>
+    </div>
 {{/if}}
 <form class="form" name="createAppForm">
     <div class="form-group">
@@ -24,16 +34,21 @@
     <div class="form-group">
         <label for="team_id">Team ID</label>
         <small>The ID of the owning team.</small>
-        <input
-            required="required"
-            autofocus="autofocus"
-            placeholder="stups"
-            title="Only characters."
-            pattern="[A-Za-z]+"
-            id="team_id"
-            value="{{app.team_id}}"
-            name="yourturn_app_team_id"
-            type="text" />
+        {{#if edit}}
+            <input
+                id="team_id"
+                value="{{app.team_id}}"
+                disabled="disabled"
+                type="text" />
+        {{else}}
+            <select
+                name="yourturn_app_team_id"
+                id="team_id">
+                {{#each teams}}
+                    <option value="{{this.id}}">{{this.name}}</option>
+                {{/each}}
+            </select>
+        {{/if}}
     </div>
     <div class="form-group createApplication-applicationId">
         <label for="app_id">Application ID</label>

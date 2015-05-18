@@ -14,6 +14,33 @@
     @media( max-width: $mobile-breakpoint) {
         margin-right: 0;
     }
+    .header {
+        background: $gray-light;
+        color: $white;
+        padding-bottom: $padding-small;
+        .userInfo {
+            text-align: center;
+            .userImage {
+                background-color: white;
+                background-size: cover;
+                margin: $padding-tiny auto;
+                background-image: url(../../img/stups-icon.png);
+                width: 75px;
+                height: 75px;
+                border-radius: 100%;
+                display: block;
+            }
+
+        }
+        .tokenInfo {
+            text-align: center;
+            .btn-group {
+                .btn {
+                    padding: 0 $padding-tiny;
+                }
+            }
+        }
+    }
 
     .sidebar-content {
         display: flex;

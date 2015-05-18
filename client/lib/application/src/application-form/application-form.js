@@ -11,14 +11,17 @@ class ApplicationForm extends BaseView {
     constructor(props) {
         props = props || {edit: false};
         props.className = 'applicationForm';
+        props.stores = {
+            user: props.globalFlux.getStore('user')
+        };
         props.events = {
             'submit form': 'save',
-            'keyup #team_id': 'fillServiceUrl',
+            'change #team_id': 'fillServiceUrl',
             'keyup #app_id': 'handleAppId',
             'keyup #service_url': 'deactivateAutocomplete'
         };
         if (props.edit) {
-            props.store = props.flux.getStore('application');
+            props.stores.application = props.flux.getStore('application');
         }
         this.state = {
             autocompleteServiceUrl: true
@@ -39,12 +42,16 @@ class ApplicationForm extends BaseView {
         if (this.props.edit) {
             this.data = {
                 edit: !!this.props.edit,
-                app: this.store.getApplication(this.props.applicationId)
+                app: this.stores.application.getApplication(this.props.applicationId)
             };
             let {app} = this.data;
             if (!(app instanceof FetchResult) && app.service_url) {
                 app.service_url = app.service_url.substring('https://'.length);
             }
+        } else {
+            this.data = {
+                teams: this.stores.user.getUserTeams()
+            };
         }
     }
 
@@ -130,7 +137,8 @@ class ApplicationForm extends BaseView {
             let verb = this.props.edit ? 'update' : 'create';
             this
             .props
-            .notificationActions
+            .globalFlux
+            .getActions('notification')
             .addNotification(
                 `Could not ${verb} application ${app.name}.`,
                 'error'

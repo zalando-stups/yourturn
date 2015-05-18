@@ -1,4 +1,38 @@
 <div class="sidebar-content">
+    <div class="header">
+    {{#if tokeninfo}}
+        <div class="userInfo">
+            <span class="userImage" />
+            <span>{{tokeninfo.uid}}</span>
+        </div>
+        <div class="tokenInfo">
+            <div><small>OAuth Token expires {{{relativeDate tokeninfo.valid_until}}}</small>.</div>
+            <div class="btn-group">
+                <button
+                    data-action="refresh"
+                    class="btn btn-default">
+                    <i class="fa fa-refresh"></i> Refresh
+                </button>
+                <button
+                    data-action="logout"
+                    class="btn btn-default">
+                    <i class="fa fa-sign-out"></i> Logout
+                </button>
+            </div>  
+        </div>
+    {{else}}
+        <div class="tokenInfo">
+            <div>You are not logged in.</div>
+            <div class="btn-group">
+                <button
+                    data-action="login"
+                    class="btn btn-default">
+                    <i class="fa fa-sign-in"></i> Log in
+                </button>
+            </div>
+        </div>
+    {{/if}}
+    </div>
     <div class="sidebar-item" data-route="search">
         <a href="/search">Search</a> <i class="fa fa-search"></i>
     </div>
