@@ -67,7 +67,7 @@ class SidebarView extends BaseView {
         if (this.interval) {
             clearInterval(this.interval);
         }
-        // this.interval = setInterval(() => this.$el.html(Template(this.data)), 5000);
+        this.interval = setInterval(() => this.$el.html(Template(this.data)), 5000);
         return this;
     }
 }
