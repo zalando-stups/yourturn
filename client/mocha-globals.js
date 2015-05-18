@@ -29,6 +29,7 @@ global.YTENV_KIO_BASE_URL = '';
 global.YTENV_MINT_BASE_URL = '';
 global.YTENV_ESSENTIALS_BASE_URL = '';
 global.YTENV_TEAM_BASE_URL = '';
+global.YTENV_PIERONE_BASE_URL = '';
 global.YTENV_OAUTH_CLIENT_ID = '';
 global.YTENV_OAUTH_AUTH_URL = '';
 global.YTENV_OAUTH_TOKENINFO_URL='';
