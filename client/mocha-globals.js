@@ -22,7 +22,7 @@ global.window = {
     // so we feed it the in-memory storage for testing
     localStorage: localStorage
 };
-
+global.document = global.window.document;
 // these are set by env.js in production
 global.YTENV_TWINTIP_BASE_URL = '';
 global.YTENV_KIO_BASE_URL = '';
