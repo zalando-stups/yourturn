@@ -1,4 +1,4 @@
-/* globals ENV_PRODUCTION */
+/* globals ENV_TEST */
 import BaseView from 'common/src/base-view';
 import Template from './searchable-list.hbs';
 import _ from 'lodash';
@@ -88,7 +88,7 @@ class SearchableList extends BaseView {
         this.$el.find('input[data-action="filter"]').focus();
 
         // .setSelectionRange is not worth the effort to mock it in node tests
-        if (ENV_PRODUCTION) {
+        if (!ENV_TEST) {
             this
             .$el
             .find('input[data-action="filter"]')[0]

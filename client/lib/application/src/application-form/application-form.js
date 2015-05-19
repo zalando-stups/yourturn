@@ -1,4 +1,4 @@
-/* globals ENV_PRODUCTION */
+/* globals ENV_TEST */
 import BaseView from 'common/src/base-view';
 import Template from './application-form.hbs';
 import SERVICE_URL_TLD from 'SERVICE_URL_TLD';
@@ -64,13 +64,13 @@ class ApplicationForm extends BaseView {
             app_id = $appInput.val();
 
         if (this.props.flux.getStore('application').getApplication(app_id)) {
-            if (ENV_PRODUCTION) {
+            if (!ENV_TEST) {
                 $appInput[0].setCustomValidity('App ID already exists.');
             }
             this.$el.find('.is-taken').css('display', 'inline-block');
             this.$el.find('.is-available').css('display', 'none');
         } else {
-            if (ENV_PRODUCTION) {
+            if (!ENV_TEST) {
                 $appInput[0].setCustomValidity('');
             }
             this.$el.find('.is-taken').css('display', 'none');

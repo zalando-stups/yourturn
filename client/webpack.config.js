@@ -21,7 +21,8 @@ module.exports = {
         new webpack.NormalModuleReplacementPlugin(/^lodash$/, 'common/src/lodash.custom'),
         new webpack.NoErrorsPlugin(),
         new webpack.DefinePlugin({
-            ENV_PRODUCTION: true
+            ENV_DEVELOPMENT: true,
+            ENV_TEST: false
         })
     ],
     resolve: {

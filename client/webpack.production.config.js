@@ -30,7 +30,8 @@ module.exports = {
             allChunks: true
         }),
         new webpack.DefinePlugin({
-            ENV_PRODUCTION: false
+            ENV_DEVELOPMENT: false,
+            ENV_TEST: true
         })
     ],
     resolve: {

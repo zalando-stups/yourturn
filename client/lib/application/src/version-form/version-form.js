@@ -1,4 +1,4 @@
-/* globals ENV_PRODUCTION */
+/* globals ENV_TEST */
 import BaseView from 'common/src/base-view';
 import Template from './version-form.hbs';
 import {history} from 'backbone';
@@ -46,13 +46,13 @@ class VersionForm extends BaseView {
             storeVersion = this.store.getApplicationVersion(this.props.applicationId, version_id);
 
         if (storeVersion && version_id !== this.props.versionId) {
-            if (ENV_PRODUCTION) {
+            if (!ENV_TEST) {
                 $idInput[0].setCustomValidity('Version already exists.');
             }
             this.$el.find('.is-taken').css('display', 'inline-block');
             this.$el.find('.is-available').css('display', 'none');
         } else {
-            if (ENV_PRODUCTION) {
+            if (!ENV_TEST) {
                 $idInput[0].setCustomValidity('');
             }
             this.$el.find('.is-taken').css('display', 'none');
