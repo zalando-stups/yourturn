@@ -92,8 +92,8 @@ class ApplicationActions extends Actions {
                 .exec(saveRoute)
                 .then(res => [
                     applicationId,
-                    // specification, test and deploy always have to be there
-                    (res.body.concat(['SPECIFICATION', 'TEST', 'DEPLOY']))
+                    // specification, test, deploy and code change always have to be there
+                    (res.body.concat(['SPECIFICATION', 'TEST', 'DEPLOY', 'CODE_CHANGE']))
                         .filter((i, idx, arr) => arr.lastIndexOf(i) === idx)
                         .sort()
                 ])
