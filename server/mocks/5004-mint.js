@@ -57,4 +57,4 @@ server.put('/apps/:id', function(req, res) {
     }, Math.random() * 2000 );
 })
 
-server.listen(5004);
+module.exports = server;

@@ -21,7 +21,7 @@ module.exports = {
         new webpack.NormalModuleReplacementPlugin(/^lodash$/, 'common/src/lodash.custom'),
         new webpack.NoErrorsPlugin(),
         new webpack.DefinePlugin({
-            ENV_PRODUCTION: false
+            ENV_PRODUCTION: true
         })
     ],
     resolve: {
@@ -43,6 +43,7 @@ module.exports = {
         MINT_BASE_URL: 'YTENV_MINT_BASE_URL',
         ESSENTIALS_BASE_URL: 'YTENV_ESSENTIALS_BASE_URL',
         TEAM_BASE_URL: 'YTENV_TEAM_BASE_URL',
+        PIERONE_BASE_URL: 'YTENV_PIERONE_BASE_URL',
         DOCKER_REGISTRY: 'YTENV_DOCKER_REGISTRY',
         SERVICE_URL_TLD: 'YTENV_SERVICE_URL_TLD'
     },

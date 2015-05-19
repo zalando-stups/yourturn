@@ -47,4 +47,4 @@ server.get('/apis/:id', function(req,res){
     }, Math.random() * 2000 );
 });
 
-server.listen(5001);
+module.exports = server;

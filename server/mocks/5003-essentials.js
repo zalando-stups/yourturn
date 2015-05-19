@@ -128,4 +128,5 @@ server.put('/resource-types/:id/scopes/:scopeId', function(req,res){
         res.status( 200 ).send();
     }, Math.random() * 2000 );
 });
-server.listen(5003);
+
+module.exports = server;

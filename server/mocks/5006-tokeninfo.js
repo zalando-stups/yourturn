@@ -27,5 +27,4 @@ server.get('/tokeninfo', function(req,res) {
     res.status(200).send(tokeninfo);
 });
 
-console.log('TOKENINFO 5006');
-server.listen(5006);
+module.exports = server;

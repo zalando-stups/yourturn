@@ -207,5 +207,4 @@ server.post('/apps/:id/versions/:ver/approvals', function(req, res) {
     }, Math.random() * 2000 );
 });
 
-
-server.listen(5000);
+module.exports = server;

@@ -31,4 +31,4 @@ server.get('/auth', function(req,res) {
     }, Math.random() * 2000);
 });
 
-server.listen(5002);
+module.exports = server;
