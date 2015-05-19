@@ -1,4 +1,4 @@
-/* globals ENV_PRODUCTION */
+/* globals ENV_TEST */
 import {history} from 'backbone';
 import BaseView from 'common/src/base-view';
 import Template from './scope-form.hbs';
@@ -34,13 +34,13 @@ class ScopeForm extends BaseView {
             $scopeInput = this.$el.find('#scope_id'),
             scope_id = $scopeInput.val();
         if (this.props.flux.getStore('resource').getScope(resourceId, scope_id)) {
-            if (ENV_PRODUCTION) {
+            if (!ENV_TEST) {
                 $scopeInput[0].setCustomValidity('Custom ID already exists.');
             }
             this.$el.find('.is-taken').css('display', 'inline-block');
             this.$el.find('.is-available').css('display', 'none');
         } else {
-            if (ENV_PRODUCTION) {
+            if (!ENV_TEST) {
                 $scopeInput[0].setCustomValidity('');
             }
             this.$el.find('.is-taken').css('display', 'none');

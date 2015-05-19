@@ -1,4 +1,4 @@
-/* globals ENV_PRODUCTION */
+/* globals ENV_TEST */
 import $ from 'jquery';
 import {history} from 'backbone';
 import BaseView from 'common/src/base-view';
@@ -26,13 +26,13 @@ class ResourceForm extends BaseView {
         let $resourceInput = this.$el.find('#resource_id'),
             resource_id = $resourceInput.val();
         if (this.store.getResource(resource_id)) {
-            if (ENV_PRODUCTION) {
+            if (!ENV_TEST) {
                 $resourceInput[0].setCustomValidity('Resource ID already exists.');
             }
             this.$el.find('.is-taken').css('display', 'inline-block');
             this.$el.find('.is-available').css('display', 'none');
         } else {
-            if (ENV_PRODUCTION) {
+            if (!ENV_TEST) {
                 $resourceInput[0].setCustomValidity('');
             }
             this.$el.find('.is-taken').css('display', 'none');

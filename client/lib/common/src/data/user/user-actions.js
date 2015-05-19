@@ -1,4 +1,4 @@
-/* globals Date, Promise */
+/* globals Date, Promise, ENV_DEVELOPMENT */
 import {Actions} from 'flummox';
 import request from 'common/src/superagent';
 import {Provider, RequestConfig, saveRoute} from 'common/src/oauth-provider';
@@ -10,7 +10,7 @@ class UserActions extends Actions {
             return Promise.reject();
         }
         return request
-                    .get('/tokeninfo')
+                    .get(`${ENV_DEVELOPMENT ? 'http://localhost:5006' : ''}/tokeninfo`)
                     .query({
                         access_token: token
                     })
@@ -37,7 +37,7 @@ class UserActions extends Actions {
 
     fetchUserTeams(userId) {
         return request
-                    .get(`/user/${userId}`)
+                    .get(`${ENV_DEVELOPMENT ? 'http://localhost:5005' : ''}/user/${userId}`)
                     .accept('json')
                     .oauth(Provider, RequestConfig)
                     .exec(saveRoute)
