@@ -96,7 +96,7 @@ class VersionForm extends BaseView {
             .props
             .notificationActions
             .addNotification(
-                `Could not ${verb} version ${version_id} for ${this.data.application.name}. ${err.message}`,
+                `Could not ${verb} version ${version_id} of ${this.data.application.name}. ${err.message}`,
                 'error');
         });
     }

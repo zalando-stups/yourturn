@@ -39,7 +39,15 @@ class ApprovalForm extends BaseView {
         this
         .actions
         .saveApproval(applicationId, versionId, approval)
-        .then(() => this.actions.fetchApprovals(applicationId, versionId));
+        .then(() => this.actions.fetchApprovals(applicationId, versionId))
+        .catch(err => {
+            this
+            .props
+            .notificationActions
+            .addNotification(
+                `Could not approve version ${version_id} of ${this.data.application.name}. ${err.message}`,
+                'error');
+        });
     }
 
     update() {
