@@ -175,13 +175,13 @@ class ResourceStore extends Store {
      *
      * @return {array} An empty array if there are none.
      */
-    getResources(filterTerm) {
+    getResources(term) {
         let filtered = _m.filter(e => !(e instanceof FetchResult), _m.vals(this.state.resources)),
             entries = _m.sortBy(e => _m.get(e, 'name').toLowerCase(), filtered);
-        if (filterTerm) {
+        if (term) {
             entries = _m.filter(res => (_m.get(res, 'name')
                                             .toLowerCase()
-                                            .indexOf(filterTerm.toLowerCase()) !== -1), entries);
+                                            .indexOf(term.toLowerCase()) !== -1), entries);
         }
         return entries ? _m.toJs(entries) : [];
     }

@@ -166,12 +166,12 @@ class ApplicationStore extends Store {
      *
      * @return {Array} Available applications
      */
-    getApplications(filterTerm) {
+    getApplications(term) {
         let availableApps = _m.filter(app => !(app instanceof FetchResult), _m.vals(this.state.applications));
-        if (filterTerm) {
+        if (term) {
             availableApps = _m.filter(app => (_m.get(app, 'name')
                                                 .toLowerCase()
-                                                .indexOf(filterTerm.toLowerCase()) !== -1), availableApps);
+                                                .indexOf(term.toLowerCase()) !== -1), availableApps);
         }
         return _.sortBy(_m.toJs(availableApps) || [], a => a.name ? a.name.toLowerCase() : null);
     }
