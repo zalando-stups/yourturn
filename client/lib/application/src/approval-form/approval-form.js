@@ -26,20 +26,28 @@ class ApprovalForm extends BaseView {
         let {$el} = this,
             {applicationId, versionId} = this.props,
             customUsed = $el.find('#approval_custom_type').val().length > 0,
-            approval_type = customUsed ?
+            approvalType = customUsed ?
                                 $el.find('#approval_custom_type').val() :
                                 $el.find('#approval_type option:selected').val(),
             notes = $el.find('#approval_notes').val(),
 
             approval = {
-                approval_type: approval_type,
+                approval_type: approvalType,
                 notes: notes
             };
 
         this
         .actions
         .saveApproval(applicationId, versionId, approval)
-        .then(() => this.actions.fetchApprovals(applicationId, versionId));
+        .then(() => this.actions.fetchApprovals(applicationId, versionId))
+        .catch(err => {
+            this
+            .props
+            .notificationActions
+            .addNotification(
+                `Could not approve version ${versionId} of ${this.data.application.name}. ${err.message}`,
+                'error');
+        });
     }
 
     update() {
@@ -47,6 +55,7 @@ class ApprovalForm extends BaseView {
         this.data = {
             applicationId: applicationId,
             versionId: versionId,
+            application: this.store.getApplication(applicationId),
             approvalTypes: this.store.getApprovalTypes(applicationId),
             approvals: this.store.getApprovals(applicationId, versionId)
         };

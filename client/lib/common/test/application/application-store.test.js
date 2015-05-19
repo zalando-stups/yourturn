@@ -163,7 +163,7 @@ describe('The application store', () => {
                 approval_type: 'DEPLOY',
                 approved_at: '2015-04-26T01:37:17Z'
             }];
-            store.receiveApprovals(approvals);
+            store.receiveApprovals(['kio', '0.12', approvals]);
             expect(store.getApprovals('kio', '0.12').length).to.equal(2);
         });
 
@@ -181,7 +181,7 @@ describe('The application store', () => {
                 approval_type: 'DEPLOY',
                 approved_at: '2015-04-26T01:37:17Z'
             }];
-            store.receiveApprovals(results);
+            store.receiveApprovals(['kio', '0.12', results]);
             let approvals = store.getApprovals('kio', '0.12');
             expect(approvals[0].approval_type).to.equal('DEPLOY');
             expect(approvals[1].approval_type).to.equal('TESTED');

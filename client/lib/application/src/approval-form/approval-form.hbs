@@ -1,7 +1,7 @@
-<h2>{{applicationId}} <span class="approvalForm-versionId">{{versionId}}</span> approvals</h2>
+<h2>{{application.name}} <span class="approvalForm-versionId">{{versionId}}</span> approvals</h2>
 <div class="btn-group">
     <a href="/application/detail/{{applicationId}}/version/detail/{{versionId}}" class="btn btn-default">
-        <i class="fa fa-chevron-left"></i> Back to {{applicationId}} {{versionId}}
+        <i class="fa fa-chevron-left"></i> Back to {{application.name}} {{versionId}}
     </a>
 </div>
 <div class="grid with-gutter">
@@ -47,7 +47,7 @@
                     <textarea
                         id="approval_notes"
                         name="yourturn_approval_notes"
-                        placeholder="I swear by the life of my firstborn that {{applicationId}} {{versionId}} is properly tested."
+                        placeholder="I swear by the life of my firstborn that {{application.name}} {{versionId}} is properly tested."
                         cols="30"
                         rows="10"></textarea>
                 </div>

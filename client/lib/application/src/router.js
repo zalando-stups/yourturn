@@ -57,7 +57,8 @@ class AppRouter extends Router {
             puppeteer.show(new ApprovalForm({
                 applicationId: applicationId,
                 versionId: versionId,
-                flux: APP_FLUX
+                flux: APP_FLUX,
+                notificationActions: this.globalFlux.getActions('notification')
             }), MAIN_VIEW_ID);
         })
         .catch(e => puppeteer.show(Error(e), MAIN_VIEW_ID));
@@ -112,6 +113,8 @@ class AppRouter extends Router {
         if (!version) {
             promises.push(APP_ACTIONS.fetchApplicationVersion(applicationId, versionId));
         }
+        APP_ACTIONS.fetchApprovals(applicationId, versionId);
+
         Promise
         .all(promises)
         .then(() => {
@@ -253,6 +256,7 @@ class AppRouter extends Router {
             APP_ACTIONS.fetchApplication(id);
         }
 
+        APP_ACTIONS.fetchApprovals(id, ver);
         APP_ACTIONS.fetchApplicationVersion(id, ver);
 
         puppeteer.show(new VersionDetail({

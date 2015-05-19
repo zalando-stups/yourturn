@@ -31,6 +31,9 @@
             <input
                 autofocus="autofocus"
                 required="required"
+                {{#if edit}}
+                disabled="disabled"
+                {{/if}}
                 placeholder="0.0.1"
                 data-block="id-input"
                 value="{{version.id}}"
@@ -65,6 +68,15 @@
             cols="30"
             rows="10">{{version.notes}}</textarea>
     </div>
+    {{#if edit}}
+        {{#if approvalCount }}
+            <div
+                data-block="warning"
+                class="u-warning">
+                <p>Existing approvals ({{approvalCount}}) will be deleted after you save!</p>
+            </div>
+        {{/if}}
+    {{/if}}
     <div class="btn-group">
         <button
             type="submit"
