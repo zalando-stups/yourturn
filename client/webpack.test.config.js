@@ -25,7 +25,6 @@ module.exports = {
         new webpack.NormalModuleReplacementPlugin(/^underscore$/, 'common/src/lodash.custom'),
         new webpack.NormalModuleReplacementPlugin(/^lodash$/, 'common/src/lodash.custom'),
         new webpack.DefinePlugin({
-            'ENV_PRODUCTION': false,
             'ENV_DEVELOPMENT': false,
             'ENV_TEST': true,
             'global.GENTLY': false  // fix for superagent
