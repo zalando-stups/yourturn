@@ -5,15 +5,28 @@ class ResourceList extends BaseView {
     constructor(props) {
         super({
             className: 'resourceList',
-            store: props.flux.getStore('resource')
+            store: props.flux.getStore('resource'),
+            events: {
+                'submit': 'filter'
+            }
         });
-        this.actions = props.flux.getActions('resource');
+        this.state = {
+            filterTerm: ''
+        };
     }
 
     update() {
         this.data = {
-            resources: this.store.getResources()
+            resources: this.store.getResources(this.state.filterTerm),
+            filterTerm: this.state.filterTerm
         };
+    }
+
+    filter(evt) {
+        evt.preventDefault();
+        this.state.filterTerm = this.$el.find('input').val();
+        this.update();
+        this.render();
     }
 
     render() {

@@ -3,6 +3,19 @@
     <a href="/application/create" class="btn btn-default">
     <i class="fa fa-plus"></i> Create Application</a>
 </div>
+<form>
+    <input
+        autofocus="autofocus"
+        value="{{filterTerm}}"
+        type="search"
+        aria-label="Enter your filter term"
+        placeholder="Application" />
+    <button
+        type="submit"
+        class="btn btn-default">
+            <i class="fa fa-filter"></i> Filter
+        </button>
+</form>
 {{#if apps.length}}
     <ul>
         {{#each apps}}

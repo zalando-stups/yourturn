@@ -9,6 +9,19 @@
         <i class="fa fa-plus"></i> Create resource type
     </a>
 </div>
+<form>
+    <input
+        autofocus="autofocus"
+        value="{{filterTerm}}"
+        type="search"
+        aria-label="Enter your filter term"
+        placeholder="Resource Type" />
+    <button
+        type="submit"
+        class="btn btn-default">
+            <i class="fa fa-filter"></i> Filter
+        </button>
+</form>
 {{#if resources.length}}
     <ul>
         {{#each resources}}
