@@ -2,12 +2,10 @@
 
 [![Build Status](https://travis-ci.org/zalando-stups/yourturn.svg?branch=master)](https://travis-ci.org/zalando-stups/yourturn) [![Coverage Status](https://coveralls.io/repos/zalando-stups/yourturn/badge.svg?branch=master)](https://coveralls.io/r/zalando-stups/yourturn?branch=master)
 
-This will be the Zalando Developer Console someday.
+This is the Zalando Developer Console.
 
 ## Installation
 
-    # install gulp if you haven't already
-    npm i -g gulp
     # install dependencies of yourturn
     npm i
 
@@ -15,16 +13,25 @@ This will be the Zalando Developer Console someday.
 
     # start the webpack dev server
     npm start
-    # start automatic linting
-    gulp watch
+    # start the mocked dependencies
+    node server/mocks/all.js
 
 On `localhost:3000` you now have the frontend of yourturn with hot reloading enabled.
 
-yourturn needs some backends to work properly. To start mocks you have to have [docker](https://www.docker.com/) installed as well as [swagger-mock](https://github.com/zalando/swagger-mock). Then just run
+## Building
 
-    ./server/start-docker.sh
+To do a production build:
 
-from the root directory. This will spin up two docker containers running a mocked [kio](https://github.com/zalando-stups/kio) on port 5000 and [twintip](https://github.com/zalando-stups/twintip) on 5001. Make sure to kill them when there are updated APIs. Also note that with boot2docker you have to replace `localhost` with your `boot2docker ip` in `index.html`.
+    gulp build
+    
+This will trigger a `webpack` build that breaks when you do not obey the rules defined by `eslint` and `jscs`. Use `gulp lint` and `gulp format` to check that.
+
+## Testing
+
+You have to use `iojs` for testing because of `jsdom`. For the normal build you have to use regular Node because of `node-sass`. Sorry.
+
+    # run all the tests
+    npm test
 
 ## License
 
