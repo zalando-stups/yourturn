@@ -24,6 +24,7 @@ class VersionDetail extends BaseView {
             applicationId: applicationId,
             versionId: versionId,
             version: version,
+            approvalCount: this.stores.application.getApprovals(applicationId, versionId).length,
             application: application instanceof FetchResult ? false : application
         };
     }
