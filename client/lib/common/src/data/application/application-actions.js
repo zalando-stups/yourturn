@@ -109,7 +109,7 @@ class ApplicationActions extends Actions {
                 .accept('json')
                 .oauth(Provider, RequestConfig)
                 .exec(saveRoute)
-                .then(res => res.body)
+                .then(res => [applicationId, versionId, res.body])
                 .catch(err => {
                     err.applicationId = applicationId;
                     err.versionId = versionId;
