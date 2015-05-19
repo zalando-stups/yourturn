@@ -107,6 +107,7 @@ class VersionForm extends BaseView {
             applicationId: applicationId,
             versionId: versionId,
             edit: edit,
+            approvalCount: this.store.getApprovals(applicationId, versionId).length,
             application: this.store.getApplication(applicationId)
         };
         if (edit) {

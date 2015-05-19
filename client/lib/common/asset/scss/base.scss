@@ -84,6 +84,20 @@ ul {
     line-height: inherit;
 }
 
+.badge {
+    border: 2px solid currentColor;
+    border-radius: 100%;
+    font-size: $small-font-size;
+    line-height: $small-line-height;
+    display: inline-block;
+    min-width: 10px;
+    width: 2em;
+    height: 2em;
+    vertical-align: middle;
+    white-space: nowrap;
+    text-align: center;
+}
+
 .u-text-center {
     text-align: center;
 }
@@ -101,6 +115,28 @@ ul {
     text-align: center;
     h2 {
         color: red;
+    }
+}
+
+.u-warning {
+    color: $white;
+    background: $red;
+    border: 1px solid darken($red, 10%);
+    border-radius: $border-radius;
+    padding: $padding-tiny $padding-small;
+    margin: $padding-small 0;
+    max-width: 600px;
+    :first-child {
+        &:before {
+            content: '\f06a';
+            font-family: 'FontAwesome';
+            font-size: 200%;
+            display: block;
+            text-align: center;
+            float: right;
+            height: 2em;
+            margin-left: 1em
+        }
     }
 }
 
@@ -124,6 +160,5 @@ ul {
             height: 2em;
             margin-left: 1em
         }
-
     }
 }
