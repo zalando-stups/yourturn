@@ -26,13 +26,13 @@ class ApprovalForm extends BaseView {
         let {$el} = this,
             {applicationId, versionId} = this.props,
             customUsed = $el.find('#approval_custom_type').val().length > 0,
-            approval_type = customUsed ?
+            approvalType = customUsed ?
                                 $el.find('#approval_custom_type').val() :
                                 $el.find('#approval_type option:selected').val(),
             notes = $el.find('#approval_notes').val(),
 
             approval = {
-                approval_type: approval_type,
+                approval_type: approvalType,
                 notes: notes
             };
 
@@ -45,7 +45,7 @@ class ApprovalForm extends BaseView {
             .props
             .notificationActions
             .addNotification(
-                `Could not approve version ${version_id} of ${this.data.application.name}. ${err.message}`,
+                `Could not approve version ${versionId} of ${this.data.application.name}. ${err.message}`,
                 'error');
         });
     }

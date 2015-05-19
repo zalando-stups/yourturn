@@ -162,7 +162,6 @@ server.put('/apps/:id/versions/:ver', function(req, res) {
             versions[id][ver].id = ver;
             // delete approvals for this version
             if (approvals[id] && approvals[id][ver]) {
-                console.log('deleting approvals for', id, ver);
                 approvals[id][ver] = [];
             }
             return res.status(200).send();
