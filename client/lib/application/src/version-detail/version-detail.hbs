@@ -1,8 +1,8 @@
 <h2>
     {{#if application}}
-        {{application.name}}
+        <a href="/application/detail/{{applicationId}}">{{application.name}}</a>
     {{else}}
-        {{version.application_id}}
+        <a href="/application/detail/{{applicationId}}">{{version.application_id}}</a>
     {{/if}}
     <span class="versionDetail-versionId">{{version.id}}</span>
 </h2>

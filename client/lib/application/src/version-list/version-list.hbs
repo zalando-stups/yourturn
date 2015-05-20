@@ -1,8 +1,8 @@
 <h2>
     {{#if application}}
-        {{application.name}} versions
+        <a href="/application/detail/{{applicationId}}">{{application.name}}</a> versions
     {{else}}
-        {{applicationId}} versions
+        <a href="/application/detail/{{applicationId}}">{{applicationId}}</a> versions
     {{/if}}
 </h2>
 <div class="btn-group">
