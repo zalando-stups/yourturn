@@ -1,11 +1,12 @@
 /* globals ENV_TEST */
+import _ from 'lodash';
 import BaseView from 'common/src/base-view';
 import Template from './application-list.hbs';
 import 'common/asset/scss/application/application-list.scss';
 
 class AppList extends BaseView {
     constructor(props) {
-        props.className = 'applicationList',
+        props.className = 'applicationList';
         props.stores = {
             application: props.flux.getStore('application'),
             user: props.globalFlux.getStore('user')

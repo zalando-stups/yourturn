@@ -25,7 +25,7 @@
 </div>
 <h3>Your team apps</h3>
 {{#if teamApps.length}}
-    <ul>
+    <ul data-block="teamApps">
         {{#each teamApps}}
             <li>
                 <a href="/application/detail/{{this.id}}">{{this.name}}</a>
@@ -38,7 +38,7 @@
 
 <h3>Other apps</h3>
 {{#if otherApps.length}}
-    <ul>
+    <ul data-block="otherApps">
         {{#each otherApps}}
             <li>
                 <a href="/application/detail/{{this.id}}">{{this.name}}</a>
