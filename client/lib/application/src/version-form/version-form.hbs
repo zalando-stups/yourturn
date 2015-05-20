@@ -1,12 +1,19 @@
 {{#if edit}}
-    <h2>Edit {{application.name}} <span class="versionForm-versionHeadline">{{version.id}}</span></h2>
+    <h2>
+        Edit 
+        <a
+            href="/application/detail/{{application.id}}">{{application.name}}</a> 
+        <a
+            href="/application/detail/{{application.id}}/version/detail/{{version.id}}"
+            class="versionForm-versionHeadline">{{version.id}}</a>
+    </h2>
 {{else}}
-    <h2>Create a new version for {{application.name}}</h2>
+    <h2>Create a new version for <a href="/application/detail/{{application.id}}">{{application.name}}</a></h2>
 {{/if}}
 
 <div class="btn-group">
-    <a href="/application/detail/{{application.id}}/version" class="btn btn-default">
-        <i class="fa fa-chevron-left"></i> Back to {{application.name}} versions
+    <a href="/application/detail/{{application.id}}/version/detail/{{version.id}}" class="btn btn-default">
+        <i class="fa fa-chevron-left"></i> {{application.name}} {{version.id}}
     </a>
 </div>
 

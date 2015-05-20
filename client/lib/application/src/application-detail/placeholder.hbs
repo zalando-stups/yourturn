@@ -2,8 +2,11 @@
     <h1>{{applicationId}}</h1>
 
     <div class="btn-group">
+        <a href="/application" class="btn btn-default">
+            <i class="fa fa-chevron-left"></i> Applications
+        </a>
         <a href="/application/edit/{{applicationId}}" class="btn btn-default">
-            <i class="fa fa-pencil"></i> Edit
+            <i class="fa fa-pencil"></i> Edit {{applicationId}}
         </a>
         <a href="/application/oauth/{{applicationId}}" class="btn btn-default">
             <i class="fa fa-plug"></i> OAuth Client

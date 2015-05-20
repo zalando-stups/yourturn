@@ -1,10 +1,13 @@
 <h2>{{resource.name}}</h2>
 <div class="btn-group">
+    <a href="/resource" class="btn btn-default">
+        <i class="fa fa-chevron-left"></i> Resource Types
+    </a>
     <a href="/resource/edit/{{resource.id}}" class="btn btn-default">
         <i class="fa fa-pencil"></i> Edit {{resource.name}}
     </a>
     <a href="/resource/detail/{{resource.id}}/scope/create" class="btn btn-primary">
-        <i class="fa fa-plus"></i> Create scope
+        <i class="fa fa-plus"></i> Create Scope
     </a>
 </div>
 <table>

@@ -1,7 +1,23 @@
 {{#if edit}}
-    <h2>Edit {{resource.id}}.{{scope.id}}</h2>
+    <h2>
+        Edit 
+        <a href="/resource/detail/{{resource.id}}">{{resource.id}}</a>.<a href="/resource/detail/{{resource.id}}/scope/detail/{{scope.id}}">{{scope.id}}</a>
+    </h2>
+    <div class="btn-group">
+        <a href="/resource/detail/{{resource.id}}/scope/detail/{{scope.id}}" class="btn btn-default">
+            <i class="fa fa-chevron-left"></i> {{resource.id}}.{{scope.id}}
+        </a>
+    </div>
 {{else}}
-    <h2>Create new scope for {{resource.name}}</h2>
+    <h2>
+        Create new scope for 
+        <a href="/resource/detail/{{resource.id}}">{{resource.name}}</a>
+    </h2>
+    <div class="btn-group">
+        <a href="/resource/detail/{{resource.id}}" class="btn btn-default">
+            <i class="fa fa-chevron-left"></i> {{resource.name}}
+        </a>
+    </div>
 {{/if}}
 <form class="form" name="scopeForm">
     <div class="form-group">

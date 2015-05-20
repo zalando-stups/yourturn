@@ -1,13 +1,15 @@
 <div class="scopeDetail u-placeholder">
-    <h2>{{resourceId}}.{{scopeId}}</h2>
+    <h2>
+        <a href="/resource/detail/{{resourceId}}">{{resourceId}}</a>.{{scopeId}}
+    </h2>
     <div class="btn-group">
         <a
             class="btn btn-default"
             href="/resource/detail/{{resourceId}}">
-            <i class="fa fa-chevron-left"></i> Back to {{resourceId}}
+            <i class="fa fa-chevron-left"></i> {{resourceId}}
         </a>
         <a href="/resource/detail/{{resourceId}}/scope/edit/{{scope.id}}" class="btn btn-primary">
-            <i class="fa fa-pencil"></i> Edit
+            <i class="fa fa-pencil"></i> Edit {{scope.id}}
         </a>
     </div>
     <table>

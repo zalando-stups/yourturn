@@ -9,10 +9,10 @@
 
 <div class="btn-group">
     <a href="/application/detail/{{version.application_id}}/version" class="btn btn-default">
-        <i class="fa fa-chevron-left"></i> Back to {{application.name}} versions
+        <i class="fa fa-chevron-left"></i> {{application.name}} versions
     </a>
     <a href="/application/detail/{{version.application_id}}/version/edit/{{version.id}}" class="btn btn-default">
-        <i class="fa fa-edit"></i> Edit
+        <i class="fa fa-edit"></i> Edit {{version.id}}
     </a>
     <a href="/application/detail/{{version.application_id}}/version/approve/{{version.id}}" class="btn btn-primary">
         <i class="fa fa-check"></i> Approvals <span class="badge">{{approvalCount}}</span>
