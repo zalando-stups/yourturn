@@ -7,6 +7,7 @@ server.use(bodyParser.json());
 var applications = {
     kio: {
         documentation_url: 'https://github.com/zalando-stups/kio',
+        specification_url: 'https://github.com/zalando-stups/kio/issues',
         scm_url: 'https://github.com/zalando-stups/kio.git',
         service_url: 'https://kio.example.org/',
         description: 'An application registry to manage application base information.',
@@ -18,6 +19,7 @@ var applications = {
     },
     pierone: {
         documentation_url: 'https://github.com/zalando-stups/pierone',
+        specification_url: 'https://github.com/zalando-stups/pierone/issues',
         scm_url: 'https://github.com/zalando-stups/pierone.git',
         service_url: 'https://pierone.example.org/',
         description: 'A Docker registry compliant repository for Docker images.',
