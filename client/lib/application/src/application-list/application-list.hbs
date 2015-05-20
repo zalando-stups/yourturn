@@ -5,16 +5,16 @@
 </div>
 <div class="form-group">
     <form class="form">
+        <label for="yourturn-search">Search:</label>
         <div class="input-group">
-            <label>Search:
             <input
+                name="yourturn-search"
                 autofocus="autofocus"
                 value="{{term}}"
                 type="search"
                 aria-label="Enter your term"
                 data-action="search"
                 placeholder="Application" />
-            </label>
             <button
                 type="submit"
                 class="btn btn-default">
@@ -23,14 +23,28 @@
             </div>
     </form>
 </div>
-{{#if apps.length}}
+<h3>Your team apps</h3>
+{{#if teamApps.length}}
     <ul>
-        {{#each apps}}
+        {{#each teamApps}}
             <li>
                 <a href="/application/detail/{{this.id}}">{{this.name}}</a>
             </li>
         {{/each}}
     </ul>
 {{else}}
-    No applications.
+    No applications owned by your team.
+{{/if}}
+
+<h3>Other apps</h3>
+{{#if otherApps.length}}
+    <ul>
+        {{#each otherApps}}
+            <li>
+                <a href="/application/detail/{{this.id}}">{{this.name}}</a>
+            </li>
+        {{/each}}
+    </ul>
+{{else}}
+    No applications owned by other teams.
 {{/if}}

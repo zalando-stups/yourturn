@@ -97,7 +97,7 @@ input[type="search"] {
             line-height: inherit;
             font-family: $font-sans;
 
-            + input {            
+            + input {
                 border-top-left-radius: 0px;
                 border-bottom-left-radius: 0px;
             }
@@ -105,6 +105,9 @@ input[type="search"] {
 
         input {
             flex: 1;
+            + .btn {
+                border-left: 0;
+            }
         }
     }
 }

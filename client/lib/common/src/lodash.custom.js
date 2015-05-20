@@ -1,7 +1,7 @@
 /**
  * @license
  * lodash 3.8.0 (Custom Build) <https://lodash.com/>
- * Build: `lodash modern include="chain,filter,flatten,forOwn,groupBy,intersection,reverse,sortBy,take,value,values,once,keys,uniqueId,isEmpty,extend,defaults,clone,escape,isEqual,has,isObject,result,each,isArray,isString,matches,bind,invoke,isFunction,pick,isRegExp,map,bindAll,any" -d -o lib/common/src/lodash.custom.js`
+ * Build: `lodash modern include="chain,filter,flatten,forOwn,groupBy,intersection,pluck,reverse,sortBy,take,value,values,once,keys,uniqueId,isEmpty,extend,defaults,clone,escape,isEqual,has,isObject,result,each,isArray,isString,matches,bind,invoke,isFunction,pick,isRegExp,map,bindAll,any" -d -o lib/common/src/lodash.custom.js`
  * Copyright 2012-2015 The Dojo Foundation <http://dojofoundation.org/>
  * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
  * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
@@ -3640,6 +3640,33 @@
   }
 
   /**
+   * Gets the property value of `path` from all elements in `collection`.
+   *
+   * @static
+   * @memberOf _
+   * @category Collection
+   * @param {Array|Object|string} collection The collection to iterate over.
+   * @param {Array|string} path The path of the property to pluck.
+   * @returns {Array} Returns the property values.
+   * @example
+   *
+   * var users = [
+   *   { 'user': 'barney', 'age': 36 },
+   *   { 'user': 'fred',   'age': 40 }
+   * ];
+   *
+   * _.pluck(users, 'user');
+   * // => ['barney', 'fred']
+   *
+   * var userIndex = _.indexBy(users, 'user');
+   * _.pluck(userIndex, 'age');
+   * // => [36, 40] (iteration order is not guaranteed)
+   */
+  function pluck(collection, path) {
+    return map(collection, property(path));
+  }
+
+  /**
    * Checks if `predicate` returns truthy for **any** element of `collection`.
    * The function returns as soon as it finds a passing value and does not iterate
    * over the entire collection. The predicate is bound to `thisArg` and invoked
@@ -5018,6 +5045,7 @@
   lodash.mixin = mixin;
   lodash.once = once;
   lodash.pick = pick;
+  lodash.pluck = pluck;
   lodash.property = property;
   lodash.restParam = restParam;
   lodash.sortBy = sortBy;

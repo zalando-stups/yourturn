@@ -1,5 +1,7 @@
+/* globals ENV_TEST */
 import BaseView from 'common/src/base-view';
 import Template from './resource-list.hbs';
+import 'common/asset/scss/resource/resource-list.scss';
 
 class ResourceList extends BaseView {
     constructor(props) {
@@ -7,7 +9,8 @@ class ResourceList extends BaseView {
             className: 'resourceList',
             store: props.flux.getStore('resource'),
             events: {
-                'submit': 'filter'
+                'keyup input': 'search',
+                'submit': 'search'
             }
         });
         this.state = {
@@ -22,7 +25,7 @@ class ResourceList extends BaseView {
         };
     }
 
-    filter(evt) {
+    search(evt) {
         evt.preventDefault();
         this.state.term = this.$el.find('input').val();
         this.update();
@@ -34,7 +37,7 @@ class ResourceList extends BaseView {
             this
             .$el
             .find('input[data-action="search"]')[0]
-            .setSelectionRange(this.state.search.length, this.state.search.length);
+            .setSelectionRange(this.state.term.length, this.state.term.length);
         }
     }
 
