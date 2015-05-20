@@ -2,8 +2,8 @@ docker run \
     -it \
     -e YTENV_KIO_BASE_URL=http://localhost:5000 \
     -e YTENV_TWINTIP_BASE_URL=http://localhost:5001 \
-    -e YTENV_DOCKER_REGISTRY=pierone.stups.zalan.do \
-    -e YTENV_SERVICE_URL_TLD=zalan.do \
+    -e YTENV_DOCKER_REGISTRY=docker.io \
+    -e YTENV_SERVICE_URL_TLD=exaple.com \
     -e YTENV_OAUTH_CLIENT_ID=stups_yourturn \
     -e YTENV_OAUTH_AUTH_URL=http://localhost:5002/auth \
     -e YTENV_OAUTH_REDIRECT_URI=http://192.168.59.103:8080/oauth \
