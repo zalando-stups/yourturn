@@ -3,11 +3,14 @@ var express = require('express'),
 
 var user = {
     npiccolotto: [{
-        id: 'asa',
-        name: 'asa'
+        id: 'greendale',
+        name: 'greendale'
     }, {
         id: 'stups',
         name: 'stups'
+    }, {
+        id: 'greendale',
+        name: 'greendale'
     }]
 };
 
