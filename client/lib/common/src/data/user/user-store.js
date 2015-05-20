@@ -1,5 +1,6 @@
 import {Store} from 'flummox';
 import _m from 'mori';
+import _ from 'lodash';
 
 class UserStore extends Store {
     constructor(flux) {
@@ -32,6 +33,19 @@ class UserStore extends Store {
 
 
     receiveUserTeams(teams) {
+        teams = teams
+                // dedup
+                // TODO remove as soon as team service is fixed
+                .filter((team, idx, all) => idx === _.findLastIndex(all, e => e.id === team.id))
+                // sort
+                .sort((a, b) => {
+                    let aName = a.name.toLowerCase(),
+                        bName = b.name.toLowerCase();
+                    return aName < bName ?
+                            -1 : bName < aName ?
+                                1 : 0;
+                });
+
         this.setState({
             teams: _m.toClj(teams)
         });

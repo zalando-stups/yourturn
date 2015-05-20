@@ -20,7 +20,7 @@ On `localhost:3000` you now have the frontend of yourturn with hot reloading ena
 
 ## Building
 
-To do a production build:
+To do a production build go in the `client` directory and run this:
 
     gulp build
     

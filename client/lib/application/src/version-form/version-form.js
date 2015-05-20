@@ -42,10 +42,10 @@ class VersionForm extends BaseView {
      */
     checkVersionAvailability() {
         let $idInput = this.$el.find('#version_id'),
-            version_id = $idInput.val(),
-            storeVersion = this.store.getApplicationVersion(this.props.applicationId, version_id);
+            versionId = $idInput.val(),
+            storeVersion = this.store.getApplicationVersion(this.props.applicationId, versionId);
 
-        if (storeVersion && version_id !== this.props.versionId) {
+        if (storeVersion && versionId !== this.props.versionId) {
             if (!ENV_TEST) {
                 $idInput[0].setCustomValidity('Version already exists.');
             }
@@ -68,13 +68,13 @@ class VersionForm extends BaseView {
 
         // gather data
         let {$el} = this,
-            version_id = $el.find('#version_id').val(),
-            version_artifact = $el.find('#version_artifactName').val(),
-            version_notes = $el.find('#version_notes').val(),
+            versionId = $el.find('#version_id').val(),
+            versionArtifact = $el.find('#version_artifactName').val(),
+            versionNotes = $el.find('#version_notes').val(),
 
             version = {
-                artifact: version_artifact ? 'docker://' + version_artifact : '',
-                notes: version_notes
+                artifact: versionArtifact ? 'docker://' + versionArtifact : '',
+                notes: versionNotes
             };
 
 
@@ -82,13 +82,13 @@ class VersionForm extends BaseView {
 
         this
         .actions
-        .saveApplicationVersion(this.data.applicationId, version_id, version)
+        .saveApplicationVersion(this.data.applicationId, versionId, version)
         .then(() => {
             history
             .navigate(
                 constructLocalUrl(
                     'application-version',
-                    [this.data.applicationId, version_id]),
+                    [this.data.applicationId, versionId]),
                 {trigger: true});
         })
         .catch(err => {
@@ -96,7 +96,7 @@ class VersionForm extends BaseView {
             .props
             .notificationActions
             .addNotification(
-                `Could not ${verb} version ${version_id} for ${this.data.application.name}. ${err.message}`,
+                `Could not ${verb} version ${versionId} of ${this.data.application.name}. ${err.message}`,
                 'error');
         });
     }
@@ -107,6 +107,7 @@ class VersionForm extends BaseView {
             applicationId: applicationId,
             versionId: versionId,
             edit: edit,
+            approvalCount: this.store.getApprovals(applicationId, versionId).length,
             application: this.store.getApplication(applicationId)
         };
         if (edit) {

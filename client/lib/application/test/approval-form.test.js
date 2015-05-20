@@ -44,7 +44,7 @@ describe('The approval form view', () => {
     });
 
     it('should show approvals', () => {
-        flux.getStore(FLUX).receiveApprovals(TEST_APPROVALS);
+        flux.getStore(FLUX).receiveApprovals([APP_ID, VER_ID, TEST_APPROVALS]);
         let $list = form.$el.find('[data-block="approval-list"]');
         expect($list.find('.approvalCard').length).to.equal(2);
     });

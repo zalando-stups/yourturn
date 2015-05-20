@@ -23,7 +23,20 @@ const FLUX = 'application',
         application_id: APP_ID,
         artifact: `docker://stups/${APP_ID}:${VER_ID}`,
         notes: '# Test'
-    };
+    },
+    TEST_APPROVALS = [{
+        application_id: APP_ID,
+        version_id: VER_ID,
+        approval_type: 'TESTED',
+        user_id: 'npiccolotto',
+        approved_at: '2015-04-25T16:25:00'
+    }, {
+        application_id: APP_ID,
+        version_id: VER_ID,
+        approval_type: 'TESTED',
+        user_id: 'tobi',
+        approved_at: '2015-04-25T16:40:00'
+    }];
 
 class MockFlux extends Flummox {
     constructor() {
@@ -89,6 +102,11 @@ describe('The version form view', () => {
         it('should call the correct action', () => {
             form.$el.find('form').submit();
             expect(actionSpy.calledOnce).to.be.true;
+        });
+
+        it('should display a warning when there are approvals', () => {
+            flux.getStore(FLUX).receiveApprovals([APP_ID, VER_ID, TEST_APPROVALS]);
+            expect(form.$el.find('[data-block="warning"]').length).to.equal(1);
         });
     });
 

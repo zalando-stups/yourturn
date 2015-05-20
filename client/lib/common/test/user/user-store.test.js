@@ -3,7 +3,17 @@ import UserStore from 'common/src/data/user/user-store';
 import UserActions from 'common/src/data/user/user-actions';
 import {Flummox} from 'flummox';
 
-const FLUX = 'user';
+const FLUX = 'user',
+    TEST_TEAMS = [{
+        id: 'stups',
+        name: 'stups'
+    }, {
+        id: 'greendale',
+        name: 'greendale'
+    }, {
+        id: 'stups',
+        name: 'stups'
+    }];
 
 class MockFlux extends Flummox {
     constructor() {
@@ -40,5 +50,12 @@ describe('The user store', () => {
         });
         store.deleteTokenInfo();
         expect(store.getTokenInfo()).to.be.false;
+    });
+
+    it('should deduplicate and sort teams', () => {
+        store.receiveUserTeams(TEST_TEAMS);
+        let userTeams = store.getUserTeams();
+        expect(userTeams.length).to.equal(2);
+        expect(userTeams[0].id).to.equal('greendale');
     });
 });

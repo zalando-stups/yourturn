@@ -15,6 +15,7 @@ var LODASH_FUNCS = [
         // own
         'chain',
         'filter',
+        'findLastIndex',
         'flatten',
         'forOwn',
         'groupBy',
