@@ -1,8 +1,22 @@
+// NEW RELIC
+if (process.env.NEW_RELIC_APP_NAME) {
+    require('newrelic');
+    console.log('Starting with New Relic App', process.env.NEW_RELIC_APP_NAME);
+}
+
 var express = require('express'),
+    winston = require('winston'),
     server = express(),
     request = require('superagent'),
     fs = require('fs'),
     index = process.env.ENV_TEST ? '' : fs.readFileSync('./index.html');
+
+// configure logger
+winston.remove(winston.transports.Console);
+winston.add(winston.transports.Console, {
+    timestamp: true,
+    showLevel: true
+});
 
 server.use('/dist', express.static('dist'));
 
@@ -27,8 +41,6 @@ function generateEnv() {
 
 function writeEnv() {
     var env = generateEnv();
-    console.log('Current working directory', process.cwd());
-    console.log('Current user id', process.getuid());
     fs.writeFileSync('dist/env.js', env );
 }
 if (!process.env.ENV_TEST) {
@@ -44,8 +56,8 @@ server.get('/teams', function(req, res) {
         .set('Authorization', req.get('Authorization'))
         .end(function(err, response) {
             if (err) {
-                console.log(err);
-                return res.status(err.status).send(err);
+                winston.error('Could not GET /teams: %d %s', err.status || 0, err.message);
+                return res.status(err.status || 0).send(err);
             }
             return res
                     .status(200)
@@ -61,8 +73,8 @@ server.get('/user/:userId', function(req, res) {
         .set('Authorization', req.get('Authorization'))
         .end(function(err, response) {
             if (err) {
-                console.log(err);
-                return res.status(err.status).send(err);
+                winston.error('Could not GET /user/%s: %d %s', req.params.userId, err.status || 0, err.message);
+                return res.status(err.status || 0).send(err);
             }
             return res
                     .status(200)
@@ -72,7 +84,6 @@ server.get('/user/:userId', function(req, res) {
 });
 
 server.get('/tokeninfo', function(req, res) {
-    console.log('requested tokeninfo');
     request
         .get(process.env.YTENV_OAUTH_TOKENINFO_URL)
         .accept('json')
@@ -81,8 +92,8 @@ server.get('/tokeninfo', function(req, res) {
         })
         .end(function(err, response) {
             if (err) {
-                console.log(err);
-                return res.status(err.status).send(err);
+                winston.error('Could not GET /tokeninfo: %d %s', err.status || 0, err.message);
+                return res.status(err.status || 0).send(err);
             }
             return res
                     .status(200)
