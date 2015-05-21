@@ -31,7 +31,7 @@ module.exports = {
         }),
         new webpack.DefinePlugin({
             ENV_DEVELOPMENT: false,
-            ENV_TEST: true
+            ENV_TEST: false
         })
     ],
     resolve: {
