@@ -48,6 +48,8 @@ describe('The application store', () => {
             }];
             store.receiveApplications(results);
             expect(store.getApplications('kio').length).to.equal(1);
+            expect(store.getApplications('Kio').length).to.equal(1);
+            expect(store.getApplications('other').length).to.equal(0);
         });
 
         it('should receive applications that match a list of team ids', () => {

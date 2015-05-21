@@ -24,6 +24,7 @@ var LODASH_FUNCS = [
         'reverse',
         'sortBy',
         'take',
+        'times',
         'value',
         'values',
         // backbone

@@ -22,10 +22,13 @@ class AppList extends BaseView {
     }
 
     update() {
-        let userTeamIds = _.pluck(this.stores.user.getUserTeams(), 'id');
+        let userTeamIds = _.pluck(this.stores.user.getUserTeams(), 'id'),
+            otherApps = this.stores.application.getOtherApplications(this.state.term, userTeamIds),
+            otherAppsHiddenCount = otherApps.length - 20 < 0 ? 0 : otherApps.length - 20;
         this.data = {
             teamApps: this.stores.application.getTeamApplications(this.state.term, userTeamIds),
-            otherApps: this.stores.application.getOtherApplications(this.state.term, userTeamIds),
+            otherApps: otherApps.splice(0, 20),
+            otherAppsHiddenCount: otherAppsHiddenCount,
             term: this.state.term
         };
     }

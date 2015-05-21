@@ -44,6 +44,12 @@
                 <a href="/application/detail/{{this.id}}">{{this.name}}</a>
             </li>
         {{/each}}
+    {{#if otherAppsHiddenCount}}
+        <small data-block="otherAppsHiddenCount">
+            + <span>{{otherAppsHiddenCount}}</span> hidden.
+        </small>
+    {{/if}}
+
     </ul>
 {{else}}
     No applications owned by other teams.

@@ -96,8 +96,9 @@ describe('The resource store', () => {
             name: 'Customer'
         });
         store.beginFetchResource('sales_order');
-        let resources = store.getResources('other');
-        expect(resources.length).to.equal(0);
+        expect(store.getResources('customer').length).to.equal(1);
+        expect(store.getResources('Customer').length).to.equal(1);
+        expect(store.getResources('other').length).to.equal(0);
     });
 
     it('#getScopes should not return fetch results', () => {
