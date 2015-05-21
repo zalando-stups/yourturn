@@ -1,19 +1,52 @@
+/* globals ENV_TEST */
+import _ from 'lodash';
 import BaseView from 'common/src/base-view';
 import Template from './application-list.hbs';
 import 'common/asset/scss/application/application-list.scss';
 
-class AppDetail extends BaseView {
+class AppList extends BaseView {
     constructor(props) {
-        super({
-            className: 'applicationList',
-            store: props.flux.getStore('application')
-        });
+        props.className = 'applicationList';
+        props.stores = {
+            application: props.flux.getStore('application'),
+            user: props.globalFlux.getStore('user')
+        };
+        props.events = {
+            'keyup': 'filter',
+            'submit': 'filter'
+        };
+        super(props);
+        this.state = {
+            term: ''
+        };
     }
 
     update() {
+        let userTeamIds = _.pluck(this.stores.user.getUserTeams(), 'id'),
+            otherApps = this.stores.application.getOtherApplications(this.state.term, userTeamIds),
+            otherAppsHiddenCount = otherApps.length - 20 < 0 ? 0 : otherApps.length - 20;
         this.data = {
-            apps: this.store.getApplications()
+            teamApps: this.stores.application.getTeamApplications(this.state.term, userTeamIds),
+            otherApps: otherApps.splice(0, 20),
+            otherAppsHiddenCount: otherAppsHiddenCount,
+            term: this.state.term
         };
+    }
+
+    filter(evt) {
+        evt.preventDefault();
+        this.state.term = this.$el.find('input').val();
+        this.update();
+        this.render();
+        this.$el.find('input[data-action="search"]').focus();
+
+        // .setSelectionRange is not worth the effort to mock it in node tests
+        if (!ENV_TEST) {
+            this
+            .$el
+            .find('input[data-action="search"]')[0]
+            .setSelectionRange(this.state.term.length, this.state.term.length);
+        }
     }
 
     render() {
@@ -22,4 +55,4 @@ class AppDetail extends BaseView {
     }
 }
 
-export default AppDetail;
+export default AppList;

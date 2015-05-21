@@ -164,12 +164,43 @@ class ApplicationStore extends Store {
     /**
      * Returns all applications that are available (as in not Pending or Failed) RIGHT NAO!
      *
+     * @param  {string} term Filters list of applications by names that contain term
      * @return {Array} Available applications
      */
-    getApplications() {
+    getApplications(term) {
         let availableApps = _m.filter(app => !(app instanceof FetchResult), _m.vals(this.state.applications));
+        if (term) {
+            availableApps = _m.filter(app => (_m.get(app, 'name')
+                                                .toLowerCase()
+                                                .indexOf(term.toLowerCase()) !== -1), availableApps);
+        }
         return _.sortBy(_m.toJs(availableApps) || [], a => a.name ? a.name.toLowerCase() : null);
     }
+
+    /**
+     * Returns all applications that belong to a team and are available
+     *
+     * @param  {string} term Substring to match an application name
+     * @param  {Array} teamIds List of team ids that should be included
+     * @return {Array} Available applications
+     */
+    getTeamApplications(term, teamIds) {
+        let availableApps = _m.toClj(this.getApplications(term));
+        return _m.toJs(_m.filter(app => (teamIds.indexOf(_m.get(app, 'team_id')) !== -1), availableApps));
+    }
+
+    /**
+     * Returns all applications that don't belong to a team and are available
+     *
+     * @param  {string} term Substring to match an application name
+     * @param  {Array} teamIds List of team ids that should be filtered out
+     * @return {Array} Available applications
+     */
+    getOtherApplications(term, teamIds) {
+        let availableApps = _m.toClj(this.getApplications(term));
+        return _m.toJs(_m.remove(app => (teamIds.indexOf(_m.get(app, 'team_id')) !== -1), availableApps));
+    }
+
 
     /**
      * Returns the application with `id`. Does not care about its state, e.g. whether or not

@@ -38,6 +38,57 @@ describe('The application store', () => {
             expect(store.getApplications().length).to.equal(2);
         });
 
+        it('should filter applications', () => {
+            let results = [{
+                id: 'kio',
+                name: 'kio'
+            }, {
+                id: 'twintip',
+                name: 'twintip'
+            }];
+            store.receiveApplications(results);
+            expect(store.getApplications('kio').length).to.equal(1);
+            expect(store.getApplications('Kio').length).to.equal(1);
+            expect(store.getApplications('other').length).to.equal(0);
+        });
+
+        it('should receive applications that match a list of team ids', () => {
+            let results = [{
+                id: 'kio',
+                name: 'kio',
+                team_id: 'stups'
+            }, {
+                id: 'twintip',
+                name: 'twintip',
+                team_id: 'stups'
+            }, {
+                id: 'openam',
+                name: 'OpenAM',
+                team_id: 'iam'
+            }];
+            store.receiveApplications(results);
+            expect(store.getTeamApplications(null, ['stups']).length).to.equal(2);
+        });
+
+        it('should receive applications that dont match a list of team ids', () => {
+            let results = [{
+                id: 'kio',
+                name: 'kio',
+                team_id: 'stups'
+            }, {
+                id: 'twintip',
+                name: 'twintip',
+                team_id: 'stups'
+            }, {
+                id: 'openam',
+                name: 'OpenAM',
+                team_id: 'iam'
+            }];
+            store.receiveApplications(results);
+            expect(store.getOtherApplications(null, ['stups']).length).to.equal(1);
+        });
+
+
         it('should receive a single application', () => {
             let result = {
                 id: 'kio',

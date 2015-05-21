@@ -20,9 +20,11 @@ var LODASH_FUNCS = [
         'forOwn',
         'groupBy',
         'intersection',
+        'pluck',
         'reverse',
         'sortBy',
         'take',
+        'times',
         'value',
         'values',
         // backbone
