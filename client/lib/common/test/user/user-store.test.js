@@ -10,9 +10,6 @@ const FLUX = 'user',
     }, {
         id: 'greendale',
         name: 'greendale'
-    }, {
-        id: 'stups',
-        name: 'stups'
     }];
 
 class MockFlux extends Flummox {
@@ -52,7 +49,7 @@ describe('The user store', () => {
         expect(store.getTokenInfo()).to.be.false;
     });
 
-    it('should deduplicate and sort teams', () => {
+    it('should sort teams', () => {
         store.receiveUserTeams(TEST_TEAMS);
         let userTeams = store.getUserTeams();
         expect(userTeams.length).to.equal(2);
