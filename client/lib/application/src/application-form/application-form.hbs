@@ -1,15 +1,15 @@
 {{#if edit}}
-    <h2>Edit {{app.name}}</h2>
+    <h2>Edit <a href="/application/detail/{{app.id}}">{{app.name}}</a></h2>
     <div class="btn-group">
         <a href="/application/detail/{{app.id}}" class="btn btn-default">
-            <i class="fa fa-chevron-left"></i> Back to {{app.name}}
+            <i class="fa fa-chevron-left"></i> {{app.name}}
         </a>
     </div>
 {{else}}
-    <h2>Create a new application</h2>
+    <h2>Create a new <a href="/application">Application</a></h2>
     <div class="btn-group">
         <a href="/application" class="btn btn-default">
-            <i class="fa fa-chevron-left"></i> Back to applications
+            <i class="fa fa-chevron-left"></i> Applications
         </a>
     </div>
 {{/if}}

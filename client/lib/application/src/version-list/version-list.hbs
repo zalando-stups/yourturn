@@ -1,14 +1,14 @@
 <h2>
     {{#if application}}
-        {{application.name}} versions
+        <a href="/application/detail/{{applicationId}}">{{application.name}}</a> versions
     {{else}}
-        {{applicationId}} versions
+        <a href="/application/detail/{{applicationId}}">{{applicationId}}</a> versions
     {{/if}}
 </h2>
 <div class="btn-group">
     <a href="/application/detail/{{applicationId}}" class="btn btn-default">
         <i class="fa fa-chevron-left"></i>
-            Back {{#if application }} to {{application.name}} {{else}} to {{applicationId}} {{/if}}
+            {{#if application }}{{application.name}}{{else}}{{applicationId}}{{/if}}
     </a>
     <a href="/application/detail/{{applicationId}}/version/create" class="btn btn-primary">
         <i class="fa fa-plus"></i> Create new version
