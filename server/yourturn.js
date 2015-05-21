@@ -1,15 +1,10 @@
-// NEW RELIC
-if (process.env.NEW_RELIC_APP_NAME) {
-    require('newrelic');
-    console.log('Starting with New Relic App', process.env.NEW_RELIC_APP_NAME);
-}
-
 var express = require('express'),
     winston = require('winston'),
     server = express(),
     request = require('superagent'),
     fs = require('fs'),
-    index = process.env.ENV_TEST ? '' : fs.readFileSync('./index.html');
+    path = require('path'),
+    index = fs.readFileSync('./index.html');
 
 // configure logger
 winston.remove(winston.transports.Console);
@@ -17,6 +12,12 @@ winston.add(winston.transports.Console, {
     timestamp: true,
     showLevel: true
 });
+
+// NEW RELIC
+if (process.env.NEW_RELIC_APP_NAME) {
+    require('newrelic');
+    winston.info('Starting with New Relic App: %s', process.env.NEW_RELIC_APP_NAME);
+}
 
 server.use('/dist', express.static('dist'));
 
@@ -27,26 +28,76 @@ server.use(function(req, res, next) {
     next();
 });
 
-function generateEnv() {
-    var env = '';
-    for( key in process.env ) {
+/**
+ * Returns a JSON object with all the environment variables in it.
+ *
+ * @return {Object}
+ */
+function getEnvironment() {
+    var env = {};
+    for(key in process.env) {
         if (process.env.hasOwnProperty(key)) {
             if (key.indexOf( 'YTENV_' ) === 0 ) {
-                env += '' + key + '="' + process.env[key] + '";\n';
+                env[key] = process.env[key];
             }
         }
+    }
+    // read client id from mint
+    if (process.env.CREDENTIALS_DIR) {
+        var clientJsonPath = path.join(process.env.CREDENTIALS_DIR, 'client.json'),
+            clientJsonFile,
+            clientJson;
+        
+        try {
+            // try to read it
+            clientJsonFile = fs.readFileSync(clientJsonPath);
+        } catch(err) {
+            winston.error('Could not read client.json: %s', err.message);
+            return env;
+        }
+        
+        try {
+            // try to parse it as json
+            clientJson = JSON.parse(clientJsonFile);
+        } catch(err) {
+            winston.error('Could not parse client.json: %s. Content: %s', err.message, clientJsonFile);
+            return env;
+        }
+        // actually set it
+        env['YTENV_OAUTH_CLIENT_ID'] = clientJson.client_id;
     }
     return env;
 }
 
+/**
+ * Converts a JSON object into a JS script of global variables (trollface).
+ *
+ * @param  {Object} env The JSON object
+ * @return {String} The script containing <KEY>="<VALUE>"; for every key in the object
+ */
+function convertToScript(env) {
+    var script = '';
+    for (key in env) {
+        if (env.hasOwnProperty(key)) {
+            script += key + '="' + env[key] + '";\n';
+        }
+    }
+    return script;
+}
+
+/**
+ * Gets the environment, converts it to a JS script and writes it to the disk.
+ */
 function writeEnv() {
-    var env = generateEnv();
-    fs.writeFileSync('dist/env.js', env );
+    var env = getEnvironment();
+    fs.writeFileSync('dist/env.js', convertToScript(env));
 }
-if (!process.env.ENV_TEST) {
-    writeEnv();
-    setInterval( writeEnv, 1000 * 60 * 30 ); // write this every 30 minutes
-}
+
+writeEnv();
+setInterval(writeEnv, 1000 * 60 * 60); // write this every hour
+
+
+// EXPRESS ROUTES BELOW
 
 server.get('/teams', function(req, res) {
     request
