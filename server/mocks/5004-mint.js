@@ -8,10 +8,10 @@ var apps = {
     kio: {
         id: 'kio',
         username: 'kio-robot',
-        last_password_rotation: '2015-01-01T12:42:41Z',
+        last_password_rotation: '2015-01-02T12:42:41Z',
         last_client_rotation: '2015-01-01T12:42:41Z',
         last_modified: '2015-01-01T12:42:41Z',
-        last_synced: '2015-01-01T12:42:41Z',
+        last_synced: '2015-01-03T12:42:41Z',
         has_problems: false,
         redirect_url: 'http://example.com/oauth',
         s3_buckets: [

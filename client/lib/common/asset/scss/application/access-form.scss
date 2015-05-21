@@ -7,4 +7,8 @@
         margin-bottom: $padding-small;
         color: $gray;
     }
+    .u-info {
+        // override this style here
+        max-width: 100%;
+    }
 }
