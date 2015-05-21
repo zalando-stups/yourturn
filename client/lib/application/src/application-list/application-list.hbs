@@ -8,13 +8,13 @@
         <label for="yourturn-search">Search:</label>
         <div class="input-group">
             <input
-                name="yourturn-search"
+                name="yourturn_search"
                 autofocus="autofocus"
                 value="{{term}}"
                 type="search"
                 aria-label="Enter your term"
                 data-action="search"
-                placeholder="Application" />
+                placeholder="Kio" />
             <button
                 type="submit"
                 class="btn btn-default">
@@ -23,7 +23,7 @@
             </div>
     </form>
 </div>
-<h3>Your team apps</h3>
+<h3>Your Applications</h3>
 {{#if teamApps.length}}
     <ul data-block="teamApps">
         {{#each teamApps}}
@@ -36,7 +36,7 @@
     No applications owned by your team.
 {{/if}}
 
-<h3>Other apps</h3>
+<h3>Other Applications</h3>
 {{#if otherApps.length}}
     <ul data-block="otherApps">
         {{#each otherApps}}

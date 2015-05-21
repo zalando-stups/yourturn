@@ -40,12 +40,19 @@ describe('The application list view', () => {
         });
     });
 
-    it('should not display any list', () => {
+    it('should not display any list of applications', () => {
         expect(list.$el.find('ul[data-block="teamApps"]').length).to.equal(0);
         expect(list.$el.find('ul[data-block="otherApps"]').length).to.equal(0);
     });
 
-    it('should display a list of applications not owned by user and no list of owned by user', () => {
+    it('should display a list of applications owned by user and no list of not owned by user', () => {
+        globalFlux
+        .getStore('user')
+        .receiveUserTeams([{
+            id: 'stups',
+            name: 'stups'
+        }]);
+
         flux
         .getStore(FLUX_ID)
         .receiveApplications([{
@@ -58,7 +65,27 @@ describe('The application list view', () => {
             team_id: 'stups'
         }]);
 
+        expect(list.$el.find('ul[data-block="teamApps"] > li').length).to.equal(2);
+        expect(list.$el.find('ul[data-block="otherApps"] > li').length).to.equal(0);
+    });
+
+    it('should display a list of applications not owned by user and no list of owned by user', () => {
+        globalFlux
+        .getStore('user')
+        .receiveUserTeams([{
+            id: 'stups',
+            name: 'stups'
+        }]);
+
+        flux
+        .getStore(FLUX_ID)
+        .receiveApplications([{
+            id: 'openam',
+            name: 'OpenAM',
+            team_id: 'iam'
+        }]);
+
         expect(list.$el.find('ul[data-block="teamApps"] > li').length).to.equal(0);
-        expect(list.$el.find('ul[data-block="otherApps"] > li').length).to.equal(2);
+        expect(list.$el.find('ul[data-block="otherApps"] > li').length).to.equal(1);
     });
 });

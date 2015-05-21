@@ -12,8 +12,8 @@ class AppList extends BaseView {
             user: props.globalFlux.getStore('user')
         };
         props.events = {
-           'keyup': 'filter',
-           'submit': 'filter'
+            'keyup': 'filter',
+            'submit': 'filter'
         };
         super(props);
         this.state = {

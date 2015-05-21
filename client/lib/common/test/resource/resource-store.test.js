@@ -90,6 +90,16 @@ describe('The resource store', () => {
         expect(resources[0].id).to.equal('customer');
     });
 
+    it('#getResources should filter results', () => {
+        store.receiveResource({
+            id: 'customer',
+            name: 'Customer'
+        });
+        store.beginFetchResource('sales_order');
+        let resources = store.getResources('other');
+        expect(resources.length).to.equal(0);
+    });
+
     it('#getScopes should not return fetch results', () => {
         store.receiveScope(['customer', {
             id: 'read_all'
