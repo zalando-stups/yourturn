@@ -3,16 +3,37 @@ import Template from './approval-form.hbs';
 import ApprovalCard from './approval-card/approval-card';
 import 'common/asset/scss/application/approval-form.scss';
 
+const EXPLANATIONS = {
+    SPECIFICATION: 'Tickets are properly specified and have useful content.',
+    CODE_CHANGE: 'The approver asserts that there are no unwanted code changes, i.e. did a code review.',
+    TEST: 'The tests are okay, however they look like for this application.',
+    DEPLOY: 'The approver asserts that the code status in the deployment artifact for this version is ready to deploy.'
+};
+
 class ApprovalForm extends BaseView {
     constructor(props) {
         props.className = 'approvalForm';
         props.events = {
             'submit': 'save',
+            'change #approval_type': 'explainType',
             'keyup #approval_custom_type': 'checkCustomType'
         };
         props.store = props.flux.getStore('application');
         super(props);
         this.actions = props.flux.getActions('application');
+    }
+
+    explainType() {
+        let {$el} = this,
+            $explanation = $el.find('[data-action="explain-approval"]'),
+            customUsed = $el.find('#approval_custom_type').val().length > 0,
+            approvalType = $el.find('#approval_type option:selected').val();
+        
+        if (!EXPLANATIONS[approvalType]) {
+            return $explanation.css('display', 'none');
+        }
+        $explanation.css('display', 'block');
+        $explanation.text(EXPLANATIONS[approvalType]);
     }
 
     checkCustomType() {
@@ -76,6 +97,8 @@ class ApprovalForm extends BaseView {
             let card = new ApprovalCard({approval: a});
             $list.append(card.render().$el);
         });
+
+        this.explainType();
         return this;
     }
 }
