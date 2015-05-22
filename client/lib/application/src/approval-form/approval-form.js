@@ -46,9 +46,11 @@ class ApprovalForm extends BaseView {
 
         let {$el} = this,
             {applicationId, versionId} = this.props,
-            customUsed = $el.find('#approval_custom_type').val().length > 0,
+            $customTypeInput = $el.find('#approval_custom_type'),
+            customUsed = $customTypeInput.val().length > 0 &&
+                         $el.find('#approval_custom').is(':checked'),
             approvalType = customUsed ?
-                                $el.find('#approval_custom_type').val() :
+                                $customTypeInput.val() :
                                 $el.find('#approval_type option:selected').val(),
             notes = $el.find('#approval_notes').val(),
 
