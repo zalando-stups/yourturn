@@ -26,9 +26,8 @@ class ApprovalForm extends BaseView {
     explainType() {
         let {$el} = this,
             $explanation = $el.find('[data-action="explain-approval"]'),
-            customUsed = $el.find('#approval_custom_type').val().length > 0,
             approvalType = $el.find('#approval_type option:selected').val();
-        
+
         if (!EXPLANATIONS[approvalType]) {
             return $explanation.css('display', 'none');
         }
