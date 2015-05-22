@@ -121,9 +121,9 @@ ul {
 .u-warning {
     color: $white;
     background: $red;
-    border: 1px solid darken($red, 10%);
+    border-left: $padding-tiny solid darken($red, 10%);
     border-radius: $border-radius;
-    padding: $padding-tiny $padding-small;
+    padding: 10px $padding-small;
     margin: $padding-small 0;
     max-width: 600px;
     :first-child {
@@ -132,7 +132,7 @@ ul {
             font-family: 'FontAwesome';
             font-size: 200%;
             display: block;
-            float: right;
+            margin-bottom: .5em;
         }
     }
 }
@@ -140,9 +140,9 @@ ul {
 .u-info {
     color: $white;
     background: $blue-light;
-    border: 1px solid $blue;
+    border-left: $padding-tiny solid $blue;
     border-radius: $border-radius;
-    padding: $padding-tiny $padding-small;
+    padding: 10px $padding-small;
     margin: $padding-small 0;
     max-width: 600px;
 
@@ -152,7 +152,7 @@ ul {
             font-family: 'FontAwesome';
             font-size: 200%;
             display: block;
-            float: right;
+            margin-bottom: .5em;
         }
     }
 }

@@ -2,9 +2,8 @@ import BaseView from 'common/src/base-view';
 import Template from './approval-card.hbs';
 import Markdown from 'common/src/markdown';
 import moment from 'moment';
+import {DATE_FORMAT} from 'common/src/config';
 import 'common/asset/scss/application/approval-card.scss';
-
-const DATE_FORMAT = 'MMMM Do YYYY, h:mm:ss a';
 
 class ApprovalCard extends BaseView {
     constructor(props) {
