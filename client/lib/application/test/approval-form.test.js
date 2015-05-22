@@ -7,16 +7,17 @@ import ApprovalForm from 'application/src/approval-form/approval-form';
 const FLUX = 'application',
     APP_ID = 'kio',
     VER_ID = '0.1',
+    TEST_APPROVAL_TYPES = ['TEST', 'UX'],
     TEST_APPROVALS = [{
         application_id: APP_ID,
         version_id: VER_ID,
-        approval_type: 'TESTED',
+        approval_type: 'TEST',
         user_id: 'npiccolotto',
         approved_at: '2015-04-25T16:25:00'
     }, {
         application_id: APP_ID,
         version_id: VER_ID,
-        approval_type: 'TESTED',
+        approval_type: 'TEST',
         user_id: 'tobi',
         approved_at: '2015-04-25T16:40:00'
     }];
@@ -53,6 +54,24 @@ describe('The approval form view', () => {
         flux.getStore(FLUX).receiveApprovalTypes([APP_ID, ['CHAOS', 'MORE_CHAOS']]);
         let $select = form.$el.find('[data-block="approvalType-selection"]');
         expect($select.find('option').length).to.equal(2);
+    });
+
+    it('should display an explanation of default approval types', () => {
+        flux.getStore(FLUX).receiveApprovalTypes([APP_ID, TEST_APPROVAL_TYPES]);
+        let $select = form.$el.find('[data-block="approvalType-selection"]');
+        $select.find('option[value="TEST"]').prop('selected', true);
+        form.explainType();
+        let $explanation = form.$el.find('[data-block="approvalType-explanation"]');
+        expect($explanation.attr('style')).to.equal('display: block;');
+    });
+
+    it('should hide the explanation when a non-default approval type is selected', () => {
+        flux.getStore(FLUX).receiveApprovalTypes([APP_ID, TEST_APPROVAL_TYPES]);
+        let $select = form.$el.find('[data-block="approvalType-selection"]');
+        $select.find('option[value="UX"]').prop('selected', true);
+        form.explainType();
+        let $explanation = form.$el.find('[data-block="approvalType-explanation"]');
+        expect($explanation.attr('style')).to.equal('display: none;');
     });
 
 });
