@@ -125,7 +125,7 @@ ul {
     border-radius: $border-radius;
     padding: $padding-tiny $padding-small;
     margin: $padding-small 0;
-    max-width: 600px;
+    max-width: $body-text-width;
     :first-child {
         &:before {
             content: '\f06a';
@@ -147,7 +147,7 @@ ul {
     border-radius: $border-radius;
     padding: $padding-tiny $padding-small;
     margin: $padding-small 0;
-    max-width: 600px;
+    max-width: $body-text-width;
 
     > :first-child {
         &:before {

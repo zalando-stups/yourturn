@@ -4,6 +4,11 @@
     .applicationDetail-descriptionTitle {
         color: $gray;
     }
+
+    .applicationDetail-description {
+        max-width: $body-text-width;
+    }
+
     table {
         width: 100%;
         th {
