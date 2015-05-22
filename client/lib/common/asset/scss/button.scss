@@ -116,4 +116,10 @@
 
 .btn-group {
     padding: $padding-tiny 0 $padding-tiny 0;
+    .btn {
+        margin: 3px 0;
+        + .btn {
+            margin-left: 3px;
+        }
+    }
 }

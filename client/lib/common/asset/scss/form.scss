@@ -44,18 +44,18 @@ input[type="search"] {
 
             &:invalid,
             &.invalid {
-                border: 1px solid $red;
+                border-color: $red;
+                border-style: solid;
                 &:focus {
-                    border: 1px solid $red;
                     box-shadow: 0px 0px 5px $red;
                 }
             }
 
             &:valid,
             &.valid {
-                border: 1px solid $green;
+                border-color: $green;
+                border-style: solid;
                 &:focus {
-                    border: 1px solid $green;
                     box-shadow: 0px 0px 5px $green;
                 }
             }
@@ -83,30 +83,63 @@ input[type="search"] {
     .input-group {
         width: 100%;
         display: flex;
+
+        // styles assume an input will every only
+        // be with ONE other thing together
+        // in an input-group
+        // see: first-child, last-child
+
         .input-addon {
             user-select: none;
             padding: $padding-tiniest $padding-tiny;
             border: 1px solid $gray-light;
             color: $gray;
-            border-top-left-radius: 2px;
-            border-bottom-left-radius: 2px;
-            border-top-right-radius: 0px;
-            border-bottom-right-radius: 0px;
-            border-right: 0;
             font-size: inherit;
             line-height: inherit;
             font-family: $font-sans;
-
-            + input {
+            
+            &:first-child {
+                border-top-left-radius: 2px;
+                border-bottom-left-radius: 2px;
+                border-top-right-radius: 0px;
+                border-bottom-right-radius: 0px;
+                border-right: 0;
+            }
+            &:last-child {
+                border-top-right-radius: 2px;
+                border-bottom-right-radius: 2px;
                 border-top-left-radius: 0px;
-                border-bottom-left-radius: 0px;
+                border-bottom-left-radius: 0px; 
+                border-left: 0;
+            }
+        }
+
+        .btn {
+            &:first-child {
+                border-top-left-radius: 2px;
+                border-bottom-left-radius: 2px;
+                border-top-right-radius: 0px;
+                border-bottom-right-radius: 0px;
+                border-right: 0;
+            }
+            &:last-child {
+                border-top-right-radius: 2px;
+                border-bottom-right-radius: 2px;
+                border-top-left-radius: 0px;
+                border-bottom-left-radius: 0px; 
+                border-left: 0;
             }
         }
 
         input {
             flex: 1;
-            + .btn {
-                border-left: 0;
+            &:first-child {
+                border-top-right-radius: 0px;
+                border-bottom-right-radius: 0px;
+            }
+            &:last-child {
+                border-top-left-radius: 0px;
+                border-bottom-left-radius: 0px;
             }
         }
     }
