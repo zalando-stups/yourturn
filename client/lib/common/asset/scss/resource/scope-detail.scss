@@ -14,4 +14,7 @@
     .scopeDetail-descriptionTitle {
         color: $gray;
     }
+    .scopeDetail-description {
+        max-width: $body-text-width;
+    }
 }

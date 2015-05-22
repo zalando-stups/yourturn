@@ -8,6 +8,9 @@
     .resourceDetail-descriptionTitle {
         color: $gray;
     }
+    .resourceDetail-description {
+        max-width: $body-text-width;
+    }
     h1 {
         color: $gray-dark;
     }

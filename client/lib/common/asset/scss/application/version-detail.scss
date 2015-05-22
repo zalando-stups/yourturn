@@ -7,6 +7,9 @@
     .versionDetail-notesTitle {
         color: $gray;
     }
+    .versionDetail-notes {
+        max-width: $body-text-width;
+    }
     h1 {
         color: $gray-dark;
     }
