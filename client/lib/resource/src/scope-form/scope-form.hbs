@@ -92,7 +92,10 @@
                 </div>
                 <div class="grid-col">
                     <p>
-                        <small>{{#each resource.owners}}<strong>{{this}}</strong>{{/each}} can grant <strong data-action="sync-with-scope-id" /> access on his <strong>{{resource.name}}</strong> data to applications.</small>
+                        <small>{{#each resource.resource_owners}}
+                                <strong>{{this}}</strong>{{#unless @last}}, {{/unless}}
+                                {{/each}}
+                                can grant <strong data-action="sync-with-scope-id" /> access on his <strong>{{resource.name}}</strong> data to applications.</small>
                     </p>
                     <p>
                         <small>A Resource Owner Scope can be granted by the resource owners to others. The resource owner automatically has the permission to grant this scope without further actions. Resource Owner Scopes always authorize only in the context of the resource owner’s resources.</small>
