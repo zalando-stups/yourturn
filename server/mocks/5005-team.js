@@ -8,9 +8,6 @@ var user = {
     }, {
         id: 'stups',
         name: 'stups'
-    }, {
-        id: 'greendale',
-        name: 'greendale'
     }]
 };
 
