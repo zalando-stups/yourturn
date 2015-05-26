@@ -66,6 +66,7 @@ function getEnvironment() {
         }
         // actually set it
         env['YTENV_OAUTH_CLIENT_ID'] = clientJson.client_id;
+        winston.info('Successfully updated OAuth client credentials');
     }
     return env;
 }
