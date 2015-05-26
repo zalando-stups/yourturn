@@ -142,6 +142,7 @@ class ApplicationStore extends Store {
         let newState = versions.reduce(
                             (map, ver) => {
                                 let app = _m.get(map, ver.application_id) || _m.hashMap();
+                                ver.last_modified = Date.parse(ver.last_modified);
                                 app = _m.assoc(app, ver.id, _m.toClj(ver));
                                 return _m.assoc(map, ver.application_id, app);
                             },
@@ -223,7 +224,7 @@ class ApplicationStore extends Store {
         let versions = _m.vals(_m.get(this.state.versions, id)),
             filtered = _m.filter(v => !(v instanceof FetchResult), versions);
         return _.chain(_m.toJs(filtered) || [])
-                .sortBy(v => v.id ? v.id.toLowerCase() : null)
+                .sortBy(v => v.last_modified)
                 .reverse()
                 .value();
     }

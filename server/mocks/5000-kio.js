@@ -44,21 +44,25 @@ var versions = {
         "1": {
             "id": "1",
             "application_id": "kio",
+            "last_modified": "2015-05-28T16:30:00Z",
             "artifact": "docker://stups/kio:1.0"
         },
         "0.9": {
             "id": "0.9",
             "application_id": "kio",
+            "last_modified": "2015-05-21T06:30:00Z",
             "artifact": "docker//stups/kio:0.9"
         },
         "0.9-beta": {
             "id": "0.9-beta",
             "application_id": "kio",
+            "last_modified": "2015-05-19T10:45:00Z",
             "artifact": "docker//stups/kio:0.9-beta"
         },
         "0.9-alpha": {
             "id": "0.9-alpha",
             "application_id": "kio",
+            "last_modified": "2015-05-11T16:30:00Z",
             "artifact": "docker//stups/kio:0.9-alpha"
         }
     }

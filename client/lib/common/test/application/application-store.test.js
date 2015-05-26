@@ -147,10 +147,12 @@ describe('The application store', () => {
         it('should receive versions', () => {
             let versions = [{
                 application_id: 'kio',
-                id: '0.12'
+                id: '0.12',
+                last_modified: '2015-05-28T16:30:00Z'
             }, {
                 application_id: 'kio',
-                id: '0.13'
+                id: '0.13',
+                last_modified: '2015-05-28T16:30:00Z'
             }];
             store.receiveApplicationVersions(versions);
             expect(store.getApplicationVersions('kio').length).to.equal(2);
@@ -159,24 +161,27 @@ describe('The application store', () => {
         it('should receive a single version', () => {
             let version = {
                 application_id: 'kio',
-                id: '0.12'
+                id: '0.12',
+                last_modified: '2015-05-28T16:30:00Z'
             };
             store.receiveApplicationVersion(version);
             expect(store.getApplicationVersions('kio').length).to.equal(1);
         });
 
-        it('should sort versions by id desc', () => {
+        it('should sort versions by last_modified desc', () => {
             let results = [{
                 application_id: 'kio',
-                id: '0.12'
+                id: '0.12',
+                last_modified: '2015-05-28T16:30:00Z'
             }, {
                 application_id: 'kio',
-                id: '0.13'
+                id: '0.13',
+                last_modified: '2015-05-24T16:30:00Z'
             }];
             store.receiveApplicationVersions(results);
             let versions = store.getApplicationVersions('kio');
-            expect(versions[0].id).to.equal('0.13');
-            expect(versions[1].id).to.equal('0.12');
+            expect(versions[0].id).to.equal('0.12');
+            expect(versions[1].id).to.equal('0.13');
         });
 
         it('should insert a pending fetch result placeholder', () => {
