@@ -1,8 +1,8 @@
 // NEW RELIC
 // has to be first require!
+
 if (process.env.NEW_RELIC_APP_NAME) {
     require('newrelic');
-    winston.info('Starting with New Relic App: %s', process.env.NEW_RELIC_APP_NAME);
 }
 
 var express = require('express'),
