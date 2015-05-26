@@ -1,6 +1,7 @@
 @import "../variables";
 
 .searchView {
+    max-width: $content-width-regular;
     .searchResult-headline {
         color: $gray;
     }   
