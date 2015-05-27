@@ -7,7 +7,10 @@ class ResourceList extends BaseView {
     constructor(props) {
         super({
             className: 'resourceList',
-            store: props.flux.getStore('resource'),
+            stores: {
+                resource: props.flux.getStore('resource'),
+                user: props.globalFlux.getStore('user')
+            },
             events: {
                 'keyup input': 'search',
                 'submit': 'search'
@@ -20,7 +23,8 @@ class ResourceList extends BaseView {
 
     update() {
         this.data = {
-            resources: this.store.getResources(this.state.term),
+            whitelisted: this.stores.user.isWhitelisted(),
+            resources: this.stores.resource.getResources(this.state.term),
             term: this.state.term
         };
     }

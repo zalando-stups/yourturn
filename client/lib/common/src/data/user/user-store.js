@@ -1,5 +1,6 @@
 import {Store} from 'flummox';
 import _m from 'mori';
+import Config from 'common/src/config';
 
 class UserStore extends Store {
     constructor(flux) {
@@ -63,6 +64,16 @@ class UserStore extends Store {
         this.setState({
             tokeninfo: false
         });
+    }
+
+    // QUICKFIX #133
+    isWhitelisted() {
+        let token = _m.toJs(this.state.tokeninfo);
+        // ignore whitelist if it's empty
+        if (Config.RESOURCE_WHITELIST.length === 0) {
+            return true;
+        }
+        return token && Config.RESOURCE_WHITELIST.indexOf(token.uid) >= 0;
     }
 
     _empty() {

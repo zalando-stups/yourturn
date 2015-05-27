@@ -9,16 +9,20 @@ import 'common/asset/scss/resource/resource-detail.scss';
 class ResourceDetail extends BaseView {
     constructor(props) {
         props.className = 'resourceDetail';
-        props.store = props.flux.getStore('resource');
+        props.stores = {
+            resource: props.flux.getStore('resource'),
+            user: props.globalFlux.getStore('user')
+        };
         super(props);
     }
 
     update() {
         let {resourceId} = this.props,
-            scopes = this.store.getScopes(resourceId);
+            scopes = this.stores.resource.getScopes(resourceId);
         this.data = {
+            whitelisted: this.stores.user.isWhitelisted(),
             resourceId: resourceId,
-            resource: this.store.getResource(resourceId),
+            resource: this.stores.resource.getResource(resourceId),
             scopes: scopes,
             ownerScopes: scopes.filter(s => s.is_resource_owner_scope),
             appScopes: scopes.filter(s => !s.is_resource_owner_scope)

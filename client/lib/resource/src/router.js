@@ -77,12 +77,10 @@ class ResourceRouter extends Router {
      * Lists available resources.
      */
     listResources() {
-        Promise.all([
-            RES_ACTIONS.fetchResources(),
-            rejectIfNotWhitelisted(this.globalFlux) // QUICKFIX #133
-        ])
+        RES_ACTIONS.fetchResources()
         .then(() => puppeteer.show(new ResourceList({
-            flux: RES_FLUX
+            flux: RES_FLUX,
+            globalFlux: this.globalFlux
         }), MAIN_VIEW_ID))
         .catch(e => puppeteer.show(Error(e), MAIN_VIEW_ID));
     }
@@ -125,15 +123,13 @@ class ResourceRouter extends Router {
      * @param  {string} resourceId ID of the resource in question
      */
     listResource(resourceId) {
-        rejectIfNotWhitelisted(this.globalFlux) // QUICKFIX #133
-        .then(() => {
-            RES_ACTIONS.fetchResource(resourceId);
-            RES_ACTIONS.fetchScopes(resourceId);
-            puppeteer.show(new ResouceDetail({
-                resourceId: resourceId,
-                flux: RES_FLUX
-            }), MAIN_VIEW_ID);    
-        });
+        RES_ACTIONS.fetchResource(resourceId);
+        RES_ACTIONS.fetchScopes(resourceId);
+        puppeteer.show(new ResouceDetail({
+            resourceId: resourceId,
+            flux: RES_FLUX,
+            globalFlux: this.globalFlux
+        }), MAIN_VIEW_ID);
     }
 
     /**
@@ -160,16 +156,14 @@ class ResourceRouter extends Router {
      * @param  {string} scopeId The ID of the scope
      */
     listScope(resourceId, scopeId) {
-        rejectIfNotWhitelisted(this.globalFlux) // QUICKFIX #133
-        .then(() => {
-            RES_ACTIONS.fetchScope(resourceId, scopeId);
-            RES_ACTIONS.fetchScopeApplications(resourceId, scopeId);
-            puppeteer.show(new ScopeDetail({
-                resourceId: resourceId,
-                scopeId: scopeId,
-                flux: RES_FLUX
-            }), MAIN_VIEW_ID);
-        });
+        RES_ACTIONS.fetchScope(resourceId, scopeId);
+        RES_ACTIONS.fetchScopeApplications(resourceId, scopeId);
+        puppeteer.show(new ScopeDetail({
+            resourceId: resourceId,
+            scopeId: scopeId,
+            flux: RES_FLUX,
+            globalFlux: this.globalFlux
+        }), MAIN_VIEW_ID);
     }
 
     /**
