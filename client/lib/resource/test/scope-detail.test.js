@@ -2,6 +2,8 @@
 import {Flummox} from 'flummox';
 import ResourceStore from 'common/src/data/resource/resource-store';
 import ResourceActions from 'common/src/data/resource/resource-actions';
+import UserStore from 'common/src/data/user/user-store';
+import UserActions from 'common/src/data/user/user-actions';
 import Detail from 'resource/src/scope-detail/scope-detail';
 
 const RES = 'resource',
@@ -17,15 +19,27 @@ class MockFlux extends Flummox {
     }
 }
 
+class GlobalFlux extends Flummox {
+    constructor() {
+        super();
+
+        this.createActions('user', UserActions);
+        this.createStore('user', UserStore, this);
+    }
+}
+
 describe('The scope detail view', () => {
     var flux,
+        globalFlux,
         TEST_SCP,
         detail;
 
     beforeEach(() => {
         flux = new MockFlux();
+        globalFlux = new GlobalFlux();
         detail = new Detail({
             flux: flux,
+            globalFlux: globalFlux,
             resourceId: RES_ID,
             scopeId: SCP_ID
         });
