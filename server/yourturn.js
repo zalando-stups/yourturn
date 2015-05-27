@@ -145,7 +145,11 @@ server.get('/tokeninfo', function(req, res) {
         })
         .end(function(err, response) {
             if (err) {
-                winston.error('Could not GET /tokeninfo: %d %s', err.status || 0, err.message);
+                if (err.status !== 400) {
+                    // log error on tokeninfo only if it's not
+                    // because of an invalid token
+                    winston.error('Could not GET /tokeninfo: %d %s', err.status || 0, err.message);
+                }
                 return res.status(err.status || 0).send(err);
             }
             return res
