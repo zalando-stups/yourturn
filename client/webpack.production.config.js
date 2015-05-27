@@ -56,7 +56,8 @@ module.exports = {
         TEAM_BASE_URL: 'YTENV_TEAM_BASE_URL',
         PIERONE_BASE_URL: 'YTENV_PIERONE_BASE_URL',
         DOCKER_REGISTRY: 'YTENV_DOCKER_REGISTRY',
-        SERVICE_URL_TLD: 'YTENV_SERVICE_URL_TLD'
+        SERVICE_URL_TLD: 'YTENV_SERVICE_URL_TLD',
+        RESOURCE_WHITELIST: 'YTENV_RESOURCE_WHITELIST'
     },
     eslint: {
         configFile: './.eslintrc',

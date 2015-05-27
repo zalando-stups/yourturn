@@ -6,12 +6,56 @@ import ResouceDetail from './resource-detail/resource-detail';
 import ScopeForm from './scope-form/scope-form';
 import ScopeDetail from './scope-detail/scope-detail';
 import Error from 'common/src/error.hbs';
+import Config from 'common/src/config';
 import Flux from './flux';
 import 'promise.prototype.finally';
 
 const RES_FLUX = new Flux(),
       RES_ACTIONS = RES_FLUX.getActions('resource'),
       MAIN_VIEW_ID = '#yourturn-view';
+
+// QUICKFIX #133
+function isWhitelisted(token) {
+    // ignore whitelist if it's empty
+    if (Config.RESOURCE_WHITELIST.length === 0) {
+        return true;
+    }
+    return token && Config.RESOURCE_WHITELIST.indexOf(token.uid) >= 0;
+}
+
+// QUICKFIX #133
+function rejectIfNotWhitelisted(globalFlux) {
+    return new Promise((resolve, reject) => {
+        let token = globalFlux.getStore('user').getTokenInfo();
+        if (!token.uid) {
+            globalFlux
+            .getActions('user')
+            .fetchTokenInfo()
+            .then(token => {
+                if (!isWhitelisted(token)) {
+                    let error = new Error();
+                    error.name = 'Not whitelisted';
+                    error.message = 'You are not allowed to view this page. Sorry!';
+                    error.status = 'u1F62D';
+                    reject(error);
+                } else {
+                    resolve();
+                }
+            })
+            .catch(err => {
+                reject(err);
+            });
+        } else if (!isWhitelisted(token)) {
+            let error = new Error();
+            error.name = 'Not whitelisted';
+            error.message = 'You are not allowed to view this page. Sorry!';
+            error.status = 'u1F62D';
+            reject(error);
+        } else {
+            resolve();
+        }
+    });
+}
 
 class ResourceRouter extends Router {
     constructor(props) {
@@ -33,10 +77,10 @@ class ResourceRouter extends Router {
      * Lists available resources.
      */
     listResources() {
-        RES_ACTIONS
-        .fetchResources()
+        RES_ACTIONS.fetchResources()
         .then(() => puppeteer.show(new ResourceList({
-            flux: RES_FLUX
+            flux: RES_FLUX,
+            globalFlux: this.globalFlux
         }), MAIN_VIEW_ID))
         .catch(e => puppeteer.show(Error(e), MAIN_VIEW_ID));
     }
@@ -45,8 +89,10 @@ class ResourceRouter extends Router {
      * Shows form to create a new resource
      */
     createResource() {
-        RES_ACTIONS
-        .fetchResources()
+        Promise.all([
+            RES_ACTIONS.fetchResources(),
+            rejectIfNotWhitelisted(this.globalFlux) // QUICKFIX #133
+        ])
         .then(() => puppeteer.show(new ResourceForm({
             flux: RES_FLUX,
             notificationActions: this.globalFlux.getActions('notification')
@@ -59,8 +105,10 @@ class ResourceRouter extends Router {
      * @param  {String} resourceId ID of the resource
      */
     editResource(resourceId) {
-        RES_ACTIONS
-        .fetchResource(resourceId)
+        Promise.all([
+            RES_ACTIONS.fetchResource(resourceId),
+            rejectIfNotWhitelisted(this.globalFlux) // QUICKFIX #133
+        ])
         .then(() => puppeteer.show(new ResourceForm({
             flux: RES_FLUX,
             notificationActions: this.globalFlux.getActions('notification'),
@@ -79,7 +127,8 @@ class ResourceRouter extends Router {
         RES_ACTIONS.fetchScopes(resourceId);
         puppeteer.show(new ResouceDetail({
             resourceId: resourceId,
-            flux: RES_FLUX
+            flux: RES_FLUX,
+            globalFlux: this.globalFlux
         }), MAIN_VIEW_ID);
     }
 
@@ -90,7 +139,8 @@ class ResourceRouter extends Router {
     createScope(resourceId) {
         Promise.all([
             RES_ACTIONS.fetchResource(resourceId),
-            RES_ACTIONS.fetchScopes(resourceId)
+            RES_ACTIONS.fetchScopes(resourceId),
+            rejectIfNotWhitelisted(this.globalFlux) // QUICKFIX #133
         ])
         .then(() => puppeteer.show(new ScopeForm({
             resourceId: resourceId,
@@ -111,7 +161,8 @@ class ResourceRouter extends Router {
         puppeteer.show(new ScopeDetail({
             resourceId: resourceId,
             scopeId: scopeId,
-            flux: RES_FLUX
+            flux: RES_FLUX,
+            globalFlux: this.globalFlux
         }), MAIN_VIEW_ID);
     }
 
@@ -123,7 +174,8 @@ class ResourceRouter extends Router {
     editScope(resourceId, scopeId) {
         Promise.all([
             RES_ACTIONS.fetchResource(resourceId),
-            RES_ACTIONS.fetchScopes(resourceId)
+            RES_ACTIONS.fetchScopes(resourceId),
+            rejectIfNotWhitelisted(this.globalFlux) // QUICKFIX #133
         ])
         .then(() => {
             puppeteer.show(new ScopeForm({

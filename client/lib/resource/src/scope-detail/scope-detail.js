@@ -9,15 +9,19 @@ import 'common/asset/scss/resource/scope-detail.scss';
 class ScopeDetail extends BaseView {
     constructor(props) {
         props.className = 'scopeDetail';
-        props.store = props.flux.getStore('resource');
+        props.stores = {
+            resource: props.flux.getStore('resource'),
+            user: props.globalFlux.getStore('user')
+        };
         super(props);
         this.actions = props.flux.getActions('resource');
     }
 
     update() {
-        let scope = this.store.getScope(this.props.resourceId, this.props.scopeId),
-            applications = this.store.getScopeApplications(this.props.resourceId, this.props.scopeId);
+        let scope = this.stores.resource.getScope(this.props.resourceId, this.props.scopeId),
+            applications = this.stores.resource.getScopeApplications(this.props.resourceId, this.props.scopeId);
         this.data = {
+            whitelisted: this.stores.user.isWhitelisted(),
             resourceId: this.props.resourceId,
             scopeId: this.props.scopeId,
             scope: scope,
