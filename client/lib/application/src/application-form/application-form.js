@@ -98,13 +98,14 @@ class ApplicationForm extends BaseView {
         // prevent the form from actually be submitted
         evt.preventDefault();
         let {$el} = this,
-        // gather data from dom
+            $serviceUrl = $el.find('#service_url'),
+            // gather data from dom
             active = !!$el.find('#active:checked').length,
             team_id = $el.find('#team_id').val(),
             id = $el.find('#app_id').val(),
             name = $el.find('#name').val(),
             subtitle = $el.find('#subtitle').val(),
-            service_url = 'https://' + $el.find('#service_url').val(),
+            service_url = !!$serviceUrl.val() ? 'https://' + $serviceUrl.val() : '',
             scm_url = $el.find('#scm_url').val(),
             documentation_url = $el.find('#documentation_url').val(),
             specification_url = $el.find('#specification_url').val(),
