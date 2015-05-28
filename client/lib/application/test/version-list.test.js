@@ -43,7 +43,7 @@ describe('The version list view', () => {
             application_id: APP_ID
         }]);
 
-        expect(list.$el.find('ul > li').length).to.equal(2);
+        expect(list.$el.find('[data-block="versions"]').children().length).to.equal(2);
     });
 
     it('should display a filtered list of applications', () => {
@@ -58,6 +58,6 @@ describe('The version list view', () => {
         }]);
         list.$el.find('[data-block="search-input"]').val('few');
         list.$el.find('form').submit();
-        expect(list.$el.find('ul > li').length).to.equal(1);
+        expect(list.$el.find('[data-block="versions"]').children().length).to.equal(1);
     });
 });

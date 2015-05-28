@@ -55,7 +55,7 @@ describe('The resource list view', () => {
             name: 'Customer'
         }]);
 
-        expect(list.$el.find('ul > li').length).to.equal(2);
+        expect(list.$el.find('[data-block="resources"]').children().length).to.equal(2);
     });
 
 });

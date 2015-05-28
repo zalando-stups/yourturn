@@ -25,7 +25,7 @@
 </div>
 <h4>Your Applications</h4>
 {{#if teamApps.length}}
-    <ul data-block="teamApps">
+    <ul data-block="team-apps">
         {{#each teamApps}}
             <li>
                 <a href="/application/detail/{{this.id}}">{{this.name}}</a>
@@ -38,19 +38,18 @@
 
 <h4>Other Applications</h4>
 {{#if otherApps.length}}
-    <ul data-block="otherApps">
+    <ul data-block="other-apps">
         {{#each otherApps}}
             <li>
                 <a href="/application/detail/{{this.id}}">{{this.name}}</a>
             </li>
         {{/each}}
+    </ul>
     {{#if otherAppsHiddenCount}}
-        <small data-block="otherAppsHiddenCount">
+        <small data-block="other-apps-hidden-count">
             + <span>{{otherAppsHiddenCount}}</span> hidden.
         </small>
     {{/if}}
-
-    </ul>
 {{else}}
     No applications owned by other teams.
 {{/if}}
