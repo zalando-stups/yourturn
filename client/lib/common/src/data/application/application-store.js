@@ -220,10 +220,11 @@ class ApplicationStore extends Store {
      *
      * @return {Array} Available applications
      */
-    getApplicationVersions(id) {
+    getApplicationVersions(id, filter) {
         let versions = _m.vals(_m.get(this.state.versions, id)),
-            filtered = _m.filter(v => !(v instanceof FetchResult), versions);
-        return _.chain(_m.toJs(filtered) || [])
+            existing = _m.filter(v => !(v instanceof FetchResult), versions);
+        return _.chain(_m.toJs(existing) || [])
+                .filter(v => !!filter ? v.id.indexOf(filter) >= 0 : true)
                 .sortBy(v => v.last_modified)
                 .reverse()
                 .value();

@@ -45,4 +45,19 @@ describe('The version list view', () => {
 
         expect(list.$el.find('ul > li').length).to.equal(2);
     });
+
+    it('should display a filtered list of applications', () => {
+        flux
+        .getStore(FLUX_ID)
+        .receiveApplicationVersions([{
+            id: 'few-squirrels',
+            application_id: APP_ID
+        }, {
+            id: 'many-squirrels',
+            application_id: APP_ID
+        }]);
+        list.$el.find('[data-block="search-input"]').val('few');
+        list.$el.find('form').submit();
+        expect(list.$el.find('ul > li').length).to.equal(1);
+    });
 });
