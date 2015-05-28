@@ -202,6 +202,22 @@ describe('The application store', () => {
         it('should return an empty array by default', () => {
             expect(store.getApplicationVersions('kio').length).to.equal(0);
         });
+
+        it('should filter properly', () => {
+            store.receiveApplicationVersions([{
+                application_id: 'kio',
+                id: 'squirrel',
+                last_modified: '2015-05-28T16:30:00Z'
+            }, {
+                application_id: 'kio',
+                id: 'not-a-squirrel',
+                last_modified: '2015-05-24T16:30:00Z'
+            }]);
+            let filtered = store.getApplicationVersions('kio', 'a-');
+            expect(filtered.length).to.equal(1);
+            let unfiltered = store.getApplicationVersions('kio');
+            expect(unfiltered.length).to.equal(2);
+        });
     });
 
     describe('approvals', () => {

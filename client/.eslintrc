@@ -25,6 +25,8 @@
         // i actually like that
         "no-underscore-dangle": 0,
         // e.g. search endpoints offer `matched_rank`
-        "camelcase": 0
+        "camelcase": 0,
+        // allow `!!something` 
+        "no-extra-boolean-cast": 0
     }
 }

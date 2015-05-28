@@ -14,9 +14,31 @@
         <i class="fa fa-plus"></i> Create new version
     </a>
 </div>
+<div class="form-group">
+    <form class="form">
+        <label for="yourturn-search">Search:</label>
+        <div class="input-group">
+            <input
+                name="yourturn_version_search"
+                autofocus="autofocus"
+                value="{{term}}"
+                type="search"
+                aria-label="Enter your search term"
+                data-action="search"
+                data-block="search-input"
+                placeholder="1.0-squirrel" />
+            <button
+                type="submit"
+                data-block="search-button"
+                class="btn btn-default">
+                    <i class="fa fa-search"></i> Search
+                </button>
+            </div>
+    </form>
+</div>
 
 {{#if versions.length}}
-    <ul>
+    <ul data-block="versions">
         {{#each versions}}
             <li>
                 <a href="/application/detail/{{this.application_id}}/version/detail/{{this.id}}">{{this.id}}</a>
