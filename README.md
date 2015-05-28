@@ -26,6 +26,36 @@ To do a production build go in the `client` directory and run this:
     
 This will trigger a `webpack` build that breaks when you do not obey the rules defined by `eslint` and `jscs`. Use `gulp lint` and `gulp format` to check that.
 
+### Docker
+
+First do a build (see above). Then go into the root directory and run
+
+    docker build -t yourturn .
+
+It will pack everything in a Docker image `yourturn`. You can then run it with
+
+    docker run \
+    -it \
+    -e YTENV_KIO_BASE_URL=http://localhost:5000 \
+    -e YTENV_TWINTIP_BASE_URL=http://localhost:5001 \
+    -e YTENV_DOCKER_REGISTRY=docker.io \
+    -e YTENV_SERVICE_URL_TLD=example.com \
+    -e YTENV_OAUTH_CLIENT_ID=stups_yourturn \
+    -e YTENV_OAUTH_AUTH_URL=http://localhost:5002/auth \
+    -e YTENV_OAUTH_REDIRECT_URI=http://localhost:8080/oauth \
+    -e YTENV_OAUTH_SCOPES=uid \
+    -e YTENV_OAUTH_TOKENINFO_URL=http://localhost:5006/tokeninfo \
+    -e YTENV_TEAM_BASE_URL=http://localhost:5005 \
+    -e YTENV_MINT_BASE_URL=http://localhost:5004 \
+    -e YTENV_ESSENTIALS_BASE_URL=http://localhost:5003 \
+    -e YTENV_PIERONE_BASE_URL=http://localhost:5007/v1 \
+    -e YTENV_RESOURCE_WHITELIST="" \
+    -p 8080:8080 \
+    -u 998 \
+    yourturn
+
+The application will not work due to the `localhost` mocks running on the host, but you can inspect the Docker container and check if it actually starts.
+
 ## Testing
 
 You have to use `iojs` for testing because of `jsdom`. For the normal build you have to use regular Node because of `node-sass`. Sorry.
