@@ -1,6 +1,8 @@
 var express = require('express'),
+    fs = require('fs'),
     bodyParser = require('body-parser'),
-    server = express();
+    server = express(),
+    swagger = fs.readFileSync(__dirname + '/kio-api.json');
 
 server.use(bodyParser.json());
 
@@ -9,7 +11,7 @@ var applications = {
         documentation_url: 'https://github.com/zalando-stups/kio',
         specification_url: 'https://github.com/zalando-stups/kio/issues',
         scm_url: 'https://github.com/zalando-stups/kio.git',
-        service_url: 'https://kio.example.org/',
+        service_url: 'http://localhost:5000/',
         description: 'An application registry to manage application base information.',
         subtitle: 'STUPS application registry',
         name: 'Kio',
@@ -92,6 +94,13 @@ server.use(function(req, res, next) {
     res.header('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE');
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
     next();
+});
+
+server.get('/swagger.json', function(req, res) {
+    res
+        .type('json')
+        .status(200)
+        .send(swagger);
 });
 
 server.get('/apps', function(req,res) {
