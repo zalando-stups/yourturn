@@ -6,6 +6,7 @@ if (process.env.NEW_RELIC_APP_NAME) {
 }
 
 var express = require('express'),
+    compression = require('compression'),
     winston = require('winston'),
     server = express(),
     request = require('superagent'),
@@ -20,6 +21,7 @@ winston.add(winston.transports.Console, {
     showLevel: true
 });
 
+server.use(compression());
 server.use('/dist', express.static('dist'));
 
 /** enable cors */

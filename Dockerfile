@@ -2,10 +2,11 @@ FROM node:0.12.1
 
 MAINTAINER Zalando SE
 
-RUN npm install superagent@1.2.0
-RUN npm install express@4.12.3
 RUN npm install newrelic@1.19.1
 RUN npm install winston@1.0.0
+RUN npm install superagent@1.2.0
+RUN npm install express@4.12.3
+RUN npm install compression@1.4.4
 
 # add scm-source
 ADD /scm-source.json /scm-source.json
