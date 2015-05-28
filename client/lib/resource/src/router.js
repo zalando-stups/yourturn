@@ -31,8 +31,8 @@ function rejectIfNotWhitelisted(globalFlux) {
             globalFlux
             .getActions('user')
             .fetchTokenInfo()
-            .then(token => {
-                if (!isWhitelisted(token)) {
+            .then(fresh_token => {
+                if (!isWhitelisted(fresh_token)) {
                     let error = new Error();
                     error.name = 'Not whitelisted';
                     error.message = 'You are not allowed to view this page. Sorry!';
