@@ -71,7 +71,9 @@ describe('The version detail view', () => {
         error.tag = VER;
         error.status = 404;
         flux.getStore('pierone').failFetchScmSource(error);
-        flux.getStore('pierone').receiveTags([TEAM, APP, [{ name: VER }]]);
+        flux.getStore('pierone').receiveTags([TEAM, APP, [{
+            name: VER
+        }]]);
         detail.update();
         detail.render();
         expect(detail.$el.find('[data-block="missing-scmsource-warning"]').length).to.equal(1);

@@ -27,8 +27,8 @@ class PieroneStore extends Store {
             this.failFetchTags);
     }
 
-    beginFetchTags() {}
-    failFetchTags() {}
+    beginFetchTags() { }
+    failFetchTags() { }
 
     receiveTags([team, artifact, tags]) {
         this.setState({
