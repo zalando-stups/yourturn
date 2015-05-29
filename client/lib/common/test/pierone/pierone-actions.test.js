@@ -27,5 +27,10 @@ describe('The pierone actions', () => {
             mitm.on('request', assertOAuthHeader);
             actions.fetchScmSource(TEAM, ARTIFACT, TAG);
         });
+
+        it('#fetchTags', () => {
+            mitm.on('request', assertOAuthHeader);
+            actions.fetchTags(TEAM, ARTIFACT);
+        });
     });
 });

@@ -19,6 +19,20 @@ class PieroneActions extends Actions {
                     throw err;
                 });
     }
+
+    fetchTags(team, artifact) {
+        return request
+                .get(`${Services.pierone.url}/teams/${team}/artifacts/${artifact}/tags`)
+                .accept('json')
+                .oauth(Provider, RequestConfig)
+                .exec(saveRoute)
+                .then(res => [team, artifact, res.body])
+                .catch(err => {
+                    err.team = team;
+                    err.artifact = artifact;
+                    throw err;
+                });
+    }
 }
 
 export default PieroneActions;

@@ -35,7 +35,7 @@ const SERVICES = {
     },
     pierone: {
         url: PIERONE_BASE_URL,
-        root: '/search',
+        root: '/v1/search',
         searchQuery: 'q'
     }
 };

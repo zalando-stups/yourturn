@@ -10,7 +10,8 @@ class PieroneStore extends Store {
         const pieroneActions = flux.getActions('pierone');
 
         this.state = {
-            scmSources: _m.hashMap()
+            scmSources: _m.hashMap(),
+            tags: _m.hashMap()
         };
 
         this.registerAsync(
@@ -18,6 +19,26 @@ class PieroneStore extends Store {
             this.beginFetchScmSource,
             this.receiveScmSource,
             this.failFetchScmSource);
+
+        this.registerAsync(
+            pieroneActions.fetchTags,
+            this.beginFetchTags,
+            this.receiveTags,
+            this.failFetchTags);
+    }
+
+    beginFetchTags() {}
+    failFetchTags() {}
+
+    receiveTags([team, artifact, tags]) {
+        this.setState({
+            tags: _m.assocIn(this.state.tags, [team, artifact], _m.toClj(tags))
+        });
+    }
+
+    getTags(team, artifact) {
+        let exists = _m.getIn(this.state.tags, [team, artifact]);
+        return exists ? _m.toJs(exists) : [];
     }
 
     /**
@@ -41,13 +62,6 @@ class PieroneStore extends Store {
      */
     failFetchScmSource(err) {
         let {team, artifact, tag} = err;
-        if (err.status === 404) {
-            // not found, just set to false
-            this.setState({
-                scmSources: _m.assocIn(this.state.scmSources, [team, artifact, tag], false)
-            });
-            return;
-        }
         this.setState({
             scmSources: _m.assocIn(this.state.scmSources, [team, artifact, tag], new Failed(err))
         });

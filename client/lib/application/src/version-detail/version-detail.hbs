@@ -27,19 +27,52 @@
             <td>{{version.id}}</td>
         </tr>
         <tr>
-            <th>Artifact</th>
-            <td>{{version.artifact}}</td>
-        </tr>
-        <tr>
             <th>Last modified</th>
             <td>{{{absoluteDate version.last_modified}}}</td>
         </tr>
+        <tr>
+            <th>Artifact</th>
+            <td>{{version.artifact}}</td>
+        </tr>
+    {{#if scmSource}}
+        <tr>
+            <th>Artifact Author</th>
+            <td>{{scmSource.author}}</td>
+        </tr>
+        <tr>
+            <th>Artifact Source</th>
+            <td>{{scmSource.url}}<br/>{{scmSource.revision}}</td>
+        </tr>
+    {{/if}}
     </tbody>
 </table>
-<h4 class="versionDetail-notesTitle">Notes</h4>
-<p
-    class="versionDetail-notes"
-    data-block="version-notes"
-    data-action="markdown">
-    {{version.notes}}
-</p>
+
+{{#if scmSource}}
+    {{#if scmErrors.locallyModified }}
+        <div
+            data-block="locally-modified-warning"
+            class="u-warning">
+            Artifact was locally modified:<br/>
+            {{scmSource.status}}
+        </div>
+    {{/if}}
+{{else}}
+    {{#if isTagInRegistry}}
+        <div
+            data-block="missing-scmsource-warning"
+            class="u-warning">
+            scm-source.json missing for {{version.artifact}}
+        </div>
+    {{/if}}
+{{/if}}
+{{#if version.notes}}
+    <h4 class="versionDetail-notesTitle">Notes</h4>
+    <p
+        class="versionDetail-notes"
+        data-block="version-notes"
+        data-action="markdown">
+        {{version.notes}}
+    </p>
+{{else}}
+    No version notes.
+{{/if}}

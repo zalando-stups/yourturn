@@ -19,6 +19,10 @@
             color: $gray;
             text-align: left;
         }
+        tr,
+        th {
+            vertical-align: top;
+        }
     }
 
     .versionDetail-status {
