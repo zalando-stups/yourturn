@@ -6,6 +6,7 @@ if (process.env.NEW_RELIC_APP_NAME) {
 }
 
 var express = require('express'),
+    compression = require('compression'),
     winston = require('winston'),
     server = express(),
     request = require('superagent'),
@@ -20,7 +21,15 @@ winston.add(winston.transports.Console, {
     showLevel: true
 });
 
-server.use('/dist', express.static('dist'));
+var ONE_WEEK =  1000 *  // 1s
+                60 *    // 1m
+                60 *    // 1h
+                24 *    // 1d
+                7;      // 1w
+server.use(compression());
+server.use('/dist', express.static('dist', {
+    maxAge: ONE_WEEK
+}));
 
 /** enable cors */
 server.use(function(req, res, next) {
