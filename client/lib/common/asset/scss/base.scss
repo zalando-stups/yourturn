@@ -126,15 +126,6 @@ ul {
     padding: 10px $padding-small;
     margin: $padding-small 0;
     max-width: $body-text-width;
-    :first-child {
-        &:before {
-            content: '\f06a';
-            font-family: 'FontAwesome';
-            font-size: 200%;
-            display: block;
-            margin-bottom: .5em;
-        }
-    }
 }
 
 .u-info {
@@ -145,14 +136,4 @@ ul {
     padding: 10px $padding-small;
     margin: $padding-small 0;
     max-width: $body-text-width;
-
-    > :first-child {
-        &:before {
-            content: '\f05a';
-            font-family: 'FontAwesome';
-            font-size: 200%;
-            display: block;
-            margin-bottom: .5em;
-        }
-    }
 }
