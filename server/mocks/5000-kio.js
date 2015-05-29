@@ -47,7 +47,7 @@ var versions = {
             "id": "1",
             "application_id": "kio",
             "last_modified": "2015-05-28T16:30:00Z",
-            "artifact": "docker://stups/kio:1.0"
+            "artifact": "docker://stups/kio:1"
         },
         "0.9": {
             "id": "0.9",

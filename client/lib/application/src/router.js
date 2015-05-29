@@ -258,13 +258,15 @@ class AppRouter extends Router {
         }
 
         APP_ACTIONS.fetchApprovals(id, ver);
-        APP_ACTIONS.fetchApplicationVersion(id, ver);
-
-        puppeteer.show(new VersionDetail({
-            applicationId: id,
-            versionId: ver,
-            flux: APP_FLUX
-        }), MAIN_VIEW_ID);
+        APP_ACTIONS
+        .fetchApplicationVersion(id, ver)
+        .then(() => {
+            puppeteer.show(new VersionDetail({
+                applicationId: id,
+                versionId: ver,
+                flux: APP_FLUX
+            }), MAIN_VIEW_ID);
+        });
     }
 }
 

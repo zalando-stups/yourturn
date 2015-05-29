@@ -12,6 +12,9 @@ import ResourceStore from 'common/src/data/resource/resource-store';
 import OAuthActions from 'common/src/data/oauth/oauth-actions';
 import OAuthStore from 'common/src/data/oauth/oauth-store';
 
+import PieroneActions from 'common/src/data/pierone/pierone-actions';
+import PieroneStore from 'common/src/data/pierone/pierone-store';
+
 class AppFlux extends Flummox {
     constructor() {
         super();
@@ -27,6 +30,9 @@ class AppFlux extends Flummox {
 
         this.createActions('oauth', OAuthActions);
         this.createStore('oauth', OAuthStore, this);
+
+        this.createActions('pierone', PieroneActions);
+        this.createStore('pierone', PieroneStore, this);
     }
 }
 
