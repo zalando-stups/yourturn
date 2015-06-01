@@ -21,35 +21,39 @@ server.use(function(req, res, next) {
 });
 
 server.get('/teams/:team/artifacts/:artifact/tags', function(req, res) {
-    if (req.params.team === 'stups' &&
-        req.params.artifact === 'kio') {
-        res
-        .status(200)
-        .type('json')
-        .send([{
-            created_by: 'npiccolotto',
-            created: '2015-05-21T09:06:35.319+0000',
-            name: '2'
-        }, {
-            created_by: 'npiccolotto',
-            created: '2015-05-28T11:52:13.652+0000',
-            name: '1'
-        }]);
-        return;
-    }
-    res.status(404).send();
+    setTimeout(function() {
+        if (req.params.team === 'stups' &&
+            req.params.artifact === 'kio') {
+            res
+            .status(200)
+            .type('json')
+            .send([{
+                created_by: 'npiccolotto',
+                created: '2015-05-21T09:06:35.319+0000',
+                name: '2'
+            }, {
+                created_by: 'npiccolotto',
+                created: '2015-05-28T11:52:13.652+0000',
+                name: '1'
+            }]);
+            return;
+        }
+        res.status(404).send();
+    }, Math.random() * 2000);
 });
 
 server.get('/teams/:team/artifacts/:artifact/tags/:tag/scm-source', function(req, res) {
-    if (req.params.team === 'stups' &&
-        req.params.artifact === 'kio' &&
-        req.params.tag === '1') {
-        return res
-                .status(200)
-                .type('json')
-                .send(scmSource);
-    }
-    res.status(404).send();
+    setTimeout(function() {
+        if (req.params.team === 'stups' &&
+            req.params.artifact === 'kio' &&
+            req.params.tag === '1') {
+            return res
+                    .status(200)
+                    .type('json')
+                    .send(scmSource);
+        }
+        res.status(404).send();
+    }, Math.random() * 2000);
 });
 
 server.get('/v1/search', function(req,res) {
