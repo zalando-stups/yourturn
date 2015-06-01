@@ -18,7 +18,10 @@ class ApprovalForm extends BaseView {
             'change #approval_type': 'explainType',
             'keyup #approval_custom_type': 'checkCustomType'
         };
-        props.store = props.flux.getStore('application');
+        props.stores = {
+            application: props.flux.getStore('application'),
+            user: props.globalFlux.getStore('user')
+        };
         super(props);
         this.actions = props.flux.getActions('application');
     }
@@ -65,7 +68,8 @@ class ApprovalForm extends BaseView {
         .catch(err => {
             this
             .props
-            .notificationActions
+            .globalFlux
+            .getActions('notification')
             .addNotification(
                 `Could not approve version ${versionId} of ${this.data.application.name}. ${err.message}`,
                 'error');
@@ -73,13 +77,18 @@ class ApprovalForm extends BaseView {
     }
 
     update() {
-        let {applicationId, versionId} = this.props;
+        let {applicationId, versionId} = this.props,
+            application = this.stores.application.getApplication(applicationId);
         this.data = {
             applicationId: applicationId,
-            versionId: versionId,
-            application: this.store.getApplication(applicationId),
-            approvalTypes: this.store.getApprovalTypes(applicationId),
-            approvals: this.store.getApprovals(applicationId, versionId)
+            application: application,
+            approvals: this.stores.application.getApprovals(applicationId, versionId),
+            approvalTypes: this.stores.application.getApprovalTypes(applicationId),
+            isOwnApplication: this.stores.user
+                                    .getUserTeams()
+                                    .map(team => team.id)
+                                    .some(id => id === application.team_id),
+            versionId: versionId
         };
     }
 

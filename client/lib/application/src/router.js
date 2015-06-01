@@ -58,7 +58,7 @@ class AppRouter extends Router {
                 applicationId: applicationId,
                 versionId: versionId,
                 flux: APP_FLUX,
-                notificationActions: this.globalFlux.getActions('notification')
+                globalFlux: this.globalFlux
             }), MAIN_VIEW_ID);
         })
         .catch(e => puppeteer.show(Error(e), MAIN_VIEW_ID));
