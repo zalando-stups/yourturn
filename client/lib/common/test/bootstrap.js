@@ -1,8 +1,8 @@
 import './fetch-result.test';
 import './puppeteer.test';
 
-import './application/application-actions.test';
-import './application/application-store.test';
+import './kio/kio-actions.test';
+import './kio/kio-store.test';
 import './notification/notification-store.test';
 import './oauth/oauth-actions.test';
 import './oauth/oauth-store.test';

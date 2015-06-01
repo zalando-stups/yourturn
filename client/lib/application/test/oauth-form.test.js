@@ -1,7 +1,7 @@
 /* globals sinon, Promise, expect */
 import {Flummox} from 'flummox';
-import ApplicationStore from 'common/src/data/application/application-store';
-import ApplicationActions from 'common/src/data/application/application-actions';
+import KioStore from 'common/src/data/kio/kio-store';
+import KioActions from 'common/src/data/kio/kio-actions';
 import OAuthStore from 'common/src/data/oauth/oauth-store';
 import OAuthActions from 'common/src/data/oauth/oauth-actions';
 import ResourceStore from 'common/src/data/resource/resource-store';
@@ -30,8 +30,8 @@ class MockFlux extends Flummox {
     constructor() {
         super();
 
-        this.createActions('application', ApplicationActions);
-        this.createStore('application', ApplicationStore, this);
+        this.createActions('kio', KioActions);
+        this.createStore('kio', KioStore, this);
 
         this.createActions('oauth', OAuthActions);
         this.createStore('oauth', OAuthStore, this);

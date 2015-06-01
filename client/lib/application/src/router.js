@@ -17,8 +17,8 @@ import 'promise.prototype.finally';
 const MAIN_VIEW_ID = '#yourturn-view',
       APP_FLUX = new Flux(),
       OAUTH_ACTIONS = APP_FLUX.getActions('oauth'),
-      APP_ACTIONS = APP_FLUX.getActions('application'),
-      APP_STORE = APP_FLUX.getStore('application');
+      KIO_ACTIONS = APP_FLUX.getActions('kio'),
+      KIO_STORE = APP_FLUX.getStore('kio');
 
 class AppRouter extends Router {
     constructor(props) {
@@ -42,14 +42,14 @@ class AppRouter extends Router {
 
     approveApplicationVersion(applicationId, versionId) {
         let promises = [];
-        if (!APP_STORE.getApplication(applicationId)) {
-            promises.push(APP_ACTIONS.fetchApplication(applicationId));
+        if (!KIO_STORE.getApplication(applicationId)) {
+            promises.push(KIO_ACTIONS.fetchApplication(applicationId));
         }
-        if (!APP_STORE.getApplicationVersion(applicationId, versionId)) {
-            promises.push(APP_ACTIONS.fetchApplicationVersion(applicationId, versionId));
+        if (!KIO_STORE.getApplicationVersion(applicationId, versionId)) {
+            promises.push(KIO_ACTIONS.fetchApplicationVersion(applicationId, versionId));
         }
-        promises.push(APP_ACTIONS.fetchApprovalTypes(applicationId));
-        APP_ACTIONS.fetchApprovals(applicationId, versionId);
+        promises.push(KIO_ACTIONS.fetchApprovalTypes(applicationId));
+        KIO_ACTIONS.fetchApprovals(applicationId, versionId);
 
         Promise
         .all(promises)
@@ -65,7 +65,7 @@ class AppRouter extends Router {
     }
 
     createApplication() {
-        APP_ACTIONS
+        KIO_ACTIONS
         .fetchApplications()
         .then(() => {
             puppeteer.show(new AppForm({
@@ -78,14 +78,14 @@ class AppRouter extends Router {
     createApplicationVersion(applicationId) {
         // we probably already have this app, so check
         let promises = [],
-            versions = APP_ACTIONS.fetchApplicationVersions(applicationId),
-            app = APP_STORE.getApplication(applicationId);
+            versions = KIO_ACTIONS.fetchApplicationVersions(applicationId),
+            app = KIO_STORE.getApplication(applicationId);
 
         if (app) {
             promises = [app];
         } else {
             promises = [
-                APP_ACTIONS.fetchApplication(applicationId),
+                KIO_ACTIONS.fetchApplication(applicationId),
                 versions
             ];
         }
@@ -104,16 +104,16 @@ class AppRouter extends Router {
     editApplicationVersion(applicationId, versionId) {
         // we probably already have this app, so check
         let promises = [],
-            version = APP_STORE.getApplicationVersion(applicationId, versionId),
-            app = APP_STORE.getApplication(applicationId);
+            version = KIO_STORE.getApplicationVersion(applicationId, versionId),
+            app = KIO_STORE.getApplication(applicationId);
 
         if (!app) {
-            promises.push(APP_ACTIONS.fetchApplication(applicationId));
+            promises.push(KIO_ACTIONS.fetchApplication(applicationId));
         }
         if (!version) {
-            promises.push(APP_ACTIONS.fetchApplicationVersion(applicationId, versionId));
+            promises.push(KIO_ACTIONS.fetchApplicationVersion(applicationId, versionId));
         }
-        APP_ACTIONS.fetchApprovals(applicationId, versionId);
+        KIO_ACTIONS.fetchApprovals(applicationId, versionId);
 
         Promise
         .all(promises)
@@ -130,7 +130,7 @@ class AppRouter extends Router {
     }
 
     editApplication(id) {
-        APP_ACTIONS
+        KIO_ACTIONS
         .fetchApplication(id)
         .then(() => {
             puppeteer.show(new AppForm({
@@ -153,7 +153,7 @@ class AppRouter extends Router {
     configureOAuth(id) {
         OAUTH_ACTIONS.fetchOAuthConfig(id);
         Promise.all([
-            APP_STORE.getApplication(id) ? Promise.resolve() : APP_ACTIONS.fetchApplication(id),
+            KIO_STORE.getApplication(id) ? Promise.resolve() : KIO_ACTIONS.fetchApplication(id),
             APP_FLUX.getActions('resource').fetchAllScopes()
         ])
         .then(() => {
@@ -176,7 +176,7 @@ class AppRouter extends Router {
     configureAccess(id) {
         OAUTH_ACTIONS.fetchOAuthConfig(id);
         Promise.all([
-            APP_STORE.getApplication(id) ? Promise.resolve() : APP_ACTIONS.fetchApplication(id),
+            KIO_STORE.getApplication(id) ? Promise.resolve() : KIO_ACTIONS.fetchApplication(id),
             APP_FLUX.getActions('resource').fetchAllScopes()
         ])
         .then(() => {
@@ -196,8 +196,8 @@ class AppRouter extends Router {
      * @param  {String} id
      */
     listApplication(id) {
-        APP_ACTIONS.fetchApplication(id);
-        APP_ACTIONS.fetchApplicationVersions(id);
+        KIO_ACTIONS.fetchApplication(id);
+        KIO_ACTIONS.fetchApplicationVersions(id);
         APP_FLUX.getActions('twintip').fetchApi(id);
 
         puppeteer.show(new Detail({
@@ -215,7 +215,7 @@ class AppRouter extends Router {
     listApplications() {
         // ensure that the data we need is there
         // then show the view
-        APP_ACTIONS
+        KIO_ACTIONS
         .fetchApplications()
         .then(() => puppeteer.show(new List({
             flux: APP_FLUX,
@@ -231,10 +231,10 @@ class AppRouter extends Router {
      * @param  {String} id
      */
     listApplicationVersions(id) {
-        if (!APP_STORE.getApplication(id)) {
-            APP_ACTIONS.fetchApplication(id);
+        if (!KIO_STORE.getApplication(id)) {
+            KIO_ACTIONS.fetchApplication(id);
         }
-        APP_ACTIONS
+        KIO_ACTIONS
         .fetchApplicationVersions(id)
         .then(() => {
             puppeteer.show(new VersionList({
@@ -253,12 +253,12 @@ class AppRouter extends Router {
      * @param  {String} ver
      */
     listApplicationVersion(id, ver) {
-        if (!APP_STORE.getApplication(id)) {
-            APP_ACTIONS.fetchApplication(id);
+        if (!KIO_STORE.getApplication(id)) {
+            KIO_ACTIONS.fetchApplication(id);
         }
 
-        APP_ACTIONS.fetchApprovals(id, ver);
-        APP_ACTIONS
+        KIO_ACTIONS.fetchApprovals(id, ver);
+        KIO_ACTIONS
         .fetchApplicationVersion(id, ver)
         .then(() => {
             puppeteer.show(new VersionDetail({

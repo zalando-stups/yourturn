@@ -21,7 +21,7 @@ class ApplicationForm extends BaseView {
             'keyup #service_url': 'deactivateAutocomplete'
         };
         if (props.edit) {
-            props.stores.application = props.flux.getStore('application');
+            props.stores.kio = props.flux.getStore('kio');
         }
         super(props);
         this.state = {
@@ -42,7 +42,7 @@ class ApplicationForm extends BaseView {
         if (this.props.edit) {
             this.data = {
                 edit: !!this.props.edit,
-                app: this.stores.application.getApplication(this.props.applicationId)
+                app: this.stores.kio.getApplication(this.props.applicationId)
             };
             let {app} = this.data;
             if (!(app instanceof FetchResult) && app.service_url) {
@@ -56,14 +56,14 @@ class ApplicationForm extends BaseView {
     }
 
     /**
-     * Checks the application store if an app with this ID
+     * Checks the kio store if an app with this ID
      * already exists. Shows or hides according input-addon.
      */
     checkAppIdAvailability() {
         let $appInput = this.$el.find('#app_id'),
             app_id = $appInput.val();
 
-        if (this.props.flux.getStore('application').getApplication(app_id)) {
+        if (this.props.flux.getStore('kio').getApplication(app_id)) {
             if (!ENV_TEST) {
                 $appInput[0].setCustomValidity('App ID already exists.');
             }
@@ -126,7 +126,7 @@ class ApplicationForm extends BaseView {
         this
         .props
         .flux
-        .getActions('application')
+        .getActions('kio')
         .saveApplication(id, app)
         .then(() => {
             // redirect

@@ -1,7 +1,7 @@
 import {Flummox} from 'flummox';
 
-import ApplicationActions from 'common/src/data/application/application-actions';
-import ApplicationStore from 'common/src/data/application/application-store';
+import KioActions from 'common/src/data/kio/kio-actions';
+import KioStore from 'common/src/data/kio/kio-store';
 
 import TwintipActions from 'common/src/data/twintip/twintip-actions';
 import TwintipStore from 'common/src/data/twintip/twintip-store';
@@ -19,8 +19,8 @@ class AppFlux extends Flummox {
     constructor() {
         super();
 
-        this.createActions('application', ApplicationActions);
-        this.createStore('application', ApplicationStore, this);
+        this.createActions('kio', KioActions);
+        this.createStore('kio', KioStore, this);
 
         this.createActions('twintip', TwintipActions);
         this.createStore('twintip', TwintipStore, this);

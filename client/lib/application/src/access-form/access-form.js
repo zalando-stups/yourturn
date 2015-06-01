@@ -16,7 +16,7 @@ class AccessForm extends BaseView {
         props.stores = {
             oauth: props.flux.getStore('oauth'),
             resource: props.flux.getStore('resource'),
-            application: props.flux.getStore('application')
+            kio: props.flux.getStore('kio')
         };
         props.events = {
             'submit': 'save'
@@ -92,7 +92,7 @@ class AccessForm extends BaseView {
         let scopes = this.stores.resource.getAllScopes();
         this.data = {
             applicationId: this.props.applicationId,
-            application: this.stores.application.getApplication(this.props.applicationId),
+            application: this.stores.kio.getApplication(this.props.applicationId),
             ownerScopes: scopes.filter(s => s.is_resource_owner_scope),
             appScopes: scopes.filter(s => !s.is_resource_owner_scope),
             oauth: this.stores.oauth.getOAuthConfig(this.props.applicationId)

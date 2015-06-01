@@ -1,5 +1,5 @@
 /* globals Mitm, expect */
-import ApplicationActions from 'common/src/data/application/application-actions';
+import KioActions from 'common/src/data/kio/kio-actions';
 
 const APP_ID = 'kio',
       VER_ID = '0.1';
@@ -9,13 +9,13 @@ function assertOAuthHeader(req) {
     expect(req.headers.authorization).to.equal('Bearer access_token');
 }
 
-describe('The application actions', () => {
+describe('The kio actions', () => {
     var actions,
         mitm;
 
     beforeEach(() => {
         mitm = Mitm();
-        actions = new ApplicationActions();
+        actions = new KioActions();
     });
     afterEach(() => {
         mitm.disable();

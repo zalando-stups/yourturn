@@ -1,6 +1,6 @@
 /* globals expect */
-import ApplicationStore from 'common/src/data/application/application-store';
-import ApplicationActions from 'common/src/data/application/application-actions';
+import KioStore from 'common/src/data/kio/kio-store';
+import KioActions from 'common/src/data/kio/kio-actions';
 import {Flummox} from 'flummox';
 import {Pending, Failed} from 'common/src/fetch-result';
 
@@ -8,17 +8,17 @@ class MockFlux extends Flummox {
     constructor() {
         super();
 
-        this.createActions('application', ApplicationActions);
-        this.createStore('application', ApplicationStore, this);
+        this.createActions('kio', KioActions);
+        this.createStore('kio', KioStore, this);
     }
 }
 
-describe('The application store', () => {
+describe('The kio store', () => {
     var store,
         flux = new MockFlux();
 
     beforeEach(() => {
-        store = flux.getStore('application');
+        store = flux.getStore('kio');
     });
 
     afterEach(() => {

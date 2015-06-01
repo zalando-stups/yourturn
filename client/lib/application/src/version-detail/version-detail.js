@@ -18,7 +18,7 @@ class VersionDetail extends BaseView {
     constructor(props) {
         props.className = 'versionDetail';
         props.stores = {
-            application: props.flux.getStore('application'),
+            kio: props.flux.getStore('kio'),
             pierone: props.flux.getStore('pierone')
         };
         super(props);
@@ -26,7 +26,7 @@ class VersionDetail extends BaseView {
         // we have to do this here because the only
         // way to fetch the correct thing is to
         // parse version.artifact
-        this.version = this.stores.application.getApplicationVersion(props.applicationId, props.versionId);
+        this.version = this.stores.kio.getApplicationVersion(props.applicationId, props.versionId);
         this.image = this.parseArtifact(this.version.artifact);
 
         if (ENV_TEST) {
@@ -66,8 +66,8 @@ class VersionDetail extends BaseView {
     update() {
         let {applicationId, versionId} = this.props,
             {image, stores} = this,
-            application = stores.application.getApplication(applicationId),
-            approvals = stores.application.getApprovals(applicationId, versionId),
+            application = stores.kio.getApplication(applicationId),
+            approvals = stores.kio.getApprovals(applicationId, versionId),
             registryTags = image ?
                             stores.pierone.getTags(image.team, image.artifact) :
                             [],

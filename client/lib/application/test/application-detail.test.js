@@ -1,12 +1,12 @@
 /* globals expect */
 import {Flummox} from 'flummox';
-import ApplicationStore from 'common/src/data/application/application-store';
-import ApplicationActions from 'common/src/data/application/application-actions';
+import KioStore from 'common/src/data/kio/kio-store';
+import KioActions from 'common/src/data/kio/kio-actions';
 import TwintipStore from 'common/src/data/twintip/twintip-store';
 import TwintipActions from 'common/src/data/twintip/twintip-actions';
 import Detail from 'application/src/application-detail/application-detail';
 
-const APP = 'application',
+const APP = 'kio',
       API = 'twintip',
       ID = 'kio';
 
@@ -14,8 +14,8 @@ class MockFlux extends Flummox {
     constructor() {
         super();
 
-        this.createActions(APP, ApplicationActions);
-        this.createStore(APP, ApplicationStore, this);
+        this.createActions(APP, KioActions);
+        this.createStore(APP, KioStore, this);
 
         this.createActions(API, TwintipActions);
         this.createStore(API, TwintipStore, this);
