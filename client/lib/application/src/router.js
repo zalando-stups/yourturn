@@ -198,7 +198,7 @@ class AppRouter extends Router {
     listApplication(id) {
         APP_ACTIONS.fetchApplication(id);
         APP_ACTIONS.fetchApplicationVersions(id);
-        APP_FLUX.getActions('api').fetchApi(id);
+        APP_FLUX.getActions('twintip').fetchApi(id);
 
         puppeteer.show(new Detail({
             applicationId: id,

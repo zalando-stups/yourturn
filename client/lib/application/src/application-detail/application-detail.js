@@ -13,7 +13,7 @@ class AppDetail extends BaseView {
         props.className = 'applicationDetail';
         props.stores = {
             application: props.flux.getStore('application'),
-            api: props.flux.getStore('api')
+            twintip: props.flux.getStore('twintip')
         };
         super(props);
     }
@@ -23,7 +23,7 @@ class AppDetail extends BaseView {
         this.data = {
             applicationId: applicationId,
             app: this.stores.application.getApplication(applicationId),
-            api: this.stores.api.getApi(applicationId),
+            api: this.stores.twintip.getApi(applicationId),
             versions: _.take(this.stores.application.getApplicationVersions(applicationId), 3)
         };
         this.data.hasApi = this.data.api && this.data.api.status === 'SUCCESS';
