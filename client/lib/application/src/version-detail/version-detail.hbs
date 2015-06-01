@@ -37,11 +37,21 @@
     {{#if scmSource}}
         <tr>
             <th>Artifact Author</th>
-            <td>{{scmSource.author}}</td>
+            <td>{{#if scmSource.author}}
+                    {{scmSource.author}}
+                {{else}}
+                    <i class="fa fa-spin fa-circle-o-notch"></i>
+                {{/if}}
+            </td>
         </tr>
         <tr>
             <th>Artifact Source</th>
-            <td>{{scmSource.url}}<br/>{{scmSource.revision}}</td>
+            <td>{{#if scmSource.url}}
+                    {{scmSource.url}}<br/>{{scmSource.revision}}
+                {{else}}
+                    <i class="fa fa-spin fa-circle-o-notch"></i>
+                {{/if}}
+                </td>
         </tr>
     {{/if}}
     </tbody>
