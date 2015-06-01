@@ -8,7 +8,7 @@ class ResourceList extends BaseView {
         super({
             className: 'resourceList',
             stores: {
-                resource: props.flux.getStore('resource'),
+                essentials: props.flux.getStore('essentials'),
                 user: props.globalFlux.getStore('user')
             },
             events: {
@@ -24,7 +24,7 @@ class ResourceList extends BaseView {
     update() {
         this.data = {
             whitelisted: this.stores.user.isWhitelisted(),
-            resources: this.stores.resource.getResources(this.state.term),
+            resources: this.stores.essentials.getResources(this.state.term),
             term: this.state.term
         };
     }

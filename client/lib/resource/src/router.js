@@ -11,7 +11,7 @@ import Flux from './flux';
 import 'promise.prototype.finally';
 
 const RES_FLUX = new Flux(),
-      RES_ACTIONS = RES_FLUX.getActions('resource'),
+      RES_ACTIONS = RES_FLUX.getActions('essentials'),
       MAIN_VIEW_ID = '#yourturn-view';
 
 // QUICKFIX #133

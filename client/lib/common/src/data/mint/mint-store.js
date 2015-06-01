@@ -2,18 +2,18 @@ import {Store} from 'flummox';
 import _m from 'mori';
 import {Pending, Failed} from 'common/src/fetch-result';
 
-class OAuthStore extends Store {
+class MintStore extends Store {
     constructor(flux) {
         super();
 
-        const oauthActions = flux.getActions('oauth');
+        const mintActions = flux.getActions('mint');
 
         this.state = {
             applications: _m.hashMap()
         };
 
         this.registerAsync(
-            oauthActions.fetchOAuthConfig,
+            mintActions.fetchOAuthConfig,
             this.beginFetchOAuthConfig,
             this.receiveOAuthConfig,
             this.failFetchOAuthConfig);
@@ -83,4 +83,4 @@ class OAuthStore extends Store {
     }
 }
 
-export default OAuthStore;
+export default MintStore;

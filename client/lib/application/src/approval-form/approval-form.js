@@ -18,9 +18,9 @@ class ApprovalForm extends BaseView {
             'change #approval_type': 'explainType',
             'keyup #approval_custom_type': 'checkCustomType'
         };
-        props.store = props.flux.getStore('application');
+        props.store = props.flux.getStore('kio');
         super(props);
-        this.actions = props.flux.getActions('application');
+        this.actions = props.flux.getActions('kio');
     }
 
     explainType() {

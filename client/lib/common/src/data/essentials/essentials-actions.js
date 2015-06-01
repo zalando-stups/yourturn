@@ -3,7 +3,7 @@ import request from 'common/src/superagent';
 import {Services} from 'common/src/data/services';
 import {Provider, RequestConfig, saveRoute} from 'common/src/oauth-provider';
 
-class ResourceActions extends Actions {
+class EssentialsActions extends Actions {
 
     fetchAllScopes() {
         return request
@@ -105,4 +105,4 @@ class ResourceActions extends Actions {
 
 }
 
-export default ResourceActions;
+export default EssentialsActions;

@@ -13,9 +13,9 @@ class OAuthForm extends BaseView {
     constructor(props) {
         props.className = 'oAuthForm';
         props.stores = {
-            oauth: props.flux.getStore('oauth'),
-            resource: props.flux.getStore('resource'),
-            application: props.flux.getStore('application')
+            mint: props.flux.getStore('mint'),
+            essentials: props.flux.getStore('essentials'),
+            kio: props.flux.getStore('kio')
         };
         props.events = {
             'submit': 'save'
@@ -30,7 +30,7 @@ class OAuthForm extends BaseView {
     save(evt) {
         evt.preventDefault();
         let {$el} = this,
-            scopes = this.stores.resource.getAllScopes(),
+            scopes = this.stores.essentials.getAllScopes(),
             ownerscopes = this.ownerscopeList
                             .getSelection()
                             .map(s => s.split('.'))
@@ -58,7 +58,7 @@ class OAuthForm extends BaseView {
         this
         .props
         .flux
-        .getActions('oauth')
+        .getActions('mint')
         .saveOAuthConfig(applicationId, oauthConfig)
         .then(() => {
             history.navigate(constructLocalUrl('application', [applicationId]), {trigger: true});
@@ -77,13 +77,13 @@ class OAuthForm extends BaseView {
      * Makes new data available to templates.
      */
     update() {
-        let scopes = this.stores.resource.getAllScopes();
+        let scopes = this.stores.essentials.getAllScopes();
         this.data = {
             applicationId: this.props.applicationId,
-            application: this.stores.application.getApplication(this.props.applicationId),
+            application: this.stores.kio.getApplication(this.props.applicationId),
             ownerScopes: scopes.filter(s => s.is_resource_owner_scope),
             appScopes: scopes.filter(s => !s.is_resource_owner_scope),
-            oauth: this.stores.oauth.getOAuthConfig(this.props.applicationId)
+            oauth: this.stores.mint.getOAuthConfig(this.props.applicationId)
         };
     }
 

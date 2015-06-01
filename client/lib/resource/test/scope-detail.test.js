@@ -1,12 +1,12 @@
 /* globals expect */
 import {Flummox} from 'flummox';
-import ResourceStore from 'common/src/data/resource/resource-store';
-import ResourceActions from 'common/src/data/resource/resource-actions';
+import EssentialsStore from 'common/src/data/essentials/essentials-store';
+import EssentialsActions from 'common/src/data/essentials/essentials-actions';
 import UserStore from 'common/src/data/user/user-store';
 import UserActions from 'common/src/data/user/user-actions';
 import Detail from 'resource/src/scope-detail/scope-detail';
 
-const RES = 'resource',
+const ESSENTIALS = 'essentials',
       RES_ID = 'sales_order',
       SCP_ID = 'read';
 
@@ -14,8 +14,8 @@ class MockFlux extends Flummox {
     constructor() {
         super();
 
-        this.createActions(RES, ResourceActions);
-        this.createStore(RES, ResourceStore, this);
+        this.createActions(ESSENTIALS, EssentialsActions);
+        this.createStore(ESSENTIALS, EssentialsStore, this);
     }
 }
 
@@ -51,12 +51,12 @@ describe('The scope detail view', () => {
     });
 
     it('should display a placeholder when the scope is Pending', () => {
-        flux.getStore(RES).beginFetchScope(RES_ID, SCP_ID);
+        flux.getStore(ESSENTIALS).beginFetchScope(RES_ID, SCP_ID);
         expect(detail.$el.find('.u-placeholder').length).to.equal(1);
     });
 
     it('should contain rendered markdown', () => {
-        flux.getStore(RES).receiveScope([RES_ID, TEST_SCP]);
+        flux.getStore(ESSENTIALS).receiveScope([RES_ID, TEST_SCP]);
         expect(detail.$el.find('[data-block="description"] h1').length).to.equal(1);
     });
 });

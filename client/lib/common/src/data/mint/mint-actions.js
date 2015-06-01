@@ -3,7 +3,7 @@ import request from 'common/src/superagent';
 import {Services} from 'common/src/data/services';
 import {Provider, RequestConfig, saveRoute} from 'common/src/oauth-provider';
 
-class OAuthActions extends Actions {
+class MintActions extends Actions {
     fetchOAuthConfig(applicationId) {
         return request
                     .get(`${Services.mint.url}${Services.mint.root}/${applicationId}`)
@@ -34,4 +34,4 @@ class OAuthActions extends Actions {
     }
 }
 
-export default OAuthActions;
+export default MintActions;

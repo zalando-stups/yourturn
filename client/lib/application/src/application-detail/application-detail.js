@@ -12,8 +12,8 @@ class AppDetail extends BaseView {
     constructor(props) {
         props.className = 'applicationDetail';
         props.stores = {
-            application: props.flux.getStore('application'),
-            api: props.flux.getStore('api')
+            kio: props.flux.getStore('kio'),
+            twintip: props.flux.getStore('twintip')
         };
         super(props);
     }
@@ -22,9 +22,9 @@ class AppDetail extends BaseView {
         let {applicationId} = this.props;
         this.data = {
             applicationId: applicationId,
-            app: this.stores.application.getApplication(applicationId),
-            api: this.stores.api.getApi(applicationId),
-            versions: _.take(this.stores.application.getApplicationVersions(applicationId), 3)
+            app: this.stores.kio.getApplication(applicationId),
+            api: this.stores.twintip.getApi(applicationId),
+            versions: _.take(this.stores.kio.getApplicationVersions(applicationId), 3)
         };
         this.data.hasApi = this.data.api && this.data.api.status === 'SUCCESS';
     }

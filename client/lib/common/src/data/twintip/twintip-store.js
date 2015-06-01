@@ -2,18 +2,18 @@ import {Store} from 'flummox';
 import _m from 'mori';
 import {Pending, Failed} from 'common/src/fetch-result';
 
-class ApiStore extends Store {
+class TwintipStore extends Store {
     constructor(flux) {
         super();
 
-        const apiActions = flux.getActions('api');
+        const twintipActions = flux.getActions('twintip');
 
         this.state = {
             apis: _m.hashMap()
         };
 
         this.registerAsync(
-            apiActions.fetchApi,
+            twintipActions.fetchApi,
             this.beginFetchApi,
             this.receiveApi,
             this.failFetchApi);
@@ -71,4 +71,4 @@ class ApiStore extends Store {
     }
 }
 
-export default ApiStore;
+export default TwintipStore;

@@ -9,7 +9,7 @@ class AppVersion extends BaseView {
     constructor(props) {
         props.className = 'versionList';
         props.stores = {
-            application: props.flux.getStore('application')
+            kio: props.flux.getStore('kio')
         };
         props.events = {
             'submit': 'search',
@@ -30,8 +30,8 @@ class AppVersion extends BaseView {
 
     update() {
         let {applicationId} = this.props,
-            application = this.stores.application.getApplication(applicationId),
-            versions = _.take(this.stores.application.getApplicationVersions(applicationId, this.state.term), 20);
+            application = this.stores.kio.getApplication(applicationId),
+            versions = _.take(this.stores.kio.getApplicationVersions(applicationId, this.state.term), 20);
         this.data = {
             applicationId: applicationId,
             application: application instanceof FetchResult ? false : application,
