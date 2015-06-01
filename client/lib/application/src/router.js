@@ -183,7 +183,7 @@ class AppRouter extends Router {
             puppeteer.show(new AccessForm({
                 applicationId: id,
                 flux: APP_FLUX,
-                notificationActions: this.globalFlux.getActions('notification')
+                globalFlux: this.globalFlux
             }), MAIN_VIEW_ID);
         })
         .catch(e => puppeteer.show(Error(e), MAIN_VIEW_ID));
