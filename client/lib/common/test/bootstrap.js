@@ -3,9 +3,9 @@ import './puppeteer.test';
 
 import './kio/kio-actions.test';
 import './kio/kio-store.test';
+import './mint/mint-actions.test';
+import './mint/mint-store.test';
 import './notification/notification-store.test';
-import './oauth/oauth-actions.test';
-import './oauth/oauth-store.test';
 import './pierone/pierone-actions.test';
 import './pierone/pierone-store.test';
 import './resource/resource-actions.test';

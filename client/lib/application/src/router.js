@@ -16,7 +16,7 @@ import 'promise.prototype.finally';
 
 const MAIN_VIEW_ID = '#yourturn-view',
       APP_FLUX = new Flux(),
-      OAUTH_ACTIONS = APP_FLUX.getActions('oauth'),
+      MINT_ACTIONS = APP_FLUX.getActions('mint'),
       KIO_ACTIONS = APP_FLUX.getActions('kio'),
       KIO_STORE = APP_FLUX.getStore('kio');
 
@@ -151,7 +151,7 @@ class AppRouter extends Router {
      * @param  {String} id ID of the application
      */
     configureOAuth(id) {
-        OAUTH_ACTIONS.fetchOAuthConfig(id);
+        MINT_ACTIONS.fetchOAuthConfig(id);
         Promise.all([
             KIO_STORE.getApplication(id) ? Promise.resolve() : KIO_ACTIONS.fetchApplication(id),
             APP_FLUX.getActions('resource').fetchAllScopes()
@@ -174,7 +174,7 @@ class AppRouter extends Router {
      * @param  {String} id ID of the application
      */
     configureAccess(id) {
-        OAUTH_ACTIONS.fetchOAuthConfig(id);
+        MINT_ACTIONS.fetchOAuthConfig(id);
         Promise.all([
             KIO_STORE.getApplication(id) ? Promise.resolve() : KIO_ACTIONS.fetchApplication(id),
             APP_FLUX.getActions('resource').fetchAllScopes()

@@ -14,7 +14,7 @@ class AccessForm extends BaseView {
     constructor(props) {
         props.className = 'accessForm';
         props.stores = {
-            oauth: props.flux.getStore('oauth'),
+            mint: props.flux.getStore('mint'),
             resource: props.flux.getStore('resource'),
             kio: props.flux.getStore('kio')
         };
@@ -70,7 +70,7 @@ class AccessForm extends BaseView {
         this
         .props
         .flux
-        .getActions('oauth')
+        .getActions('mint')
         .saveOAuthConfig(applicationId, oauthConfig)
         .then(() => {
             history.navigate(constructLocalUrl('application', [applicationId]), {trigger: true});
@@ -95,7 +95,7 @@ class AccessForm extends BaseView {
             application: this.stores.kio.getApplication(this.props.applicationId),
             ownerScopes: scopes.filter(s => s.is_resource_owner_scope),
             appScopes: scopes.filter(s => !s.is_resource_owner_scope),
-            oauth: this.stores.oauth.getOAuthConfig(this.props.applicationId)
+            oauth: this.stores.mint.getOAuthConfig(this.props.applicationId)
         };
     }
 

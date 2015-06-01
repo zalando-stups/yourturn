@@ -9,8 +9,8 @@ import TwintipStore from 'common/src/data/twintip/twintip-store';
 import ResourceActions from 'common/src/data/resource/resource-actions';
 import ResourceStore from 'common/src/data/resource/resource-store';
 
-import OAuthActions from 'common/src/data/oauth/oauth-actions';
-import OAuthStore from 'common/src/data/oauth/oauth-store';
+import MintActions from 'common/src/data/mint/mint-actions';
+import MintStore from 'common/src/data/mint/mint-store';
 
 import PieroneActions from 'common/src/data/pierone/pierone-actions';
 import PieroneStore from 'common/src/data/pierone/pierone-store';
@@ -28,8 +28,8 @@ class AppFlux extends Flummox {
         this.createActions('resource', ResourceActions);
         this.createStore('resource', ResourceStore, this);
 
-        this.createActions('oauth', OAuthActions);
-        this.createStore('oauth', OAuthStore, this);
+        this.createActions('mint', MintActions);
+        this.createStore('mint', MintStore, this);
 
         this.createActions('pierone', PieroneActions);
         this.createStore('pierone', PieroneStore, this);

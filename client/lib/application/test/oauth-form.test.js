@@ -2,8 +2,8 @@
 import {Flummox} from 'flummox';
 import KioStore from 'common/src/data/kio/kio-store';
 import KioActions from 'common/src/data/kio/kio-actions';
-import OAuthStore from 'common/src/data/oauth/oauth-store';
-import OAuthActions from 'common/src/data/oauth/oauth-actions';
+import MintStore from 'common/src/data/mint/mint-store';
+import MintActions from 'common/src/data/mint/mint-actions';
 import ResourceStore from 'common/src/data/resource/resource-store';
 import ResourceActions from 'common/src/data/resource/resource-actions';
 import OAuthForm from 'application/src/oauth-form/oauth-form';
@@ -33,8 +33,8 @@ class MockFlux extends Flummox {
         this.createActions('kio', KioActions);
         this.createStore('kio', KioStore, this);
 
-        this.createActions('oauth', OAuthActions);
-        this.createStore('oauth', OAuthStore, this);
+        this.createActions('mint', MintActions);
+        this.createStore('mint', MintStore, this);
 
         this.createActions('resource', ResourceActions);
         this.createStore('resource', ResourceStore, this);
@@ -48,7 +48,7 @@ describe('The oauth form view', () => {
 
     beforeEach(() => {
         flux = new MockFlux();
-        actionSpy = sinon.stub(flux.getActions('oauth'), 'saveOAuthConfig', () => {
+        actionSpy = sinon.stub(flux.getActions('mint'), 'saveOAuthConfig', () => {
             return Promise.resolve();
         });
         form = new OAuthForm({
@@ -58,24 +58,24 @@ describe('The oauth form view', () => {
     });
 
     it('should show the placeholder when oauth is Pending', () => {
-        flux.getStore('oauth').beginFetchOAuthConfig('kio');
+        flux.getStore('mint').beginFetchOAuthConfig('kio');
         expect(form.$el.children().first().hasClass('u-placeholder')).to.be.true;
     });
 
     it('should show the full view when oauth is completed', () => {
-        flux.getStore('oauth').receiveOAuthConfig(['kio', MOCK_KIO]);
+        flux.getStore('mint').receiveOAuthConfig(['kio', MOCK_KIO]);
         // not the placeholder
         expect(form.$el.children().first().hasClass('u-placeholder')).to.be.false;
     });
 
     it('should check the non-confidentiality checkbox by default', () => {
-        flux.getStore('oauth').receiveOAuthConfig(['kio', MOCK_KIO]);
+        flux.getStore('mint').receiveOAuthConfig(['kio', MOCK_KIO]);
         let $box = form.$el.find('[data-block="confidentiality-checkbox"]').first();
         expect($box.is(':checked')).to.be.true;
     });
 
     it('should call the correct action', () => {
-        flux.getStore('oauth').receiveOAuthConfig(['kio', MOCK_KIO]);
+        flux.getStore('mint').receiveOAuthConfig(['kio', MOCK_KIO]);
         form.$el.find('form').submit();
         expect(actionSpy.calledOnce).to.be.true;
     });

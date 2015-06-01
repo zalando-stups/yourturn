@@ -1,6 +1,6 @@
 /* globals expect */
-import OAuthStore from 'common/src/data/oauth/oauth-store';
-import OAuthActions from 'common/src/data/oauth/oauth-actions';
+import MintStore from 'common/src/data/mint/mint-store';
+import MintActions from 'common/src/data/mint/mint-actions';
 import {Flummox} from 'flummox';
 import {Pending, Failed} from 'common/src/fetch-result';
 
@@ -8,17 +8,17 @@ class MockFlux extends Flummox {
     constructor() {
         super();
 
-        this.createActions('oauth', OAuthActions);
-        this.createStore('oauth', OAuthStore, this);
+        this.createActions('mint', MintActions);
+        this.createStore('mint', MintStore, this);
     }
 }
 
-describe('The oauth store', () => {
+describe('The mint store', () => {
     var store,
         flux = new MockFlux();
 
     beforeEach(() => {
-        store = flux.getStore('oauth');
+        store = flux.getStore('mint');
     });
 
     afterEach(() => {
