@@ -103,21 +103,39 @@ class AppRouter extends Router {
 
     editApplicationVersion(applicationId, versionId) {
         // we probably already have this app, so check
-        let promises = [],
-            version = APP_STORE.getApplicationVersion(applicationId, versionId),
+        var promises = [],
+            that = this,
+            ver = APP_STORE.getApplicationVersion(applicationId, versionId),
             app = APP_STORE.getApplication(applicationId);
 
         if (!app) {
             promises.push(APP_ACTIONS.fetchApplication(applicationId));
         }
-        if (!version) {
+        if (!ver) {
             promises.push(APP_ACTIONS.fetchApplicationVersion(applicationId, versionId));
         }
         APP_ACTIONS.fetchApprovals(applicationId, versionId);
 
         Promise
         .all(promises)
-        .then(() => {
+        .then(function ([application, version]) {
+            if (!app) {
+                app = application;
+            }
+
+            let isOwnApplication = that.globalFlux
+                                        .getStore('user')
+                                        .getUserTeams()
+                                        .map(team => team.id)
+                                        .some(id => id === app.team_id);
+            if (!isOwnApplication) {
+                let error = new Error();
+                error.name = 'Forbidden';
+                error.message = 'You can only edit your own applications!';
+                error.status = 'u1F62D';
+                throw error;
+            }
+
             puppeteer.show(new VersionForm({
                 applicationId: applicationId,
                 versionId: versionId,
@@ -277,7 +295,8 @@ class AppRouter extends Router {
             puppeteer.show(new VersionDetail({
                 applicationId: id,
                 versionId: ver,
-                flux: APP_FLUX
+                flux: APP_FLUX,
+                globalFlux: this.globalFlux
             }), MAIN_VIEW_ID);
         });
     }
