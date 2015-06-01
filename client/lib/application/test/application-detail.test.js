@@ -4,6 +4,8 @@ import ApplicationStore from 'common/src/data/application/application-store';
 import ApplicationActions from 'common/src/data/application/application-actions';
 import ApiStore from 'common/src/data/api/api-store';
 import ApiActions from 'common/src/data/api/api-actions';
+import UserStore from 'common/src/data/user/user-store';
+import UserActions from 'common/src/data/user/user-actions';
 import Detail from 'application/src/application-detail/application-detail';
 
 const APP = 'application',
@@ -22,15 +24,27 @@ class MockFlux extends Flummox {
     }
 }
 
+class GlobalFlux extends Flummox {
+    constructor() {
+        super();
+
+        this.createActions('user', UserActions);
+        this.createStore('user', UserStore, this);
+    }
+}
+
 describe('The application detail view', () => {
     var flux,
+        globalFlux,
         TEST_APP,
         detail;
 
     beforeEach(() => {
         flux = new MockFlux();
+        globalFlux = new GlobalFlux();
         detail = new Detail({
             flux: flux,
+            globalFlux: globalFlux,
             applicationId: ID
         });
         TEST_APP = {

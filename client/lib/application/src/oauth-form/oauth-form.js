@@ -15,7 +15,8 @@ class OAuthForm extends BaseView {
         props.stores = {
             oauth: props.flux.getStore('oauth'),
             resource: props.flux.getStore('resource'),
-            application: props.flux.getStore('application')
+            application: props.flux.getStore('application'),
+            user: props.globalFlux.getStore('user')
         };
         props.events = {
             'submit': 'save'
@@ -66,7 +67,8 @@ class OAuthForm extends BaseView {
         .catch(e => {
             this
             .props
-            .notificationActions
+            .globalFlux
+            .getActions('notification')
             .addNotification(
                 'Could not save OAuth client configuration for ' + applicationId + '. ' + e.message,
                 'error');
@@ -77,13 +79,18 @@ class OAuthForm extends BaseView {
      * Makes new data available to templates.
      */
     update() {
-        let scopes = this.stores.resource.getAllScopes();
+        let scopes = this.stores.resource.getAllScopes(),
+            application = this.stores.application.getApplication(this.props.applicationId);
         this.data = {
+            application: application,
             applicationId: this.props.applicationId,
-            application: this.stores.application.getApplication(this.props.applicationId),
-            ownerScopes: scopes.filter(s => s.is_resource_owner_scope),
             appScopes: scopes.filter(s => !s.is_resource_owner_scope),
-            oauth: this.stores.oauth.getOAuthConfig(this.props.applicationId)
+            isOwnApplication: this.stores.user
+                                    .getUserTeams()
+                                    .map(team => team.id)
+                                    .some(id => id === application.team_id),
+            oauth: this.stores.oauth.getOAuthConfig(this.props.applicationId),
+            ownerScopes: scopes.filter(s => s.is_resource_owner_scope)
         };
     }
 
