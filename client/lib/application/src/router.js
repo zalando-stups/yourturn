@@ -132,7 +132,19 @@ class AppRouter extends Router {
     editApplication(id) {
         APP_ACTIONS
         .fetchApplication(id)
-        .then(() => {
+        .then(app => {
+            let isOwnApplication = this.globalFlux
+                                        .getStore('user')
+                                        .getUserTeams()
+                                        .map(team => team.id)
+                                        .some(id => id === app.team_id);
+            if (!isOwnApplication) {
+                let error = new Error();
+                error.name = 'Forbidden';
+                error.message = 'You can only edit your own applications!';
+                error.status = 'u1F62D';
+                throw error;
+            }
             puppeteer.show(new AppForm({
                 applicationId: id,
                 edit: true,
@@ -202,7 +214,8 @@ class AppRouter extends Router {
 
         puppeteer.show(new Detail({
             applicationId: id,
-            flux: APP_FLUX
+            flux: APP_FLUX,
+            globalFlux: this.globalFlux
         }), MAIN_VIEW_ID);
     }
 

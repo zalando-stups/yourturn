@@ -13,17 +13,23 @@ class AppDetail extends BaseView {
         props.className = 'applicationDetail';
         props.stores = {
             application: props.flux.getStore('application'),
-            api: props.flux.getStore('api')
+            api: props.flux.getStore('api'),
+            user: props.globalFlux.getStore('user')
         };
         super(props);
     }
 
     update() {
-        let {applicationId} = this.props;
+        let {applicationId} = this.props,
+            application = this.stores.application.getApplication(applicationId);
         this.data = {
             applicationId: applicationId,
-            app: this.stores.application.getApplication(applicationId),
+            app: application,
             api: this.stores.api.getApi(applicationId),
+            isOwnApplication: this.stores.user
+                                .getUserTeams()
+                                .map(team => team.id)
+                                .some(id => id === application.team_id),
             versions: _.take(this.stores.application.getApplicationVersions(applicationId), 3)
         };
         this.data.hasApi = this.data.api && this.data.api.status === 'SUCCESS';
