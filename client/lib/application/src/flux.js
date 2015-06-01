@@ -6,8 +6,8 @@ import KioStore from 'common/src/data/kio/kio-store';
 import TwintipActions from 'common/src/data/twintip/twintip-actions';
 import TwintipStore from 'common/src/data/twintip/twintip-store';
 
-import ResourceActions from 'common/src/data/resource/resource-actions';
-import ResourceStore from 'common/src/data/resource/resource-store';
+import EssentialsActions from 'common/src/data/essentials/essentials-actions';
+import EssentialsStore from 'common/src/data/essentials/essentials-store';
 
 import MintActions from 'common/src/data/mint/mint-actions';
 import MintStore from 'common/src/data/mint/mint-store';
@@ -25,8 +25,8 @@ class AppFlux extends Flummox {
         this.createActions('twintip', TwintipActions);
         this.createStore('twintip', TwintipStore, this);
 
-        this.createActions('resource', ResourceActions);
-        this.createStore('resource', ResourceStore, this);
+        this.createActions('essentials', EssentialsActions);
+        this.createStore('essentials', EssentialsStore, this);
 
         this.createActions('mint', MintActions);
         this.createStore('mint', MintStore, this);

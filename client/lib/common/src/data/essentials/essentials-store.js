@@ -4,11 +4,11 @@ import _ from 'common/src/lodash.custom';
 import {Pending, Failed} from 'common/src/fetch-result';
 import FetchResult from 'common/src/fetch-result';
 
-class ResourceStore extends Store {
+class EssentialsStore extends Store {
     constructor(flux) {
         super();
 
-        const resourceActions = flux.getActions('resource');
+        const essentialsActions = flux.getActions('essentials');
 
         this.state = {
             resources: _m.hashMap(),
@@ -17,31 +17,31 @@ class ResourceStore extends Store {
         };
 
         this.registerAsync(
-            resourceActions.fetchResource,
+            essentialsActions.fetchResource,
             this.beginFetchResource,
             this.receiveResource,
             this.failFetchResource);
 
         this.registerAsync(
-            resourceActions.fetchResources,
+            essentialsActions.fetchResources,
             this.beginFetchResources,
             this.receiveResources,
             this.failFetchResources);
 
         this.registerAsync(
-            resourceActions.fetchScope,
+            essentialsActions.fetchScope,
             this.beginFetchScope,
             this.receiveScope,
             this.failFetchScope);
 
         this.registerAsync(
-            resourceActions.fetchScopes,
+            essentialsActions.fetchScopes,
             this.beginFetchScopes,
             this.receiveScopes,
             this.failFetchScopes);
 
         this.registerAsync(
-            resourceActions.fetchScopeApplications,
+            essentialsActions.fetchScopeApplications,
             this.beginFetchApplications,
             this.receiveScopeApplications,
             this.failFetchScopeApplications);
@@ -252,4 +252,4 @@ class ResourceStore extends Store {
     }
 }
 
-export default ResourceStore;
+export default EssentialsStore;

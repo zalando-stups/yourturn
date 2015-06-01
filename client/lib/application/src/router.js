@@ -154,7 +154,7 @@ class AppRouter extends Router {
         MINT_ACTIONS.fetchOAuthConfig(id);
         Promise.all([
             KIO_STORE.getApplication(id) ? Promise.resolve() : KIO_ACTIONS.fetchApplication(id),
-            APP_FLUX.getActions('resource').fetchAllScopes()
+            APP_FLUX.getActions('essentials').fetchAllScopes()
         ])
         .then(() => {
             puppeteer.show(new OAuthForm({
@@ -177,7 +177,7 @@ class AppRouter extends Router {
         MINT_ACTIONS.fetchOAuthConfig(id);
         Promise.all([
             KIO_STORE.getApplication(id) ? Promise.resolve() : KIO_ACTIONS.fetchApplication(id),
-            APP_FLUX.getActions('resource').fetchAllScopes()
+            APP_FLUX.getActions('essentials').fetchAllScopes()
         ])
         .then(() => {
             puppeteer.show(new AccessForm({

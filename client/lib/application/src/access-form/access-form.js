@@ -15,7 +15,7 @@ class AccessForm extends BaseView {
         props.className = 'accessForm';
         props.stores = {
             mint: props.flux.getStore('mint'),
-            resource: props.flux.getStore('resource'),
+            essentials: props.flux.getStore('essentials'),
             kio: props.flux.getStore('kio')
         };
         props.events = {
@@ -30,7 +30,7 @@ class AccessForm extends BaseView {
      */
     save(evt) {
         evt.preventDefault();
-        let scopes = this.stores.resource.getAllScopes(),
+        let scopes = this.stores.essentials.getAllScopes(),
             appscopes = this.appscopeList
                             .getSelection()
                             .map(s => s.split('.'))
@@ -89,7 +89,7 @@ class AccessForm extends BaseView {
      * Makes new data available to templates.
      */
     update() {
-        let scopes = this.stores.resource.getAllScopes();
+        let scopes = this.stores.essentials.getAllScopes();
         this.data = {
             applicationId: this.props.applicationId,
             application: this.stores.kio.getApplication(this.props.applicationId),

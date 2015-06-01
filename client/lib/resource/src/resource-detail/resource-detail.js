@@ -10,7 +10,7 @@ class ResourceDetail extends BaseView {
     constructor(props) {
         props.className = 'resourceDetail';
         props.stores = {
-            resource: props.flux.getStore('resource'),
+            essentials: props.flux.getStore('essentials'),
             user: props.globalFlux.getStore('user')
         };
         super(props);
@@ -18,11 +18,11 @@ class ResourceDetail extends BaseView {
 
     update() {
         let {resourceId} = this.props,
-            scopes = this.stores.resource.getScopes(resourceId);
+            scopes = this.stores.essentials.getScopes(resourceId);
         this.data = {
             whitelisted: this.stores.user.isWhitelisted(),
             resourceId: resourceId,
-            resource: this.stores.resource.getResource(resourceId),
+            resource: this.stores.essentials.getResource(resourceId),
             scopes: scopes,
             ownerScopes: scopes.filter(s => s.is_resource_owner_scope),
             appScopes: scopes.filter(s => !s.is_resource_owner_scope)

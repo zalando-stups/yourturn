@@ -4,8 +4,8 @@ import KioStore from 'common/src/data/kio/kio-store';
 import KioActions from 'common/src/data/kio/kio-actions';
 import MintStore from 'common/src/data/mint/mint-store';
 import MintActions from 'common/src/data/mint/mint-actions';
-import ResourceStore from 'common/src/data/resource/resource-store';
-import ResourceActions from 'common/src/data/resource/resource-actions';
+import EssentialsStore from 'common/src/data/essentials/essentials-store';
+import EssentialsActions from 'common/src/data/essentials/essentials-actions';
 import AccessForm from 'application/src/access-form/access-form';
 
 const MOCK_KIO = {
@@ -36,8 +36,8 @@ class MockFlux extends Flummox {
         this.createActions('mint', MintActions);
         this.createStore('mint', MintStore, this);
 
-        this.createActions('resource', ResourceActions);
-        this.createStore('resource', ResourceStore, this);
+        this.createActions('essentials', EssentialsActions);
+        this.createStore('essentials', EssentialsStore, this);
     }
 }
 

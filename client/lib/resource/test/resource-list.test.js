@@ -1,19 +1,19 @@
 /* globals expect */
 import {Flummox} from 'flummox';
-import ResourceStore from 'common/src/data/resource/resource-store';
-import ResourceActions from 'common/src/data/resource/resource-actions';
+import EssentialsStore from 'common/src/data/essentials/essentials-store';
+import EssentialsActions from 'common/src/data/essentials/essentials-actions';
 import UserStore from 'common/src/data/user/user-store';
 import UserActions from 'common/src/data/user/user-actions';
 import List from 'resource/src/resource-list/resource-list';
 
-const FLUX_ID = 'resource';
+const FLUX_ID = 'essentials';
 
 class MockFlux extends Flummox {
     constructor() {
         super();
 
-        this.createActions(FLUX_ID, ResourceActions);
-        this.createStore(FLUX_ID, ResourceStore, this);
+        this.createActions(FLUX_ID, EssentialsActions);
+        this.createStore(FLUX_ID, EssentialsStore, this);
     }
 }
 
