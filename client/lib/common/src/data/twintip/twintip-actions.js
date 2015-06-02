@@ -3,7 +3,7 @@ import request from 'common/src/superagent';
 import {Services} from 'common/src/data/services';
 import {Provider, RequestConfig, saveRoute} from 'common/src/oauth-provider';
 
-class ApiActions extends Actions {
+class TwintipActions extends Actions {
     fetchApi(id) {
         return request
                 .get(`${Services.twintip.url}${Services.twintip.root}/${id}`)
@@ -18,4 +18,4 @@ class ApiActions extends Actions {
     }
 }
 
-export default ApiActions;
+export default TwintipActions;

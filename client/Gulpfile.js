@@ -1,4 +1,5 @@
 var fs = require('fs'),
+    path = require('path'),
     gulp = require('gulp'),
     gutil= require('gulp-util'),
     eslint = require('gulp-eslint'),
@@ -9,6 +10,7 @@ var fs = require('fs'),
     shell = require('gulp-shell'),
     replace = require('gulp-replace'),
     rename = require('gulp-rename'),
+    critical = require('critical'),
     webpack = require('webpack');
 
 var LODASH_FUNCS = [
@@ -117,15 +119,52 @@ gulp.task('copy', function() {
             .pipe(gulp.dest('dist'));
 });
 
-gulp.task('cachebust', function() {
-    return gulp
-                .src('index-prod.html')
-                .pipe( replace('${timestamp}', Date.now()) )
-                .pipe( rename('index.html') )
-                .pipe( gulp.dest( 'dist' ) );
+gulp.task('extract-atf-css', ['cachebust', 'pack'], function(done) {
+    var html = String(fs.readFileSync(path.join(__dirname + '/dist/index.html')));
+    // remove some stuff that critical doesn't like
+    html = html
+            .replace(/\?v=\d+/gi, '')
+            .replace(/\/dist\//gi, '');
+
+    critical.generate({
+        base: './dist',
+        html: html,
+        dest: 'site.css',
+        dimensions: [{
+            // generic 13" laptop
+            width: 1280,
+            height: 800
+        }, {
+            // iphone 4s
+            width: 640,
+            height: 960
+        }],
+        minify: true
+    }, function(err, css) {
+        done();
+    });
 });
 
-gulp.task('build', ['pack', 'cachebust', 'copy', 'scm-source']);
+gulp.task('inline-atf-css', ['extract-atf-css'], function(done) {
+    var inline = String(fs.readFileSync(path.join(__dirname + '/dist/site.css')));
+    var stream = gulp
+                    .src('dist/index.html')
+                    .pipe(replace('${inline}', inline))
+                    .pipe(gulp.dest('dist'));
+    // this is kind of a race condition, probably?
+    del('dist/index.html');
+    return stream;
+});
+
+gulp.task('cachebust', ['clean'], function() {
+    return gulp
+                .src('index-prod.html')
+                .pipe(replace('${timestamp}', Date.now()))
+                .pipe(rename('index.html'))
+                .pipe(gulp.dest('dist'));
+});
+
+gulp.task('build', ['pack', 'inline-atf-css', 'copy', 'scm-source']);
 
 gulp.task('watch', ['watch:js']);
 gulp.task('default', ['watch']);

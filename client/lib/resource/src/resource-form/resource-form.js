@@ -9,17 +9,17 @@ import 'common/asset/scss/resource/resource-form.scss';
 class ResourceForm extends BaseView {
     constructor(props) {
         props.className = 'resourceForm';
-        props.store = props.flux.getStore('resource');
+        props.store = props.flux.getStore('essentials');
         props.events = {
             'submit': 'save',
             'keyup #resource_id': 'checkResourceIdAvailability'
         };
         super(props);
-        this.actions = props.flux.getActions('resource');
+        this.actions = props.flux.getActions('essentials');
     }
 
     /**
-     * Checks the resource store if a resource with this ID
+     * Checks the essentials store if a resource with this ID
      * already exists. Shows or hides according input-addon.
      */
     checkResourceIdAvailability() {

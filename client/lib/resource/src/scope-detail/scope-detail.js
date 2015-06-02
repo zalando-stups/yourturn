@@ -10,16 +10,16 @@ class ScopeDetail extends BaseView {
     constructor(props) {
         props.className = 'scopeDetail';
         props.stores = {
-            resource: props.flux.getStore('resource'),
+            essentials: props.flux.getStore('essentials'),
             user: props.globalFlux.getStore('user')
         };
         super(props);
-        this.actions = props.flux.getActions('resource');
+        this.actions = props.flux.getActions('essentials');
     }
 
     update() {
-        let scope = this.stores.resource.getScope(this.props.resourceId, this.props.scopeId),
-            applications = this.stores.resource.getScopeApplications(this.props.resourceId, this.props.scopeId);
+        let scope = this.stores.essentials.getScope(this.props.resourceId, this.props.scopeId),
+            applications = this.stores.essentials.getScopeApplications(this.props.resourceId, this.props.scopeId);
         this.data = {
             whitelisted: this.stores.user.isWhitelisted(),
             resourceId: this.props.resourceId,

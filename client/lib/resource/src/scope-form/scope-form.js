@@ -11,9 +11,9 @@ class ScopeForm extends BaseView {
             'submit': 'save',
             'keyup #scope_id': 'handleScopeId'
         };
-        props.store = props.flux.getStore('resource');
+        props.store = props.flux.getStore('essentials');
         super(props);
-        this.actions = props.flux.getActions('resource');
+        this.actions = props.flux.getActions('essentials');
     }
 
     handleScopeId() {
@@ -26,14 +26,14 @@ class ScopeForm extends BaseView {
     }
 
     /**
-     * Checks the resource store if a scope with this ID
+     * Checks the essentials store if a scope with this ID
      * already exists. Shows or hides according input-addon.
      */
     checkScopeIdAvailability() {
         let {resourceId} = this.props,
             $scopeInput = this.$el.find('#scope_id'),
             scope_id = $scopeInput.val();
-        if (this.props.flux.getStore('resource').getScope(resourceId, scope_id)) {
+        if (this.props.flux.getStore('essentials').getScope(resourceId, scope_id)) {
             if (!ENV_TEST) {
                 $scopeInput[0].setCustomValidity('Custom ID already exists.');
             }

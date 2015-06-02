@@ -14,10 +14,10 @@ class AccessForm extends BaseView {
     constructor(props) {
         props.className = 'accessForm';
         props.stores = {
-            oauth: props.flux.getStore('oauth'),
-            resource: props.flux.getStore('resource'),
-            application: props.flux.getStore('application'),
-            user: props.globalFlux.getStore('user')
+            user: props.globalFlux.getStore('user'),
+            mint: props.flux.getStore('mint'),
+            essentials: props.flux.getStore('essentials'),
+            kio: props.flux.getStore('kio')
         };
         props.events = {
             'submit': 'save'
@@ -31,7 +31,7 @@ class AccessForm extends BaseView {
      */
     save(evt) {
         evt.preventDefault();
-        let scopes = this.stores.resource.getAllScopes(),
+        let scopes = this.stores.essentials.getAllScopes(),
             appscopes = this.appscopeList
                             .getSelection()
                             .map(s => s.split('.'))
@@ -71,7 +71,7 @@ class AccessForm extends BaseView {
         this
         .props
         .flux
-        .getActions('oauth')
+        .getActions('mint')
         .saveOAuthConfig(applicationId, oauthConfig)
         .then(() => {
             history.navigate(constructLocalUrl('application', [applicationId]), {trigger: true});
@@ -91,18 +91,19 @@ class AccessForm extends BaseView {
      * Makes new data available to templates.
      */
     update() {
-        let scopes = this.stores.resource.getAllScopes(),
-            application = this.stores.application.getApplication(this.props.applicationId);
+        let scopes = this.stores.essentials.getAllScopes(),
+            application = this.stores.kio.getApplication(this.props.applicationId);
+
         this.data = {
             application: application,
             applicationId: this.props.applicationId,
-            appScopes: scopes.filter(s => !s.is_resource_owner_scope),
             isOwnApplication: this.stores.user
                                     .getUserTeams()
                                     .map(team => team.id)
                                     .some(id => application.team_id === id),
-            oauth: this.stores.oauth.getOAuthConfig(this.props.applicationId),
-            ownerScopes: scopes.filter(s => s.is_resource_owner_scope)
+            ownerScopes: scopes.filter(s => s.is_resource_owner_scope),
+            appScopes: scopes.filter(s => !s.is_resource_owner_scope),
+            oauth: this.stores.mint.getOAuthConfig(this.props.applicationId)
         };
     }
 

@@ -1,5 +1,5 @@
 /* globals Mitm, expect */
-import ResourceActions from 'common/src/data/resource/resource-actions';
+import EssentialsActions from 'common/src/data/essentials/essentials-actions';
 
 const RES_ID = 'customer',
       SCP_ID = 'read';
@@ -9,13 +9,13 @@ function assertOAuthHeader(req) {
     expect(req.headers.authorization).to.equal('Bearer access_token');
 }
 
-describe('The resource actions', () => {
+describe('The essentials actions', () => {
     var actions,
         mitm;
 
     beforeEach(() => {
         mitm = Mitm();
-        actions = new ResourceActions();
+        actions = new EssentialsActions();
     });
     afterEach(() => {
         mitm.disable();

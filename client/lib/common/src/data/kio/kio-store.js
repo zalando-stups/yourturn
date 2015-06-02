@@ -4,11 +4,11 @@ import _m from 'mori';
 import {Pending, Failed} from 'common/src/fetch-result';
 import FetchResult from 'common/src/fetch-result';
 
-class ApplicationStore extends Store {
+class KioStore extends Store {
     constructor(flux) {
         super();
 
-        const appActions = flux.getActions('application');
+        const kioActions = flux.getActions('kio');
 
         this.state = {
             applications: _m.hashMap(),
@@ -18,37 +18,37 @@ class ApplicationStore extends Store {
         };
 
         this.registerAsync(
-            appActions.fetchApplications,
+            kioActions.fetchApplications,
             this.beginFetchApplications,
             this.receiveApplications,
             this.failFetchApplications);
 
         this.registerAsync(
-            appActions.fetchApplication,
+            kioActions.fetchApplication,
             this.beginFetchApplication,
             this.receiveApplication,
             this.failFetchApplication);
 
         this.registerAsync(
-            appActions.fetchApplicationVersions,
+            kioActions.fetchApplicationVersions,
             this.beginFetchApplicationVersions,
             this.receiveApplicationVersions,
             this.failFetchApplications);
 
         this.registerAsync(
-            appActions.fetchApplicationVersion,
+            kioActions.fetchApplicationVersion,
             this.beginFetchApplicationVersion,
             this.receiveApplicationVersion,
             this.failFetchApplicationVersion);
 
         this.registerAsync(
-            appActions.fetchApprovals,
+            kioActions.fetchApprovals,
             this.beginFetchApprovals,
             this.receiveApprovals,
             this.failFetchApprovals);
 
         this.register(
-            appActions.fetchApprovalTypes,
+            kioActions.fetchApprovalTypes,
             this.receiveApprovalTypes);
     }
 
@@ -305,4 +305,4 @@ class ApplicationStore extends Store {
     }
 }
 
-export default ApplicationStore;
+export default KioStore;

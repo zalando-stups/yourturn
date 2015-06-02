@@ -1,5 +1,5 @@
 /* globals Mitm, expect */
-import OAuthActions from 'common/src/data/oauth/oauth-actions';
+import MintActions from 'common/src/data/mint/mint-actions';
 
 const APP_ID = 'kio';
 
@@ -8,13 +8,13 @@ function assertOAuthHeader(req) {
     expect(req.headers.authorization).to.equal('Bearer access_token');
 }
 
-describe('The oauth actions', () => {
+describe('The mint actions', () => {
     var actions,
         mitm;
 
     beforeEach(() => {
         mitm = Mitm();
-        actions = new OAuthActions();
+        actions = new MintActions();
     });
     afterEach(() => {
         mitm.disable();

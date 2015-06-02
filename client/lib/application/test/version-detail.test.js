@@ -1,14 +1,14 @@
 /* globals expect */
 import {Flummox} from 'flummox';
-import ApplicationStore from 'common/src/data/application/application-store';
-import ApplicationActions from 'common/src/data/application/application-actions';
+import KioStore from 'common/src/data/kio/kio-store';
+import KioActions from 'common/src/data/kio/kio-actions';
 import PieroneStore from 'common/src/data/pierone/pierone-store';
 import PieroneActions from 'common/src/data/pierone/pierone-actions';
 import UserStore from 'common/src/data/user/user-store';
 import UserActions from 'common/src/data/user/user-actions';
 import Detail from 'application/src/version-detail/version-detail';
 
-const FLUX = 'application',
+const FLUX = 'kio',
     TEAM = 'stups',
     VER = '0.1',
     APP = 'kio',
@@ -27,8 +27,8 @@ class MockFlux extends Flummox {
     constructor() {
         super();
 
-        this.createActions(FLUX, ApplicationActions);
-        this.createStore(FLUX, ApplicationStore, this);
+        this.createActions(FLUX, KioActions);
+        this.createStore(FLUX, KioStore, this);
 
         this.createActions('pierone', PieroneActions);
         this.createStore('pierone', PieroneStore, this);

@@ -3,7 +3,7 @@ import request from 'common/src/superagent';
 import {Services} from 'common/src/data/services';
 import {Provider, RequestConfig, saveRoute} from 'common/src/oauth-provider';
 
-class ApplicationActions extends Actions {
+class KioActions extends Actions {
     fetchApplications() {
         return request
                 .get(`${Services.kio.url}${Services.kio.root}`)
@@ -134,4 +134,4 @@ class ApplicationActions extends Actions {
     }
 }
 
-export default ApplicationActions;
+export default KioActions;

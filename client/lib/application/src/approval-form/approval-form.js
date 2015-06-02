@@ -19,11 +19,11 @@ class ApprovalForm extends BaseView {
             'keyup #approval_custom_type': 'checkCustomType'
         };
         props.stores = {
-            application: props.flux.getStore('application'),
+            kio: props.flux.getStore('kio'),
             user: props.globalFlux.getStore('user')
         };
         super(props);
-        this.actions = props.flux.getActions('application');
+        this.actions = props.flux.getActions('kio');
     }
 
     explainType() {
@@ -78,12 +78,12 @@ class ApprovalForm extends BaseView {
 
     update() {
         let {applicationId, versionId} = this.props,
-            application = this.stores.application.getApplication(applicationId);
+            application = this.stores.kio.getApplication(applicationId);
         this.data = {
             applicationId: applicationId,
             application: application,
-            approvals: this.stores.application.getApprovals(applicationId, versionId),
-            approvalTypes: this.stores.application.getApprovalTypes(applicationId),
+            approvals: this.stores.kio.getApprovals(applicationId, versionId),
+            approvalTypes: this.stores.kio.getApprovalTypes(applicationId),
             isOwnApplication: this.stores.user
                                     .getUserTeams()
                                     .map(team => team.id)

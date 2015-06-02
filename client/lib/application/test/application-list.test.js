@@ -1,20 +1,20 @@
 /* globals expect */
 import _ from 'lodash';
 import {Flummox} from 'flummox';
-import ApplicationStore from 'common/src/data/application/application-store';
-import ApplicationActions from 'common/src/data/application/application-actions';
+import KioStore from 'common/src/data/kio/kio-store';
+import KioActions from 'common/src/data/kio/kio-actions';
 import UserStore from 'common/src/data/user/user-store';
 import UserActions from 'common/src/data/user/user-actions';
 import List from 'application/src/application-list/application-list';
 
-const FLUX_ID = 'application';
+const FLUX_ID = 'kio';
 
 class AppFlux extends Flummox {
     constructor() {
         super();
 
-        this.createActions(FLUX_ID, ApplicationActions);
-        this.createStore(FLUX_ID, ApplicationStore, this);
+        this.createActions(FLUX_ID, KioActions);
+        this.createStore(FLUX_ID, KioStore, this);
     }
 }
 

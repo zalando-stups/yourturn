@@ -1,10 +1,10 @@
 /* globals expect, sinon, Promise */
 import {Flummox} from 'flummox';
-import ApplicationStore from 'common/src/data/application/application-store';
-import ApplicationActions from 'common/src/data/application/application-actions';
+import KioStore from 'common/src/data/kio/kio-store';
+import KioActions from 'common/src/data/kio/kio-actions';
 import VersionForm from 'application/src/version-form/version-form';
 
-const FLUX = 'application',
+const FLUX = 'kio',
     APP_ID = 'kio',
     VER_ID = '0.1',
     TEST_APP = {
@@ -42,8 +42,8 @@ class MockFlux extends Flummox {
     constructor() {
         super();
 
-        this.createActions(FLUX, ApplicationActions);
-        this.createStore(FLUX, ApplicationStore, this);
+        this.createActions(FLUX, KioActions);
+        this.createStore(FLUX, KioStore, this);
     }
 }
 

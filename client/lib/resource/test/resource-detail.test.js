@@ -1,20 +1,20 @@
 /* globals expect */
 import {Flummox} from 'flummox';
-import ResourceStore from 'common/src/data/resource/resource-store';
-import ResourceActions from 'common/src/data/resource/resource-actions';
+import EssentialsStore from 'common/src/data/essentials/essentials-store';
+import EssentialsActions from 'common/src/data/essentials/essentials-actions';
 import UserStore from 'common/src/data/user/user-store';
 import UserActions from 'common/src/data/user/user-actions';
 import Detail from 'resource/src/resource-detail/resource-detail';
 
-const RES = 'resource',
+const ESSENTIALS = 'essentials',
       ID = 'sales_order';
 
 class MockFlux extends Flummox {
     constructor() {
         super();
 
-        this.createActions(RES, ResourceActions);
-        this.createStore(RES, ResourceStore, this);
+        this.createActions(ESSENTIALS, EssentialsActions);
+        this.createStore(ESSENTIALS, EssentialsStore, this);
     }
 }
 
@@ -51,12 +51,12 @@ describe('The resource detail view', () => {
     });
 
     it('should display a placeholder when the resource is Pending', () => {
-        flux.getStore(RES).beginFetchResource(ID);
+        flux.getStore(ESSENTIALS).beginFetchResource(ID);
         expect(detail.$el.find('.u-placeholder').length).to.equal(1);
     });
 
     it('should contain rendered markdown', () => {
-        flux.getStore(RES).receiveResource(TEST_RES);
+        flux.getStore(ESSENTIALS).receiveResource(TEST_RES);
         expect(detail.$el.find('[data-block="description"] h1').length).to.equal(1);
     });
 

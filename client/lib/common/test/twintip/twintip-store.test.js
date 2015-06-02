@@ -1,6 +1,6 @@
 /* globals expect */
-import ApiStore from 'common/src/data/api/api-store';
-import ApiActions from 'common/src/data/api/api-actions';
+import TwintipStore from 'common/src/data/twintip/twintip-store';
+import TwintipActions from 'common/src/data/twintip/twintip-actions';
 import {Flummox} from 'flummox';
 import {Pending, Failed} from 'common/src/fetch-result';
 
@@ -8,17 +8,17 @@ class MockFlux extends Flummox {
     constructor() {
         super();
 
-        this.createActions('api', ApiActions);
-        this.createStore('api', ApiStore, this);
+        this.createActions('twintip', TwintipActions);
+        this.createStore('twintip', TwintipStore, this);
     }
 }
 
-describe('The api store', () => {
+describe('The twintip store', () => {
     var store,
         flux = new MockFlux();
 
     beforeEach(() => {
-        store = flux.getStore('api');
+        store = flux.getStore('twintip');
     });
 
     afterEach(() => {
