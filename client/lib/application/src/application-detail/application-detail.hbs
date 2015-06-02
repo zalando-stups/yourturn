@@ -87,22 +87,21 @@
             <th>Recently updated versions</th>
             <td>
                 {{#if versions}}
-                    <ul>
                     {{#each versions}}
-                        <li>
+                        <div>
                             <a  title="Approve version {{this.id}}"
                                 class="btn btn-default btn-small"
                                 href="/application/detail/{{../app.id}}/version/approve/{{this.id}}">
-                                <i class="fa fa-check"></i>
+                                <i class="fa fa-check fa-sm"></i>
                             </a>
                             <a href="/application/detail/{{../app.id}}/version/detail/{{this.id}}">
                                 {{this.id}}
                             </a>
-                        </li>            
+                        </div>            
                     {{/each}}
-                    </ul>
                 {{/if}}
-                <a href="/application/detail/{{applicationId}}/version/create" class="btn btn-default">
+                <a  class="btn btn-default applicationDetail-newVersion"
+                    href="/application/detail/{{applicationId}}/version/create">
                     <i class="fa fa-plus"></i> New version
                 </a>
             </td>

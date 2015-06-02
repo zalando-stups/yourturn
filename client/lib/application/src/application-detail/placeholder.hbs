@@ -66,12 +66,27 @@
             <tr>
                 <th>Recently updated versions</th>
                 <td>
-                    <ul>
-                        <li class="u-placeholder-text">0.1</li>
-                        <li class="u-placeholder-text">0.3</li>
-                        <li class="u-placeholder-text">0.2</li>
-                    </ul>
-                    <a href="/application/detail/{{applicationId}}/version/create" class="btn btn-default">
+                    <div>
+                        <a class="btn btn-disabled btn-small">
+                            <i class="fa fa-check"></i>
+                        </a>
+                        <span class="u-placeholder-text">0.1</span>
+                    </div>
+                    <div>
+                        <a class="btn btn-disabled btn-small">
+                            <i class="fa fa-check"></i>
+                        </a>
+                        <span class="u-placeholder-text">0.1</span>
+                    </div>
+                    <div>
+                        <a class="btn btn-disabled btn-small">
+                            <i class="fa fa-check"></i>
+                        </a>
+                        <span class="u-placeholder-text">0.1</span>
+                    </div>
+                    
+                    <a  class="btn btn-default applicationDetail-newVersion"
+                        href="/application/detail/{{applicationId}}/version/create">
                         <i class="fa fa-plus"></i> New version
                     </a>
                 </td>
