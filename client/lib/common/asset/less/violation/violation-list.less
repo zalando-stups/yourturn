@@ -1,0 +1,13 @@
+@import "../variables";
+
+.violationList {
+    max-width: @content-width-regular;
+    .violation {
+        padding: @padding-small;
+        border: 1px solid @red;
+        border-left: 10px solid @red;
+        + .violation {
+            margin-top: @padding-small;
+        }
+    }
+}

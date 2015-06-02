@@ -1,0 +1,7 @@
+<h2 class="violationList-headline">Violations</h2>
+{{#each violations}}
+<div class="violation">
+    <strong>In account {{this.accountId}} ({{this.region}}):</strong>
+    <div>{{this.message}}</div>
+</div>
+{{/each}}
