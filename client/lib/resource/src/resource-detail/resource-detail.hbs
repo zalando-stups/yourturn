@@ -16,7 +16,7 @@
         <i class="fa fa-plus"></i> Create Scope
     </a>
 </div>
-<table>
+<table class="table">
     <tbody>
         <tr>
             <th>ID</th>
@@ -29,15 +29,17 @@
         <tr>
             <th>Resource Owners</th>
             <td>
+                {{#if resource.resource_owners}}
                 <ul>
                     {{#each resource.resource_owners}}
                         <li>
                             {{this}}
                         </li>
-                    {{else}}
-                        Nobody owns {{resource.name}}.
                     {{/each}}
                 </ul>
+                {{else}}
+                Nobody owns {{resource.name}}.
+                {{/if}}
             </td>
         </tr>
     </tbody>

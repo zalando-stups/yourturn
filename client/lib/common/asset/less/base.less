@@ -73,9 +73,26 @@ a {
     }
 }
 
-table {
+table.table {
+    width: 100%;
+    border: 1px solid @gray-lighter;
     th {
         font-weight: @weight-bold;
+        color: @gray;
+    }
+    td,
+    th {
+        width: 50%;
+        padding: 0 @padding-small;
+        text-align: left;
+        vertical-align: top;
+    }
+    tr:nth-child(2n) {
+        background: @gray-lighter;
+    }
+    ul {
+        margin: 0;
+        padding-left: 1em;
     }
 }
 
