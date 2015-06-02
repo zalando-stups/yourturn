@@ -1,7 +1,29 @@
 <h2 class="violationList-headline">Violations</h2>
+<div class="u-info">
+    Violations of the STUPS policy and bad practices in accounts you have access to.
+</div>
+<small>Showing {{violations.length}} violations:</small>
 {{#each violations}}
 <div class="violation">
-    <strong>In account {{this.accountId}} ({{this.region}}):</strong>
-    <div>{{this.message}}</div>
+    <header>
+        Account <strong>{{this.accountId}}</strong> Region <strong>{{this.region}}</strong>
+    </header>
+    <blockquote>{{this.message}}</blockquote>
+    <footer>
+        {{#if checked}}
+            {{comment}}
+        {{else}}
+            <form class="form">
+                <div class="input-group">
+                    <input
+                        placeholder="This was intended because I tested things."
+                        type="text" />
+                    <div class="btn btn-default">
+                        <i class="fa fa-check"></i> Resolve
+                    </div>
+                </div>
+            </form>
+        {{/if}}
+    </footer>
 </div>
 {{/each}}
