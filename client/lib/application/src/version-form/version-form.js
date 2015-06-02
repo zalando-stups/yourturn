@@ -4,7 +4,7 @@ import Template from './version-form.hbs';
 import {history} from 'backbone';
 import {constructLocalUrl} from 'common/src/data/services';
 import DOCKER_REGISTRY from 'DOCKER_REGISTRY';
-import 'common/asset/scss/application/version-form.scss';
+import 'common/asset/less/application/version-form.less';
 
 class VersionForm extends BaseView {
     constructor(props) {

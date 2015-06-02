@@ -31,7 +31,7 @@ module.exports = {
         })
     ],
     resolve: {
-        extensions: ['', '.js', '.scss'],
+        extensions: ['', '.js', '.less'],
         alias: {
             common: path.resolve(__dirname, './lib/common/'),
             yourturn: path.resolve(__dirname, './lib/yourturn/'),
@@ -64,7 +64,7 @@ module.exports = {
         loaders: [
             { test: /\.hbs$/, exclude: /node_modules/, loader: 'handlebars?helperDirs[]=' + __dirname + '/lib/common/src/handlebars' },
             { test: /\.js$/, exclude: /node_modules/, loader: 'babel' },
-            { test: /\.scss$/, exclude: /node_modules/, loader: 'null' },
+            { test: /\.less$/, exclude: /node_modules/, loader: 'null' },
             { test: /\.woff(\?v=\d+\.\d+\.\d+)?$/, loader: 'null' },
             { test: /\.json$/, loader: 'json' },,
             { test: /\.(png|jpg|jpeg|gif)$/, loader: 'null'}

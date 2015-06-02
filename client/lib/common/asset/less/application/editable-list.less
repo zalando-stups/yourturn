@@ -1,0 +1,30 @@
+@import "../variables";
+
+.editableList {
+    
+    .input-group {
+        margin-bottom: @padding-tiny;
+    }
+
+    [data-action="add-item"] {
+        display: inline-block;
+    }
+
+    .list-item {
+        width: 100%;
+        padding: @padding-tiniest @padding-tiny;
+        border: 1px solid @gray;
+        display: flex;
+        span:first-child {
+            flex: 1;
+        }
+        [data-action="delete-item"] {
+            flex: 0 0 auto;
+            padding: 0 @padding-tiny;
+        }
+
+        + .list-item {
+            border-top: 0;
+        }
+    }
+}

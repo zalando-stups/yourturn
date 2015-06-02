@@ -5,7 +5,7 @@ import SERVICE_URL_TLD from 'SERVICE_URL_TLD';
 import {history} from 'backbone';
 import {constructLocalUrl} from 'common/src/data/services';
 import FetchResult from 'common/src/fetch-result';
-import 'common/asset/scss/application/application-form.scss';
+import 'common/asset/less/application/application-form.less';
 
 class ApplicationForm extends BaseView {
     constructor(props) {

@@ -120,7 +120,7 @@ gulp.task('copy', function() {
 });
 
 gulp.task('extract-atf-css', ['cachebust', 'pack'], function(done) {
-    var html = String(fs.readFileSync(path.join(__dirname + '/dist/index.html')));
+    var html = String(fs.readFileSync(path.join(__dirname + '/dist/index-prod.html')));
     // remove some stuff that critical doesn't like
     html = html
             .replace(/\?v=\d+/gi, '')
@@ -141,26 +141,27 @@ gulp.task('extract-atf-css', ['cachebust', 'pack'], function(done) {
         }],
         minify: true
     }, function(err, css) {
+        if (err) {
+            console.log(err);
+            return;
+        }
         done();
     });
 });
 
 gulp.task('inline-atf-css', ['extract-atf-css'], function(done) {
     var inline = String(fs.readFileSync(path.join(__dirname + '/dist/site.css')));
-    var stream = gulp
-                    .src('dist/index.html')
-                    .pipe(replace('${inline}', inline))
-                    .pipe(gulp.dest('dist'));
-    // this is kind of a race condition, probably?
-    del('dist/index.html');
-    return stream;
+    return gulp
+            .src('dist/index-prod.html')
+            .pipe(replace('${inline}', inline))
+            .pipe(rename('index.html'))
+            .pipe(gulp.dest('dist'));
 });
 
 gulp.task('cachebust', ['clean'], function() {
     return gulp
                 .src('index-prod.html')
                 .pipe(replace('${timestamp}', Date.now()))
-                .pipe(rename('index.html'))
                 .pipe(gulp.dest('dist'));
 });
 

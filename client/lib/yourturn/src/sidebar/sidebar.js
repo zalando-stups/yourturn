@@ -4,7 +4,7 @@ import BaseView from 'common/src/base-view';
 import Template from './sidebar.hbs';
 import request from 'common/src/superagent';
 import {Provider, RequestConfig, saveRoute} from 'common/src/oauth-provider';
-import 'common/asset/scss/yourturn/sidebar.scss';
+import 'common/asset/less/yourturn/sidebar.less';
 
 class SidebarView extends BaseView {
     constructor(props) {

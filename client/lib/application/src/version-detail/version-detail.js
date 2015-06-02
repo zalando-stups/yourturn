@@ -5,7 +5,7 @@ import FetchResult from 'common/src/fetch-result';
 import ErrorTpl from 'common/src/error.hbs';
 import Placeholder from './placeholder.hbs';
 import Markdown from 'common/src/markdown';
-import 'common/asset/scss/application/version-detail.scss';
+import 'common/asset/less/application/version-detail.less';
 
 // extracts team, artifact name and version of something like
 // docker://docker.io/stups/yourturn:1.0-squirrel

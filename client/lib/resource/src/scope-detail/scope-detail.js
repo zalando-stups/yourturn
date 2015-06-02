@@ -4,7 +4,7 @@ import Placeholder from './placeholder.hbs';
 import Error from 'common/src/error.hbs';
 import Markdown from 'common/src/markdown';
 import FetchResult from 'common/src/fetch-result';
-import 'common/asset/scss/resource/scope-detail.scss';
+import 'common/asset/less/resource/scope-detail.less';
 
 class ScopeDetail extends BaseView {
     constructor(props) {

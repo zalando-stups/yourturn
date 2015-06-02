@@ -1,6 +1,6 @@
 import BaseView from 'common/src/base-view';
 import Template from './editable-list.hbs';
-import 'common/asset/scss/application/editable-list.scss';
+import 'common/asset/less/application/editable-list.less';
 
 
 /**

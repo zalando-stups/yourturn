@@ -1,7 +1,7 @@
 import BaseView from 'common/src/base-view';
 import Template from './approval-form.hbs';
 import ApprovalCard from './approval-card/approval-card';
-import 'common/asset/scss/application/approval-form.scss';
+import 'common/asset/less/application/approval-form.less';
 
 const EXPLANATIONS = {
     SPECIFICATION: 'Tickets are properly specified and have useful content.',

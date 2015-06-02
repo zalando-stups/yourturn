@@ -2,7 +2,7 @@
 import {history} from 'backbone';
 import BaseView from 'common/src/base-view';
 import Template from './scope-form.hbs';
-import 'common/asset/scss/resource/scope-form.scss';
+import 'common/asset/less/resource/scope-form.less';
 
 class ScopeForm extends BaseView {
     constructor(props) {

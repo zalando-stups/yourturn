@@ -1,0 +1,137 @@
+@import "variables";
+
+.input-addon-border() {
+    &:first-child {
+        border-top-left-radius: 2px;
+        border-bottom-left-radius: 2px;
+        border-top-right-radius: 0px;
+        border-bottom-right-radius: 0px;
+        border-right-width: 0;
+    }
+    &:last-child {
+        border-top-right-radius: 2px;
+        border-bottom-right-radius: 2px;
+        border-top-left-radius: 0px;
+        border-bottom-left-radius: 0px; 
+        border-left-width: 0;
+    }
+}
+
+input[disabled="disabled"],
+label.form-disabled {
+    color: @gray;
+}
+
+textarea,
+select,
+input[type="url"],
+input[type="text"],
+input[type="search"] {
+    font-size: inherit;
+    line-height: inherit;
+    font-family: @font-sans;
+    font-weight: @weight-light;
+    padding: @padding-tiniest @padding-tiny;
+    display: inline-block;
+    border: 1px solid @gray-light;
+    border-radius: @border-radius;
+    vertical-align: middle;
+    &:focus {
+        border: 1px solid @gray;
+        outline: none;
+        box-shadow: 0px 0px 5px @gray;
+    }
+}
+
+.form {
+    .form-group {
+        small {
+            color: @gray;
+        }
+        label {
+            font-weight: @weight-regular;
+            display: block;
+        }
+        textarea,
+        select,
+        input[type="url"],
+        input[type="text"],
+        input[type="search"] {
+            width: 100%;
+
+            &:invalid,
+            &.invalid {
+                border-color: @red;
+                border-style: solid;
+                &:focus {
+                    box-shadow: 0px 0px 5px @red;
+                }
+            }
+
+            &:valid,
+            &.valid {
+                border-color: @green;
+                border-style: solid;
+                &:focus {
+                    box-shadow: 0px 0px 5px @green;
+                }
+            }
+        }
+
+        select {
+            display: block;
+        }
+
+        p {
+            margin: 0;
+            max-width: 400px;
+            + p {
+                margin-top: @padding-tiny;
+            }
+        }
+
+
+        + .btn-group,
+        + .form-group {
+            padding-top: @padding-small;
+        }
+    }
+
+    .input-group {
+        width: 100%;
+        display: flex;
+
+        // styles assume an input will every only
+        // be with ONE other thing together
+        // in an input-group
+        // see: first-child, last-child
+
+        .input-addon {
+            user-select: none;
+            padding: @padding-tiniest @padding-tiny;
+            border: 1px solid @gray-light;
+            color: @gray;
+            font-size: inherit;
+            line-height: inherit;
+            font-family: @font-sans;
+            .input-addon-border();
+            
+        }
+
+        .btn {
+            .input-addon-border();
+        }
+
+        input {
+            flex: 1;
+            &:first-child {
+                border-top-right-radius: 0px;
+                border-bottom-right-radius: 0px;
+            }
+            &:last-child {
+                border-top-left-radius: 0px;
+                border-bottom-left-radius: 0px;
+            }
+        }
+    }
+}

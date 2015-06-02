@@ -2,7 +2,7 @@
 import _ from 'lodash';
 import BaseView from 'common/src/base-view';
 import Template from './application-list.hbs';
-import 'common/asset/scss/application/application-list.scss';
+import 'common/asset/less/application/application-list.less';
 
 class AppList extends BaseView {
     constructor(props) {

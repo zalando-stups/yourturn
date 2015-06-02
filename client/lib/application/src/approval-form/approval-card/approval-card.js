@@ -3,7 +3,7 @@ import Template from './approval-card.hbs';
 import Markdown from 'common/src/markdown';
 import moment from 'moment';
 import {DATE_FORMAT} from 'common/src/config';
-import 'common/asset/scss/application/approval-card.scss';
+import 'common/asset/less/application/approval-card.less';
 
 class ApprovalCard extends BaseView {
     constructor(props) {

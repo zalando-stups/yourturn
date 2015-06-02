@@ -1,0 +1,16 @@
+@import "../variables";
+
+.scopeForm {
+    max-width: @content-width-regular;
+    .grid {
+        p {
+            margin: 0;
+            + p {
+                margin-top: @padding-tiny;
+            }
+        }
+        + .grid {
+            margin-top: @padding-small;
+        }
+    }
+}
