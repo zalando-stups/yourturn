@@ -1,7 +1,7 @@
 import $ from 'jquery';
 import BaseView from 'common/src/base-view';
 import Template from './notification-bar.hbs';
-import 'common/asset/scss/yourturn/notification-bar.scss';
+import 'common/asset/less/yourturn/notification-bar.less';
 
 class NotificationBar extends BaseView {
     constructor(props) {

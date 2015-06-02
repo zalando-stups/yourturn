@@ -1,6 +1,6 @@
 import BaseView from 'common/src/base-view';
 import Template from './search.hbs';
-import 'common/asset/scss/yourturn/search.scss';
+import 'common/asset/less/yourturn/search.less';
 
 class SearchView extends BaseView {
     constructor(props) {

@@ -2,7 +2,7 @@
 import BaseView from 'common/src/base-view';
 import Template from './searchable-list.hbs';
 import _ from 'lodash';
-import 'common/asset/scss/application/searchable-list.scss';
+import 'common/asset/less/application/searchable-list.less';
 
 function filterItems(search) {
     return i => search

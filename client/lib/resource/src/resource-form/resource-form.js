@@ -4,7 +4,7 @@ import {history} from 'backbone';
 import BaseView from 'common/src/base-view';
 import Template from './resource-form.hbs';
 import {constructLocalUrl} from 'common/src/data/services';
-import 'common/asset/scss/resource/resource-form.scss';
+import 'common/asset/less/resource/resource-form.less';
 
 class ResourceForm extends BaseView {
     constructor(props) {

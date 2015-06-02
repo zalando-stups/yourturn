@@ -1,7 +1,7 @@
 /* globals ENV_TEST */
 import BaseView from 'common/src/base-view';
 import Template from './resource-list.hbs';
-import 'common/asset/scss/resource/resource-list.scss';
+import 'common/asset/less/resource/resource-list.less';
 
 class ResourceList extends BaseView {
     constructor(props) {

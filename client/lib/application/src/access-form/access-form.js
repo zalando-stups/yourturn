@@ -7,8 +7,8 @@ import EditableList from 'common/src/editable-list/editable-list';
 import FetchResult from 'common/src/fetch-result';
 import {history} from 'backbone';
 import {constructLocalUrl} from 'common/src/data/services';
-import 'common/asset/scss/application/access-form.scss';
-import 'common/asset/scss/application/oauth-sync-info.scss';
+import 'common/asset/less/application/access-form.less';
+import 'common/asset/less/application/oauth-sync-info.less';
 
 class AccessForm extends BaseView {
     constructor(props) {

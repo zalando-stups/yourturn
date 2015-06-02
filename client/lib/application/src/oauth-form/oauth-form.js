@@ -6,8 +6,8 @@ import SearchableList from 'common/src/searchable-list/searchable-list';
 import FetchResult from 'common/src/fetch-result';
 import {history} from 'backbone';
 import {constructLocalUrl} from 'common/src/data/services';
-import 'common/asset/scss/application/oauth-form.scss';
-import 'common/asset/scss/application/oauth-sync-info.scss';
+import 'common/asset/less/application/oauth-form.less';
+import 'common/asset/less/application/oauth-sync-info.less';
 
 class OAuthForm extends BaseView {
     constructor(props) {

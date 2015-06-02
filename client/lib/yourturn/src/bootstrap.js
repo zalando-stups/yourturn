@@ -9,9 +9,9 @@ import ResourceRouter from 'resource/src/router';
 import AppRouter from 'application/src/router';
 import Flux from './flux';
 
-import 'common/asset/scss/base.scss';
-import 'common/asset/scss/grid.scss';
-import 'common/asset/scss/yourturn/yourturn.scss';
+import 'common/asset/less/base.less';
+import 'common/asset/less/grid.less';
+import 'common/asset/less/yourturn/yourturn.less';
 
 const YT_FLUX = new Flux();
 

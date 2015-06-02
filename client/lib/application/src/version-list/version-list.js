@@ -3,7 +3,7 @@ import _ from 'lodash';
 import BaseView from 'common/src/base-view';
 import Template from './version-list.hbs';
 import FetchResult from 'common/src/fetch-result';
-import 'common/asset/scss/application/version-list.scss';
+import 'common/asset/less/application/version-list.less';
 
 class AppVersion extends BaseView {
     constructor(props) {
