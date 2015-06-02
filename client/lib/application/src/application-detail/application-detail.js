@@ -12,6 +12,7 @@ class AppDetail extends BaseView {
     constructor(props) {
         props.className = 'applicationDetail';
         props.stores = {
+            user: props.globalFlux.getStore('user'),
             kio: props.flux.getStore('kio'),
             twintip: props.flux.getStore('twintip')
         };
@@ -19,10 +20,15 @@ class AppDetail extends BaseView {
     }
 
     update() {
-        let {applicationId} = this.props;
+        let {applicationId} = this.props,
+            application = this.stores.kio.getApplication(applicationId);
         this.data = {
             applicationId: applicationId,
-            app: this.stores.kio.getApplication(applicationId),
+            app: application,
+            isOwnApplication: this.stores.user
+                                .getUserTeams()
+                                .map(team => team.id)
+                                .some(id => id === application.team_id),
             api: this.stores.twintip.getApi(applicationId),
             versions: _.take(this.stores.kio.getApplicationVersions(applicationId), 3)
         };

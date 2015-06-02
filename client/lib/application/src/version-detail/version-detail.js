@@ -19,7 +19,8 @@ class VersionDetail extends BaseView {
         props.className = 'versionDetail';
         props.stores = {
             kio: props.flux.getStore('kio'),
-            pierone: props.flux.getStore('pierone')
+            pierone: props.flux.getStore('pierone'),
+            user: props.globalFlux.getStore('user')
         };
         super(props);
         // fetch scm source from pierone
@@ -66,7 +67,9 @@ class VersionDetail extends BaseView {
     update() {
         let {applicationId, versionId} = this.props,
             {image, stores} = this,
-            application = stores.kio.getApplication(applicationId),
+
+            storeApplication = stores.kio.getApplication(applicationId),
+            application = storeApplication instanceof FetchResult ? false : storeApplication,
             approvals = stores.kio.getApprovals(applicationId, versionId),
             registryTags = image ?
                             stores.pierone.getTags(image.team, image.artifact) :
@@ -79,11 +82,15 @@ class VersionDetail extends BaseView {
             versionId: versionId,
             version: this.version,
             scmSource: scmSource,
+            isOwnApplication: this.stores.user
+                                    .getUserTeams()
+                                    .map(team => team.id)
+                                    .some(id => application ? id === application.team_id : false),
             isTagInRegistry: registryTags
                                 .map(t => t.name)
                                 .some(n => n === image.tag),
             approvalCount: approvals.length,
-            application: application instanceof FetchResult ? false : application
+            application: application
         };
         if (scmSource instanceof FetchResult) {
             if (scmSource.isFailed() && scmSource.getResult().status === 404) {

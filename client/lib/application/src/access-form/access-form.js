@@ -14,6 +14,7 @@ class AccessForm extends BaseView {
     constructor(props) {
         props.className = 'accessForm';
         props.stores = {
+            user: props.globalFlux.getStore('user'),
             mint: props.flux.getStore('mint'),
             essentials: props.flux.getStore('essentials'),
             kio: props.flux.getStore('kio')
@@ -78,7 +79,8 @@ class AccessForm extends BaseView {
         .catch(e => {
             this
             .props
-            .notificationActions
+            .globalFlux
+            .getActions('notification')
             .addNotification(
                 'Could not save access control configuration for ' + applicationId + '. ' + e.message,
                 'error');
@@ -89,10 +91,16 @@ class AccessForm extends BaseView {
      * Makes new data available to templates.
      */
     update() {
-        let scopes = this.stores.essentials.getAllScopes();
+        let scopes = this.stores.essentials.getAllScopes(),
+            application = this.stores.kio.getApplication(this.props.applicationId);
+
         this.data = {
+            application: application,
             applicationId: this.props.applicationId,
-            application: this.stores.kio.getApplication(this.props.applicationId),
+            isOwnApplication: this.stores.user
+                                    .getUserTeams()
+                                    .map(team => team.id)
+                                    .some(id => application.team_id === id),
             ownerScopes: scopes.filter(s => s.is_resource_owner_scope),
             appScopes: scopes.filter(s => !s.is_resource_owner_scope),
             oauth: this.stores.mint.getOAuthConfig(this.props.applicationId)

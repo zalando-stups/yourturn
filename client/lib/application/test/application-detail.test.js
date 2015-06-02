@@ -4,6 +4,8 @@ import KioStore from 'common/src/data/kio/kio-store';
 import KioActions from 'common/src/data/kio/kio-actions';
 import TwintipStore from 'common/src/data/twintip/twintip-store';
 import TwintipActions from 'common/src/data/twintip/twintip-actions';
+import UserStore from 'common/src/data/user/user-store';
+import UserActions from 'common/src/data/user/user-actions';
 import Detail from 'application/src/application-detail/application-detail';
 
 const APP = 'kio',
@@ -22,15 +24,27 @@ class MockFlux extends Flummox {
     }
 }
 
+class GlobalFlux extends Flummox {
+    constructor() {
+        super();
+
+        this.createActions('user', UserActions);
+        this.createStore('user', UserStore, this);
+    }
+}
+
 describe('The application detail view', () => {
     var flux,
+        globalFlux,
         TEST_APP,
         detail;
 
     beforeEach(() => {
         flux = new MockFlux();
+        globalFlux = new GlobalFlux();
         detail = new Detail({
             flux: flux,
+            globalFlux: globalFlux,
             applicationId: ID
         });
         TEST_APP = {

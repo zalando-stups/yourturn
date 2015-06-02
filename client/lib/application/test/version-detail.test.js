@@ -4,6 +4,8 @@ import KioStore from 'common/src/data/kio/kio-store';
 import KioActions from 'common/src/data/kio/kio-actions';
 import PieroneStore from 'common/src/data/pierone/pierone-store';
 import PieroneActions from 'common/src/data/pierone/pierone-actions';
+import UserStore from 'common/src/data/user/user-store';
+import UserActions from 'common/src/data/user/user-actions';
 import Detail from 'application/src/version-detail/version-detail';
 
 const FLUX = 'kio',
@@ -33,15 +35,27 @@ class MockFlux extends Flummox {
     }
 }
 
+class GlobalFlux extends Flummox {
+    constructor() {
+        super();
+
+        this.createActions('user', UserActions);
+        this.createStore('user', UserStore, this);
+    }
+}
+
 describe('The version detail view', () => {
     var flux,
+        globalFlux,
         detail;
 
     beforeEach(() => {
         flux = new MockFlux();
+        globalFlux = new GlobalFlux();
         flux.getStore(FLUX).receiveApplicationVersion(TEST_VERSION);
         detail = new Detail({
             flux: flux,
+            globalFlux: globalFlux,
             applicationId: APP,
             versionId: VER
         });

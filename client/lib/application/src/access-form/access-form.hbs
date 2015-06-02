@@ -15,11 +15,10 @@
         <small>Activate credential distribution into these S3 buckets (<a href="http://docs.aws.amazon.com/AmazonS3/latest/dev/BucketRestrictions.html" data-external>Naming Conventions</a>):</small>
         <div data-action="editable-list"></div>
     </div>
-    
     <div class="btn-group">
         <button
             type="submit"
-            class="btn btn-primary">
+            class="btn btn-primary {{#unless isOwnApplication}}btn-disabled{{/unless}}">
             <i class="fa fa-save"></i> Save
         </button>
     </div>

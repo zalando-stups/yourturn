@@ -58,7 +58,7 @@ class AppRouter extends Router {
                 applicationId: applicationId,
                 versionId: versionId,
                 flux: APP_FLUX,
-                notificationActions: this.globalFlux.getActions('notification')
+                globalFlux: this.globalFlux
             }), MAIN_VIEW_ID);
         })
         .catch(e => puppeteer.show(Error(e), MAIN_VIEW_ID));
@@ -103,21 +103,39 @@ class AppRouter extends Router {
 
     editApplicationVersion(applicationId, versionId) {
         // we probably already have this app, so check
-        let promises = [],
-            version = KIO_STORE.getApplicationVersion(applicationId, versionId),
+        var promises = [],
+            that = this,
+            ver = KIO_STORE.getApplicationVersion(applicationId, versionId),
             app = KIO_STORE.getApplication(applicationId);
-
         if (!app) {
             promises.push(KIO_ACTIONS.fetchApplication(applicationId));
         }
-        if (!version) {
+        
+        if (!ver) {
             promises.push(KIO_ACTIONS.fetchApplicationVersion(applicationId, versionId));
         }
         KIO_ACTIONS.fetchApprovals(applicationId, versionId);
 
         Promise
         .all(promises)
-        .then(() => {
+        .then(function ([application, version]) {
+            if (!app) {
+                app = application;
+            }
+
+            let isOwnApplication = that.globalFlux
+                                        .getStore('user')
+                                        .getUserTeams()
+                                        .map(team => team.id)
+                                        .some(id => id === app.team_id);
+            if (!isOwnApplication) {
+                let error = new Error();
+                error.name = 'Forbidden';
+                error.message = 'You can only edit your own applications!';
+                error.status = 'u1F62D';
+                throw error;
+            }
+
             puppeteer.show(new VersionForm({
                 applicationId: applicationId,
                 versionId: versionId,
@@ -132,7 +150,19 @@ class AppRouter extends Router {
     editApplication(id) {
         KIO_ACTIONS
         .fetchApplication(id)
-        .then(() => {
+        .then(app => {
+            let isOwnApplication = this.globalFlux
+                                        .getStore('user')
+                                        .getUserTeams()
+                                        .map(team => team.id)
+                                        .some(id => id === app.team_id);
+            if (!isOwnApplication) {
+                let error = new Error();
+                error.name = 'Forbidden';
+                error.message = 'You can only edit your own applications!';
+                error.status = 'u1F62D';
+                throw error;
+            }
             puppeteer.show(new AppForm({
                 applicationId: id,
                 edit: true,
@@ -160,7 +190,7 @@ class AppRouter extends Router {
             puppeteer.show(new OAuthForm({
                 applicationId: id,
                 flux: APP_FLUX,
-                notificationActions: this.globalFlux.getActions('notification')
+                globalFlux: this.globalFlux
             }), MAIN_VIEW_ID);
         })
         .catch(e => puppeteer.show(Error(e), MAIN_VIEW_ID));
@@ -183,7 +213,7 @@ class AppRouter extends Router {
             puppeteer.show(new AccessForm({
                 applicationId: id,
                 flux: APP_FLUX,
-                notificationActions: this.globalFlux.getActions('notification')
+                globalFlux: this.globalFlux
             }), MAIN_VIEW_ID);
         })
         .catch(e => puppeteer.show(Error(e), MAIN_VIEW_ID));
@@ -202,7 +232,8 @@ class AppRouter extends Router {
 
         puppeteer.show(new Detail({
             applicationId: id,
-            flux: APP_FLUX
+            flux: APP_FLUX,
+            globalFlux: this.globalFlux
         }), MAIN_VIEW_ID);
     }
 
@@ -264,7 +295,8 @@ class AppRouter extends Router {
             puppeteer.show(new VersionDetail({
                 applicationId: id,
                 versionId: ver,
-                flux: APP_FLUX
+                flux: APP_FLUX,
+                globalFlux: this.globalFlux
             }), MAIN_VIEW_ID);
         });
     }

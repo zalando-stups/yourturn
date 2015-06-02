@@ -3,6 +3,8 @@ import {Flummox} from 'flummox';
 import KioStore from 'common/src/data/kio/kio-store';
 import KioActions from 'common/src/data/kio/kio-actions';
 import ApprovalForm from 'application/src/approval-form/approval-form';
+import UserStore from 'common/src/data/user/user-store';
+import UserActions from 'common/src/data/user/user-actions';
 
 const FLUX = 'kio',
     APP_ID = 'kio',
@@ -31,14 +33,26 @@ class MockFlux extends Flummox {
     }
 }
 
+class GlobalFlux extends Flummox {
+    constructor() {
+        super();
+
+        this.createActions('user', UserActions);
+        this.createStore('user', UserStore, this);
+    }
+}
+
 describe('The approval form view', () => {
     var flux,
+        globalFlux,
         form;
 
     beforeEach(() => {
         flux = new MockFlux();
+        globalFlux = new GlobalFlux();
         form = new ApprovalForm({
             flux: flux,
+            globalFlux: globalFlux,
             applicationId: APP_ID,
             versionId: VER_ID
         });
@@ -73,5 +87,4 @@ describe('The approval form view', () => {
         let $explanation = form.$el.find('[data-block="approvalType-explanation"]');
         expect($explanation.attr('style')).to.equal('display: none;');
     });
-
 });

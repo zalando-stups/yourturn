@@ -6,6 +6,8 @@ import MintStore from 'common/src/data/mint/mint-store';
 import MintActions from 'common/src/data/mint/mint-actions';
 import EssentialsStore from 'common/src/data/essentials/essentials-store';
 import EssentialsActions from 'common/src/data/essentials/essentials-actions';
+import UserStore from 'common/src/data/user/user-store';
+import UserActions from 'common/src/data/user/user-actions';
 import OAuthForm from 'application/src/oauth-form/oauth-form';
 
 const MOCK_KIO = {
@@ -41,18 +43,30 @@ class MockFlux extends Flummox {
     }
 }
 
+class GlobalFlux extends Flummox {
+    constructor() {
+        super();
+
+        this.createActions('user', UserActions);
+        this.createStore('user', UserStore, this);
+    }
+}
+
 describe('The oauth form view', () => {
     var flux,
+        globalFlux,
         actionSpy,
         form;
 
     beforeEach(() => {
         flux = new MockFlux();
+        globalFlux = new GlobalFlux();
         actionSpy = sinon.stub(flux.getActions('mint'), 'saveOAuthConfig', () => {
             return Promise.resolve();
         });
         form = new OAuthForm({
             flux: flux,
+            globalFlux: globalFlux,
             applicationId: 'kio'
         });
     });
