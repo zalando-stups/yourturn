@@ -110,7 +110,7 @@ class AppRouter extends Router {
         if (!app) {
             promises.push(KIO_ACTIONS.fetchApplication(applicationId));
         }
-        
+
         if (!ver) {
             promises.push(KIO_ACTIONS.fetchApplicationVersion(applicationId, versionId));
         }
@@ -118,7 +118,7 @@ class AppRouter extends Router {
 
         Promise
         .all(promises)
-        .then(function ([application, version]) {
+        .then(function ([application]) {
             if (!app) {
                 app = application;
             }
@@ -155,7 +155,7 @@ class AppRouter extends Router {
                                         .getStore('user')
                                         .getUserTeams()
                                         .map(team => team.id)
-                                        .some(id => id === app.team_id);
+                                        .some(team_id => team_id === app.team_id);
             if (!isOwnApplication) {
                 let error = new Error();
                 error.name = 'Forbidden';
