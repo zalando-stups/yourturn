@@ -45,4 +45,17 @@ describe('The fullstop store', () => {
         let violations = store.getViolations();
         expect(violations.length).to.equal(1);
     });
+
+    it('should return a single violation', () => {
+        store.receiveViolations([VIOLATION]);
+        let violation = store.getViolation(VIOLATION.id);
+        expect(violation).to.be.ok;
+    });
+
+    it('should exchange an existing violation', () => {
+        store.receiveViolations([VIOLATION]);
+        store.receiveViolation(VIOLATION);
+        let violations = store.getViolations();
+        expect(violations.length).to.equal(1);
+    });
 });

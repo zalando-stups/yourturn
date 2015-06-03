@@ -23,5 +23,10 @@ describe('The fullstop actions', () => {
             mitm.on('request', assertOAuthHeader);
             actions.fetchViolations([]);
         });
+
+        it('#resolveViolation', () => {
+            mitm.on('request', assertOAuthHeader);
+            actions.resolveViolation(1, {});
+        });
     });
 });

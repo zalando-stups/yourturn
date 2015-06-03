@@ -15,6 +15,28 @@ class FullstopActions extends Actions {
                 .exec(saveRoute)
                 .then(res => res.body);
     }
+
+    fetchViolation(violationId) {
+        return request
+                .get(`${FULLSTOP_BASE_URL}/violations/${violationId}`)
+                .accept('json')
+                .oauth(Provider, RequestConfig)
+                .exec(saveRoute)
+                .then(res => res.body);
+    }
+
+    resolveViolation(violationId, comment) {
+        return request
+                .post(`${FULLSTOP_BASE_URL}/violations/${violationId}/resolve`)
+                .accept('json')
+                .type('json')
+                .send({
+                    comment: comment
+                })
+                .oauth(Provider, RequestConfig)
+                .exec(saveRoute)
+                .then(() => this.fetchViolation(violationId));
+    }
 }
 
 export default FullstopActions;
