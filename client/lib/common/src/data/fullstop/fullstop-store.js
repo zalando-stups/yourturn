@@ -57,7 +57,7 @@ class FullstopStore extends Store {
     }
 
     getViolations(accounts, checked) {
-        let violations = _m.filter(v => accounts ? accounts.indexOf(v.get('accountId')) >= 0 : true,
+        let violations = _m.filter(v => accounts ? accounts.indexOf(_m.get(v, 'accountId')) >= 0 : true,
                                    this.state.violations);
         if (checked !== undefined) {
             violations = _m.filter(v => _m.get(v, 'checked') === checked, violations);

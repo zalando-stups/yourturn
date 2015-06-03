@@ -18,7 +18,9 @@ class ViolationRouter extends Router {
     }
 
     listViolations() {
-        VIO_ACTIONS.fetchViolations();
+        let accountIds = this.globalFlux.getStore('user').getUserCloudAccounts().map(a => a.id);
+        console.log(this.globalFlux.getStore('user').getUserCloudAccounts());
+        VIO_ACTIONS.fetchViolations(accountIds);
         puppeteer.show(new ViolationList({
             flux: VIO_FLUX,
             globalFlux: this.globalFlux

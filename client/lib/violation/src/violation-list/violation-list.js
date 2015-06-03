@@ -66,8 +66,9 @@ class ViolationList extends BaseView {
     }
 
     update() {
-        let uncheckedViolations = this.stores.fullstop.getViolations(undefined, false),
-            checkedViolations = this.stores.fullstop.getViolations(undefined, true);
+        let accountIds = this.stores.user.getUserCloudAccounts().map(a => a.id),
+            uncheckedViolations = this.stores.fullstop.getViolations(accountIds, false),
+            checkedViolations = this.stores.fullstop.getViolations(accountIds, true);
         this.data = {
             violations: this.state.showingChecked ? checkedViolations : uncheckedViolations,
             uncheckedViolations: uncheckedViolations,
