@@ -6,9 +6,11 @@
 {{#each violations}}
 <div class="violation">
     <header>
-        Account <strong>{{this.accountId}}</strong> Region <strong>{{this.region}}</strong>
+        In <strong>{{this.region}}</strong> of account <strong>{{this.accountId}}</strong> 
     </header>
-    <blockquote>{{this.message}}</blockquote>
+    <blockquote>
+        {{this.message}}
+    </blockquote>
     <footer>
         {{#if checked}}
             {{comment}}

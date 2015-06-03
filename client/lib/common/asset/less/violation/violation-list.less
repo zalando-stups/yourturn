@@ -7,6 +7,23 @@
         border: 1px solid @red;
         border-radius: @border-radius;
         border-left: 10px solid @red;
+        strong {
+            color: @gray;
+        }
+        blockquote {
+            margin-top: @padding-small;
+            margin-bottom: @padding-small;
+            font-family: 'Monaco', monospace;
+            font-size: .8em;
+            &:before {
+                content: '\f10d';
+                font-family: 'FontAwesome';
+                display: inline-block;
+                margin-left: -30px;
+                font-size: 1.25em;
+                color: @gray-lighter;
+            }
+        }
         + .violation {
             margin-top: @padding-small;
         }
