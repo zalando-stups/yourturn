@@ -6,13 +6,38 @@ class ViolationList extends BaseView {
     constructor(props) {
         props.className = 'violationList';
         props.events = {
-            'submit form': 'resolveViolation'
+            'submit form': 'resolveViolation',
+            'click [data-action="show-checked"]': 'showChecked',
+            'click [data-action="show-unchecked"]': 'showUnchecked',
         };
         props.stores = {
             fullstop: props.flux.getStore('fullstop'),
             user: props.globalFlux.getStore('user')
         };
         super(props);
+        this.state = {
+            showingChecked: false
+        };
+    }
+
+    showChecked() {
+        if (this.state.showingChecked) {
+            // nothing to do
+            return;
+        }
+        this.state.showingChecked = true;
+        this.update();
+        this.render();
+    }
+
+    showUnchecked() {
+        if (!this.state.showingChecked) {
+            // nothing to do
+            return;
+        }
+        this.state.showingChecked = false;
+        this.update();
+        this.render();
     }
 
     resolveViolation(evt) {
@@ -26,12 +51,20 @@ class ViolationList extends BaseView {
         .props
         .flux
         .getActions('fullstop')
-        .resolveViolation(violationId, comment);
+        .resolveViolation(
+            violationId,
+            this.stores.fullstop.getViolation(violationId),
+            comment);
     }
 
     update() {
+        let uncheckedViolations = this.stores.fullstop.getViolations(undefined, false),
+            checkedViolations = this.stores.fullstop.getViolations(undefined, true);
         this.data = {
-            violations: this.stores.fullstop.getViolations()
+            violations: this.state.showingChecked ? checkedViolations : uncheckedViolations,
+            uncheckedViolations: uncheckedViolations,
+            checkedViolations: checkedViolations,
+            showingChecked: this.state.showingChecked
         };
     }
 

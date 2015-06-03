@@ -2,7 +2,18 @@
 <div class="u-info">
     Violations of the STUPS policy and bad practices in accounts you have access to.
 </div>
-<small>Showing {{violations.length}} violations:</small>
+<div class="tabs">
+    <div
+        data-action="show-unchecked"
+        class="tab {{#unless showingChecked}}is-active{{/unless}}">
+        Unresolved <span class="badge">{{uncheckedViolations.length}}</span>
+    </div>
+    <div
+        data-action="show-checked"
+        class="tab {{#if showingChecked}}is-active{{/if}}">
+        Resolved <span class="badge">{{checkedViolations.length}}</span>
+    </div>
+</div>
 {{#each violations}}
 <div class="violation">
     <header>
@@ -13,8 +24,7 @@
     </blockquote>
     <footer>
         {{#if checked}}
-            <!-- does not work because not re-fetched -->
-            <span>{{lastModifiedBy}} ({{{relativeDate lastModified}}}):</span>
+            <span><i class="fa fa-fw fa-user"></i> {{lastModifiedBy}} ({{{relativeDate lastModified}}}):</span>
             <blockquote class="violation-explanationMessage">{{comment}}</blockquote>
         {{else}}
             <form class="form" data-violation-id="{{this.id}}">

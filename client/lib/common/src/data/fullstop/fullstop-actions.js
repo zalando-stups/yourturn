@@ -25,14 +25,14 @@ class FullstopActions extends Actions {
                 .then(res => res.body);
     }
 
-    resolveViolation(violationId, comment) {
+    resolveViolation(violationId, violation, comment) {
+        violation.checked = true;
+        violation.comment = comment;
         return request
-                .post(`${FULLSTOP_BASE_URL}/violations/${violationId}/resolve`)
+                .put(`${FULLSTOP_BASE_URL}/violations/${violationId}`)
                 .accept('json')
                 .type('json')
-                .send({
-                    comment: comment
-                })
+                .send(violation)
                 .oauth(Provider, RequestConfig)
                 .exec(saveRoute)
                 .then(() => this.fetchViolation(violationId));

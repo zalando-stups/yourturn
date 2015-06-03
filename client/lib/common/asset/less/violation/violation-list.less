@@ -2,12 +2,18 @@
 
 .violationList {
     max-width: @content-width-regular;
+    .tabs {
+        margin-bottom: @padding-small;
+    }
     .violation {
         padding: @padding-small;
         border: 1px solid @red;
         border-radius: @border-radius;
         border-left: 10px solid @red;
         strong {
+            color: @gray;
+        }
+        .fa-user {
             color: @gray;
         }
         .violation-violationMessage {

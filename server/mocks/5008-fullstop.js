@@ -15,10 +15,15 @@ server.use(function(req, res, next) {
 
 server.get('/violations', function(req, res) {
     setTimeout(function() {
+        var all = VIOLATIONS;
+        if (req.query.checked) {
+            var checked = req.query.checked === 'true';
+            all = all.filter(function(v) { return v.checked === checked; });
+        }
         res
             .status(200)
             .type('json')
-            .send(VIOLATIONS);
+            .send(all);
     }, Math.random() * 2000);
 });
 
@@ -35,7 +40,7 @@ server.get('/violations/:violationId', function(req, res) {
     res.status(200).type('json').send(violation[0]);
 });
 
-server.post('/violations/:violationId/resolve', function(req, res) {
+server.put('/violations/:violationId', function(req, res) {
     var violationId = parseInt(req.params.violationId, 10),
         violation = VIOLATIONS
                         .filter(function(v) {

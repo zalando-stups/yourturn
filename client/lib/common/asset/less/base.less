@@ -84,6 +84,34 @@ ul {
     line-height: inherit;
 }
 
+.tabs {
+    @tab-border: @gray-light;
+    border-bottom: 1px solid @tab-border;
+    .tab {
+        cursor: pointer;
+        position: relative;
+        top: 1px;
+        background: @white;
+        display: inline-block;
+        border: 1px solid @tab-border;
+        border-bottom: 0;
+        padding: @padding-tiniest @padding-tiny;
+        &:first-child {
+            margin-left: @padding-small;
+        }
+        &.is-active {
+            border-bottom: 1px solid @white;
+        }
+        &:not(.is-active) {
+            color: @gray;
+            border-color: @gray-lighter;
+        }
+        &:hover {
+            background-color: @gray-lighter;
+        }
+    }
+}
+
 .badge {
     border: 2px solid currentColor;
     border-radius: 100%;
