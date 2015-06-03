@@ -3,24 +3,24 @@ var express = require('express'),
 
 var user = {
     npiccolotto: [{
-        id: "stups",
-        infrastructure-accounts: [
+        id: 'stups',
+        'infrastructure-accounts': [
           {
-            id: "12345678910",
-            type: "aws"
+            id: '123456789',
+            type: 'aws'
           }
         ],
-        name: "stups"
+        name: 'stups'
       },
       {
-        id: "greendale",
-        infrastructure-accounts: [
+        id: 'greendale',
+        'infrastructure-accounts': [
           {
-            id: "10987654321",
-            type: "aws"
+            id: '10987654321',
+            type: 'aws'
           }
         ],
-        name: "greendale"
+        name: 'greendale'
     }]
 };
 

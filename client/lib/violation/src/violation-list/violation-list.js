@@ -3,12 +3,12 @@ import BaseView from 'common/src/base-view';
 import Template from './violation-list.hbs';
 import 'common/asset/less/violation/violation-list.less';
 
-import moment from 'moment';
-import 'pickadate/lib/picker.date';
-import 'pickadate/lib/picker.time';
-import 'pickadate/lib/themes/classic.css';
-import 'pickadate/lib/themes/classic.date.css';
-import 'pickadate/lib/themes/classic.time.css';
+// import moment from 'moment';
+// import 'pickadate/lib/picker.date';
+// import 'pickadate/lib/picker.time';
+// import 'pickadate/lib/themes/classic.css';
+// import 'pickadate/lib/themes/classic.date.css';
+// import 'pickadate/lib/themes/classic.time.css';
 
 class ViolationList extends BaseView {
     constructor(props) {
