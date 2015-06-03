@@ -19,27 +19,6 @@ server.get('/violations', function(req, res) {
     }, Math.random() * 2000);
 });
 
-server.get('/teams/:team/artifacts/:artifact/tags/:tag/scm-source', function(req, res) {
-    setTimeout(function() {
-        if (req.params.team === 'stups' &&
-            req.params.artifact === 'kio' &&
-            req.params.tag === '1') {
-            return res
-                    .status(200)
-                    .type('json')
-                    .send(scmSource);
-        }
-        res.status(404).send();
-    }, Math.random() * 2000);
-});
 
-server.get('/v1/search', function(req,res) {
-    res
-        .type('json')
-        .status(200)
-        .send({
-            results: images
-        });
-});
 
 module.exports = server;
