@@ -19,7 +19,6 @@ module.exports = {
         new webpack.HotModuleReplacementPlugin(),
         new webpack.NormalModuleReplacementPlugin(/^underscore$/, 'common/src/lodash.custom'),
         new webpack.NormalModuleReplacementPlugin(/^lodash$/, 'common/src/lodash.custom'),
-        new webpack.NormalModuleReplacementPlugin(/^picker$/, 'pickadate/lib/picker'),
         new webpack.NoErrorsPlugin(),
         new webpack.DefinePlugin({
             ENV_DEVELOPMENT: true,
