@@ -24,7 +24,7 @@
     </blockquote>
     <footer>
         {{#if checked}}
-            <span><i class="fa fa-fw fa-user"></i> {{lastModifiedBy}} ({{{relativeDate lastModified}}}):</span>
+            <span>{{lastModifiedBy}} ({{{relativeDate lastModified}}}):</span>
             <blockquote class="violation-explanationMessage">{{comment}}</blockquote>
         {{else}}
             <form class="form" data-violation-id="{{this.id}}">
