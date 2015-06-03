@@ -19,6 +19,7 @@ module.exports = {
         new webpack.HotModuleReplacementPlugin(),
         new webpack.NormalModuleReplacementPlugin(/^underscore$/, 'common/src/lodash.custom'),
         new webpack.NormalModuleReplacementPlugin(/^lodash$/, 'common/src/lodash.custom'),
+        new webpack.NormalModuleReplacementPlugin(/^picker$/, 'pickadate/lib/picker'),
         new webpack.NoErrorsPlugin(),
         new webpack.DefinePlugin({
             ENV_DEVELOPMENT: true,
@@ -26,7 +27,7 @@ module.exports = {
         })
     ],
     resolve: {
-        extensions: ['', '.js', '.less'],
+        extensions: ['', '.js', '.css', '.less'],
         alias: {
             common: path.resolve(__dirname, './lib/common/'),
             yourturn: path.resolve(__dirname, './lib/yourturn/'),
@@ -56,6 +57,7 @@ module.exports = {
             { test: /\.hbs$/, exclude: /node_modules/, loader: 'handlebars?helperDirs[]=' + __dirname + '/lib/common/src/handlebars' },
             { test: /\.js$/, exclude: /node_modules/, loader: 'babel' },
             { test: /\.less$/, exclude: /node_modules/, loaders: ['style', 'css', 'autoprefixer', 'less'] },
+            { test: /\.css$/, loaders: ['style', 'css'] },
             { test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,   loader: 'url?limit=8192&mimetype=application/font-woff' },
             { test: /\.(png|jpg|jpeg|gif)$/, loaders: ['url?limit=8192', 'img']}
         ]
