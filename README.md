@@ -1,8 +1,8 @@
 # yourturn
 
-[![Join the chat at https://gitter.im/zalando-stups/yourturn](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/zalando-stups/yourturn?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
 [![Build Status](https://travis-ci.org/zalando-stups/yourturn.svg?branch=master)](https://travis-ci.org/zalando-stups/yourturn) [![Coverage Status](https://coveralls.io/repos/zalando-stups/yourturn/badge.svg?branch=master)](https://coveralls.io/r/zalando-stups/yourturn?branch=master)
+
+[![Join the chat at https://gitter.im/zalando-stups/yourturn](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/zalando-stups/yourturn?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 This is the Zalando Developer Console.
 
