@@ -56,11 +56,11 @@ class FullstopStore extends Store {
         return _m.toJs(_m.first(_m.filter(v => _m.get(v, 'id') === violationId, coll)));
     }
 
-    getViolations(accounts, checked) {
+    getViolations(accounts, resolved) {
         let violations = _m.filter(v => accounts ? accounts.indexOf(_m.get(v, 'accountId')) >= 0 : true,
                                    this.state.violations);
-        if (checked !== undefined) {
-            violations = _m.filter(v => _m.get(v, 'checked') === checked, violations);
+        if (resolved !== undefined) {
+            violations = _m.filter(v => _m.get(v, 'resolved') === resolved, violations);
         }
         violations = _m.sortBy(v => _m.get(v, 'created'), violations);
         return _m.toJs(violations);

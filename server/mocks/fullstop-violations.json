@@ -11,8 +11,7 @@
         "region": "eu-central-1",
         "message": "Instances with ids: [\"i-847167136\"] was started with wrong images: [ami-38efd225]",
         "violationObject": null,
-        "comment": null,
-        "checked": false
+        "resolved": false
     },
     {
         "id": 7,
@@ -26,8 +25,7 @@
         "region": "eu-central-1",
         "message": "InstanceId: i-847167136 doesn't have any userData.",
         "violationObject": null,
-        "comment": null,
-        "checked": false
+        "resolved": false
     },
     {
         "id": 8,
@@ -41,8 +39,7 @@
         "region": "eu-central-1",
         "message": "KeyPair must be blank, but was [\"app-pierone\"]",
         "violationObject": null,
-        "comment": null,
-        "checked": false
+        "resolved": false
     },
     {
         "id": 9,
@@ -56,8 +53,7 @@
         "region": "eu-west-1",
         "message": "The instance ID 'i-asdfasdf' does not exist (Service: AmazonEC2; Status Code: 400; Error Code: InvalidInstanceID.NotFound; Request ID: 1aef97da-d063-4398-83da-4db3f6ce751b)",
         "violationObject": null,
-        "comment": null,
-        "checked": false
+        "resolved": false
     },
     {
         "id": 10,
@@ -71,8 +67,7 @@
         "region": "eu-west-1",
         "message": "InstanceId: i-asdfasdf doesn't have any userData.",
         "violationObject": null,
-        "comment": null,
-        "checked": false
+        "resolved": false
     },
     {
         "id": 11,
@@ -86,8 +81,7 @@
         "region": "eu-west-1",
         "message": "The instance ID 'i-8580asdf' does not exist (Service: AmazonEC2; Status Code: 400; Error Code: InvalidInstanceID.NotFound; Request ID: 4276467a-0e6e-4ac4-9190-d2a2f10b652a)",
         "violationObject": null,
-        "comment": null,
-        "checked": false
+        "resolved": false
     },
     {
         "id": 12,
@@ -101,8 +95,7 @@
         "region": "eu-west-1",
         "message": "InstanceId: i-8580asdf doesn't have any userData.",
         "violationObject": null,
-        "comment": null,
-        "checked": false
+        "resolved": false
     },
     {
         "id": 13,
@@ -116,8 +109,7 @@
         "region": "eu-west-1",
         "message": "The instance ID 'i-dodfasddfa' does not exist (Service: AmazonEC2; Status Code: 400; Error Code: InvalidInstanceID.NotFound; Request ID: 76c4d888-caa2-4e9b-afdc-bb5e0d05c4ec)",
         "violationObject": null,
-        "comment": null,
-        "checked": false
+        "resolved": false
     },
     {
         "id": 14,
@@ -131,7 +123,6 @@
         "region": "eu-west-1",
         "message": "Instances with ids: [\"i-dodfasddfa\"] was started with wrong images: [ami-asdfasdf]",
         "violationObject": null,
-        "comment": null,
-        "checked": false
+        "resolved": false
     }
 ]

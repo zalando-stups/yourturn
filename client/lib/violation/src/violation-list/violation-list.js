@@ -8,8 +8,8 @@ class ViolationList extends BaseView {
         props.className = 'violationList';
         props.events = {
             'submit form': 'resolveViolation',
-            'click [data-action="show-checked"]': 'showChecked',
-            'click [data-action="show-unchecked"]': 'showUnchecked',
+            'click [data-action="show-resolved"]': 'showResolved',
+            'click [data-action="show-unresolved"]': 'showUnresolved',
         };
         props.stores = {
             fullstop: props.flux.getStore('fullstop'),
@@ -17,26 +17,26 @@ class ViolationList extends BaseView {
         };
         super(props);
         this.state = {
-            showingChecked: false
+            showingResolved: false
         };
     }
 
-    showChecked() {
-        if (this.state.showingChecked) {
+    showResolved() {
+        if (this.state.showingResolved) {
             // nothing to do
             return;
         }
-        this.state.showingChecked = true;
+        this.state.showingResolved = true;
         this.update();
         this.render();
     }
 
-    showUnchecked() {
-        if (!this.state.showingChecked) {
+    showUnresolved() {
+        if (!this.state.showingResolved) {
             // nothing to do
             return;
         }
-        this.state.showingChecked = false;
+        this.state.showingResolved = false;
         this.update();
         this.render();
     }
@@ -45,7 +45,7 @@ class ViolationList extends BaseView {
         evt.preventDefault();
         let {$el} = this,
             $form = $el.find(evt.target),
-            comment = $form.find('input').val(),
+            message = $form.find('input').val(),
             violationId = parseInt($form.attr('data-violation-id'), 10);
 
         this
@@ -54,19 +54,18 @@ class ViolationList extends BaseView {
         .getActions('fullstop')
         .resolveViolation(
             violationId,
-            this.stores.fullstop.getViolation(violationId),
-            comment);
+            message);
     }
 
     update() {
         let accountIds = this.stores.user.getUserCloudAccounts().map(a => a.id),
-            uncheckedViolations = this.stores.fullstop.getViolations(accountIds, false),
-            checkedViolations = this.stores.fullstop.getViolations(accountIds, true);
+            unresolvedViolations = this.stores.fullstop.getViolations(accountIds, false),
+            resolvedViolations = this.stores.fullstop.getViolations(accountIds, true);
         this.data = {
-            violations: this.state.showingChecked ? checkedViolations : uncheckedViolations,
-            uncheckedViolations: uncheckedViolations,
-            checkedViolations: checkedViolations,
-            showingChecked: this.state.showingChecked
+            violations: this.state.showingResolved ? resolvedViolations : unresolvedViolations,
+            unresolvedViolations: unresolvedViolations,
+            resolvedViolations: resolvedViolations,
+            showingResolved: this.state.showingResolved
         };
     }
 

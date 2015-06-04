@@ -5,14 +5,14 @@
 
 <div class="tabs">
     <div
-        data-action="show-unchecked"
-        class="tab {{#unless showingChecked}}is-active{{/unless}}">
-        Unresolved <span class="badge">{{uncheckedViolations.length}}</span>
+        data-action="show-unresolved"
+        class="tab {{#unless showingResolved}}is-active{{/unless}}">
+        Unresolved <span class="badge">{{unresolvedViolations.length}}</span>
     </div>
     <div
-        data-action="show-checked"
-        class="tab {{#if showingChecked}}is-active{{/if}}">
-        Resolved <span class="badge">{{checkedViolations.length}}</span>
+        data-action="show-resolved"
+        class="tab {{#if showingResolved}}is-active{{/if}}">
+        Resolved <span class="badge">{{resolvedViolations.length}}</span>
     </div>
 </div>
 {{#if violations.length}}
@@ -25,9 +25,9 @@
             {{message}}
         </blockquote>
         <footer>
-            {{#if checked}}
-                <span>{{lastModifiedBy}} ({{{relativeDate lastModified}}}):</span>
-                <blockquote class="violation-explanationMessage">{{comment}}</blockquote>
+            {{#if resolved}}
+                <span>{{resolution.user}} ({{{relativeDate resolution.timestamp}}}):</span>
+                <blockquote class="violation-resolutionMessage">{{resolution.message}}</blockquote>
             {{else}}
                 <form class="form" data-violation-id="{{this.id}}">
                     <div class="input-group">

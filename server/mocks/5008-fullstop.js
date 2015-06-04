@@ -40,7 +40,7 @@ server.get('/violations/:violationId', function(req, res) {
     res.status(200).type('json').send(violation[0]);
 });
 
-server.put('/violations/:violationId', function(req, res) {
+server.post('/violations/:violationId/resolution', function(req, res) {
     var violationId = parseInt(req.params.violationId, 10),
         violation = VIOLATIONS
                         .filter(function(v) {
@@ -55,10 +55,13 @@ server.put('/violations/:violationId', function(req, res) {
                     .filter(function(v) {
                         return v.id !== violationId;
                     });
-    violation[0].lastModifiedBy = 'npiccolotto';
-    violation[0].lastModified = '2015-05-28T16:30:00Z';
-    violation[0].checked = true;
-    violation[0].comment = req.body.comment;
+    violation[0].resolved = true;
+    violation[0].resolution = {
+        message: req.body.message,
+        user: 'npiccolotto',
+        timestamp: '2015-05-28T16:30:00Z'
+    };
+
     // add new
     VIOLATIONS = VIOLATIONS.concat(violation);
     res.status(200).send();

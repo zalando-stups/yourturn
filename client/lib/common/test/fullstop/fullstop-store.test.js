@@ -15,8 +15,7 @@ const VIOLATION = {
         'region': 'eu-west-1',
         'message': 'InstanceId: i-id doesn\'t have any userData.',
         'violationObject': null,
-        'comment': null,
-        'checked': null
+        'resolved': false
     };
 
 class MockFlux extends Flummox {
