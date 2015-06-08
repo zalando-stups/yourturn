@@ -43,9 +43,6 @@ class ApplicationForm extends React.Component {
         .getActions('kio')
         .saveApplication(this.state.app.id, this.state.app)
         .then(() => {
-            // redirect
-            // we can't import the router directly because circular dependencies ensue
-            // and window.location is ugly and probably aborts the PUT request from before
             this.context.router.transitionTo(constructLocalUrl('application', [this.state.app.id]));
         })
         .catch(() => {
