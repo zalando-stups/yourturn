@@ -44,6 +44,7 @@ class CreateAppFormHandler extends React.Component {
                     connectToStores={['kio']}>
 
                     <ApplicationForm
+                        edit={false}
                         globalFlux={this.props.globalFlux} />
                 </FluxComponent>;
     }
