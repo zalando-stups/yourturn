@@ -1,8 +1,8 @@
 import React from 'react';
+import Timestamp from 'react-time';
 import request from 'common/src/superagent';
 import {Provider, RequestConfig, saveRoute} from 'common/src/oauth-provider';
 import 'common/asset/less/yourturn/sidebar.less';
-// {{#inPast tokeninfo.valid_until}}expired{{/inPast}}{{#inFuture tokeninfo.valid_until}}expires{{/inFuture}} {{{relativeDate tokeninfo.valid_until}}}
 
 class Sidebar extends React.Component {
     constructor(props) {
@@ -38,7 +38,11 @@ class Sidebar extends React.Component {
                                     <span>{tokeninfo.uid}</span>
                                 </div>
                                 <div className='tokenInfo'>
-                                    <div><small>OAuth Token </small>.</div>
+                                    <div>
+                                        <small>
+                                            OAuth Token {tokeninfo.valid_until < Date.now() ? 'expired' : 'expires'} <Timestamp value={tokeninfo.valid_until} relative={true} />.
+                                        </small>
+                                    </div>
                                     <div className='btn-group'>
                                         <button
                                             onClick={this.refresh.bind(this)}
