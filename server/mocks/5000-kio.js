@@ -12,7 +12,7 @@ var applications = {
         specification_url: 'https://github.com/zalando-stups/kio/issues',
         scm_url: 'https://github.com/zalando-stups/kio.git',
         service_url: 'http://localhost:5000/',
-        description: 'An application registry to manage application base information.',
+        description: '**An application registry to manage application base information.**',
         subtitle: 'STUPS application registry',
         name: 'Kio',
         active: true,
