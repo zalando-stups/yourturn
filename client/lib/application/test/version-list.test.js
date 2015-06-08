@@ -29,10 +29,10 @@ describe('The version list view', () => {
     });
 
     it('should not display a list without versions', () => {
-        expect(list.$el.find('ul').length).to.equal(0);
+        expect(list.$el.find('[data-block="versions"]').children().length).to.equal(0);
     });
 
-    it('should display a list of applications', () => {
+    it('should display a list of application versions', () => {
         flux
         .getStore(FLUX_ID)
         .receiveApplicationVersions([{
@@ -42,11 +42,10 @@ describe('The version list view', () => {
             id: 'many-squirrels',
             application_id: APP_ID
         }]);
-
         expect(list.$el.find('[data-block="versions"]').children().length).to.equal(2);
     });
 
-    it('should display a filtered list of applications', () => {
+    it('should display a filtered list of application versions', () => {
         flux
         .getStore(FLUX_ID)
         .receiveApplicationVersions([{

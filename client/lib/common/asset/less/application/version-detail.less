@@ -1,6 +1,7 @@
 @import "../variables";
 
 .versionDetail {
+    max-width: @content-width-regular;
     .versionDetail-versionId {
         color: @gray-light;
     }
@@ -13,22 +14,11 @@
     h1 {
         color: @gray-dark;
     }
-    table {
-        width: 100%;
-        th {
-            color: @gray;
-            text-align: left;
-        }
-        tr,
-        th {
-            vertical-align: top;
-        }
-    }
 
     .versionDetail-status {
-          padding: @padding-tiny;
-          border: 3px solid @gray-dark;
-          border-radius: 5px;
-          margin-right: @padding-small;
+        padding: @padding-tiny;
+        border: 3px solid @gray-dark;
+        border-radius: 5px;
+        margin-right: @padding-small;
     }
 }

@@ -29,7 +29,7 @@
     {{ app.subtitle }}
 </h4>
 
-<table>
+<table class="table">
     <tbody>
         <tr>
             <th>ID</th>
@@ -86,11 +86,24 @@
         <tr>
             <th>Recently updated versions</th>
             <td>
-                <ul>
-                {{#each versions}}
-                    <li><a href="/application/detail/{{../app.id}}/version/detail/{{this.id}}">{{this.id}}</a></li>            
-                {{/each}}
-                </ul>
+                {{#if versions}}
+                    {{#each versions}}
+                        <div>
+                            <a  title="Approve version {{this.id}}"
+                                class="btn btn-default btn-small"
+                                href="/application/detail/{{../app.id}}/version/approve/{{this.id}}">
+                                <i class="fa fa-check"></i>
+                            </a>
+                            <a href="/application/detail/{{../app.id}}/version/detail/{{this.id}}">
+                                {{this.id}}
+                            </a>
+                        </div>            
+                    {{/each}}
+                {{/if}}
+                <a  class="btn btn-default applicationDetail-newVersion"
+                    href="/application/detail/{{applicationId}}/version/create">
+                    <i class="fa fa-plus"></i> New version
+                </a>
             </td>
         </tr>
     </tbody>

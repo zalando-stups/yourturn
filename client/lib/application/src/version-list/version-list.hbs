@@ -38,13 +38,22 @@
 </div>
 
 {{#if versions.length}}
-    <ul data-block="versions">
+    <div
+        class="versionList-list"
+        data-block="versions">
         {{#each versions}}
-            <li>
-                <a href="/application/detail/{{this.application_id}}/version/detail/{{this.id}}">{{this.id}}</a>
-            </li>
+            <div>
+                <a  title="Approve version {{this.id}}"
+                    class="btn btn-default btn-small"
+                    href="/application/detail/{{this.application_id}}/version/approve/{{this.id}}">
+                    <i class="fa fa-check"></i>
+                </a>
+                <a href="/application/detail/{{this.application_id}}/version/detail/{{this.id}}">
+                    {{this.id}}
+                </a>
+            </div>
         {{/each}}
-    </ul>
+    </div>
 {{else}}
     No versions.
 {{/if}}
