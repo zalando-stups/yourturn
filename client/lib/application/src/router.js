@@ -141,7 +141,7 @@ class AppRouter extends Router {
                 versionId: versionId,
                 edit: true,
                 flux: APP_FLUX,
-                notificationActions: this.globalFlux.getActions('notification')
+                notificationActions: that.globalFlux.getActions('notification')
             }), MAIN_VIEW_ID);
         })
         .catch(e => puppeteer.show(Error(e), MAIN_VIEW_ID));
