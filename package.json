@@ -18,12 +18,15 @@
   "homepage": "https://github.com/zalando-stups/yourturn",
   "dependencies": {
     "backbone": "1.2.0",
+    "eslint-plugin-react": "^2.5.0",
     "flummox": "3.5.2",
     "jquery": "2.1.4",
     "moment": "2.10.3",
     "mori": "0.3.2",
     "oauth2-client-js": "0.0.14",
     "promise.prototype.finally": "1.0.1",
+    "react": "0.13.3",
+    "react-router": "0.13.3",
     "remarkable": "1.6.0",
     "superagent": "1.2.0",
     "superagent-oauth2-client": "0.0.17"
@@ -68,6 +71,7 @@
     "node-uuid": "1.4.3",
     "null-loader": "0.1.1",
     "raw-loader": "0.5.1",
+    "react-hot-loader": "^1.2.7",
     "sinon": "1.14.1",
     "style-loader": "0.12.2",
     "url-loader": "0.5.5",

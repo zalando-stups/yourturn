@@ -7,8 +7,10 @@ var webpack = require('webpack'),
 module.exports = {
     devtool: 'eval',
     entry: [
-        'webpack/hot/dev-server',
-        './lib/yourturn/src/bootstrap'   // entrypoint to resolve dependencies
+        /* react hot loader */
+        'webpack-dev-server/client?http://localhost:3000',
+        'webpack/hot/only-dev-server',
+        './lib/yourturn/src/bootstrap.jsx'   // entrypoint to resolve dependencies
     ],
     output: {
         path: __dirname + '/dist/',
@@ -26,7 +28,7 @@ module.exports = {
         })
     ],
     resolve: {
-        extensions: ['', '.js', '.less'],
+        extensions: ['', '.js', '.less', '.jsx'],
         alias: {
             common: path.resolve(__dirname, './lib/common/'),
             yourturn: path.resolve(__dirname, './lib/yourturn/'),
@@ -53,6 +55,7 @@ module.exports = {
         loaders: [
             { test: /\.hbs$/, exclude: /node_modules/, loader: 'handlebars?helperDirs[]=' + __dirname + '/lib/common/src/handlebars' },
             { test: /\.js$/, exclude: /node_modules/, loader: 'babel' },
+            { test: /\.jsx$/, exclude: /node_modules/, loaders: ['react-hot', 'babel'] },
             { test: /\.less$/, exclude: /node_modules/, loaders: ['style', 'css', 'autoprefixer', 'less'] },
             { test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,   loader: 'url?limit=8192&mimetype=application/font-woff' },
             { test: /\.(png|jpg|jpeg|gif)$/, loaders: ['url?limit=8192', 'img']}

@@ -14,7 +14,7 @@
             border-bottom: 1px solid @gray-light;
             cursor: pointer;
             padding: @padding-tiny;
-            &[data-notification-type="error"] {
+            &.type-error {
                 background-color: @red;
                 color: @white;
                 &:before {
@@ -24,7 +24,7 @@
                     margin-right: @padding-small;
                 }
             }
-            &[data-notification-type="default"] {
+            &.type-default {
                 background-color: @white;
                 color: @black;
             }

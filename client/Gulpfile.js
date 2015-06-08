@@ -107,7 +107,7 @@ gulp.task('scm-source', function(done) {
 // lints the source code using .eslintrc
 gulp.task('lint', function() {
     return gulp
-            .src(['lib/**/*.js', '!lib/common/src/lodash.custom.js'])
+            .src(['lib/**/*.js', 'lib/**/*.jsx', '!lib/common/src/lodash.custom.js'])
             .pipe(eslint())
             .pipe(eslint.format())
             .pipe(eslint.failAfterError());
