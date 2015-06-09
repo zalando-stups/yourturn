@@ -145,7 +145,7 @@ class ApplicationForm extends React.Component {
                             <small>The ID of the application.</small>
                             <div className='input-group'>
                                 <div className='input-addon'>
-                                    {this.state.appIdTaken ?
+                                    {this.state.appIdTaken && !edit ?
                                         <i  data-block='taken-symbol'
                                             title='App ID is already taken.'
                                             className='fa fa-close fa-fw is-taken'></i>
