@@ -27,13 +27,17 @@ class MintActions extends Actions {
     }
 
     saveOAuthConfig(applicationId, config) {
-        config.scopes = config.scopes && config.scopes.length ? config.scopes : undefined;
-        config.s3_buckets = config.s3_buckets && config.s3_buckets.length ? config.s3_buckets : undefined;
+        let configToSend = {
+            scopes: config.scopes && config.scopes.length ? config.scopes : undefined,
+            s3_buckets: config.s3_buckets && config.s3_buckets.length ? config.s3_buckets : undefined,
+            is_client_confidential: config.is_client_confidential,
+            redirect_url: config.redirect_url
+        };
         return request
                     .put(`${Services.mint.url}${Services.mint.root}/${applicationId}`)
                     .accept('json')
                     .type('json')
-                    .send(config)
+                    .send(configToSend)
                     .oauth(Provider, RequestConfig)
                     .exec(saveRoute)
                     .catch(e => {

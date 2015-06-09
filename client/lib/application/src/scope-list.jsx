@@ -15,24 +15,27 @@ class OwnerScopeList extends React.Component {
     componentWillReceiveProps(nextProps) {
         if (!this.state.term.length) {
             this.setState({
-                filtered: nextProps.scopes
+                filtered: nextProps.scopes,
+                selected: nextProps.selected
             });
         }
     }
 
     toggleSelection(scope, evt) {
-        let selected = _.findLastIndex(this.state.selected, s => s.id === scope.id && s.resource_type_id === scope.resource_type_id);
-        if (selected < 0) {
-            this.state.selected.push(scope);
-            this.setState({
-                selected: this.state.selected
-            });
+        let scopeToAdd = {
+                scope_id: scope.id,
+                resource_type_id: scope.resource_type_id
+            },
+            idx = _.findLastIndex(this.state.selected, scopeToAdd);
+
+        if (idx < 0) {
+            this.state.selected.push(scopeToAdd);
         } else {
-            this.state.selected.splice(selected, 1)
-            this.setState({
-                selected: this.state.selected
-            });
+            this.state.selected.splice(idx, 1);
         }
+        this.setState({
+            selected: this.state.selected
+        });
         this.props.onSelect(this.state.selected);
     }
 
@@ -75,9 +78,9 @@ class OwnerScopeList extends React.Component {
                                                 <div>
                                                     <label> 
                                                         <input
-                                                            defaultChecked={
+                                                            checked={
                                                                 selected.some(
-                                                                    s => s.id === scope.id &&
+                                                                    s => s.scope_id === scope.id &&
                                                                          s.resource_type_id === scope.resource_type_id)
                                                             }
                                                             onChange={this.toggleSelection.bind(this, scope)}

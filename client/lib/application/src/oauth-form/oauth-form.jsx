@@ -1,6 +1,6 @@
 import React from 'react';
 import OAuthSyncInfo from 'application/src/oauth-sync-info.jsx';
-import ScopeList from './scope-list.jsx';
+import ScopeList from 'application/src/scope-list.jsx';
 import {constructLocalUrl} from 'common/src/data/services';
 import 'common/asset/less/application/oauth-form.less';
 
@@ -15,10 +15,12 @@ class OAuthForm extends React.Component {
         };
         this._boundRender = this.forceUpdate.bind(this);
         this.stores.user.on('change', this._boundRender);
+        let oauthConfig = this.stores.mint.getOAuthConfig(props.applicationId);
         this.state = {
-            oauth: this.stores.mint.getOAuthConfig(props.applicationId)
+            scopes: oauthConfig.scopes,
+            redirectUrl: oauthConfig.redirect_url,
+            isClientConfidential: oauthConfig.is_client_confidential
         };
-        console.log(this.state.oauth);
     }
 
     componentWillUnmount() {
@@ -26,26 +28,20 @@ class OAuthForm extends React.Component {
     }
 
     updateScopes(selectedScopes) {
-        this.state.oauth.scopes = selectedScopes.map(s => ({
-                                                        id: s.id,
-                                                        resource_type_id: s.resource_type_id
-                                                    }));
         this.setState({
-            oauth: this.state.oauth  
+            scopes: selectedScopes
         });
     }
 
     updateConfidentiality(evt) {
-        this.state.oauth.is_client_confidential = !evt.target.checked;
         this.setState({
-            oauth: this.state.oauth
+            isClientConfidential: !evt.target.checked
         });
     }
 
     updateRedirectUrl(evt) {
-        this.state.oauth.redirect_url = evt.target.value;
         this.setState({
-            oauth: this.state.oauth
+            redirectUrl: evt.target.value
         });
     }
 
@@ -56,19 +52,18 @@ class OAuthForm extends React.Component {
         evt.preventDefault();
         let {applicationId} = this.props,
             scopes = this.stores.essentials.getAllScopes(),
-            ownerscopes = this.state.oauth.scopes,
+            ownerscopes = this.state.scopes,
             oauthConfig = this.stores.mint.getOAuthConfig(applicationId),
             appscopes = oauthConfig
                             .scopes
                             .filter(s => scopes.some(scp => scp.id === s.id && 
                                                             scp.resource_type_id === s.resource_type_id &&
                                                             !scp.is_resource_owner_scope ));
-        console.log(appscopes, ownerscopes);
+        
         oauthConfig.scopes = ownerscopes.concat(appscopes);
-        oauthConfig.redirect_url = this.state.oauth.redirect_url;
-        oauthConfig.is_client_confidential = this.state.oauth.is_client_confidential;
+        oauthConfig.redirect_url = this.state.redirectUrl;
+        oauthConfig.is_client_confidential = this.state.isClientConfidential;
 
-        console.log(oauthConfig);
         this
         .props
         .flux
@@ -91,13 +86,13 @@ class OAuthForm extends React.Component {
             {applicationId} = this.props,
             application = kio.getApplication(applicationId),
             isOwnApplication = user.getUserTeams().some(t => t.id === application.team_id),
-            scopes = essentials.getAllScopes().filter(s => s.is_resource_owner_scope),
+            allRoScopes = essentials.getAllScopes().filter(s => s.is_resource_owner_scope),
             oauth = mint.getOAuthConfig(applicationId);
 
         return  <div className='oAuthForm'>    
                     <h2><a href={`/application/detail/${application.id}`}>{application.name}</a> OAuth Client</h2>
                     <div className='btn-group'>
-                        <a href={`/application/detail/{application.id}`} className='btn btn-default'>
+                        <a href={`/application/detail/${application.id}`} className='btn btn-default'>
                             <i className='fa fa-chevron-left'></i> {application.name}
                         </a>
                     </div>
@@ -108,7 +103,7 @@ class OAuthForm extends React.Component {
                             <label htmlFor='oauth_redirect_url'>Redirect URL</label>
                             <small>Where you expect users to come back to after logging in.</small>
                             <input
-                                value={this.state.oauth.redirect_url}
+                                value={this.state.redirectUrl}
                                 onChange={this.updateRedirectUrl.bind(this)}
                                 id='oauth_redirect_url'
                                 name='yourturn_oauth_redirect_url'
@@ -117,7 +112,7 @@ class OAuthForm extends React.Component {
                         <div className='form-group'>
                             <label>
                                 <input
-                                    defaultChecked={this.state.oauth.is_client_confidential ? null : 'checked'}
+                                    defaultChecked={this.state.isClientConfidential ? null : 'checked'}
                                     onChange={this.updateConfidentiality.bind(this)}
                                     data-block='confidentiality-checkbox'
                                     id='oauth_is_client_non_confidential'
@@ -132,7 +127,7 @@ class OAuthForm extends React.Component {
                             <ScopeList
                                 onSelect={this.updateScopes.bind(this)}
                                 selected={oauth.scopes}
-                                scopes={scopes} />
+                                scopes={allRoScopes} />
                         </div>
                         
                         <div className='btn-group'>
