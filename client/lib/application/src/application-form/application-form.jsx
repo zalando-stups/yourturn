@@ -251,7 +251,8 @@ class ApplicationForm extends React.Component {
                                 name='yourturn_app_description'
                                 onChange={this.update.bind(this, 'description', 'value')}
                                 cols='30'
-                                rows='10'>{app.description}</textarea>
+                                defaultValue={app.description}
+                                rows='10' />
                         </div>
                         <div className='btn-group'>
                         <button
