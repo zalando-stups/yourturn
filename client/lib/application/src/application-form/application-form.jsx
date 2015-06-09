@@ -12,13 +12,14 @@ class ApplicationForm extends React.Component {
         };
         let {kio, user} = this.stores;
         this.state = {
-            autocompleteServiceUrl: true,
-            app: props.edit ?
-                    kio.getApplication(this.props.applicationId) :
-                    {
-                        team_id: user.getUserTeams()[0].id
-                    }
+            autocompleteServiceUrl: true
         };
+        if (props.edit) {
+            this.state.app = kio.getApplication(props.applicationId);
+            this.state.app.service_url = this.state.app.service_url.substring('http://'.length);
+        } else {
+            this.state.app = { team_id: user.getUserTeams()[0].id };
+        }
     }
 
     disableAutocomplete() {
@@ -70,16 +71,17 @@ class ApplicationForm extends React.Component {
     }
 
     render() {
-        let {edit} = this.props,
+        let {edit, applicationId} = this.props,
+            storeApp = this.stores.kio.getApplication(applicationId),
             {app} = this.state,
             teams = this.stores.user.getUserTeams();
         return  <div className='applicationForm'>
                     {edit ?
                         <div>
-                            <h2>Edit <a href={`/application/detail/${app.id}`}>{app.name}</a></h2>
+                            <h2>Edit <a href={`/application/detail/${applicationId}`}>{storeApp.name}</a></h2>
                             <div className='btn-group'>
-                                <a href={`/application/detail/${app.id}`} className='btn btn-default'>
-                                    <i className='fa fa-chevron-left'></i> {app.name}
+                                <a href={`/application/detail/${applicationId}`} className='btn btn-default'>
+                                    <i className='fa fa-chevron-left'></i> {storeApp.name}
                                 </a>
                             </div>
                         </div>

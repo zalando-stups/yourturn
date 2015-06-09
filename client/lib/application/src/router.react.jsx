@@ -55,6 +55,28 @@ CreateAppFormHandler.fetchData = function(state) {
 };
 
 
+class EditAppFormHandler extends React.Component {
+    constructor() {
+        super();
+    }
+
+    render() {
+        return  <FluxComponent
+                    flux={APP_FLUX}
+                    connectToStores={['kio']}>
+
+                    <ApplicationForm
+                        edit={true}
+                        applicationId={this.props.params.applicationId}
+                        globalFlux={this.props.globalFlux} />
+                </FluxComponent>;
+    }
+}
+EditAppFormHandler.fetchData = function(state) {
+    return KIO_ACTIONS.fetchApplication(state.params.applicationId);
+};
+
+
 class AppDetailHandler extends React.Component {
     constructor() {
         super();
@@ -95,6 +117,7 @@ const ROUTES =
         <Route path='/application'>
             <DefaultRoute handler={AppListHandler} />
             <Route path='create' handler={CreateAppFormHandler} />
+            <Route path='edit/:applicationId' handler={EditAppFormHandler} />
             <Route path='detail/:applicationId'>
                 <DefaultRoute handler={AppDetailHandler} />
             </Route>
