@@ -13,6 +13,7 @@ var apps = {
         last_modified: '2015-01-01T12:42:41Z',
         last_synced: '2015-01-03T12:42:41Z',
         has_problems: false,
+        is_client_confidential: false,
         redirect_url: 'http://example.com/oauth',
         s3_buckets: [
             'kio-stups-bucket'

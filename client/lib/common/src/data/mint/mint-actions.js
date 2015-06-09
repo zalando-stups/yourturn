@@ -11,9 +11,18 @@ class MintActions extends Actions {
                     .oauth(Provider, RequestConfig)
                     .exec(saveRoute)
                     .then(res => [applicationId, res.body])
-                    .catch(e => {
-                        e.id = applicationId;
-                        throw e;
+                    .catch(err => {
+                        if (err.status === 404) {
+                            let body = {
+                                scopes: [],
+                                s3_buckets: [],
+                                is_client_confidential: true,
+                                redirect_url: ''
+                            };
+                            return [applicationId, body];
+                        }
+                        err.id = applicationId;
+                        throw err;
                     });
     }
 

@@ -6,6 +6,7 @@ import Flux from './flux';
 import ApplicationList from './application-list/application-list.jsx';
 import ApplicationForm from './application-form/application-form.jsx';
 import ApplicationDetail from './application-detail/application-detail.jsx';
+import OAuthForm from './oauth-form/oauth-form.jsx';
 
 const APP_FLUX = new Flux(),
       MINT_ACTIONS = APP_FLUX.getActions('mint'),
@@ -98,8 +99,34 @@ AppDetailHandler.fetchData = function(state) {
     KIO_ACTIONS.fetchApplicationVersions(state.params.applicationId);
     APP_FLUX.getActions('twintip').fetchApi(state.params.applicationId);
 };
+
+
+class OAuthFormHandler extends React.Component {
+    constructor() {
+        super();
+    }
+
+    render() {
+        return <FluxComponent
+                    flux={APP_FLUX}
+                    connectToStores={['mint', 'essentials', 'kio']}>
+
+                    <OAuthForm
+                        applicationId={this.props.params.applicationId}
+                        globalFlux={this.props.globalFlux} />
+                </FluxComponent>;
+    }
+}
+OAuthFormHandler.fetchData = function(state) {
+    let id = state.params.applicationId;
+    APP_FLUX.getActions('essentials').fetchAllScopes();
+    if (!KIO_STORE.getApplication(id)) {
+        KIO_ACTIONS.fetchApplication(id);
+    }
+    return MINT_ACTIONS.fetchOAuthConfig(id);
+};
 /**
- *  <Route path='oauth/:id' handler={OAuthFormHandler} />
+ *  
     <Route path='access-control/:id' handler={AccessFormHandler} />
     <Route path='edit/:id' handler={AppFormHandler} />
     
@@ -118,6 +145,7 @@ const ROUTES =
             <DefaultRoute handler={AppListHandler} />
             <Route path='create' handler={CreateAppFormHandler} />
             <Route path='edit/:applicationId' handler={EditAppFormHandler} />
+            <Route path='oauth/:applicationId' handler={OAuthFormHandler} />
             <Route path='detail/:applicationId'>
                 <DefaultRoute handler={AppDetailHandler} />
             </Route>

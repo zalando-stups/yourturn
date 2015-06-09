@@ -37,17 +37,6 @@ class MintStore extends Store {
      * @param  {Error} err The error
      */
     failFetchOAuthConfig(err) {
-        if (err.status === 404) {
-            this.setState({
-                applications: _m.assoc(this.state.applications, err.id, _m.toClj({
-                                    scopes: [],
-                                    s3_buckets: [],
-                                    is_client_confidential: true,
-                                    redirect_url: ''
-                                }))
-            });
-            return;
-        }
         this.setState({
             applications: _m.assoc(this.state.applications, err.id, new Failed(err))
         });
