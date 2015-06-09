@@ -8,6 +8,7 @@ import ApplicationForm from './application-form/application-form.jsx';
 import ApplicationDetail from './application-detail/application-detail.jsx';
 import OAuthForm from './oauth-form/oauth-form.jsx';
 import AccessForm from './access-form/access-form.jsx';
+import VersionList from './version-list/version-list.jsx';
 
 const APP_FLUX = new Flux(),
       MINT_ACTIONS = APP_FLUX.getActions('mint'),
@@ -153,19 +154,36 @@ AccessFormHandler.fetchData = function(state) {
     return MINT_ACTIONS.fetchOAuthConfig(id);
 };
 
+
+class VersionListHandler extends React.Component {
+    constructor() {
+        super();
+    }
+
+    render() {
+        return <FluxComponent
+                    flux={APP_FLUX}
+                    connectToStores={['kio']}>
+
+                    <VersionList
+                        applicationId={this.props.params.applicationId} />
+                </FluxComponent>
+    }
+}
+VersionListHandler.fetchData = function(state) {
+    let id = state.params.applicationId;
+    KIO_ACTIONS.fetchApplicationVersions(id);
+    if (!KIO_STORE.getApplication(id)) {
+        KIO_ACTIONS.fetchApplication(id);
+    }
+};
+
+
 /**
- *  
-    
-    <Route path='edit/:id' handler={AppFormHandler} />
-    
-        <Route path=':id' handler={AppDetailHandler} />
-        <Route path=':id/version' handler={VersionListHandler}>
-            <Route path='create' handler={VersionFormHandler} />
-            <Route path='detail/:ver' handler={VersionDetailHandler} />
-            <Route path='edit/:ver' handler={VersionFormHandler} />
-            <Route path='approve/:ver' handler={ApprovalFormHandler} />
-        </Route>
-    </Route>
+    <Route path='create' handler={VersionFormHandler} />
+    <Route path='detail/:ver' handler={VersionDetailHandler} />
+    <Route path='edit/:ver' handler={VersionFormHandler} />
+    <Route path='approve/:ver' handler={ApprovalFormHandler} />
  */
 
 const ROUTES =
@@ -177,6 +195,7 @@ const ROUTES =
             <Route path='access-control/:applicationId' handler={AccessFormHandler} />
             <Route path='detail/:applicationId'>
                 <DefaultRoute handler={AppDetailHandler} />
+                <Route path='version' handler={VersionListHandler} />
             </Route>
         </Route>;
 
