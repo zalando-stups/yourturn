@@ -48,17 +48,16 @@ YT_FLUX
     .then(info => {
         YT_FLUX
             .getActions('user')
-            .fetchUserTeams(info.uid)
-            .then(() => {
-                router.run(
-                    (Handler, state) => {
-                        fetchData(state.routes, state)
-                        .then(() => 
-                            React.render(<Handler globalFlux={YT_FLUX} />,
-                                         document.getElementById(MAIN_VIEW_ID))
-                        );
-                    });
-            })
+            .fetchUserTeams(info.uid);
+    });
+
+router.run(
+    (Handler, state) => {
+        fetchData(state.routes, state)
+        .then(() => 
+            React.render(<Handler globalFlux={YT_FLUX} />,
+                         document.getElementById(MAIN_VIEW_ID))
+        );
     });
 
 /**

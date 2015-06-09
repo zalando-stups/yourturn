@@ -12,6 +12,13 @@ class ApplicationList extends React.Component {
         this.state = {
             term: ''
         };
+        // connect to user store in case teams are fetched after the other stuff
+        this._boundRender = this.forceUpdate.bind(this);
+        this.stores.user.on('change', this._boundRender);
+    }
+
+    componentWillUnmount() {
+        this.stores.user.off('change', this._boundRender);
     }
 
     filter(evt) {
@@ -21,16 +28,14 @@ class ApplicationList extends React.Component {
     }
 
     render() {
+        const OTHER_APPS_COUNT = 20;
         let userTeamIds = _.pluck(this.stores.user.getUserTeams(), 'id'),
             otherApps = this.stores.kio.getOtherApplications(this.state.term, userTeamIds),
-            otherAppsHiddenCount = otherApps.length - 20 < 0 ? 0 : otherApps.length - 20,
-            data = {
-                teamApps: this.stores.kio.getTeamApplications(this.state.term, userTeamIds),
-                otherApps: otherApps.splice(0, 20),
-                otherAppsHiddenCount: otherAppsHiddenCount,
-                term: this.state.term
-            };
-
+            otherAppsHiddenCount = otherApps.length - OTHER_APPS_COUNT < 0 ? 0 : otherApps.length - OTHER_APPS_COUNT,
+            teamApps = this.stores.kio.getTeamApplications(this.state.term, userTeamIds),
+            shortApps = otherApps.splice(0, OTHER_APPS_COUNT),
+            term = this.state.term;
+        
         return  <div className='applicationList'>
                     <h2 className='applicationList-headline'>Applications</h2>
                     <div className='btn-group'>
@@ -48,7 +53,7 @@ class ApplicationList extends React.Component {
                                 ref='filterInput'
                                 name='yourturn_search'
                                 autofocus='autofocus'
-                                value={data.term}
+                                value={term}
                                 onChange={this.filter.bind(this)}
                                 type='search'
                                 aria-label='Enter your term'
@@ -57,9 +62,9 @@ class ApplicationList extends React.Component {
                         </div>
                     </div>
                     <h4>Your Applications</h4>
-                    {data.teamApps.length ?
+                    {teamApps.length ?
                         <ul data-block='team-apps'>
-                            {data.teamApps.map(
+                            {teamApps.map(
                                 (ta, i) => 
                                     <li key={i}>
                                         <a href={`/application/detail/${ta.id}`}>{ta.name}</a>
@@ -70,15 +75,15 @@ class ApplicationList extends React.Component {
                     }
 
                     <h4>Other Applications</h4>
-                    {data.otherApps.length ?
+                    {shortApps.length ?
                         <ul data-block='other-apps'>
-                            {data.otherApps.map(
+                            {shortApps.map(
                                 (oa,i) =>
                                     <li key={i}>
                                         <a href={`/application/detail/${oa.id}`}>{oa.name}</a>
                                     </li>
                             )}
-                             {data.otherAppsHiddenCount ?
+                             {otherAppsHiddenCount ?
                                 <small data-block='other-apps-hidden-count'>
                                     + <span>{{otherAppsHiddenCount}}</span> hidden.
                                 </small> :
