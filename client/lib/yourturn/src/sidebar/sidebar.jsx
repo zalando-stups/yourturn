@@ -8,6 +8,11 @@ class Sidebar extends React.Component {
     constructor(props) {
         super();
         this.actions = props.flux.getActions('user');
+        this.store = props.flux.getStore('user');
+        this.interval = false;
+        this.state = {
+            isTokenValid: true
+        };
     }
 
     login() {
@@ -26,6 +31,23 @@ class Sidebar extends React.Component {
         this.actions.deleteTokenInfo();
     }
 
+    updateExpiryDate() {
+        let tokeninfo = this.store.getTokenInfo(),
+            NOW = Date.now();
+        this.setState({
+            currentDate: NOW,   // to enforce state change
+            isTokenValid: NOW < tokeninfo.valid_until
+        });
+    }
+
+    componentDidMount() {
+        this.interval = setInterval(this.updateExpiryDate.bind(this), 5000);
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.interval);
+    }
+
     render() {
         let tokeninfo = this.props.flux.getStore('user').getTokenInfo();
         return  <aside className='sidebar'>
@@ -40,7 +62,7 @@ class Sidebar extends React.Component {
                                 <div className='tokenInfo'>
                                     <div>
                                         <small>
-                                            OAuth Token {tokeninfo.valid_until < Date.now() ? 'expired' : 'expires'} <Timestamp value={tokeninfo.valid_until} relative={true} />.
+                                            OAuth Token {this.state.isTokenValid ? 'expires' : 'expired'} <Timestamp value={tokeninfo.valid_until} relative={true} />.
                                         </small>
                                     </div>
                                     <div className='btn-group'>
