@@ -34,13 +34,7 @@ $(document).ready(() => {
         .then(info => {
             YT_FLUX
                 .getActions('user')
-                .fetchUserTeams(info.uid)
-                .then(() => {
-                    // have to wait for teams and cloud accounts for user
-                    history.start({
-                        pushState: true
-                    });
-                });
+                .fetchUserTeams(info.uid);
         });
     $('#yourturn-sidebar').append(sidebar.$el);
     $('body').prepend(notifications.$el);
@@ -55,6 +49,9 @@ $(document).ready(() => {
     });
     new ViolationRouter({
         globalFlux: YT_FLUX
+    });
+    history.start({
+        pushState: true
     });
 });
 
