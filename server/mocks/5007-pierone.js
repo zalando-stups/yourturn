@@ -2,10 +2,10 @@ var express = require('express'),
     server = express();
 
 var scmSource = {
-  url: 'git:git@github.com:zalando-stups/pierone.git',
-  revision: 'cd768599e1bb41c38279c26254feff5cf57bf967',
-  author: 'npiccolotto',
-  status: 'M client/index.html'
+    url: 'git:git@github.com:zalando-stups/pierone.git',
+    revision: 'cd768599e1bb41c38279c26254feff5cf57bf967',
+    author: 'npiccolotto',
+    status: 'M client/index.html'
 };
 
 var images = [{
@@ -52,7 +52,7 @@ server.get('/teams/:team/artifacts/:artifact/tags/:tag/scm-source', function(req
                     .type('json')
                     .send(scmSource);
         }
-        res.status(404).send();
+        res.status(200).send();
     }, Math.random() * 2000);
 });
 

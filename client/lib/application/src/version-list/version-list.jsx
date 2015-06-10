@@ -26,11 +26,11 @@ class VersionList extends React.Component {
             versions = kio.getApplicationVersions(applicationId, term);
         return <div className='versionList'>
                     <h2>
-                        <a href={`/application/detail/${application.id}`}>{application.name}</a> versions
+                        <a href={`/application/detail/${application.id}`}>{application.name || applicationId}</a> versions
                     </h2>
                     <div className='btn-group'>
                         <a href={`/application/detail/${applicationId}`} className='btn btn-default'>
-                            <i className='fa fa-chevron-left'></i> {application.name}
+                            <i className='fa fa-chevron-left'></i> {application.name || applicationId}
                         </a>
                         <a href={`/application/detail/${applicationId}/version/create`} className='btn btn-primary'>
                             <i className='fa fa-plus'></i> Create new version
@@ -49,7 +49,6 @@ class VersionList extends React.Component {
                                 onChange={this.filter.bind(this)}
                                 type='search'
                                 aria-label='Enter your search term'
-                                data-action='search'
                                 data-block='search-input'
                                 placeholder='1.0-squirrel' />
                         </div>
