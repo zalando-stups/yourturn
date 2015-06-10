@@ -1,4 +1,7 @@
 /* globals sinon, expect, Promise */
+import jsdom from 'jsdom';
+import $ from 'jquery';
+import React from 'react';
 import {Flummox} from 'flummox';
 import KioStore from 'common/src/data/kio/kio-store';
 import KioActions from 'common/src/data/kio/kio-actions';
@@ -8,7 +11,7 @@ import EssentialsStore from 'common/src/data/essentials/essentials-store';
 import EssentialsActions from 'common/src/data/essentials/essentials-actions';
 import UserStore from 'common/src/data/user/user-store';
 import UserActions from 'common/src/data/user/user-actions';
-import AccessForm from 'application/src/access-form/access-form';
+import AccessForm from 'application/src/access-form/access-form.jsx';
 
 const MOCK_KIO = {
     id: 'kio',
@@ -56,35 +59,49 @@ describe('The access control form view', () => {
     var flux,
         globalFlux,
         actionSpy,
-        form;
+        $form,
+        reactComponent,
+        reactElement;
 
-    beforeEach(() => {
-        flux = new MockFlux();
-        globalFlux = new GlobalFlux();
-        actionSpy = sinon.stub(flux.getActions('mint'), 'saveOAuthConfig', () => {
-            return Promise.resolve();
-        });
-        form = new AccessForm({
+    function render(done) {
+        let props = {
             flux: flux,
             globalFlux: globalFlux,
             applicationId: 'kio'
+        };
+        reactComponent = new AccessForm(props);
+        reactElement = React.createElement(AccessForm, props);
+        jsdom.env(React.renderToString(reactElement), (err, wndw) => {
+            $form = $(wndw.document.body).find('.accessForm');
+            done();
         });
-    });
+    }
 
-    it('should show the placeholder when oauth is Pending', () => {
-        flux.getStore('mint').beginFetchOAuthConfig('kio');
-        expect(form.$el.children().first().hasClass('u-placeholder')).to.be.true;
-    });
-
-    it('should show the full view when oauth is completed', () => {
+    beforeEach(done => {
+        flux = new MockFlux();
+        globalFlux = new GlobalFlux();
+        flux.getStore('essentials').receiveScopes(['customer', [{ id: 'read_all' }]]);
         flux.getStore('mint').receiveOAuthConfig(['kio', MOCK_KIO]);
-        // not the placeholder
-        expect(form.$el.children().first().hasClass('u-placeholder')).to.be.false;
+        actionSpy = sinon.stub(flux.getActions('mint'), 'saveOAuthConfig', () => {
+            return Promise.resolve();
+        });
+        render(done);
+    });
+
+    it('should select the scope', () => {
+        let items = $form.find('[data-block="scope-list-item"]');
+        expect(items.length).to.equal(1);
+        expect(items.find('input:checked').length).to.equal(1);
+    });
+
+    it('should show the bucket', () => {
+        let items = $form.find('[data-block="editable-list-item"]');
+        expect(items.length).to.equal(1);
+        expect(items.first().text()).to.equal(MOCK_KIO.s3_buckets[0]);
     });
 
     it('should call the correct action', () => {
-        flux.getStore('mint').receiveOAuthConfig(['kio', MOCK_KIO]);
-        form.$el.find('form').submit();
+        reactComponent.save();
         expect(actionSpy.calledOnce).to.be.true;
     });
 });

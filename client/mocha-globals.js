@@ -1,28 +1,31 @@
 var chai = require('chai'),
-    jsdom = require('jsdom'),
     sinon = require('sinon'),
     Mitm = require('mitm'),
     OAuth = require('oauth2-client-js'),
     localStorage = new OAuth.MemoryStorage();
 
-// globals for tests
-global.sinon = sinon;
-global.expect = chai.expect;
-global.Mitm = Mitm;
-
 // shim window
 localStorage.set('stups-access_token', 'access_token');
 global.window = {
-    // fake document that hopefully works with jquery
-    document: jsdom.jsdom(),
     location: {
         href: ''
     },
+    document: require('jsdom').jsdom(),
     // OAuth Provider uses localStorage by default
     // so we feed it the in-memory storage for testing
     localStorage: localStorage
 };
 global.document = global.window.document;
+global.navigator = {
+    userAgent: 'Chrome 42'
+};
+console.debug = console.log.bind(console);
+console.error = console.log.bind(console);
+
+// globals for tests
+global.sinon = sinon;
+global.expect = chai.expect;
+global.Mitm = Mitm;
 // these are set by env.js in production
 global.YTENV_TWINTIP_BASE_URL = '';
 global.YTENV_KIO_BASE_URL = '';

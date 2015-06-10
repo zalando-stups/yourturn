@@ -61,7 +61,7 @@
     "istanbul": "0.3.14",
     "jscs": "1.13.1",
     "jscs-loader": "0.1.0",
-    "jsdom": "5.4.1",
+    "jsdom": "5.4.3",
     "json-loader": "0.5.1",
     "less-loader": "2.2.0",
     "lodash-cli": "3.8.0",

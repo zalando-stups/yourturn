@@ -69,8 +69,10 @@ class EditableList extends React.Component {
                         .sort()
                         .map(
                             item =>
-                                <div key={item} className='list-item'>
-                                    <span>{item}</span>
+                                <div
+                                    key={item}
+                                    className='list-item'>
+                                    <span data-block='editable-list-item'>{item}</span>
                                     <div
                                         onClick={this.deleteItem.bind(this, item)}
                                         className='btn btn-danger'>

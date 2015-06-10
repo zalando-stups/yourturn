@@ -8,6 +8,7 @@ import 'common/asset/less/application/access-form.less';
 class AccessForm extends React.Component {
     constructor(props) {
         super();
+        this.props = props;
         this.stores = {
             kio: props.flux.getStore('kio'),
             mint: props.flux.getStore('mint'),
@@ -19,6 +20,12 @@ class AccessForm extends React.Component {
             s3_buckets: oauth.s3_buckets,
             scopes: oauth.scopes
         };
+        this._boundRender = this.forceUpdate.bind(this);
+        this.stores.user.on('change', this._boundRender);
+    }
+
+    componentWillUnmount() {
+        this.stores.user.off('change', this._boundRender);
     }
 
     updateScopes(selectedScopes) {
@@ -34,7 +41,9 @@ class AccessForm extends React.Component {
     }
 
     save(evt) {
-        evt.preventDefault();
+        if (evt) {
+            evt.preventDefault();
+        }
         let {applicationId} = this.props,
             scopes = this.stores.essentials.getAllScopes(),
             appscopes = this.state.scopes,
