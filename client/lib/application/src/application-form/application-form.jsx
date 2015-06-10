@@ -6,6 +6,7 @@ import 'common/asset/less/application/application-form.less';
 class ApplicationForm extends React.Component {
     constructor(props) {
         super();
+        this.props = props;
         this.stores = {
             user: props.globalFlux.getStore('user'),
             kio: props.flux.getStore('kio')
@@ -15,8 +16,9 @@ class ApplicationForm extends React.Component {
             autocompleteServiceUrl: true
         };
         if (props.edit) {
-            this.state.app = kio.getApplication(props.applicationId);
-            this.state.app.service_url = this.state.app.service_url.substring('http://'.length);
+            let app = kio.getApplication(props.applicationId);
+            app.service_url = app.service_url.substring('http://'.length);
+            this.state.app = app;
         } else {
             this.state.app = { team_id: user.getUserTeams()[0].id };
         }
@@ -39,7 +41,9 @@ class ApplicationForm extends React.Component {
      * Saves the application to kio.
      */
     save(evt) {
-        evt.preventDefault();
+        if (evt) {
+            evt.preventDefault();
+        }
 
         let {app} = this.state;
 

@@ -1,10 +1,13 @@
 /* globals expect, sinon, Promise */
+import jsdom from 'jsdom';
+import $ from 'jquery';
+import React from 'react';
 import {Flummox} from 'flummox';
 import KioStore from 'common/src/data/kio/kio-store';
 import KioActions from 'common/src/data/kio/kio-actions';
 import UserStore from 'common/src/data/user/user-store';
 import UserActions from 'common/src/data/user/user-actions';
-import AppForm from 'application/src/application-form/application-form';
+import AppForm from 'application/src/application-form/application-form.jsx';
 
 const FLUX = 'kio',
     APP_ID = 'kio',
@@ -42,7 +45,9 @@ describe('The application form view', () => {
     var flux,
         globalFlux,
         actionSpy,
-        form;
+        reactElement,
+        reactComponent,
+        $form;
 
     beforeEach(() => {
         flux = new AppFlux();
@@ -53,64 +58,75 @@ describe('The application form view', () => {
     });
 
     describe('in create mode', () => {
-        beforeEach(() => {
-            form = new AppForm({
+
+        function render(done) {
+            let props = {
                 flux: flux,
-                globalFlux: globalFlux
+                globalFlux: globalFlux,
+                applicationId: APP_ID,
+                edit: false
+            };
+            reactComponent = new AppForm(props);
+            reactElement = React.createElement(AppForm, props);
+            jsdom.env(React.renderToString(reactElement), (err, wndw) => {
+                $form = $(wndw.document.body).find('.applicationForm');
+                done();
             });
+        }
+
+        beforeEach(done => {
+            globalFlux.getStore('user').receiveUserTeams([{ id: 'stups' }]);
+            render(done);
         });
 
         it('should not have a placeholder', () => {
-            // form is not automatically rendered because not connected to store
-            form.render();
-            expect(form.$el.find('.u-placeholder').length).to.equal(0);
+            expect($form.hasClass('.u-placeholder')).to.be.false;
         });
 
         it('should have active checkbox preselected', () => {
-            form.render();
-            let $checkbox = form.$el.find('[data-block="active-checkbox"]').first();
+            let $checkbox = $form.find('[data-block="active-checkbox"]').first();
             expect($checkbox.is(':checked')).to.be.true;
         });
     });
 
     describe('in edit mode', () => {
-        beforeEach(() => {
-            form = new AppForm({
+        function render(done) {
+            let props = {
                 flux: flux,
+                globalFlux: globalFlux,
                 applicationId: APP_ID,
-                edit: true,
-                globalFlux: globalFlux
+                edit: true
+            };
+            reactComponent = new AppForm(props);
+            reactElement = React.createElement(AppForm, props);
+            jsdom.env(React.renderToString(reactElement), (err, wndw) => {
+                $form = $(wndw.document.body).find('.applicationForm');
+                done();
             });
-        });
+        }
 
-        it('should not have a placeholder', () => {
-            flux.getStore(FLUX).beginFetchApplication(APP_ID);
-            expect(form.$el.find('.u-placeholder').length).to.equal(0);
+        beforeEach(done => {
+            flux.getStore(FLUX).receiveApplication(TEST_APP);
+            render(done);
         });
 
         it('should not check the active box if app is inactive', () => {
-            flux.getStore(FLUX).receiveApplication(TEST_APP);
-            let $checkbox = form.$el.find('[data-block="active-checkbox"]').first();
+            let $checkbox = $form.find('[data-block="active-checkbox"]').first();
             expect($checkbox.is(':checked')).to.be.false;
         });
 
         it('should display the available symbol', () => {
-            flux.getStore(FLUX).receiveApplication(TEST_APP);
-            let $available = form.$el.find('[data-block="available-symbol"]').first();
+            let $available = $form.find('[data-block="available-symbol"]').first();
             expect($available.length).to.equal(1);
         });
 
         it('should disable the ID input', () => {
-            flux.getStore(FLUX).receiveApplication(TEST_APP);
-            let $input = form.$el.find('[data-block="id-input"]').first();
+            let $input = $form.find('[data-block="id-input"]').first();
             expect($input.is(':disabled')).to.be.true;
         });
 
         it('should call the correct action', () => {
-            flux.getStore(FLUX).receiveApplication(TEST_APP);
-            let $input = form.$el.find('[data-block="name-input"]').first();
-            $input.val('test');
-            form.$el.find('form').submit();
+            reactComponent.save();
             expect(actionSpy.calledOnce).to.be.true;
         });
     });
