@@ -155,7 +155,7 @@ class ApplicationForm extends React.Component {
                                         className='fa fa-check fa-fw is-available'></i>}
                                 </div>
                                 <input
-                                    required='required'
+                                    required={true}
                                     id='app_id'
                                     disabled={edit ? 'disabled' : null}
                                     value={edit ? app.id : null}
@@ -172,7 +172,7 @@ class ApplicationForm extends React.Component {
                             <label htmlFor='name'>Name</label>
                             <small>The full name of your application.</small>
                             <input
-                                required='required'
+                                required={true}
                                 id='name'
                                 data-block='name-input'
                                 value={app.name}

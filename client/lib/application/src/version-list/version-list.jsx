@@ -44,7 +44,7 @@ class VersionList extends React.Component {
                             </div>
                             <input
                                 name='yourturn_version_search'
-                                autofocus='autofocus'
+                                autoFocus={true}
                                 value={term}
                                 onChange={this.filter.bind(this)}
                                 type='search'

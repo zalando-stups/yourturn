@@ -52,7 +52,7 @@ class ApplicationList extends React.Component {
                             <input
                                 ref='filterInput'
                                 name='yourturn_search'
-                                autofocus='autofocus'
+                                autoFocus={true}
                                 value={term}
                                 onChange={this.filter.bind(this)}
                                 type='search'

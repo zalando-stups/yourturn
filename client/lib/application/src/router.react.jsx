@@ -10,6 +10,7 @@ import ApplicationDetail from './application-detail/application-detail.jsx';
 import OAuthForm from './oauth-form/oauth-form.jsx';
 import AccessForm from './access-form/access-form.jsx';
 import VersionList from './version-list/version-list.jsx';
+import VersionForm from './version-form/version-form.jsx';
 import VersionDetail from './version-detail/version-detail.jsx';
 import ApprovalForm from './approval-form/approval-form.jsx';
 
@@ -250,12 +251,60 @@ ApprovalFormHandler.fetchData = function(state) {
     return KIO_ACTIONS.fetchApprovalTypes(applicationId);
 };
 
-/**
-    <Route path='create' handler={VersionFormHandler} />
-    <Route path='edit/:ver' handler={VersionFormHandler} />
-    <Route path='approve' />
-   
- */
+
+class CreateVersionFormHandler extends React.Component {
+    constructor() {
+        super();
+    }
+
+    render() {
+        return <FluxComponent
+                    flux={APP_FLUX}
+                    connectToStores={['kio']}>
+
+                    <VersionForm
+                        edit={false}
+                        applicationId={this.props.params.applicationId}
+                        versionId={this.props.params.versionId}
+                        globalFlux={this.props.globalFlux} />
+                </FluxComponent>;
+    }
+}
+CreateVersionFormHandler.fetchData = function(state) {
+    let {applicationId} = state.params;
+    return Promise.all([
+        !!KIO_STORE.getApplication(applicationId) ? Promise.resolve() : KIO_ACTIONS.fetchApplication(applicationId),
+        KIO_ACTIONS.fetchApplicationVersions(applicationId)
+    ]);
+};
+
+
+class EditVersionFormHandler extends React.Component {
+    constructor() {
+        super();
+    }
+
+    render() {
+        return <FluxComponent
+                    flux={APP_FLUX}
+                    connectToStores={['kio']}>
+
+                    <VersionForm
+                        edit={true}
+                        applicationId={this.props.params.applicationId}
+                        versionId={this.props.params.versionId}
+                        globalFlux={this.props.globalFlux} />
+                </FluxComponent>;
+    }
+}
+EditVersionFormHandler.fetchData = function(state) {
+    let {applicationId, versionId} = state.params;
+    if (!KIO_STORE.getApplication(applicationId)) {
+        KIO_ACTIONS.fetchApplication(applicationId);
+    }
+    KIO_ACTIONS.fetchApprovals(applicationId, versionId);
+    return KIO_ACTIONS.fetchApplicationVersion(applicationId, versionId);
+};
 
 const ROUTES =
         <Route path='/application'>
@@ -268,8 +317,10 @@ const ROUTES =
                 <DefaultRoute handler={AppDetailHandler} />
                 <Route path='version'>
                     <DefaultRoute handler={VersionListHandler} />
+                    <Route path='create' handler={CreateVersionFormHandler} />
                     <Route path='approve/:versionId' handler={ApprovalFormHandler} />
                     <Route path='detail/:versionId' handler={VersionDetailHandler} />
+                    <Route path='edit/:versionId' handler={EditVersionFormHandler} />
                 </Route>
             </Route>
         </Route>;

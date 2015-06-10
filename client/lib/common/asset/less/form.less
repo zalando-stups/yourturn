@@ -59,7 +59,7 @@ input[type="search"] {
         input[type="search"] {
             width: 100%;
 
-            &:invalid,
+            &:invalid:not(.valid),
             &.invalid {
                 border-color: @red;
                 border-style: solid;
@@ -68,7 +68,7 @@ input[type="search"] {
                 }
             }
 
-            &:valid,
+            &:valid:not(.invalid),
             &.valid {
                 border-color: @green;
                 border-style: solid;
@@ -115,7 +115,6 @@ input[type="search"] {
             line-height: inherit;
             font-family: @font-sans;
             .input-addon-border();
-            
         }
 
         .btn {
