@@ -7,7 +7,7 @@ class ApplicationDetailPlaceholder extends React.Component {
 
     render() {
         let {applicationId} = this.props;
-        return <div className='u-placeholder'>
+        return <div className='applicationDetail u-placeholder'>
                     <h1>{{applicationId}}</h1>
 
                     <div className='btn-group'>

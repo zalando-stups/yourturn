@@ -1,4 +1,7 @@
 /* globals expect */
+import jsdom from 'jsdom';
+import $ from 'jquery';
+import React from 'react';
 import {Flummox} from 'flummox';
 import KioStore from 'common/src/data/kio/kio-store';
 import KioActions from 'common/src/data/kio/kio-actions';
@@ -6,7 +9,7 @@ import TwintipStore from 'common/src/data/twintip/twintip-store';
 import TwintipActions from 'common/src/data/twintip/twintip-actions';
 import UserStore from 'common/src/data/user/user-store';
 import UserActions from 'common/src/data/user/user-actions';
-import Detail from 'application/src/application-detail/application-detail';
+import Detail from 'application/src/application-detail/application-detail.jsx';
 
 const APP = 'kio',
       API = 'twintip',
@@ -37,16 +40,27 @@ describe('The application detail view', () => {
     var flux,
         globalFlux,
         TEST_APP,
-        detail;
+        reactElement,
+        reactComponent,
+        $detail;
 
-    beforeEach(() => {
-        flux = new MockFlux();
-        globalFlux = new GlobalFlux();
-        detail = new Detail({
+    function render(done) {
+        let props = {
             flux: flux,
             globalFlux: globalFlux,
             applicationId: ID
+        };
+        reactComponent = new Detail(props);
+        reactElement = React.createElement(Detail, props);
+        jsdom.env(React.renderToString(reactElement), (err, wndw) => {
+            $detail = $(wndw.document.body).find('.applicationDetail');
+            done();
         });
+    }
+
+    beforeEach(done => {
+        flux = new MockFlux();
+        globalFlux = new GlobalFlux();
         TEST_APP = {
             documentation_url: 'https://github.com/zalando-stups/kio',
             scm_url: 'https://github.com/zalando-stups/kio.git',
@@ -58,32 +72,48 @@ describe('The application detail view', () => {
             team_id: 'stups',
             id: 'kio'
         };
+        render(done);
     });
 
-    it('should display a placeholder when the application is Pending', () => {
+    it('should display a placeholder when the application is Pending', done => {
         flux.getStore(APP).beginFetchApplication(ID);
-        expect(detail.$el.find('.u-placeholder').length).to.equal(1);
+        render(() => {
+            expect($detail.hasClass('u-placeholder')).to.be.true;
+            done();
+        });
     });
 
-    it('should not a display a placeholder when the api is Pending', () => {
+    it('should not a display a placeholder when the api is Pending', done => {
         flux.getStore(APP).receiveApplication(TEST_APP);
         flux.getStore(API).beginFetchApi(ID);
-        expect(detail.$el.find('.u-placeholder').length).to.equal(0);
+        render(() => {
+            expect($detail.hasClass('u-placeholder')).to.be.false;
+            done();
+        });
     });
 
-    it('should display an inactive badge when the application is inactive', () => {
+    it('should display an inactive badge when the application is inactive', done => {
         TEST_APP.active = false;
         flux.getStore(APP).receiveApplication(TEST_APP);
-        expect(detail.$el.find('[data-block="inactive-badge"]').length).to.equal(1);
+        render(() => {
+            expect($detail.find('[data-block="inactive-badge"]').length).to.equal(1);
+            done();
+        });
     });
 
-    it('should not display a badge when the application is active', () => {
+    it('should not display a badge when the application is active', done => {
         flux.getStore(APP).receiveApplication(TEST_APP);
-        expect(detail.$el.find('[data-block="inactive-badge"]').length).to.equal(0);
+        render(() => {
+            expect($detail.find('[data-block="inactive-badge"]').length).to.equal(0);
+            done();
+        });
     });
 
-    it('should contain rendered markdown', () => {
+    it('should contain rendered markdown', done => {
         flux.getStore(APP).receiveApplication(TEST_APP);
-        expect(detail.$el.find('[data-block="description"] h1').length).to.equal(1);
+        render(() => {
+            expect($detail.find('[data-block="description"] h1').length).to.equal(1);
+            done();
+        });
     });
 });

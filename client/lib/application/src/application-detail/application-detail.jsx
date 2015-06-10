@@ -154,12 +154,10 @@ class ApplicationDetail extends React.Component {
                         </tbody>
                     </table>
                     <h4 className='applicationDetail-descriptionTitle'>Description</h4>
-                    <p
+                    <Markdown
                         className='applicationDetail-description'
-                        data-block='description'
-                        data-action='markdown'>
-                        <Markdown src={app.description} />
-                    </p>
+                        block='description'
+                        src={app.description} />
                 </div>;
     }
 }

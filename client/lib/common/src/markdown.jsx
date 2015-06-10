@@ -15,15 +15,18 @@ class Markdown extends React.Component {
     render() {
         let html = MD.render(this.props.src);
         return <div
+                    className={'u-markdown' + this.props.className}
+                    data-block={this.props.block || null}
                     dangerouslySetInnerHTML={{
                         __html: html
-                    }}
-                    className='u-markdown' />;
+                    }} />;
     }
 }
 
 Markdown.propTypes = {
-    src: React.PropTypes.string.isRequired
+    src: React.PropTypes.string.isRequired,
+    className: React.PropTypes.string,
+    block: React.PropTypes.string
 };
 
 export default Markdown;
