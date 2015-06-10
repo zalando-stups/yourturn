@@ -11,6 +11,7 @@ import OAuthForm from './oauth-form/oauth-form.jsx';
 import AccessForm from './access-form/access-form.jsx';
 import VersionList from './version-list/version-list.jsx';
 import VersionDetail from './version-detail/version-detail.jsx';
+import ApprovalForm from './approval-form/approval-form.jsx';
 
 const APP_FLUX = new Flux(),
       MINT_ACTIONS = APP_FLUX.getActions('mint'),
@@ -220,6 +221,34 @@ VersionDetailHandler.fetchData = function(state) {
 };
 
 
+class ApprovalFormHandler extends React.Component {
+    constructor() {
+        super();
+    }
+
+    render() {
+        return <FluxComponent
+                    flux={APP_FLUX}
+                    connectToStores={['kio', 'pierone']}>
+
+                    <ApprovalForm
+                        applicationId={this.props.params.applicationId}
+                        versionId={this.props.params.versionId}
+                        globalFlux={this.props.globalFlux} />
+                </FluxComponent>;
+    }
+}
+ApprovalFormHandler.fetchData = function(state) {
+    let {applicationId, versionId} = state.params;
+    if (!KIO_STORE.getApplication(applicationId)) {
+        KIO_ACTIONS.fetchApplication(applicationId);
+    }
+    if (!KIO_STORE.getApplicationVersion(applicationId, versionId)) {
+        KIO_ACTIONS.fetchApplicationVersion(applicationId, versionId);
+    }
+    KIO_ACTIONS.fetchApprovals(applicationId, versionId);
+    return KIO_ACTIONS.fetchApprovalTypes(applicationId);
+};
 
 /**
     <Route path='create' handler={VersionFormHandler} />
@@ -239,8 +268,8 @@ const ROUTES =
                 <DefaultRoute handler={AppDetailHandler} />
                 <Route path='version'>
                     <DefaultRoute handler={VersionListHandler} />
+                    <Route path='approve/:versionId' handler={ApprovalFormHandler} />
                     <Route path='detail/:versionId' handler={VersionDetailHandler} />
-
                 </Route>
             </Route>
         </Route>;

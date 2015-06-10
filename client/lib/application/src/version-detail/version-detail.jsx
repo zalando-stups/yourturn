@@ -88,13 +88,13 @@ class VersionDetail extends React.Component {
                     </h2>
 
                     <div className='btn-group'>
-                        <a href='/application/detail/{version.application_id}/version' className='btn btn-default'>
+                        <a href={`/application/detail/${applicationId}/version`} className='btn btn-default'>
                             <i className='fa fa-chevron-left'></i> {application.name || applicationId} versions
                         </a>
-                        <a href='/application/detail/{version.application_id}/version/edit/{version.id}' className='btn btn-default {#unless isOwnApplication}btn-disabled{/unless}'>
+                        <a href={`/application/detail/${applicationId}/version/edit/${versionId}`} className='btn btn-default {#unless isOwnApplication}btn-disabled{/unless}'>
                             <i className='fa fa-edit'></i> Edit {versionId}
                         </a>
-                        <a href='/application/detail/{version.application_id}/version/approve/{version.id}' className='btn btn-primary'>
+                        <a href={`/application/detail/${applicationId}/version/approve/${versionId}`} className='btn btn-primary'>
                             <i className='fa fa-check'></i> Approvals <span className='badge'>{approvals.length}</span>
                         </a>
                     </div>
