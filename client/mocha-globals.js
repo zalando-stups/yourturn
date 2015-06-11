@@ -8,6 +8,14 @@ var chai = require('chai'),
     OAuth = require('oauth2-client-js'),
     localStorage = new OAuth.MemoryStorage();
 
+TestUtils.findRenderedDOMComponentWithAttributeValue = function(component, attr, val) {
+    var doms = TestUtils.scryRenderedDOMComponentsWithAttributeValue(component, attr, val);
+    if (doms.length !== 1) {
+        throw new Error('findRenderedDOMComponentWithAttributeValue encountered more than one element');
+    }
+    return doms[0];
+}
+
 localStorage.set('stups-access_token', 'access_token');
 
 global.window = {

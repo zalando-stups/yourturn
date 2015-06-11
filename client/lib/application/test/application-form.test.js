@@ -1,7 +1,4 @@
 /* globals expect, sinon, Promise */
-import jsdom from 'jsdom';
-import $ from 'jquery';
-import React from 'react';
 import {Flummox} from 'flummox';
 import KioStore from 'common/src/data/kio/kio-store';
 import KioActions from 'common/src/data/kio/kio-actions';
@@ -74,58 +71,51 @@ describe('The application form view', () => {
         });
 
         it('should not have a placeholder', () => {
-            let placeholders = TestUtils.srcyRenderedDOMComponentsWithClass(form, 'u-placeholder');
+            let placeholders = TestUtils.scryRenderedDOMComponentsWithClass(form, 'u-placeholder');
             expect(placeholders.length).to.equal(0);
         });
 
         it('should have active checkbox preselected', () => {
-            let checkbox = scryRenderedDOMComponentsWithAttributeValue(form, 'data-block', 'active-checkbox');
-            expect(checkbox.length).to.equal(1);
-            console.log(React.findDOMNode(form));
-            // expect($checkbox.is(':checked')).to.be.true;
+            let checkbox = TestUtils.findRenderedDOMComponentWithAttributeValue(form, 'data-block', 'active-checkbox');
+            expect($(React.findDOMNode(checkbox)).is(':checked')).to.be.true;
         });
     });
 
-    // describe('in edit mode', () => {
-    //     function render(done) {
-    //         let props = {
-    //             flux: flux,
-    //             globalFlux: globalFlux,
-    //             applicationId: APP_ID,
-    //             edit: true
-    //         };
-    //         reactComponent = new AppForm(props);
-    //         reactElement = React.createElement(AppForm, props);
-    //         jsdom.env(React.renderToString(reactElement), (err, wndw) => {
-    //             form = $(wndw.document.body).find('.applicationForm');
-    //             done();
-    //         });
-    //     }
+    describe('in edit mode', () => {
+        beforeEach(done => {
+            reset(() => {
+                props = {
+                    flux: flux,
+                    globalFlux: globalFlux,
+                    applicationId: APP_ID,
+                    edit: true
+                };
+                globalFlux.getStore('user').receiveUserTeams([{ id: 'stups' }]);
+                flux.getStore(FLUX).receiveApplication(TEST_APP);
+                form = render(AppForm, props);
+                done();
+            });
+        });
 
-    //     beforeEach(done => {
-    //         flux.getStore(FLUX).receiveApplication(TEST_APP);
-    //         render(done);
-    //     });
+        it('should not check the active box if app is inactive', () => {
+            let checkbox = TestUtils.findRenderedDOMComponentWithAttributeValue(form, 'data-block', 'active-checkbox');
+            expect($(React.findDOMNode(checkbox)).is(':checked')).to.be.false;
+        });
 
-    //     it('should not check the active box if app is inactive', () => {
-    //         let $checkbox = form.find('[data-block="active-checkbox"]').first();
-    //         expect($checkbox.is(':checked')).to.be.false;
-    //     });
+        it('should display the available symbol', () => {
+            let available = TestUtils.scryRenderedDOMComponentsWithAttributeValue(form, 'data-block', 'available-symbol');
+            expect(available.length).to.equal(1);
+        });
 
-    //     it('should display the available symbol', () => {
-    //         let $available = form.find('[data-block="available-symbol"]').first();
-    //         expect($available.length).to.equal(1);
-    //     });
+        it('should disable the ID input', () => {
+            let input = TestUtils.findRenderedDOMComponentWithAttributeValue(form, 'data-block', 'id-input');
+            expect($(React.findDOMNode(input)).is(':disabled')).to.be.true;
+        });
 
-    //     it('should disable the ID input', () => {
-    //         let $input = form.find('[data-block="id-input"]').first();
-    //         expect($input.is(':disabled')).to.be.true;
-    //     });
-
-    //     it('should call the correct action', () => {
-    //         reactComponent.save();
-    //         expect(actionSpy.calledOnce).to.be.true;
-    //     });
-    // });
+        it('should call the correct action', () => {
+            form.save();
+            expect(actionSpy.calledOnce).to.be.true;
+        });
+    });
 
 });

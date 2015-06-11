@@ -113,10 +113,10 @@ class ApplicationForm extends React.Component {
                             <label htmlFor='active'>
                                 <input
                                     id='active'
-                                    onChange={this.update.bind(this, 'active', 'checked')}
-                                    defaultChecked={edit ? (app.active ? 'checked' : null) : 'checked'}
-                                    name='yourturn_app_active'
                                     data-block='active-checkbox'
+                                    name='yourturn_app_active'
+                                    defaultChecked={edit ? (app.active ? 'checked' : null) : 'checked'}
+                                    onChange={this.update.bind(this, 'active', 'checked')}
                                     type='checkbox' /> Active application
                             </label>
                         </div>
