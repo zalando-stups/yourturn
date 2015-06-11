@@ -52,7 +52,6 @@ class OwnerScopeList extends React.Component {
     render() {
         let {term, selected, filtered} = this.state,
             resourceTypes = _.groupBy(filtered, 'resource_type_id');
-        console.log(filtered);
         return <div className='ownerscopeList'>
                     <div className='input-group'>
                         <div className='input-addon'>

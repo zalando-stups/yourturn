@@ -76,20 +76,22 @@ class ApplicationList extends React.Component {
 
                     <h4>Other Applications</h4>
                     {shortApps.length ?
-                        <ul data-block='other-apps'>
-                            {shortApps.map(
-                                (oa,i) =>
-                                    <li key={i}>
-                                        <a href={`/application/detail/${oa.id}`}>{oa.name}</a>
-                                    </li>
-                            )}
-                             {otherAppsHiddenCount ?
-                                <small data-block='other-apps-hidden-count'>
-                                    + <span>{{otherAppsHiddenCount}}</span> hidden.
+                        <div>
+                            <ul data-block='other-apps'>
+                                {shortApps.map(
+                                    (oa,i) =>
+                                        <li key={i}>
+                                            <a href={`/application/detail/${oa.id}`}>{oa.name}</a>
+                                        </li>
+                                )}
+                            </ul>
+                            {otherAppsHiddenCount ?
+                                <small>
+                                    + <span data-block='other-apps-hidden-count'>{{otherAppsHiddenCount}}</span> hidden.
                                 </small> :
-                                null
-                            }
-                        </ul> :
+                                null}
+                        </div>
+                        :
                         <span>No applications owned by other teams.</span>
                     }
                 </div>;
