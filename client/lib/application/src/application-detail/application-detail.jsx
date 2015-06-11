@@ -20,13 +20,6 @@ class ApplicationDetail extends React.Component {
             kio: props.flux.getStore('kio'),
             twintip: props.flux.getStore('twintip')
         };
-
-        this._boundRender = this.forceUpdate.bind(this);
-        this.stores.user.on('change', this._boundRender);
-    }
-
-    componentWillUnmount() {
-        this.stores.user.off('change', this._boundRender);
     }
 
     render() {

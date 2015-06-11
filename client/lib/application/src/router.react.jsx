@@ -80,6 +80,19 @@ class EditAppFormHandler extends React.Component {
                 </FluxComponent>;
     }
 }
+EditAppFormHandler.isAllowed = function(state, globalFlux) {
+    let {applicationId} = state.params,
+        application = KIO_STORE.getApplication(applicationId),
+        userTeams = globalFlux.getStore('user').getUserTeams(),
+        isOwnTeam = userTeams.map(t => t.id).indexOf(application.team_id) >= 0;
+    if (!isOwnTeam) {
+        let error = new Error();
+        error.name = 'Forbidden';
+        error.message = 'You can only edit your own applications!';
+        error.status = 'u1F62D';
+        return error;
+    }
+}
 EditAppFormHandler.fetchData = function(state) {
     return KIO_ACTIONS.fetchApplication(state.params.applicationId);
 };

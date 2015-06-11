@@ -21,13 +21,6 @@ class ApplicationForm extends React.Component {
         } else {
             this.state.app = { team_id: user.getUserTeams()[0].id };
         }
-
-        this._boundRender = this.forceUpdate.bind(this);
-        this.stores.user.on('change', this._boundRender);
-    }
-
-    componentWillUnmount() {
-        this.stores.user.off('change', this._boundRender);
     }
 
     disableAutocomplete() {

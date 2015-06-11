@@ -12,13 +12,6 @@ class ApplicationList extends React.Component {
         this.state = {
             term: ''
         };
-        // connect to user store in case teams are fetched after the other stuff
-        this._boundRender = this.forceUpdate.bind(this);
-        this.stores.user.on('change', this._boundRender);
-    }
-
-    componentWillUnmount() {
-        this.stores.user.off('change', this._boundRender);
     }
 
     filter(evt) {

@@ -13,18 +13,13 @@ class OAuthForm extends React.Component {
             user: props.globalFlux.getStore('user'),
             essentials: props.flux.getStore('essentials')
         };
-        this._boundRender = this.forceUpdate.bind(this);
-        this.stores.user.on('change', this._boundRender);
+
         let oauthConfig = this.stores.mint.getOAuthConfig(props.applicationId);
         this.state = {
             scopes: oauthConfig.scopes,
             redirectUrl: oauthConfig.redirect_url,
             isClientConfidential: oauthConfig.is_client_confidential
         };
-    }
-
-    componentWillUnmount() {
-        this.stores.user.off('change', this._boundRender);
     }
 
     updateScopes(selectedScopes) {
