@@ -2,7 +2,7 @@
 import {Flummox} from 'flummox';
 import KioStore from 'common/src/data/kio/kio-store';
 import KioActions from 'common/src/data/kio/kio-actions';
-import VersionForm from 'application/src/version-form/version-form';
+import VersionForm from 'application/src/version-form/version-form.jsx';
 
 const FLUX = 'kio',
     APP_ID = 'kio',
@@ -50,6 +50,7 @@ class MockFlux extends Flummox {
 describe('The version form view', () => {
     var flux,
         actionSpy,
+        props,
         form;
 
     beforeEach(() => {
@@ -60,53 +61,47 @@ describe('The version form view', () => {
     });
 
     describe('in create mode', () => {
-        beforeEach(() => {
-            flux.getStore(FLUX).receiveApplication(TEST_APP);
-            flux.getStore(FLUX).receiveApplicationVersion(TEST_VERSION);
-            form = new VersionForm({
-                flux: flux,
-                applicationId: APP_ID,
-                versionId: VER_ID
+        beforeEach(done => {
+            reset(() => {
+                flux.getStore(FLUX).receiveApplication(TEST_APP);
+                flux.getStore(FLUX).receiveApplicationVersion(TEST_VERSION);
+                props = {
+                    flux: flux,
+                    applicationId: APP_ID,
+                    versionId: VER_ID,
+                    edit: false
+                };
+                form = render(VersionForm, props);
+                done();
             });
-            // does not get called automatically because we filled the
-            // store prior to creating the form
-            form.update();
-            form.render();
-        });
-
-        it('should not have a placeholder', () => {
-
-            expect(form.$el.find('.u-placeholder').length).to.equal(0);
         });
     });
 
     describe('in edit mode', () => {
-        beforeEach(() => {
-            flux.getStore(FLUX).receiveApplication(TEST_APP);
-            flux.getStore(FLUX).receiveApplicationVersion(TEST_VERSION);
-            form = new VersionForm({
-                flux: flux,
-                applicationId: APP_ID,
-                versionId: VER_ID,
-                edit: true
+        beforeEach(done => {
+            reset(() => {
+                flux.getStore(FLUX).receiveApplication(TEST_APP);
+                flux.getStore(FLUX).receiveApplicationVersion(TEST_VERSION);
+                props = {
+                    flux: flux,
+                    applicationId: APP_ID,
+                    versionId: VER_ID,
+                    edit: true
+                };
+                form = render(VersionForm, props);
+                done();
             });
-            form.update();
-            form.render();
-        });
-
-        it('should not have a placeholder', () => {
-            flux.getStore(FLUX).beginFetchApplicationVersion(APP_ID, VER_ID);
-            expect(form.$el.find('.u-placeholder').length).to.equal(0);
         });
 
         it('should call the correct action', () => {
-            form.$el.find('form').submit();
+            form.save();
             expect(actionSpy.calledOnce).to.be.true;
         });
 
         it('should display a warning when there are approvals', () => {
             flux.getStore(FLUX).receiveApprovals([APP_ID, VER_ID, TEST_APPROVALS]);
-            expect(form.$el.find('[data-block="warning"]').length).to.equal(1);
+            form = render(VersionForm, props);
+            TestUtils.findRenderedDOMComponentWithAttributeValue(form, 'data-block', 'warning');
         });
     });
 

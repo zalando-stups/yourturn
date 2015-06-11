@@ -51,7 +51,9 @@ class VersionForm extends React.Component {
     }
 
     save(evt) {
-        evt.preventDefault();
+        if (evt) {
+            evt.preventDefault();
+        }
         let {applicationId, versionId} = this.props,
             {kio} = this.stores,
             application = kio.getApplication(applicationId),
