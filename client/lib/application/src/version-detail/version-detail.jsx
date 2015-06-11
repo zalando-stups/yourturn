@@ -2,7 +2,6 @@ import React from 'react';
 import Timestamp from 'react-time';
 import ScmSourceWarning from './scm-source-warning.jsx';
 import Markdown from 'common/src/markdown.jsx';
-import DefaultError from 'common/src/error.jsx';
 import {parseArtifact} from 'application/src/util';
 import FetchResult from 'common/src/fetch-result';
 import 'common/asset/less/application/version-detail.less';
@@ -129,11 +128,10 @@ class VersionDetail extends React.Component {
 
                     <h4 className='versionDetail-notesTitle'>Notes</h4>
                     {version.notes ?
-                        <p
+                        <Markdown
                             className='versionDetail-notes'
-                            data-block='version-notes'>
-                            <Markdown src={version.notes} />
-                        </p>
+                            block='version-notes'
+                            src={version.notes} />
                         :
                         <span>No version notes.</span>}
                 </div>;

@@ -18,8 +18,11 @@ require('react/lib/ExecutionEnvironment').canUseDOM = true;
 
 TestUtils.findRenderedDOMComponentWithAttributeValue = function(component, attr, val) {
     var doms = TestUtils.scryRenderedDOMComponentsWithAttributeValue(component, attr, val);
-    if (doms.length !== 1) {
+    if (doms.length > 1) {
         throw new Error('findRenderedDOMComponentWithAttributeValue encountered more than one element');
+    }
+    if (doms.length === 0) {
+        throw new Error('findRenderedDOMComponentWithAttributeValue did not find any element');
     }
     return doms[0];
 }

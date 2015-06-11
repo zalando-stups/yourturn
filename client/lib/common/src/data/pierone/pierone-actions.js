@@ -13,9 +13,6 @@ class PieroneActions extends Actions {
                 .exec(saveRoute)
                 .then(res => [team, artifact, tag, res.body])
                 .catch(err => {
-                    if (err.status === 404) {
-                        return [team, artifact, tag, false];
-                    }
                     err.team = team;
                     err.artifact = artifact;
                     err.tag = tag;

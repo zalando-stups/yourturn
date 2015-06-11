@@ -15,7 +15,7 @@ class Markdown extends React.Component {
     render() {
         let html = MD.render(this.props.src);
         return <div
-                    className={'u-markdown' + this.props.className}
+                    className={'u-markdown ' + this.props.className}
                     data-block={this.props.block || null}
                     dangerouslySetInnerHTML={{
                         __html: html
