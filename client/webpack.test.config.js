@@ -8,9 +8,9 @@ module.exports = {
     devtool: 'eval',
     entry: [
         // entrypoint to resolve dependencies
-        './lib/application/test/bootstrap',
-        './lib/resource/test/bootstrap',
-        './lib/common/test/bootstrap'
+        './lib/application/test/bootstrap'
+        // './lib/resource/test/bootstrap',
+        // './lib/common/test/bootstrap'
     ],
     target: 'node',
     node: {
@@ -31,7 +31,7 @@ module.exports = {
         })
     ],
     resolve: {
-        extensions: ['', '.js', '.less'],
+        extensions: ['', '.js', '.jsx', '.less'],
         alias: {
             common: path.resolve(__dirname, './lib/common/'),
             yourturn: path.resolve(__dirname, './lib/yourturn/'),
@@ -59,11 +59,11 @@ module.exports = {
     },
     module: {
         preLoaders: [
-            { test: /\.js$/, exclude: /(node_modules|lodash)/, loader: 'eslint' }
+            { test: /\.jsx?$/, exclude: /(node_modules|lodash)/, loader: 'eslint' }
         ],
         loaders: [
             { test: /\.hbs$/, exclude: /node_modules/, loader: 'handlebars?helperDirs[]=' + __dirname + '/lib/common/src/handlebars' },
-            { test: /\.js$/, exclude: /node_modules/, loader: 'babel' },
+            { test: /\.jsx?$/, include: /(client)|(node_modules\/jsdom)/, loader: 'babel' },
             { test: /\.less$/, exclude: /node_modules/, loader: 'null' },
             { test: /\.woff(\?v=\d+\.\d+\.\d+)?$/, loader: 'null' },
             { test: /\.json$/, loader: 'json' },,

@@ -50,7 +50,6 @@ class ApplicationList extends React.Component {
                                 <span className='fa fa-search' />
                             </div>
                             <input
-                                ref='filterInput'
                                 name='yourturn_search'
                                 autoFocus={true}
                                 value={term}
