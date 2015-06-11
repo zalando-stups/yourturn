@@ -8,7 +8,6 @@ import 'common/asset/less/application/access-form.less';
 class AccessForm extends React.Component {
     constructor(props) {
         super();
-        this.props = props;
         this.stores = {
             kio: props.flux.getStore('kio'),
             mint: props.flux.getStore('mint'),

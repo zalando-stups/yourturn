@@ -6,7 +6,6 @@ import 'common/asset/less/application/application-form.less';
 class ApplicationForm extends React.Component {
     constructor(props) {
         super();
-        this.props = props;
         this.stores = {
             user: props.globalFlux.getStore('user'),
             kio: props.flux.getStore('kio')

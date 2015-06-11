@@ -1,7 +1,4 @@
 /* globals sinon, expect, Promise */
-import jsdom from 'jsdom';
-import $ from 'jquery';
-import React from 'react';
 import {Flummox} from 'flummox';
 import KioStore from 'common/src/data/kio/kio-store';
 import KioActions from 'common/src/data/kio/kio-actions';
@@ -59,49 +56,30 @@ describe('The access control form view', () => {
     var flux,
         globalFlux,
         actionSpy,
-        $form,
-        reactComponent,
-        reactElement;
-
-    function render(done) {
-        let props = {
-            flux: flux,
-            globalFlux: globalFlux,
-            applicationId: 'kio'
-        };
-        reactComponent = new AccessForm(props);
-        reactElement = React.createElement(AccessForm, props);
-        jsdom.env(React.renderToString(reactElement), (err, wndw) => {
-            $form = $(wndw.document.body).find('.accessForm');
-            done();
-        });
-    }
+        props,
+        form;
 
     beforeEach(done => {
-        flux = new MockFlux();
-        globalFlux = new GlobalFlux();
-        flux.getStore('essentials').receiveScopes(['customer', [{ id: 'read_all' }]]);
-        flux.getStore('mint').receiveOAuthConfig(['kio', MOCK_KIO]);
-        actionSpy = sinon.stub(flux.getActions('mint'), 'saveOAuthConfig', () => {
-            return Promise.resolve();
+        reset(() => {
+            flux = new MockFlux();
+            globalFlux = new GlobalFlux();
+            flux.getStore('essentials').receiveScopes(['customer', [{ id: 'read_all' }]]);
+            flux.getStore('mint').receiveOAuthConfig(['kio', MOCK_KIO]);
+            actionSpy = sinon.stub(flux.getActions('mint'), 'saveOAuthConfig', () => {
+                return Promise.resolve();
+            });
+            props = {
+                flux: flux,
+                globalFlux: globalFlux,
+                applicationId: 'kio'
+            };
+            form = render(AccessForm, props);
+            done();
         });
-        render(done);
-    });
-
-    it('should select the scope', () => {
-        let items = $form.find('[data-block="scope-list-item"]');
-        expect(items.length).to.equal(1);
-        expect(items.find('input:checked').length).to.equal(1);
-    });
-
-    it('should show the bucket', () => {
-        let items = $form.find('[data-block="editable-list-item"]');
-        expect(items.length).to.equal(1);
-        expect(items.first().text()).to.equal(MOCK_KIO.s3_buckets[0]);
     });
 
     it('should call the correct action', () => {
-        reactComponent.save();
+        form.save();
         expect(actionSpy.calledOnce).to.be.true;
     });
 });

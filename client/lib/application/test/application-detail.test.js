@@ -1,7 +1,4 @@
 /* globals expect */
-import jsdom from 'jsdom';
-import $ from 'jquery';
-import React from 'react';
 import {Flummox} from 'flummox';
 import KioStore from 'common/src/data/kio/kio-store';
 import KioActions from 'common/src/data/kio/kio-actions';
@@ -40,80 +37,67 @@ describe('The application detail view', () => {
     var flux,
         globalFlux,
         TEST_APP,
-        reactElement,
-        reactComponent,
-        $detail;
-
-    function render(done) {
-        let props = {
-            flux: flux,
-            globalFlux: globalFlux,
-            applicationId: ID
-        };
-        reactComponent = new Detail(props);
-        reactElement = React.createElement(Detail, props);
-        jsdom.env(React.renderToString(reactElement), (err, wndw) => {
-            $detail = $(wndw.document.body).find('.applicationDetail');
-            done();
-        });
-    }
+        props,
+        detail;
 
     beforeEach(done => {
-        flux = new MockFlux();
-        globalFlux = new GlobalFlux();
-        TEST_APP = {
-            documentation_url: 'https://github.com/zalando-stups/kio',
-            scm_url: 'https://github.com/zalando-stups/kio.git',
-            service_url: 'https://kio.example.org/',
-            description: '# Kio',
-            subtitle: 'STUPS application registry',
-            name: 'Kio',
-            active: true,
-            team_id: 'stups',
-            id: 'kio'
-        };
-        render(done);
-    });
-
-    it('should display a placeholder when the application is Pending', done => {
-        flux.getStore(APP).beginFetchApplication(ID);
-        render(() => {
-            expect($detail.hasClass('u-placeholder')).to.be.true;
+        reset(() => {
+            flux = new MockFlux();
+            globalFlux = new GlobalFlux();
+            TEST_APP = {
+                documentation_url: 'https://github.com/zalando-stups/kio',
+                scm_url: 'https://github.com/zalando-stups/kio.git',
+                service_url: 'https://kio.example.org/',
+                description: '# Kio',
+                subtitle: 'STUPS application registry',
+                name: 'Kio',
+                active: true,
+                team_id: 'stups',
+                id: 'kio'
+            };
+            props = {
+                flux: flux,
+                globalFlux: globalFlux,
+                applicationId: ID
+            };
+            detail = render(Detail, props);
             done();
         });
     });
 
-    it('should not a display a placeholder when the api is Pending', done => {
+    it('should display a placeholder when the application is Pending', () => {
+        flux.getStore(APP).beginFetchApplication(ID);
+        detail = render(Detail, props);
+        let placeholders = TestUtils.scryRenderedDOMComponentsWithClass(detail, 'u-placeholder');
+        expect(placeholders.length).to.equal(1);
+    });
+
+    it('should not a display a placeholder when the api is Pending', () => {
         flux.getStore(APP).receiveApplication(TEST_APP);
         flux.getStore(API).beginFetchApi(ID);
-        render(() => {
-            expect($detail.hasClass('u-placeholder')).to.be.false;
-            done();
-        });
+        detail = render(Detail, props);
+        let placeholders = TestUtils.scryRenderedDOMComponentsWithClass(detail, 'u-placeholder');
+        expect(placeholders.length).to.equal(0);
     });
 
-    it('should display an inactive badge when the application is inactive', done => {
+    it('should display an inactive badge when the application is inactive', () => {
         TEST_APP.active = false;
         flux.getStore(APP).receiveApplication(TEST_APP);
-        render(() => {
-            expect($detail.find('[data-block="inactive-badge"]').length).to.equal(1);
-            done();
-        });
+        detail = render(Detail, props);
+        let inactiveBadges = TestUtils.scryRenderedDOMComponentsWithAttributeValue(detail, 'data-block', 'inactive-badge');
+        expect(inactiveBadges.length).to.equal(1);
     });
 
-    it('should not display a badge when the application is active', done => {
+    it('should not display a badge when the application is active', () => {
         flux.getStore(APP).receiveApplication(TEST_APP);
-        render(() => {
-            expect($detail.find('[data-block="inactive-badge"]').length).to.equal(0);
-            done();
-        });
+        detail = render(Detail, props);
+        let inactiveBadges = TestUtils.scryRenderedDOMComponentsWithAttributeValue(detail, 'data-block', 'inactive-badge');
+        expect(inactiveBadges.length).to.equal(0);
     });
 
-    it('should contain rendered markdown', done => {
+    it('should contain rendered markdown', () => {
         flux.getStore(APP).receiveApplication(TEST_APP);
-        render(() => {
-            expect($detail.find('[data-block="description"] h1').length).to.equal(1);
-            done();
-        });
+        detail = render(Detail, props);
+        expect($(React.findDOMNode(detail)).find('[data-block="description"] h1').length).to.equal(1);
     });
 });
