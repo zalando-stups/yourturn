@@ -310,13 +310,28 @@ class EditVersionFormHandler extends React.Component {
                 </FluxComponent>;
     }
 }
+EditVersionFormHandler.isAllowed = function(state, globalFlux) {
+    let {applicationId} = state.params,
+        application = KIO_STORE.getApplication(applicationId),
+        userTeams = globalFlux.getStore('user').getUserTeams(),
+        isOwnTeam = userTeams.map(t => t.id).indexOf(application.team_id) >= 0;
+    if (!isOwnTeam) {
+        let error = new Error();
+        error.name = 'Forbidden';
+        error.message = 'You can only edit versions of your own applications!';
+        error.status = 'u1F62D';
+        return error;
+    }
+}
 EditVersionFormHandler.fetchData = function(state) {
     let {applicationId, versionId} = state.params;
-    if (!KIO_STORE.getApplication(applicationId)) {
-        KIO_ACTIONS.fetchApplication(applicationId);
-    }
     KIO_ACTIONS.fetchApprovals(applicationId, versionId);
-    return KIO_ACTIONS.fetchApplicationVersion(applicationId, versionId);
+    return Promise.all([
+        KIO_ACTIONS.fetchApplicationVersion(applicationId, versionId),
+        KIO_STORE.getApplication(applicationId) ?
+            Promise.resolve() :
+            KIO_ACTIONS.fetchApplication(applicationId)
+    ]);
 };
 
 const ROUTES =

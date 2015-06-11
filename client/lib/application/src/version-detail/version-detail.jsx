@@ -79,7 +79,8 @@ class VersionDetail extends React.Component {
             version = kio.getApplicationVersion(applicationId, versionId),
             {team, artifact, tag} = parseArtifact(version.artifact),
             scmSource = pierone.getScmSource(team, artifact, tag),
-            approvals = kio.getApprovals(applicationId, versionId);
+            approvals = kio.getApprovals(applicationId, versionId),
+            isOwnApplication = user.getUserTeams().map(t => t.id).indexOf(application.team_id) >= 0;
 
         return <div className='versionDetail'>
                     <h2>
@@ -90,7 +91,7 @@ class VersionDetail extends React.Component {
                         <a href={`/application/detail/${applicationId}/version`} className='btn btn-default'>
                             <i className='fa fa-chevron-left'></i> {application.name || applicationId} versions
                         </a>
-                        <a href={`/application/detail/${applicationId}/version/edit/${versionId}`} className='btn btn-default {#unless isOwnApplication}btn-disabled{/unless}'>
+                        <a href={`/application/detail/${applicationId}/version/edit/${versionId}`} className={`btn btn-default ${isOwnApplication ? '' : 'btn-disabled'}`}>
                             <i className='fa fa-edit'></i> Edit {versionId}
                         </a>
                         <a href={`/application/detail/${applicationId}/version/approve/${versionId}`} className='btn btn-primary'>
