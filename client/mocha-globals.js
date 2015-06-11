@@ -8,6 +8,14 @@ var chai = require('chai'),
     OAuth = require('oauth2-client-js'),
     localStorage = new OAuth.MemoryStorage();
 
+// necessary because when React is loaded it looks for a window
+// if it's not available, this result is stored
+// however we create a virtual window further down
+// so override that
+// 
+// http://stackoverflow.com/a/26872245
+require('react/lib/ExecutionEnvironment').canUseDOM = true;
+
 TestUtils.findRenderedDOMComponentWithAttributeValue = function(component, attr, val) {
     var doms = TestUtils.scryRenderedDOMComponentsWithAttributeValue(component, attr, val);
     if (doms.length !== 1) {
@@ -17,7 +25,6 @@ TestUtils.findRenderedDOMComponentWithAttributeValue = function(component, attr,
 }
 
 localStorage.set('stups-access_token', 'access_token');
-
 global.window = {
     localStorage: localStorage
 };

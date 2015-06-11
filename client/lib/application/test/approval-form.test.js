@@ -1,7 +1,4 @@
 /* globals expect */
-import jsdom from 'jsdom';
-import $ from 'jquery';
-import React from 'react';
 import {Flummox} from 'flummox';
 import KioStore from 'common/src/data/kio/kio-store';
 import KioActions from 'common/src/data/kio/kio-actions';
@@ -48,58 +45,53 @@ class GlobalFlux extends Flummox {
 describe('The approval form view', () => {
     var flux,
         globalFlux,
-        reactComponent,
-        reactElement,
-        $form;
+        props,
+        form;
 
-    function render(done) {
-        let props = {
-            flux: flux,
-            globalFlux: globalFlux,
-            applicationId: APP_ID,
-            versionId: VER_ID
-        };
-        reactComponent = new ApprovalForm(props);
-        reactElement = React.createElement(ApprovalForm, props);
-        jsdom.env(React.renderToString(reactElement), (err, wndw) => {
-            $form = $(wndw.document.body).find('.approvalForm');
+    beforeEach(done => {
+        reset(() => {
+            flux = new MockFlux();
+            globalFlux = new GlobalFlux();
+            props = {
+                flux: flux,
+                globalFlux: globalFlux,
+                applicationId: APP_ID,
+                versionId: VER_ID
+            };
+            form = render(ApprovalForm, props);
             done();
         });
-    }
-
-    beforeEach(() => {
-        flux = new MockFlux();
-        globalFlux = new GlobalFlux();
     });
 
     it('should show approvals', () => {
         flux.getStore(FLUX).receiveApprovals([APP_ID, VER_ID, TEST_APPROVALS]);
-        render(() => {
-            let $list = $form.find('[data-block="approval-list"]');
-            expect($list.find('.approvalCard').length).to.equal(2);
-            done();
-        });
+        form = render(ApprovalForm, props);
+        let approvals = TestUtils.findRenderedDOMComponentWithAttributeValue(form, 'data-block', 'approval-list');
+        expect($(React.findDOMNode(approvals)).children().length).to.equal(2);
     });
 
     it('should show all approval types in selectbox', () => {
         flux.getStore(FLUX).receiveApprovalTypes([APP_ID, ['CHAOS', 'MORE_CHAOS']]);
-        render(() => {
-            let $select = $form.find('[data-block="approvalType-selection"]');
-            expect($select.find('option').length).to.equal(2);
-            done();
-        });
+        form = render(ApprovalForm, props);
+        let select = TestUtils.findRenderedDOMComponentWithAttributeValue(form, 'data-block', 'approvalType-selection');
+        expect($(React.findDOMNode(select)).children().length).to.equal(2);
     });
 
     it('should display an explanation of default approval types', () => {
         flux.getStore(FLUX).receiveApprovalTypes([APP_ID, TEST_APPROVAL_TYPES]);
-        render(() => {
-            reactComponent.selectType(TEST_APPROVAL_TYPES[1]);
-            console.log(React.renderToString(reactComponent));
-        });
+        form = render(ApprovalForm, props);
+        TestUtils.findRenderedDOMComponentWithAttributeValue(form, 'data-block', 'approvalType-explanation');
     });
 
     it('should hide the explanation when a non-default approval type is selected', () => {
         flux.getStore(FLUX).receiveApprovalTypes([APP_ID, TEST_APPROVAL_TYPES]);
-        
+        form = render(ApprovalForm, props);
+
+        let select = TestUtils.findRenderedDOMComponentWithAttributeValue(form, 'data-block', 'approvalType-selection');
+        TestUtils.Simulate.change(select, { target: { value: 'UX' } });
+
+        expect(() => {
+            TestUtils.findRenderedDOMComponentWithAttributeValue(form, 'data-block', 'approvalType-explanation');
+        }).to.throw;
     });
 });
