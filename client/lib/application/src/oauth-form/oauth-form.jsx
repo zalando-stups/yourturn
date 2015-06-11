@@ -49,7 +49,9 @@ class OAuthForm extends React.Component {
      * Save current state to backend
      */
     save(evt) {
-        evt.preventDefault();
+        if (evt) {
+            evt.preventDefault();
+        }
         let {applicationId} = this.props,
             scopes = this.stores.essentials.getAllScopes(),
             ownerscopes = this.state.scopes,

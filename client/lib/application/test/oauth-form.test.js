@@ -8,7 +8,7 @@ import EssentialsStore from 'common/src/data/essentials/essentials-store';
 import EssentialsActions from 'common/src/data/essentials/essentials-actions';
 import UserStore from 'common/src/data/user/user-store';
 import UserActions from 'common/src/data/user/user-actions';
-import OAuthForm from 'application/src/oauth-form/oauth-form';
+import OAuthForm from 'application/src/oauth-form/oauth-form.jsx';
 
 const MOCK_KIO = {
     id: 'kio',
@@ -56,41 +56,34 @@ describe('The oauth form view', () => {
     var flux,
         globalFlux,
         actionSpy,
+        props,
         form;
 
-    beforeEach(() => {
-        flux = new MockFlux();
-        globalFlux = new GlobalFlux();
-        actionSpy = sinon.stub(flux.getActions('mint'), 'saveOAuthConfig', () => {
-            return Promise.resolve();
+    beforeEach(done => {
+        reset(() => {
+            flux = new MockFlux();
+            globalFlux = new GlobalFlux();
+            actionSpy = sinon.stub(flux.getActions('mint'), 'saveOAuthConfig', () => {
+                return Promise.resolve();
+            });
+            props = {
+                flux: flux,
+                globalFlux: globalFlux,
+                applicationId: 'kio'
+            };
+            flux.getStore('mint').receiveOAuthConfig(['kio', MOCK_KIO]);
+            form = render(OAuthForm, props);
+            done();
         });
-        form = new OAuthForm({
-            flux: flux,
-            globalFlux: globalFlux,
-            applicationId: 'kio'
-        });
-    });
-
-    it('should show the placeholder when oauth is Pending', () => {
-        flux.getStore('mint').beginFetchOAuthConfig('kio');
-        expect(form.$el.children().first().hasClass('u-placeholder')).to.be.true;
-    });
-
-    it('should show the full view when oauth is completed', () => {
-        flux.getStore('mint').receiveOAuthConfig(['kio', MOCK_KIO]);
-        // not the placeholder
-        expect(form.$el.children().first().hasClass('u-placeholder')).to.be.false;
     });
 
     it('should check the non-confidentiality checkbox by default', () => {
-        flux.getStore('mint').receiveOAuthConfig(['kio', MOCK_KIO]);
-        let $box = form.$el.find('[data-block="confidentiality-checkbox"]').first();
-        expect($box.is(':checked')).to.be.true;
+        let box = TestUtils.findRenderedDOMComponentWithAttributeValue(form, 'data-block', 'confidentiality-checkbox');
+        expect($(React.findDOMNode(box)).is(':checked')).to.be.true;
     });
 
     it('should call the correct action', () => {
-        flux.getStore('mint').receiveOAuthConfig(['kio', MOCK_KIO]);
-        form.$el.find('form').submit();
+        form.save();
         expect(actionSpy.calledOnce).to.be.true;
     });
 });
