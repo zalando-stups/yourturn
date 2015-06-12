@@ -38,6 +38,7 @@ class FullstopStore extends Store {
         let all = _m.toJs(_m.into(this.state.violations, _m.toClj(violations)));
         all.forEach(v => v.timestamp = Date.parse(v.created));
         // sorry, with mori there always was an infinite loop
+        // dedup
         all = all.filter((v, i, array) => _.findLastIndex(array, a => a.id === v.id) === i);
 
         this.setState({
@@ -55,7 +56,7 @@ class FullstopStore extends Store {
                                             accounts.indexOf(_m.get(v, 'account_id')) >= 0 :
                                             true,
                                         this.state.violations);
-        
+
         if (resolved === true) {
             violations = _m.filter(v => _m.get(v, 'comment') !== null, violations);
         } else if (resolved === false) {
