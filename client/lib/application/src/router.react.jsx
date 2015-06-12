@@ -345,7 +345,7 @@ EditVersionFormHandler.fetchData = function(state) {
 };
 
 const ROUTES =
-        <Route path='/application'>
+        <Route path='application'>
             <DefaultRoute handler={AppListHandler} />
             <Route path='create' handler={CreateAppFormHandler} />
             <Route path='edit/:applicationId' handler={EditAppFormHandler} />

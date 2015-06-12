@@ -2,7 +2,7 @@ import React from 'react';
 import {Route} from 'react-router';
 import YT_FLUX from './flux';
 import AppRoutes from 'application/src/router.react.jsx';
-
+import ResRoutes from 'resource/src/router.react.jsx';
 
 // import Search from 'yourturn/src/search/search';
 // import puppeteer from 'common/src/puppeteer';
@@ -61,7 +61,6 @@ class LoginHandler extends React.Component {
         return null;   
     }
 }
-
 LoginHandler.contextTypes = {
     router: React.PropTypes.func.isRequired
 };
@@ -69,6 +68,7 @@ LoginHandler.contextTypes = {
 const ROUTES =
     <Route path='/'>
         {AppRoutes}
+        {ResRoutes}
         <Route path='oauth' handler={LoginHandler} />
     </Route>;
 

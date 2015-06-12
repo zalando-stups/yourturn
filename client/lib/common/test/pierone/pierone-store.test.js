@@ -72,16 +72,5 @@ describe('The pierone store', () => {
             let result = store.getScmSource(TEAM, ARTIFACT, TAG);
             expect(result).to.be.false;
         });
-
-        it('should set a Failed result on eror', () => {
-            let error = new Error();
-            error.status = 404;
-            error.team = TEAM;
-            error.artifact = ARTIFACT;
-            error.tag = TAG;
-            store.failFetchScmSource(error);
-            let result = store.getScmSource(TEAM, ARTIFACT, TAG);
-            expect(result.isFailed()).to.be.true;
-        });
     });
 });
