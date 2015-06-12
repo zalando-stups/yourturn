@@ -1,0 +1,58 @@
+<h2 class="violationList-headline">Violations</h2>
+<div class="u-info">
+    Violations of the STUPS policy and bad practices in accounts you have access to.
+</div>
+
+<div class="tabs">
+    <div
+        data-action="show-unresolved"
+        class="tab {{#unless showingResolved}}is-active{{/unless}}">
+        Unresolved <span class="badge">{{unresolvedViolations.length}}</span>
+    </div>
+    <div
+        data-action="show-resolved"
+        class="tab {{#if showingResolved}}is-active{{/if}}">
+        Resolved <span class="badge">{{resolvedViolations.length}}</span>
+    </div>
+</div>
+{{#if violations.length}}
+    {{#each violations}}
+    <div class="violation">
+        <header>
+            <div>
+                <i title="Time when this violation was discovered" class="fa fa-fw fa-calendar-o"></i> {{{absoluteDate timestamp}}}
+            </div>
+            <div>
+                <i title="The cloud account number" class="fa fa-fw fa-cloud"></i> {{account_id}}
+            </div>
+            <div>
+                <i title="Which region this violation happened in" class="fa fa-fw fa-map-marker"></i> {{region}}
+            </div>
+        </header>
+        <blockquote class="violation-violationMessage">
+            {{message}}
+        </blockquote>
+        <footer>
+            {{#if comment}}
+                <span>{{last_modified_by}} ({{{relativeDate last_modified}}}):</span>
+                <blockquote class="violation-resolutionMessage">{{comment}}</blockquote>
+            {{else}}
+                <form class="form" data-violation-id="{{this.id}}">
+                    <div class="input-group">
+                        <input
+                            placeholder="This is expected because I tested things."
+                            type="text" />
+                        <button
+                            type="submit"
+                            class="btn btn-default">
+                            <i class="fa fa-check"></i> Resolve
+                        </button>
+                    </div>
+                </form>
+            {{/if}}
+        </footer>
+    </div>
+    {{/each}}
+{{else}}
+    Wow, no violations! You are a good person.
+{{/if}}

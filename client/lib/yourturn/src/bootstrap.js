@@ -7,6 +7,7 @@ import NotificationBar from './notification-bar/notification-bar';
 import Router from './router';
 import ResourceRouter from 'resource/src/router';
 import AppRouter from 'application/src/router';
+import ViolationRouter from 'violation/src/router';
 import Flux from './flux';
 
 import 'common/asset/less/base.less';
@@ -33,7 +34,11 @@ $(document).ready(() => {
         .then(info => {
             YT_FLUX
                 .getActions('user')
-                .fetchUserTeams(info.uid);
+                .fetchUserTeams(info.uid)
+                .then(() => {
+                    history.fragment = null;
+                    history.navigate(window.location.pathname, {trigger: true});
+                });
         });
     $('#yourturn-sidebar').append(sidebar.$el);
     $('body').prepend(notifications.$el);
@@ -44,6 +49,9 @@ $(document).ready(() => {
         globalFlux: YT_FLUX
     });
     new AppRouter({
+        globalFlux: YT_FLUX
+    });
+    new ViolationRouter({
         globalFlux: YT_FLUX
     });
     history.start({
