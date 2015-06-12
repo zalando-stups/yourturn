@@ -12,6 +12,13 @@ class ApplicationList extends React.Component {
         this.state = {
             term: ''
         };
+
+        this._forceUpdate = this.forceUpdate.bind(this);
+        this.stores.user.on('change', this._forceUpdate);
+    }
+
+    componentWillUnmount() {
+        this.stores.user.off('change', this._forceUpdate);
     }
 
     filter(evt) {

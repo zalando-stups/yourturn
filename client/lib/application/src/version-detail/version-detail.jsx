@@ -70,6 +70,13 @@ class VersionDetail extends React.Component {
             pierone: props.flux.getStore('pierone'),
             user: props.globalFlux.getStore('user')
         };
+
+        this._forceUpdate = this.forceUpdate.bind(this);
+        this.stores.user.on('change', this._forceUpdate);
+    }
+
+    componentWillUnmount() {
+        this.stores.user.off('change', this._forceUpdate);
     }
 
     render() {

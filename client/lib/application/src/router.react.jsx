@@ -20,6 +20,14 @@ const APP_FLUX = new Flux(),
       KIO_ACTIONS = APP_FLUX.getActions('kio'),
       KIO_STORE = APP_FLUX.getStore('kio');
 
+function requireTeam(flux) {
+    if (!flux.getStore('user').getUserTeams().length) {
+        let {uid} = flux.getStore('user').getTokenInfo();
+        return flux.getActions('user').fetchUserTeams(uid);
+    }
+    return Promise.resolve();
+}
+
 class AppListHandler extends React.Component {
     constructor() {
         super();
@@ -93,8 +101,10 @@ EditAppFormHandler.isAllowed = function(state, globalFlux) {
         return error;
     }
 }
-EditAppFormHandler.fetchData = function(state) {
-    return KIO_ACTIONS.fetchApplication(state.params.applicationId);
+EditAppFormHandler.fetchData = function(state, globalFlux) {
+    let {uid} = globalFlux.getStore('user').getTokenInfo();
+    KIO_ACTIONS.fetchApplication(state.params.applicationId);
+    return requireTeam(globalFlux);
 };
 
 

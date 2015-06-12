@@ -23,6 +23,13 @@ class ApprovalForm extends React.Component {
             selectedType: this.stores.kio.getApprovalTypes(props.applicationId)[0],
             notes: ''
         };
+
+        this._forceUpdate = this.forceUpdate.bind(this);
+        this.stores.user.on('change', this._forceUpdate);
+    }
+
+    componentWillUnmount() {
+        this.stores.user.off('change', this._forceUpdate);
     }
 
     selectType(evt) {

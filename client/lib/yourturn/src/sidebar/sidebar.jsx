@@ -49,7 +49,7 @@ class Sidebar extends React.Component {
     }
 
     render() {
-        let tokeninfo = this.props.flux.getStore('user').getTokenInfo();
+        let tokeninfo = this.store.getTokenInfo();
         return  <aside className='sidebar'>
                     <div className='sidebar-content'>
                         <div className='header'>

@@ -20,6 +20,13 @@ class OAuthForm extends React.Component {
             redirectUrl: oauthConfig.redirect_url,
             isClientConfidential: oauthConfig.is_client_confidential
         };
+
+        this._forceUpdate = this.forceUpdate.bind(this);
+        this.stores.user.on('change', this._forceUpdate);
+    }
+
+    componentWillUnmount() {
+        this.stores.user.off('change', this._forceUpdate);
     }
 
     updateScopes(selectedScopes) {

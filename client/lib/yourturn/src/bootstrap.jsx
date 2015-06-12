@@ -31,10 +31,10 @@ function isAllowed(state, globalFlux) {
     return true;
 }
 
-function fetchData(routes, state) {
+function fetchData(routes, state, globalFlux) {
     let promises = routes
                     .filter(route => route.handler.fetchData !== undefined)
-                    .map(route => route.handler.fetchData(state));
+                    .map(route => route.handler.fetchData(state, globalFlux));
     return Promise.all(promises);
 }
 
@@ -61,30 +61,28 @@ YT_FLUX
     .then(info => {
         YT_FLUX
             .getActions('user')
-            .fetchUserTeams(info.uid)
-            .then(() => {
-                router.run(
-                    (Handler, state) => {
-                        fetchData(state.routes, state)
-                        .then(() => {
-                            // before checking if user is allowed to see stuff,
-                            // we have to fetch the data
-                            // (i.e. to know the team of an application)
-                            let authError = isAllowed(state, YT_FLUX);
-                            if (authError !== true) {
-                                // if auth error true => everythings good
-                                // I KNOW!
-                                React.render(<DefaultError error={authError} />,
-                                             document.getElementById(MAIN_VIEW_ID));
-                            } else {
-                                React.render(<Handler globalFlux={YT_FLUX} />,
-                                             document.getElementById(MAIN_VIEW_ID));
-                            }
-                        });
-                    });
-            });
+            .fetchUserTeams(info.uid);
     });
 
+router.run(
+    (Handler, state) => {
+        fetchData(state.routes, state, YT_FLUX)
+        .then(() => {
+            // before checking if user is allowed to see stuff,
+            // we have to fetch the data
+            // (i.e. to know the team of an application)
+            let authError = isAllowed(state, YT_FLUX);
+            if (authError !== true) {
+                // if auth error true => everythings good
+                // I KNOW!
+                React.render(<DefaultError error={authError} />,
+                             document.getElementById(MAIN_VIEW_ID));
+            } else {
+                React.render(<Handler globalFlux={YT_FLUX} />,
+                             document.getElementById(MAIN_VIEW_ID));
+            }
+        });
+    });
 
 
 /**

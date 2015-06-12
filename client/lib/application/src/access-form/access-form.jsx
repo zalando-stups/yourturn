@@ -19,6 +19,12 @@ class AccessForm extends React.Component {
             s3_buckets: oauth.s3_buckets,
             scopes: oauth.scopes
         };
+        this._forceUpdate = this.forceUpdate.bind(this);
+        this.stores.user.on('change', this._forceUpdate);
+    }
+
+    componentWillUnmount() {
+        this.stores.user.off('change', this._forceUpdate);
     }
 
     updateScopes(selectedScopes) {
