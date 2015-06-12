@@ -1,4 +1,3 @@
-/* globals ENV_TEST */
 import BaseView from 'common/src/base-view';
 import Template from './violation-list.hbs';
 import 'common/asset/less/violation/violation-list.less';
@@ -9,7 +8,7 @@ class ViolationList extends BaseView {
         props.events = {
             'submit form': 'resolveViolation',
             'click [data-action="show-resolved"]': 'showResolved',
-            'click [data-action="show-unresolved"]': 'showUnresolved',
+            'click [data-action="show-unresolved"]': 'showUnresolved'
         };
         props.stores = {
             fullstop: props.flux.getStore('fullstop'),

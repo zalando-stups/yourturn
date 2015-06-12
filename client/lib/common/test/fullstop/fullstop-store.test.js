@@ -6,17 +6,31 @@ import {Flummox} from 'flummox';
 const VIOLATION = {
         'id': 1,
         'created': null,
-        'createdBy': null,
+        'created_by': null,
         'version': 0,
-        'lastModified': null,
-        'lastModifiedBy': null,
-        'eventId': 'event',
-        'accountId': '123',
+        'last_modified': null,
+        'last_modified_by': null,
+        'event_id': 'event',
+        'account_id': '123',
         'region': 'eu-west-1',
         'message': 'InstanceId: i-id doesn\'t have any userData.',
-        'violationObject': null,
+        'violation_object': null,
         'resolved': false
-    };
+    },
+    VIOLATIONS = [VIOLATION, {
+        'id': 2,
+        'created': null,
+        'created_by': null,
+        'version': 0,
+        'last_modified': null,
+        'last_modified_by': null,
+        'event_id': 'event',
+        'account_id': '123',
+        'region': 'eu-central-1',
+        'message': 'InstanceId: i-id doesn\'t have any userData.',
+        'violation_object': null,
+        'resolved': false
+    }];
 
 class MockFlux extends Flummox {
     constructor() {
@@ -49,6 +63,13 @@ describe('The fullstop store', () => {
         store.receiveViolations([VIOLATION]);
         let violation = store.getViolation(VIOLATION.id);
         expect(violation).to.be.ok;
+    });
+
+    it('should not contain duplicate violations', () => {
+        store.receiveViolations(VIOLATIONS);
+        expect(store.getViolations().length).to.equal(2);
+        store.receiveViolations(VIOLATIONS);
+        expect(store.getViolations().length).to.equal(2);
     });
 
     it('should exchange an existing violation', () => {

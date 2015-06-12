@@ -9,11 +9,12 @@ class FullstopActions extends Actions {
                 .get(`${FULLSTOP_BASE_URL}/violations`)
                 .accept('json')
                 .query({
-                    accounts: accounts
+                    accounts: accounts,
+                    size: 500
                 })
                 .oauth(Provider, RequestConfig)
                 .exec(saveRoute)
-                .then(res => res.body);
+                .then(res => res.body.content);
     }
 
     fetchViolation(violationId) {

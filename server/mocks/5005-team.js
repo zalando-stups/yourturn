@@ -6,7 +6,7 @@ var user = {
         id: 'stups',
         'infrastructure-accounts': [
           {
-            id: '123456789',
+            id: '1',
             type: 'aws'
           }
         ],

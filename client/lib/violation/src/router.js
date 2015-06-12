@@ -1,4 +1,4 @@
-import {Router, history} from 'backbone';
+import {Router} from 'backbone';
 import Flux from './flux';
 import ViolationList from 'violation/src/violation-list/violation-list';
 import puppeteer from 'common/src/puppeteer';
@@ -18,13 +18,24 @@ class ViolationRouter extends Router {
     }
 
     listViolations() {
-        let accountIds = this.globalFlux.getStore('user').getUserCloudAccounts().map(a => a.id);
-        console.log(this.globalFlux.getStore('user').getUserCloudAccounts());
-        VIO_ACTIONS.fetchViolations(accountIds);
-        puppeteer.show(new ViolationList({
-            flux: VIO_FLUX,
-            globalFlux: this.globalFlux
-        }), MAIN_VIEW_ID);
+        let accounts = this.globalFlux.getStore('user').getUserCloudAccounts();
+        if (accounts.length === 0 || accounts.isPending && accounts.isPending()) {
+            this.globalFlux.getActions('user').fetchUserTeams().then(() => {
+                let accountIds = this.globalFlux.getStore('user').getUserCloudAccounts().map(a => a.id);
+                VIO_ACTIONS.fetchViolations(accountIds);
+                puppeteer.show(new ViolationList({
+                    flux: VIO_FLUX,
+                    globalFlux: this.globalFlux
+                }), MAIN_VIEW_ID);
+            });
+        } else {
+            let accountIds = accounts.map(a => a.id);
+            VIO_ACTIONS.fetchViolations(accountIds);
+            puppeteer.show(new ViolationList({
+                flux: VIO_FLUX,
+                globalFlux: this.globalFlux
+            }), MAIN_VIEW_ID);
+        }
     }
 }
 

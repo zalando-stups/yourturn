@@ -23,7 +23,10 @@ server.get('/violations', function(req, res) {
         res
             .status(200)
             .type('json')
-            .send(all);
+            .send({
+                // spring paging :(
+                content: all
+            });
     }, Math.random() * 2000);
 });
 
@@ -55,12 +58,9 @@ server.post('/violations/:violationId/resolution', function(req, res) {
                     .filter(function(v) {
                         return v.id !== violationId;
                     });
-    violation[0].resolved = true;
-    violation[0].resolution = {
-        message: req.body.message,
-        user: 'npiccolotto',
-        timestamp: '2015-05-28T16:30:00Z'
-    };
+    violation[0].comment = req.body.message;
+    violation[0].last_modified_by = 'npiccolotto';
+    violation[0].last_modified = '2015-05-28T16:30:00Z';
 
     // add new
     VIOLATIONS = VIOLATIONS.concat(violation);

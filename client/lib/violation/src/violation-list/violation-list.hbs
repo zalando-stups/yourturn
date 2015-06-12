@@ -19,15 +19,15 @@
     {{#each violations}}
     <div class="violation">
         <header>
-            In <strong>{{region}}</strong> of account <strong>{{accountId}}</strong> 
+            In <strong>{{region}}</strong> of account <strong>{{account_id}}</strong> 
         </header>
         <blockquote class="violation-violationMessage">
             {{message}}
         </blockquote>
         <footer>
-            {{#if resolved}}
-                <span>{{resolution.user}} ({{{relativeDate resolution.timestamp}}}):</span>
-                <blockquote class="violation-resolutionMessage">{{resolution.message}}</blockquote>
+            {{#if comment}}
+                <span>{{last_modified_by}} ({{{relativeDate last_modified}}}):</span>
+                <blockquote class="violation-resolutionMessage">{{comment}}</blockquote>
             {{else}}
                 <form class="form" data-violation-id="{{this.id}}">
                     <div class="input-group">

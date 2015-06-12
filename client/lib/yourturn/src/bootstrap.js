@@ -34,7 +34,11 @@ $(document).ready(() => {
         .then(info => {
             YT_FLUX
                 .getActions('user')
-                .fetchUserTeams(info.uid);
+                .fetchUserTeams(info.uid)
+                .then(() => {
+                    history.fragment = null;
+                    history.navigate(window.location.pathname, {trigger: true});
+                });
         });
     $('#yourturn-sidebar').append(sidebar.$el);
     $('body').prepend(notifications.$el);

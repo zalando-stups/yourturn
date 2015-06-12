@@ -1,5 +1,6 @@
 import {Store} from 'flummox';
 import _m from 'mori';
+import _ from 'lodash';
 
 class FullstopStore extends Store {
     constructor(flux) {
@@ -45,9 +46,14 @@ class FullstopStore extends Store {
     }
 
     receiveViolations(violations) {
-        let all = _m.into(this.state.violations, _m.toClj(violations));
+        let all = _m.toJs(_m.into(this.state.violations, _m.toClj(violations)));
+        // sorry, with mori there always was an infinite loop
+        all = all
+                .reverse()
+                .filter((v, i, array) => _.findLastIndex(array, a => a.id === v.id) === i);
+
         this.setState({
-            violations: all
+            violations: _m.toClj(all)
         });
     }
 
@@ -57,10 +63,12 @@ class FullstopStore extends Store {
     }
 
     getViolations(accounts, resolved) {
-        let violations = _m.filter(v => accounts ? accounts.indexOf(_m.get(v, 'accountId')) >= 0 : true,
-                                   this.state.violations);
+        let violations = _m.filter(v => accounts ?
+                                            accounts.indexOf(_m.get(v, 'account_id')) >= 0 :
+                                            true,
+                                        this.state.violations);
         if (resolved !== undefined) {
-            violations = _m.filter(v => _m.get(v, 'resolved') === resolved, violations);
+            violations = _m.filter(v => !!_m.get(v, 'comment') === resolved, violations);
         }
         violations = _m.sortBy(v => _m.get(v, 'created'), violations);
         return _m.toJs(violations);
