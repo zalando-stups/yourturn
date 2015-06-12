@@ -19,7 +19,15 @@
     {{#each violations}}
     <div class="violation">
         <header>
-            In <strong>{{region}}</strong> of account <strong>{{account_id}}</strong> 
+            <div>
+                <i class="fa fa-fw fa-calendar-o"></i> {{{absoluteDate timestamp}}}
+            </div>
+            <div>
+                <i class="fa fa-fw fa-cloud"></i> {{account_id}}
+            </div>
+            <div>
+                <i class="fa fa-fw fa-map-marker"></i> {{region}}
+            </div>
         </header>
         <blockquote class="violation-violationMessage">
             {{message}}

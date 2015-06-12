@@ -31,22 +31,12 @@ class FullstopStore extends Store {
     failFetchViolation() { }
 
     receiveViolation(violation) {
-        // check if we have this violation already
-        let coll = this.state.violations,
-            exists = _m.empty(_m.filter(v => _m.get(v, 'id') === violation.id, coll));
-        if (exists) {
-            // if we do, remove the old one
-            coll = _m.filter(v => _m.get(v, 'id') !== violation.id, coll);
-        }
-        // if not, just add it
-        coll = _m.conj(coll, _m.toClj(violation));
-        this.setState({
-            violations: coll
-        });
+        this.receiveViolations([violation]);
     }
 
     receiveViolations(violations) {
         let all = _m.toJs(_m.into(this.state.violations, _m.toClj(violations)));
+        all.forEach(v => v.timestamp = Date.parse(v.created));
         // sorry, with mori there always was an infinite loop
         all = all
                 .reverse()
