@@ -36,7 +36,7 @@ class FullstopStore extends Store {
 
     receiveViolations(violations) {
         let all = _m.toJs(_m.into(this.state.violations, _m.toClj(violations)));
-        all.forEach(v => v.timestamp = Date.parse(v.created));
+        all.forEach(v => v.timestamp = Date.parse(v.created) || 0);
         // sorry, with mori there always was an infinite loop
         // dedup
         all = all.filter((v, i, array) => _.findLastIndex(array, a => a.id === v.id) === i);

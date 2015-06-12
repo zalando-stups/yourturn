@@ -31,9 +31,7 @@ class FullstopActions extends Actions {
                 .post(`${FULLSTOP_BASE_URL}/violations/${violationId}/resolution`)
                 .accept('json')
                 .type('json')
-                .send({
-                    message: message
-                })
+                .send(message)
                 .oauth(Provider, RequestConfig)
                 .exec(saveRoute)
                 .then(res => res.body);
