@@ -36,7 +36,7 @@ class FullstopActions extends Actions {
                 })
                 .oauth(Provider, RequestConfig)
                 .exec(saveRoute)
-                .then(() => this.fetchViolation(violationId));
+                .then(res => res.body);
     }
 }
 

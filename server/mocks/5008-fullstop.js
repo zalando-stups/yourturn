@@ -64,7 +64,7 @@ server.post('/violations/:violationId/resolution', function(req, res) {
 
     // add new
     VIOLATIONS = VIOLATIONS.concat(violation);
-    res.status(200).send();
+    res.status(200).send(violation[0]);
 });
 
 module.exports = server;
