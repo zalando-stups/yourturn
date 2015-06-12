@@ -74,8 +74,8 @@ class ResourceDetail extends React.Component {
                             {appScopes.length ?
                                 <ul>
                                     {appScopes.map(
-                                        scope => <li>
-                                                    <a href='/resource/detail/{../resource.id}/scope/detail/{scope.id}'>
+                                        scope => <li key={scope.id}>
+                                                    <a href={`/resource/detail/${resourceId}/scope/detail/${scope.id}`}>
                                                         {scope.id}
                                                     </a>
                                                 </li>)}
@@ -88,8 +88,8 @@ class ResourceDetail extends React.Component {
                             {ownerScopes.length ?
                                 <ul>
                                     {ownerScopes.map(
-                                        scope => <li>
-                                                    <a href='/resource/detail/{../resource.id}/scope/detail/{scope.id}'>
+                                        scope => <li key={scope.id}>
+                                                    <a href={`/resource/detail/${resourceId}/scope/detail/${scope.id}`}>
                                                         {scope.id}
                                                     </a>
                                                 </li>)}

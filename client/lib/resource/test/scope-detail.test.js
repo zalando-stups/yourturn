@@ -4,11 +4,16 @@ import EssentialsStore from 'common/src/data/essentials/essentials-store';
 import EssentialsActions from 'common/src/data/essentials/essentials-actions';
 import UserStore from 'common/src/data/user/user-store';
 import UserActions from 'common/src/data/user/user-actions';
-import Detail from 'resource/src/scope-detail/scope-detail';
+import Detail from 'resource/src/scope-detail/scope-detail.jsx';
 
 const ESSENTIALS = 'essentials',
       RES_ID = 'sales_order',
-      SCP_ID = 'read';
+      SCP_ID = 'read',
+      TEST_SCP = {
+            id: 'read',
+            is_resource_owner_scope: true,
+            description: '# Read scope'
+        };
 
 class MockFlux extends Flummox {
     constructor() {
@@ -31,32 +36,27 @@ class GlobalFlux extends Flummox {
 describe('The scope detail view', () => {
     var flux,
         globalFlux,
-        TEST_SCP,
+        props,
         detail;
 
-    beforeEach(() => {
-        flux = new MockFlux();
-        globalFlux = new GlobalFlux();
-        detail = new Detail({
-            flux: flux,
-            globalFlux: globalFlux,
-            resourceId: RES_ID,
-            scopeId: SCP_ID
+    beforeEach(done => {
+        reset(() => {
+            flux = new MockFlux();
+            globalFlux = new GlobalFlux();
+            props = {
+                flux: flux,
+                globalFlux: globalFlux,
+                resourceId: RES_ID,
+                scopeId: SCP_ID
+            };
+            flux.getStore(ESSENTIALS).receiveScope([RES_ID, TEST_SCP]);
+            detail = render(Detail, props);
+            done();
         });
-        TEST_SCP = {
-            id: 'read',
-            is_resource_owner_scope: true,
-            description: '# Read scope'
-        };
-    });
-
-    it('should display a placeholder when the scope is Pending', () => {
-        flux.getStore(ESSENTIALS).beginFetchScope(RES_ID, SCP_ID);
-        expect(detail.$el.find('.u-placeholder').length).to.equal(1);
     });
 
     it('should contain rendered markdown', () => {
-        flux.getStore(ESSENTIALS).receiveScope([RES_ID, TEST_SCP]);
-        expect(detail.$el.find('[data-block="description"] h1').length).to.equal(1);
+        let description = TestUtils.findRenderedDOMComponentWithAttributeValue(detail, 'data-block', 'description');
+        expect($(React.findDOMNode(description)).find('h1').length).to.equal(1);
     });
 });
