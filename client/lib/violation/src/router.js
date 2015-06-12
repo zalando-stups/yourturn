@@ -18,16 +18,10 @@ class ViolationRouter extends Router {
     }
 
     listViolations() {
-        let accounts = this.globalFlux.getStore('user').getUserCloudAccounts();
+        var userStore = this.globalFlux.getStore('user');
+        let accounts = userStore.getUserCloudAccounts();
         if (accounts.length === 0 || accounts.isPending && accounts.isPending()) {
-            this.globalFlux.getActions('user').fetchUserTeams().then(() => {
-                let accountIds = this.globalFlux.getStore('user').getUserCloudAccounts().map(a => a.id);
-                VIO_ACTIONS.fetchViolations(accountIds);
-                puppeteer.show(new ViolationList({
-                    flux: VIO_FLUX,
-                    globalFlux: this.globalFlux
-                }), MAIN_VIEW_ID);
-            });
+            return;
         } else {
             let accountIds = accounts.map(a => a.id);
             VIO_ACTIONS.fetchViolations(accountIds);
