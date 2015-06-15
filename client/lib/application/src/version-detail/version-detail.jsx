@@ -1,14 +1,18 @@
 import React from 'react';
 import Timestamp from 'react-time';
+import {DATE_FORMAT} from 'common/src/config';
 import ScmSourceWarning from './scm-source-warning.jsx';
 import Markdown from 'common/src/markdown.jsx';
 import {parseArtifact} from 'application/src/util';
 import FetchResult from 'common/src/fetch-result';
+import Placeholder from './placeholder.jsx';
+import DefaultError from 'common/src/error.jsx';
 import 'common/asset/less/application/version-detail.less';
 
 class ScmCommitInfo extends React.Component {
-    constructor() {
+    constructor(props) {
         super();
+        let {applicationId, versionId} = props;
     }
 
     render() {
@@ -89,6 +93,13 @@ class VersionDetail extends React.Component {
             approvals = kio.getApprovals(applicationId, versionId),
             isOwnApplication = user.getUserTeams().map(t => t.id).indexOf(application.team_id) >= 0;
 
+        if (version instanceof FetchResult) {
+            return version.isPending() ?
+                        <Placeholder
+                                applicationId={applicationId}
+                                versionId={versionId} /> :
+                        <DefaultError error={version.getResult()} />;
+        }
         return <div className='versionDetail'>
                     <h2>
                         <a href='/application/detail/{applicationId}'>{application.name || applicationId}</a> <span className='versionDetail-versionId'>{version.id}</span>
@@ -115,7 +126,7 @@ class VersionDetail extends React.Component {
                             </tr>
                             <tr>
                                 <th>Last modified</th>
-                                <td><Timestamp value={version.last_modified} /></td>
+                                <td><Timestamp format={DATE_FORMAT} value={version.last_modified} /></td>
                             </tr>
                             <tr>
                                 <th>Artifact</th>
