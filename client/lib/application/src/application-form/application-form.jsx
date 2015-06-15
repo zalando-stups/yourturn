@@ -167,7 +167,6 @@ class ApplicationForm extends React.Component {
                                 <input
                                     required={true}
                                     id='app_id'
-                                    className={this.state.appIdTaken ? 'invalid' : ''}
                                     disabled={edit ? 'disabled' : null}
                                     value={edit ? app.id : null}
                                     onKeyUp={this.setCustomValidity.bind(this)}

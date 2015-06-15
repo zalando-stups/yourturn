@@ -3,6 +3,7 @@ import FlummoxComponent from 'flummox/component';
 import {Route, DefaultRoute} from 'react-router';
 import Config from 'common/src/config';
 import Flux from './flux';
+import ResourceForm from './resource-form/resource-form.jsx';
 import ResourceList from './resource-list/resource-list.jsx';
 import ResourceDetail from './resource-detail/resource-detail.jsx';
 import ScopeDetail from './scope-detail/scope-detail.jsx';
@@ -12,6 +13,26 @@ import 'promise.prototype.finally';
 
 const RES_FLUX = new Flux(),
       RES_ACTIONS = RES_FLUX.getActions('essentials');
+
+
+class CreateResourceFormHandler extends React.Component {
+    constructor() {
+        super();
+    }
+
+    render() {
+        return <FlummoxComponent
+                    flux={RES_FLUX}
+                    globalFlux={this.props.globalFlux}
+                    connectToStores={['essentials']}>
+                    <ResourceForm
+                        edit={false} />
+                </FlummoxComponent>;
+    }
+}
+CreateResourceFormHandler.fetchData = function() {
+    return RES_ACTIONS.fetchResources();
+};
 
 class ResourceListHandler extends React.Component {
     constructor() {
@@ -123,6 +144,7 @@ CreateScopeFormHandler.fetchData = function(state) {
 const ROUTES =
     <Route path='resource'>
         <DefaultRoute handler={ResourceListHandler} />
+        <Route path='create' handler={CreateResourceFormHandler} />
         <Route path='detail/:resourceId'>
             <DefaultRoute handler={ResourceDetailHandler} />
             <Route path='scope'>

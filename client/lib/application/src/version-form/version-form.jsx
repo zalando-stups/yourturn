@@ -134,7 +134,6 @@ class VersionForm extends React.Component {
                                 <input
                                     autoFocus={true}
                                     required={true}
-                                    className={versionIdTaken ? 'invalid' : 'valid'}
                                     disabled={edit ? 'disabled' : null}
                                     placeholder='0.0.1'
                                     data-block='id-input'

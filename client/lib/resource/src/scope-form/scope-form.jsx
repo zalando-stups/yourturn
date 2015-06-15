@@ -10,7 +10,7 @@ class ScopeForm extends React.Component {
         };
         this.actions = props.flux.getActions('essentials');
         this.state = {
-            scope: edit ? this.stores.essentials.getScope(resourceId, scopeId) : { is_resource_owner_scope: true },
+            scope: edit ? this.stores.essentials.getScope(resourceId, scopeId) : { is_resource_owner_scope: false },
             scopeIdTaken: false
         };
     }
@@ -106,7 +106,6 @@ class ScopeForm extends React.Component {
                                     autoFocus={true}
                                     required={true}
                                     onKeyUp={this.setCustomValidity.bind(this)}
-                                    className={scopeIdTaken ? 'invalid' : ''}
                                     pattern='[A-Za-z]\w+[A-Za-z]'
                                     placeholder='read'
                                     disabled={edit}
@@ -150,7 +149,7 @@ class ScopeForm extends React.Component {
                                             value='scope_ownerScope'
                                             name='yourturn_scope_scopeType'
                                             onChange={this.update.bind(this, 'is_resource_owner_scope', 'checked')}
-                                            checked={!edit || scope.is_resource_owner_scope}
+                                            checked={scope.is_resource_owner_scope}
                                             type='radio' /> Resource Owner Scope
                                     </label>
                                 </div>
@@ -186,7 +185,7 @@ class ScopeForm extends React.Component {
                                             id='scope_appScope'
                                             value='scope_appScope'
                                             name='yourturn_scope_scopeType'
-                                            checked={edit && !scope.is_resource_owner_scope}
+                                            checked={!scope.is_resource_owner_scope}
                                             onChange={this.update.bind(this, 'is_resource_owner_scope', 'checked')}
                                             data-block='appscope-checkbox'
                                             type='radio' /> Application Scope
