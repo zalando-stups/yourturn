@@ -24,7 +24,6 @@
     "moment": "2.10.3",
     "mori": "0.3.2",
     "oauth2-client-js": "0.0.14",
-    "promise.prototype.finally": "1.0.1",
     "react": "0.13.3",
     "react-router": "0.13.3",
     "react-time": "2.5.0",

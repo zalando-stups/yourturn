@@ -9,11 +9,39 @@ import ResourceDetail from './resource-detail/resource-detail.jsx';
 import ScopeDetail from './scope-detail/scope-detail.jsx';
 import ScopeForm from './scope-form/scope-form.jsx';
 
-import 'promise.prototype.finally';
-
 const RES_FLUX = new Flux(),
       RES_ACTIONS = RES_FLUX.getActions('essentials');
 
+// QUICKFIX #133
+function isWhitelisted(token) {
+    // ignore whitelist if it's empty
+    if (Config.RESOURCE_WHITELIST.length === 0) {
+        return true;
+    }
+    return token && Config.RESOURCE_WHITELIST.indexOf(token.uid) >= 0;
+}
+
+function requireToken(flux) {
+    const ACTIONS = flux.getActions('user'),
+          STORE = flux.getStore('user');
+    let tokeninfo = STORE.getTokenInfo();
+    if (!tokeninfo.uid) {
+        return ACTIONS.fetchTokenInfo();
+    }
+    return Promise.resolve(tokeninfo);
+}
+
+function requireWhitelisted(flux) {
+    let token = flux.getStore('user').getTokenInfo();
+    if (!isWhitelisted(token)) {
+        let error = new Error();
+        error.name = 'Not whitelisted';
+        error.message = 'You are not allowed to view this page. Sorry!';
+        error.status = 'u1F62D';
+        return error;
+    }
+    return true;
+}
 
 class CreateResourceFormHandler extends React.Component {
     constructor() {
@@ -30,8 +58,14 @@ class CreateResourceFormHandler extends React.Component {
                 </FlummoxComponent>;
     }
 }
-CreateResourceFormHandler.fetchData = function() {
-    return RES_ACTIONS.fetchResources();
+CreateResourceFormHandler.isAllowed = function(state, globalFlux) {
+    return requireWhitelisted(globalFlux);
+}
+CreateResourceFormHandler.fetchData = function(state, globalFlux) {
+    return Promise.all([
+        RES_ACTIONS.fetchResources(),
+        requireToken(globalFlux)
+    ]);
 };
 
 
@@ -51,9 +85,15 @@ class EditResourceFormHandler extends React.Component {
                 </FlummoxComponent>;
     }
 }
-EditResourceFormHandler.fetchData = function(state) {
-    return RES_ACTIONS.fetchResource(state.params.resourceId);
-}
+EditResourceFormHandler.isAllowed = function(state, globalFlux) {
+    return requireWhitelisted(globalFlux);
+};
+EditResourceFormHandler.fetchData = function(state, globalFlux) {
+    return Promise.all([
+        RES_ACTIONS.fetchResource(state.params.resourceId),
+        requireToken(globalFlux)
+    ]);
+};
 
 class ResourceListHandler extends React.Component {
     constructor() {
@@ -87,7 +127,7 @@ class ResourceDetailHandler extends React.Component {
                 </FlummoxComponent>;
     }
 }
-ResourceDetailHandler.fetchData = function(state) {
+ResourceDetailHandler.fetchData = function(state, globalFlux) {
     RES_ACTIONS.fetchResource(state.params.resourceId);
     RES_ACTIONS.fetchScopes(state.params.resourceId);
 };
@@ -108,7 +148,7 @@ class ScopeDetailHandler extends React.Component {
                 </FlummoxComponent>;
     }
 }
-ScopeDetailHandler.fetchData = function(state) {
+ScopeDetailHandler.fetchData = function(state, globalFlux) {
     let {resourceId, scopeId} = state.params;
     RES_ACTIONS.fetchResource(resourceId);
     RES_ACTIONS.fetchScope(resourceId, scopeId);
@@ -132,10 +172,16 @@ class EditScopeFormHandler extends React.Component {
                 </FlummoxComponent>;
     }
 }
-EditScopeFormHandler.fetchData = function(state) {
+EditScopeFormHandler.isAllowed = function(state, globalFlux) {
+    return requireWhitelisted(globalFlux);
+};
+EditScopeFormHandler.fetchData = function(state, globalFlux) {
     let {resourceId, scopeId} = state.params;
     RES_ACTIONS.fetchResource(resourceId);
-    return RES_ACTIONS.fetchScope(resourceId, scopeId);
+    return Promise.all([
+        RES_ACTIONS.fetchScope(resourceId, scopeId),
+        requireToken(globalFlux)
+    ]);
 };
 
 
@@ -156,10 +202,16 @@ class CreateScopeFormHandler extends React.Component {
                 </FlummoxComponent>;
     }
 }
-CreateScopeFormHandler.fetchData = function(state) {
+CreateScopeFormHandler.isAllowed = function(state, globalFlux) {
+    return requireWhitelisted(globalFlux);
+};
+CreateScopeFormHandler.fetchData = function(state, globalFlux) {
     let {resourceId, scopeId} = state.params;
     RES_ACTIONS.fetchResource(resourceId);
-    return RES_ACTIONS.fetchScopes(resourceId);
+    return Promise.all([
+        RES_ACTIONS.fetchScopes(resourceId),
+        requireToken(globalFlux)
+    ]);
 }
 
 const ROUTES =
