@@ -100,7 +100,7 @@ class AccessForm extends React.Component {
                         </div>
                         <div className='form-group'>
                             <label>Credential Distribution</label>
-                            <small>Activate credential distribution into these S3 buckets (<a href='http://docs.aws.amazon.com/AmazonS3/latest/dev/BucketRestrictions.html' data-external>Naming Conventions</a>):</small>
+                            <small>Activate credential distribution into these S3 buckets (<a href='http://docs.aws.amazon.com/AmazonS3/latest/dev/BucketRestrictions.html'>Naming Conventions</a>):</small>
                             <EditableList
                                 placeholder='my-s3-bucket'
                                 itemName={'bucket'}

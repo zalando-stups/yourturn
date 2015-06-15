@@ -256,7 +256,7 @@ class ApplicationForm extends React.Component {
                         </div>
                         <div className='form-group'>
                             <label htmlFor='description'>Description</label>
-                            <small>A more elaborate description than subtitle. You can use <a data-external href='http://www.unexpected-vortices.com/sw/rippledoc/quick-markdown-example.html'>Markdown</a>.</small>
+                            <small>A more elaborate description than subtitle. You can use <a href='http://www.unexpected-vortices.com/sw/rippledoc/quick-markdown-example.html'>Markdown</a>.</small>
                             <textarea
                                 id='description'
                                 name='yourturn_app_description'

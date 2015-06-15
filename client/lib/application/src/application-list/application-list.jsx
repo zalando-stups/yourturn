@@ -56,7 +56,6 @@ class ApplicationList extends React.Component {
                                 onChange={this.filter.bind(this)}
                                 type='search'
                                 aria-label='Enter your term'
-                                data-action='search'
                                 placeholder='Kio' />
                         </div>
                     </div>

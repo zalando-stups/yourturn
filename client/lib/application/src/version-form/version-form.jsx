@@ -119,7 +119,7 @@ class VersionForm extends React.Component {
                         </div>
                         <div className='form-group versionForm-versionId'>
                             <label htmlFor='version_id'>Version ID</label>
-                            <small>For instance <a data-external href='http://semver.org/'>semantic versioning</a> or a codename like “pretty-squirrel”.</small>
+                            <small>For instance <a href='http://semver.org/'>semantic versioning</a> or a codename like “pretty-squirrel”.</small>
                             <div className='input-group'>
                                 <div className='input-addon'>
                                     {versionIdTaken && !edit ?
@@ -165,7 +165,7 @@ class VersionForm extends React.Component {
                         </div>
                         <div className='form-group'>
                             <label htmlFor='description'>Notes</label>
-                            <small>A more elaborate description of what the version contains. You can use <a data-external href='http://www.unexpected-vortices.com/sw/rippledoc/quick-markdown-example.html'>Markdown</a>.</small>
+                            <small>A more elaborate description of what the version contains. You can use <a href='http://www.unexpected-vortices.com/sw/rippledoc/quick-markdown-example.html'>Markdown</a>.</small>
                             <textarea
                                 id='version_notes'
                                 placeholder='Fixes serious CSS race condition.'
