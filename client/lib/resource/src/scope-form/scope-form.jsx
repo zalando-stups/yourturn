@@ -4,13 +4,14 @@ import 'common/asset/less/resource/scope-form.less';
 class ScopeForm extends React.Component {
     constructor(props) {
         super();
-        let {resourceId, scopeId} = props;
+        let {resourceId, scopeId, edit} = props;
         this.stores = {
             essentials: props.flux.getStore('essentials')
         };
         this.actions = props.flux.getActions('essentials');
         this.state = {
-            scope: this.stores.essentials.getScope(resourceId, scopeId)
+            scope: edit ? this.stores.essentials.getScope(resourceId, scopeId) : { is_resource_owner_scope: true },
+            scopeIdTaken: false
         };
     }
 
@@ -21,8 +22,15 @@ class ScopeForm extends React.Component {
         }
         this.setState({
             scope: this.state.scope,
-            scopeIdTaken: this.stores.essentials.getScope(this.state.scope.id) !== false,
+            scopeIdTaken: this.stores.essentials.getScope(this.props.resourceId, this.state.scope.id) !== false,
         });
+    }
+
+    setCustomValidity(evt) {
+        React.findDOMNode(evt.target).setCustomValidity(
+            this.state.scopeIdTaken ?
+                'Scope ID is already taken' :
+                '');
     }
 
     save(evt) {
@@ -97,6 +105,8 @@ class ScopeForm extends React.Component {
                                     title='Only characters with underscores in between.'
                                     autoFocus={true}
                                     required={true}
+                                    onKeyUp={this.setCustomValidity.bind(this)}
+                                    className={scopeIdTaken ? 'invalid' : ''}
                                     pattern='[A-Za-z]\w+[A-Za-z]'
                                     placeholder='read'
                                     disabled={edit}

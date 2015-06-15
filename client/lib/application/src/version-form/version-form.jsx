@@ -21,6 +21,13 @@ class VersionForm extends React.Component {
         };
     }
 
+    setCustomValidity(evt) {
+        React.findDOMNode(evt.target).setCustomValidity(
+            this.state.versionIdTaken ?
+                'Version ID is already taken' :
+                '');
+    }
+
     disableAutocomplete() {
         this.setState({
             autocompleteArtifact: false
@@ -132,6 +139,7 @@ class VersionForm extends React.Component {
                                     placeholder='0.0.1'
                                     data-block='id-input'
                                     value={id}
+                                    onKeyUp={this.setCustomValidity.bind(this)}
                                     onChange={this.update.bind(this, 'id', 'value')}
                                     title='Characters and numbers with dots, dashes or underscores in between.'
                                     pattern='[A-Za-z0-9]([A-Za-z0-9\._-]*[A-Za-z0-9])?'
@@ -179,7 +187,7 @@ class VersionForm extends React.Component {
                         <div className='btn-group'>
                             <button
                                 type='submit'
-                                className={`btn btn-primary ${this.state.versionIdTaken ? 'btn-disabled' : ''}`}>
+                                className='btn btn-primary'>
                                 <i className='fa fa-save'></i> Save
                             </button>
                         </div>

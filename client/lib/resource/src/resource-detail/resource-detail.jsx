@@ -40,7 +40,7 @@ class ResourceDetail extends React.Component {
                             <i className='fa fa-pencil'></i> Edit {resource.name}
                         </a>
                         <a
-                            href='/resource/detail/{resource.id}/scope/create'
+                            href={`/resource/detail/${resource.id}/scope/create`}
                             className={`btn btn-primary ${ whitelisted ? '' : 'btn-disabled'}`}>
                             <i className='fa fa-plus'></i> Create Scope
                         </a>

@@ -36,6 +36,13 @@ class ApplicationForm extends React.Component {
         });
     }
 
+    setCustomValidity(evt) {
+        React.findDOMNode(evt.target).setCustomValidity(
+            this.state.appIdTaken ?
+                'Application ID is already taken' :
+                '');
+    }
+
     /**
      * Saves the application to kio.
      */
@@ -146,7 +153,7 @@ class ApplicationForm extends React.Component {
                         <div className='form-group createApplication-applicationId'>
                             <label htmlFor='app_id'>Application ID</label>
                             <small>The ID of the application.</small>
-                            <div className='input-group'>
+                            <div className={'input-group'}>
                                 <div className='input-addon'>
                                     {this.state.appIdTaken && !edit ?
                                         <i  data-block='taken-symbol'
@@ -160,8 +167,10 @@ class ApplicationForm extends React.Component {
                                 <input
                                     required={true}
                                     id='app_id'
+                                    className={this.state.appIdTaken ? 'invalid' : ''}
                                     disabled={edit ? 'disabled' : null}
                                     value={edit ? app.id : null}
+                                    onKeyUp={this.setCustomValidity.bind(this)}
                                     onChange={this.update.bind(this, 'id', 'value')}
                                     name='yourturn_app_app_id'
                                     data-block='id-input'

@@ -21,9 +21,18 @@ const APP_FLUX = new Flux(),
       KIO_STORE = APP_FLUX.getStore('kio');
 
 function requireTeam(flux) {
-    if (!flux.getStore('user').getUserTeams().length) {
-        let {uid} = flux.getStore('user').getTokenInfo();
-        return flux.getActions('user').fetchUserTeams(uid);
+    const ACTIONS = flux.getActions('user'),
+          STORE = flux.getStore('user');
+    if (!STORE.getUserTeams().length) {
+        let tokeninfo = STORE.getTokenInfo();
+        if (!tokeninfo.uid) {
+            return ACTIONS
+                    .fetchTokenInfo()
+                    .then(token => {
+                        return ACTIONS.fetchUserTeams(token.uid);
+                    });
+        }
+        return ACTIONS.fetchUserTeams(tokeninfo.uid);
     }
     return Promise.resolve();
 }
@@ -66,8 +75,11 @@ class CreateAppFormHandler extends React.Component {
                 </FluxComponent>;
     }
 }
-CreateAppFormHandler.fetchData = function(state) {
-    return KIO_ACTIONS.fetchApplications();
+CreateAppFormHandler.fetchData = function(state, globalFlux) {
+    return Promise.all([
+        requireTeam(globalFlux),
+        KIO_ACTIONS.fetchApplications()
+    ]);
 };
 
 

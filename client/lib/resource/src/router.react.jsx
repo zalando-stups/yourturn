@@ -96,12 +96,37 @@ EditScopeFormHandler.fetchData = function(state) {
     return RES_ACTIONS.fetchScope(resourceId, scopeId);
 };
 
+
+class CreateScopeFormHandler extends React.Component {
+    constructor() {
+        super();
+    }
+
+    render() {
+        return <FlummoxComponent
+                    flux={RES_FLUX}
+                    globalFlux={this.props.globalFlux}
+                    connectToStores={['essentials']}>
+                    <ScopeForm
+                        resourceId={this.props.params.resourceId}
+                        scopeId={this.props.params.scopeId}
+                        edit={false} />
+                </FlummoxComponent>;
+    }
+}
+CreateScopeFormHandler.fetchData = function(state) {
+    let {resourceId, scopeId} = state.params;
+    RES_ACTIONS.fetchResource(resourceId);
+    return RES_ACTIONS.fetchScopes(resourceId);
+}
+
 const ROUTES =
     <Route path='resource'>
         <DefaultRoute handler={ResourceListHandler} />
         <Route path='detail/:resourceId'>
             <DefaultRoute handler={ResourceDetailHandler} />
             <Route path='scope'>
+                <Route path='create' handler={CreateScopeFormHandler} />
                 <Route path='detail/:scopeId' handler={ScopeDetailHandler} />
                 <Route path='edit/:scopeId' handler={EditScopeFormHandler} />
             </Route>
