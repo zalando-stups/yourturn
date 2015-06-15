@@ -101,6 +101,9 @@ class Sidebar extends React.Component {
                         <div className='sidebar-item' data-route='resource'>
                             <a href='/resource'>Resource Types</a> <i className='fa fa-key'></i>
                         </div>
+                        <div className='sidebar-item' data-route='violation'>
+                            <a href='/violation'>Violations</a> <i className='fa fa-warning'></i>
+                        </div>
                     </div>
                 </aside>;
     }

@@ -4,6 +4,7 @@ import FlummoxComponent from 'flummox/component';
 import YT_FLUX from './flux';
 import AppRoutes from 'application/src/router.react.jsx';
 import ResRoutes from 'resource/src/router.react.jsx';
+import VioRoutes from 'violation/src/router.react.jsx';
 import Search from 'yourturn/src/search/search.jsx';
 
 import {Provider} from 'common/src/oauth-provider';
@@ -81,6 +82,7 @@ const ROUTES =
     <Route path='/'>
         {AppRoutes}
         {ResRoutes}
+        {VioRoutes}
         <Route path='search' handler={SearchHandler} />
         <Route path='oauth' handler={LoginHandler} />
     </Route>;
