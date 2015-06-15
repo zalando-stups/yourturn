@@ -1,5 +1,8 @@
 import React from 'react';
 import Markdown from 'common/src/markdown.jsx';
+import Placeholder from './placeholder.jsx';
+import FetchResult from 'common/src/fetch-result';
+import DefaultError from 'common/src/error.jsx';
 import 'common/asset/less/resource/scope-detail.less';
 
 class ScopeDetail extends React.Component {
@@ -24,6 +27,14 @@ class ScopeDetail extends React.Component {
             scope = essentials.getScope(resourceId, scopeId),
             applications = essentials.getScopeApplications(scopeId),
             whitelisted = user.isWhitelisted();
+
+        if (scope instanceof FetchResult) {
+            return scope.isPending() ?
+                    <Placeholder
+                        resourceId={resourceId}
+                        scopeId={scopeId} /> :
+                    <DefaultError error={scope.getResult()} />;
+        }
         return <div className='scopeDetail'>
                     <h2>
                         <a href={`/resource/detail/${resourceId}`}>{resourceId}</a>.{scope.id || scopeId}
