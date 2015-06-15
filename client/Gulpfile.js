@@ -16,6 +16,7 @@ var fs = require('fs'),
 var LODASH_FUNCS = [
         // own
         'chain',
+        'debounce',
         'filter',
         'findLastIndex',
         'flatten',
