@@ -1,5 +1,8 @@
 import React from 'react';
 import Markdown from 'common/src/markdown.jsx';
+import Placeholder from './placeholder.jsx';
+import FetchResult from 'common/src/fetch-result';
+import DefaultError from 'common/src/error.jsx';
 import 'common/asset/less/resource/resource-detail.less';
 
 class ResourceDetail extends React.Component {
@@ -26,6 +29,14 @@ class ResourceDetail extends React.Component {
             scopes = essentials.getScopes(resourceId),
             appScopes = scopes.filter(s => !s.is_resource_owner_scope),
             ownerScopes = scopes.filter(s => s.is_resource_owner_scope);
+
+        if (resource instanceof FetchResult) {
+            return resource.isPending() ?
+                    <Placeholder
+                        resourceId={resourceId} /> :
+                    <DefaultError error={resource.getResult()} />;
+        }
+
         return <div className='resourceDetail'>
                     <h2>{resource.name || resourceId}</h2>
                     <div className='btn-group'>

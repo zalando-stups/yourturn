@@ -1,4 +1,5 @@
 import React from 'react';
+import 'common/asset/less/application/version-detail.less';
 
 export default class VersionFormPlaceholder extends React.Component {
     constructor() {
