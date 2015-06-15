@@ -38,7 +38,7 @@ class ResourceDetail extends React.Component {
         }
 
         return <div className='resourceDetail'>
-                    <h2>{resource.name || resourceId}</h2>
+                    <h2>{resource.name || resourceId}</h2>
                     <div className='btn-group'>
                         <a
                             href='/resource'

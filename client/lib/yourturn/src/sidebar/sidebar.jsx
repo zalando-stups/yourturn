@@ -50,7 +50,7 @@ class Sidebar extends React.Component {
 
     render() {
         let tokeninfo = this.store.getTokenInfo();
-        return  <aside className='sidebar'>
+        return <aside className='sidebar'>
                     <div className='sidebar-content'>
                         <div className='header'>
                         {tokeninfo ?
@@ -76,7 +76,7 @@ class Sidebar extends React.Component {
                                             className='btn btn-default'>
                                             <i className='fa fa-sign-out'></i> Logout
                                         </button>
-                                    </div>  
+                                    </div>
                                 </div>
                             </div>
                             :

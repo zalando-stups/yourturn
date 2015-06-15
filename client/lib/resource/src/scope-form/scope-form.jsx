@@ -22,7 +22,7 @@ class ScopeForm extends React.Component {
         }
         this.setState({
             scope: this.state.scope,
-            scopeIdTaken: this.stores.essentials.getScope(this.props.resourceId, this.state.scope.id) !== false,
+            scopeIdTaken: this.stores.essentials.getScope(this.props.resourceId, this.state.scope.id) !== false
         });
     }
 
@@ -34,7 +34,7 @@ class ScopeForm extends React.Component {
     }
 
     save(evt) {
-        if (evt) {
+        if (evt) {
             evt.preventDefault();
         }
 
@@ -69,7 +69,7 @@ class ScopeForm extends React.Component {
             resource = this.stores.essentials.getResource(resourceId);
         return <div className='scopeForm'>
                     {edit ?
-                        <h2>Edit {resource.id || resourceId}.{scope.id || scopeId}</h2>
+                        <h2>Edit {resource.id || resourceId}.{scope.id || scopeId}</h2>
                         :
                         <h2>Create new scope for {resource.id || resourceId}</h2>}
                     <div className='btn-group'>
@@ -91,11 +91,11 @@ class ScopeForm extends React.Component {
                             <div className='input-group'>
                                 <div className='input-addon'>
                                     {scopeIdTaken && !edit ?
-                                        <i  data-block='taken-symbol'
+                                        <i data-block='taken-symbol'
                                             title='Scope ID is already taken.'
                                             className='fa fa-close fa-fw is-taken'></i>
                                         :
-                                        <i  data-block='available-symbol'
+                                        <i data-block='available-symbol'
                                             title='Scope ID is available.'
                                             className='fa fa-check fa-fw is-available'></i>}
                                 </div>

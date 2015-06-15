@@ -60,10 +60,10 @@ class OAuthForm extends React.Component {
             oauthConfig = this.stores.mint.getOAuthConfig(applicationId),
             appscopes = oauthConfig
                             .scopes
-                            .filter(s => scopes.some(scp => scp.id === s.id && 
+                            .filter(s => scopes.some(scp => scp.id === s.id &&
                                                             scp.resource_type_id === s.resource_type_id &&
                                                             !scp.is_resource_owner_scope ));
-        
+
         oauthConfig.scopes = ownerscopes.concat(appscopes);
         oauthConfig.redirect_url = this.state.redirectUrl;
         oauthConfig.is_client_confidential = this.state.isClientConfidential;
@@ -93,7 +93,7 @@ class OAuthForm extends React.Component {
             allRoScopes = essentials.getAllScopes().filter(s => s.is_resource_owner_scope),
             oauth = mint.getOAuthConfig(applicationId);
 
-        return  <div className='oAuthForm'>    
+        return <div className='oAuthForm'>
                     <h2><a href={`/application/detail/${application.id}`}>{application.name}</a> OAuth Client</h2>
                     <div className='btn-group'>
                         <a href={`/application/detail/${application.id}`} className='btn btn-default'>
@@ -133,7 +133,7 @@ class OAuthForm extends React.Component {
                                 selected={oauth.scopes}
                                 scopes={allRoScopes} />
                         </div>
-                        
+
                         <div className='btn-group'>
                             <button
                                 type='submit'

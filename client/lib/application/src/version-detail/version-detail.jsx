@@ -10,9 +10,8 @@ import DefaultError from 'common/src/error.jsx';
 import 'common/asset/less/application/version-detail.less';
 
 class ScmCommitInfo extends React.Component {
-    constructor(props) {
+    constructor() {
         super();
-        let {applicationId, versionId} = props;
     }
 
     render() {
@@ -26,7 +25,7 @@ class ScmCommitInfo extends React.Component {
                     </tr>;
         }
         // no fetch result
-        if (scmSource) {
+        if (scmSource) {
             return <tr>
                         <th>Artifact Source</th>
                         <td>
@@ -55,7 +54,7 @@ class ScmAuthorInfo extends React.Component {
                     </tr>;
         }
         // no fetch result
-        if (scmSource) {
+        if (scmSource) {
             return <tr>
                         <th>Artifact Author</th>
                         <td>{scmSource.author}</td>

@@ -1,12 +1,11 @@
-/* globals expect */
+/* globals expect, $, TestUtils, reset, render, React */
 import {Flummox} from 'flummox';
 import EssentialsStore from 'common/src/data/essentials/essentials-store';
 import EssentialsActions from 'common/src/data/essentials/essentials-actions';
 import Form from 'resource/src/scope-form/scope-form.jsx';
 
 const ESSENTIALS = 'essentials',
-      RES_ID = 'sales_order',
-      SCP_ID = 'read';
+      RES_ID = 'sales_order';
 
 class MockFlux extends Flummox {
     constructor() {

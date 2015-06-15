@@ -12,7 +12,7 @@ class ScmSourceWarning extends React.Component {
     }
 
     render() {
-        let {scmSource, application, version} = this.props,
+        let {scmSource, version} = this.props,
             {pierone} = this.stores,
             {team, artifact, tag} = parseArtifact(version.artifact),
             tags = pierone.getTags(team, artifact),
@@ -25,14 +25,14 @@ class ScmSourceWarning extends React.Component {
                     <DefaultError error={scmSource.getResult()} />;
         }
         // no scm-source, but tag in pierone -> bad
-        if (!scmSource && tags.map(t => t.name).indexOf(tag) >= 0) {
+        if (!scmSource && tags.map(t => t.name).indexOf(tag) >= 0) {
             missingScmSource = <div
                                     data-block='missing-scmsource-warning'
                                     className='u-warning'>
                                     scm-source.json missing for {version.artifact}
                                 </div>;
         }
-        
+
         // status not empty string -> locally modified -> bad
         if (scmSource && scmSource.status !== '') {
             locallyModified = <div
@@ -40,9 +40,9 @@ class ScmSourceWarning extends React.Component {
                                     className='u-warning'>
                                     Artifact was locally modified:<br/>
                                     {scmSource.status}
-                                </div>
+                                </div>;
         }
-        
+
         return <div>
                     {locallyModified}
                     {missingScmSource}

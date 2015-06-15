@@ -22,7 +22,7 @@ class ResourceForm extends React.Component {
                 '');
     }
 
-    updateResourceOwner(owner, evt) {
+    updateResourceOwner(owner) {
         let idx = this.state.resource.resource_owners.indexOf(owner);
         if (idx >= 0) {
             this.state.resource.resource_owners.splice(idx, 1);
@@ -68,7 +68,7 @@ class ResourceForm extends React.Component {
     }
 
     render() {
-        let {edit, resourceid} = this.props,
+        let {edit} = this.props,
             {resourceIdTaken, resource} = this.state;
         return <div className='resourceForm'>
                     <h2>
@@ -99,11 +99,11 @@ class ResourceForm extends React.Component {
                             <div className='input-group'>
                                 <div className='input-addon'>
                                     {resourceIdTaken && !edit ?
-                                        <i  data-block='taken-symbol'
+                                        <i data-block='taken-symbol'
                                             title='Resource ID is already taken.'
                                             className='fa fa-close fa-fw is-taken'></i>
                                         :
-                                        <i  data-block='available-symbol'
+                                        <i data-block='available-symbol'
                                             title='Resource ID is available.'
                                             className='fa fa-check fa-fw is-available'></i>}
                                 </div>
@@ -120,7 +120,7 @@ class ResourceForm extends React.Component {
                                         data-block='id-input'
                                         required={true}
                                         placeholder='sales_order'
-                                        type='text' />  
+                                        type='text' />
                             </div>
                         </div>
                         <div className='form-group'>

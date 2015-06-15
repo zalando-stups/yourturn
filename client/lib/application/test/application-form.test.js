@@ -1,4 +1,4 @@
-/* globals expect, sinon, Promise */
+/* globals expect, $, TestUtils, reset, render, React, sinon, Promise */
 import {Flummox} from 'flummox';
 import KioStore from 'common/src/data/kio/kio-store';
 import KioActions from 'common/src/data/kio/kio-actions';
@@ -54,8 +54,6 @@ describe('The application form view', () => {
     });
 
     describe('in create mode', () => {
-        var props;
-
         beforeEach(done => {
             reset(() => {
                 props = {
@@ -64,7 +62,9 @@ describe('The application form view', () => {
                     applicationId: APP_ID,
                     edit: false
                 };
-                globalFlux.getStore('user').receiveUserTeams([{ id: 'stups' }]);
+                globalFlux.getStore('user').receiveUserTeams([{
+                    id: 'stups'
+                }]);
                 form = render(AppForm, props);
                 done();
             });
@@ -90,7 +90,9 @@ describe('The application form view', () => {
                     applicationId: APP_ID,
                     edit: true
                 };
-                globalFlux.getStore('user').receiveUserTeams([{ id: 'stups' }]);
+                globalFlux.getStore('user').receiveUserTeams([{
+                    id: 'stups'
+                }]);
                 flux.getStore(FLUX).receiveApplication(TEST_APP);
                 form = render(AppForm, props);
                 done();

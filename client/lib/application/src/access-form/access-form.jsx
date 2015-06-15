@@ -33,7 +33,7 @@ class AccessForm extends React.Component {
         });
     }
 
-    updateBuckets(s3_buckets) {
+    updateBuckets(s3_buckets) {
         this.setState({
             s3_buckets: s3_buckets
         });
@@ -49,10 +49,10 @@ class AccessForm extends React.Component {
             oauthConfig = this.stores.mint.getOAuthConfig(applicationId),
             ownerscopes = oauthConfig
                             .scopes
-                            .filter(s => scopes.some(scp => scp.id === s.id && 
+                            .filter(s => scopes.some(scp => scp.id === s.id &&
                                                             scp.resource_type_id === s.resource_type_id &&
                                                             scp.is_resource_owner_scope ));
-        
+
         oauthConfig.scopes = ownerscopes.concat(appscopes);
         oauthConfig.s3_buckets = this.state.s3_buckets;
 

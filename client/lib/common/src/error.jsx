@@ -8,7 +8,7 @@ class DefaultError extends React.Component {
 
     render() {
         let {status, name, message} = this.props.error;
-        return  <div className='u-error'>
+        return <div className='u-error'>
                     <h2>{status}—{name}</h2>
                     <p>{message}</p>
                 </div>;

@@ -1,4 +1,4 @@
-/* globals expect */
+/* globals expect, $, TestUtils, reset, render, React */
 import {Flummox} from 'flummox';
 import KioStore from 'common/src/data/kio/kio-store';
 import KioActions from 'common/src/data/kio/kio-actions';
@@ -88,7 +88,11 @@ describe('The approval form view', () => {
         form = render(ApprovalForm, props);
 
         let select = TestUtils.findRenderedDOMComponentWithAttributeValue(form, 'data-block', 'approvalType-selection');
-        TestUtils.Simulate.change(select, { target: { value: 'UX' } });
+        TestUtils.Simulate.change(select, {
+            target: {
+                value: 'UX'
+            }
+        });
 
         expect(() => {
             TestUtils.findRenderedDOMComponentWithAttributeValue(form, 'data-block', 'approvalType-explanation');

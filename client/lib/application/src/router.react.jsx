@@ -43,7 +43,7 @@ class AppListHandler extends React.Component {
     }
 
     render() {
-        return  <FluxComponent
+        return <FluxComponent
                     flux={APP_FLUX}
                     globalFlux={this.props.globalFlux}
                     connectToStores={['kio']}>
@@ -65,7 +65,7 @@ class CreateAppFormHandler extends React.Component {
     }
 
     render() {
-        return  <FluxComponent
+        return <FluxComponent
                     flux={APP_FLUX}
                     globalFlux={this.props.globalFlux}
                     connectToStores={['kio']}>
@@ -89,7 +89,7 @@ class EditAppFormHandler extends React.Component {
     }
 
     render() {
-        return  <FluxComponent
+        return <FluxComponent
                     flux={APP_FLUX}
                     globalFlux={this.props.globalFlux}
                     connectToStores={['kio']}>
@@ -112,9 +112,8 @@ EditAppFormHandler.isAllowed = function(state, globalFlux) {
         error.status = 'u1F62D';
         return error;
     }
-}
+};
 EditAppFormHandler.fetchData = function(state, globalFlux) {
-    let {uid} = globalFlux.getStore('user').getTokenInfo();
     KIO_ACTIONS.fetchApplication(state.params.applicationId);
     return requireTeam(globalFlux);
 };
@@ -151,7 +150,7 @@ class OAuthFormHandler extends React.Component {
     render() {
         return <FluxComponent
                     flux={APP_FLUX}
-                    globalFlux={this.props.globalFlux} 
+                    globalFlux={this.props.globalFlux}
                     connectToStores={['mint', 'essentials', 'kio']}>
 
                     <OAuthForm
@@ -207,7 +206,7 @@ class VersionListHandler extends React.Component {
 
                     <VersionList
                         applicationId={this.props.params.applicationId} />
-                </FluxComponent>
+                </FluxComponent>;
     }
 }
 VersionListHandler.fetchData = function(state) {
@@ -344,7 +343,7 @@ EditVersionFormHandler.isAllowed = function(state, globalFlux) {
         error.status = 'u1F62D';
         return error;
     }
-}
+};
 EditVersionFormHandler.fetchData = function(state) {
     let {applicationId, versionId} = state.params;
     KIO_ACTIONS.fetchApprovals(applicationId, versionId);

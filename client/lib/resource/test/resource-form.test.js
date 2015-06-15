@@ -1,4 +1,4 @@
-/* globals expect, sinon, Promise */
+/* globals expect, sinon, Promise, $, TestUtils, reset, render, React */
 import {Flummox} from 'flummox';
 import EssentialsStore from 'common/src/data/essentials/essentials-store';
 import EssentialsActions from 'common/src/data/essentials/essentials-actions';

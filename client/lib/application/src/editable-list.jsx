@@ -19,7 +19,7 @@ class EditableList extends React.Component {
     addItem(evt) {
         evt.preventDefault();
         let regex = new RegExp(this.props.pattern);
-        
+
         // check validity, would be automatic if it weren't for nested forms
         if (this.state.input.length >= this.props.minlength &&
             this.state.input.length <= this.props.maxlength &&
@@ -36,7 +36,7 @@ class EditableList extends React.Component {
         }
     }
 
-    deleteItem(item, evt) {
+    deleteItem(item) {
         let idx = this.state.items.indexOf(item);
         if (idx >= 0) {
             this.state.items.splice(idx, 1);
@@ -62,7 +62,7 @@ class EditableList extends React.Component {
                         <button
                             type='submit'
                             onClick={this.addItem.bind(this)}
-                            className='btn btn-default'><i className='fa fa-plus'></i> Add {this.props.itemName || 'item'}
+                            className='btn btn-default'><i className='fa fa-plus'></i> Add {this.props.itemName || 'item'}
                         </button>
                     </div>
                     {items
@@ -82,6 +82,7 @@ class EditableList extends React.Component {
                 </div>;
     }
 }
+EditableList.displayName = 'EditableList';
 EditableList.propTypes = {
     pattern: React.PropTypes.string.isRequired,
     minlength: React.PropTypes.number.isRequired,
@@ -89,7 +90,7 @@ EditableList.propTypes = {
     placeholder: React.PropTypes.string,
     itemName: React.PropTypes.string,
     items: React.PropTypes.array,
-    onChange: React.PropTypes.func.isRequired,
+    onChange: React.PropTypes.func.isRequired
 };
 
 export default EditableList;

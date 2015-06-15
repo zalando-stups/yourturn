@@ -35,8 +35,8 @@ class ApplicationList extends React.Component {
             teamApps = this.stores.kio.getTeamApplications(this.state.term, userTeamIds),
             shortApps = otherApps.splice(0, OTHER_APPS_COUNT),
             term = this.state.term;
-        
-        return  <div className='applicationList'>
+
+        return <div className='applicationList'>
                     <h2 className='applicationList-headline'>Applications</h2>
                     <div className='btn-group'>
                         <a href='/application/create' className='btn btn-primary'>
@@ -64,7 +64,7 @@ class ApplicationList extends React.Component {
                     {teamApps.length ?
                         <ul data-block='team-apps'>
                             {teamApps.map(
-                                (ta, i) => 
+                                (ta, i) =>
                                     <li key={i}>
                                         <a href={`/application/detail/${ta.id}`}>{ta.name}</a>
                                     </li>
@@ -78,7 +78,7 @@ class ApplicationList extends React.Component {
                         <div>
                             <ul data-block='other-apps'>
                                 {shortApps.map(
-                                    (oa,i) =>
+                                    (oa, i) =>
                                         <li key={i}>
                                             <a href={`/application/detail/${oa.id}`}>{oa.name}</a>
                                         </li>

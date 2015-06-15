@@ -1,4 +1,4 @@
-/* globals sinon, expect, Promise */
+/* globals expect, reset, render, sinon, Promise */
 import {Flummox} from 'flummox';
 import KioStore from 'common/src/data/kio/kio-store';
 import KioActions from 'common/src/data/kio/kio-actions';
@@ -63,7 +63,9 @@ describe('The access control form view', () => {
         reset(() => {
             flux = new MockFlux();
             globalFlux = new GlobalFlux();
-            flux.getStore('essentials').receiveScopes(['customer', [{ id: 'read_all' }]]);
+            flux.getStore('essentials').receiveScopes(['customer', [{
+                id: 'read_all'
+            }]]);
             flux.getStore('mint').receiveOAuthConfig(['kio', MOCK_KIO]);
             actionSpy = sinon.stub(flux.getActions('mint'), 'saveOAuthConfig', () => {
                 return Promise.resolve();

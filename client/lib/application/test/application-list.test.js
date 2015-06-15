@@ -1,4 +1,4 @@
-/* globals expect */
+/* globals expect, $, TestUtils, reset, render, React */
 import _ from 'lodash';
 import {Flummox} from 'flummox';
 import KioStore from 'common/src/data/kio/kio-store';
@@ -34,7 +34,7 @@ describe('The application list view', () => {
         list;
 
 
-    beforeEach(() => {
+    beforeEach(done => {
         reset(() => {
             flux = new AppFlux();
             globalFlux = new GlobalFlux();
@@ -53,7 +53,7 @@ describe('The application list view', () => {
 
             list = render(List, props);
             done();
-        })
+        });
     });
 
     it('should not display any list of applications', () => {
@@ -81,7 +81,7 @@ describe('The application list view', () => {
         list = render(List, props);
         let teamApps = TestUtils.findRenderedDOMComponentWithAttributeValue(list, 'data-block', 'team-apps');
         expect($(React.findDOMNode(teamApps)).children().length).to.equal(2);
-        
+
         expect(() => {
             TestUtils.findRenderedDOMComponentWithAttributeValue(list, 'data-block', 'other-apps');
         }).to.throw();
@@ -102,7 +102,7 @@ describe('The application list view', () => {
         list = render(List, props);
         let otherApps = TestUtils.findRenderedDOMComponentWithAttributeValue(list, 'data-block', 'other-apps');
         expect($(React.findDOMNode(otherApps)).children().length).to.equal(1);
-        
+
         expect(() => {
             TestUtils.findRenderedDOMComponentWithAttributeValue(list, 'data-block', 'team-apps');
         }).to.throw();
@@ -127,7 +127,7 @@ describe('The application list view', () => {
         list = render(List, props);
         let otherApps = TestUtils.findRenderedDOMComponentWithAttributeValue(list, 'data-block', 'other-apps'),
             count = TestUtils.findRenderedDOMComponentWithAttributeValue(list, 'data-block', 'other-apps-hidden-count');
-        
+
         expect($(React.findDOMNode(otherApps)).children().length).to.equal(20);
         expect($(React.findDOMNode(count)).text()).to.equal('5');
 

@@ -60,7 +60,7 @@ class VersionList extends React.Component {
                                 {versions.map(
                                     v =>
                                         <div>
-                                            <a  title={`Approve version ${v.id}`}
+                                            <a title={`Approve version ${v.id}`}
                                                 className='btn btn-default btn-small'
                                                 href={`/application/detail/${v.application_id}/version/approve/${v.id}`}>
                                                 <i className='fa fa-check'></i>

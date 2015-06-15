@@ -56,7 +56,7 @@ class LoginHandler extends React.Component {
     }
 
     render() {
-        return null;   
+        return null;
     }
 }
 LoginHandler.contextTypes = {

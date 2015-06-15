@@ -37,9 +37,9 @@ class VersionForm extends React.Component {
     update(field, prop, evt) {
         let {kio} = this.stores,
             {applicationId} = this.props,
-            versions = this.stores.kio.getApplicationVersions(applicationId),
-            application = this.stores.kio.getApplication(applicationId);
-        
+            versions = kio.getApplicationVersions(applicationId),
+            application = kio.getApplication(applicationId);
+
         this.state[field] = evt.target[prop];
         if (this.state.autocompleteArtifact) {
             this.state.artifact = `${DOCKER_REGISTRY}/${application.team_id}/${application.id}:${this.state.id}`;
@@ -49,7 +49,7 @@ class VersionForm extends React.Component {
             // check id availability
             this.state.versionIdTaken = versions.map(v => v.id).indexOf(this.state.id) >= 0;
         }
-        
+
         this.setState({
             id: this.state.id,
             artifact: this.state.artifact,
@@ -123,11 +123,11 @@ class VersionForm extends React.Component {
                             <div className='input-group'>
                                 <div className='input-addon'>
                                     {versionIdTaken && !edit ?
-                                        <i  data-block='taken-symbol'
+                                        <i data-block='taken-symbol'
                                             title='Version ID is already taken.'
                                             className='fa fa-close fa-fw is-taken'></i>
                                         :
-                                        <i  data-block='available-symbol'
+                                        <i data-block='available-symbol'
                                         title='Version ID is available.'
                                         className='fa fa-check fa-fw is-available'></i>}
                                 </div>
@@ -153,7 +153,7 @@ class VersionForm extends React.Component {
                             <div className='input-group'>
                                 <div className='input-addon'>
                                     Docker
-                                </div>            
+                                </div>
                                 <input
                                     value={artifact}
                                     onKeyDown={this.disableAutocomplete.bind(this)}

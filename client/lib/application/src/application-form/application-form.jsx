@@ -83,7 +83,7 @@ class ApplicationForm extends React.Component {
         }
         this.setState({
             app: this.state.app,
-            appIdTaken: this.stores.kio.getApplication(this.state.app.id) !== false,
+            appIdTaken: this.stores.kio.getApplication(this.state.app.id) !== false
         });
     }
 
@@ -92,7 +92,7 @@ class ApplicationForm extends React.Component {
             storeApp = this.stores.kio.getApplication(applicationId),
             {app} = this.state,
             teams = this.stores.user.getUserTeams();
-        return  <div className='applicationForm'>
+        return <div className='applicationForm'>
                     {edit ?
                         <div>
                             <h2>Edit <a href={`/application/detail/${applicationId}`}>{storeApp.name}</a></h2>
@@ -156,11 +156,11 @@ class ApplicationForm extends React.Component {
                             <div className={'input-group'}>
                                 <div className='input-addon'>
                                     {this.state.appIdTaken && !edit ?
-                                        <i  data-block='taken-symbol'
+                                        <i data-block='taken-symbol'
                                             title='App ID is already taken.'
                                             className='fa fa-close fa-fw is-taken'></i>
                                         :
-                                        <i  data-block='available-symbol'
+                                        <i data-block='available-symbol'
                                         title='App ID is available.'
                                         className='fa fa-check fa-fw is-available'></i>}
                                 </div>

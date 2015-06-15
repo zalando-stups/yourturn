@@ -10,7 +10,7 @@ export default class VersionFormPlaceholder extends React.Component {
         let {applicationId, versionId} = this.props;
         return <div className='versionDetail u-placeholder'>
                     <h2>
-                        <a href='/application/detail/{applicationId}'>{applicationId}</a> 
+                        <a href='/application/detail/{applicationId}'>{applicationId}</a>
                         <span className='u-placeholder-text'>0.10.0</span>
                     </h2>
 
@@ -46,6 +46,6 @@ export default class VersionFormPlaceholder extends React.Component {
                     <p className='u-placeholder-text'>
                         These are some version notes.
                     </p>
-                </div>
+                </div>;
     }
 }

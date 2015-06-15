@@ -15,7 +15,7 @@ class ApplicationDetail extends React.Component {
     constructor(props) {
         super();
         this.placeholder = <Placeholder applicationId={props.applicationId} />;
-        this.stores = {
+        this.stores = {
             user: props.globalFlux.getStore('user'),
             kio: props.flux.getStore('kio'),
             twintip: props.flux.getStore('twintip')
@@ -41,7 +41,7 @@ class ApplicationDetail extends React.Component {
                     this.placeholder :
                     <DefaultError error={app.getResult()} />;
         }
-        return  <div className='applicationDetail'>
+        return <div className='applicationDetail'>
                     <h1>{app.name}</h1>
                     <div className='btn-group'>
                         <a href='/application' className='btn btn-default'>
@@ -122,7 +122,8 @@ class ApplicationDetail extends React.Component {
                                     {api ?
                                         <a href={app.service_url + api.ui}>
                                             Version {api.version}
-                                        </a>:
+                                        </a>
+                                        :
                                         <span>No API docs available.</span>
                                     }
                                 </td>
@@ -133,7 +134,7 @@ class ApplicationDetail extends React.Component {
                                     {versions.length ?
                                         versions.map(
                                             v => <div key={v.id}>
-                                                    <a  title={`Approve version ${v.id}`}
+                                                    <a title={`Approve version ${v.id}`}
                                                         className='btn btn-default btn-small'
                                                         href={`/application/detail/${app.id}/version/approve/{v.id}`}>
                                                         <i className='fa fa-check'></i>
@@ -144,7 +145,7 @@ class ApplicationDetail extends React.Component {
                                         :
                                         <div>No versions yet.</div>
                                     }
-                                    <a  className={`btn btn-default applicationDetail-newVersion ${isOwnApplication ? '' : 'btn-disabled'}`}
+                                    <a className={`btn btn-default applicationDetail-newVersion ${isOwnApplication ? '' : 'btn-disabled'}`}
                                         href={`/application/detail/${applicationId}/version/create`}>
                                         <i className='fa fa-plus'></i> New version
                                     </a>

@@ -1,7 +1,7 @@
 import React from 'react';
 
 class ApplicationDetailPlaceholder extends React.Component {
-    constructor(props) {
+    constructor() {
         super();
     }
 
@@ -90,8 +90,8 @@ class ApplicationDetailPlaceholder extends React.Component {
                                             <i className='fa fa-check'></i>
                                         </a> <span className='u-placeholder-text'>0.1</span>
                                     </div>
-                                    
-                                    <a  className='btn btn-default btn-disabled applicationDetail-newVersion'
+
+                                    <a className='btn btn-default btn-disabled applicationDetail-newVersion'
                                         href='/application/detail/{{applicationId}}/version/create'>
                                         <i className='fa fa-plus'></i> New version
                                     </a>

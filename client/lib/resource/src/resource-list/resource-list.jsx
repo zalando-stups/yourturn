@@ -38,7 +38,7 @@ class ResourceList extends React.Component {
                         </div>
                     </div>
                     <div className='btn-group'>
-                        <a  href='/resource/create'
+                        <a href='/resource/create'
                             className={`btn btn-primary ${whitelisted ? '' : 'btn-disabled'}`}>
                             <i className='fa fa-plus'></i> Create Resource Type
                         </a>
@@ -65,7 +65,7 @@ class ResourceList extends React.Component {
                     {resources.length ?
                         <ul data-block='resources'>
                             {resources.map(
-                                res => 
+                                res =>
                                     <li key={res.id}>
                                         <a href={`/resource/detail/${res.id}`}>{res.name}</a>
                                     </li>)}

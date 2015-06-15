@@ -21,7 +21,7 @@ class OwnerScopeList extends React.Component {
         }
     }
 
-    toggleSelection(scope, evt) {
+    toggleSelection(scope) {
         let scopeToAdd = {
                 scope_id: scope.id,
                 resource_type_id: scope.resource_type_id
@@ -76,7 +76,7 @@ class OwnerScopeList extends React.Component {
                                         .map(
                                             scope =>
                                                 <div data-block='scope-list-item'>
-                                                    <label> 
+                                                    <label>
                                                         <input
                                                             checked={
                                                                 selected.some(

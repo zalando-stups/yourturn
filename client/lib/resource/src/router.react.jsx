@@ -60,7 +60,7 @@ class CreateResourceFormHandler extends React.Component {
 }
 CreateResourceFormHandler.isAllowed = function(state, globalFlux) {
     return requireWhitelisted(globalFlux);
-}
+};
 CreateResourceFormHandler.fetchData = function(state, globalFlux) {
     return Promise.all([
         RES_ACTIONS.fetchResources(),
@@ -108,7 +108,7 @@ class ResourceListHandler extends React.Component {
                 </FlummoxComponent>;
     }
 }
-ResourceListHandler.fetchData = function(state) {
+ResourceListHandler.fetchData = function() {
     RES_ACTIONS.fetchResources();
 };
 
@@ -127,7 +127,7 @@ class ResourceDetailHandler extends React.Component {
                 </FlummoxComponent>;
     }
 }
-ResourceDetailHandler.fetchData = function(state, globalFlux) {
+ResourceDetailHandler.fetchData = function(state) {
     RES_ACTIONS.fetchResource(state.params.resourceId);
     RES_ACTIONS.fetchScopes(state.params.resourceId);
 };
@@ -148,7 +148,7 @@ class ScopeDetailHandler extends React.Component {
                 </FlummoxComponent>;
     }
 }
-ScopeDetailHandler.fetchData = function(state, globalFlux) {
+ScopeDetailHandler.fetchData = function(state) {
     let {resourceId, scopeId} = state.params;
     RES_ACTIONS.fetchResource(resourceId);
     RES_ACTIONS.fetchScope(resourceId, scopeId);
@@ -206,13 +206,13 @@ CreateScopeFormHandler.isAllowed = function(state, globalFlux) {
     return requireWhitelisted(globalFlux);
 };
 CreateScopeFormHandler.fetchData = function(state, globalFlux) {
-    let {resourceId, scopeId} = state.params;
+    let {resourceId} = state.params;
     RES_ACTIONS.fetchResource(resourceId);
     return Promise.all([
         RES_ACTIONS.fetchScopes(resourceId),
         requireToken(globalFlux)
     ]);
-}
+};
 
 const ROUTES =
     <Route path='resource'>

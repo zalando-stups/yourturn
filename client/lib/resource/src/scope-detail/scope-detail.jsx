@@ -23,7 +23,6 @@ class ScopeDetail extends React.Component {
     render() {
         let {resourceId, scopeId} = this.props,
             {user, essentials} = this.stores,
-            resource = essentials.getResource(resourceId),
             scope = essentials.getScope(resourceId, scopeId),
             applications = essentials.getScopeApplications(scopeId),
             whitelisted = user.isWhitelisted();
@@ -37,7 +36,7 @@ class ScopeDetail extends React.Component {
         }
         return <div className='scopeDetail'>
                     <h2>
-                        <a href={`/resource/detail/${resourceId}`}>{resourceId}</a>.{scope.id || scopeId}
+                        <a href={`/resource/detail/${resourceId}`}>{resourceId}</a>.{scope.id || scopeId}
                     </h2>
                     <div className='btn-group'>
                         <a
@@ -79,12 +78,12 @@ class ScopeDetail extends React.Component {
                                 <td>
                                     {applications.length ?
                                         <ul>
-                                            applications.map(
+                                            {applications.map(
                                                 app => <li key={app.id}>
                                                             <a href='/application/detail/{this.id}'>
                                                                 {app.id}
                                                             </a>
-                                                        </li>)
+                                                        </li>)}
                                         </ul>
                                         :
                                         <span>No applications with this scope.</span>}

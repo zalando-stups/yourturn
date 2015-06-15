@@ -118,9 +118,8 @@ class ApprovalForm extends React.Component {
 
     render() {
         let {applicationId, versionId} = this.props,
-            {user, kio} = this.stores,
+            {kio} = this.stores,
             application = kio.getApplication(applicationId),
-            version = kio.getApplicationVersion(applicationId, versionId),
             approvalTypes = kio.getApprovalTypes(applicationId),
             approvals = kio.getApprovals(applicationId, versionId);
         return <div className='approvalForm'>
@@ -180,7 +179,7 @@ class ApprovalForm extends React.Component {
                                             id='approval_custom'
                                             checked={this.state.useCustomType}
                                             onChange={this.toggleCustomType.bind(this)}
-                                            type='checkbox' /> Custom: 
+                                            type='checkbox' /> Custom:
                                     </label>
                                     <input
                                         id='approval_custom_type'

@@ -1,4 +1,4 @@
-/* globals expect */
+/* globals expect, $, TestUtils, reset, render, React */
 import {Flummox} from 'flummox';
 import KioStore from 'common/src/data/kio/kio-store';
 import KioActions from 'common/src/data/kio/kio-actions';
@@ -65,7 +65,11 @@ describe('The version list view', () => {
         }]);
         list = render(List, props);
         let input = TestUtils.findRenderedDOMComponentWithAttributeValue(list, 'data-block', 'search-input');
-        TestUtils.Simulate.change(input, { target: { value: 'few' } });
+        TestUtils.Simulate.change(input, {
+            target: {
+                value: 'few'
+            }
+        });
         let versions = TestUtils.findRenderedDOMComponentWithAttributeValue(list, 'data-block', 'versions');
         expect($(React.findDOMNode(versions)).children().length).to.equal(1);
     });

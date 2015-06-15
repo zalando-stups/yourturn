@@ -4,7 +4,7 @@ import {DATE_FORMAT} from 'common/src/config';
 import 'common/asset/less/violation/violation-list.less';
 
 class Violation extends React.Component {
-    constructor(props) {
+    constructor() {
         super();
         this.state = {
             message: ''
@@ -88,7 +88,7 @@ class ViolationList extends React.Component {
         };
     }
 
-    showResolved(showResolved, evt) {
+    showResolved(showResolved) {
         this.setState({
             showingResolved: showResolved
         });

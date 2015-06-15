@@ -2,7 +2,7 @@ import React from 'react';
 import 'common/asset/less/yourturn/notification-bar.less';
 
 class Notification extends React.Component {
-    constructor(props) {
+    constructor() {
         super();
     }
 
@@ -27,7 +27,7 @@ class NotificationBar extends React.Component {
     render() {
         let notifications = this.store.getNotifications();
         if (notifications.length) {
-            return  <div className='notificationBar'>
+            return <div className='notificationBar'>
                         <ul>
                             {notifications.map(
                                 n => <Notification
