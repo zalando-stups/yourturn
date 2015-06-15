@@ -26,16 +26,16 @@ class ScopeDetail extends React.Component {
             whitelisted = user.isWhitelisted();
         return <div className='scopeDetail'>
                     <h2>
-                        <a href='/resource/detail/{resourceId}'>{resourceId}</a>.{scope.id || scopeId}
+                        <a href={`/resource/detail/${resourceId}`}>{resourceId}</a>.{scope.id || scopeId}
                     </h2>
                     <div className='btn-group'>
                         <a
-                            href='/resource/detail/{resourceId}'
+                            href={`/resource/detail/${resourceId}`}
                             className='btn btn-default'>
                             <i className='fa fa-chevron-left'></i> {resourceId}
                         </a>
                         <a
-                            href='/resource/detail/{resourceId}/scope/edit/{scope.id}'
+                            href={`/resource/detail/${resourceId}/scope/edit/${scope.id}`}
                             className={`btn btn-primary ${whitelisted ? '' : 'btn-disabled'}`}>
                             <i className='fa fa-pencil'></i> Edit {scope.id || scopeId}
                         </a>

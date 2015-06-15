@@ -36,10 +36,10 @@ class AppListHandler extends React.Component {
     render() {
         return  <FluxComponent
                     flux={APP_FLUX}
+                    globalFlux={this.props.globalFlux}
                     connectToStores={['kio']}>
 
-                    <ApplicationList
-                        globalFlux={this.props.globalFlux} />
+                    <ApplicationList />
                 </FluxComponent>;
     }
 }
@@ -58,11 +58,11 @@ class CreateAppFormHandler extends React.Component {
     render() {
         return  <FluxComponent
                     flux={APP_FLUX}
+                    globalFlux={this.props.globalFlux}
                     connectToStores={['kio']}>
 
                     <ApplicationForm
-                        edit={false}
-                        globalFlux={this.props.globalFlux} />
+                        edit={false} />
                 </FluxComponent>;
     }
 }
@@ -79,12 +79,12 @@ class EditAppFormHandler extends React.Component {
     render() {
         return  <FluxComponent
                     flux={APP_FLUX}
+                    globalFlux={this.props.globalFlux}
                     connectToStores={['kio']}>
 
                     <ApplicationForm
                         edit={true}
-                        applicationId={this.props.params.applicationId}
-                        globalFlux={this.props.globalFlux} />
+                        applicationId={this.props.params.applicationId} />
                 </FluxComponent>;
     }
 }
@@ -116,11 +116,11 @@ class AppDetailHandler extends React.Component {
     render() {
         return <FluxComponent
                     flux={APP_FLUX}
+                    globalFlux={this.props.globalFlux}
                     connectToStores={['kio', 'pierone', 'twintip']}>
 
                     <ApplicationDetail
-                        applicationId={this.props.params.applicationId}
-                        globalFlux={this.props.globalFlux} />
+                        applicationId={this.props.params.applicationId} />
                 </FluxComponent>;
     }
 }
@@ -139,11 +139,11 @@ class OAuthFormHandler extends React.Component {
     render() {
         return <FluxComponent
                     flux={APP_FLUX}
+                    globalFlux={this.props.globalFlux} 
                     connectToStores={['mint', 'essentials', 'kio']}>
 
                     <OAuthForm
-                        applicationId={this.props.params.applicationId}
-                        globalFlux={this.props.globalFlux} />
+                        applicationId={this.props.params.applicationId} />
                 </FluxComponent>;
     }
 }
@@ -165,11 +165,11 @@ class AccessFormHandler extends React.Component {
     render() {
         return <FluxComponent
                     flux={APP_FLUX}
+                    globalFlux={this.props.globalFlux}
                     connectToStores={['mint', 'essentials', 'kio']}>
 
                     <AccessForm
-                        applicationId={this.props.params.applicationId}
-                        globalFlux={this.props.globalFlux} />
+                        applicationId={this.props.params.applicationId} />
                 </FluxComponent>;
     }
 }
@@ -214,12 +214,12 @@ class VersionDetailHandler extends React.Component {
     render() {
         return <FluxComponent
                     flux={APP_FLUX}
+                    globalFlux={this.props.globalFlux}
                     connectToStores={['kio', 'pierone']}>
 
                     <VersionDetail
                         applicationId={this.props.params.applicationId}
-                        versionId={this.props.params.versionId}
-                        globalFlux={this.props.globalFlux} />
+                        versionId={this.props.params.versionId} />
                 </FluxComponent>;
     }
 }
@@ -227,7 +227,7 @@ VersionDetailHandler.fetchData = function(state) {
     let {applicationId, versionId} = state.params;
     // fetch approvals for version
     KIO_ACTIONS.fetchApprovals(applicationId, versionId);
-    
+
     // fetch version itself
     KIO_ACTIONS
     .fetchApplicationVersion(applicationId, versionId)
@@ -237,7 +237,7 @@ VersionDetailHandler.fetchData = function(state) {
         PIERONE_ACTIONS.fetchScmSource(team, artifact, tag);
         PIERONE_ACTIONS.fetchTags(team, artifact);
     });
-    
+
     // fetch the application if it's not there aleady
     if (!KIO_STORE.getApplication(applicationId)) {
         KIO_ACTIONS.fetchApplication(applicationId);
@@ -253,12 +253,12 @@ class ApprovalFormHandler extends React.Component {
     render() {
         return <FluxComponent
                     flux={APP_FLUX}
+                    globalFlux={this.props.globalFlux}
                     connectToStores={['kio', 'pierone']}>
 
                     <ApprovalForm
                         applicationId={this.props.params.applicationId}
-                        versionId={this.props.params.versionId}
-                        globalFlux={this.props.globalFlux} />
+                        versionId={this.props.params.versionId} />
                 </FluxComponent>;
     }
 }
@@ -283,13 +283,13 @@ class CreateVersionFormHandler extends React.Component {
     render() {
         return <FluxComponent
                     flux={APP_FLUX}
+                    globalFlux={this.props.globalFlux}
                     connectToStores={['kio']}>
 
                     <VersionForm
                         edit={false}
                         applicationId={this.props.params.applicationId}
-                        versionId={this.props.params.versionId}
-                        globalFlux={this.props.globalFlux} />
+                        versionId={this.props.params.versionId} />
                 </FluxComponent>;
     }
 }
@@ -310,13 +310,13 @@ class EditVersionFormHandler extends React.Component {
     render() {
         return <FluxComponent
                     flux={APP_FLUX}
+                    globalFlux={this.props.globalFlux}
                     connectToStores={['kio']}>
 
                     <VersionForm
                         edit={true}
                         applicationId={this.props.params.applicationId}
-                        versionId={this.props.params.versionId}
-                        globalFlux={this.props.globalFlux} />
+                        versionId={this.props.params.versionId} />
                 </FluxComponent>;
     }
 }

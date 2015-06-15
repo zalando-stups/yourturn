@@ -27,7 +27,7 @@ class ResourceDetail extends React.Component {
             appScopes = scopes.filter(s => !s.is_resource_owner_scope),
             ownerScopes = scopes.filter(s => s.is_resource_owner_scope);
         return <div className='resourceDetail'>
-                    <h2>{resource.name}</h2>
+                    <h2>{resource.name || resourceId}</h2>
                     <div className='btn-group'>
                         <a
                             href='/resource'

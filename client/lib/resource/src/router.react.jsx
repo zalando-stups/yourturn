@@ -6,6 +6,7 @@ import Flux from './flux';
 import ResourceList from './resource-list/resource-list.jsx';
 import ResourceDetail from './resource-detail/resource-detail.jsx';
 import ScopeDetail from './scope-detail/scope-detail.jsx';
+import ScopeForm from './scope-form/scope-form.jsx';
 
 import 'promise.prototype.finally';
 
@@ -71,6 +72,30 @@ ScopeDetailHandler.fetchData = function(state) {
     RES_ACTIONS.fetchScope(resourceId, scopeId);
 };
 
+
+class EditScopeFormHandler extends React.Component {
+    constructor() {
+        super();
+    }
+
+    render() {
+        return <FlummoxComponent
+                    flux={RES_FLUX}
+                    globalFlux={this.props.globalFlux}
+                    connectToStores={['essentials']}>
+                    <ScopeForm
+                        resourceId={this.props.params.resourceId}
+                        scopeId={this.props.params.scopeId}
+                        edit={true} />
+                </FlummoxComponent>;
+    }
+}
+EditScopeFormHandler.fetchData = function(state) {
+    let {resourceId, scopeId} = state.params;
+    RES_ACTIONS.fetchResource(resourceId);
+    return RES_ACTIONS.fetchScope(resourceId, scopeId);
+};
+
 const ROUTES =
     <Route path='resource'>
         <DefaultRoute handler={ResourceListHandler} />
@@ -78,6 +103,7 @@ const ROUTES =
             <DefaultRoute handler={ResourceDetailHandler} />
             <Route path='scope'>
                 <Route path='detail/:scopeId' handler={ScopeDetailHandler} />
+                <Route path='edit/:scopeId' handler={EditScopeFormHandler} />
             </Route>
         </Route>
     </Route>;
