@@ -35,7 +35,7 @@ class ResourceDetail extends React.Component {
                             <i className='fa fa-chevron-left'></i> Resource Types
                         </a>
                         <a
-                            href='/resource/edit/{resource.id}'
+                            href={`/resource/edit/${resource.id}`}
                             className={`btn btn-default ${ whitelisted ? '' : 'btn-disabled'}`}>
                             <i className='fa fa-pencil'></i> Edit {resource.name}
                         </a>

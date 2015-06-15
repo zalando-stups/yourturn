@@ -34,6 +34,27 @@ CreateResourceFormHandler.fetchData = function() {
     return RES_ACTIONS.fetchResources();
 };
 
+
+class EditResourceFormHandler extends React.Component {
+    constructor() {
+        super();
+    }
+
+    render() {
+        return <FlummoxComponent
+                    flux={RES_FLUX}
+                    globalFlux={this.props.globalFlux}
+                    connectToStores={['essentials']}>
+                    <ResourceForm
+                        resourceId={this.props.params.resourceId}
+                        edit={true} />
+                </FlummoxComponent>;
+    }
+}
+EditResourceFormHandler.fetchData = function(state) {
+    return RES_ACTIONS.fetchResource(state.params.resourceId);
+}
+
 class ResourceListHandler extends React.Component {
     constructor() {
         super();
@@ -145,6 +166,7 @@ const ROUTES =
     <Route path='resource'>
         <DefaultRoute handler={ResourceListHandler} />
         <Route path='create' handler={CreateResourceFormHandler} />
+        <Route path='edit/:resourceId' handler={EditResourceFormHandler} />
         <Route path='detail/:resourceId'>
             <DefaultRoute handler={ResourceDetailHandler} />
             <Route path='scope'>
