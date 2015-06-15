@@ -1,0 +1,46 @@
+@import "../variables";
+
+.violationList {
+    max-width: @content-width-regular;
+    .tabs {
+        margin-bottom: @padding-small;
+    }
+    .violationList-datetime {
+        margin-bottom: @padding-small;
+    }
+    .violation {
+        padding: @padding-small;
+        border: 1px solid @red;
+        border-radius: @border-radius;
+        border-left: 10px solid @red;
+        
+        strong,
+        header {
+            color: @gray;
+        }
+
+        .violation-violationMessage {
+            font-family: 'Monaco', monospace;
+            // font-size: .8em;
+            margin-top: @padding-small;
+            margin-bottom: @padding-small;
+            margin-left: 0;
+        }
+        .violation-resolutionMessage {
+            margin-top: @padding-small;
+            margin-bottom: @padding-small;
+            &:before {
+                content: '\f10d';
+                font-family: 'FontAwesome';
+                float: left;
+                display: block;
+                margin-left: -30px;
+                font-size: 1em;
+                color: @gray-lighter;
+            }
+        }
+        + .violation {
+            margin-top: @padding-small;
+        }
+    }
+}

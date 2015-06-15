@@ -6,10 +6,18 @@ import {Flummox} from 'flummox';
 const FLUX = 'user',
     TEST_TEAMS = [{
         id: 'stups',
-        name: 'stups'
+        name: 'stups',
+        'infrastructure-accounts': [{
+            id: '74129824892479',
+            type: 'aws'
+        }]
     }, {
         id: 'greendale',
-        name: 'greendale'
+        name: 'greendale',
+        'infrastructure-accounts': [{
+            id: '8575378539035035',
+            type: 'gcc'
+        }]
     }];
 
 class MockFlux extends Flummox {
@@ -47,6 +55,18 @@ describe('The user store', () => {
         });
         store.deleteTokenInfo();
         expect(store.getTokenInfo()).to.be.false;
+    });
+
+    it('should return teams without their accounts', () => {
+        store.receiveUserTeams(TEST_TEAMS);
+        let userTeams = store.getUserTeams();
+        expect(userTeams[0]['infrastructure-accounts']).to.not.be.ok;
+    });
+
+    it('should return cloud accounts of a user', () => {
+        store.receiveUserTeams(TEST_TEAMS);
+        let accounts = store.getUserCloudAccounts();
+        expect(accounts.length).to.equal(2);
     });
 
     it('should sort teams', () => {

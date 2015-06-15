@@ -46,8 +46,22 @@ class UserStore extends Store {
         });
     }
 
+    getUserCloudAccounts() {
+        let teams = _m.toJs(this.state.teams);
+        return teams
+                .map(t => t['infrastructure-accounts'])
+                .reduce((prev, cur) => {
+                    prev = prev.concat(cur);
+                    return prev;
+                }, []);
+    }
+
     getUserTeams() {
-        return _m.toJs(this.state.teams);
+        let teams = _m.toJs(this.state.teams);
+        return teams.map(t => ({
+            id: t.id,
+            name: t.name
+        }));
     }
 
     receiveTokenInfo(tokeninfo) {

@@ -28,12 +28,13 @@ module.exports = {
         })
     ],
     resolve: {
-        extensions: ['', '.js', '.less', '.jsx'],
+        extensions: ['', '.js', '.css', '.less', '.jsx'],
         alias: {
             common: path.resolve(__dirname, './lib/common/'),
             yourturn: path.resolve(__dirname, './lib/yourturn/'),
             application: path.resolve(__dirname, './lib/application/'),
-            resource: path.resolve(__dirname, './lib/resource/')
+            resource: path.resolve(__dirname, './lib/resource/'),
+            violation: path.resolve(__dirname, './lib/violation/')
         }
     },
     externals: {
@@ -47,6 +48,7 @@ module.exports = {
         ESSENTIALS_BASE_URL: 'YTENV_ESSENTIALS_BASE_URL',
         TEAM_BASE_URL: 'YTENV_TEAM_BASE_URL',
         PIERONE_BASE_URL: 'YTENV_PIERONE_BASE_URL',
+        FULLSTOP_BASE_URL: 'YTENV_FULLSTOP_BASE_URL',
         DOCKER_REGISTRY: 'YTENV_DOCKER_REGISTRY',
         SERVICE_URL_TLD: 'YTENV_SERVICE_URL_TLD',
         RESOURCE_WHITELIST: 'YTENV_RESOURCE_WHITELIST'
@@ -57,7 +59,8 @@ module.exports = {
             { test: /\.js$/, exclude: /node_modules/, loader: 'babel' },
             { test: /\.jsx$/, exclude: /node_modules/, loaders: ['react-hot', 'babel'] },
             { test: /\.less$/, exclude: /node_modules/, loaders: ['style', 'css', 'autoprefixer', 'less'] },
-            { test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,   loader: 'url?limit=8192&mimetype=application/font-woff' },
+            { test: /\.css$/, loaders: ['style', 'css'] },
+            { test: /\.woff(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=8192&mimetype=application/font-woff' },
             { test: /\.(png|jpg|jpeg|gif)$/, loaders: ['url?limit=8192', 'img']}
         ]
     }

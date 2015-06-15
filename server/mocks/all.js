@@ -5,7 +5,8 @@ var kio = require('./5000-kio'),
     mint = require('./5004-mint'),
     team = require('./5005-team'),
     token = require('./5006-tokeninfo'),
-    pierone = require('./5007-pierone');
+    pierone = require('./5007-pierone'),
+    fullstop = require('./5008-fullstop');
 
 kio.listen(5000);
 console.log('kio on 5000');
@@ -23,3 +24,5 @@ token.listen(5006);
 console.log('token on 5006');
 pierone.listen(5007);
 console.log('pierone on 5007');
+fullstop.listen(5008);
+console.log('fullstop on 5008');

@@ -3,6 +3,8 @@ import './fetch-result.test';
 
 import './essentials/essentials-actions.test';
 import './essentials/essentials-store.test';
+import './fullstop/fullstop-actions.test';
+import './fullstop/fullstop-store.test';
 import './kio/kio-actions.test';
 import './kio/kio-store.test';
 import './mint/mint-actions.test';
