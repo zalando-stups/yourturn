@@ -119,14 +119,11 @@ class ViolationList extends React.Component {
                         </div>
                     </div>
                     {violations.length ?
-                        violations.map((v, i) => <div>
-                                                    <div>{i}</div>
-                                                    <Violation
+                        violations.map((v, i) => <Violation
                                                     key={v.id}
                                                     autoFocus={i === 0}
                                                     flux={this.props.flux}
-                                                    violation={v} />
-                                                </div>)
+                                                    violation={v} />)
                         :
                         <span>Wow, no violations! You are a good person.</span>}
                 </div>;
