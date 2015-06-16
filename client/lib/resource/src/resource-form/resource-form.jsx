@@ -1,4 +1,5 @@
 import React from 'react';
+import {Link} from 'react-router';
 import {constructLocalUrl} from 'common/src/data/services';
 import 'common/asset/less/resource/resource-form.less';
 
@@ -68,27 +69,33 @@ class ResourceForm extends React.Component {
     }
 
     render() {
-        let {edit} = this.props,
+        let {edit, resourceId} = this.props,
             {resourceIdTaken, resource} = this.state;
+        const LINK_PARAMS = {
+            resourceId: resourceId
+        };
         return <div className='resourceForm'>
                     <h2>
                         {edit ?
-                            <span>Edit <a href='/resource/detail/{resource.id}'>{resource.name}</a></span>
+                            <span>Edit <Link to='resource-resDetail' params={LINK_PARAMS}>{resource.name}</Link></span>
                             :
-                            <span>Create a new <a href='/resource'>Resource Type</a></span>}
+                            <span>Create a new <Link to='resource-resList'>Resource Type</Link></span>}
                     </h2>
-                    {edit ?
-                        <div className='btn-group'>
-                            <a href='/resource/detail/{resource.id}' className='btn btn-default'>
+                    <div className='btn-group'>
+                        {edit ?
+                            <Link
+                                to='resource-resDetail'
+                                params={LINK_PARAMS}
+                                className='btn btn-default'>
                                 <i className='fa fa-chevron-left'></i> {resource.name}
-                            </a>
-                        </div>
-                        :
-                        <div className='btn-group'>
-                            <a href='/resource' className='btn btn-default'>
+                            </Link>
+                            :
+                            <Link
+                                to='resource-resList'
+                                className='btn btn-default'>
                                 <i className='fa fa-chevron-left'></i> Resource Types
-                            </a>
-                        </div>}
+                            </Link>}
+                    </div>
                     <form
                         onSubmit={this.save.bind(this)}
                         className='form'
