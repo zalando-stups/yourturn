@@ -1,4 +1,5 @@
 import React from 'react';
+import {Link} from 'react-router';
 
 export default class ScopeDetailPlaceholder extends React.Component {
     constructor() {
@@ -7,21 +8,31 @@ export default class ScopeDetailPlaceholder extends React.Component {
 
     render() {
         let {resourceId, scopeId} = this.props;
+        const LINK_PARAMS = {
+            resourceId: resourceId,
+            scopeId: scopeId
+        };
         return <div className='scopeDetail u-placeholder'>
                     <h2>
-                        <a href='/resource/detail/{resourceId}'>{resourceId}</a>.{scopeId}
+                        <Link
+                            to='resource-resDetail'
+                            params={LINK_PARAMS}>
+                            {resourceId}
+                        </Link>.{scopeId}
                     </h2>
                     <div className='btn-group'>
-                        <a
-                            href='/resource/detail/{resourceId}'
+                        <Link
+                            to='resource-resDetail'
+                            params={LINK_PARAMS}
                             className='btn btn-default'>
                             <i className='fa fa-chevron-left'></i> {resourceId}
-                        </a>
-                        <a
-                            href='/resource/detail/{resourceId}/scope/edit/{scope.id}'
+                        </Link>
+                        <Link
+                            to='resource-scpEdit'
+                            params={LINK_PARAMS}
                             className='btn btn-primary btn-disabled'>
                             <i className='fa fa-pencil'></i> Edit {scopeId}
-                        </a>
+                        </Link>
                     </div>
                     <table className='table'>
                         <tbody>

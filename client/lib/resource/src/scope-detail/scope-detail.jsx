@@ -90,9 +90,13 @@ class ScopeDetail extends React.Component {
                                         <ul>
                                             {applications.map(
                                                 app => <li key={app.id}>
-                                                            <a href='/application/detail/{this.id}'>
+                                                            <Link
+                                                                to='application-appDetail'
+                                                                params={{
+                                                                    applicationId: app.id
+                                                                }}>
                                                                 {app.id}
-                                                            </a>
+                                                            </Link>
                                                         </li>)}
                                         </ul>
                                         :
