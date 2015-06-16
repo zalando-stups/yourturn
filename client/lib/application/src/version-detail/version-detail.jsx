@@ -123,7 +123,7 @@ class VersionDetail extends React.Component {
                         </Link>
                         <Link
                             to='application-verEdit'
-                            className='btn btn-default'
+                            className={`btn btn-default ${isOwnApplication ? '' : 'btn-disabled'}`}
                             params={LINK_PARAMS}>
                             <i className='fa fa-edit'></i> Edit {versionId}
                         </Link>

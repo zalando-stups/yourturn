@@ -51,7 +51,7 @@ class OAuthForm extends React.Component {
     /**
      * Save current state to backend
      */
-    save(evt) {        
+    save(evt) {
         evt.preventDefault();
 
         let {applicationId} = this.props,

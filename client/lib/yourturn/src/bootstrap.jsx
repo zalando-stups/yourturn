@@ -1,10 +1,7 @@
 import React from 'react';
 import Router from 'react-router';
-import FluxComponent from 'flummox/component';
 import ROUTES from './router.react.jsx';
 import YT_FLUX from './flux';
-import Sidebar from './sidebar/sidebar.jsx';
-import NotificationBar from './notification-bar/notification-bar.jsx';
 import DefaultError from 'common/src/error.jsx';
 
 import 'common/asset/less/base.less';

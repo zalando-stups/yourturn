@@ -131,7 +131,7 @@ class ApprovalForm extends React.Component {
                     <h2>
                         <Link
                             to='application-appDetail'
-                            params={LINK_PARAMS}>{application.name || applicationId}</Link> <Link
+                            params={LINK_PARAMS}>{application.name || applicationId}</Link> <Link
                             to='application-verDetail'
                             className='approvalForm-versionId'
                             params={LINK_PARAMS}>{versionId}</Link> Approvals

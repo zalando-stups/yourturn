@@ -78,18 +78,18 @@ class ScopeForm extends React.Component {
                             <span>Edit <Link
                                             to='resource-resDetail'
                                             params={LINK_PARAMS}>
-                                            {resource.id || resourceId}
+                                            {resource.id || resourceId}
                                         </Link>.<Link
                                             to='resource-scpDetail'
                                             params={LINK_PARAMS}>
-                                            {scope.id || scopeId}
+                                            {scope.id || scopeId}
                                         </Link>
                             </span>
                             :
                             <span>Create new scope for <Link
                                                             to='resource-resDetail'
                                                             params={LINK_PARAMS}>
-                                                            {resource.id || resourceId}
+                                                            {resource.id || resourceId}
                                                         </Link>
                             </span>}
                     </h2>
