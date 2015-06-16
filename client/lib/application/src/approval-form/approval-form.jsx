@@ -1,4 +1,5 @@
 import React from 'react';
+import {Link} from 'react-router';
 import ApprovalCard from './approval-card.jsx';
 import 'common/asset/less/application/approval-form.less';
 
@@ -122,17 +123,26 @@ class ApprovalForm extends React.Component {
             application = kio.getApplication(applicationId),
             approvalTypes = kio.getApprovalTypes(applicationId),
             approvals = kio.getApprovals(applicationId, versionId);
+        const LINK_PARAMS = {
+            applicationId: applicationId,
+            versionId: versionId
+        };
         return <div className='approvalForm'>
                     <h2>
-                        <a
-                            href='/application/detail/{applicationId}'>{application.name}</a> <a
-                            href='/application/detail/{applicationId}/version/detail/{versionId}'
-                            className='approvalForm-versionId'>{versionId}</a> approvals
+                        <Link
+                            to='application-appDetail'
+                            params={LINK_PARAMS}>{application.name || applicationId}</Link> <Link
+                            to='application-verDetail'
+                            className='approvalForm-versionId'
+                            params={LINK_PARAMS}>{versionId}</Link> Approvals
                     </h2>
                     <div className='btn-group'>
-                        <a href='/application/detail/{applicationId}/version/detail/{versionId}' className='btn btn-default'>
+                        <Link
+                            to='application-verDetail'
+                            params={LINK_PARAMS}
+                            className='btn btn-default'>
                             <i className='fa fa-chevron-left'></i> {application.name} {versionId}
-                        </a>
+                        </Link>
                     </div>
                     <div className='grid with-gutter'>
                         <div className='grid-col col-1-2'>
