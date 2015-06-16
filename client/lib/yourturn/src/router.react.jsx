@@ -5,6 +5,7 @@ import YT_FLUX from './flux';
 import AppRoutes from 'application/src/router.react.jsx';
 import ResRoutes from 'resource/src/router.react.jsx';
 import VioRoutes from 'violation/src/router.react.jsx';
+import YourTurn from './app.jsx';
 import Search from 'yourturn/src/search/search.jsx';
 
 import {Provider} from 'common/src/oauth-provider';
@@ -79,11 +80,11 @@ class SearchHandler extends React.Component {
 }
 
 const ROUTES =
-    <Route path='/'>
+    <Route handler={YourTurn} path='/'>
         {AppRoutes}
         {ResRoutes}
         {VioRoutes}
-        <Route path='search' handler={SearchHandler} />
+        <Route name='search' path='search' handler={SearchHandler} />
         <Route path='oauth' handler={LoginHandler} />
     </Route>;
 

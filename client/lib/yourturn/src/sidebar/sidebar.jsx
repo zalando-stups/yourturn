@@ -1,4 +1,5 @@
 import React from 'react';
+import {Link} from 'react-router';
 import Timestamp from 'react-time';
 import request from 'common/src/superagent';
 import {Provider, RequestConfig, saveRoute} from 'common/src/oauth-provider';
@@ -48,6 +49,10 @@ class Sidebar extends React.Component {
         clearInterval(this.interval);
     }
 
+    transition(route) {
+        this.context.router.transitionTo(route);
+    }
+
     render() {
         let tokeninfo = this.store.getTokenInfo();
         return <aside className='sidebar'>
@@ -92,21 +97,36 @@ class Sidebar extends React.Component {
                             </div>
                         }
                         </div>
-                        <div className='sidebar-item' data-route='search'>
-                            <a href='/search'>Search</a> <i className='fa fa-search'></i>
+                        <div className='sidebar-item' onClick={this.transition.bind(this, 'search')}>
+                            <Link
+                                to='search'>
+                                Search <i className='fa fa-search'></i>
+                            </Link>
                         </div>
-                        <div className='sidebar-item' data-route='application'>
-                            <a href='/application'>Applications</a> <i className='fa fa-cubes'></i>
+                        <div className='sidebar-item' onClick={this.transition.bind(this, 'application-appList')}>
+                            <Link
+                                to='application-appList'>
+                                Applications <i className='fa fa-cubes'></i>
+                            </Link>
                         </div>
-                        <div className='sidebar-item' data-route='resource'>
-                            <a href='/resource'>Resource Types</a> <i className='fa fa-key'></i>
+                        <div className='sidebar-item' onClick={this.transition.bind(this, 'resource-resList')}>
+                            <Link
+                                to='resource-resList'>
+                                Resource Types <i className='fa fa-key'></i>
+                            </Link>
                         </div>
-                        <div className='sidebar-item' data-route='violation'>
-                            <a href='/violation'>Violations</a> <i className='fa fa-warning'></i>
+                        <div className='sidebar-item' onClick={this.transition.bind(this, 'violation-vioList')}>
+                            <Link
+                                to='violation-vioList'>
+                                Violations <i className='fa fa-warning'></i>
+                            </Link>
                         </div>
                     </div>
                 </aside>;
     }
 }
+Sidebar.contextTypes = {
+    router: React.PropTypes.func.isRequired
+};
 
 export default Sidebar;

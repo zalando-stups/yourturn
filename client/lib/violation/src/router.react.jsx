@@ -47,7 +47,7 @@ ViolationListHandler.fetchData = function(state, globalFlux) {
 };
 
 const ROUTES =
-    <Route path='violation'>
+    <Route name='violation-vioList' path='violation'>
         <DefaultRoute handler={ViolationListHandler} />
     </Route>;
 

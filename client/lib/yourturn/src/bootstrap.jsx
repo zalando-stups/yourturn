@@ -11,8 +11,6 @@ import 'common/asset/less/base.less';
 import 'common/asset/less/grid.less';
 import 'common/asset/less/yourturn/yourturn.less';
 
-const MAIN_VIEW_ID = 'yourturn-view';
-
 let router = Router.create({
     routes: ROUTES,
     location: Router.HistoryLocation
@@ -38,22 +36,6 @@ function fetchData(routes, state, globalFlux) {
     return Promise.all(promises);
 }
 
-// render sidebar
-let sidebar = <FluxComponent
-                flux={YT_FLUX}
-                connectToStores={['user']}>
-                    <Sidebar />
-                </FluxComponent>;
-React.render(sidebar, document.getElementById('yourturn-sidebar'));
-
-// render notifications
-let notificationBar = <FluxComponent
-                        flux={YT_FLUX}
-                        connectToStores={['notification']}>
-                            <NotificationBar />
-                    </FluxComponent>;
-React.render(notificationBar, document.getElementById('yourturn-notifications'));
-
 // render the rest
 YT_FLUX
     .getActions('user')
@@ -76,10 +58,10 @@ router.run(
                 // if auth error true => everythings good
                 // I KNOW!
                 React.render(<DefaultError error={authError} />,
-                             document.getElementById(MAIN_VIEW_ID));
+                             document.body);
             } else {
                 React.render(<Handler globalFlux={YT_FLUX} />,
-                             document.getElementById(MAIN_VIEW_ID));
+                             document.body);
             }
         });
     });
