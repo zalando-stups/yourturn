@@ -1,4 +1,5 @@
 import React from 'react';
+import {Link} from 'react-router';
 import 'common/asset/less/resource/resource-list.less';
 
 class ResourceList extends React.Component {
@@ -38,10 +39,11 @@ class ResourceList extends React.Component {
                         </div>
                     </div>
                     <div className='btn-group'>
-                        <a href='/resource/create'
+                        <Link
+                            to='resource-resCreate'
                             className={`btn btn-primary ${whitelisted ? '' : 'btn-disabled'}`}>
                             <i className='fa fa-plus'></i> Create Resource Type
-                        </a>
+                        </Link>
                     </div>
                     <div className='form-group'>
                         <form className='form'>
@@ -66,7 +68,13 @@ class ResourceList extends React.Component {
                             {resources.map(
                                 res =>
                                     <li key={res.id}>
-                                        <a href={`/resource/detail/${res.id}`}>{res.name}</a>
+                                        <Link
+                                            to='resource-resDetail'
+                                            params={{
+                                                resourceId: res.id
+                                            }}>
+                                            {res.name}
+                                        </Link>
                                     </li>)}
                         </ul>
                         :
