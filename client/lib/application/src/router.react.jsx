@@ -53,9 +53,7 @@ class AppListHandler extends React.Component {
     }
 }
 AppListHandler.fetchData = function() {
-    if (!KIO_STORE.getApplications().length) {
-        KIO_ACTIONS.fetchApplications();
-    }
+    KIO_ACTIONS.fetchApplications();
 };
 
 
@@ -358,7 +356,7 @@ EditVersionFormHandler.fetchData = function(state) {
 const ROUTES =
         <Route name='application-appList' path='application'>
             <DefaultRoute handler={AppListHandler} />
-            <Route path='create' handler={CreateAppFormHandler} />
+            <Route name='application-appCreate' path='create' handler={CreateAppFormHandler} />
             <Route name='application-appEdit' path='edit/:applicationId' handler={EditAppFormHandler} />
             <Route name='application-appOAuth' path='oauth/:applicationId' handler={OAuthFormHandler} />
             <Route name='application-appAccess' path='access-control/:applicationId' handler={AccessFormHandler} />

@@ -1,4 +1,5 @@
 import React from 'react';
+import {Link} from 'react-router';
 import _ from 'lodash';
 import 'common/asset/less/application/application-list.less';
 
@@ -39,8 +40,11 @@ class ApplicationList extends React.Component {
         return <div className='applicationList'>
                     <h2 className='applicationList-headline'>Applications</h2>
                     <div className='btn-group'>
-                        <a href='/application/create' className='btn btn-primary'>
-                        <i className='fa fa-plus'></i> Create Application</a>
+                        <Link
+                            to='application-appCreate'
+                            className='btn btn-primary'>
+                            <i className='fa fa-plus'></i> Create Application
+                        </Link>
                     </div>
                     <div className='form'>
                         <label htmlFor='yourturn-search'>Search:</label>
@@ -63,9 +67,15 @@ class ApplicationList extends React.Component {
                     {teamApps.length ?
                         <ul data-block='team-apps'>
                             {teamApps.map(
-                                (ta, i) =>
-                                    <li key={i}>
-                                        <a href={`/application/detail/${ta.id}`}>{ta.name}</a>
+                                ta =>
+                                    <li key={ta.id}>
+                                        <Link
+                                            to='application-appDetail'
+                                            params={{
+                                                applicationId: ta.id
+                                            }}>
+                                            {ta.name}
+                                        </Link>
                                     </li>
                             )}
                         </ul> :
@@ -77,9 +87,15 @@ class ApplicationList extends React.Component {
                         <div>
                             <ul data-block='other-apps'>
                                 {shortApps.map(
-                                    (oa, i) =>
-                                        <li key={i}>
-                                            <a href={`/application/detail/${oa.id}`}>{oa.name}</a>
+                                    oa =>
+                                        <li key={oa.id}>
+                                            <Link
+                                                to='application-appDetail'
+                                                params={{
+                                                    applicationId: oa.id
+                                                }}>
+                                                {oa.name}
+                                            </Link>
                                         </li>
                                 )}
                             </ul>
