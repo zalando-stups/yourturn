@@ -1,4 +1,5 @@
 import React from 'react';
+import {Link} from 'react-router';
 import Markdown from 'common/src/markdown.jsx';
 import Placeholder from './placeholder.jsx';
 import FetchResult from 'common/src/fetch-result';
@@ -26,7 +27,10 @@ class ScopeDetail extends React.Component {
             scope = essentials.getScope(resourceId, scopeId),
             applications = essentials.getScopeApplications(scopeId),
             whitelisted = user.isWhitelisted();
-
+        const LINK_PARAMS = {
+            resourceId: resourceId,
+            scopeId: scopeId
+        };
         if (scope instanceof FetchResult) {
             return scope.isPending() ?
                     <Placeholder
@@ -36,19 +40,25 @@ class ScopeDetail extends React.Component {
         }
         return <div className='scopeDetail'>
                     <h2>
-                        <a href={`/resource/detail/${resourceId}`}>{resourceId}</a>.{scope.id || scopeId}
+                        <Link
+                            to='resource-resDetail'
+                            params={LINK_PARAMS}>
+                            {resourceId}
+                        </Link>.{scope.id || scopeId}
                     </h2>
                     <div className='btn-group'>
-                        <a
-                            href={`/resource/detail/${resourceId}`}
+                        <Link
+                            to='resource-resDetail'
+                            params={LINK_PARAMS}
                             className='btn btn-default'>
                             <i className='fa fa-chevron-left'></i> {resourceId}
-                        </a>
-                        <a
-                            href={`/resource/detail/${resourceId}/scope/edit/${scope.id}`}
+                        </Link>
+                        <Link
+                            to='resource-scpEdit'
+                            params={LINK_PARAMS}
                             className={`btn btn-primary ${whitelisted ? '' : 'btn-disabled'}`}>
                             <i className='fa fa-pencil'></i> Edit {scope.id || scopeId}
-                        </a>
+                        </Link>
                     </div>
                     <table className='table'>
                         <tbody>

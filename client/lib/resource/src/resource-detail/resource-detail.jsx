@@ -91,9 +91,14 @@ class ResourceDetail extends React.Component {
                                 <ul>
                                     {appScopes.map(
                                         scope => <li key={scope.id}>
-                                                    <a href={`/resource/detail/${resourceId}/scope/detail/${scope.id}`}>
+                                                    <Link
+                                                        to='resource-scpDetail'
+                                                        params={{
+                                                            resourceId: resourceId,
+                                                            scopeId: scope.id
+                                                        }}>
                                                         {scope.id}
-                                                    </a>
+                                                    </Link>
                                                 </li>)}
                                 </ul>
                                 :
