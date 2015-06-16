@@ -1,4 +1,5 @@
 import React from 'react';
+import {Link} from 'react-router';
 import OAuthSyncInfo from 'application/src/oauth-sync-info.jsx';
 import ScopeList from 'application/src/scope-list.jsx';
 import EditableList from 'application/src/editable-list.jsx';
@@ -80,12 +81,26 @@ class AccessForm extends React.Component {
             application = kio.getApplication(applicationId),
             isOwnApplication = user.getUserTeams().some(t => t.id === application.team_id),
             oauth = mint.getOAuthConfig(applicationId);
+
+        const LINK_PARAMS = {
+            applicationId: applicationId
+        };
+
         return <div className='accessForm'>
-                    <h2><a href={`/application/detail/${application.id}`}>{application.name}</a> Access Control</h2>
+                    <h2>
+                        <Link
+                            to='application-appDetail'
+                            params={LINK_PARAMS}>
+                            {application.name}
+                        </Link> Access Control
+                    </h2>
                     <div className='btn-group'>
-                        <a href={`/application/detail/${application.id}`} className='btn btn-default'>
+                        <Link
+                            to='application-appDetail'
+                            className='btn btn-default'
+                            params={LINK_PARAMS}>
                             <i className='fa fa-chevron-left'></i> {application.name}
-                        </a>
+                        </Link>
                     </div>
                     <form
                         onSubmit={this.save.bind(this)}

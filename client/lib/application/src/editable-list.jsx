@@ -55,7 +55,6 @@ class EditableList extends React.Component {
                             onChange={this.updateInput.bind(this)}
                             pattern={this.props.pattern || null}
                             placeholder={this.props.placeholder}
-                            minLength={this.props.minlength || null}
                             maxLength={this.props.maxlength || null}
                             value={input}
                             type='text' />
@@ -85,7 +84,6 @@ class EditableList extends React.Component {
 EditableList.displayName = 'EditableList';
 EditableList.propTypes = {
     pattern: React.PropTypes.string.isRequired,
-    minlength: React.PropTypes.number.isRequired,
     maxlength: React.PropTypes.number.isRequired,
     placeholder: React.PropTypes.string,
     itemName: React.PropTypes.string,
