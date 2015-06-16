@@ -94,7 +94,8 @@ class VersionDetail extends React.Component {
             isOwnApplication = user.getUserTeams().map(t => t.id).indexOf(application.team_id) >= 0;
 
         const LINK_PARAMS = {
-            applicationId: applicationId
+            applicationId: applicationId,
+            versionId: versionId
         };
 
         if (version instanceof FetchResult) {
@@ -121,7 +122,7 @@ class VersionDetail extends React.Component {
                             <i className='fa fa-chevron-left'></i> {application.name || applicationId} versions
                         </Link>
                         <Link
-                            to='application-appEdit'
+                            to='application-verEdit'
                             className='btn btn-default'
                             params={LINK_PARAMS}>
                             <i className='fa fa-edit'></i> Edit {versionId}
@@ -129,10 +130,7 @@ class VersionDetail extends React.Component {
                         <Link
                             to='application-verApproval'
                             className='btn btn-primary'
-                            params={{
-                                applicationId: applicationId,
-                                versionId: versionId
-                            }}>
+                            params={LINK_PARAMS}>
                             <i className='fa fa-check'></i> Approvals <span className='badge'>{approvals.length}</span>
                         </Link>
                     </div>

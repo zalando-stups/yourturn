@@ -30,7 +30,7 @@ class VersionFormPlaceholder extends React.Component {
                             <i className='fa fa-chevron-left'></i> {applicationId} versions
                         </Link>
                         <Link
-                            to='application-appEdit'
+                            to='application-verEdit'
                             className='btn btn-default'
                             params={LINK_PARAMS}>
                             <i className='fa fa-edit'></i> Edit {versionId}

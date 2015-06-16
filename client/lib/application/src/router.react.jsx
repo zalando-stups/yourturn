@@ -369,7 +369,7 @@ const ROUTES =
                     <Route name='application-verCreate' path='create' handler={CreateVersionFormHandler} />
                     <Route name='application-verApproval' path='approve/:versionId' handler={ApprovalFormHandler} />
                     <Route name='application-verDetail' path='detail/:versionId' handler={VersionDetailHandler} />
-                    <Route path='edit/:versionId' handler={EditVersionFormHandler} />
+                    <Route name='application-verEdit' path='edit/:versionId' handler={EditVersionFormHandler} />
                 </Route>
             </Route>
         </Route>;

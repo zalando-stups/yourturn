@@ -1,4 +1,5 @@
 import React from 'react';
+import {Link} from 'react-router';
 import {constructLocalUrl} from 'common/src/data/services';
 import DOCKER_REGISTRY from 'DOCKER_REGISTRY';
 
@@ -93,19 +94,34 @@ class VersionForm extends React.Component {
             application = kio.getApplication(applicationId),
             version = edit ? kio.getApplicationVersion(applicationId, versionId) : false,
             approvals = edit ? kio.getApprovals(applicationId, versionId) : false;
+
+        const LINK_PARAMS = {
+            applicationId: applicationId,
+            versionId: versionId
+        };
+
         return <div className='versionForm'>
                     <h2>
-                        {edit ? 'Edit ' : 'Create new version for '} <a href={`/application/detail/${applicationId}`}>{application.name || applicationId}</a>
+                        {edit ?
+                            <span>Edit <Link to='application-appDetail' params={LINK_PARAMS}>{application.name || applicationId}</Link> <Link to='application-verDetail' params={LINK_PARAMS}>{versionId}</Link></span>
+                            :
+                            <span>Create new version for <Link to='application-appDetail' params={LINK_PARAMS}>{application.name || applicationId}</Link></span>}
                     </h2>
                     <div className='btn-group'>
                         {edit ?
-                            <a href='/application/detail/{application.id}/version/detail/{version.id}' className='btn btn-default'>
+                            <Link
+                                to='application-verDetail'
+                                params={LINK_PARAMS}
+                                className='btn btn-default'>
                                 <i className='fa fa-chevron-left'></i> {application.name} {version.id}
-                            </a>
+                            </Link>
                             :
-                            <a href='/application/detail/{application.id}/version' className='btn btn-default'>
+                            <Link
+                                to='application-verList'
+                                params={LINK_PARAMS}
+                                className='btn btn-default'>
                                 <i className='fa fa-chevron-left'></i> {application.name}
-                            </a>}
+                            </Link>}
                     </div>
                     <form
                         onSubmit={this.save.bind(this)}
