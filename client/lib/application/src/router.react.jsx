@@ -112,8 +112,10 @@ EditAppFormHandler.isAllowed = function(state, globalFlux) {
     }
 };
 EditAppFormHandler.fetchData = function(state, globalFlux) {
-    KIO_ACTIONS.fetchApplication(state.params.applicationId);
-    return requireTeam(globalFlux);
+    return Promise.all([
+            KIO_ACTIONS.fetchApplication(state.params.applicationId),
+            requireTeam(globalFlux)
+        ]);
 };
 
 
