@@ -39,20 +39,18 @@ describe('The scope detail view', () => {
         props,
         detail;
 
-    beforeEach(done => {
-        reset(() => {
-            flux = new MockFlux();
-            globalFlux = new GlobalFlux();
-            props = {
-                flux: flux,
-                globalFlux: globalFlux,
-                resourceId: RES_ID,
-                scopeId: SCP_ID
-            };
-            flux.getStore(ESSENTIALS).receiveScope([RES_ID, TEST_SCP]);
-            detail = render(Detail, props);
-            done();
-        });
+    beforeEach(() => {
+        reset();
+        flux = new MockFlux();
+        globalFlux = new GlobalFlux();
+        props = {
+            flux: flux,
+            globalFlux: globalFlux,
+            resourceId: RES_ID,
+            scopeId: SCP_ID
+        };
+        flux.getStore(ESSENTIALS).receiveScope([RES_ID, TEST_SCP]);
+        detail = render(Detail, props);
     });
 
     it('should contain rendered markdown', () => {

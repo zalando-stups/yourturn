@@ -40,29 +40,27 @@ describe('The application detail view', () => {
         props,
         detail;
 
-    beforeEach(done => {
-        reset(() => {
-            flux = new MockFlux();
-            globalFlux = new GlobalFlux();
-            TEST_APP = {
-                documentation_url: 'https://github.com/zalando-stups/kio',
-                scm_url: 'https://github.com/zalando-stups/kio.git',
-                service_url: 'https://kio.example.org/',
-                description: '# Kio',
-                subtitle: 'STUPS application registry',
-                name: 'Kio',
-                active: true,
-                team_id: 'stups',
-                id: 'kio'
-            };
-            props = {
-                flux: flux,
-                globalFlux: globalFlux,
-                applicationId: ID
-            };
-            detail = render(Detail, props);
-            done();
-        });
+    beforeEach(() => {
+        reset();
+        flux = new MockFlux();
+        globalFlux = new GlobalFlux();
+        TEST_APP = {
+            documentation_url: 'https://github.com/zalando-stups/kio',
+            scm_url: 'https://github.com/zalando-stups/kio.git',
+            service_url: 'https://kio.example.org/',
+            description: '# Kio',
+            subtitle: 'STUPS application registry',
+            name: 'Kio',
+            active: true,
+            team_id: 'stups',
+            id: 'kio'
+        };
+        props = {
+            flux: flux,
+            globalFlux: globalFlux,
+            applicationId: ID
+        };
+        detail = render(Detail, props);
     });
 
     it('should display a placeholder when the application is Pending', () => {

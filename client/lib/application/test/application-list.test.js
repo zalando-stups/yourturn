@@ -34,26 +34,24 @@ describe('The application list view', () => {
         list;
 
 
-    beforeEach(done => {
-        reset(() => {
-            flux = new AppFlux();
-            globalFlux = new GlobalFlux();
+    beforeEach(() => {
+        reset();
+        flux = new AppFlux();
+        globalFlux = new GlobalFlux();
 
-            globalFlux
-            .getStore('user')
-            .receiveUserTeams([{
-                id: 'stups',
-                name: 'stups'
-            }]);
+        globalFlux
+        .getStore('user')
+        .receiveUserTeams([{
+            id: 'stups',
+            name: 'stups'
+        }]);
 
-            props = {
-                flux: flux,
-                globalFlux: globalFlux
-            };
+        props = {
+            flux: flux,
+            globalFlux: globalFlux
+        };
 
-            list = render(List, props);
-            done();
-        });
+        list = render(List, props);
     });
 
     it('should not display any list of applications', () => {

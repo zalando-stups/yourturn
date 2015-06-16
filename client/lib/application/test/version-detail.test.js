@@ -50,20 +50,18 @@ describe('The version detail view', () => {
         props,
         detail;
 
-    beforeEach(done => {
-        reset(() => {
-            flux = new MockFlux();
-            globalFlux = new GlobalFlux();
-            flux.getStore(FLUX).receiveApplicationVersion(TEST_VERSION);
-            props = {
-                flux: flux,
-                globalFlux: globalFlux,
-                applicationId: APP,
-                versionId: VER
-            };
-            detail = render(Detail, props);
-            done();
-        });
+    beforeEach(() => {
+        reset();
+        flux = new MockFlux();
+        globalFlux = new GlobalFlux();
+        flux.getStore(FLUX).receiveApplicationVersion(TEST_VERSION);
+        props = {
+            flux: flux,
+            globalFlux: globalFlux,
+            applicationId: APP,
+            versionId: VER
+        };
+        detail = render(Detail, props);
     });
 
     it('should show rendered markdown', () => {

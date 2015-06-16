@@ -48,19 +48,17 @@ describe('The approval form view', () => {
         props,
         form;
 
-    beforeEach(done => {
-        reset(() => {
-            flux = new MockFlux();
-            globalFlux = new GlobalFlux();
-            props = {
-                flux: flux,
-                globalFlux: globalFlux,
-                applicationId: APP_ID,
-                versionId: VER_ID
-            };
-            form = render(ApprovalForm, props);
-            done();
-        });
+    beforeEach(() => {
+        reset();
+        flux = new MockFlux();
+        globalFlux = new GlobalFlux();
+        props = {
+            flux: flux,
+            globalFlux: globalFlux,
+            applicationId: APP_ID,
+            versionId: VER_ID
+        };
+        form = render(ApprovalForm, props);
     });
 
     it('should show approvals', () => {

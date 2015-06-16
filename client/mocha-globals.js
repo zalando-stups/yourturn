@@ -1,6 +1,7 @@
 var chai = require('chai'),
     sinon = require('sinon'),
-    jsdom = require('jsdom'),
+    domino = require('domino'),
+    assign = require('object-assign'),
     HTML = '<!doctype html><html><body></body></html>',
     React = require('react/addons'),
     TestUtils = require('react-testutils-additions'),
@@ -15,6 +16,43 @@ var chai = require('chai'),
 // 
 // http://stackoverflow.com/a/26872245
 require('react/lib/ExecutionEnvironment').canUseDOM = true;
+
+
+/**
+ * STUB ROUTER
+ */
+var RouterStub = function () {};
+assign(RouterStub, {
+    makePath: sinon.spy(),
+    makeHref: sinon.spy(),
+    transitionTo: sinon.spy(),
+    replaceWith: sinon.spy(),
+    goBack: sinon.spy(),
+    getCurrentPath: sinon.spy(),
+    getCurrentRoutes: sinon.spy(),
+    getCurrentPathname: sinon.spy(),
+    getCurrentParams: sinon.spy(),
+    getCurrentQuery: sinon.spy(),
+    isActive: sinon.spy(),
+    getRouteAtDept: sinon.spy(),
+    setRouteComponentAtDepth: sinon.spy()
+});
+
+var Wrapper = function(Component, props) {
+    return React.createClass({
+        childContextTypes: {
+            router: React.PropTypes.func
+        },
+        getChildContext: function() {
+            return {
+                router: RouterStub
+            };
+        },
+        render: function() {
+            return React.createElement(Component, props);
+        }
+    });
+};
 
 TestUtils.findRenderedDOMComponentWithAttributeValue = function(component, attr, val) {
     var doms = TestUtils.scryRenderedDOMComponentsWithAttributeValue(component, attr, val);
@@ -32,9 +70,9 @@ global.window = {
     localStorage: localStorage
 };
 
-
 global.render = function(Component, props) {
-    var element = React.createElement(Component, props),
+    var clazz = Wrapper(Component, props),
+        element = React.createElement(clazz),
         component;
     try {
         component = TestUtils.renderIntoDocument(element);
@@ -45,22 +83,32 @@ global.render = function(Component, props) {
     return component;
 }
 
-global.reset = function(done) {
-    jsdom.env(HTML, function(err, wndw) {
-        global.window = wndw;
-        global.document = wndw.document;
-        global.$ = require('jquery'); // needs a document
-        // OAuth Provider uses localStorage by default
-        // so we feed it the in-memory storage for testing
-        global.window.localStorage = localStorage;
-        global.navigator = {
-            userAgent: 'mocha'
-        };
-        console.debug = console.log.bind(console);
-        console.error = console.log.bind(console);
-        done();
-    });
+global.reset = function() {
+    global.window = domino.createWindow(HTML);
+    global.document = global.window.document;
+    global.$ = require('jquery'); // needs a document
+    global.window.localStorage = localStorage;
+    global.navigator = {
+        userAgent: 'mocha'
+    };
 }
+
+// global.reset = function(done) {
+//     jsdom.env(HTML, function(err, wndw) {
+//         global.window = wndw;
+//         global.document = wndw.document;
+//         global.$ = require('jquery'); // needs a document
+//         // OAuth Provider uses localStorage by default
+//         // so we feed it the in-memory storage for testing
+//         global.window.localStorage = localStorage;
+//         global.navigator = {
+//             userAgent: 'mocha'
+//         };
+//         console.debug = console.log.bind(console);
+//         console.error = console.log.bind(console);
+//         done();
+//     });
+// }
 
 // globals for tests
 global.sinon = sinon;
@@ -68,6 +116,7 @@ global.expect = chai.expect;
 global.Mitm = Mitm;
 global.TestUtils = TestUtils;
 global.React = React;
+global.ReactRouter = require('react-router');
 // these are set by env.js in production
 global.YTENV_TWINTIP_BASE_URL = '';
 global.YTENV_KIO_BASE_URL = '';

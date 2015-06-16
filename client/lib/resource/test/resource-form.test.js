@@ -45,17 +45,15 @@ describe('The resource form view', () => {
     });
 
     describe('in edit mode', () => {
-        beforeEach(done => {
-            reset(() => {
-                flux.getStore(ESSENTIALS).receiveResource(TEST_RES);
-                props = {
-                    flux: flux,
-                    resourceId: RES_ID,
-                    edit: true
-                };
-                form = render(Form, props);
-                done();
-            });
+        beforeEach(() => {
+            reset();
+            flux.getStore(ESSENTIALS).receiveResource(TEST_RES);
+            props = {
+                flux: flux,
+                resourceId: RES_ID,
+                edit: true
+            };
+            form = render(Form, props);
         });
 
         it('should display the available symbol', () => {
@@ -68,7 +66,8 @@ describe('The resource form view', () => {
         });
 
         it('should call the correct action', () => {
-            form.save();
+            let f = TestUtils.findRenderedDOMComponentWithAttributeValue(form, 'data-block', 'form');
+            TestUtils.Simulate.submit(f);
             expect(actionSpy.calledOnce).to.be.true;
         });
 

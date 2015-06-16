@@ -59,29 +59,28 @@ describe('The access control form view', () => {
         props,
         form;
 
-    beforeEach(done => {
-        reset(() => {
-            flux = new MockFlux();
-            globalFlux = new GlobalFlux();
-            flux.getStore('essentials').receiveScopes(['customer', [{
-                id: 'read_all'
-            }]]);
-            flux.getStore('mint').receiveOAuthConfig(['kio', MOCK_KIO]);
-            actionSpy = sinon.stub(flux.getActions('mint'), 'saveOAuthConfig', () => {
-                return Promise.resolve();
-            });
-            props = {
-                flux: flux,
-                globalFlux: globalFlux,
-                applicationId: 'kio'
-            };
-            form = render(AccessForm, props);
-            done();
+    beforeEach(() => {
+        reset();
+        flux = new MockFlux();
+        globalFlux = new GlobalFlux();
+        flux.getStore('essentials').receiveScopes(['customer', [{
+            id: 'read_all'
+        }]]);
+        flux.getStore('mint').receiveOAuthConfig(['kio', MOCK_KIO]);
+        actionSpy = sinon.stub(flux.getActions('mint'), 'saveOAuthConfig', () => {
+            return Promise.resolve();
         });
+        props = {
+            flux: flux,
+            globalFlux: globalFlux,
+            applicationId: 'kio'
+        };
+        form = render(AccessForm, props);
     });
 
     it('should call the correct action', () => {
-        form.save();
+        let f = TestUtils.findRenderedDOMComponentWithAttributeValue(form, 'data-block', 'form');
+        TestUtils.Simulate.submit(f);
         expect(actionSpy.calledOnce).to.be.true;
     });
 });

@@ -41,9 +41,8 @@ class AccessForm extends React.Component {
     }
 
     save(evt) {
-        if (evt) {
-            evt.preventDefault();
-        }
+        evt.preventDefault();
+
         let {applicationId} = this.props,
             scopes = this.stores.essentials.getAllScopes(),
             appscopes = this.state.scopes,
@@ -103,6 +102,7 @@ class AccessForm extends React.Component {
                         </Link>
                     </div>
                     <form
+                        data-block='form'
                         onSubmit={this.save.bind(this)}
                         className='form'>
                         <div className='form-group'>
@@ -128,6 +128,7 @@ class AccessForm extends React.Component {
                         <div className='btn-group'>
                             <button
                                 type='submit'
+                                data-block='save-button'
                                 className={`btn btn-primary ${isOwnApplication ? '' : 'btn-disabled'}`}>
                                 <i className='fa fa-save'></i> Save
                             </button>

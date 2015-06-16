@@ -54,20 +54,18 @@ describe('The application form view', () => {
     });
 
     describe('in create mode', () => {
-        beforeEach(done => {
-            reset(() => {
-                props = {
-                    flux: flux,
-                    globalFlux: globalFlux,
-                    applicationId: APP_ID,
-                    edit: false
-                };
-                globalFlux.getStore('user').receiveUserTeams([{
-                    id: 'stups'
-                }]);
-                form = render(AppForm, props);
-                done();
-            });
+        beforeEach(() => {
+            reset();
+            props = {
+                flux: flux,
+                globalFlux: globalFlux,
+                applicationId: APP_ID,
+                edit: false
+            };
+            globalFlux.getStore('user').receiveUserTeams([{
+                id: 'stups'
+            }]);
+            form = render(AppForm, props);
         });
 
         it('should not have a placeholder', () => {
@@ -82,21 +80,19 @@ describe('The application form view', () => {
     });
 
     describe('in edit mode', () => {
-        beforeEach(done => {
-            reset(() => {
-                props = {
-                    flux: flux,
-                    globalFlux: globalFlux,
-                    applicationId: APP_ID,
-                    edit: true
-                };
-                globalFlux.getStore('user').receiveUserTeams([{
-                    id: 'stups'
-                }]);
-                flux.getStore(FLUX).receiveApplication(TEST_APP);
-                form = render(AppForm, props);
-                done();
-            });
+        beforeEach(() => {
+            reset();
+            props = {
+                flux: flux,
+                globalFlux: globalFlux,
+                applicationId: APP_ID,
+                edit: true
+            };
+            globalFlux.getStore('user').receiveUserTeams([{
+                id: 'stups'
+            }]);
+            flux.getStore(FLUX).receiveApplication(TEST_APP);
+            form = render(AppForm, props);
         });
 
         it('should not check the active box if app is inactive', () => {
@@ -115,7 +111,8 @@ describe('The application form view', () => {
         });
 
         it('should call the correct action', () => {
-            form.save();
+            let f = TestUtils.findRenderedDOMComponentWithAttributeValue(form, 'data-block', 'form');
+            TestUtils.Simulate.submit(f);
             expect(actionSpy.calledOnce).to.be.true;
         });
     });

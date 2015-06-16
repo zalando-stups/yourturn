@@ -1,5 +1,4 @@
 import './fetch-result.test';
-// import './puppeteer.test';
 
 import './essentials/essentials-actions.test';
 import './essentials/essentials-store.test';

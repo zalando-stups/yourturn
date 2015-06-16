@@ -39,20 +39,17 @@ describe('The resource detail view', () => {
         props,
         detail;
 
-    beforeEach(done => {
-        reset(() => {
-            flux = new MockFlux();
-            globalFlux = new GlobalFlux();
-            flux.getStore(ESSENTIALS).receiveResource(TEST_RES);
-            props = {
-                flux: flux,
-                resourceId: ID,
-                globalFlux: globalFlux
-            };
-            detail = render(Detail, props);
-            done();
-        });
-
+    beforeEach(() => {
+        reset();
+        flux = new MockFlux();
+        globalFlux = new GlobalFlux();
+        flux.getStore(ESSENTIALS).receiveResource(TEST_RES);
+        props = {
+            flux: flux,
+            resourceId: ID,
+            globalFlux: globalFlux
+        };
+        detail = render(Detail, props);
     });
 
     it('should contain rendered markdown', () => {

@@ -48,9 +48,7 @@ class ApplicationForm extends React.Component {
      * Saves the application to kio.
      */
     save(evt) {
-        if (evt) {
-            evt.preventDefault();
-        }
+        evt.preventDefault();
 
         let {app} = this.state;
 
@@ -125,6 +123,7 @@ class ApplicationForm extends React.Component {
                             </div>
                         </div>}
                     <form
+                        data-block='form'
                         className='form'
                         onSubmit={this.save.bind(this)}
                         name='createAppForm'>

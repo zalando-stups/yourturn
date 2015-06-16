@@ -27,14 +27,12 @@ describe('The scope form view', () => {
     });
 
     describe('in create mode', () => {
-        beforeEach(done => {
-            reset(() => {
-                props = {
-                    flux: flux
-                };
-                form = render(Form, props);
-                done();
-            });
+        beforeEach(() => {
+            reset();
+            props = {
+                flux: flux
+            };
+            form = render(Form, props);
         });
 
         it('should have application checkbox preselected', () => {
@@ -45,16 +43,14 @@ describe('The scope form view', () => {
     });
 
     describe('in edit mode', () => {
-        beforeEach(done => {
-            reset(() => {
-                props = {
-                    flux: flux,
-                    resourceId: RES_ID,
-                    edit: true
-                };
-                form = render(Form, props);
-                done();
-            });
+        beforeEach(() => {
+            reset();
+            props = {
+                flux: flux,
+                resourceId: RES_ID,
+                edit: true
+            };
+            form = render(Form, props);
         });
 
     });

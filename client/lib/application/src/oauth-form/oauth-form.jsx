@@ -51,10 +51,9 @@ class OAuthForm extends React.Component {
     /**
      * Save current state to backend
      */
-    save(evt) {
-        if (evt) {
-            evt.preventDefault();
-        }
+    save(evt) {        
+        evt.preventDefault();
+
         let {applicationId} = this.props,
             scopes = this.stores.essentials.getAllScopes(),
             ownerscopes = this.state.scopes,
@@ -113,6 +112,7 @@ class OAuthForm extends React.Component {
                         </Link>
                     </div>
                     <form
+                        data-block='form'
                         onSubmit={this.save.bind(this)}
                         className='form'>
                         <div className='form-group'>

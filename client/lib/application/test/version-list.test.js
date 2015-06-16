@@ -21,16 +21,14 @@ describe('The version list view', () => {
         props,
         list;
 
-    beforeEach(done => {
-        reset(() => {
-            flux = new MockFlux();
-            props = {
-                flux: flux,
-                applicationId: APP_ID
-            };
-            list = render(List, props);
-            done();
-        });
+    beforeEach(() => {
+        reset();
+        flux = new MockFlux();
+        props = {
+            flux: flux,
+            applicationId: APP_ID
+        };
+        list = render(List, props);
     });
 
     it('should not display a list without versions', () => {

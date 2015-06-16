@@ -55,9 +55,7 @@ module.exports = {
     },
     module: {
         loaders: [
-            { test: /\.hbs$/, exclude: /node_modules/, loader: 'handlebars?helperDirs[]=' + __dirname + '/lib/common/src/handlebars' },
-            { test: /\.js$/, exclude: /node_modules/, loader: 'babel' },
-            { test: /\.jsx$/, exclude: /node_modules/, loaders: ['react-hot', 'babel'] },
+            { test: /\.jsx?$/, exclude: /node_modules/, loaders: ['react-hot', 'babel'] },
             { test: /\.less$/, exclude: /node_modules/, loaders: ['style', 'css', 'autoprefixer', 'less'] },
             { test: /\.css$/, loaders: ['style', 'css'] },
             { test: /\.woff(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=8192&mimetype=application/font-woff' },

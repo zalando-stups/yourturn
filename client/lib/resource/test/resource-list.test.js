@@ -32,17 +32,15 @@ describe('The resource list view', () => {
         props,
         list;
 
-    beforeEach(done => {
-        reset(() => {
-            flux = new MockFlux();
-            globalFlux = new GlobalFlux();
-            props = {
-                flux: flux,
-                globalFlux: globalFlux
-            };
-            list = render(List, props);
-            done();
-        });
+    beforeEach(() => {
+        reset();
+        flux = new MockFlux();
+        globalFlux = new GlobalFlux();
+        props = {
+            flux: flux,
+            globalFlux: globalFlux
+        };
+        list = render(List, props);
     });
 
     it('should not display a list without resources', () => {

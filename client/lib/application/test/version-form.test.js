@@ -61,40 +61,37 @@ describe('The version form view', () => {
     });
 
     describe('in create mode', () => {
-        beforeEach(done => {
-            reset(() => {
-                flux.getStore(FLUX).receiveApplication(TEST_APP);
-                flux.getStore(FLUX).receiveApplicationVersion(TEST_VERSION);
-                props = {
-                    flux: flux,
-                    applicationId: APP_ID,
-                    versionId: VER_ID,
-                    edit: false
-                };
-                form = render(VersionForm, props);
-                done();
-            });
+        beforeEach(() => {
+            reset();
+            flux.getStore(FLUX).receiveApplication(TEST_APP);
+            flux.getStore(FLUX).receiveApplicationVersion(TEST_VERSION);
+            props = {
+                flux: flux,
+                applicationId: APP_ID,
+                versionId: VER_ID,
+                edit: false
+            };
+            form = render(VersionForm, props);
         });
     });
 
     describe('in edit mode', () => {
-        beforeEach(done => {
-            reset(() => {
-                flux.getStore(FLUX).receiveApplication(TEST_APP);
-                flux.getStore(FLUX).receiveApplicationVersion(TEST_VERSION);
-                props = {
-                    flux: flux,
-                    applicationId: APP_ID,
-                    versionId: VER_ID,
-                    edit: true
-                };
-                form = render(VersionForm, props);
-                done();
-            });
+        beforeEach(() => {
+            reset();
+            flux.getStore(FLUX).receiveApplication(TEST_APP);
+            flux.getStore(FLUX).receiveApplicationVersion(TEST_VERSION);
+            props = {
+                flux: flux,
+                applicationId: APP_ID,
+                versionId: VER_ID,
+                edit: true
+            };
+            form = render(VersionForm, props);
         });
 
         it('should call the correct action', () => {
-            form.save();
+            let f = TestUtils.findRenderedDOMComponentWithAttributeValue(form, 'data-block', 'form');
+            TestUtils.Simulate.submit(f);
             expect(actionSpy.calledOnce).to.be.true;
         });
 

@@ -97,6 +97,7 @@ class ResourceForm extends React.Component {
                             </Link>}
                     </div>
                     <form
+                        data-block='form'
                         onSubmit={this.save.bind(this)}
                         className='form'
                         name='resourceForm'>

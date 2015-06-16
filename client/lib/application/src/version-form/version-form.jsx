@@ -59,9 +59,8 @@ class VersionForm extends React.Component {
     }
 
     save(evt) {
-        if (evt) {
-            evt.preventDefault();
-        }
+        evt.preventDefault();
+
         let {applicationId, versionId} = this.props,
             {kio} = this.stores,
             application = kio.getApplication(applicationId),
@@ -124,6 +123,7 @@ class VersionForm extends React.Component {
                             </Link>}
                     </div>
                     <form
+                        data-block='form'
                         onSubmit={this.save.bind(this)}
                         className='form'>
                         <div className='form-group'>
