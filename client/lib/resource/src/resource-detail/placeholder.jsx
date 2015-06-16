@@ -1,25 +1,37 @@
 import React from 'react';
+import {Link} from 'react-router';
 import 'common/asset/less/resource/resource-detail.less';
 
-export default class ResourceDetailPlaceholder extends React.Component {
+class ResourceDetailPlaceholder extends React.Component {
     constructor() {
         super();
     }
 
     render() {
         let {resourceId} = this.props;
+        const LINK_PARAMS = {
+            resourceId: resourceId
+        };
         return <div className='resourceDetail u-placeholder'>
                     <h2>{resourceId}</h2>
                     <div className='btn-group'>
-                        <a href='/resource' className='btn btn-default'>
+                        <Link
+                            to='resource-resList'
+                            className='btn btn-default'>
                             <i className='fa fa-chevron-left'></i> Resource Types
-                        </a>
-                        <a href='/resource/edit/{resourceId}' className='btn btn-default btn-disabled'>
+                        </Link>
+                        <Link
+                            to='resource-resEdit'
+                            params={LINK_PARAMS}
+                            className='btn btn-default btn-disabled'>
                             <i className='fa fa-pencil'></i> Edit {resourceId}
-                        </a>
-                        <a href='/resource/detail/{resourceId}/create' className='btn btn-primary btn-disabled'>
+                        </Link>
+                        <Link
+                            to='resource-scpCreate'
+                            params={LINK_PARAMS}
+                            className='btn btn-default btn-disabled'>
                             <i className='fa fa-plus'></i> Create Scope
-                        </a>
+                        </Link>
                     </div>
                     <table className='table'>
                         <tbody>
@@ -64,3 +76,8 @@ export default class ResourceDetailPlaceholder extends React.Component {
                 </div>;
     }
 }
+ResourceDetailPlaceholder.contextTypes = {
+    router: React.PropTypes.func.isRequired
+};
+
+export default ResourceDetailPlaceholder;

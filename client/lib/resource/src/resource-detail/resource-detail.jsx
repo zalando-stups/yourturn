@@ -1,4 +1,5 @@
 import React from 'react';
+import {Link} from 'react-router';
 import Markdown from 'common/src/markdown.jsx';
 import Placeholder from './placeholder.jsx';
 import FetchResult from 'common/src/fetch-result';
@@ -29,7 +30,9 @@ class ResourceDetail extends React.Component {
             scopes = essentials.getScopes(resourceId),
             appScopes = scopes.filter(s => !s.is_resource_owner_scope),
             ownerScopes = scopes.filter(s => s.is_resource_owner_scope);
-
+        const LINK_PARAMS = {
+            resourceId: resourceId
+        };
         if (resource instanceof FetchResult) {
             return resource.isPending() ?
                     <Placeholder
@@ -40,21 +43,23 @@ class ResourceDetail extends React.Component {
         return <div className='resourceDetail'>
                     <h2>{resource.name || resourceId}</h2>
                     <div className='btn-group'>
-                        <a
-                            href='/resource'
+                        <Link
+                            to='resource-resList'
                             className='btn btn-default'>
                             <i className='fa fa-chevron-left'></i> Resource Types
-                        </a>
-                        <a
-                            href={`/resource/edit/${resource.id}`}
+                        </Link>
+                        <Link
+                            to='resource-resEdit'
+                            params={LINK_PARAMS}
                             className={`btn btn-default ${ whitelisted ? '' : 'btn-disabled'}`}>
                             <i className='fa fa-pencil'></i> Edit {resource.name}
-                        </a>
-                        <a
-                            href={`/resource/detail/${resource.id}/scope/create`}
+                        </Link>
+                        <Link
+                            to='resource-scpCreate'
+                            params={LINK_PARAMS}
                             className={`btn btn-primary ${ whitelisted ? '' : 'btn-disabled'}`}>
                             <i className='fa fa-plus'></i> Create Scope
-                        </a>
+                        </Link>
                     </div>
                     <table className='table'>
                         <tbody>
@@ -100,9 +105,14 @@ class ResourceDetail extends React.Component {
                                 <ul>
                                     {ownerScopes.map(
                                         scope => <li key={scope.id}>
-                                                    <a href={`/resource/detail/${resourceId}/scope/detail/${scope.id}`}>
+                                                    <Link
+                                                        to='resource-scpDetail'
+                                                        params={{
+                                                            resourceId: resourceId,
+                                                            scopeId: scope.id
+                                                        }}>
                                                         {scope.id}
-                                                    </a>
+                                                    </Link>
                                                 </li>)}
                                 </ul>
                                 :

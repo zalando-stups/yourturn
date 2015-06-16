@@ -215,16 +215,16 @@ CreateScopeFormHandler.fetchData = function(state, globalFlux) {
 };
 
 const ROUTES =
-    <Route path='resource'>
+    <Route name='resource-resList' path='resource'>
         <DefaultRoute handler={ResourceListHandler} />
-        <Route path='create' handler={CreateResourceFormHandler} />
-        <Route path='edit/:resourceId' handler={EditResourceFormHandler} />
-        <Route path='detail/:resourceId'>
+        <Route name='resource-resCreate' path='create' handler={CreateResourceFormHandler} />
+        <Route name='resource-resEdit' path='edit/:resourceId' handler={EditResourceFormHandler} />
+        <Route name='resource-resDetail' path='detail/:resourceId'>
             <DefaultRoute handler={ResourceDetailHandler} />
             <Route path='scope'>
-                <Route path='create' handler={CreateScopeFormHandler} />
-                <Route path='detail/:scopeId' handler={ScopeDetailHandler} />
-                <Route path='edit/:scopeId' handler={EditScopeFormHandler} />
+                <Route name='resource-scpCreate' path='create' handler={CreateScopeFormHandler} />
+                <Route name='resource-scpDetail' path='detail/:scopeId' handler={ScopeDetailHandler} />
+                <Route name='resource-scpEdit' path='edit/:scopeId' handler={EditScopeFormHandler} />
             </Route>
         </Route>
     </Route>;
