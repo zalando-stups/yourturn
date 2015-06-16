@@ -1,4 +1,5 @@
 import React from 'react';
+import {Link} from 'react-router';
 import 'common/asset/less/application/version-list.less';
 
 class VersionList extends React.Component {
@@ -24,17 +25,30 @@ class VersionList extends React.Component {
             application = kio.getApplication(applicationId),
             {term} = this.state,
             versions = kio.getApplicationVersions(applicationId, term);
+        const LINK_PARAMS = {
+            applicationId: applicationId
+        };
         return <div className='versionList'>
                     <h2>
-                        <a href={`/application/detail/${application.id}`}>{application.name || applicationId}</a> versions
+                        <Link
+                            to='application-appDetail'
+                            params={LINK_PARAMS}>
+                            {application.name || applicationId}
+                        </Link> versions
                     </h2>
                     <div className='btn-group'>
-                        <a href={`/application/detail/${applicationId}`} className='btn btn-default'>
+                        <Link
+                            to='application-appDetail'
+                            params={LINK_PARAMS}
+                            className='btn btn-default'>
                             <i className='fa fa-chevron-left'></i> {application.name || applicationId}
-                        </a>
-                        <a href={`/application/detail/${applicationId}/version/create`} className='btn btn-primary'>
+                        </Link>
+                        <Link
+                            to='application-verCreate'
+                            params={LINK_PARAMS}
+                            className='btn btn-primary'>
                             <i className='fa fa-plus'></i> Create new version
-                        </a>
+                        </Link>
                     </div>
                     <div className='form'>
                         <div className='input-group'>
@@ -59,15 +73,23 @@ class VersionList extends React.Component {
                             data-block='versions'>
                                 {versions.map(
                                     v =>
-                                        <div>
-                                            <a title={`Approve version ${v.id}`}
+                                        <div key={v.id}>
+                                            <Link
+                                                to='application-verApproval'
                                                 className='btn btn-default btn-small'
-                                                href={`/application/detail/${v.application_id}/version/approve/${v.id}`}>
+                                                params={{
+                                                    applicationId: applicationId,
+                                                    versionId: v.id
+                                                }}>
                                                 <i className='fa fa-check'></i>
-                                            </a>
-                                            <a href={`/application/detail/${v.application_id}/version/detail/${v.id}`}>
+                                            </Link> <Link
+                                                to='application-verDetail'
+                                                params={{
+                                                    applicationId: applicationId,
+                                                    versionId: v.id
+                                                }}>
                                                 {v.id}
-                                            </a>
+                                            </Link>
                                         </div>)}
                         </div>
                         :
