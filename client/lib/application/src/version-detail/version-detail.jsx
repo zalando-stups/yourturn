@@ -1,4 +1,5 @@
 import React from 'react';
+import {Link} from 'react-router';
 import Timestamp from 'react-time';
 import {DATE_FORMAT} from 'common/src/config';
 import ScmSourceWarning from './scm-source-warning.jsx';
@@ -92,6 +93,10 @@ class VersionDetail extends React.Component {
             approvals = kio.getApprovals(applicationId, versionId),
             isOwnApplication = user.getUserTeams().map(t => t.id).indexOf(application.team_id) >= 0;
 
+        const LINK_PARAMS = {
+            applicationId: applicationId
+        };
+
         if (version instanceof FetchResult) {
             return version.isPending() ?
                         <Placeholder
@@ -101,21 +106,36 @@ class VersionDetail extends React.Component {
         }
         return <div className='versionDetail'>
                     <h2>
-                        <a href='/application/detail/{applicationId}'>{application.name || applicationId}</a> <span className='versionDetail-versionId'>{version.id}</span>
+                        <Link
+                            to='application-appDetail'
+                            params={LINK_PARAMS}>
+                            {application.name || applicationId}
+                        </Link> <span className='versionDetail-versionId'>{version.id}</span>
                     </h2>
 
                     <div className='btn-group'>
-                        <a href={`/application/detail/${applicationId}/version`} className='btn btn-default'>
+                        <Link
+                            to='application-appDetail'
+                            className='btn btn-default'
+                            params={LINK_PARAMS}>
                             <i className='fa fa-chevron-left'></i> {application.name || applicationId} versions
-                        </a>
-                        <a href={`/application/detail/${applicationId}/version/edit/${versionId}`} className={`btn btn-default ${isOwnApplication ? '' : 'btn-disabled'}`}>
+                        </Link>
+                        <Link
+                            to='application-appEdit'
+                            className='btn btn-default'
+                            params={LINK_PARAMS}>
                             <i className='fa fa-edit'></i> Edit {versionId}
-                        </a>
-                        <a href={`/application/detail/${applicationId}/version/approve/${versionId}`} className='btn btn-primary'>
+                        </Link>
+                        <Link
+                            to='application-verApproval'
+                            className='btn btn-primary'
+                            params={{
+                                applicationId: applicationId,
+                                versionId: versionId
+                            }}>
                             <i className='fa fa-check'></i> Approvals <span className='badge'>{approvals.length}</span>
-                        </a>
+                        </Link>
                     </div>
-
 
                     <table className='table'>
                         <tbody>

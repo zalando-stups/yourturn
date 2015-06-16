@@ -1,29 +1,46 @@
 import React from 'react';
+import {Link} from 'react-router';
 import 'common/asset/less/application/version-detail.less';
 
-export default class VersionFormPlaceholder extends React.Component {
+class VersionFormPlaceholder extends React.Component {
     constructor() {
         super();
     }
 
     render() {
         let {applicationId, versionId} = this.props;
+        const LINK_PARAMS = {
+            applicationId: applicationId,
+            versionId: versionId
+        };
         return <div className='versionDetail u-placeholder'>
                     <h2>
-                        <a href='/application/detail/{applicationId}'>{applicationId}</a>
-                        <span className='u-placeholder-text'>0.10.0</span>
+                        <Link
+                            to='application-appDetail'
+                            params={LINK_PARAMS}>
+                            {applicationId}
+                        </Link> <span className='versionDetail-versionId'>{versionId}</span>
                     </h2>
 
                     <div className='btn-group'>
-                        <a href='/application/detail/{applicationId}/version' className='btn btn-default'>
+                        <Link
+                            to='application-appDetail'
+                            className='btn btn-default'
+                            params={LINK_PARAMS}>
                             <i className='fa fa-chevron-left'></i> {applicationId} versions
-                        </a>
-                        <a href='/application/detail/{applicationId}/version/edit/{versionId}' className='btn btn-default btn-disabled'>
+                        </Link>
+                        <Link
+                            to='application-appEdit'
+                            className='btn btn-default'
+                            params={LINK_PARAMS}>
                             <i className='fa fa-edit'></i> Edit {versionId}
-                        </a>
-                        <a href='/application/detail/{applicationId}/version/approve/{versionId}' className='btn btn-primary'>
-                            <i className='fa fa-check'></i> Approvals <span className='badge'>?</span>
-                        </a>
+                        </Link>
+                        <Link
+                            to='application-verApproval'
+                            className='btn btn-primary'
+                            params={LINK_PARAMS}>
+                            <i className='fa fa-check'></i> Approvals <span className='badge'>0</span>
+                        </Link>
                     </div>
 
                     <table className='table'>
@@ -49,3 +66,8 @@ export default class VersionFormPlaceholder extends React.Component {
                 </div>;
     }
 }
+VersionFormPlaceholder.contextTypes = {
+    router: React.PropTypes.func.isRequired
+};
+
+export default VersionFormPlaceholder;
