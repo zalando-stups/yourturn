@@ -1,4 +1,5 @@
 import React from 'react';
+import {Link} from 'react-router';
 
 class ApplicationDetailPlaceholder extends React.Component {
     constructor() {
@@ -7,25 +8,42 @@ class ApplicationDetailPlaceholder extends React.Component {
 
     render() {
         let {applicationId} = this.props;
+        const LINK_PARAMS = {
+            applicationId: applicationId
+        };
         return <div className='applicationDetail u-placeholder'>
                     <h1>{{applicationId}}</h1>
 
                     <div className='btn-group'>
-                        <a href='/application' className='btn btn-default'>
+                        <Link
+                            to='application-appList'
+                            className='btn btn-default'>
                             <i className='fa fa-chevron-left'></i> Applications
-                        </a>
-                        <a href='/application/edit/{{applicationId}}' className='btn btn-default btn-disabled'>
-                            <i className='fa fa-pencil'></i> Edit {{applicationId}}
-                        </a>
-                        <a href='/application/oauth/{{applicationId}}' className='btn btn-default'>
+                        </Link>
+                        <Link
+                            to='application-appEdit'
+                            className='btn btn-default btn-disabled'
+                            params={LINK_PARAMS}>
+                            <i className='fa fa-pencil'></i> Edit {applicationId}
+                        </Link>
+                        <Link
+                            to='application-appOAuth'
+                            className='btn btn-default'
+                            params={LINK_PARAMS}>
                             <i className='fa fa-plug'></i> OAuth Client
-                        </a>
-                        <a href='/application/access-control/{{applicationId}}' className='btn btn-default'>
+                        </Link>
+                        <Link
+                            to='application-appAccess'
+                            className='btn btn-default'
+                            params={LINK_PARAMS}>
                             <i className='fa fa-key'></i> Access Control
-                        </a>
-                        <a href='/application/detail/{{applicationId}}/version' className='btn btn-primary'>
+                        </Link>
+                        <Link
+                            to='application-verList'
+                            className='btn btn-primary'
+                            params={LINK_PARAMS}>
                             <i className='fa fa-list'></i> Versions
-                        </a>
+                        </Link>
                     </div>
 
                     <h4>
@@ -91,10 +109,12 @@ class ApplicationDetailPlaceholder extends React.Component {
                                         </a> <span className='u-placeholder-text'>0.1</span>
                                     </div>
 
-                                    <a className='btn btn-default btn-disabled applicationDetail-newVersion'
-                                        href='/application/detail/{{applicationId}}/version/create'>
+                                    <Link
+                                        to='application-verCreate'
+                                        params={LINK_PARAMS}
+                                        className='btn btn-default applicationDetail-newVersion btn-disabled'>
                                         <i className='fa fa-plus'></i> New version
-                                    </a>
+                                    </Link>
                                 </td>
                             </tr>
                         </tbody>
@@ -106,5 +126,7 @@ class ApplicationDetailPlaceholder extends React.Component {
                 </div>;
     }
 }
-
+ApplicationDetailPlaceholder.contextTypes = {
+    router: React.PropTypes.func.isRequired
+};
 export default ApplicationDetailPlaceholder;

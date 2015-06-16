@@ -356,19 +356,19 @@ EditVersionFormHandler.fetchData = function(state) {
 };
 
 const ROUTES =
-        <Route path='application'>
+        <Route name='application-appList' path='application'>
             <DefaultRoute handler={AppListHandler} />
             <Route path='create' handler={CreateAppFormHandler} />
-            <Route path='edit/:applicationId' handler={EditAppFormHandler} />
-            <Route path='oauth/:applicationId' handler={OAuthFormHandler} />
-            <Route path='access-control/:applicationId' handler={AccessFormHandler} />
-            <Route path='detail/:applicationId'>
+            <Route name='application-appEdit' path='edit/:applicationId' handler={EditAppFormHandler} />
+            <Route name='application-appOAuth' path='oauth/:applicationId' handler={OAuthFormHandler} />
+            <Route name='application-appAccess' path='access-control/:applicationId' handler={AccessFormHandler} />
+            <Route name='application-appDetail' path='detail/:applicationId'>
                 <DefaultRoute handler={AppDetailHandler} />
-                <Route path='version'>
+                <Route name='application-verList' path='version'>
                     <DefaultRoute handler={VersionListHandler} />
-                    <Route path='create' handler={CreateVersionFormHandler} />
-                    <Route path='approve/:versionId' handler={ApprovalFormHandler} />
-                    <Route path='detail/:versionId' handler={VersionDetailHandler} />
+                    <Route name='application-verCreate' path='create' handler={CreateVersionFormHandler} />
+                    <Route name='application-verApproval' path='approve/:versionId' handler={ApprovalFormHandler} />
+                    <Route name='application-verDetail' path='detail/:versionId' handler={VersionDetailHandler} />
                     <Route path='edit/:versionId' handler={EditVersionFormHandler} />
                 </Route>
             </Route>

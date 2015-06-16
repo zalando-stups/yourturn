@@ -1,4 +1,5 @@
 import React from 'react';
+import {Link} from 'react-router';
 import _ from 'lodash';
 import Markdown from 'common/src/markdown.jsx';
 import FetchResult from 'common/src/fetch-result';
@@ -14,7 +15,6 @@ function determineOwnApplication(app, teams) {
 class ApplicationDetail extends React.Component {
     constructor(props) {
         super();
-        this.placeholder = <Placeholder applicationId={props.applicationId} />;
         this.stores = {
             user: props.globalFlux.getStore('user'),
             kio: props.flux.getStore('kio'),
@@ -22,6 +22,10 @@ class ApplicationDetail extends React.Component {
         };
         this._forceUpdate = this.forceUpdate.bind(this);
         this.stores.user.on('change', this._forceUpdate);
+    }
+
+    getChildContext() {
+        return this.context;
     }
 
     componentWillUnmount() {
@@ -36,29 +40,48 @@ class ApplicationDetail extends React.Component {
             isOwnApplication = determineOwnApplication(app, user.getUserTeams()),
             api = twintip.getApi(applicationId);
 
+        const LINK_PARAMS = {
+            applicationId: applicationId
+        };
+
         if (app instanceof FetchResult) {
             return app.isPending() ?
-                    this.placeholder :
+                    <Placeholder
+                        applicationId={applicationId} /> :
                     <DefaultError error={app.getResult()} />;
         }
         return <div className='applicationDetail'>
                     <h1>{app.name}</h1>
                     <div className='btn-group'>
-                        <a href='/application' className='btn btn-default'>
+                        <Link
+                            to='application-appList'
+                            className='btn btn-default'>
                             <i className='fa fa-chevron-left'></i> Applications
-                        </a>
-                        <a href={`/application/edit/${applicationId}`} className={`btn btn-default ${isOwnApplication ? '' : 'btn-disabled'}`}>
+                        </Link>
+                        <Link
+                            to='application-appEdit'
+                            className={`btn btn-default ${isOwnApplication ? '' : 'btn-disabled'}`}
+                            params={LINK_PARAMS}>
                             <i className='fa fa-pencil'></i> Edit {app.name}
-                        </a>
-                        <a href={`/application/oauth/${applicationId}`} className='btn btn-default'>
+                        </Link>
+                        <Link
+                            to='application-appOAuth'
+                            className='btn btn-default'
+                            params={LINK_PARAMS}>
                             <i className='fa fa-plug'></i> OAuth Client
-                        </a>
-                        <a href={`/application/access-control/${applicationId}`} className='btn btn-default'>
+                        </Link>
+                        <Link
+                            to='application-appAccess'
+                            className='btn btn-default'
+                            params={LINK_PARAMS}>
                             <i className='fa fa-key'></i> Access Control
-                        </a>
-                        <a href={`/application/detail/${applicationId}/version`} className='btn btn-primary'>
+                        </Link>
+                        <Link
+                            to='application-verList'
+                            className='btn btn-primary'
+                            params={LINK_PARAMS}>
                             <i className='fa fa-list'></i> Versions
-                        </a>
+                        </Link>
                     </div>
 
                     <h4>
@@ -134,21 +157,32 @@ class ApplicationDetail extends React.Component {
                                     {versions.length ?
                                         versions.map(
                                             v => <div key={v.id}>
-                                                    <a title={`Approve version ${v.id}`}
+                                                    <Link
+                                                        to='application-verApproval'
                                                         className='btn btn-default btn-small'
-                                                        href={`/application/detail/${app.id}/version/approve/{v.id}`}>
+                                                        params={{
+                                                            applicationId: applicationId,
+                                                            versionId: v.id
+                                                        }}>
                                                         <i className='fa fa-check'></i>
-                                                    </a> <a href={`/application/detail/${app.id}/version/detail/{v.id}`}>
-                                                            {v.id}
-                                                        </a>
+                                                    </Link> <Link
+                                                        to='application-verDetail'
+                                                        params={{
+                                                            applicationId: applicationId,
+                                                            versionId: v.id
+                                                        }}>
+                                                        {v.id}
+                                                    </Link>
                                                  </div>)
                                         :
                                         <div>No versions yet.</div>
                                     }
-                                    <a className={`btn btn-default applicationDetail-newVersion ${isOwnApplication ? '' : 'btn-disabled'}`}
-                                        href={`/application/detail/${applicationId}/version/create`}>
+                                    <Link
+                                        to='application-verCreate'
+                                        params={LINK_PARAMS}
+                                        className={`btn btn-default applicationDetail-newVersion ${isOwnApplication ? '' : 'btn-disabled'}`}>
                                         <i className='fa fa-plus'></i> New version
-                                    </a>
+                                    </Link>
                                 </td>
                             </tr>
                         </tbody>
@@ -161,5 +195,10 @@ class ApplicationDetail extends React.Component {
                 </div>;
     }
 }
-
+ApplicationDetail.contextTypes = {
+    router: React.PropTypes.func.isRequired
+};
+ApplicationDetail.childContextTypes = {
+    router: React.PropTypes.func
+};
 export default ApplicationDetail;
