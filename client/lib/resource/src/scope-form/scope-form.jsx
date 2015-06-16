@@ -1,4 +1,5 @@
 import React from 'react';
+import {Link} from 'react-router';
 import 'common/asset/less/resource/scope-form.less';
 
 class ScopeForm extends React.Component {
@@ -67,20 +68,46 @@ class ScopeForm extends React.Component {
         let {edit, scopeId, resourceId} = this.props,
             {scope, scopeIdTaken} = this.state,
             resource = this.stores.essentials.getResource(resourceId);
+        const LINK_PARAMS = {
+            resourceId: resourceId,
+            scopeId: scopeId
+        };
         return <div className='scopeForm'>
-                    {edit ?
-                        <h2>Edit {resource.id || resourceId}.{scope.id || scopeId}</h2>
-                        :
-                        <h2>Create new scope for {resource.id || resourceId}</h2>}
+                    <h2>
+                        {edit ?
+                            <span>Edit <Link
+                                            to='resource-resDetail'
+                                            params={LINK_PARAMS}>
+                                            {resource.id || resourceId}
+                                        </Link>.<Link
+                                            to='resource-scpDetail'
+                                            params={LINK_PARAMS}>
+                                            {scope.id || scopeId}
+                                        </Link>
+                            </span>
+                            :
+                            <span>Create new scope for <Link
+                                                            to='resource-resDetail'
+                                                            params={LINK_PARAMS}>
+                                                            {resource.id || resourceId}
+                                                        </Link>
+                            </span>}
+                    </h2>
                     <div className='btn-group'>
                         {edit ?
-                            <a href={`/resource/detail/${resource.id}/scope/detail/${scope.id}`} className='btn btn-default'>
-                                <i className='fa fa-chevron-left'></i> {resource.id}.{scope.id}
-                            </a>
+                            <Link
+                                to='resource-scpDetail'
+                                className='btn btn-default'
+                                params={LINK_PARAMS}>
+                                <i className='fa fa-chevron-left' /> {resource.id}.{scope.id}
+                            </Link>
                             :
-                            <a href='/resource/detail/{resource.id}' className='btn btn-default'>
-                                <i className='fa fa-chevron-left'></i> {resource.name}
-                            </a>}
+                            <Link
+                                to='resource-resDetail'
+                                className='btn btn-default'
+                                params={LINK_PARAMS}>
+                                <i className='fa fa-chevron-left' /> {resource.name}
+                            </Link>}
                     </div>
                     <form
                         onSubmit={this.save.bind(this)}
