@@ -17,6 +17,7 @@ var LODASH_FUNCS = [
         // own
         'chain',
         'debounce',
+        'extend',
         'filter',
         'findLastIndex',
         'flatten',
