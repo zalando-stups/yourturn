@@ -44,6 +44,9 @@ describe('The application detail view', () => {
         reset();
         flux = new MockFlux();
         globalFlux = new GlobalFlux();
+        flux.getStore(API).receiveApi({
+            application_id: ID
+        });
         TEST_APP = {
             documentation_url: 'https://github.com/zalando-stups/kio',
             scm_url: 'https://github.com/zalando-stups/kio.git',
@@ -53,7 +56,7 @@ describe('The application detail view', () => {
             name: 'Kio',
             active: true,
             team_id: 'stups',
-            id: 'kio'
+            id: ID
         };
         props = {
             flux: flux,
