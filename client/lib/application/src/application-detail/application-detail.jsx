@@ -139,7 +139,7 @@ class ApplicationDetail extends React.Component {
                             <tr>
                                 <th>API</th>
                                 <td>
-                                    {api ?
+                                    {api.status === 'SUCCESS' ?
                                         <a href={app.service_url + api.ui}>
                                             Version {api.version}
                                         </a>
