@@ -116,7 +116,6 @@ global.expect = chai.expect;
 global.Mitm = Mitm;
 global.TestUtils = TestUtils;
 global.React = React;
-global.ReactRouter = require('react-router');
 // these are set by env.js in production
 global.YTENV_TWINTIP_BASE_URL = '';
 global.YTENV_KIO_BASE_URL = '';
