@@ -1,4 +1,5 @@
 import React from 'react';
+import Icon from 'react-fa';
 import {Link} from 'react-router';
 import {constructLocalUrl} from 'common/src/data/services';
 import DOCKER_REGISTRY from 'DOCKER_REGISTRY';
@@ -112,14 +113,14 @@ class VersionForm extends React.Component {
                                 to='application-verDetail'
                                 params={LINK_PARAMS}
                                 className='btn btn-default'>
-                                <i className='fa fa-chevron-left'></i> {application.name} {version.id}
+                                <Icon name='chevron-left' /> {application.name} {version.id}
                             </Link>
                             :
                             <Link
                                 to='application-verList'
                                 params={LINK_PARAMS}
                                 className='btn btn-default'>
-                                <i className='fa fa-chevron-left'></i> {application.name}
+                                <Icon name='chevron-left' /> {application.name}
                             </Link>}
                     </div>
                     <form
@@ -139,13 +140,19 @@ class VersionForm extends React.Component {
                             <div className='input-group'>
                                 <div className='input-addon'>
                                     {versionIdTaken && !edit ?
-                                        <i data-block='taken-symbol'
+                                        <Icon
+                                            data-block='taken-symbol'
                                             title='Version ID is already taken.'
-                                            className='fa fa-close fa-fw is-taken'></i>
+                                            className='is-taken'
+                                            fixedWidth
+                                            name='close' />
                                         :
-                                        <i data-block='available-symbol'
-                                        title='Version ID is available.'
-                                        className='fa fa-check fa-fw is-available'></i>}
+                                        <Icon
+                                            data-block='available-symbol'
+                                            title='Version ID is available.'
+                                            className='is-available'
+                                            fixedWidth
+                                            name='check' />}
                                 </div>
                                 <input
                                     autoFocus={true}
@@ -203,7 +210,7 @@ class VersionForm extends React.Component {
                             <button
                                 type='submit'
                                 className='btn btn-primary'>
-                                <i className='fa fa-save'></i> Save
+                                <Icon name='save' /> Save
                             </button>
                         </div>
                     </form>

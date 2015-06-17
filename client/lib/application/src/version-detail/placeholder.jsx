@@ -1,4 +1,5 @@
 import React from 'react';
+import Icon from 'react-fa';
 import {Link} from 'react-router';
 import 'common/asset/less/application/version-detail.less';
 
@@ -27,19 +28,19 @@ class VersionFormPlaceholder extends React.Component {
                             to='application-appDetail'
                             className='btn btn-default'
                             params={LINK_PARAMS}>
-                            <i className='fa fa-chevron-left'></i> {applicationId} versions
+                            <Icon name='chevron-left' /> {applicationId} versions
                         </Link>
                         <Link
                             to='application-verEdit'
                             className='btn btn-default'
                             params={LINK_PARAMS}>
-                            <i className='fa fa-edit'></i> Edit {versionId}
+                            <Icon name='edit' /> Edit {versionId}
                         </Link>
                         <Link
                             to='application-verApproval'
                             className='btn btn-primary'
                             params={LINK_PARAMS}>
-                            <i className='fa fa-check'></i> Approvals <span className='badge'>0</span>
+                            <Icon name='check' /> Approvals <span className='badge'>0</span>
                         </Link>
                     </div>
 

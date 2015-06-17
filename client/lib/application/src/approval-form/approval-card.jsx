@@ -1,4 +1,5 @@
 import React from 'react';
+import Icon from 'react-fa';
 import Timestamp from 'react-time';
 import {DATE_FORMAT} from 'common/src/config';
 import Markdown from 'common/src/markdown.jsx';
@@ -27,11 +28,13 @@ class ApprovalCard extends React.Component {
                     <header>
                         <div className='grid'>
                             <span className='approvalCard-approvalType grid-col'>
-                                <i className='fa fa-check'></i> {approval.approval_type}
+                                <Icon name='check' /> {approval.approval_type}
                             </span>
                             <span className='grid-col'>from <strong>{approval.user_id}</strong></span>
                             {approval.notes ?
-                                <span><i className='fa fa-comment'></i></span>
+                                <span>
+                                    <Icon name='comment' />
+                                </span>
                                 :
                                 null}
                         </div>

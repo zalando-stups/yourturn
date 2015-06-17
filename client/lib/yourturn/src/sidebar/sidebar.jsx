@@ -1,4 +1,5 @@
 import React from 'react';
+import Icon from 'react-fa';
 import {Link} from 'react-router';
 import Timestamp from 'react-time';
 import request from 'common/src/superagent';
@@ -74,12 +75,12 @@ class Sidebar extends React.Component {
                                         <button
                                             onClick={this.refresh.bind(this)}
                                             className='btn btn-default'>
-                                            <i className='fa fa-refresh'></i> Refresh
+                                            <Icon name='refresh' /> Refresh
                                         </button>
                                         <button
                                             onClick={this.logout.bind(this)}
                                             className='btn btn-default'>
-                                            <i className='fa fa-sign-out'></i> Logout
+                                            <Icon name='sign-out' /> Logout
                                         </button>
                                     </div>
                                 </div>
@@ -91,34 +92,42 @@ class Sidebar extends React.Component {
                                     <button
                                         onClick={this.login.bind(this)}
                                         className='btn btn-default'>
-                                        <i className='fa fa-sign-in'></i> Log in
+                                        <Icon name='sign-in' /> Log in
                                     </button>
                                 </div>
                             </div>
                         }
                         </div>
-                        <div className='sidebar-item' onClick={this.transition.bind(this, 'search')}>
+                        <div
+                            className='sidebar-item'
+                            onClick={this.transition.bind(this, 'search')}>
                             <Link
                                 to='search'>
-                                Search <i className='fa fa-search'></i>
+                                Search <Icon name='search' />
                             </Link>
                         </div>
-                        <div className='sidebar-item' onClick={this.transition.bind(this, 'application-appList')}>
+                        <div
+                            className='sidebar-item'
+                            onClick={this.transition.bind(this, 'application-appList')}>
                             <Link
                                 to='application-appList'>
-                                Applications <i className='fa fa-cubes'></i>
+                                Applications <Icon name='cubes' />
                             </Link>
                         </div>
-                        <div className='sidebar-item' onClick={this.transition.bind(this, 'resource-resList')}>
+                        <div
+                            className='sidebar-item'
+                            onClick={this.transition.bind(this, 'resource-resList')}>
                             <Link
                                 to='resource-resList'>
-                                Resource Types <i className='fa fa-key'></i>
+                                Resource Types <Icon name='key' />
                             </Link>
                         </div>
-                        <div className='sidebar-item' onClick={this.transition.bind(this, 'violation-vioList')}>
+                        <div
+                            className='sidebar-item'
+                            onClick={this.transition.bind(this, 'violation-vioList')}>
                             <Link
                                 to='violation-vioList'>
-                                Violations <i className='fa fa-warning'></i>
+                                Violations <Icon name='warning' />
                             </Link>
                         </div>
                     </div>

@@ -1,4 +1,5 @@
 import React from 'react';
+import Icon from 'react-fa';
 import {Link} from 'react-router';
 import {constructLocalUrl} from 'common/src/data/services';
 import 'common/asset/less/resource/resource-form.less';
@@ -87,13 +88,13 @@ class ResourceForm extends React.Component {
                                 to='resource-resDetail'
                                 params={LINK_PARAMS}
                                 className='btn btn-default'>
-                                <i className='fa fa-chevron-left'></i> {resource.name}
+                                <Icon name='chevron-left' /> {resource.name}
                             </Link>
                             :
                             <Link
                                 to='resource-resList'
                                 className='btn btn-default'>
-                                <i className='fa fa-chevron-left'></i> Resource Types
+                                <Icon name='chevron-left' /> Resource Types
                             </Link>}
                     </div>
                     <form
@@ -107,13 +108,19 @@ class ResourceForm extends React.Component {
                             <div className='input-group'>
                                 <div className='input-addon'>
                                     {resourceIdTaken && !edit ?
-                                        <i data-block='taken-symbol'
+                                        <Icon
+                                            data-block='taken-symbol'
                                             title='Resource ID is already taken.'
-                                            className='fa fa-close fa-fw is-taken'></i>
+                                            className='is-taken'
+                                            name='close'
+                                            fixedWidth />
                                         :
-                                        <i data-block='available-symbol'
+                                        <Icon
+                                            data-block='available-symbol'
                                             title='Resource ID is available.'
-                                            className='fa fa-check fa-fw is-available'></i>}
+                                            className='is-available'
+                                            name='check'
+                                            fixedWidth />}
                                 </div>
                                 <input
                                         id='resource_id'
@@ -193,7 +200,7 @@ class ResourceForm extends React.Component {
                             <button
                                 type='submit'
                                 className='btn btn-primary'>
-                                <i className='fa fa-save'></i> Save
+                                <Icon name='save' /> Save
                             </button>
                         </div>
                     </form>

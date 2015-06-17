@@ -1,4 +1,5 @@
 import React from 'react';
+import Icon from 'react-fa';
 import {Link} from 'react-router';
 import 'common/asset/less/application/version-list.less';
 
@@ -41,20 +42,20 @@ class VersionList extends React.Component {
                             to='application-appDetail'
                             params={LINK_PARAMS}
                             className='btn btn-default'>
-                            <i className='fa fa-chevron-left'></i> {application.name || applicationId}
+                            <Icon name='chevron-left' /> {application.name || applicationId}
                         </Link>
                         <Link
                             to='application-verCreate'
                             params={LINK_PARAMS}
                             className='btn btn-primary'>
-                            <i className='fa fa-plus'></i> Create new version
+                            <Icon name='plus' /> Create new version
                         </Link>
                     </div>
                     <div className='form'>
                         <div className='input-group'>
                             <div
                                 className='input-addon'>
-                                <i className='fa fa-search' />
+                                <Icon name='search' />
                             </div>
                             <input
                                 name='yourturn_version_search'
@@ -81,7 +82,7 @@ class VersionList extends React.Component {
                                                     applicationId: applicationId,
                                                     versionId: v.id
                                                 }}>
-                                                <i className='fa fa-check'></i>
+                                                <Icon name='check' />
                                             </Link> <Link
                                                 to='application-verDetail'
                                                 params={{

@@ -1,4 +1,5 @@
 import React from 'react';
+import Icon from 'react-fa';
 import {Link} from 'react-router';
 
 export default class ScopeDetailPlaceholder extends React.Component {
@@ -25,13 +26,13 @@ export default class ScopeDetailPlaceholder extends React.Component {
                             to='resource-resDetail'
                             params={LINK_PARAMS}
                             className='btn btn-default'>
-                            <i className='fa fa-chevron-left'></i> {resourceId}
+                            <Icon name='chevron-left' /> {resourceId}
                         </Link>
                         <Link
                             to='resource-scpEdit'
                             params={LINK_PARAMS}
                             className='btn btn-primary btn-disabled'>
-                            <i className='fa fa-pencil'></i> Edit {scopeId}
+                            <Icon name='edit' /> Edit {scopeId}
                         </Link>
                     </div>
                     <table className='table'>
@@ -51,7 +52,7 @@ export default class ScopeDetailPlaceholder extends React.Component {
                             <tr>
                                 <th>Resource Owner Scope</th>
                                 <td>
-                                    <i className='fa fa-square-o'></i>
+                                    <Icon name='square-o' />
                                 </td>
                             </tr>
                             <tr>

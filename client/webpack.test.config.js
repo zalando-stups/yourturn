@@ -70,7 +70,8 @@ module.exports = {
             { test: /\.hbs$/, exclude: /node_modules/, loader: 'handlebars?helperDirs[]=' + __dirname + '/lib/common/src/handlebars' },
             { test: /\.jsx?$/, include: /(client)|(node_modules\/jsdom)/, loader: 'babel' },
             { test: /\.less$/, exclude: /node_modules/, loader: 'null' },
-            { test: /\.woff(\?v=\d+\.\d+\.\d+)?$/, loader: 'null' },
+            { test: /\.css$/, loader: 'null' },
+            { test: /\.(otf|eot|svg|ttf|woff|woff2)(\?v=\d+\.\d+\.\d+)?$/, loader: 'null' },
             { test: /\.json$/, loader: 'json' },,
             { test: /\.(png|jpg|jpeg|gif)$/, loader: 'null'}
         ]

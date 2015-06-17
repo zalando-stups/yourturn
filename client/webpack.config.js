@@ -58,7 +58,7 @@ module.exports = {
             { test: /\.jsx?$/, exclude: /node_modules/, loaders: ['react-hot', 'babel'] },
             { test: /\.less$/, exclude: /node_modules/, loaders: ['style', 'css', 'autoprefixer', 'less'] },
             { test: /\.css$/, loaders: ['style', 'css'] },
-            { test: /\.woff(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=8192&mimetype=application/font-woff' },
+            { test: /\.(otf|eot|svg|ttf|woff|woff2)(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=8192&mimetype=application/font-woff' },
             { test: /\.(png|jpg|jpeg|gif)$/, loaders: ['url?limit=8192', 'img']}
         ]
     }

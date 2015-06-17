@@ -1,4 +1,5 @@
 import React from 'react';
+import Icon from 'react-fa';
 import {Link} from 'react-router';
 
 class ApplicationDetailPlaceholder extends React.Component {
@@ -18,31 +19,31 @@ class ApplicationDetailPlaceholder extends React.Component {
                         <Link
                             to='application-appList'
                             className='btn btn-default'>
-                            <i className='fa fa-chevron-left'></i> Applications
+                            <Icon name='chevron-left' /> Applications
                         </Link>
                         <Link
                             to='application-appEdit'
                             className='btn btn-default btn-disabled'
                             params={LINK_PARAMS}>
-                            <i className='fa fa-pencil'></i> Edit {applicationId}
+                            <Icon name='pencil' /> Edit {applicationId}
                         </Link>
                         <Link
                             to='application-appOAuth'
                             className='btn btn-default'
                             params={LINK_PARAMS}>
-                            <i className='fa fa-plug'></i> OAuth Client
+                            <Icon name='plug' /> OAuth Client
                         </Link>
                         <Link
                             to='application-appAccess'
                             className='btn btn-default'
                             params={LINK_PARAMS}>
-                            <i className='fa fa-key'></i> Access Control
+                            <Icon name='key' /> Access Control
                         </Link>
                         <Link
                             to='application-verList'
                             className='btn btn-primary'
                             params={LINK_PARAMS}>
-                            <i className='fa fa-list'></i> Versions
+                            <Icon name='list' /> Versions
                         </Link>
                     </div>
 
@@ -95,17 +96,17 @@ class ApplicationDetailPlaceholder extends React.Component {
                                 <td>
                                     <div>
                                         <a className='btn btn-disabled btn-small'>
-                                            <i className='fa fa-check'></i>
+                                            <Icon name='check' />
                                         </a> <span className='u-placeholder-text'>0.1</span>
                                     </div>
                                     <div>
                                         <a className='btn btn-disabled btn-small'>
-                                            <i className='fa fa-check'></i>
+                                            <Icon name='check' />
                                         </a> <span className='u-placeholder-text'>0.1</span>
                                     </div>
                                     <div>
                                         <a className='btn btn-disabled btn-small'>
-                                            <i className='fa fa-check'></i>
+                                            <Icon name='check' />
                                         </a> <span className='u-placeholder-text'>0.1</span>
                                     </div>
 
@@ -113,7 +114,7 @@ class ApplicationDetailPlaceholder extends React.Component {
                                         to='application-verCreate'
                                         params={LINK_PARAMS}
                                         className='btn btn-default applicationDetail-newVersion btn-disabled'>
-                                        <i className='fa fa-plus'></i> New version
+                                        <Icon name='plus' /> New version
                                     </Link>
                                 </td>
                             </tr>

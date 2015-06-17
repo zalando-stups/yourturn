@@ -1,4 +1,5 @@
 import React from 'react';
+import Icon from 'react-fa';
 import _ from 'lodash';
 import 'common/asset/less/yourturn/search.less';
 
@@ -44,7 +45,7 @@ class Search extends React.Component {
                     <div className='form'>
                         <div className='input-group'>
                             <div className='input-addon'>
-                                <i className='fa fa-search' />
+                                <Icon name='search' />
                             </div>
                             <input
                                 autoFocus='autofocus'

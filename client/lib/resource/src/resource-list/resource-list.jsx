@@ -1,4 +1,5 @@
 import React from 'react';
+import Icon from 'react-fa';
 import {Link} from 'react-router';
 import 'common/asset/less/resource/resource-list.less';
 
@@ -42,7 +43,7 @@ class ResourceList extends React.Component {
                         <Link
                             to='resource-resCreate'
                             className={`btn btn-primary ${whitelisted ? '' : 'btn-disabled'}`}>
-                            <i className='fa fa-plus'></i> Create Resource Type
+                            <Icon name='plus' /> Create Resource Type
                         </Link>
                     </div>
                     <div className='form-group'>
@@ -50,7 +51,7 @@ class ResourceList extends React.Component {
                             <label htmlFor='yourturn-search'>Search:</label>
                             <div className='input-group'>
                                 <div className='input-addon'>
-                                    <i className='fa fa-search'></i>
+                                    <Icon name='search' />
                                 </div>
                                 <input
                                     name='yourturn_search'

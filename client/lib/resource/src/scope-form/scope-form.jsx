@@ -1,4 +1,5 @@
 import React from 'react';
+import Icon from 'react-fa';
 import {Link} from 'react-router';
 import 'common/asset/less/resource/scope-form.less';
 
@@ -99,14 +100,14 @@ class ScopeForm extends React.Component {
                                 to='resource-scpDetail'
                                 className='btn btn-default'
                                 params={LINK_PARAMS}>
-                                <i className='fa fa-chevron-left' /> {resource.id}.{scope.id}
+                                <Icon name='chevron-left' /> {resource.id}.{scope.id}
                             </Link>
                             :
                             <Link
                                 to='resource-resDetail'
                                 className='btn btn-default'
                                 params={LINK_PARAMS}>
-                                <i className='fa fa-chevron-left' /> {resource.name}
+                                <Icon name='chevron-left' /> {resource.name}
                             </Link>}
                     </div>
                     <form
@@ -118,13 +119,19 @@ class ScopeForm extends React.Component {
                             <div className='input-group'>
                                 <div className='input-addon'>
                                     {scopeIdTaken && !edit ?
-                                        <i data-block='taken-symbol'
+                                        <Icon
+                                            data-block='taken-symbol'
                                             title='Scope ID is already taken.'
-                                            className='fa fa-close fa-fw is-taken'></i>
+                                            className='is-taken'
+                                            name='close'
+                                            fixedWidth />
                                         :
-                                        <i data-block='available-symbol'
+                                        <Icon
+                                            data-block='available-symbol'
                                             title='Scope ID is available.'
-                                            className='fa fa-check fa-fw is-available'></i>}
+                                            className='is-available'
+                                            name='check'
+                                            fixedWidth />}
                                 </div>
                                 <input
                                     id='scope_id'
@@ -246,7 +253,7 @@ class ScopeForm extends React.Component {
                             <button
                                 type='submit'
                                 className='btn btn-primary'>
-                                <i className='fa fa-save'></i> Save
+                                <Icon name='save' /> Save
                             </button>
                         </div>
                     </form>

@@ -1,4 +1,5 @@
 import React from 'react';
+import Icon from 'react-fa';
 import {Link} from 'react-router';
 import Markdown from 'common/src/markdown.jsx';
 import Placeholder from './placeholder.jsx';
@@ -51,13 +52,13 @@ class ScopeDetail extends React.Component {
                             to='resource-resDetail'
                             params={LINK_PARAMS}
                             className='btn btn-default'>
-                            <i className='fa fa-chevron-left'></i> {resourceId}
+                            <Icon name='chevron-left' /> {resourceId}
                         </Link>
                         <Link
                             to='resource-scpEdit'
                             params={LINK_PARAMS}
                             className={`btn btn-primary ${whitelisted ? '' : 'btn-disabled'}`}>
-                            <i className='fa fa-pencil'></i> Edit {scope.id || scopeId}
+                            <Icon name='edit' /> Edit {scope.id || scopeId}
                         </Link>
                     </div>
                     <table className='table'>
@@ -78,9 +79,9 @@ class ScopeDetail extends React.Component {
                                 <th>Resource Owner Scope</th>
                                 <td>
                                     {scope.is_resource_owner_scope ?
-                                        <i className='fa fa-check-square'></i>
+                                        <Icon name='check-square' />
                                         :
-                                        <i className='fa fa-square-o'></i>}
+                                        <Icon name='square-o' />}
                                 </td>
                             </tr>
                             <tr>

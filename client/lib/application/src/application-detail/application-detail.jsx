@@ -1,4 +1,5 @@
 import React from 'react';
+import Icon from 'react-fa';
 import {Link} from 'react-router';
 import _ from 'lodash';
 import Markdown from 'common/src/markdown.jsx';
@@ -56,31 +57,31 @@ class ApplicationDetail extends React.Component {
                         <Link
                             to='application-appList'
                             className='btn btn-default'>
-                            <i className='fa fa-chevron-left'></i> Applications
+                            <Icon name='chevron-left' /> Applications
                         </Link>
                         <Link
                             to='application-appEdit'
                             className={`btn btn-default ${isOwnApplication ? '' : 'btn-disabled'}`}
                             params={LINK_PARAMS}>
-                            <i className='fa fa-pencil'></i> Edit {app.name}
+                            <Icon name='pencil' /> Edit {app.name}
                         </Link>
                         <Link
                             to='application-appOAuth'
                             className='btn btn-default'
                             params={LINK_PARAMS}>
-                            <i className='fa fa-plug'></i> OAuth Client
+                            <Icon name='plug' /> OAuth Client
                         </Link>
                         <Link
                             to='application-appAccess'
                             className='btn btn-default'
                             params={LINK_PARAMS}>
-                            <i className='fa fa-key'></i> Access Control
+                            <Icon name='key' /> Access Control
                         </Link>
                         <Link
                             to='application-verList'
                             className='btn btn-primary'
                             params={LINK_PARAMS}>
-                            <i className='fa fa-list'></i> Versions
+                            <Icon name='list' /> Versions
                         </Link>
                     </div>
 
@@ -91,7 +92,7 @@ class ApplicationDetail extends React.Component {
                             <span
                                 data-block='inactive-badge'
                                 className='applicationDetail-status'>
-                                <i className='fa fa-lg fa-circle-o'></i> Inactive
+                                <Icon name='circle-o' size='lg' /> Inactive
                             </span>
                         }
                         { app.subtitle }
@@ -164,7 +165,7 @@ class ApplicationDetail extends React.Component {
                                                             applicationId: applicationId,
                                                             versionId: v.id
                                                         }}>
-                                                        <i className='fa fa-check'></i>
+                                                        <Icon name='check' />
                                                     </Link> <Link
                                                         to='application-verDetail'
                                                         params={{
@@ -181,7 +182,7 @@ class ApplicationDetail extends React.Component {
                                         to='application-verCreate'
                                         params={LINK_PARAMS}
                                         className={`btn btn-default applicationDetail-newVersion ${isOwnApplication ? '' : 'btn-disabled'}`}>
-                                        <i className='fa fa-plus'></i> New version
+                                        <Icon name='plus' /> New version
                                     </Link>
                                 </td>
                             </tr>

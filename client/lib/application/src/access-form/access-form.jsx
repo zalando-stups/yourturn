@@ -1,4 +1,5 @@
 import React from 'react';
+import Icon from 'react-fa';
 import {Link} from 'react-router';
 import OAuthSyncInfo from 'application/src/oauth-sync-info.jsx';
 import ScopeList from 'application/src/scope-list.jsx';
@@ -98,7 +99,7 @@ class AccessForm extends React.Component {
                             to='application-appDetail'
                             className='btn btn-default'
                             params={LINK_PARAMS}>
-                            <i className='fa fa-chevron-left'></i> {application.name}
+                            <Icon name='chevron-left' /> {application.name}
                         </Link>
                     </div>
                     <form
@@ -130,7 +131,7 @@ class AccessForm extends React.Component {
                                 type='submit'
                                 data-block='save-button'
                                 className={`btn btn-primary ${isOwnApplication ? '' : 'btn-disabled'}`}>
-                                <i className='fa fa-save'></i> Save
+                                <Icon name='save' /> Save
                             </button>
                         </div>
                     </form>

@@ -1,4 +1,5 @@
 import React from 'react';
+import Icon from 'react-fa';
 import Timestamp from 'react-time';
 import {DATE_FORMAT} from 'common/src/config';
 import 'common/asset/less/violation/violation-list.less';
@@ -37,13 +38,22 @@ class Violation extends React.Component {
         return <div className='violation'>
                     <header>
                         <div>
-                            <i title='Time when this violation was discovered' className='fa fa-fw fa-calendar-o'></i> <Timestamp value={violation.timestamp} format={DATE_FORMAT} />
+                            <Icon
+                                fixedWidth
+                                name='calendar-o'
+                                title='Time when this violation was discovered' /> <Timestamp value={violation.timestamp} format={DATE_FORMAT} />
                         </div>
                         <div>
-                            <i title='The cloud account number' className='fa fa-fw fa-cloud'></i> {violation.account_id}
+                            <Icon
+                                fixedWidth
+                                name='cloud'
+                                title='The cloud account number' /> {violation.account_id}
                         </div>
                         <div>
-                            <i title='Which region this violation happened in' className='fa fa-fw fa-map-marker'></i> {violation.region}
+                            <Icon
+                                fixedWidth
+                                name='map-marker'
+                                title='Which region this violation happened in' /> {violation.region}
                         </div>
                     </header>
                     <blockquote className='violation-violationMessage'>
@@ -67,7 +77,7 @@ class Violation extends React.Component {
                                     <button
                                         type='submit'
                                         className='btn btn-default'>
-                                        <i className='fa fa-check'></i> Resolve
+                                        <Icon name='check' /> Resolve
                                     </button>
                                 </div>
                             </form>}

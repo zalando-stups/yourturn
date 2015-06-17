@@ -1,4 +1,5 @@
 import React from 'react';
+import Icon from 'react-fa';
 import {Link} from 'react-router';
 import SERVICE_URL_TLD from 'SERVICE_URL_TLD';
 import {constructLocalUrl} from 'common/src/data/services';
@@ -107,7 +108,7 @@ class ApplicationForm extends React.Component {
                                     params={{
                                         applicationId: applicationId
                                     }}>
-                                    <i className='fa fa-chevron-left'></i> {storeApp.name}
+                                    <Icon name='chevron-left' /> {storeApp.name}
                                 </Link>
                             </div>
                         </div>
@@ -118,7 +119,7 @@ class ApplicationForm extends React.Component {
                                 <Link
                                     to='application-appList'
                                     className='btn btn-default'>
-                                    <i className='fa fa-chevron-left'></i> Applications
+                                    <Icon name='chevron-left' /> Applications
                                 </Link>
                             </div>
                         </div>}
@@ -168,13 +169,19 @@ class ApplicationForm extends React.Component {
                             <div className={'input-group'}>
                                 <div className='input-addon'>
                                     {this.state.appIdTaken && !edit ?
-                                        <i data-block='taken-symbol'
+                                        <Icon
                                             title='App ID is already taken.'
-                                            className='fa fa-close fa-fw is-taken'></i>
+                                            className='is-taken'
+                                            fixedWidth
+                                            data-block='taken-symbol'
+                                            name='close' />
                                         :
-                                        <i data-block='available-symbol'
-                                        title='App ID is available.'
-                                        className='fa fa-check fa-fw is-available'></i>}
+                                        <Icon
+                                            name='check'
+                                            className='is-available'
+                                            fixedWidth
+                                            data-block='available-symbol'
+                                            title='App ID is available.' />}
                                 </div>
                                 <input
                                     required={true}
@@ -281,7 +288,7 @@ class ApplicationForm extends React.Component {
                         <button
                             type='submit'
                             className='btn btn-primary'>
-                            <i className='fa fa-save'></i> Save
+                            <Icon name='save' /> Save
                         </button>
                     </div>
                     </form>

@@ -1,4 +1,5 @@
 import React from 'react';
+import Icon from 'react-fa';
 import {Link} from 'react-router';
 import _ from 'lodash';
 import 'common/asset/less/application/application-list.less';
@@ -43,7 +44,7 @@ class ApplicationList extends React.Component {
                         <Link
                             to='application-appCreate'
                             className='btn btn-primary'>
-                            <i className='fa fa-plus'></i> Create Application
+                            <Icon name='plus' /> Create Application
                         </Link>
                     </div>
                     <div className='form'>
@@ -51,7 +52,7 @@ class ApplicationList extends React.Component {
                         <div className='input-group'>
                             <div
                                 className='input-addon'>
-                                <span className='fa fa-search' />
+                                <Icon name='search' />
                             </div>
                             <input
                                 name='yourturn_search'

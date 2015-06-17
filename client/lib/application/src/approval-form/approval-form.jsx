@@ -1,4 +1,5 @@
 import React from 'react';
+import Icon from 'react-fa';
 import {Link} from 'react-router';
 import ApprovalCard from './approval-card.jsx';
 import 'common/asset/less/application/approval-form.less';
@@ -141,7 +142,7 @@ class ApprovalForm extends React.Component {
                             to='application-verDetail'
                             params={LINK_PARAMS}
                             className='btn btn-default'>
-                            <i className='fa fa-chevron-left'></i> {application.name} {versionId}
+                            <Icon name='chevron-left' /> {application.name} {versionId}
                         </Link>
                     </div>
                     <div className='grid with-gutter'>
@@ -217,7 +218,7 @@ class ApprovalForm extends React.Component {
                                     <button
                                         type='submit'
                                         className='btn btn-primary {#unless isOwnApplication}btn-disabled{/unless}'>
-                                        <i className='fa fa-save'></i> Save
+                                        <Icon name='save' /> Save
                                     </button>
                                 </div>
                             </form>

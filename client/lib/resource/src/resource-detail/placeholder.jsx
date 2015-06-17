@@ -1,4 +1,5 @@
 import React from 'react';
+import Icon from 'react-fa';
 import {Link} from 'react-router';
 import 'common/asset/less/resource/resource-detail.less';
 
@@ -18,19 +19,19 @@ class ResourceDetailPlaceholder extends React.Component {
                         <Link
                             to='resource-resList'
                             className='btn btn-default'>
-                            <i className='fa fa-chevron-left'></i> Resource Types
+                            <Icon name='chevron-left' /> Resource Types
                         </Link>
                         <Link
                             to='resource-resEdit'
                             params={LINK_PARAMS}
                             className='btn btn-default btn-disabled'>
-                            <i className='fa fa-pencil'></i> Edit {resourceId}
+                            <Icon name='edit' /> Edit {resourceId}
                         </Link>
                         <Link
                             to='resource-scpCreate'
                             params={LINK_PARAMS}
                             className='btn btn-default btn-disabled'>
-                            <i className='fa fa-plus'></i> Create Scope
+                            <Icon name='plus' /> Create Scope
                         </Link>
                     </div>
                     <table className='table'>

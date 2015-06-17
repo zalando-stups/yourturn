@@ -1,4 +1,5 @@
 import React from 'react';
+import Icon from 'react-fa';
 import 'common/asset/less/application/editable-list.less';
 
 class EditableList extends React.Component {
@@ -61,7 +62,7 @@ class EditableList extends React.Component {
                         <button
                             type='submit'
                             onClick={this.addItem.bind(this)}
-                            className='btn btn-default'><i className='fa fa-plus'></i> Add {this.props.itemName || 'item'}
+                            className='btn btn-default'><Icon name='plus' /> Add {this.props.itemName || 'item'}
                         </button>
                     </div>
                     {items
@@ -75,7 +76,7 @@ class EditableList extends React.Component {
                                     <div
                                         onClick={this.deleteItem.bind(this, item)}
                                         className='btn btn-danger'>
-                                        <i className='fa fa-close'></i> Remove
+                                        <Icon name='close' /> Remove
                                     </div>
                                 </div>)}
                 </div>;

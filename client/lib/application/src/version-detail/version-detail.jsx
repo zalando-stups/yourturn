@@ -1,4 +1,5 @@
 import React from 'react';
+import Icon from 'react-fa';
 import {Link} from 'react-router';
 import Timestamp from 'react-time';
 import {DATE_FORMAT} from 'common/src/config';
@@ -22,7 +23,9 @@ class ScmCommitInfo extends React.Component {
                     <tr /> :
                     <tr>
                         <th>Artifact Source</th>
-                        <td><i className='fa fa-spin fa-circle-o-notch'></i></td>
+                        <td>
+                            <Icon name='circle-o-notch' spin />
+                        </td>
                     </tr>;
         }
         // no fetch result
@@ -51,7 +54,9 @@ class ScmAuthorInfo extends React.Component {
                     <tr /> :
                     <tr>
                         <th>Artifact Author</th>
-                        <td><i className='fa fa-spin fa-circle-o-notch'></i></td>
+                        <td>
+                            <Icon name='circle-o-notch' spin />
+                        </td>
                     </tr>;
         }
         // no fetch result
@@ -119,19 +124,19 @@ class VersionDetail extends React.Component {
                             to='application-appDetail'
                             className='btn btn-default'
                             params={LINK_PARAMS}>
-                            <i className='fa fa-chevron-left'></i> {application.name || applicationId} versions
+                            <Icon name='chevron-left' /> {application.name || applicationId} versions
                         </Link>
                         <Link
                             to='application-verEdit'
                             className={`btn btn-default ${isOwnApplication ? '' : 'btn-disabled'}`}
                             params={LINK_PARAMS}>
-                            <i className='fa fa-edit'></i> Edit {versionId}
+                            <Icon name='edit' /> Edit {versionId}
                         </Link>
                         <Link
                             to='application-verApproval'
                             className='btn btn-primary'
                             params={LINK_PARAMS}>
-                            <i className='fa fa-check'></i> Approvals <span className='badge'>{approvals.length}</span>
+                            <Icon name='edit' /> Approvals <span className='badge'>{approvals.length}</span>
                         </Link>
                     </div>
 

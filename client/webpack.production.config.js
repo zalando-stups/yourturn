@@ -31,7 +31,8 @@ module.exports = {
         }),
         new webpack.DefinePlugin({
             ENV_DEVELOPMENT: false,
-            ENV_TEST: false
+            ENV_TEST: false,
+            NODE_ENV: 'production'  // causes react to drop some lines
         })
     ],
     resolve: {
@@ -77,7 +78,7 @@ module.exports = {
             { test: /\.jsx?$/, exclude: /node_modules/, loader: 'babel' },
             { test: /\.less$/, exclude: /node_modules/, loader: ExtractTextPlugin.extract('css!autoprefixer!less') },
             { test: /\.css$/, loader: ExtractTextPlugin.extract('css') },
-            { test: /\.woff(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=8192&mimetype=application/font-woff' },
+            { test: /\.(otf|eot|svg|ttf|woff|woff2)(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=8192&mimetype=application/font-woff' },
             { test: /\.(png|jpg|jpeg|gif)$/, loaders: ['url?limit=8192', 'img']}
         ]
     }

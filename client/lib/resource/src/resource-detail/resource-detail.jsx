@@ -1,4 +1,5 @@
 import React from 'react';
+import Icon from 'react-fa';
 import {Link} from 'react-router';
 import Markdown from 'common/src/markdown.jsx';
 import Placeholder from './placeholder.jsx';
@@ -46,19 +47,19 @@ class ResourceDetail extends React.Component {
                         <Link
                             to='resource-resList'
                             className='btn btn-default'>
-                            <i className='fa fa-chevron-left'></i> Resource Types
+                            <Icon name='chevron-left' /> Resource Types
                         </Link>
                         <Link
                             to='resource-resEdit'
                             params={LINK_PARAMS}
                             className={`btn btn-default ${ whitelisted ? '' : 'btn-disabled'}`}>
-                            <i className='fa fa-pencil'></i> Edit {resource.name}
+                            <Icon name='edit' /> Edit {resource.name}
                         </Link>
                         <Link
                             to='resource-scpCreate'
                             params={LINK_PARAMS}
                             className={`btn btn-primary ${ whitelisted ? '' : 'btn-disabled'}`}>
-                            <i className='fa fa-plus'></i> Create Scope
+                            <Icon name='plus' /> Create Scope
                         </Link>
                     </div>
                     <table className='table'>

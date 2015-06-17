@@ -1,5 +1,6 @@
 import React from 'react';
 import _ from 'lodash';
+import Icon from 'react-fa';
 import 'common/asset/less/application/searchable-list.less';
 
 class OwnerScopeList extends React.Component {
@@ -55,7 +56,7 @@ class OwnerScopeList extends React.Component {
         return <div className='ownerscopeList'>
                     <div className='input-group'>
                         <div className='input-addon'>
-                            <i className='fa fa-search' />
+                            <Icon name='search' />
                         </div>
                         <input
                             onChange={this.filter.bind(this)}
