@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import {Actions} from 'flummox';
 import request from 'common/src/superagent';
 import {Services} from 'common/src/data/services';
@@ -24,12 +25,14 @@ class EssentialsActions extends Actions {
     }
 
     saveResource(resourceId, resource) {
+        let copy = _.extend({}, resource);
+        copy.id = undefined;
         return request
                 .put(`${Services.essentials.url}${Services.essentials.root}/${resourceId}`)
                 .type('json')
                 .accept('json')
                 .oauth(Provider, RequestConfig)
-                .send(resource)
+                .send(copy)
                 .exec(saveRoute)
                 .catch(err => {
                     err.id = resourceId;
@@ -38,12 +41,14 @@ class EssentialsActions extends Actions {
     }
 
     saveScope(resourceId, scopeId, scope) {
+        let copy = _.extend({}, scope);
+        copy.id = undefined;
         return request
                 .put(`${Services.essentials.url}${Services.essentials.root}/${resourceId}/scopes/${scopeId}`)
                 .type('json')
                 .accept('json')
                 .oauth(Provider, RequestConfig)
-                .send(scope)
+                .send(copy)
                 .exec(saveRoute)
                 .catch(err => {
                     err.id = scopeId;

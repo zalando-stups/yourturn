@@ -36,9 +36,7 @@ class ScopeForm extends React.Component {
     }
 
     save(evt) {
-        if (evt) {
-            evt.preventDefault();
-        }
+        evt.preventDefault();
 
         let {resourceId} = this.props,
             resource = this.stores.essentials.getResource(resourceId),

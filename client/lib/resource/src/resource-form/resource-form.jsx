@@ -37,9 +37,8 @@ class ResourceForm extends React.Component {
     }
 
     save(evt) {
-        if (evt) {
-            evt.preventDefault();
-        }
+        evt.preventDefault();
+
         let {resource} = this.state;
         // save the resource
         this

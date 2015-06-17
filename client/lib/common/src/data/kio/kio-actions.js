@@ -27,12 +27,13 @@ class KioActions extends Actions {
     }
 
     saveApplication(id, app) {
-        app.id = undefined;
+        let copy = _.extend({}, app);
+        copy.id = undefined;
         return request
                 .put(`${Services.kio.url}${Services.kio.root}/${id}`)
                 .type('json')
                 .accept('json')
-                .send(app)
+                .send(copy)
                 .oauth(Provider, RequestConfig)
                 .exec(saveRoute)
                 .then(res => res.body)
@@ -70,18 +71,19 @@ class KioActions extends Actions {
     }
 
     saveApplicationVersion(applicationId, versionId, version) {
-        version.id = undefined;
+        let copy = _.extend({}, version);
+        copy.id = undefined;
         return request
                 .put(`${Services.kio.url}${Services.kio.root}/${applicationId}/versions/${versionId}`)
                 .type('json')
                 .accept('json')
-                .send(version)
+                .send(copy)
                 .oauth(Provider, RequestConfig)
                 .exec(saveRoute)
                 .then(res => res.body)
                 .catch(err => {
                     err.applicationId = applicationId;
-                    err.version_id = versionId;
+                    err.versionId = versionId;
                     throw err;
                 });
     };
