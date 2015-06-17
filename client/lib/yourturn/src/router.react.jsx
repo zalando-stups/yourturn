@@ -1,5 +1,5 @@
 import React from 'react';
-import {Route} from 'react-router';
+import {Route, DefaultRoute} from 'react-router';
 import FlummoxComponent from 'flummox/component';
 import YT_FLUX from './flux';
 import AppRoutes from 'application/src/router.react.jsx';
@@ -86,7 +86,7 @@ const ROUTES =
         {AppRoutes}
         {ResRoutes}
         {VioRoutes}
-        <Route name='search' path='search' handler={SearchHandler} />
+        <DefaultRoute name='search' path='search' handler={SearchHandler} />
         <Route path='oauth' handler={LoginHandler} />
     </Route>;
 
