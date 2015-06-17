@@ -6,7 +6,7 @@ var webpack = require('webpack'),
     path = require('path');
 
 module.exports = {
-    devtool: 'source-map',
+    devtool: 'cheap-module-source-map',
     bail: true, // break on error
     entry: [
         './lib/yourturn/src/bootstrap.jsx'   // entrypoint to resolve dependencies
