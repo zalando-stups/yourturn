@@ -21,7 +21,10 @@ class ApplicationForm extends React.Component {
             app.service_url = app.service_url.substring('http://'.length);
             this.state.app = app;
         } else {
-            this.state.app = { team_id: user.getUserTeams()[0].id };
+            this.state.app = {
+                active: true,
+                team_id: user.getUserTeams()[0].id
+            };
         }
 
         this._forceUpdate = this.forceUpdate.bind(this);
@@ -135,7 +138,7 @@ class ApplicationForm extends React.Component {
                                     id='active'
                                     data-block='active-checkbox'
                                     name='yourturn_app_active'
-                                    defaultChecked={edit ? (app.active ? 'checked' : null) : 'checked'}
+                                    checked={app.active}
                                     onChange={this.update.bind(this, 'active', 'checked')}
                                     type='checkbox' /> Active application
                             </label>

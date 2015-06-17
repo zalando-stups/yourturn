@@ -74,7 +74,7 @@ class VersionForm extends React.Component {
 
         this
         .actions
-        .saveApplicationVersion(applicationId, versionId, version)
+        .saveApplicationVersion(applicationId, version.id, version)
         .then(() => this.context.router.transitionTo(constructLocalUrl('application-version', [applicationId, version.id])))
         .catch(err => {
             this
