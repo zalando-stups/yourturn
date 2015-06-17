@@ -1,7 +1,7 @@
 import React from 'react';
 import _ from 'lodash';
 import Icon from 'react-fa';
-import 'common/asset/less/application/searchable-list.less';
+import 'common/asset/less/application/scope-list.less';
 
 class OwnerScopeList extends React.Component {
     constructor(props) {
@@ -53,7 +53,7 @@ class OwnerScopeList extends React.Component {
     render() {
         let {term, selected, filtered} = this.state,
             resourceTypes = _.groupBy(filtered, 'resource_type_id');
-        return <div className='ownerscopeList'>
+        return <div className='scopeList'>
                     <div className='input-group'>
                         <div className='input-addon'>
                             <Icon name='search' />
