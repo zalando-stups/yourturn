@@ -60,8 +60,6 @@ The application will not work due to the `localhost` mocks running on the host, 
 
 ## Testing
 
-You have to use `iojs` for testing because of `jsdom`. For the normal build you have to use regular Node because of `node-sass`. Sorry.
-
     # run all the tests
     npm test
 

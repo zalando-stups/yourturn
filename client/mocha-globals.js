@@ -93,23 +93,6 @@ global.reset = function() {
     };
 }
 
-// global.reset = function(done) {
-//     jsdom.env(HTML, function(err, wndw) {
-//         global.window = wndw;
-//         global.document = wndw.document;
-//         global.$ = require('jquery'); // needs a document
-//         // OAuth Provider uses localStorage by default
-//         // so we feed it the in-memory storage for testing
-//         global.window.localStorage = localStorage;
-//         global.navigator = {
-//             userAgent: 'mocha'
-//         };
-//         console.debug = console.log.bind(console);
-//         console.error = console.log.bind(console);
-//         done();
-//     });
-// }
-
 // globals for tests
 global.sinon = sinon;
 global.expect = chai.expect;
