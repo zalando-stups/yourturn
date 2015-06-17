@@ -18,7 +18,7 @@ class ApplicationForm extends React.Component {
         };
         if (props.edit) {
             let app = kio.getApplication(props.applicationId);
-            app.service_url = app.service_url.substring('http://'.length);
+            app.service_url = app.service_url.substring('https://'.length);
             this.state.app = app;
         } else {
             this.state.app = {

@@ -27,6 +27,7 @@ class KioActions extends Actions {
     }
 
     saveApplication(id, app) {
+        app.id = undefined;
         return request
                 .put(`${Services.kio.url}${Services.kio.root}/${id}`)
                 .type('json')
@@ -69,6 +70,7 @@ class KioActions extends Actions {
     }
 
     saveApplicationVersion(applicationId, versionId, version) {
+        version.id = undefined;
         return request
                 .put(`${Services.kio.url}${Services.kio.root}/${applicationId}/versions/${versionId}`)
                 .type('json')
