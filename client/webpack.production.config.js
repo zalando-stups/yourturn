@@ -31,7 +31,9 @@ module.exports = {
         new webpack.DefinePlugin({
             ENV_DEVELOPMENT: false,
             ENV_TEST: false,
-            NODE_ENV: 'production'  // causes react to drop some lines
+            'process.env': {
+                NODE_ENV: '"production"'  // causes react to lose weight
+            }
         })
     ],
     resolve: {
