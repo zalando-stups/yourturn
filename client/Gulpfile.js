@@ -29,32 +29,7 @@ var LODASH_FUNCS = [
         'take',
         'times',
         'value',
-        'values',
-        // backbone
-        'once',
-        'keys',
-        'uniqueId',
-        'isEmpty',
-        'extend',
-        'defaults',
-        'clone',
-        'escape',
-        'isEqual',
-        'has',
-        'isObject',
-        'result',
-        'each',
-        'isArray',
-        'isString',
-        'matches',
-        'bind',
-        'invoke',
-        'isFunction',
-        'pick',
-        'isRegExp',
-        'map',
-        'bindAll',
-        'any'
+        'values'
     ],
     LODASH_INCLUDE = 'include=' + LODASH_FUNCS.join(',');
 
