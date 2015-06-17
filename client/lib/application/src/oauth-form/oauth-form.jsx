@@ -87,7 +87,7 @@ class OAuthForm extends React.Component {
     }
 
     render() {
-        let {kio, mint, user, essentials} = this.stores,
+        let {kio, mint, user, essentials} = this.stores,    // eslint-disable-line
             {applicationId} = this.props,
             application = kio.getApplication(applicationId),
             isOwnApplication = user.getUserTeams().some(t => t.id === application.team_id),
@@ -159,7 +159,12 @@ class OAuthForm extends React.Component {
                 </div>;
     }
 }
-
+OAuthForm.displayName = 'OAuthForm';
+OAuthForm.propTypes = {
+    applicationId: React.PropTypes.string.isRequired,
+    flux: React.PropTypes.object.isRequired,
+    globalFlux: React.PropTypes.object.isRequired
+};
 OAuthForm.contextTypes = {
     router: React.PropTypes.func.isRequired
 };

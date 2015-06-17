@@ -227,5 +227,13 @@ class ApprovalForm extends React.Component {
                 </div>;
     }
 }
-
+ApprovalForm.displayName = 'ApprovalForm';
+ApprovalForm.propTypes = {
+    globalFlux: React.PropTypes.object.isRequired,
+    applicationId: React.PropTypes.string.isRequired,
+    versionId: React.PropTypes.string.isRequired
+};
+ApprovalForm.contextTypes = {
+    router: React.PropTypes.func.isRequired
+};
 export default ApprovalForm;

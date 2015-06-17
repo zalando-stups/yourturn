@@ -49,5 +49,10 @@ class ScmSourceWarning extends React.Component {
                 </div>;
     }
 }
+ScmSourceWarning.displayName = 'ScmSourceWarning';
+ScmSourceWarning.propTypes = {
+    scmSource: React.PropTypes.object.isRequired,
+    version: React.PropTypes.object.isRequired
+};
 
 export default ScmSourceWarning;

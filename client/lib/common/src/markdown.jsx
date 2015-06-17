@@ -22,7 +22,7 @@ class Markdown extends React.Component {
                     }} />;
     }
 }
-
+Markdown.displayName = 'Markdown';
 Markdown.propTypes = {
     src: React.PropTypes.string.isRequired,
     className: React.PropTypes.string,

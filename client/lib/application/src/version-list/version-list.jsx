@@ -98,5 +98,9 @@ class VersionList extends React.Component {
                 </div>;
     }
 }
+VersionList.displayName = 'VersionList';
+VersionList.propTypes = {
+    applicationId: React.PropTypes.string.isRequired
+};
 
 export default VersionList;

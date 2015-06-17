@@ -37,6 +37,10 @@ class ViolationListHandler extends React.Component {
                 </FlummoxComponent>;
     }
 }
+ViolationListHandler.displayName = 'ViolationListHandler';
+ViolationListHandler.propTypes = {
+    globalFlux: React.PropTypes.object.isRequired
+};
 ViolationListHandler.fetchData = function(state, globalFlux) {
     return requireTeam(globalFlux)
             .then(() => {

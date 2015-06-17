@@ -134,6 +134,7 @@ class Sidebar extends React.Component {
                 </aside>;
     }
 }
+Sidebar.displayName = 'Sidebar';
 Sidebar.contextTypes = {
     router: React.PropTypes.func.isRequired
 };

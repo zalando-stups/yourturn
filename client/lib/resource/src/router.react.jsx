@@ -61,6 +61,11 @@ class CreateResourceFormHandler extends React.Component {
 CreateResourceFormHandler.isAllowed = function(state, globalFlux) {
     return requireWhitelisted(globalFlux);
 };
+CreateResourceFormHandler.displayName = 'CreateResourceFormHandler';
+CreateResourceFormHandler.propTypes = {
+    globalFlux: React.PropTypes.object.isRequired,
+    params: React.PropTypes.object
+};
 CreateResourceFormHandler.fetchData = function(state, globalFlux) {
     return Promise.all([
         RES_ACTIONS.fetchResources(),
@@ -88,6 +93,11 @@ class EditResourceFormHandler extends React.Component {
 EditResourceFormHandler.isAllowed = function(state, globalFlux) {
     return requireWhitelisted(globalFlux);
 };
+EditResourceFormHandler.displayName = 'EditResourceFormHandler';
+EditResourceFormHandler.propTypes = {
+    globalFlux: React.PropTypes.object.isRequired,
+    params: React.PropTypes.object
+};
 EditResourceFormHandler.fetchData = function(state, globalFlux) {
     return Promise.all([
         RES_ACTIONS.fetchResource(state.params.resourceId),
@@ -108,6 +118,11 @@ class ResourceListHandler extends React.Component {
                 </FlummoxComponent>;
     }
 }
+ResourceListHandler.displayName = 'ResourceListHandler';
+ResourceListHandler.propTypes = {
+    globalFlux: React.PropTypes.object.isRequired,
+    params: React.PropTypes.object
+};
 ResourceListHandler.fetchData = function() {
     RES_ACTIONS.fetchResources();
 };
@@ -127,6 +142,11 @@ class ResourceDetailHandler extends React.Component {
                 </FlummoxComponent>;
     }
 }
+ResourceDetailHandler.displayName = 'ResourceDetailHandler';
+ResourceDetailHandler.propTypes = {
+    globalFlux: React.PropTypes.object.isRequired,
+    params: React.PropTypes.object
+};
 ResourceDetailHandler.fetchData = function(state) {
     RES_ACTIONS.fetchResource(state.params.resourceId);
     RES_ACTIONS.fetchScopes(state.params.resourceId);
@@ -148,6 +168,11 @@ class ScopeDetailHandler extends React.Component {
                 </FlummoxComponent>;
     }
 }
+ScopeDetailHandler.displayName = 'ScopeDetailHandler';
+ScopeDetailHandler.propTypes = {
+    globalFlux: React.PropTypes.object.isRequired,
+    params: React.PropTypes.object
+};
 ScopeDetailHandler.fetchData = function(state) {
     let {resourceId, scopeId} = state.params;
     RES_ACTIONS.fetchResource(resourceId);
@@ -174,6 +199,11 @@ class EditScopeFormHandler extends React.Component {
 }
 EditScopeFormHandler.isAllowed = function(state, globalFlux) {
     return requireWhitelisted(globalFlux);
+};
+EditScopeFormHandler.displayName = 'EditScopeFormHandler';
+EditScopeFormHandler.propTypes = {
+    globalFlux: React.PropTypes.object.isRequired,
+    params: React.PropTypes.object
 };
 EditScopeFormHandler.fetchData = function(state, globalFlux) {
     let {resourceId, scopeId} = state.params;
@@ -204,6 +234,11 @@ class CreateScopeFormHandler extends React.Component {
 }
 CreateScopeFormHandler.isAllowed = function(state, globalFlux) {
     return requireWhitelisted(globalFlux);
+};
+CreateScopeFormHandler.displayName = 'CreateScopeFormHandler';
+CreateScopeFormHandler.propTypes = {
+    globalFlux: React.PropTypes.object.isRequired,
+    params: React.PropTypes.object
 };
 CreateScopeFormHandler.fetchData = function(state, globalFlux) {
     let {resourceId} = state.params;

@@ -45,5 +45,9 @@ class OAuthSyncInfo extends React.Component {
                 </table>;
     }
 }
+OAuthSyncInfo.displayName = 'OAuthSyncInfo';
+OAuthSyncInfo.propTypes = {
+    oauth: React.PropTypes.object.isRequired
+};
 
 export default OAuthSyncInfo;

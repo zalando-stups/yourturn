@@ -41,6 +41,10 @@ class ScmCommitInfo extends React.Component {
         return <tr />;
     }
 }
+ScmCommitInfo.displayName = 'ScmCommitInfo';
+ScmCommitInfo.propTypes = {
+    scmSource: React.PropTypes.object.isRequired
+};
 
 class ScmAuthorInfo extends React.Component {
     constructor() {
@@ -70,6 +74,10 @@ class ScmAuthorInfo extends React.Component {
         return <tr />;
     }
 }
+ScmAuthorInfo.displayName = 'ScmAuthorInfo';
+ScmAuthorInfo.propTypes = {
+    scmSource: React.PropTypes.object.isRequired
+};
 
 class VersionDetail extends React.Component {
     constructor(props) {
@@ -178,5 +186,14 @@ class VersionDetail extends React.Component {
                 </div>;
     }
 }
+VersionDetail.displayName = 'VersionDetail';
+VersionDetail.propTypes = {
+    flux: React.PropTypes.object.isRequired,
+    applicationId: React.PropTypes.string.isRequired,
+    versionId: React.PropTypes.string.isRequired
+};
+VersionDetail.contextTypes = {
+    router: React.PropTypes.func.isRequired
+};
 
 export default VersionDetail;

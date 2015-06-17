@@ -127,6 +127,10 @@ class ApplicationDetailPlaceholder extends React.Component {
                 </div>;
     }
 }
+ApplicationDetailPlaceholder.displayName = 'ApplicationDetailPlaceholder';
+ApplicationDetailPlaceholder.propTypes = {
+    applicationId: React.PropTypes.string.isRequired
+};
 ApplicationDetailPlaceholder.contextTypes = {
     router: React.PropTypes.func.isRequired
 };

@@ -14,5 +14,8 @@ class DefaultError extends React.Component {
                 </div>;
     }
 }
-
+DefaultError.displayName = 'DefaultError';
+DefaultError.propTypes = {
+    error: React.PropTypes.object.isRequired
+};
 export default DefaultError;

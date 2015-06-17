@@ -112,5 +112,6 @@ class ApplicationList extends React.Component {
                 </div>;
     }
 }
+ApplicationList.displayName = 'ApplicationList';
 
 export default ApplicationList;

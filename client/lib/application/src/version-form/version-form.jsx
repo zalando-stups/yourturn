@@ -37,7 +37,7 @@ class VersionForm extends React.Component {
     }
 
     update(field, prop, evt) {
-        let {kio} = this.stores,
+        let {kio} = this.stores,    // eslint-disable-line
             {applicationId} = this.props,
             versions = kio.getApplicationVersions(applicationId),
             application = kio.getApplication(applicationId);
@@ -217,6 +217,13 @@ class VersionForm extends React.Component {
                 </div>;
     }
 }
+VersionForm.displayName = 'VersionForm';
+VersionForm.propTypes = {
+    applicationId: React.PropTypes.string.isRequired,
+    versionId: React.PropTypes.string,
+    edit: React.PropTypes.bool,
+    globalFlux: React.PropTypes.object.isRequired
+};
 VersionForm.contextTypes = {
     router: React.PropTypes.func.isRequired
 };

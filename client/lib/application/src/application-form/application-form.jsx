@@ -295,7 +295,13 @@ class ApplicationForm extends React.Component {
                 </div>;
     }
 }
-
+ApplicationForm.displayName = 'ApplicationForm';
+ApplicationForm.propTypes = {
+    applicationId: React.PropTypes.string,
+    flux: React.PropTypes.object.isRequired,
+    edit: React.PropTypes.bool,
+    globalFlux: React.PropTypes.object.isRequired
+};
 ApplicationForm.contextTypes = {
     router: React.PropTypes.func.isRequired
 };

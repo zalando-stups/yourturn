@@ -77,6 +77,10 @@ class ResourceDetailPlaceholder extends React.Component {
                 </div>;
     }
 }
+ResourceDetailPlaceholder.displayName = 'ResourceDetailPlaceholder';
+ResourceDetailPlaceholder.propTypes = {
+    resourceId: React.PropTypes.string.isRequired
+};
 ResourceDetailPlaceholder.contextTypes = {
     router: React.PropTypes.func.isRequired
 };

@@ -260,6 +260,13 @@ class ScopeForm extends React.Component {
                 </div>;
     }
 }
+ScopeForm.displayName = 'ScopeForm';
+ScopeForm.propTypes = {
+    scopeId: React.PropTypes.string.isRequired,
+    resourceId: React.PropTypes.string.isRequired,
+    globalFlux: React.PropTypes.object.isRequired,
+    edit: React.PropTypes.bool
+};
 ScopeForm.contextTypes = {
     router: React.PropTypes.func.isRequired
 };

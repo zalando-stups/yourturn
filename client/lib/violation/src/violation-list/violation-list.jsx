@@ -85,6 +85,12 @@ class Violation extends React.Component {
                 </div>;
     }
 }
+Violation.displayName = 'Violation';
+Violation.propTypes = {
+    autoFocus: React.PropTypes.bool,
+    violation: React.PropTypes.object.isRequired,
+    flux: React.PropTypes.object.isRequired
+};
 
 class ViolationList extends React.Component {
     constructor(props) {
@@ -139,5 +145,9 @@ class ViolationList extends React.Component {
                 </div>;
     }
 }
+ViolationList.displayName = 'ViolationList';
+ViolationList.propTypes = {
+    flux: React.PropTypes.object.isRequired
+};
 
 export default ViolationList;

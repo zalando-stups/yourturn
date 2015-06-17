@@ -67,6 +67,11 @@ class VersionFormPlaceholder extends React.Component {
                 </div>;
     }
 }
+VersionFormPlaceholder.displayName = 'VersionFormPlaceholder';
+VersionFormPlaceholder.propTypes = {
+    applicationId: React.PropTypes.string.isRequired,
+    versionId: React.PropTypes.string
+};
 VersionFormPlaceholder.contextTypes = {
     router: React.PropTypes.func.isRequired
 };

@@ -83,5 +83,5 @@ class ResourceList extends React.Component {
                 </div>;
     }
 }
-
+ResourceList.displayName = 'ResourceList';
 export default ResourceList;

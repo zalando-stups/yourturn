@@ -35,5 +35,8 @@ class YourTurn extends React.Component {
                 </div>;
     }
 }
-
+YourTurn.displayName = 'YourTurn';
+YourTurn.propTypes = {
+    globalFlux: React.PropTypes.object.isRequired
+};
 export default YourTurn;

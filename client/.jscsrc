@@ -1,4 +1,5 @@
 {
+    "esprima" : "esprima-fb",
     "validateIndentation": 4,
     "disallowMixedSpacesAndTabs": true,
     "validateJSDoc": {

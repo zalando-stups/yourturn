@@ -12,6 +12,13 @@ class Notification extends React.Component {
                 className={'type-' + (this.props.type || 'default')}>{this.props.message}</li>;
     }
 }
+Notification.propTypes = {
+    type: React.PropTypes.string,
+    onClick: React.PropTypes.func.isRequired,
+    message: React.PropTypes.string.isRequired
+};
+Notification.displayName = 'Notification';
+
 
 class NotificationBar extends React.Component {
     constructor(props) {
@@ -42,5 +49,6 @@ class NotificationBar extends React.Component {
         return null;
     }
 }
+NotificationBar.displayName = 'NotificationBar';
 
 export default NotificationBar;

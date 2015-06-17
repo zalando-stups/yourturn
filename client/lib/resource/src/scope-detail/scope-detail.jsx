@@ -114,5 +114,9 @@ class ScopeDetail extends React.Component {
                 </div>;
     }
 }
-
+ScopeDetail.displayName = 'ScopeDetail';
+ScopeDetail.propTypes = {
+    resourceId: React.PropTypes.string.isRequired,
+    scopeId: React.PropTypes.string.isRequired
+};
 export default ScopeDetail;

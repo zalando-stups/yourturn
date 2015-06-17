@@ -52,6 +52,11 @@ class AppListHandler extends React.Component {
                 </FluxComponent>;
     }
 }
+AppListHandler.displayName = 'AppListHandler';
+AppListHandler.propTypes = {
+    globalFlux: React.PropTypes.object.isRequired,
+    params: React.PropTypes.object.isRequired
+};
 AppListHandler.fetchData = function() {
     KIO_ACTIONS.fetchApplications();
 };
@@ -73,6 +78,11 @@ class CreateAppFormHandler extends React.Component {
                 </FluxComponent>;
     }
 }
+CreateAppFormHandler.displayName = 'CreateAppFormHandler';
+CreateAppFormHandler.propTypes = {
+    globalFlux: React.PropTypes.object.isRequired,
+    params: React.PropTypes.object.isRequired
+};
 CreateAppFormHandler.fetchData = function(state, globalFlux) {
     return Promise.all([
         requireTeam(globalFlux),
@@ -111,6 +121,11 @@ EditAppFormHandler.isAllowed = function(state, globalFlux) {
         return error;
     }
 };
+EditAppFormHandler.displayName = 'EditAppFormHandler';
+EditAppFormHandler.propTypes = {
+    globalFlux: React.PropTypes.object.isRequired,
+    params: React.PropTypes.object.isRequired
+};
 EditAppFormHandler.fetchData = function(state, globalFlux) {
     return Promise.all([
             KIO_ACTIONS.fetchApplication(state.params.applicationId),
@@ -135,6 +150,11 @@ class AppDetailHandler extends React.Component {
                 </FluxComponent>;
     }
 }
+AppDetailHandler.displayName = 'AppDetailHandler';
+AppDetailHandler.propTypes = {
+    globalFlux: React.PropTypes.object.isRequired,
+    params: React.PropTypes.object.isRequired
+};
 AppDetailHandler.fetchData = function(state) {
     KIO_ACTIONS.fetchApplication(state.params.applicationId);
     KIO_ACTIONS.fetchApplicationVersions(state.params.applicationId);
@@ -158,6 +178,11 @@ class OAuthFormHandler extends React.Component {
                 </FluxComponent>;
     }
 }
+OAuthFormHandler.displayName = 'OAuthFormHandler';
+OAuthFormHandler.propTypes = {
+    globalFlux: React.PropTypes.object.isRequired,
+    params: React.PropTypes.object.isRequired
+};
 OAuthFormHandler.fetchData = function(state) {
     let id = state.params.applicationId;
     APP_FLUX.getActions('essentials').fetchAllScopes();
@@ -184,6 +209,11 @@ class AccessFormHandler extends React.Component {
                 </FluxComponent>;
     }
 }
+AccessFormHandler.displayName = 'AccessFormHandler';
+AccessFormHandler.propTypes = {
+    globalFlux: React.PropTypes.object.isRequired,
+    params: React.PropTypes.object.isRequired
+};
 AccessFormHandler.fetchData = function(state) {
     let id = state.params.applicationId;
     APP_FLUX.getActions('essentials').fetchAllScopes();
@@ -209,6 +239,11 @@ class VersionListHandler extends React.Component {
                 </FluxComponent>;
     }
 }
+VersionListHandler.displayName = 'VersionListHandler';
+VersionListHandler.propTypes = {
+    globalFlux: React.PropTypes.object.isRequired,
+    params: React.PropTypes.object.isRequired
+};
 VersionListHandler.fetchData = function(state) {
     let id = state.params.applicationId;
     KIO_ACTIONS.fetchApplicationVersions(id);
@@ -234,6 +269,11 @@ class VersionDetailHandler extends React.Component {
                 </FluxComponent>;
     }
 }
+VersionDetailHandler.displayName = 'VersionDetailHandler';
+VersionDetailHandler.propTypes = {
+    globalFlux: React.PropTypes.object.isRequired,
+    params: React.PropTypes.object.isRequired
+};
 VersionDetailHandler.fetchData = function(state) {
     let {applicationId, versionId} = state.params;
     // fetch approvals for version
@@ -273,6 +313,11 @@ class ApprovalFormHandler extends React.Component {
                 </FluxComponent>;
     }
 }
+ApprovalFormHandler.displayName = 'ApprovalFormHandler';
+ApprovalFormHandler.propTypes = {
+    globalFlux: React.PropTypes.object.isRequired,
+    params: React.PropTypes.object.isRequired
+};
 ApprovalFormHandler.fetchData = function(state) {
     let {applicationId, versionId} = state.params;
     if (!KIO_STORE.getApplication(applicationId)) {
@@ -304,6 +349,11 @@ class CreateVersionFormHandler extends React.Component {
                 </FluxComponent>;
     }
 }
+CreateVersionFormHandler.displayName = 'CreateVersionFormHandler';
+CreateVersionFormHandler.propTypes = {
+    globalFlux: React.PropTypes.object.isRequired,
+    params: React.PropTypes.object.isRequired
+};
 CreateVersionFormHandler.fetchData = function(state) {
     let {applicationId} = state.params;
     return Promise.all([
@@ -343,6 +393,11 @@ EditVersionFormHandler.isAllowed = function(state, globalFlux) {
         error.status = 'u1F62D';
         return error;
     }
+};
+EditVersionFormHandler.displayName = 'EditVersionFormHandler';
+EditVersionFormHandler.propTypes = {
+    globalFlux: React.PropTypes.object.isRequired,
+    params: React.PropTypes.object.isRequired
 };
 EditVersionFormHandler.fetchData = function(state) {
     let {applicationId, versionId} = state.params;

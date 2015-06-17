@@ -139,6 +139,12 @@ class AccessForm extends React.Component {
                 </div>;
     }
 }
+AccessForm.displayName = 'AccessForm';
+AccessForm.propTypes = {
+    applicationId: React.PropTypes.string.isRequired,
+    flux: React.PropTypes.object.isRequired,
+    globalFlux: React.PropTypes.object.isRequired
+};
 AccessForm.contextTypes = {
     router: React.PropTypes.func.isRequired
 };

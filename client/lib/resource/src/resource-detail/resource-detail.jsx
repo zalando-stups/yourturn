@@ -24,7 +24,8 @@ class ResourceDetail extends React.Component {
     }
 
     render() {
-        let {essentials, user} = this.stores,
+        let {essentials, user} = this.stores,   // eslint-disable-line
+            // TODO eslint somehow reports this?
             {resourceId} = this.props,
             whitelisted = user.isWhitelisted(),
             resource = essentials.getResource(resourceId),
@@ -133,5 +134,12 @@ class ResourceDetail extends React.Component {
                 </div>;
     }
 }
-
+ResourceDetail.displayName = 'ResourceDetail';
+ResourceDetail.propTypes = {
+    flux: React.PropTypes.object.isRequired,
+    resourceId: React.PropTypes.string.isRequired
+};
+ResourceDetail.contextTypes = {
+    router: React.PropTypes.func.isRequired
+};
 export default ResourceDetail;

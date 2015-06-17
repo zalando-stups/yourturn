@@ -208,6 +208,12 @@ class ResourceForm extends React.Component {
                 </div>;
     }
 }
+ResourceForm.displayName = 'ResourceForm';
+ResourceForm.propTypes = {
+    globalFlux: React.PropTypes.object.isRequired,
+    edit: React.PropTypes.bool,
+    resourceId: React.PropTypes.string.isRequired
+};
 ResourceForm.contextTypes = {
     router: React.PropTypes.func.isRequired
 };

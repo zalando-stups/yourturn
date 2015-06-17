@@ -2,7 +2,7 @@ import React from 'react';
 import Icon from 'react-fa';
 import {Link} from 'react-router';
 
-export default class ScopeDetailPlaceholder extends React.Component {
+class ScopeDetailPlaceholder extends React.Component {
     constructor() {
         super();
     }
@@ -81,3 +81,10 @@ export default class ScopeDetailPlaceholder extends React.Component {
                 </div>;
     }
 }
+ScopeDetailPlaceholder.displayName = 'ScopeDetailPlaceholder';
+ScopeDetailPlaceholder.propTypes = {
+    resourceId: React.PropTypes.string.isRequired,
+    scopeId: React.PropTypes.string.isRequired
+};
+
+export default ScopeDetailPlaceholder;

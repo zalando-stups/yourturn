@@ -65,15 +65,21 @@ module.exports = {
         failOnError: true
     },
     jscs: {
-        esnext: true,
-        failOnHint: true
+        emitErrors: false,
+        failOnHint: false,
+        reporter: function(errors) {
+            console.log(errors);
+            errors._errorList.forEach(function(err) {
+                console.log(err.message);
+            });
+        }
     },
     module: {
         preLoaders: [
-            { test: /\.jsx?$/, exclude: /(node_modules|lodash)/, loaders: ['jscs', 'eslint'] }
+            { test: /\.jsx?$/, exclude: /(node_modules|lodash)/, loaders: ['eslint'] }
         ],
         loaders: [
-            { test: /\.jsx?$/, exclude: /node_modules/, loader: 'babel' },
+            { test: /\.jsx?$/, exclude: /node_modules/, loaders: ['babel'] },
             { test: /\.less$/, exclude: /node_modules/, loader: ExtractTextPlugin.extract('css!autoprefixer!less') },
             { test: /\.css$/, loader: ExtractTextPlugin.extract('css!autoprefixer') },
             { test: /\.(otf|eot|svg|ttf|woff|woff2)(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=8192&mimetype=application/font-woff' },

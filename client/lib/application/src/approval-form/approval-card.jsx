@@ -59,5 +59,8 @@ class ApprovalCard extends React.Component {
                 </div>;
     }
 }
-
+ApprovalCard.displayName = 'ApprovalCard';
+ApprovalCard.propTypes = {
+    approval: React.PropTypes.object.isRequired
+};
 export default ApprovalCard;

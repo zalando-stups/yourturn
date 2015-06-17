@@ -60,6 +60,7 @@ class LoginHandler extends React.Component {
         return null;
     }
 }
+LoginHandler.displayName = 'LoginHandler';
 LoginHandler.contextTypes = {
     router: React.PropTypes.func.isRequired
 };
@@ -78,6 +79,7 @@ class SearchHandler extends React.Component {
                 </FlummoxComponent>;
     }
 }
+SearchHandler.displayName = 'SearchHandler';
 
 const ROUTES =
     <Route handler={YourTurn} path='/'>

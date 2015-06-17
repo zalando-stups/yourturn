@@ -95,6 +95,7 @@ class OwnerScopeList extends React.Component {
                 </div>;
     }
 }
+OwnerScopeList.displayName = 'OwnerScopeList';
 OwnerScopeList.propTypes = {
     scopes: React.PropTypes.array.isRequired,
     selected: React.PropTypes.array,

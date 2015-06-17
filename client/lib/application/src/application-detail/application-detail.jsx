@@ -25,10 +25,6 @@ class ApplicationDetail extends React.Component {
         this.stores.user.on('change', this._forceUpdate);
     }
 
-    getChildContext() {
-        return this.context;
-    }
-
     componentWillUnmount() {
         this.stores.user.off('change', this._forceUpdate);
     }
@@ -196,10 +192,11 @@ class ApplicationDetail extends React.Component {
                 </div>;
     }
 }
+ApplicationDetail.displayName = 'ApplicationDetail';
+ApplicationDetail.propTypes = {
+    applicationId: React.PropTypes.string.isRequired
+};
 ApplicationDetail.contextTypes = {
     router: React.PropTypes.func.isRequired
-};
-ApplicationDetail.childContextTypes = {
-    router: React.PropTypes.func
 };
 export default ApplicationDetail;
