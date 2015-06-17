@@ -9,7 +9,7 @@ module.exports = {
     devtool: 'eval',
     bail: true, // break on error
     entry: [
-        './lib/yourturn/src/bootstrap'   // entrypoint to resolve dependencies
+        './lib/yourturn/src/bootstrap.jsx'   // entrypoint to resolve dependencies
     ],
     output: {
         path: __dirname + '/dist/',
@@ -23,7 +23,6 @@ module.exports = {
         new webpack.PrefetchPlugin('moment'),
         new webpack.PrefetchPlugin('common/src/superagent'),
         new webpack.NormalModuleReplacementPlugin(/^lodash$/, 'common/src/lodash.custom'),
-        new webpack.NormalModuleReplacementPlugin(/underscore/, 'common/src/lodash.custom'),
         new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /en/),
         new webpack.NoErrorsPlugin(),
         new ExtractTextPlugin('style.css', {
@@ -36,7 +35,6 @@ module.exports = {
         })
     ],
     resolve: {
-        extensions: ['', '.js', '.jsx', '.less'],
         alias: {
             common: path.resolve(__dirname, './lib/common/'),
             yourturn: path.resolve(__dirname, './lib/yourturn/'),
@@ -77,7 +75,7 @@ module.exports = {
         loaders: [
             { test: /\.jsx?$/, exclude: /node_modules/, loader: 'babel' },
             { test: /\.less$/, exclude: /node_modules/, loader: ExtractTextPlugin.extract('css!autoprefixer!less') },
-            { test: /\.css$/, loader: ExtractTextPlugin.extract('css') },
+            { test: /\.css$/, loader: ExtractTextPlugin.extract('css!autoprefixer') },
             { test: /\.(otf|eot|svg|ttf|woff|woff2)(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=8192&mimetype=application/font-woff' },
             { test: /\.(png|jpg|jpeg|gif)$/, loaders: ['url?limit=8192', 'img']}
         ]

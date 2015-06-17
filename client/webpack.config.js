@@ -19,7 +19,6 @@ module.exports = {
     },
     plugins: [
         new webpack.HotModuleReplacementPlugin(),
-        new webpack.NormalModuleReplacementPlugin(/^underscore$/, 'common/src/lodash.custom'),
         new webpack.NormalModuleReplacementPlugin(/^lodash$/, 'common/src/lodash.custom'),
         new webpack.NoErrorsPlugin(),
         new webpack.DefinePlugin({
@@ -28,7 +27,6 @@ module.exports = {
         })
     ],
     resolve: {
-        extensions: ['', '.js', '.css', '.less', '.jsx'],
         alias: {
             common: path.resolve(__dirname, './lib/common/'),
             yourturn: path.resolve(__dirname, './lib/yourturn/'),
