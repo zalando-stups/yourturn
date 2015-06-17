@@ -1,8 +1,8 @@
-/* globals expect, sinon, Promise */
+/* globals expect, sinon, Promise, $, TestUtils, reset, render, React */
 import {Flummox} from 'flummox';
 import EssentialsStore from 'common/src/data/essentials/essentials-store';
 import EssentialsActions from 'common/src/data/essentials/essentials-actions';
-import Form from 'resource/src/resource-form/resource-form';
+import Form from 'resource/src/resource-form/resource-form.jsx';
 
 const ESSENTIALS = 'essentials',
     RES_ID = 'sales_order',
@@ -24,6 +24,7 @@ class MockFlux extends Flummox {
 
 describe('The resource form view', () => {
     var flux,
+        props,
         actionSpy,
         form;
 
@@ -41,45 +42,32 @@ describe('The resource form view', () => {
                 flux: flux
             });
         });
-
-        it('should not have a placeholder', () => {
-            form.render();
-            expect(form.$el.find('.u-placeholder').length).to.equal(0);
-        });
-
     });
 
     describe('in edit mode', () => {
         beforeEach(() => {
-            form = new Form({
+            reset();
+            flux.getStore(ESSENTIALS).receiveResource(TEST_RES);
+            props = {
                 flux: flux,
                 resourceId: RES_ID,
                 edit: true
-            });
-        });
-
-        it('should not have a placeholder', () => {
-            flux.getStore(ESSENTIALS).beginFetchResource(RES_ID);
-            expect(form.$el.find('.u-placeholder').length).to.equal(0);
+            };
+            form = render(Form, props);
         });
 
         it('should display the available symbol', () => {
-            flux.getStore(ESSENTIALS).receiveResource(TEST_RES);
-            let $available = form.$el.find('[data-block="available-symbol"]').first();
-            expect($available.length).to.equal(1);
+            TestUtils.findRenderedDOMComponentWithAttributeValue(form, 'data-block', 'available-symbol');
         });
 
         it('should disable the ID input', () => {
-            flux.getStore(ESSENTIALS).receiveResource(TEST_RES);
-            let $input = form.$el.find('[data-block="id-input"]').first();
-            expect($input.is(':disabled')).to.be.true;
+            let input = TestUtils.findRenderedDOMComponentWithAttributeValue(form, 'data-block', 'id-input');
+            expect($(React.findDOMNode(input)).is(':disabled')).to.be.true;
         });
 
         it('should call the correct action', () => {
-            flux.getStore(ESSENTIALS).receiveResource(TEST_RES);
-            let $input = form.$el.find('[data-block="name-input"]').first();
-            $input.val('test');
-            form.$el.find('form').submit();
+            let f = TestUtils.findRenderedDOMComponentWithAttributeValue(form, 'data-block', 'form');
+            TestUtils.Simulate.submit(f);
             expect(actionSpy.calledOnce).to.be.true;
         });
 

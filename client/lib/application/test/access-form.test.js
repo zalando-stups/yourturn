@@ -1,4 +1,4 @@
-/* globals sinon, expect, Promise */
+/* globals expect, reset, render, sinon, Promise, TestUtils */
 import {Flummox} from 'flummox';
 import KioStore from 'common/src/data/kio/kio-store';
 import KioActions from 'common/src/data/kio/kio-actions';
@@ -8,7 +8,7 @@ import EssentialsStore from 'common/src/data/essentials/essentials-store';
 import EssentialsActions from 'common/src/data/essentials/essentials-actions';
 import UserStore from 'common/src/data/user/user-store';
 import UserActions from 'common/src/data/user/user-actions';
-import AccessForm from 'application/src/access-form/access-form';
+import AccessForm from 'application/src/access-form/access-form.jsx';
 
 const MOCK_KIO = {
     id: 'kio',
@@ -56,35 +56,31 @@ describe('The access control form view', () => {
     var flux,
         globalFlux,
         actionSpy,
+        props,
         form;
 
     beforeEach(() => {
+        reset();
         flux = new MockFlux();
         globalFlux = new GlobalFlux();
+        flux.getStore('essentials').receiveScopes(['customer', [{
+            id: 'read_all'
+        }]]);
+        flux.getStore('mint').receiveOAuthConfig(['kio', MOCK_KIO]);
         actionSpy = sinon.stub(flux.getActions('mint'), 'saveOAuthConfig', () => {
             return Promise.resolve();
         });
-        form = new AccessForm({
+        props = {
             flux: flux,
             globalFlux: globalFlux,
             applicationId: 'kio'
-        });
-    });
-
-    it('should show the placeholder when oauth is Pending', () => {
-        flux.getStore('mint').beginFetchOAuthConfig('kio');
-        expect(form.$el.children().first().hasClass('u-placeholder')).to.be.true;
-    });
-
-    it('should show the full view when oauth is completed', () => {
-        flux.getStore('mint').receiveOAuthConfig(['kio', MOCK_KIO]);
-        // not the placeholder
-        expect(form.$el.children().first().hasClass('u-placeholder')).to.be.false;
+        };
+        form = render(AccessForm, props);
     });
 
     it('should call the correct action', () => {
-        flux.getStore('mint').receiveOAuthConfig(['kio', MOCK_KIO]);
-        form.$el.find('form').submit();
+        let f = TestUtils.findRenderedDOMComponentWithAttributeValue(form, 'data-block', 'form');
+        TestUtils.Simulate.submit(f);
         expect(actionSpy.calledOnce).to.be.true;
     });
 });

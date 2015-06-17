@@ -7,8 +7,10 @@ var webpack = require('webpack'),
 module.exports = {
     devtool: 'eval',
     entry: [
-        'webpack/hot/dev-server',
-        './lib/yourturn/src/bootstrap'   // entrypoint to resolve dependencies
+        /* react hot loader */
+        'webpack-dev-server/client?http://localhost:3000',
+        'webpack/hot/only-dev-server',
+        './lib/yourturn/src/bootstrap.jsx'   // entrypoint to resolve dependencies
     ],
     output: {
         path: __dirname + '/dist/',
@@ -17,7 +19,6 @@ module.exports = {
     },
     plugins: [
         new webpack.HotModuleReplacementPlugin(),
-        new webpack.NormalModuleReplacementPlugin(/^underscore$/, 'common/src/lodash.custom'),
         new webpack.NormalModuleReplacementPlugin(/^lodash$/, 'common/src/lodash.custom'),
         new webpack.NoErrorsPlugin(),
         new webpack.DefinePlugin({
@@ -26,7 +27,6 @@ module.exports = {
         })
     ],
     resolve: {
-        extensions: ['', '.js', '.css', '.less'],
         alias: {
             common: path.resolve(__dirname, './lib/common/'),
             yourturn: path.resolve(__dirname, './lib/yourturn/'),
@@ -53,11 +53,10 @@ module.exports = {
     },
     module: {
         loaders: [
-            { test: /\.hbs$/, exclude: /node_modules/, loader: 'handlebars?helperDirs[]=' + __dirname + '/lib/common/src/handlebars' },
-            { test: /\.js$/, exclude: /node_modules/, loader: 'babel' },
+            { test: /\.jsx?$/, exclude: /node_modules/, loaders: ['react-hot', 'babel'] },
             { test: /\.less$/, exclude: /node_modules/, loaders: ['style', 'css', 'autoprefixer', 'less'] },
             { test: /\.css$/, loaders: ['style', 'css'] },
-            { test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,   loader: 'url?limit=8192&mimetype=application/font-woff' },
+            { test: /\.(otf|eot|svg|ttf|woff|woff2)(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=8192&mimetype=application/font-woff' },
             { test: /\.(png|jpg|jpeg|gif)$/, loaders: ['url?limit=8192', 'img']}
         ]
     }

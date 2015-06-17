@@ -13,6 +13,7 @@ var apps = {
         last_modified: '2015-01-01T12:42:41Z',
         last_synced: '2015-01-03T12:42:41Z',
         has_problems: false,
+        is_client_confidential: false,
         redirect_url: 'http://example.com/oauth',
         s3_buckets: [
             'kio-stups-bucket'
@@ -53,6 +54,8 @@ server.put('/apps/:id', function(req, res) {
     setTimeout( function() {
         var id = req.params.id;
         apps[id] = req.body;
+        apps[id].scopes = req.body.scopes ? req.body.scopes : [];
+        apps[id].s3_buckets = req.body.s3_buckets ? req.body.s3_buckets : [];
         res.status(200).send();
     }, Math.random() * 2000 );
 })

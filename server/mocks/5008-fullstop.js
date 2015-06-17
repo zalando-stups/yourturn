@@ -3,8 +3,7 @@ var express = require('express'),
     bodyParser = require('body-parser'),
     fs = require('fs'),
     VIOLATIONS = JSON.parse(fs.readFileSync(__dirname + '/fullstop-violations.json'));
-
-server.use(bodyParser.json());
+server.use(bodyParser.text());
 /** enable cors */
 server.use(function(req, res, next) {
     res.header('Access-Control-Allow-Origin', '*');
@@ -58,7 +57,8 @@ server.post('/violations/:violationId/resolution', function(req, res) {
                     .filter(function(v) {
                         return v.id !== violationId;
                     });
-    violation[0].comment = req.body.message;
+    
+    violation[0].comment = req.body;
     violation[0].last_modified_by = 'npiccolotto';
     violation[0].last_modified = '2015-05-28T16:30:00Z';
 

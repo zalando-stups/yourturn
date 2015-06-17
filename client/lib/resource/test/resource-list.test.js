@@ -1,10 +1,10 @@
-/* globals expect */
+/* globals expect, $, TestUtils, reset, render, React */
 import {Flummox} from 'flummox';
 import EssentialsStore from 'common/src/data/essentials/essentials-store';
 import EssentialsActions from 'common/src/data/essentials/essentials-actions';
 import UserStore from 'common/src/data/user/user-store';
 import UserActions from 'common/src/data/user/user-actions';
-import List from 'resource/src/resource-list/resource-list';
+import List from 'resource/src/resource-list/resource-list.jsx';
 
 const FLUX_ID = 'essentials';
 
@@ -29,19 +29,24 @@ class GlobalFlux extends Flummox {
 describe('The resource list view', () => {
     var flux,
         globalFlux,
+        props,
         list;
 
     beforeEach(() => {
+        reset();
         flux = new MockFlux();
         globalFlux = new GlobalFlux();
-        list = new List({
+        props = {
             flux: flux,
             globalFlux: globalFlux
-        });
+        };
+        list = render(List, props);
     });
 
     it('should not display a list without resources', () => {
-        expect(list.$el.find('ul').length).to.equal(0);
+        expect(() => {
+            TestUtils.findRenderedDOMComponentWithAttributeValue(list, 'data-block', 'resources');
+        }).to.throw;
     });
 
     it('should display a list of resources', () => {
@@ -54,8 +59,9 @@ describe('The resource list view', () => {
             id: 'customer',
             name: 'Customer'
         }]);
-
-        expect(list.$el.find('[data-block="resources"]').children().length).to.equal(2);
+        list = render(List, props);
+        let resources = TestUtils.findRenderedDOMComponentWithAttributeValue(list, 'data-block', 'resources');
+        expect($(React.findDOMNode(resources)).children().length).to.equal(2);
     });
 
 });

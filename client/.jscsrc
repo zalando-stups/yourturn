@@ -1,7 +1,7 @@
 {
+    "esprima" : "esprima-fb",
     "validateIndentation": 4,
     "disallowMixedSpacesAndTabs": true,
-    "maximumLineLength": 120,
     "validateJSDoc": {
         "checkParamNames": true,
         "checkRedundantParams": true,

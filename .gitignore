@@ -6,3 +6,6 @@ client/dist
 client/coverage
 client/stats.json
 scm-source.json
+*.log
+
+stats.json

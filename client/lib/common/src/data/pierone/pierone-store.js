@@ -62,6 +62,11 @@ class PieroneStore extends Store {
      */
     failFetchScmSource(err) {
         let {team, artifact, tag} = err;
+        if (err.status === 404) {
+            return this.setState({
+                scmSources: _m.assocIn(this.state.scmSources, [team, artifact, tag], false)
+            });
+        }
         this.setState({
             scmSources: _m.assocIn(this.state.scmSources, [team, artifact, tag], new Failed(err))
         });

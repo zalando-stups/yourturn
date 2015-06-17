@@ -1,4 +1,4 @@
-/* globals expect */
+/* globals expect, $, TestUtils, reset, render, React */
 import {Flummox} from 'flummox';
 import KioStore from 'common/src/data/kio/kio-store';
 import KioActions from 'common/src/data/kio/kio-actions';
@@ -6,7 +6,7 @@ import PieroneStore from 'common/src/data/pierone/pierone-store';
 import PieroneActions from 'common/src/data/pierone/pierone-actions';
 import UserStore from 'common/src/data/user/user-store';
 import UserActions from 'common/src/data/user/user-actions';
-import Detail from 'application/src/version-detail/version-detail';
+import Detail from 'application/src/version-detail/version-detail.jsx';
 
 const FLUX = 'kio',
     TEAM = 'stups',
@@ -47,35 +47,33 @@ class GlobalFlux extends Flummox {
 describe('The version detail view', () => {
     var flux,
         globalFlux,
+        props,
         detail;
 
     beforeEach(() => {
+        reset();
         flux = new MockFlux();
         globalFlux = new GlobalFlux();
         flux.getStore(FLUX).receiveApplicationVersion(TEST_VERSION);
-        detail = new Detail({
+        props = {
             flux: flux,
             globalFlux: globalFlux,
             applicationId: APP,
             versionId: VER
-        });
-        detail.update();
-        detail.render();
-    });
-
-    it('should not show a placeholder when version is not Pending', () => {
-        expect(detail.$el.find('.u-placeholder').length).to.equal(0);
+        };
+        detail = render(Detail, props);
     });
 
     it('should show rendered markdown', () => {
-        expect(detail.$el.find('[data-block="version-notes"] h1').length).to.equal(1);
+        let notes = TestUtils.findRenderedDOMComponentWithAttributeValue(detail, 'data-block', 'version-notes');
+        expect($(React.findDOMNode(notes)).find('h1').length).to.equal(1);
     });
 
     it('should display a warning about modified scm-source', () => {
         flux.getStore('pierone').receiveScmSource([TEAM, APP, VER, TEST_SOURCE]);
-        detail.update();
-        detail.render();
-        expect(detail.$el.find('[data-block="locally-modified-warning"]').length).to.equal(1);
+        detail = render(Detail, props);
+        // will throw if not there
+        TestUtils.findRenderedDOMComponentWithAttributeValue(detail, 'data-block', 'locally-modified-warning');
     });
 
     it('should display a warning about missing scm-source', () => {
@@ -88,8 +86,7 @@ describe('The version detail view', () => {
         flux.getStore('pierone').receiveTags([TEAM, APP, [{
             name: VER
         }]]);
-        detail.update();
-        detail.render();
-        expect(detail.$el.find('[data-block="missing-scmsource-warning"]').length).to.equal(1);
+        detail = render(Detail, props);
+        TestUtils.findRenderedDOMComponentWithAttributeValue(detail, 'data-block', 'missing-scmsource-warning');
     });
 });

@@ -1,8 +1,8 @@
-/* globals expect */
+/* globals expect, $, TestUtils, reset, render, React */
 import {Flummox} from 'flummox';
 import KioStore from 'common/src/data/kio/kio-store';
 import KioActions from 'common/src/data/kio/kio-actions';
-import List from 'application/src/version-list/version-list';
+import List from 'application/src/version-list/version-list.jsx';
 
 const FLUX_ID = 'kio',
       APP_ID = 'kio';
@@ -18,18 +18,23 @@ class MockFlux extends Flummox {
 
 describe('The version list view', () => {
     var flux,
+        props,
         list;
 
     beforeEach(() => {
+        reset();
         flux = new MockFlux();
-        list = new List({
+        props = {
             flux: flux,
             applicationId: APP_ID
-        });
+        };
+        list = render(List, props);
     });
 
     it('should not display a list without versions', () => {
-        expect(list.$el.find('[data-block="versions"]').children().length).to.equal(0);
+        expect(() => {
+            TestUtils.findRenderedDOMComponentWithAttributeValue(list, 'data-block', 'versions');
+        }).to.throw();
     });
 
     it('should display a list of application versions', () => {
@@ -42,7 +47,8 @@ describe('The version list view', () => {
             id: 'many-squirrels',
             application_id: APP_ID
         }]);
-        expect(list.$el.find('[data-block="versions"]').children().length).to.equal(2);
+        list = render(List, props);
+        TestUtils.findRenderedDOMComponentWithAttributeValue(list, 'data-block', 'versions');
     });
 
     it('should display a filtered list of application versions', () => {
@@ -55,8 +61,14 @@ describe('The version list view', () => {
             id: 'many-squirrels',
             application_id: APP_ID
         }]);
-        list.$el.find('[data-block="search-input"]').val('few');
-        list.$el.find('form').submit();
-        expect(list.$el.find('[data-block="versions"]').children().length).to.equal(1);
+        list = render(List, props);
+        let input = TestUtils.findRenderedDOMComponentWithAttributeValue(list, 'data-block', 'search-input');
+        TestUtils.Simulate.change(input, {
+            target: {
+                value: 'few'
+            }
+        });
+        let versions = TestUtils.findRenderedDOMComponentWithAttributeValue(list, 'data-block', 'versions');
+        expect($(React.findDOMNode(versions)).children().length).to.equal(1);
     });
 });

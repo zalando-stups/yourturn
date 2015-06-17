@@ -5,7 +5,7 @@ var fs = require('fs'),
     eslint = require('gulp-eslint'),
     jscs = require('gulp-jscs'),
     args = require('minimist')(process.argv.slice(2)),
-    scm = require('node-scm-source'),
+    scm = require('@zalando/node-scm-source'),
     del = require( 'del' ),
     shell = require('gulp-shell'),
     replace = require('gulp-replace'),
@@ -16,6 +16,8 @@ var fs = require('fs'),
 var LODASH_FUNCS = [
         // own
         'chain',
+        'debounce',
+        'extend',
         'filter',
         'findLastIndex',
         'flatten',
@@ -28,32 +30,7 @@ var LODASH_FUNCS = [
         'take',
         'times',
         'value',
-        'values',
-        // backbone
-        'once',
-        'keys',
-        'uniqueId',
-        'isEmpty',
-        'extend',
-        'defaults',
-        'clone',
-        'escape',
-        'isEqual',
-        'has',
-        'isObject',
-        'result',
-        'each',
-        'isArray',
-        'isString',
-        'matches',
-        'bind',
-        'invoke',
-        'isFunction',
-        'pick',
-        'isRegExp',
-        'map',
-        'bindAll',
-        'any'
+        'values'
     ],
     LODASH_INCLUDE = 'include=' + LODASH_FUNCS.join(',');
 
@@ -107,7 +84,7 @@ gulp.task('scm-source', function(done) {
 // lints the source code using .eslintrc
 gulp.task('lint', function() {
     return gulp
-            .src(['lib/**/*.js', '!lib/common/src/lodash.custom.js'])
+            .src(['lib/**/*.js', 'lib/**/*.jsx', '!lib/common/src/lodash.custom.js'])
             .pipe(eslint())
             .pipe(eslint.format())
             .pipe(eslint.failAfterError());

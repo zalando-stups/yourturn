@@ -22,7 +22,6 @@ module.exports = {
         publicPath: '/dist/'
     },
     plugins: [
-        new webpack.NormalModuleReplacementPlugin(/^underscore$/, 'common/src/lodash.custom'),
         new webpack.NormalModuleReplacementPlugin(/^lodash$/, 'common/src/lodash.custom'),
         new webpack.DefinePlugin({
             'ENV_DEVELOPMENT': false,
@@ -31,7 +30,6 @@ module.exports = {
         })
     ],
     resolve: {
-        extensions: ['', '.js', '.less'],
         alias: {
             common: path.resolve(__dirname, './lib/common/'),
             yourturn: path.resolve(__dirname, './lib/yourturn/'),
@@ -54,20 +52,23 @@ module.exports = {
         FULLSTOP_BASE_URL: 'YTENV_FULLSTOP_BASE_URL',
         DOCKER_REGISTRY: 'YTENV_DOCKER_REGISTRY',
         SERVICE_URL_TLD: 'YTENV_SERVICE_URL_TLD',
-        RESOURCE_WHITELIST: 'YTENV_RESOURCE_WHITELIST'
+        RESOURCE_WHITELIST: 'YTENV_RESOURCE_WHITELIST',
+        // needed because otherwise two react instances
+        // are running in tests and they trip each other up
+        react: 'var React'  
     },
     eslint: {
         configFile: './.eslintrc'
     },
     module: {
         preLoaders: [
-            { test: /\.js$/, exclude: /(node_modules|lodash)/, loader: 'eslint' }
+            { test: /\.jsx?$/, exclude: /(node_modules|lodash)/, loader: 'eslint' }
         ],
         loaders: [
-            { test: /\.hbs$/, exclude: /node_modules/, loader: 'handlebars?helperDirs[]=' + __dirname + '/lib/common/src/handlebars' },
-            { test: /\.js$/, exclude: /node_modules/, loader: 'babel' },
+            { test: /\.jsx?$/, include: /client/, loader: 'babel' },
             { test: /\.less$/, exclude: /node_modules/, loader: 'null' },
-            { test: /\.woff(\?v=\d+\.\d+\.\d+)?$/, loader: 'null' },
+            { test: /\.css$/, loader: 'null' },
+            { test: /\.(otf|eot|svg|ttf|woff|woff2)(\?v=\d+\.\d+\.\d+)?$/, loader: 'null' },
             { test: /\.json$/, loader: 'json' },,
             { test: /\.(png|jpg|jpeg|gif)$/, loader: 'null'}
         ]

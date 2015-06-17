@@ -6,10 +6,10 @@ var webpack = require('webpack'),
     path = require('path');
 
 module.exports = {
-    devtool: 'eval',
+    devtool: 'cheap-module-source-map',
     bail: true, // break on error
     entry: [
-        './lib/yourturn/src/bootstrap'   // entrypoint to resolve dependencies
+        './lib/yourturn/src/bootstrap.jsx'   // entrypoint to resolve dependencies
     ],
     output: {
         path: __dirname + '/dist/',
@@ -23,7 +23,6 @@ module.exports = {
         new webpack.PrefetchPlugin('moment'),
         new webpack.PrefetchPlugin('common/src/superagent'),
         new webpack.NormalModuleReplacementPlugin(/^lodash$/, 'common/src/lodash.custom'),
-        new webpack.NormalModuleReplacementPlugin(/underscore/, 'common/src/lodash.custom'),
         new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /en/),
         new webpack.NoErrorsPlugin(),
         new ExtractTextPlugin('style.css', {
@@ -31,11 +30,13 @@ module.exports = {
         }),
         new webpack.DefinePlugin({
             ENV_DEVELOPMENT: false,
-            ENV_TEST: false
+            ENV_TEST: false,
+            'process.env': {
+                NODE_ENV: '"production"'  // causes react to lose weight
+            }
         })
     ],
     resolve: {
-        extensions: ['', '.js', '.less'],
         alias: {
             common: path.resolve(__dirname, './lib/common/'),
             yourturn: path.resolve(__dirname, './lib/yourturn/'),
@@ -66,18 +67,24 @@ module.exports = {
         failOnError: true
     },
     jscs: {
-        esnext: true,
-        failOnHint: true
+        emitErrors: false,
+        failOnHint: false,
+        reporter: function(errors) {
+            console.log(errors);
+            errors._errorList.forEach(function(err) {
+                console.log(err.message);
+            });
+        }
     },
     module: {
         preLoaders: [
-            { test: /\.js$/, exclude: /(node_modules|lodash)/, loaders: ['jscs', 'eslint'] }
+            { test: /\.jsx?$/, exclude: /(node_modules|lodash)/, loaders: ['eslint'] }
         ],
         loaders: [
-            { test: /\.hbs$/, exclude: /node_modules/, loader: 'handlebars?helperDirs[]=' + __dirname + '/lib/common/src/handlebars' },
-            { test: /\.js$/, exclude: /node_modules/, loader: 'babel' },
+            { test: /\.jsx?$/, exclude: /node_modules/, loaders: ['babel'] },
             { test: /\.less$/, exclude: /node_modules/, loader: ExtractTextPlugin.extract('css!autoprefixer!less') },
-            { test: /\.woff(\?v=\d+\.\d+\.\d+)?$/, loader: "url?limit=8192&mimetype=application/font-woff" },
+            { test: /\.css$/, loader: ExtractTextPlugin.extract('css!autoprefixer') },
+            { test: /\.(otf|eot|svg|ttf|woff|woff2)(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=8192&mimetype=application/font-woff' },
             { test: /\.(png|jpg|jpeg|gif)$/, loaders: ['url?limit=8192', 'img']}
         ]
     }

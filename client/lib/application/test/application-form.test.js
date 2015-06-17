@@ -1,10 +1,10 @@
-/* globals expect, sinon, Promise */
+/* globals expect, $, TestUtils, reset, render, React, sinon, Promise */
 import {Flummox} from 'flummox';
 import KioStore from 'common/src/data/kio/kio-store';
 import KioActions from 'common/src/data/kio/kio-actions';
 import UserStore from 'common/src/data/user/user-store';
 import UserActions from 'common/src/data/user/user-actions';
-import AppForm from 'application/src/application-form/application-form';
+import AppForm from 'application/src/application-form/application-form.jsx';
 
 const FLUX = 'kio',
     APP_ID = 'kio',
@@ -42,6 +42,7 @@ describe('The application form view', () => {
     var flux,
         globalFlux,
         actionSpy,
+        props,
         form;
 
     beforeEach(() => {
@@ -54,63 +55,64 @@ describe('The application form view', () => {
 
     describe('in create mode', () => {
         beforeEach(() => {
-            form = new AppForm({
+            reset();
+            props = {
                 flux: flux,
-                globalFlux: globalFlux
-            });
+                globalFlux: globalFlux,
+                applicationId: APP_ID,
+                edit: false
+            };
+            globalFlux.getStore('user').receiveUserTeams([{
+                id: 'stups'
+            }]);
+            form = render(AppForm, props);
         });
 
         it('should not have a placeholder', () => {
-            // form is not automatically rendered because not connected to store
-            form.render();
-            expect(form.$el.find('.u-placeholder').length).to.equal(0);
+            let placeholders = TestUtils.scryRenderedDOMComponentsWithClass(form, 'u-placeholder');
+            expect(placeholders.length).to.equal(0);
         });
 
         it('should have active checkbox preselected', () => {
-            form.render();
-            let $checkbox = form.$el.find('[data-block="active-checkbox"]').first();
-            expect($checkbox.is(':checked')).to.be.true;
+            let checkbox = TestUtils.findRenderedDOMComponentWithAttributeValue(form, 'data-block', 'active-checkbox');
+            expect($(React.findDOMNode(checkbox)).is(':checked')).to.be.true;
         });
     });
 
     describe('in edit mode', () => {
         beforeEach(() => {
-            form = new AppForm({
+            reset();
+            props = {
                 flux: flux,
+                globalFlux: globalFlux,
                 applicationId: APP_ID,
-                edit: true,
-                globalFlux: globalFlux
-            });
-        });
-
-        it('should not have a placeholder', () => {
-            flux.getStore(FLUX).beginFetchApplication(APP_ID);
-            expect(form.$el.find('.u-placeholder').length).to.equal(0);
+                edit: true
+            };
+            globalFlux.getStore('user').receiveUserTeams([{
+                id: 'stups'
+            }]);
+            flux.getStore(FLUX).receiveApplication(TEST_APP);
+            form = render(AppForm, props);
         });
 
         it('should not check the active box if app is inactive', () => {
-            flux.getStore(FLUX).receiveApplication(TEST_APP);
-            let $checkbox = form.$el.find('[data-block="active-checkbox"]').first();
-            expect($checkbox.is(':checked')).to.be.false;
+            let checkbox = TestUtils.findRenderedDOMComponentWithAttributeValue(form, 'data-block', 'active-checkbox');
+            expect($(React.findDOMNode(checkbox)).is(':checked')).to.be.false;
         });
 
         it('should display the available symbol', () => {
-            flux.getStore(FLUX).receiveApplication(TEST_APP);
-            let $available = form.$el.find('[data-block="available-symbol"]').first();
-            expect($available.length).to.equal(1);
+            let available = TestUtils.scryRenderedDOMComponentsWithAttributeValue(form, 'data-block', 'available-symbol');
+            expect(available.length).to.equal(1);
         });
 
         it('should disable the ID input', () => {
-            flux.getStore(FLUX).receiveApplication(TEST_APP);
-            let $input = form.$el.find('[data-block="id-input"]').first();
-            expect($input.is(':disabled')).to.be.true;
+            let input = TestUtils.findRenderedDOMComponentWithAttributeValue(form, 'data-block', 'id-input');
+            expect($(React.findDOMNode(input)).is(':disabled')).to.be.true;
         });
 
         it('should call the correct action', () => {
-            flux.getStore(FLUX).receiveApplication(TEST_APP);
-            let $input = form.$el.find('[data-block="name-input"]').first();
-            $input.val('test');
-            form.$el.find('form').submit();
+            let f = TestUtils.findRenderedDOMComponentWithAttributeValue(form, 'data-block', 'form');
+            TestUtils.Simulate.submit(f);
             expect(actionSpy.calledOnce).to.be.true;
         });
     });

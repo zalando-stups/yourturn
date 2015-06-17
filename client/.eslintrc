@@ -4,6 +4,7 @@
         "blockBindings": true,
         "classes": true,
         "destructuring": true,
+        "jsx": true,
         "modules": true,
         "templateStrings": true,
         "spread": true
@@ -27,6 +28,22 @@
         // e.g. search endpoints offer `matched_rank`
         "camelcase": 0,
         // allow `!!something` 
-        "no-extra-boolean-cast": 0
-    }
+        "no-extra-boolean-cast": 0,
+        // react rules
+        "react/display-name": 1,
+        "react/jsx-boolean-value": 1,
+        "react/jsx-quotes": 1,
+        "react/jsx-no-undef": 1,
+        "react/jsx-uses-react": 1,
+        "react/jsx-uses-vars": 1,
+        "react/no-did-mount-set-state": 1,
+        "react/no-did-update-set-state": 1,
+        "react/no-unknown-property": 1,
+        "react/prop-types": 1,
+        "react/react-in-jsx-scope": 1,
+        "react/self-closing-comp": 1
+    },
+    "plugins": [
+        "react"
+    ]
 }
