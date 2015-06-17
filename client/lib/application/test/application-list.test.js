@@ -114,9 +114,7 @@ describe('The application list view', () => {
                 name: 'Open AM',
                 team_id: 'iam'
             },
-            apps = _.times(25, (n) => {
-                return _.extend({id: n}, app);
-            }, []);
+            apps = _.times(25, n => _.extend({id: n}, app), []);
 
         flux
         .getStore(FLUX_ID)
