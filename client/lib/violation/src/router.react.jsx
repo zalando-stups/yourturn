@@ -1,28 +1,13 @@
 import React from 'react';
 import {Route, DefaultRoute} from 'react-router';
 import FlummoxComponent from 'flummox/component';
+import {requireTeam} from 'common/src/util';
 import Flux from './flux';
 import ViolationList from 'violation/src/violation-list/violation-list.jsx';
 
 const VIO_FLUX = new Flux(),
     VIO_ACTIONS = VIO_FLUX.getActions('fullstop');
 
-function requireTeam(flux) {
-    const ACTIONS = flux.getActions('user'),
-          STORE = flux.getStore('user');
-    if (!STORE.getUserTeams().length) {
-        let tokeninfo = STORE.getTokenInfo();
-        if (!tokeninfo.uid) {
-            return ACTIONS
-                    .fetchTokenInfo()
-                    .then(token => {
-                        return ACTIONS.fetchUserTeams(token.uid);
-                    });
-        }
-        return ACTIONS.fetchUserTeams(tokeninfo.uid);
-    }
-    return Promise.resolve();
-}
 
 class ViolationListHandler extends React.Component {
     constructor() {

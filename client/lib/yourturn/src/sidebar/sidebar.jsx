@@ -18,10 +18,7 @@ class Sidebar extends React.Component {
     }
 
     login() {
-        request
-            .get('does.not.matter')
-            .oauth(Provider, RequestConfig)
-            .requestAccessToken(saveRoute);
+        this.actions.fetchAccessToken();
     }
 
     refresh() {
@@ -59,7 +56,7 @@ class Sidebar extends React.Component {
         return <aside className='sidebar'>
                     <div className='sidebar-content'>
                         <div className='header'>
-                        {tokeninfo ?
+                        {tokeninfo.uid ?
                             <div>
                                 <div className='userInfo'>
                                     <span className='userImage' />
