@@ -2,8 +2,6 @@ import React from 'react';
 import Icon from 'react-fa';
 import {Link} from 'react-router';
 import Timestamp from 'react-time';
-import request from 'common/src/superagent';
-import {Provider, RequestConfig, saveRoute} from 'common/src/oauth-provider';
 import 'common/asset/less/yourturn/sidebar.less';
 
 class Sidebar extends React.Component {
