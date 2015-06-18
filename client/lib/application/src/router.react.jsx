@@ -3,6 +3,7 @@ import {Route, DefaultRoute} from 'react-router';
 import FluxComponent from 'flummox/component';
 import Flux from './flux';
 import {parseArtifact} from 'application/src/util';
+import {requireTeam} from 'common/src/util';
 
 import ApplicationList from './application-list/application-list.jsx';
 import ApplicationForm from './application-form/application-form.jsx';
@@ -19,23 +20,6 @@ const APP_FLUX = new Flux(),
       PIERONE_ACTIONS = APP_FLUX.getActions('pierone'),
       KIO_ACTIONS = APP_FLUX.getActions('kio'),
       KIO_STORE = APP_FLUX.getStore('kio');
-
-function requireTeam(flux) {
-    const ACTIONS = flux.getActions('user'),
-          STORE = flux.getStore('user');
-    if (!STORE.getUserTeams().length) {
-        let tokeninfo = STORE.getTokenInfo();
-        if (!tokeninfo.uid) {
-            return ACTIONS
-                    .fetchTokenInfo()
-                    .then(token => {
-                        return ACTIONS.fetchUserTeams(token.uid);
-                    });
-        }
-        return ACTIONS.fetchUserTeams(tokeninfo.uid);
-    }
-    return Promise.resolve();
-}
 
 class AppListHandler extends React.Component {
     constructor() {

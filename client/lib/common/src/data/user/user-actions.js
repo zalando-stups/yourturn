@@ -30,6 +30,13 @@ class UserActions extends Actions {
                     });
     }
 
+    fetchAccessToken() {
+        return request
+                    .get('does.not.matter')
+                    .oauth(Provider, RequestConfig)
+                    .requestAccessToken(saveRoute);
+    }
+
     deleteTokenInfo() {
         Provider.deleteTokens();
         return true;
