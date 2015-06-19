@@ -10,7 +10,8 @@ module.exports = {
         // entrypoint to resolve dependencies
         './lib/application/test/bootstrap',
         './lib/resource/test/bootstrap',
-        './lib/common/test/bootstrap'
+        './lib/common/test/bootstrap',
+        './lib/yourturn/test/bootstrap'
     ],
     target: 'node',
     node: {
