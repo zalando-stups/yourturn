@@ -15,7 +15,7 @@ function validateResponse(flux) {
                 if (!tokeninfo.realm) {
                     return reject(new Error('No realm present on access token.'));
                 }
-                if (tokeninfo.realm !== 'employees') {
+                if (tokeninfo.realm !== 'employees' && tokeninfo.realm !== '/employees') {
                     return reject(new Error('Access token does not originate from "employees" realm.'));
                 }
                 // 3) fetch teams from team service
@@ -31,13 +31,9 @@ function validateResponse(flux) {
                     }
                     return resolve();
                 })
-                .catch(e => {
-                    reject(e);
-                });
+                .catch(e => reject(e));
             })
-            .catch(e => {
-                reject(e);
-            });
+            .catch(e => reject(e));
     });
 }
 
