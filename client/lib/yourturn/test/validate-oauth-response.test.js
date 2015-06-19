@@ -36,11 +36,11 @@ describe('The oauth token validation', () => {
 
     beforeEach(() => {
         flux = new MockFlux();
+        TEST_TOKEN = TOKEN;
+        TEST_TEAMS = TEAMS;
     });
 
     it('should work in happy case', done => {
-        TEST_TOKEN = TOKEN;
-        TEST_TEAMS = TEAMS;
         mock();
 
         validateResponse(flux)
@@ -51,7 +51,6 @@ describe('The oauth token validation', () => {
     it('should deny if there is no uid in token', done => {
         TEST_TOKEN = _.extend({}, TOKEN);
         delete TEST_TOKEN.uid;
-        TEST_TEAMS = TEAMS;
         mock();
 
         validateResponse(flux)
@@ -62,7 +61,6 @@ describe('The oauth token validation', () => {
     it('should deny if there is no realm in token', done => {
         TEST_TOKEN = _.extend({}, TOKEN);
         delete TEST_TOKEN.realm;
-        TEST_TEAMS = TEAMS;
         mock();
 
         validateResponse(flux)
@@ -73,7 +71,6 @@ describe('The oauth token validation', () => {
     it('should deny if the realm is something else than employees', done => {
         TEST_TOKEN = _.extend({}, TOKEN);
         TEST_TOKEN.realm = 'services';
-        TEST_TEAMS = TEAMS;
         mock();
 
         validateResponse(flux)
@@ -84,7 +81,6 @@ describe('The oauth token validation', () => {
     it('should allow if the realm is /employees', done => {
         TEST_TOKEN = _.extend({}, TOKEN);
         TEST_TOKEN.realm = '/employees';
-        TEST_TEAMS = TEAMS;
         mock();
 
         validateResponse(flux)
@@ -93,7 +89,6 @@ describe('The oauth token validation', () => {
     });
 
     it('should deny if user is not in any team', done => {
-        TEST_TOKEN = TOKEN;
         TEST_TEAMS = [];
         mock();
 
