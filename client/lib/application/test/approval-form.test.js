@@ -9,6 +9,13 @@ import ApprovalForm from 'application/src/approval-form/approval-form.jsx';
 const FLUX = 'kio',
     APP_ID = 'kio',
     VER_ID = '0.1',
+    TEST_TEAM = {
+        id: 'asdf'
+    },
+    TEST_APP = {
+        id: APP_ID,
+        team_id: 'stups'
+    },
     TEST_APPROVAL_TYPES = ['TEST', 'UX'],
     TEST_APPROVALS = [{
         application_id: APP_ID,
@@ -95,5 +102,15 @@ describe('The approval form view', () => {
         expect(() => {
             TestUtils.findRenderedDOMComponentWithAttributeValue(form, 'data-block', 'approvalType-explanation');
         }).to.throw;
+    });
+
+    it('should disable the submit button in foreign applications', () => {
+        globalFlux.getStore('user').receiveUserTeams([TEST_TEAM]);
+        flux.getStore(FLUX).receiveApplication(TEST_APP);
+
+        form = render(ApprovalForm, props);
+
+        let btn = TestUtils.findRenderedDOMComponentWithAttributeValue(form, 'data-block', 'submit-button');
+        expect(btn.props.disabled).to.be.true;
     });
 });
