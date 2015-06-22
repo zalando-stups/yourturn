@@ -209,7 +209,7 @@ class ApprovalForm extends React.Component {
                                     <textarea
                                         id='approval_notes'
                                         name='yourturn_approval_notes'
-                                        placeholder='I swear by the life of my firstborn that {application.name} {versionId} is properly tested.'
+                                        placeholder={`I swear by the life of my firstborn that ${application.name} ${versionId} is properly tested.`}
                                         cols='30'
                                         onChange={this.updateNotes.bind(this)}
                                         value={this.state.notes}
