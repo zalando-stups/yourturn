@@ -28,7 +28,8 @@
         border-bottom: 3px solid transparent;
     }
     
-    &.btn-disabled {
+    &.btn-disabled,
+    &[disabled="true"] {
         pointer-events: none;
         background: @gray-light !important;
         color: @white !important;

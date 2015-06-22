@@ -120,10 +120,11 @@ class ApprovalForm extends React.Component {
 
     render() {
         let {applicationId, versionId} = this.props,
-            {kio} = this.stores,
+            {kio, user} = this.stores,
             application = kio.getApplication(applicationId),
             approvalTypes = kio.getApprovalTypes(applicationId),
-            approvals = kio.getApprovals(applicationId, versionId);
+            approvals = kio.getApprovals(applicationId, versionId),
+            isOwnApplication = user.getUserTeams().map(t => t.id).indexOf(application.team_id) >= 0;
         const LINK_PARAMS = {
             applicationId: applicationId,
             versionId: versionId
@@ -217,7 +218,9 @@ class ApprovalForm extends React.Component {
                                 <div className='btn-group'>
                                     <button
                                         type='submit'
-                                        className='btn btn-primary {#unless isOwnApplication}btn-disabled{/unless}'>
+                                        className='btn btn-primary'
+                                        data-block='submit-button'
+                                        disabled={!isOwnApplication}>
                                         <Icon name='save' /> Save
                                     </button>
                                 </div>
