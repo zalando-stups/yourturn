@@ -1,0 +1,83 @@
+Description: "YourTurn version {{Arguments.ImageVersion}}"
+
+# basic information for generating and executing this definition
+SenzaInfo:
+  StackName: yourturn
+  Parameters:
+    - ImageVersion:
+        Description: "Docker image version of YourTurn."
+
+# a list of senza components to apply to the definition
+SenzaComponents:
+
+  # this basic configuration is required for the other components
+  - Configuration:
+      Type: Senza::StupsAutoConfiguration # auto-detect network setup
+
+
+  # will create a launch configuration and auto scaling group with scaling triggers
+  - AppServer:
+      Type: Senza::TaupageAutoScalingGroup
+      InstanceType: t2.micro
+      SecurityGroups:
+        - app-yourturn
+      IamRoles:
+        - app-yourturn
+      ElasticLoadBalancer: AppLoadBalancer
+      TaupageConfig:
+        runtime: Docker
+        # where taupage should pull the docker image from
+        source: hub.docker.com/stups/yourturn:{{Arguments.ImageVersion}}
+        # your scalyr key, if applicable
+        scalyr_account_key: 123456
+        # your mint bucket
+        mint_bucket: your-mint-bucket
+        token_service_url: https://token.example.com/access_token
+        ports:
+          8080: 8080
+        notify_cfn:
+          stack: "{{SenzaInfo.StackName}}-{{SenzaInfo.StackVersion}}"
+          resource: "AppServer"
+        environment:
+          # mandatory configuration
+          # some URLs to the other services
+          YTENV_KIO_BASE_URL: https://kio.example.com
+          YTENV_TWINTIP_BASE_URL: https://twintip.example.com
+          YTENV_MINT_BASE_URL: https://mint.example.com
+          YTENV_ESSENTIALS_BASE_URL: https://essentials.example.com
+          YTENV_TEAM_BASE_URL: https://teams.authentication.example.com
+          YTENV_PIERONE_BASE_URL: https://pierone.example.com
+          YTENV_FULLSTOP_BASE_URL: https://fullstop.example.com/api
+          # oauth endpoint configuration
+          YTENV_OAUTH_AUTH_URL: https://authentication.example.com/oauth2/authorize?realm=employees
+          YTENV_OAUTH_TOKENINFO_URL: https://authentication.example.com/oauth2/tokeninfo
+          YTENV_OAUTH_REDIRECT_URI: https://yourturn.example.com/oauth
+          YTENV_OAUTH_SCOPES: uid
+          # for autocompletion of application service url
+          YTENV_SERVICE_URL_TLD: example.com
+          # for autocompletion of deployment artifact
+          YTENV_DOCKER_REGISTRY: pierone.example.com
+          
+          # optional configuration
+          # a space-separated list of user ids who are able to enter stuff in the "resoure" section
+          YTENV_RESOURCE_WHITELIST: "someuser someotheruser"
+          # new relic configuration
+          YTENV_NEW_RELIC_BROWSER_APP_ID: 1234
+          YTENV_NEW_RELIC_BROWSER_LICENSE_KEY: abcd
+          NEW_RELIC_LICENSE_KEY: abcd
+          NEW_RELIC_APP_NAME: yourturn
+      AutoScaling:
+        Minimum: 2
+        Maximum: 10
+        MetricType: CPU
+        ScaleUpThreshold: 70
+        ScaleDownThreshold: 40
+
+  # creates an ELB entry and Route53 domains to this ELB
+  - AppLoadBalancer:
+      Type: Senza::WeightedDnsElasticLoadBalancer
+      SSLCertificateId: your-certificate
+      HTTPPort: 8080
+      HealthCheckPath: /
+      SecurityGroups:
+        - app-yourturn-lb
