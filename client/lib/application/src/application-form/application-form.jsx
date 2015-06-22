@@ -233,7 +233,7 @@ class ApplicationForm extends React.Component {
                                 <div className='input-addon'>https://</div>
                                 <input
                                     title='Only characters, numbers or dashes with at least one dot in between.'
-                                    pattern='([A-Za-z][A-Za-z0-9\-]*[A-Za-z0-9])+(\.([A-Za-z][A-Za-z0-9\-]*[A-Za-z0-9]))*\.\w+'
+                                    pattern='([A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])+(\.([A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9]))*\.[a-zA-Z0-9]+'
                                     placeholder='pierone.stups.examp.le'
                                     id='service_url'
                                     onKeyDown={this.disableAutocomplete.bind(this)}
