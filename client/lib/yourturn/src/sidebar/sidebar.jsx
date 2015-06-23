@@ -52,7 +52,8 @@ class Sidebar extends React.Component {
 
     render() {
         let tokeninfo = this.store.getTokenInfo(),
-            userinfo = this.store.getUserInfo();
+            userinfo = this.store.getUserInfo(),
+            {router} = this.context;
         return <aside className='sidebar'>
                     <div className='sidebar-content'>
                         <div className='header'>
@@ -102,6 +103,7 @@ class Sidebar extends React.Component {
                         </div>
                         <div
                             className='sidebar-item'
+                            data-active={router.isActive('search')}
                             onClick={this.transition.bind(this, 'search')}>
                             <Link
                                 to='search'>
@@ -110,6 +112,7 @@ class Sidebar extends React.Component {
                         </div>
                         <div
                             className='sidebar-item'
+                            data-active={router.isActive('application-appList')}
                             onClick={this.transition.bind(this, 'application-appList')}>
                             <Link
                                 to='application-appList'>
@@ -118,6 +121,7 @@ class Sidebar extends React.Component {
                         </div>
                         <div
                             className='sidebar-item'
+                            data-active={router.isActive('resource-resList')}
                             onClick={this.transition.bind(this, 'resource-resList')}>
                             <Link
                                 to='resource-resList'>
@@ -126,6 +130,7 @@ class Sidebar extends React.Component {
                         </div>
                         <div
                             className='sidebar-item'
+                            data-active={router.isActive('violation-vioList')}
                             onClick={this.transition.bind(this, 'violation-vioList')}>
                             <Link
                                 to='violation-vioList'>

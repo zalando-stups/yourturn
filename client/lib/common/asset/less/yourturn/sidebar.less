@@ -54,10 +54,10 @@
         padding: @padding-small;
         border-bottom: 1px solid @gray;
 
-        &:last-child {
-            border-bottom: none;
+        &[data-active="true"] {
+            background: @white;
         }
-
+        
         + .sidebar-item {
             border-top: 1px solid lighten(@gray, 30%);
         }
