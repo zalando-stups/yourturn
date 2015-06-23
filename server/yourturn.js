@@ -130,12 +130,12 @@ server.get('/teams', function(req, res) {
 
 server.get('/users/:userId', function(req, res) {
     request
-        .get(process.env.YTENV_USER_BASE_URL + '/users/' + req.params.userId)
+        .get(process.env.YTENV_USER_BASE_URL + '/employees/' + req.params.userId)
         .accept('json')
         .set('Authorization', req.get('Authorization'))
         .end(function(err, response) {
             if (err) {
-                winston.error('Could not GET /users/%s: %d %s', req.params.userId, err.status || 0, err.message);
+                winston.error('Could not GET /employees/%s: %d %s', req.params.userId, err.status || 0, err.message);
                 return res.status(err.status || 0).send(err);
             }
             return res
