@@ -63,9 +63,9 @@ class Sidebar extends React.Component {
                                     <Gravatar
                                         size={150}
                                         className='userImage'
-                                        email={userinfo.email || ''}
+                                        email={userinfo.email || ''}
                                         https={true} />
-                                    
+
                                     <span>{userinfo.name || tokeninfo.uid}</span>
                                 </div>
                                 <div className='tokenInfo'>
