@@ -31,7 +31,7 @@ server.use(function(req, res, next) {
     next();
 });
 
-server.get('/user/:id', function(req,res){
+server.get('/teams/:id', function(req,res){
     setTimeout( function() {
         var id = req.params.id;
         if (!user[id]) {

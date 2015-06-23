@@ -1,5 +1,6 @@
 import React from 'react';
 import Icon from 'react-fa';
+import Gravatar from 'react-gravatar';
 import {Link} from 'react-router';
 import Timestamp from 'react-time';
 import 'common/asset/less/yourturn/sidebar.less';
@@ -50,15 +51,22 @@ class Sidebar extends React.Component {
     }
 
     render() {
-        let tokeninfo = this.store.getTokenInfo();
+        let tokeninfo = this.store.getTokenInfo(),
+            userinfo = this.store.getUserInfo(),
+            {router} = this.context;
         return <aside className='sidebar'>
                     <div className='sidebar-content'>
                         <div className='header'>
                         {tokeninfo.uid ?
                             <div>
                                 <div className='userInfo'>
-                                    <span className='userImage' />
-                                    <span>{tokeninfo.uid}</span>
+                                    <Gravatar
+                                        size={150}
+                                        className='userImage'
+                                        email={userinfo.email || ''}
+                                        https={true} />
+
+                                    <span>{userinfo.name || tokeninfo.uid}</span>
                                 </div>
                                 <div className='tokenInfo'>
                                     <div>
@@ -95,6 +103,7 @@ class Sidebar extends React.Component {
                         </div>
                         <div
                             className='sidebar-item'
+                            data-active={router.isActive('search')}
                             onClick={this.transition.bind(this, 'search')}>
                             <Link
                                 to='search'>
@@ -103,6 +112,7 @@ class Sidebar extends React.Component {
                         </div>
                         <div
                             className='sidebar-item'
+                            data-active={router.isActive('application-appList')}
                             onClick={this.transition.bind(this, 'application-appList')}>
                             <Link
                                 to='application-appList'>
@@ -111,6 +121,7 @@ class Sidebar extends React.Component {
                         </div>
                         <div
                             className='sidebar-item'
+                            data-active={router.isActive('resource-resList')}
                             onClick={this.transition.bind(this, 'resource-resList')}>
                             <Link
                                 to='resource-resList'>
@@ -119,6 +130,7 @@ class Sidebar extends React.Component {
                         </div>
                         <div
                             className='sidebar-item'
+                            data-active={router.isActive('violation-vioList')}
                             onClick={this.transition.bind(this, 'violation-vioList')}>
                             <Link
                                 to='violation-vioList'>
