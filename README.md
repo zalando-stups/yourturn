@@ -51,6 +51,7 @@ It will pack everything in a Docker image `yourturn`. You can then run it with
     -e YTENV_MINT_BASE_URL=http://localhost:5004 \
     -e YTENV_ESSENTIALS_BASE_URL=http://localhost:5003 \
     -e YTENV_PIERONE_BASE_URL=http://localhost:5007/v1 \
+    -e YTENV_USER_BASE_URL=http://localhost:5009 \
     -e YTENV_RESOURCE_WHITELIST="" \
     -p 8080:8080 \
     -u 998 \
