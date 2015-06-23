@@ -11,6 +11,7 @@ class UserStore extends Store {
         this.state = {
             tokeninfo: _m.hashMap(),
             uid: false,
+            userinfo: _m.hashMap(),
             teams: _m.vector()
         };
 
@@ -29,6 +30,12 @@ class UserStore extends Store {
             null,
             this.receiveUserTeams,
             null);
+
+        this.registerAsync(
+            userActions.fetchUserInfo,
+            null,
+            this.receiveUserInfo,
+            null);
     }
 
     receiveUserTeams(teams) {
@@ -43,6 +50,12 @@ class UserStore extends Store {
 
         this.setState({
             teams: _m.toClj(teams)
+        });
+    }
+
+    receiveUserInfo(userinfo) {
+        this.setState({
+            userinfo: _m.toClj(userinfo)
         });
     }
 
@@ -62,6 +75,10 @@ class UserStore extends Store {
             id: t.id,
             name: t.name
         }));
+    }
+
+    getUserInfo() {
+        return _m.toJs(this.state.userinfo);
     }
 
     receiveTokenInfo(tokeninfo) {
@@ -94,6 +111,7 @@ class UserStore extends Store {
         this.setState({
             tokeninfo: _m.hashMap(),
             uid: false,
+            userinfo: _m.hashMap(),
             teams: _m.vector()
         });
     }

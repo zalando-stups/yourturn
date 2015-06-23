@@ -41,6 +41,9 @@ YT_FLUX
         YT_FLUX
             .getActions('user')
             .fetchUserTeams(info.uid);
+        YT_FLUX
+            .getActions('user')
+            .fetchUserInfo(info.uid);
     });
 
 router.run(

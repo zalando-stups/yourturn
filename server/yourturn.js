@@ -128,14 +128,31 @@ server.get('/teams', function(req, res) {
         });
 });
 
-server.get('/user/:userId', function(req, res) {
+server.get('/users/:userId', function(req, res) {
+    request
+        .get(process.env.YTENV_USER_BASE_URL + '/users/' + req.params.userId)
+        .accept('json')
+        .set('Authorization', req.get('Authorization'))
+        .end(function(err, response) {
+            if (err) {
+                winston.error('Could not GET /users/%s: %d %s', req.params.userId, err.status || 0, err.message);
+                return res.status(err.status || 0).send(err);
+            }
+            return res
+                    .status(200)
+                    .type('json')
+                    .send(response.text);
+        });
+});
+
+server.get('/teams/:userId', function(req, res) {
     request
         .get(process.env.YTENV_TEAM_BASE_URL + '/user/' + req.params.userId)
         .accept('json')
         .set('Authorization', req.get('Authorization'))
         .end(function(err, response) {
             if (err) {
-                winston.error('Could not GET /user/%s: %d %s', req.params.userId, err.status || 0, err.message);
+                winston.error('Could not GET /teams/%s: %d %s', req.params.userId, err.status || 0, err.message);
                 return res.status(err.status || 0).send(err);
             }
             return res

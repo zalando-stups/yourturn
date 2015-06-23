@@ -10,31 +10,31 @@ class UserActions extends Actions {
             return Promise.reject();
         }
         return request
-                    .get(`${ENV_DEVELOPMENT ? 'http://localhost:5006' : ''}/tokeninfo`)
-                    .query({
-                        access_token: token
-                    })
-                    .accept('json')
-                    .exec()
-                    .then(res => {
-                        let body = res.body;
-                        body.valid_until = Date.now() + parseInt(res.body.expires_in, 10) * 1000;
-                        return body;
-                    })
-                    .catch(err => {
-                        if (err.status === 400) {
-                            // access token is no longer valid
-                            this.deleteTokenInfo();
-                            throw err;
-                        }
-                    });
+                .get(`${ENV_DEVELOPMENT ? 'http://localhost:5006' : ''}/tokeninfo`)
+                .query({
+                    access_token: token
+                })
+                .accept('json')
+                .exec()
+                .then(res => {
+                    let body = res.body;
+                    body.valid_until = Date.now() + parseInt(res.body.expires_in, 10) * 1000;
+                    return body;
+                })
+                .catch(err => {
+                    if (err.status === 400) {
+                        // access token is no longer valid
+                        this.deleteTokenInfo();
+                        throw err;
+                    }
+                });
     }
 
     fetchAccessToken() {
         return request
-                    .get('does.not.matter')
-                    .oauth(Provider, RequestConfig)
-                    .requestAccessToken(saveRoute);
+                .get('does.not.matter')
+                .oauth(Provider, RequestConfig)
+                .requestAccessToken(saveRoute);
     }
 
     deleteTokenInfo() {
@@ -42,17 +42,30 @@ class UserActions extends Actions {
         return true;
     }
 
+    fetchUserInfo(userId) {
+        return request
+                .get(`${ENV_DEVELOPMENT ? 'http://localhost:5009' : ''}/users/${userId}`)
+                .accept('json')
+                .oauth(Provider, RequestConfig)
+                .exec(saveRoute)
+                .then(res => res.body)
+                .catch(e => {
+                    e.id = userId;
+                    throw e;
+                });
+    }
+
     fetchUserTeams(userId) {
         return request
-                    .get(`${ENV_DEVELOPMENT ? 'http://localhost:5005' : ''}/user/${userId}`)
-                    .accept('json')
-                    .oauth(Provider, RequestConfig)
-                    .exec(saveRoute)
-                    .then(res => res.body)
-                    .catch(e => {
-                        e.id = userId;
-                        throw e;
-                    });
+                .get(`${ENV_DEVELOPMENT ? 'http://localhost:5005' : ''}/teams/${userId}`)
+                .accept('json')
+                .oauth(Provider, RequestConfig)
+                .exec(saveRoute)
+                .then(res => res.body)
+                .catch(e => {
+                    e.id = userId;
+                    throw e;
+                });
     }
 }
 

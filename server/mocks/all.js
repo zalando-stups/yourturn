@@ -6,7 +6,8 @@ var kio = require('./5000-kio'),
     team = require('./5005-team'),
     token = require('./5006-tokeninfo'),
     pierone = require('./5007-pierone'),
-    fullstop = require('./5008-fullstop');
+    fullstop = require('./5008-fullstop'),
+    user = require('./5009-user');
 
 kio.listen(5000);
 console.log('kio on 5000');
@@ -26,3 +27,5 @@ pierone.listen(5007);
 console.log('pierone on 5007');
 fullstop.listen(5008);
 console.log('fullstop on 5008');
+user.listen(5009);
+console.log('user on 5009');
