@@ -149,6 +149,10 @@ class ApplicationDetail extends React.Component {
                                 </td>
                             </tr>
                             <tr>
+                                <th>Required Approvers</th>
+                                <td>{app.required_approvers}</td>
+                            </tr>
+                            <tr>
                                 <th>Recently updated versions</th>
                                 <td>
                                     {versions.length ?

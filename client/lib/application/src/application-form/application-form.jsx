@@ -23,6 +23,7 @@ class ApplicationForm extends React.Component {
         } else {
             this.state.app = {
                 active: true,
+                required_approvers: 2,
                 team_id: user.getUserTeams()[0].id
             };
         }
@@ -277,6 +278,19 @@ class ApplicationForm extends React.Component {
                                 type='url' />
                         </div>
                         <div className='form-group'>
+                            <label htmlFor='requiredApprovers'>Required Approvers</label>
+                            <small>fullstop. will complain if you deploy a version of {app.name || app.id} that was not approved by this many different people.</small>
+                            <input
+                                type='number'
+                                data-block='required-approvers'
+                                id='requiredApprovers'
+                                name='yourturn_app_required_approvers'
+                                min='1'
+                                required={true}
+                                defaultValue={app.required_approvers}
+                                onChange={this.update.bind(this, 'required_approvers', 'value')} />
+                        </div>
+                        <div className='form-group'>
                             <label htmlFor='description'>Description</label>
                             <small>A more elaborate description than subtitle. You can use <a href='http://www.unexpected-vortices.com/sw/rippledoc/quick-markdown-example.html'>Markdown</a>.</small>
                             <textarea
@@ -288,12 +302,12 @@ class ApplicationForm extends React.Component {
                                 rows='10' />
                         </div>
                         <div className='btn-group'>
-                        <button
-                            type='submit'
-                            className='btn btn-primary'>
-                            <Icon name='save' /> Save
-                        </button>
-                    </div>
+                            <button
+                                type='submit'
+                                className='btn btn-primary'>
+                                <Icon name='save' /> Save
+                            </button>
+                        </div>
                     </form>
                 </div>;
     }
