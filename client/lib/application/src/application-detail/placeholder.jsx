@@ -92,6 +92,10 @@ class ApplicationDetailPlaceholder extends React.Component {
                                 </td>
                             </tr>
                             <tr>
+                                <th>Required Approvers</th>
+                                <td className='u-placeholder-text'>1</td>
+                            </tr>
+                            <tr>
                                 <th>Recently updated versions</th>
                                 <td>
                                     <div>

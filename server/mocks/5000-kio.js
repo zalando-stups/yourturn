@@ -17,7 +17,8 @@ var applications = {
         name: 'Kio',
         active: true,
         team_id: 'stups',
-        id: 'kio'
+        id: 'kio',
+        required_approvers: 2
     },
     pierone: {
         documentation_url: 'https://github.com/zalando-stups/pierone',
@@ -29,7 +30,8 @@ var applications = {
         name: 'Pier One',
         active: false,
         team_id: 'stups',
-        id: 'pierone'
+        id: 'pierone',
+        required_approvers: 2
     },
     tzjztjtzj: {
         id: 'tzjztjtzj',
@@ -37,7 +39,8 @@ var applications = {
         team_id: 'stups',
         description: 'Test application 2',
         url: 'https://test2.example.org',
-        scm_url: 'git://github.com/zalando-stups/test2'
+        scm_url: 'git://github.com/zalando-stups/test2',
+        required_approvers: 2
     }
 };
 
