@@ -53,7 +53,7 @@ class UserStore extends Store {
         });
     }
 
-    receiveUserInfo(user, info) {
+    receiveUserInfo([user, info]) {
         this.setState({
             users: _m.assoc(this.state.users, user, _m.toClj(info))
         });
