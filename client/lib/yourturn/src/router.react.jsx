@@ -42,6 +42,18 @@ class LoginHandler extends React.Component {
             validate(YT_FLUX)
                 .then(() => {
                     // everything's good!
+                    // run the same stuff from bootstrap now
+                    YT_FLUX
+                        .getActions('user')
+                        .fetchTokenInfo()
+                        .then(info => {
+                            YT_FLUX
+                                .getActions('user')
+                                .fetchUserTeams(info.uid);
+                            YT_FLUX
+                                .getActions('user')
+                                .fetchUserInfo(info.uid);
+                        });
                     this.context.router.transitionTo(response.metadata.route || '/');
                 })
                 .catch(e => {
