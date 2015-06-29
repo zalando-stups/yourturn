@@ -33,7 +33,7 @@ class Sidebar extends React.Component {
         let tokeninfo = this.store.getTokenInfo(),
             NOW = Date.now();
         this.setState({
-            currentDate: NOW,   // to enforce state change
+            currentDate: NOW, // to enforce state change
             isTokenValid: NOW < tokeninfo.valid_until
         });
     }
@@ -60,12 +60,14 @@ class Sidebar extends React.Component {
                         {tokeninfo.uid ?
                             <div>
                                 <div className='userInfo'>
-                                    <Gravatar
-                                        size={150}
-                                        className='userImage'
-                                        email={userinfo.email || ''}
-                                        https={true} />
-
+                                    {userinfo ?
+                                        <Gravatar
+                                            size={150}
+                                            className='userImage'
+                                            email={userinfo.email || ''}
+                                            https={true} />
+                                        :
+                                        null}
                                     <span>{userinfo.name || tokeninfo.uid}</span>
                                 </div>
                                 <div className='tokenInfo'>
