@@ -1,10 +1,13 @@
 import React from 'react';
+import {Link} from 'react-router';
 import Icon from 'react-fa';
 import Timestamp from 'react-time';
+import FetchResult from 'common/src/fetch-result';
+import DefaultError from 'common/src/error.jsx';
 import {DATE_FORMAT} from 'common/src/config';
-import 'common/asset/less/violation/violation-list.less';
+import 'common/asset/less/violation/violation-card.less';
 
-class Violation extends React.Component {
+class ViolationCard extends React.Component {
     constructor() {
         super();
         this.state = {
@@ -35,8 +38,21 @@ class Violation extends React.Component {
 
     render() {
         let {violation} = this.props;
-        return <div className='violation'>
+        if (violation instanceof FetchResult) {
+            return violation.isPending() ?
+                    <Icon name='circle-o-notch' spin /> :
+                    <DefaultError error={violation.getResult()} />;
+        }
+        return <div className='violationCard'>
                     <header>
+                        <div className='violationCard-id'>
+                            <Link
+                                to='violation-vioDetail'
+                                params={{
+                                    violationId: violation.id
+                                }}>{violation.id}
+                            </Link>
+                        </div>
                         <div>
                             <Icon
                                 fixedWidth
@@ -56,14 +72,14 @@ class Violation extends React.Component {
                                 title='Which region this violation happened in' /> {violation.region}
                         </div>
                     </header>
-                    <blockquote className='violation-violationMessage'>
+                    <blockquote className='violationCard-violationMessage'>
                         {violation.message}
                     </blockquote>
                     <footer>
                         {violation.comment ?
                             <div>
                                 <span>{violation.last_modified_by} (<Timestamp value={violation.last_modified} relative />):</span>
-                                <blockquote className='violation-resolutionMessage'>{violation.comment}</blockquote>
+                                <blockquote className='violationCard-resolutionMessage'>{violation.comment}</blockquote>
                             </div>
                             :
                             <form onSubmit={this.resolve.bind(this)} className='form'>
@@ -85,69 +101,14 @@ class Violation extends React.Component {
                 </div>;
     }
 }
-Violation.displayName = 'Violation';
-Violation.propTypes = {
+ViolationCard.displayName = 'ViolationCard';
+ViolationCard.contextTypes = {
+    router: React.PropTypes.func.isRequired
+};
+ViolationCard.propTypes = {
     autoFocus: React.PropTypes.bool,
     violation: React.PropTypes.object.isRequired,
     flux: React.PropTypes.object.isRequired
 };
 
-class ViolationList extends React.Component {
-    constructor(props) {
-        super();
-        this.stores = {
-            fullstop: props.flux.getStore('fullstop'),
-            user: props.globalFlux.getStore('user')
-        };
-        this.state = {
-            showingResolved: false
-        };
-    }
-
-    showResolved(showResolved) {
-        this.setState({
-            showingResolved: showResolved
-        });
-    }
-
-    render() {
-        let {showingResolved} = this.state,
-            accountIds = this.stores.user.getUserCloudAccounts().map(a => a.id),
-            unresolvedViolations = this.stores.fullstop.getViolations(accountIds, false),
-            resolvedViolations = this.stores.fullstop.getViolations(accountIds, true),
-            violations = showingResolved ? resolvedViolations : unresolvedViolations;
-        return <div className='violationList'>
-                    <h2 className='violationList-headline'>Violations</h2>
-                    <div className='u-info'>
-                        Violations of the STUPS policy and bad practices in accounts you have access to.
-                    </div>
-
-                    <div className='tabs'>
-                        <div
-                            onClick={this.showResolved.bind(this, false)}
-                            className={'tab ' + (showingResolved ? '' : 'is-active')}>
-                            Unresolved <span className='badge'>{unresolvedViolations.length}</span>
-                        </div>
-                        <div
-                            onClick={this.showResolved.bind(this, true)}
-                            className={'tab ' + (showingResolved ? 'is-active' : '')}>
-                            Resolved <span className='badge'>{resolvedViolations.length}</span>
-                        </div>
-                    </div>
-                    {violations.length ?
-                        violations.map((v, i) => <Violation
-                                                    key={v.id}
-                                                    autoFocus={i === 0}
-                                                    flux={this.props.flux}
-                                                    violation={v} />)
-                        :
-                        <span>Wow, no violations! You are a good person.</span>}
-                </div>;
-    }
-}
-ViolationList.displayName = 'ViolationList';
-ViolationList.propTypes = {
-    flux: React.PropTypes.object.isRequired
-};
-
-export default ViolationList;
+export default ViolationCard;

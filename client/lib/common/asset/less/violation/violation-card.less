@@ -1,14 +1,6 @@
 @import "../variables";
 
-.violationList {
-    max-width: @content-width-regular;
-    .tabs {
-        margin-bottom: @padding-small;
-    }
-    .violationList-datetime {
-        margin-bottom: @padding-small;
-    }
-    .violation {
+.violationCard {
         padding: @padding-small;
         border: 1px solid @red;
         border-radius: @border-radius;
@@ -18,15 +10,20 @@
         header {
             color: @gray;
         }
-
-        .violation-violationMessage {
+        .violationCard-id {
+            float: right;
+            &:before {
+                content: '#';
+            }
+        }
+        .violationCard-violationMessage {
             font-family: 'Monaco', monospace;
             // font-size: .8em;
             margin-top: @padding-small;
             margin-bottom: @padding-small;
             margin-left: 0;
         }
-        .violation-resolutionMessage {
+        .violationCard-resolutionMessage {
             margin-top: @padding-small;
             margin-bottom: @padding-small;
             &:before {
@@ -39,8 +36,7 @@
                 color: @gray-lighter;
             }
         }
-        + .violation {
+        + .violationCard {
             margin-top: @padding-small;
         }
     }
-}

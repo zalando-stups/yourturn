@@ -1,6 +1,6 @@
 import {Store} from 'flummox';
 import _m from 'mori';
-import _ from 'lodash';
+import {Pending, Failed} from 'common/src/fetch-result';
 
 class FullstopStore extends Store {
     constructor(flux) {
@@ -8,15 +8,19 @@ class FullstopStore extends Store {
 
         const fullstopActions = flux.getActions('fullstop');
 
-        this.state = {
-            violations: _m.vector()
-        };
+        this._empty();
 
         this.registerAsync(
             fullstopActions.fetchViolations,
             this.beginFetchViolations,
             this.receiveViolations,
             this.failFetchViolations);
+
+        this.registerAsync(
+            fullstopActions.fetchViolation,
+            this.beginFetchViolation,
+            this.receiveViolation,
+            this.failFetchViolation);
 
         this.registerAsync(
             fullstopActions.resolveViolation,
@@ -27,36 +31,45 @@ class FullstopStore extends Store {
 
     beginFetchViolations() { }
     failFetchViolations() { }
-    beginFetchViolation() { }
-    failFetchViolation() { }
+    beginFetchViolation(violationId) {
+        this.setState({
+            violations: _m.assoc(this.state.violations, String(violationId), new Pending())
+        });
+    }
+    failFetchViolation(err) {
+        this.setState({
+            violations: _m.assoc(this.state.violations, String(err.violationId), new Failed(err))
+        });
+    }
 
     receiveViolation(violation) {
         this.receiveViolations([violation]);
     }
 
     receiveViolations(violations) {
-        let all = _m.toJs(_m.into(this.state.violations, _m.toClj(violations)));
-        all.forEach(v => v.timestamp = Date.parse(v.created) || 0);
-        // sorry, with mori there always was an infinite loop
-        // dedup
-        all = all.filter((v, i, array) => _.findLastIndex(array, a => a.id === v.id) === i);
-
+        let all = violations.reduce(
+                            (coll, v) => {
+                                v.timestamp = Date.parse(v.created) || 0;
+                                return _m.assoc(coll, String(v.id), _m.toClj(v));
+                            },
+                            this.state.violations);
         this.setState({
-            violations: _m.toClj(all)
+            violations: all
         });
     }
 
     getViolation(violationId) {
-        let coll = this.state.violations;
-        return _m.toJs(_m.first(_m.filter(v => _m.get(v, 'id') === violationId, coll)));
+        return _m.toJs(_m.get(this.state.violations, String(violationId)));
     }
 
     getViolations(accounts, resolved) {
-        let violations = _m.filter(v => accounts ?
-                                            accounts.indexOf(_m.get(v, 'account_id')) >= 0 :
-                                            true,
-                                        this.state.violations);
+        let violations = _m.vals(this.state.violations);
+        // collect violations from accounts
+        if (accounts && accounts.length) {
+            violations = _m.filter(v => accounts.indexOf(_m.get(v, 'account_id')) >= 0, violations);
+        }
 
+        // filter by resolution
         if (resolved === true) {
             violations = _m.filter(v => _m.get(v, 'comment') !== null, violations);
         } else if (resolved === false) {
@@ -68,7 +81,7 @@ class FullstopStore extends Store {
 
     _empty() {
         this.setState({
-            violations: _m.vector()
+            violations: _m.hashMap()
         });
     }
 }
