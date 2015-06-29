@@ -11,7 +11,7 @@ class UserStore extends Store {
         this.state = {
             tokeninfo: _m.hashMap(),
             uid: false,
-            userinfo: _m.hashMap(),
+            users: _m.hashMap(),
             teams: _m.vector()
         };
 
@@ -53,9 +53,9 @@ class UserStore extends Store {
         });
     }
 
-    receiveUserInfo(userinfo) {
+    receiveUserInfo(user, info) {
         this.setState({
-            userinfo: _m.toClj(userinfo)
+            users: _m.assoc(this.state.users, user, _m.toClj(info))
         });
     }
 
@@ -77,8 +77,8 @@ class UserStore extends Store {
         }));
     }
 
-    getUserInfo() {
-        return _m.toJs(this.state.userinfo);
+    getUserInfo(user) {
+        return _m.toJs(_m.get(this.state.users, _m.get(this.state.tokeninfo, 'uid', false) || user));
     }
 
     receiveTokenInfo(tokeninfo) {
@@ -111,7 +111,7 @@ class UserStore extends Store {
         this.setState({
             tokeninfo: _m.hashMap(),
             uid: false,
-            userinfo: _m.hashMap(),
+            users: _m.hashMap(),
             teams: _m.vector()
         });
     }

@@ -1,0 +1,46 @@
+@import "../variables";
+
+.violationCard {
+        padding: @padding-small;
+        border: 1px solid @red;
+        border-radius: @border-radius;
+        border-left: 10px solid @red;
+
+        &.is-resolved {
+            border-color: @green;
+        }
+
+        strong,
+        header {
+            color: @gray;
+        }
+        .violationCard-id {
+            float: right;
+            &:before {
+                content: '#';
+            }
+        }
+        .violationCard-violationMessage {
+            font-family: 'Monaco', monospace;
+            // font-size: .8em;
+            margin-top: @padding-small;
+            margin-bottom: @padding-small;
+            margin-left: 0;
+        }
+        .violationCard-resolutionMessage {
+            margin-top: @padding-small;
+            margin-bottom: @padding-small;
+            &:before {
+                content: '\f10d';
+                font-family: 'FontAwesome';
+                float: left;
+                display: block;
+                margin-left: -30px;
+                font-size: 1em;
+                color: @gray-lighter;
+            }
+        }
+        + .violationCard {
+            margin-top: @padding-small;
+        }
+    }

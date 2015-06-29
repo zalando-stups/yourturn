@@ -18,7 +18,10 @@ const FLUX = 'user',
             id: '8575378539035035',
             type: 'gcc'
         }]
-    }];
+    }],
+    TEST_USERINFO = {
+        email: 'test@example.com'
+    };
 
 class MockFlux extends Flummox {
     constructor() {
@@ -74,5 +77,22 @@ describe('The user store', () => {
         let userTeams = store.getUserTeams();
         expect(userTeams.length).to.equal(2);
         expect(userTeams[0].id).to.equal('greendale');
+    });
+
+    it('should return userinfo for a user', () => {
+        store.receiveUserInfo('test', TEST_USERINFO);
+        let info = store.getUserInfo('test');
+        expect(info).to.be.ok;
+        expect(info.email).to.equal(TEST_USERINFO.email);
+    });
+
+    it('should return userinfo for the current user', () => {
+        store.receiveTokenInfo({
+            uid: 'test'
+        });
+        store.receiveUserInfo('test', TEST_USERINFO);
+        let info = store.getUserInfo();
+        expect(info).to.be.ok;
+        expect(info.email).to.equal(TEST_USERINFO.email);
     });
 });

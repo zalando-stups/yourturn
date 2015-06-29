@@ -23,7 +23,11 @@ class FullstopActions extends Actions {
                 .accept('json')
                 .oauth(Provider, RequestConfig)
                 .exec(saveRoute)
-                .then(res => res.body);
+                .then(res => res.body)
+                .catch(e => {
+                    e.violationId = violationId;
+                    throw e;
+                });
     }
 
     resolveViolation(violationId, message) {
