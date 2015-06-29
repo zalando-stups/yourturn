@@ -46,6 +46,7 @@ class LoginHandler extends React.Component {
                     let info = YT_FLUX
                                 .getStore('user')
                                 .getTokenInfo();
+
                     YT_FLUX
                         .getActions('user')
                         .fetchUserTeams(info.uid);
