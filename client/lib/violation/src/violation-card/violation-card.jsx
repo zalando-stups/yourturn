@@ -43,7 +43,7 @@ class ViolationCard extends React.Component {
                     <Icon name='circle-o-notch' spin /> :
                     <DefaultError error={violation.getResult()} />;
         }
-        return <div className='violationCard'>
+        return <div className={'violationCard ' + (violation.comment != null ? 'is-resolved' : '')}>
                     <header>
                         <div className='violationCard-id'>
                             <Link
