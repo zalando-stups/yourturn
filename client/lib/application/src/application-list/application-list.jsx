@@ -69,7 +69,8 @@ class ApplicationList extends React.Component {
                         <ul data-block='team-apps'>
                             {teamApps.map(
                                 ta =>
-                                    <li key={ta.id}>
+                                    <li key={ta.id}
+                                        className={'app ' + (ta.active ? '' : 'is-inactive')}>
                                         <Link
                                             to='application-appDetail'
                                             params={{
@@ -89,7 +90,8 @@ class ApplicationList extends React.Component {
                             <ul data-block='other-apps'>
                                 {shortApps.map(
                                     oa =>
-                                        <li key={oa.id}>
+                                        <li key={oa.id}
+                                            className={'app ' + oa.active ? '' : 'is-inactive'}>
                                             <Link
                                                 to='application-appDetail'
                                                 params={{
