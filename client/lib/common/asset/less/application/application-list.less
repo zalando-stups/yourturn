@@ -8,4 +8,26 @@
     .input-addon {
         width: 2em;
     }
+
+    .app.is-inactive {
+        color: @gray-light;
+        list-style-type: circle;
+        > * {
+            // override link style
+            color: @gray-light !important;
+        }
+
+        // inactive badge
+        &:after {
+            content: 'Inactive';
+            display: inline-block;
+            margin-left: @padding-tiny;
+            background-color: @gray-light;
+            color: white;
+            font-size: @small-font-size;
+            padding: 0 3px;
+            line-height: 1.25;
+            border-radius: @border-radius;
+        }
+    }
 }
