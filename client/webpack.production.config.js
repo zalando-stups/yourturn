@@ -1,3 +1,4 @@
+/* global require, module, __dirname */
 /**
  * Creates a bundle for use in production.
  */
@@ -6,10 +7,10 @@ var webpack = require('webpack'),
     path = require('path');
 
 module.exports = {
-    devtool: 'cheap-module-source-map',
+    devtool: 'source-map',
     bail: true, // break on error
     entry: [
-        './lib/yourturn/src/bootstrap.jsx'   // entrypoint to resolve dependencies
+        './lib/yourturn/src/bootstrap.jsx' // entrypoint to resolve dependencies
     ],
     output: {
         path: __dirname + '/dist/',
@@ -32,7 +33,7 @@ module.exports = {
             ENV_DEVELOPMENT: false,
             ENV_TEST: false,
             'process.env': {
-                NODE_ENV: '"production"'  // causes react to lose weight
+                NODE_ENV: '"production"' // causes react to lose weight
             }
         })
     ],
@@ -59,7 +60,8 @@ module.exports = {
         FULLSTOP_BASE_URL: 'YTENV_FULLSTOP_BASE_URL',
         DOCKER_REGISTRY: 'YTENV_DOCKER_REGISTRY',
         SERVICE_URL_TLD: 'YTENV_SERVICE_URL_TLD',
-        RESOURCE_WHITELIST: 'YTENV_RESOURCE_WHITELIST'
+        RESOURCE_WHITELIST: 'YTENV_RESOURCE_WHITELIST',
+        USER_REPLACEMENT_MAP: 'YTENV_USER_REPLACEMENT_MAP'
     },
     eslint: {
         configFile: './.eslintrc',
@@ -68,23 +70,23 @@ module.exports = {
     jscs: {
         emitErrors: false,
         failOnHint: false,
-        reporter: function(errors) {
-            console.log(errors);
-            errors._errorList.forEach(function(err) {
-                console.log(err.message);
+        reporter: function (errors) {
+            console.log(errors); // eslint-disable-line
+            errors._errorList.forEach(function (err) {
+                console.log(err.message); // eslint-disable-line
             });
         }
     },
     module: {
         preLoaders: [
-            { test: /\.jsx?$/, exclude: /(node_modules|lodash)/, loaders: ['eslint'] }
+            {test: /\.jsx?$/, exclude: /(node_modules|lodash)/, loaders: ['eslint']}
         ],
         loaders: [
-            { test: /\.jsx?$/, exclude: /node_modules/, loaders: ['babel'] },
-            { test: /\.less$/, exclude: /node_modules/, loader: ExtractTextPlugin.extract('css!autoprefixer!less') },
-            { test: /\.css$/, loader: ExtractTextPlugin.extract('css!autoprefixer') },
-            { test: /\.(otf|eot|svg|ttf|woff|woff2)(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=8192&mimetype=application/font-woff' },
-            { test: /\.(png|jpg|jpeg|gif)$/, loaders: ['url?limit=8192', 'img']}
+            {test: /\.jsx?$/, exclude: /node_modules/, loaders: ['babel']},
+            {test: /\.less$/, exclude: /node_modules/, loader: ExtractTextPlugin.extract('css!autoprefixer!less')},
+            {test: /\.css$/, loader: ExtractTextPlugin.extract('css!autoprefixer')},
+            {test: /\.(otf|eot|svg|ttf|woff|woff2)(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=8192&mimetype=application/font-woff'},
+            {test: /\.(png|jpg|jpeg|gif)$/, loaders: ['url?limit=8192', 'img']}
         ]
     }
 };

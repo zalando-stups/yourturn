@@ -1,6 +1,17 @@
 import {Store} from 'flummox';
 import _m from 'mori';
 import Config from 'common/src/config';
+import REPLACEMENT_MAP from 'USER_REPLACEMENT_MAP';
+
+let MAP;
+
+try {
+    if (REPLACEMENT_MAP && REPLACEMENT_MAP.length) {
+        MAP = JSON.parse(REPLACEMENT_MAP);
+    }
+} catch (e) {
+    console.warn('Could not parse', REPLACEMENT_MAP); // eslint-disable-line
+}
 
 class UserStore extends Store {
     constructor(flux) {
@@ -78,10 +89,23 @@ class UserStore extends Store {
     }
 
     getUserInfo(user) {
-        return _m.toJs(_m.get(this.state.users, _m.get(this.state.tokeninfo, 'uid', false) || user)) || {};
+        let info;
+        if (user) {
+            // specific user
+            info = _m.get(this.state.users, user, false);
+        } else {
+            // current user
+            let {uid} = this.getTokenInfo();
+            info = uid ? _m.get(this.state.users, uid, false) : false;
+        }
+        return _m.toJs(info);
     }
 
     receiveTokenInfo(tokeninfo) {
+        if (MAP && MAP[tokeninfo.uid]) {
+            console.info(tokeninfo.uid, 'is now', MAP[tokeninfo.uid]); //eslint-disable-line
+            tokeninfo.uid = MAP[tokeninfo.uid];
+        }
         this.setState({
             tokeninfo: _m.toClj(tokeninfo)
         });

@@ -1,3 +1,4 @@
+/* global global, require */
 var chai = require('chai'),
     sinon = require('sinon'),
     domino = require('domino'),
@@ -13,7 +14,7 @@ var chai = require('chai'),
 // if it's not available, this result is stored
 // however we create a virtual window further down
 // so override that
-// 
+//
 // http://stackoverflow.com/a/26872245
 require('react/lib/ExecutionEnvironment').canUseDOM = true;
 
@@ -38,23 +39,23 @@ assign(RouterStub, {
     setRouteComponentAtDepth: sinon.spy()
 });
 
-var Wrapper = function(Component, props) {
+var Wrapper = function (Component, props) {
     return React.createClass({
         childContextTypes: {
             router: React.PropTypes.func
         },
-        getChildContext: function() {
+        getChildContext: function () {
             return {
                 router: RouterStub
             };
         },
-        render: function() {
+        render: function () {
             return React.createElement(Component, props);
         }
     });
 };
 
-TestUtils.findRenderedDOMComponentWithAttributeValue = function(component, attr, val) {
+TestUtils.findRenderedDOMComponentWithAttributeValue = function (component, attr, val) {
     var doms = TestUtils.scryRenderedDOMComponentsWithAttributeValue(component, attr, val);
     if (doms.length > 1) {
         throw new Error('More than one element with attribute ' + attr + '=' + val + ' found!');
@@ -63,27 +64,27 @@ TestUtils.findRenderedDOMComponentWithAttributeValue = function(component, attr,
         throw new Error('No element with attribute ' + attr + '=' + val + ' found!');
     }
     return doms[0];
-}
+};
 
 localStorage.set('stups-access_token', 'access_token');
 global.window = {
     localStorage: localStorage
 };
 
-global.render = function(Component, props) {
+global.render = function (Component, props) {
     var clazz = Wrapper(Component, props),
         element = React.createElement(clazz),
         component;
     try {
         component = TestUtils.renderIntoDocument(element);
-    } catch(e) {
-        console.log(e.stack);
+    } catch (e) {
+        console.log(e.stack); //eslint-disable-line
         throw e;
     }
     return component;
-}
+};
 
-global.reset = function() {
+global.reset = function () {
     global.window = domino.createWindow(HTML);
     global.document = global.window.document;
     global.$ = require('jquery'); // needs a document
@@ -91,7 +92,7 @@ global.reset = function() {
     global.navigator = {
         userAgent: 'mocha'
     };
-}
+};
 
 // globals for tests
 global.sinon = sinon;
@@ -108,9 +109,10 @@ global.YTENV_PIERONE_BASE_URL = '';
 global.YTENV_FULLSTOP_BASE_URL = '';
 global.YTENV_OAUTH_CLIENT_ID = '';
 global.YTENV_OAUTH_AUTH_URL = '';
-global.YTENV_OAUTH_TOKENINFO_URL='';
+global.YTENV_OAUTH_TOKENINFO_URL = '';
 global.YTENV_OAUTH_REDIRECT_URI = '';
 global.YTENV_OAUTH_SCOPES = '';
 global.YTENV_SERVICE_URL_TLD = '';
 global.YTENV_DOCKER_REGISTRY = '';
 global.YTENV_RESOURCE_WHITELIST = '';
+global.YTENV_USER_REPLACEMENT_MAP = '';
