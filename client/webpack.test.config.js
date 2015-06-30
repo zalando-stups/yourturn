@@ -1,3 +1,4 @@
+/* global module, require, __dirname */
 /**
  * Creates a test bundle in dist that will be fed to mocha.
  */
@@ -15,7 +16,7 @@ module.exports = {
     ],
     target: 'node',
     node: {
-        __dirname: true     // fix for superagent
+        __dirname: true // fix for superagent
     },
     output: {
         path: __dirname + '/dist/',
@@ -27,7 +28,7 @@ module.exports = {
         new webpack.DefinePlugin({
             'ENV_DEVELOPMENT': false,
             'ENV_TEST': true,
-            'global.GENTLY': false  // fix for superagent
+            'global.GENTLY': false // fix for superagent
         })
     ],
     resolve: {
@@ -53,24 +54,25 @@ module.exports = {
         DOCKER_REGISTRY: 'YTENV_DOCKER_REGISTRY',
         SERVICE_URL_TLD: 'YTENV_SERVICE_URL_TLD',
         RESOURCE_WHITELIST: 'YTENV_RESOURCE_WHITELIST',
+        USER_REPLACEMENT_MAP: 'YTENV_USER_REPLACEMENT_MAP',
         // needed because otherwise two react instances
         // are running in tests and they trip each other up
-        react: 'var React'  
+        react: 'var React'
     },
     eslint: {
         configFile: './.eslintrc'
     },
     module: {
         preLoaders: [
-            { test: /\.jsx?$/, exclude: /(node_modules|lodash)/, loader: 'eslint' }
+            {test: /\.jsx?$/, exclude: /(node_modules|lodash)/, loader: 'eslint'}
         ],
         loaders: [
-            { test: /\.jsx?$/, include: /client/, loader: 'babel' },
-            { test: /\.less$/, exclude: /node_modules/, loader: 'null' },
-            { test: /\.css$/, loader: 'null' },
-            { test: /\.(otf|eot|svg|ttf|woff|woff2)(\?v=\d+\.\d+\.\d+)?$/, loader: 'null' },
-            { test: /\.json$/, loader: 'json' },,
-            { test: /\.(png|jpg|jpeg|gif)$/, loader: 'null'}
+            {test: /\.jsx?$/, include: /client/, loader: 'babel'},
+            {test: /\.less$/, exclude: /node_modules/, loader: 'null'},
+            {test: /\.css$/, loader: 'null'},
+            {test: /\.(otf|eot|svg|ttf|woff|woff2)(\?v=\d+\.\d+\.\d+)?$/, loader: 'null'},
+            {test: /\.json$/, loader: 'json'},
+            {test: /\.(png|jpg|jpeg|gif)$/, loader: 'null'}
         ]
     }
 };

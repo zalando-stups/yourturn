@@ -1,3 +1,4 @@
+/* global require, __dirname, module */
 /**
  * Development configuration
  */
@@ -10,7 +11,7 @@ module.exports = {
         /* react hot loader */
         'webpack-dev-server/client?http://localhost:3000',
         'webpack/hot/only-dev-server',
-        './lib/yourturn/src/bootstrap.jsx'   // entrypoint to resolve dependencies
+        './lib/yourturn/src/bootstrap.jsx' // entrypoint to resolve dependencies
     ],
     output: {
         path: __dirname + '/dist/',
@@ -48,15 +49,16 @@ module.exports = {
         FULLSTOP_BASE_URL: 'YTENV_FULLSTOP_BASE_URL',
         DOCKER_REGISTRY: 'YTENV_DOCKER_REGISTRY',
         SERVICE_URL_TLD: 'YTENV_SERVICE_URL_TLD',
-        RESOURCE_WHITELIST: 'YTENV_RESOURCE_WHITELIST'
+        RESOURCE_WHITELIST: 'YTENV_RESOURCE_WHITELIST',
+        USER_REPLACEMENT_MAP: 'YTENV_USER_REPLACEMENT_MAP'
     },
     module: {
         loaders: [
-            { test: /\.jsx?$/, exclude: /node_modules/, loaders: ['react-hot', 'babel'] },
-            { test: /\.less$/, exclude: /node_modules/, loaders: ['style', 'css', 'autoprefixer', 'less'] },
-            { test: /\.css$/, loaders: ['style', 'css'] },
-            { test: /\.(otf|eot|svg|ttf|woff|woff2)(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=8192&mimetype=application/font-woff' },
-            { test: /\.(png|jpg|jpeg|gif)$/, loaders: ['url?limit=8192', 'img']}
+            {test: /\.jsx?$/, exclude: /node_modules/, loaders: ['react-hot', 'babel']},
+            {test: /\.less$/, exclude: /node_modules/, loaders: ['style', 'css', 'autoprefixer', 'less']},
+            {test: /\.css$/, loaders: ['style', 'css']},
+            {test: /\.(otf|eot|svg|ttf|woff|woff2)(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=8192&mimetype=application/font-woff'},
+            {test: /\.(png|jpg|jpeg|gif)$/, loaders: ['url?limit=8192', 'img']}
         ]
     }
 };
