@@ -89,7 +89,16 @@ class UserStore extends Store {
     }
 
     getUserInfo(user) {
-        return _m.toJs(_m.get(this.state.users, _m.get(this.state.tokeninfo, 'uid', false) || user)) || {};
+        let info;
+        if (user) {
+            // specific user
+            info = _m.get(this.state.users, user, false);
+        } else {
+            // current user
+            let {uid} = this.getTokenInfo();
+            info = uid ? _m.get(this.state.users, uid, false) : false;
+        }
+        return _m.toJs(info);
     }
 
     receiveTokenInfo(tokeninfo) {
