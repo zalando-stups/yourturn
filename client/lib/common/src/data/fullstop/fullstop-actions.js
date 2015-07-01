@@ -10,7 +10,7 @@ class FullstopActions extends Actions {
                 .accept('json')
                 .query({
                     accounts: accounts,
-                    size: size || 500,
+                    size: size || 10,
                     since: since || (new Date()).toISOString(),
                     page: page || 0
                 })

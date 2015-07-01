@@ -31,6 +31,10 @@ class ViolationList extends React.Component {
         };
     }
 
+    componentWillMount() {
+        this.loadMore(0);
+    }
+
     showResolved(showResolved) {
         this.setState({
             showingResolved: showResolved
@@ -66,10 +70,12 @@ class ViolationList extends React.Component {
             this.setState({
                 dispatching: true
             });
-            this.actions.fetchViolations(accountIds, showingSince, 10, page)
+            this
+            .actions
+            .fetchViolations(accountIds, showingSince, 10, page)
             .then(() => this.setState({
-                    dispatching: false
-                }));
+                dispatching: false
+            }));
         }
     }
 
