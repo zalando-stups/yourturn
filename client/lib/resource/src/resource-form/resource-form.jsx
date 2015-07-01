@@ -13,7 +13,7 @@ class ResourceForm extends React.Component {
         };
         this.actions = flux.getActions('essentials');
         this.state = {
-            resource: edit ? this.stores.essentials.getResource(resourceId) : { resource_owners: [] }
+            resource: edit ? this.stores.essentials.getResource(resourceId) : {resource_owners: []}
         };
     }
 

@@ -4,17 +4,19 @@ import request from 'common/src/superagent';
 import {Provider, RequestConfig, saveRoute} from 'common/src/oauth-provider';
 
 class FullstopActions extends Actions {
-    fetchViolations(accounts) {
+    fetchViolations(accounts, since, size, page) {
         return request
                 .get(`${FULLSTOP_BASE_URL}/violations`)
                 .accept('json')
                 .query({
                     accounts: accounts,
-                    size: 500
+                    size: size || 500,
+                    since: since || (new Date()).toISOString(),
+                    page: page || 0
                 })
                 .oauth(Provider, RequestConfig)
                 .exec(saveRoute)
-                .then(res => res.body.content);
+                .then(res => [res.body, res.body.content]);
     }
 
     fetchViolation(violationId) {

@@ -5,4 +5,169 @@
     .tabs {
         margin-bottom: @padding-small;
     }
+
+    .violationList-accounts {
+        padding: @padding-small 0;
+        label {
+            .transition(background, color);
+            cursor: pointer;
+            padding: 3px 5px;
+            border-radius: 2*@border-radius;
+            border: 1px solid;
+
+            border-color: @gray-lighter;
+            background: @white;
+            color: @gray;
+            &.is-checked {
+                border-color: @orange-dark;
+                background: @orange;
+                color: @white;
+            }
+            input {
+                display: none;
+            }
+            &:before {
+                content: "\f0c2";
+                font-family: "FontAwesome";
+            }
+            + label {
+                margin-left: @padding-small;
+            }
+        }
+    }
+
+    .violationList-info {
+        padding: @padding-small;
+        font-size: @small-font-size;
+        text-align: center;
+        position: fixed;
+        bottom: 0;
+        background: @gray-light;
+        color: @white;
+        z-index: 10;
+    }
+
+    .DayPicker {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        position: relative;
+        padding: 1rem 0;
+        outline: none;
+
+        .DayPicker-Month {
+            display: table;
+            border-collapse: collapse;
+            border-spacing: 0;
+            user-select: none;
+            margin: 0 1rem;
+        }
+
+        .DayPicker-NavBar {
+            position: absolute;
+            left: 0;
+            right: 0;
+            padding: 0 .5rem;
+            display: flex;
+        }
+
+        .DayPicker-NavButton {
+            .transition(color);
+            color: @gray-light;
+            width: 1.5rem;
+            height: 1.5rem;
+            cursor: pointer;
+            flex: 1 1 auto;
+            text-align: center;
+            display: block;
+            &:hover {
+                color: @gray;
+            }
+        }
+
+        .DayPicker-NavButton--prev {
+            &:before {
+                content: "\f053";
+                font-family: "FontAwesome";
+            }
+        }
+
+        .DayPicker-NavButton--next {
+            &:after {
+                content: "\f054";
+                font-family: "FontAwesome";
+            }
+        }
+
+        .DayPicker-Caption {
+            display: table-caption;
+            height: 1.5rem;
+            text-align: center;
+        }
+
+        .DayPicker-Weekdays {
+            display: table-header-group;
+            > div {
+                display: table-row;
+            }
+        }
+
+        .DayPicker-Weekday {
+            display: table-cell;
+            padding: .5rem;
+            font-size: .875em;
+            text-align: center;
+        }
+
+        .DayPicker-Body {
+            display: table-row-group;
+        }
+
+        .DayPicker-Week {
+            display: table-row;
+        }
+
+        .DayPicker-Day {
+            .transition(background, color);
+            outline: none;
+            display: table-cell;
+            padding: .5rem;
+            border: 1px solid @gray-lighter;
+            text-align: center;
+            cursor: pointer;
+            vertical-align: middle;
+        }
+
+        .DayPicker--interactionDisabled .DayPicker-Day {
+            cursor: default;
+        }
+
+
+        // Modifiers
+
+        .DayPicker-Day--today {
+            font-weight: 700;
+        }
+
+        .DayPicker-Day--disabled {
+            color: @gray;
+            cursor: default;
+            background-color: @gray-lighter;
+            pointer-events: none;
+        }
+
+        .DayPicker-Day--sunday {
+            color: @gray;
+        }
+
+        .DayPicker-Day--selected:not(.DayPicker-Day--disabled) {
+            color: @white;
+            background-color: @orange;
+        }
+        // Locales
+
+        .DayPicker--ar {
+            direction: rtl;
+        }
+    }
 }
