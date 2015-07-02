@@ -18,10 +18,18 @@
             border-color: @gray-lighter;
             background: @white;
             color: @gray;
+            &:hover {
+                background: @gray-lighter;
+            }
+
+
             &.is-checked {
                 border-color: @orange-dark;
                 background: @orange;
                 color: @white;
+                &:hover {
+                    background: @orange-dark;
+                }
             }
             input {
                 display: none;

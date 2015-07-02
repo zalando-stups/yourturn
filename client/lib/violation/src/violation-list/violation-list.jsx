@@ -65,6 +65,7 @@ class ViolationList extends React.Component {
         this.setState({
             showingAccounts: showingAccounts
         });
+        this.loadMore(0);
     }
 
     loadMore(page) {
@@ -146,12 +147,12 @@ class ViolationList extends React.Component {
                         <div
                             onClick={this.showResolved.bind(this, false)}
                             className={'tab ' + (showingResolved ? '' : 'is-active')}>
-                            Unresolved <span className='badge'>{unresolvedViolations.length}</span>
+                            Unresolved
                         </div>
                         <div
                             onClick={this.showResolved.bind(this, true)}
                             className={'tab ' + (showingResolved ? 'is-active' : '')}>
-                            Resolved <span className='badge'>{resolvedViolations.length}</span>
+                            Resolved
                         </div>
                     </div>
                     {/** pageStart only used at didMount, need to track page ourselves */}
