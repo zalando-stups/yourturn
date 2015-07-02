@@ -47,9 +47,10 @@ class ViolationList extends React.Component {
             this.actions.deleteViolations();
         }
         this.setState({
-            showingSince: day
+            showingSince: day,
+            currentPage: 0
         });
-        this.loadMore(0);
+        this.loadMore(true);
     }
 
     toggleAccount(accountId) {
