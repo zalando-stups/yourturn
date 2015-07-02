@@ -121,4 +121,11 @@ describe('The fullstop store', () => {
         expect(meta).to.be.ok;
         expect(meta.page).to.equal(0);
     });
+
+    it('should set placeholders for page metadata on load', () => {
+        store.beginFetchViolations();
+        let meta = store.getPagingInfo();
+        expect(meta).to.be.ok;
+        expect(meta.total_elements).to.equal('?');
+    });
 });

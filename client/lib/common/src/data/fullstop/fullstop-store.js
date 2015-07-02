@@ -33,7 +33,15 @@ class FullstopStore extends Store {
             this.failFetchViolation);
     }
 
-    beginFetchViolations() { }
+    beginFetchViolations() {
+        this.setState({
+            pagingInfo: _m.toClj({
+                total_elements: '?',
+                last: true,
+                page: 0
+            })
+        });
+    }
     failFetchViolations() { }
     beginFetchViolation(violationId) {
         this.setState({
