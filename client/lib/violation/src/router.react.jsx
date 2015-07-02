@@ -1,7 +1,6 @@
 import React from 'react';
 import {Route, DefaultRoute} from 'react-router';
 import FlummoxComponent from 'flummox/component';
-import {requireTeam} from 'common/src/util';
 import Flux from './flux';
 import ViolationList from './violation-list/violation-list.jsx';
 import ViolationDetail from './violation-detail/violation-detail.jsx';

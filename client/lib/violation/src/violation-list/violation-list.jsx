@@ -50,7 +50,7 @@ class ViolationList extends React.Component {
             showingSince: day,
             currentPage: 0
         });
-        this.loadMore(true);
+        this.loadMore(0);
     }
 
     toggleAccount(accountId) {
