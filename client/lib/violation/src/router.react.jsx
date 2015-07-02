@@ -27,14 +27,6 @@ ViolationListHandler.displayName = 'ViolationListHandler';
 ViolationListHandler.propTypes = {
     globalFlux: React.PropTypes.object.isRequired
 };
-ViolationListHandler.fetchData = function (state, globalFlux) {
-    return requireTeam(globalFlux)
-            .then(() => {
-                let userStore = globalFlux.getStore('user'),
-                    accounts = userStore.getUserCloudAccounts();
-                VIO_ACTIONS.fetchViolations(accounts.map(a => a.id));
-            });
-};
 
 class ViolationDetailHandler extends React.Component {
     constructor() {
