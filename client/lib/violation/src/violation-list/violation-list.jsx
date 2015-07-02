@@ -23,8 +23,7 @@ class ViolationList extends React.Component {
             dispatching: false,
             currentPage: 0,
             showingAccounts: this.stores.user.getUserCloudAccounts().map(a => a.id),
-            showingSince: moment().subtract(1, 'week').startOf('day').toDate(),
-            accountIds: this.stores.user.getUserCloudAccounts().map(a => a.id)
+            showingSince: moment().subtract(1, 'week').startOf('day').toDate()
         };
     }
 
@@ -107,7 +106,8 @@ class ViolationList extends React.Component {
     }
 
     render() {
-        let {showingResolved, showingAccounts, accountIds} = this.state,
+        let {showingResolved, showingAccounts} = this.state,
+            accounts = this.stores.user.getUserCloudAccounts(),
             unresolvedViolations = this.stores.fullstop.getViolations(showingAccounts, false),
             resolvedViolations = this.stores.fullstop.getViolations(showingAccounts, true),
             violations = showingResolved ? resolvedViolations : unresolvedViolations,
@@ -125,13 +125,13 @@ class ViolationList extends React.Component {
                     <div className='violationList-filtering'>
                         <div className='violationList-accounts'>
                             <div>Show violations in these accounts:</div>
-                            {accountIds.sort().map(a =>
-                                <label className={showingAccounts.indexOf(a) >= 0 ? 'is-checked' : ''}>
+                            {accounts.map(a =>
+                                <label className={showingAccounts.indexOf(a.id) >= 0 ? 'is-checked' : ''}>
                                     <input
                                         type="checkbox"
-                                        value={a}
-                                        onChange={this.toggleAccount.bind(this, a)}
-                                        defaultChecked={showingAccounts.indexOf(a) >= 0}/> {a}
+                                        value={a.id}
+                                        onChange={this.toggleAccount.bind(this, a.id)}
+                                        defaultChecked={showingAccounts.indexOf(a.id) >= 0}/> {a.team} <small>({a.id})</small>
                                 </label>)}
                         </div>
                         <div>

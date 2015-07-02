@@ -73,7 +73,11 @@ class UserStore extends Store {
     getUserCloudAccounts() {
         let teams = _m.toJs(this.state.teams);
         return teams
-                .map(t => t['infrastructure-accounts'])
+                .map(t => t['infrastructure-accounts']
+                            .map(acc => {
+                                acc.team = t.id;
+                                return acc;
+                            }))
                 .reduce((prev, cur) => {
                     prev = prev.concat(cur);
                     return prev;
