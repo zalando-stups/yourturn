@@ -49,7 +49,7 @@ class ViolationList extends React.Component {
             showingSince: day,
             currentPage: 0
         });
-        this.loadMore(0);
+        setTimeout(() => this.loadMore(0), 0);
     }
 
     toggleAccount(accountId) {
@@ -65,7 +65,7 @@ class ViolationList extends React.Component {
         this.setState({
             showingAccounts: showingAccounts
         });
-        this.loadMore(0);
+        setTimeout(() => this.loadMore(0), 0);
     }
 
     loadMore(page) {
