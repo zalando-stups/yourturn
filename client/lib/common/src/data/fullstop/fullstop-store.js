@@ -10,6 +10,10 @@ class FullstopStore extends Store {
 
         this._empty();
 
+        this.register(
+            fullstopActions.deleteViolations,
+            this.deleteViolations);
+
         this.registerAsync(
             fullstopActions.fetchViolations,
             this.beginFetchViolations,
@@ -62,6 +66,12 @@ class FullstopStore extends Store {
                                 page: metadata.number
                             }) :
                             this.state.pagingInfo
+        });
+    }
+
+    deleteViolations() {
+        this.setState({
+            violations: _m.hashMap()
         });
     }
 

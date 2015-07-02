@@ -42,6 +42,10 @@ class FullstopActions extends Actions {
                 .exec(saveRoute)
                 .then(res => res.body);
     }
+
+    deleteViolations() {
+        return true;
+    }
 }
 
 export default FullstopActions;
