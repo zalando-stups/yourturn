@@ -38,13 +38,7 @@ class ViolationList extends React.Component {
     }
 
     showSince(day) {
-        // if we select a date after the current one
-        // we have more violations in the store than
-        // what happened since the selected date
-        // so we clear the store.
-        if (day > this.state.showingSince) {
-            this.actions.deleteViolations();
-        }
+        this.actions.deleteViolations();
         this.setState({
             showingSince: day,
             currentPage: 0
@@ -112,11 +106,11 @@ class ViolationList extends React.Component {
             resolvedViolations = this.stores.fullstop.getViolations(showingAccounts, true),
             violations = showingResolved ? resolvedViolations : unresolvedViolations,
             pagingInfo = this.stores.fullstop.getPagingInfo(),
-            violationElements = violations.map((v, i) => <Violation
-                                        key={v.id}
-                                        autoFocus={i === 0}
-                                        flux={this.props.flux}
-                                        violation={v} />);
+            violationCards = violations.map((v, i) => <Violation
+                                key={v.id}
+                                autoFocus={i === 0}
+                                flux={this.props.flux}
+                                violation={v} />);
         return <div className='violationList'>
                     <h2 className='violationList-headline'>Violations</h2>
                     <div className='u-info'>
@@ -142,7 +136,7 @@ class ViolationList extends React.Component {
                             selectedDay={this.state.showingSince} />
                     </div>
                     <div className='violationList-info'>
-                        Showing {violationElements.length}/{pagingInfo.total_elements} violations since <Timestamp format={DATE_FORMAT} value={this.state.showingSince} />.
+                        Showing {violationCards.length}/{pagingInfo.total_elements} violations since <Timestamp format={DATE_FORMAT} value={this.state.showingSince} />.
                     </div>
                     <div className='tabs'>
                         <div
@@ -156,13 +150,14 @@ class ViolationList extends React.Component {
                             Resolved
                         </div>
                     </div>
-                    {/** pageStart only used at didMount, need to track page ourselves */}
-                    <InfiniteList
-                        loadMore={this.loadMore.bind(this, true)}
-                        hasMore={!pagingInfo.last}
-                        loader={<Icon spin name='circle-o-notch' />}>
-                        {violationElements}
-                    </InfiniteList>
+                    <div className='violationList-list'>
+                        <InfiniteList
+                            loadMore={this.loadMore.bind(this, true)}
+                            hasMore={!pagingInfo.last}
+                            loader={<Icon spin name='circle-o-notch' />}>
+                            {violationCards}
+                        </InfiniteList>
+                    </div>
                 </div>;
     }
 }
