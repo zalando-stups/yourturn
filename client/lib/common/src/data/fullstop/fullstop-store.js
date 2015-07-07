@@ -10,6 +10,10 @@ class FullstopStore extends Store {
 
         this._empty();
 
+        this.register(
+            fullstopActions.deleteViolations,
+            this.deleteViolations);
+
         this.registerAsync(
             fullstopActions.fetchViolations,
             this.beginFetchViolations,
@@ -29,7 +33,15 @@ class FullstopStore extends Store {
             this.failFetchViolation);
     }
 
-    beginFetchViolations() { }
+    beginFetchViolations() {
+        this.setState({
+            pagingInfo: _m.toClj({
+                total_elements: '?',
+                last: true,
+                page: 0
+            })
+        });
+    }
     failFetchViolations() { }
     beginFetchViolation(violationId) {
         this.setState({
@@ -43,10 +55,10 @@ class FullstopStore extends Store {
     }
 
     receiveViolation(violation) {
-        this.receiveViolations([violation]);
+        this.receiveViolations([undefined, [violation]]);
     }
 
-    receiveViolations(violations) {
+    receiveViolations([metadata, violations]) {
         let all = violations.reduce(
                             (coll, v) => {
                                 v.timestamp = Date.parse(v.created) || 0;
@@ -54,8 +66,25 @@ class FullstopStore extends Store {
                             },
                             this.state.violations);
         this.setState({
-            violations: all
+            violations: all,
+            pagingInfo: metadata ?
+                            _m.toClj({
+                                total_elements: metadata.total_elements,
+                                last: metadata.last,
+                                page: metadata.number
+                            }) :
+                            this.state.pagingInfo
         });
+    }
+
+    deleteViolations() {
+        this.setState({
+            violations: _m.hashMap()
+        });
+    }
+
+    getPagingInfo() {
+        return _m.toJs(this.state.pagingInfo);
     }
 
     getViolation(violationId) {
@@ -65,7 +94,7 @@ class FullstopStore extends Store {
     getViolations(accounts, resolved) {
         let violations = _m.vals(this.state.violations);
         // collect violations from accounts
-        if (accounts && accounts.length) {
+        if (accounts) {
             violations = _m.filter(v => accounts.indexOf(_m.get(v, 'account_id')) >= 0, violations);
         }
 
@@ -81,7 +110,12 @@ class FullstopStore extends Store {
 
     _empty() {
         this.setState({
-            violations: _m.hashMap()
+            violations: _m.hashMap(),
+            pagingInfo: _m.toClj({
+                total_elements: 0,
+                last: true,
+                page: 0
+            })
         });
     }
 }

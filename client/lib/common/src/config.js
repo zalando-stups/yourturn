@@ -1,7 +1,7 @@
 import WHITELIST from 'RESOURCE_WHITELIST';
 
 export default {
-    DATE_FORMAT: 'Do MMMM YYYY hh:mm:ss',
+    DATE_FORMAT: 'Do MMMM YYYY HH:mm',
     //QUICKFIX #133
     RESOURCE_WHITELIST: WHITELIST
                             .split(' ')

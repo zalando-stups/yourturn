@@ -72,7 +72,7 @@ describe('The fullstop store', () => {
     });
 
     it('should receive violations', () => {
-        store.receiveViolations([VIOLATION_A]);
+        store.receiveViolations([null, [VIOLATION_A]]);
         let violations = store.getViolations();
         expect(violations.length).to.equal(1);
     });
@@ -84,34 +84,48 @@ describe('The fullstop store', () => {
     });
 
     it('should not contain duplicate violations', () => {
-        store.receiveViolations(VIOLATIONS);
+        store.receiveViolations([null, VIOLATIONS]);
         expect(store.getViolations().length).to.equal(2);
     });
 
     it('should exchange an existing violation', () => {
-        store.receiveViolations([VIOLATION_A]);
+        store.receiveViolations([null, [VIOLATION_A]]);
         store.receiveViolation(VIOLATION_A);
         let violations = store.getViolations();
         expect(violations.length).to.equal(1);
     });
 
     it('should filter violations by accounts', () => {
-        store.receiveViolations(VIOLATIONS);
+        store.receiveViolations([null, VIOLATIONS]);
         let violations = store.getViolations([VIOLATION_B.account_id]);
         expect(violations.length).to.equal(1);
         expect(violations[0].id).to.equal(VIOLATION_B.id);
     });
 
     it('should filter violations by resolution', () => {
-        store.receiveViolations(VIOLATIONS);
+        store.receiveViolations([null, VIOLATIONS]);
         let violations = store.getViolations(null, true);
         expect(violations.length).to.equal(1);
         expect(violations[0].id).to.equal(VIOLATION_B.id);
     });
 
     it('should filter violations by accounts and resolution', () => {
-        store.receiveViolations(VIOLATIONS);
+        store.receiveViolations([null, VIOLATIONS]);
         let violations = store.getViolations([VIOLATION_A.account_id], VIOLATION_B.comment != null);
         expect(violations.length).to.equal(0);
+    });
+
+    it('should store page metadata info', () => {
+        store.receiveViolations([{number: 0}, VIOLATIONS]);
+        let meta = store.getPagingInfo();
+        expect(meta).to.be.ok;
+        expect(meta.page).to.equal(0);
+    });
+
+    it('should set placeholders for page metadata on load', () => {
+        store.beginFetchViolations();
+        let meta = store.getPagingInfo();
+        expect(meta).to.be.ok;
+        expect(meta.total_elements).to.equal('?');
     });
 });

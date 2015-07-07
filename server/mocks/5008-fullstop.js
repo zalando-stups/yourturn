@@ -1,3 +1,4 @@
+/* global require */
 var express = require('express'),
     server = express(),
     bodyParser = require('body-parser'),
@@ -23,7 +24,9 @@ server.get('/violations', function(req, res) {
             .status(200)
             .type('json')
             .send({
-                // spring paging :(
+                total_elements: all.length,
+                last: true,
+                page: 2,
                 content: all
             });
     }, Math.random() * 2000);
@@ -57,7 +60,7 @@ server.post('/violations/:violationId/resolution', function(req, res) {
                     .filter(function(v) {
                         return v.id !== violationId;
                     });
-    
+
     violation[0].comment = req.body;
     violation[0].last_modified_by = 'npiccolotto';
     violation[0].last_modified = '2015-05-28T16:30:00Z';

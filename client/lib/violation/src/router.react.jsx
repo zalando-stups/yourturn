@@ -1,7 +1,6 @@
 import React from 'react';
 import {Route, DefaultRoute} from 'react-router';
 import FlummoxComponent from 'flummox/component';
-import {requireTeam} from 'common/src/util';
 import Flux from './flux';
 import ViolationList from './violation-list/violation-list.jsx';
 import ViolationDetail from './violation-detail/violation-detail.jsx';
@@ -26,14 +25,6 @@ class ViolationListHandler extends React.Component {
 ViolationListHandler.displayName = 'ViolationListHandler';
 ViolationListHandler.propTypes = {
     globalFlux: React.PropTypes.object.isRequired
-};
-ViolationListHandler.fetchData = function (state, globalFlux) {
-    return requireTeam(globalFlux)
-            .then(() => {
-                let userStore = globalFlux.getStore('user'),
-                    accounts = userStore.getUserCloudAccounts();
-                VIO_ACTIONS.fetchViolations(accounts.map(a => a.id));
-            });
 };
 
 class ViolationDetailHandler extends React.Component {
