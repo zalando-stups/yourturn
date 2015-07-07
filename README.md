@@ -53,7 +53,6 @@ It will pack everything in a Docker image `yourturn`. You can then run it with
     -e YTENV_PIERONE_BASE_URL=http://localhost:5007/v1 \
     -e YTENV_USER_BASE_URL=http://localhost:5009 \
     -e YTENV_RESOURCE_WHITELIST="" \
-    -e YTENV_USER_REPLACEMENT_MAP="" \
     -p 8080:8080 \
     -u 998 \
     yourturn
