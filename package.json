@@ -26,6 +26,7 @@
     "react": "0.13.3",
     "react-fa": "3.3.1",
     "react-gravatar": "1.2.0",
+    "react-infinite-scroll": "0.1.5",
     "react-router": "0.13.3",
     "react-time": "2.5.0",
     "remarkable": "1.6.0",
