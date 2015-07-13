@@ -6,10 +6,34 @@ import ApprovalCard from './approval-card.jsx';
 import 'common/asset/less/application/approval-form.less';
 
 const EXPLANATIONS = {
-    SPECIFICATION: 'You assert that tickets are properly specified and have useful content.',
-    CODE_CHANGE: 'You assert that there are no unwanted code changes, i.e. you did a code review.',
-    TEST: 'You assert that the tests are okay, however they look like for this application.',
-    DEPLOY: 'You assert that the code status in the deployment artifact for this version is ready to deploy.'
+    SPECIFICATION: <div>
+                        <span>By approving this you declare that the specifications</span>
+                        <ul>
+                            <li>are approved by you</li>
+                            <li>are stored digitally and the links are active</li>
+                        </ul>
+                    </div>,
+    CODE_CHANGE: <div>
+                    <span>By approving this you declare that</span>
+                    <ul>
+                        <li>all code changes including new automated tests are approved by you</li>
+                        <li>all code changes are done by a member of your delivery team</li>
+                    </ul>
+                </div>,
+    TEST: <div>
+            <span>By approving this you declare that</span>
+            <ul>
+                <li>all code changes have been reviewed and tested</li>
+                <li>the extent and method of the tests are sufficient to ensure the quality and security of this version and therefore are approved by you</li>
+            </ul>
+        </div>,
+    DEPLOY: <div>
+                <span>By approving this you declare that</span>
+                <ul>
+                    <li>all other approvals are done</li>
+                    <li>deployment is approved and done by you</li>
+                </ul>
+            </div>
 };
 
 class ApprovalForm extends React.Component {
@@ -219,9 +243,9 @@ class ApprovalForm extends React.Component {
                                     </div>
                                     {EXPLANATIONS[this.state.selectedType] ?
                                         <div className='u-info'>
-                                            <p data-block='approvalType-explanation'>
+                                            <small data-block='approvalType-explanation'>
                                                 {EXPLANATIONS[this.state.selectedType]}
-                                            </p>
+                                            </small>
                                         </div>
                                         :
                                         this.state.useCustomType ?
