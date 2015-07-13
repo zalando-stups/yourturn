@@ -27,14 +27,23 @@
         outline: none;
         border-bottom: 3px solid transparent;
     }
-    
+
     &.btn-disabled,
+    &[disabled],
     &[disabled="true"] {
         pointer-events: none;
         background: @gray-light !important;
         color: @white !important;
         border-color: @gray !important;
         border-width: 1px;
+    }
+
+    &.btn-pressed,
+    &[selected],
+    &[data-selected="true"] {
+        pointer-events: none;
+        border-width: 1px;
+        color: @orange !important;
     }
 
     &.btn-small {
@@ -92,7 +101,7 @@
             box-shadow: 0px 0px 5px @white;
         }
     }
-    
+
     &.btn-default {
         .transition(background, border-color);
 

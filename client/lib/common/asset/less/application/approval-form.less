@@ -5,7 +5,37 @@
         color: @gray;
     }
 
+    .u-info {
+        small {
+            color: white !important;
+        }
+    }
+
     .approvalForm-versionId {
         color: @gray;
+    }
+
+    .typeahead {
+        .typeahead-selector {
+            padding: 0;
+            margin: 0;
+            list-style-type: none;
+
+            li {
+                border: 1px solid @gray-dark;
+                border-top: 0px;
+                padding-left: @padding-small;
+
+                .typeahead-option {
+                    background-image: none;
+                }
+
+                &.hover{
+                    .typeahead-option {
+                        color: @orange !important;
+                    }
+                }
+            }
+        }
     }
 }

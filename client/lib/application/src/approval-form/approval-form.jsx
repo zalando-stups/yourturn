@@ -1,6 +1,7 @@
 import React from 'react';
 import Icon from 'react-fa';
 import {Link} from 'react-router';
+import {Typeahead} from 'react-typeahead';
 import ApprovalCard from './approval-card.jsx';
 import 'common/asset/less/application/approval-form.less';
 
@@ -22,7 +23,7 @@ class ApprovalForm extends React.Component {
         this.state = {
             useCustomType: false,
             customType: '',
-            selectedType: this.stores.kio.getApprovalTypes(props.applicationId)[0],
+            selectedType: 'SPECIFICATION',
             notes: ''
         };
 
@@ -34,9 +35,11 @@ class ApprovalForm extends React.Component {
         this.stores.user.off('change', this._forceUpdate);
     }
 
-    selectType(evt) {
+    selectType(type) {
+        console.log(type);
         this.setState({
-            selectedType: evt.target.value
+            selectedType: type,
+            useCustomType: type === 'CUSTOM'
         });
     }
 
@@ -106,15 +109,9 @@ class ApprovalForm extends React.Component {
         });
     }
 
-    toggleCustomType() {
-        this.setState({
-            useCustomType: !this.state.useCustomType
-        });
-    }
-
     updateCustomType(evt) {
         this.setState({
-            customType: evt.target.value
+            customType: typeof evt === 'string' ? evt : evt.target.value
         });
     }
 
@@ -164,47 +161,6 @@ class ApprovalForm extends React.Component {
                                 onSubmit={this.save.bind(this)}
                                 className='form'>
                                 <div className='form-group'>
-                                    <label htmlFor='approval_type'>Approval Type</label>
-                                    <small>What specifically do you approve?</small>
-                                    <select
-                                        id='approval_type'
-                                        data-block='approvalType-selection'
-                                        name='yourturn_approval_type'
-                                        value={this.state.selectedType}
-                                        onChange={this.selectType.bind(this)}
-                                        type='text'>
-                                        {approvalTypes.map(
-                                            at => <option value={at}>{at}</option>)}
-                                    </select>
-                                    {EXPLANATIONS[this.state.selectedType] ?
-                                        <div>
-                                            <small
-                                                className='u-info'
-                                                data-block='approvalType-explanation'>
-                                                {EXPLANATIONS[this.state.selectedType]}
-                                            </small>
-                                        </div>
-                                        :
-                                        null}
-                                    <small>or</small>
-                                    <label>
-                                        <input
-                                            id='approval_custom'
-                                            checked={this.state.useCustomType}
-                                            onChange={this.toggleCustomType.bind(this)}
-                                            type='checkbox' /> Custom:
-                                    </label>
-                                    <input
-                                        id='approval_custom_type'
-                                        name='yourturn_approval_custom_type'
-                                        placeholder='CUSTOM_TYPE'
-                                        pattern='[a-zA-Z_][a-zA-Z_]*[a-zA-Z]'
-                                        title='Only characters'
-                                        value={this.state.customType}
-                                        onChange={this.updateCustomType.bind(this)}
-                                        type='text' />
-                                </div>
-                                <div className='form-group'>
                                     <label htmlFor='approval_notes'>Notes</label>
                                     <small>You can use <a href='http://www.unexpected-vortices.com/sw/rippledoc/quick-markdown-example.html'>Markdown</a>.</small>
                                     <textarea
@@ -215,6 +171,69 @@ class ApprovalForm extends React.Component {
                                         onChange={this.updateNotes.bind(this)}
                                         value={this.state.notes}
                                         rows='10'></textarea>
+                                </div>
+                                <div className='form-group'>
+                                    <label htmlFor='approval_type'>Approval Type</label>
+                                    <small>What specifically do you approve?</small>
+                                    <div className='btn-group'>
+                                        <div
+                                        data-selected={this.state.selectedType === 'SPECIFICATION'}
+                                        data-block='spec-button'
+                                        onClick={this.selectType.bind(this, 'SPECIFICATION')}
+                                            className='btn btn-default'>
+                                            <Icon name='file-text-o' /> Specification
+                                        </div>
+                                        <div
+                                            data-selected={this.state.selectedType === 'CODE_CHANGE'}
+                                            onClick={this.selectType.bind(this, 'CODE_CHANGE')}
+                                            className='btn btn-default'>
+                                            <Icon name='code' /> Code Change
+                                        </div>
+                                        <div
+                                            data-selected={this.state.selectedType === 'TEST'}
+                                            onClick={this.selectType.bind(this, 'TEST')}
+                                            className='btn btn-default'>
+                                            <Icon name='check-circle-o' /> Test
+                                        </div>
+                                        <div
+                                            data-selected={this.state.selectedType === 'DEPLOY'}
+                                            onClick={this.selectType.bind(this, 'DEPLOY')}
+                                            className='btn btn-default'>
+                                            <Icon name='cloud-upload' /> Deploy
+                                        </div>
+                                        <div
+                                            data-selected={this.state.selectedType === 'CUSTOM'}
+                                            data-block='custom-button'
+                                            onClick={this.selectType.bind(this, 'CUSTOM')}
+                                            className='btn btn-default'>
+                                            <Icon name='asterisk' /> Custom
+                                        </div>
+                                    </div>
+                                    {EXPLANATIONS[this.state.selectedType] ?
+                                        <div className='u-info'>
+                                            <p
+                                                data-block='approvalType-explanation'>
+                                                {EXPLANATIONS[this.state.selectedType]}
+                                            </p>
+                                        </div>
+                                        :
+                                        this.state.useCustomType ?
+                                        <label>
+                                                Please enter your custom approval type:
+                                        </label>
+                                        :
+                                        null}
+                                    {this.state.useCustomType ?
+                                        <Typeahead
+                                            onKeyUp={this.updateCustomType.bind(this)}
+                                            onOptionSelected={this.updateCustomType.bind(this)}
+                                            placeholder='CUSTOM_TYPE'
+                                            inputProps={{autoFocus: true}}
+                                            options={approvalTypes}
+                                            maxVisible={3} />
+                                        :
+                                        null
+                                    }
                                 </div>
                                 <div className='btn-group'>
                                     <button
