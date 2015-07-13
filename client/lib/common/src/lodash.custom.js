@@ -1,7 +1,7 @@
 /**
  * @license
  * lodash 3.9.3 (Custom Build) <https://lodash.com/>
- * Build: `lodash modern include="chain,debounce,extend,filter,findLastIndex,flatten,forOwn,groupBy,intersection,pluck,reverse,sortBy,take,times,value,values" -d -o lib/common/src/lodash.custom.js`
+ * Build: `lodash modern include="chain,debounce,extend,filter,findLastIndex,flatten,forOwn,groupBy,intersection,pluck,reverse,sortBy,slice,take,times,value,values" -d -o lib/common/src/lodash.custom.js`
  * Copyright 2012-2015 The Dojo Foundation <http://dojofoundation.org/>
  * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
  * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
@@ -2804,6 +2804,32 @@
   }
 
   /**
+   * Creates a slice of `array` from `start` up to, but not including, `end`.
+   *
+   * **Note:** This method is used instead of `Array#slice` to support node
+   * lists in IE < 9 and to ensure dense arrays are returned.
+   *
+   * @static
+   * @memberOf _
+   * @category Array
+   * @param {Array} array The array to slice.
+   * @param {number} [start=0] The start position.
+   * @param {number} [end=array.length] The end position.
+   * @returns {Array} Returns the slice of `array`.
+   */
+  function slice(array, start, end) {
+    var length = array ? array.length : 0;
+    if (!length) {
+      return [];
+    }
+    if (end && typeof end != 'number' && isIterateeCall(array, start, end)) {
+      start = 0;
+      end = length;
+    }
+    return baseSlice(array, start, end);
+  }
+
+  /**
    * Creates a slice of `array` with `n` elements taken from the beginning.
    *
    * @static
@@ -4310,6 +4336,7 @@
   lodash.pluck = pluck;
   lodash.property = property;
   lodash.restParam = restParam;
+  lodash.slice = slice;
   lodash.sortBy = sortBy;
   lodash.take = take;
   lodash.tap = tap;

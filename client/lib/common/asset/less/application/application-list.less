@@ -3,7 +3,7 @@
 .applicationList {
     max-width: @content-width-regular;
     h4 {
-        color: @gray;
+        color: @gray-light;
     }
     .input-addon {
         width: 2em;
@@ -11,14 +11,13 @@
 
     .app.is-inactive {
         color: @gray-light;
-        list-style-type: circle;
-        > * {
+        a {
             // override link style
             color: @gray-light !important;
         }
 
         // inactive badge
-        &:after {
+        > :first-child:after {
             content: 'Inactive';
             display: inline-block;
             margin-left: @padding-tiny;
