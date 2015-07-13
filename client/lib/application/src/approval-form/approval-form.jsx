@@ -24,7 +24,8 @@ class ApprovalForm extends React.Component {
             useCustomType: false,
             customType: '',
             selectedType: 'SPECIFICATION',
-            notes: ''
+            notes: '',
+            loading: false
         };
 
         this._forceUpdate = this.forceUpdate.bind(this);
@@ -81,6 +82,10 @@ class ApprovalForm extends React.Component {
             }
         }
 
+        this.setState({
+            loading: true
+        });
+
         this
         .actions
         .saveApproval(applicationId, versionId, approval)
@@ -93,11 +98,15 @@ class ApprovalForm extends React.Component {
             // reset state
             this.setState({
                 notes: '',
-                useCustomType: false,
-                customType: ''
+                customType: '',
+                loading: false
             });
         })
         .catch(err => {
+            this.setState({
+                loading: false
+            });
+
             this
             .props
             .globalFlux
@@ -169,16 +178,16 @@ class ApprovalForm extends React.Component {
                                         cols='30'
                                         onChange={this.updateNotes.bind(this)}
                                         value={this.state.notes}
-                                        rows='10'></textarea>
+                                        rows='5'></textarea>
                                 </div>
                                 <div className='form-group'>
                                     <label htmlFor='approval_type'>Approval Type</label>
                                     <small>What specifically do you approve?</small>
                                     <div className='btn-group'>
                                         <div
-                                        data-selected={this.state.selectedType === 'SPECIFICATION'}
-                                        data-block='spec-button'
-                                        onClick={this.selectType.bind(this, 'SPECIFICATION')}
+                                            data-selected={this.state.selectedType === 'SPECIFICATION'}
+                                            data-block='spec-button'
+                                            onClick={this.selectType.bind(this, 'SPECIFICATION')}
                                             className='btn btn-default'>
                                             <Icon name='file-text-o' /> Specification
                                         </div>
@@ -210,15 +219,14 @@ class ApprovalForm extends React.Component {
                                     </div>
                                     {EXPLANATIONS[this.state.selectedType] ?
                                         <div className='u-info'>
-                                            <p
-                                                data-block='approvalType-explanation'>
+                                            <p data-block='approvalType-explanation'>
                                                 {EXPLANATIONS[this.state.selectedType]}
                                             </p>
                                         </div>
                                         :
                                         this.state.useCustomType ?
                                         <label>
-                                                Please enter your custom approval type:
+                                            Please enter your custom approval type:
                                         </label>
                                         :
                                         null}
@@ -240,7 +248,10 @@ class ApprovalForm extends React.Component {
                                         className='btn btn-primary'
                                         data-block='submit-button'
                                         disabled={!isOwnApplication}>
-                                        <Icon name='save' /> Save
+                                        <Icon
+                                            fixedWidth
+                                            spin={this.state.loading}
+                                            name={this.state.loading ? 'circle-o-notch' : 'save'} /> Save
                                     </button>
                                 </div>
                             </form>

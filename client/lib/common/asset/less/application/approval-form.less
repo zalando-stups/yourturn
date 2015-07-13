@@ -27,12 +27,18 @@
                 padding-left: @padding-small;
 
                 .typeahead-option {
+                    .transition(background-color, color);
                     background-image: none;
+                }
+
+                &:hover {
+                    cursor: pointer;
+                    background-color: @orange-lighter;
                 }
 
                 &.hover{
                     .typeahead-option {
-                        color: @orange !important;
+                        color: @orange-dark !important;
                     }
                 }
             }
