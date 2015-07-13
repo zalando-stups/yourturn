@@ -41,8 +41,17 @@ AppListHandler.propTypes = {
     globalFlux: React.PropTypes.object.isRequired,
     params: React.PropTypes.object.isRequired
 };
-AppListHandler.fetchData = function() {
-    KIO_ACTIONS.fetchApplications();
+AppListHandler.fetchData = function(state, globalFlux) {
+    KIO_ACTIONS
+    .fetchApplications()
+    .then(apps =>
+        requireTeam(globalFlux)
+        .then(teams => {
+            let ids = teams.map(t => t.id);
+            apps
+            .filter(app => ids.indexOf(app.team_id) >= 0)
+            .forEach(app => KIO_ACTIONS.fetchApplicationVersions(app.id));
+        }));
 };
 
 

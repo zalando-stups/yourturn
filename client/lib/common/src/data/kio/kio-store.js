@@ -247,6 +247,11 @@ class KioStore extends Store {
         }
     }
 
+    getLatestApplicationVersion(id) {
+        let versions = this.getApplicationVersions(id);
+        return versions.length ? versions[0] : false;
+    }
+
     receiveApprovals([applicationId, versionId, approvals]) {
         function getKey(apr) {
             return `${apr.user_id}.${apr.approved_at}.${apr.approval_type}`;

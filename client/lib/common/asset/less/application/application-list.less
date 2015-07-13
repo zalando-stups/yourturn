@@ -9,6 +9,17 @@
         width: 2em;
     }
 
+    .table {
+        th,
+        td {
+            width: 33%;
+        }
+        th:nth-child(1),
+        td:nth-child(1) {
+            max-width: 200px;
+        }
+    }
+
     .app.is-inactive {
         color: @gray-light;
         a {

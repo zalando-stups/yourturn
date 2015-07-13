@@ -218,6 +218,20 @@ describe('The kio store', () => {
             let unfiltered = store.getApplicationVersions('kio');
             expect(unfiltered.length).to.equal(2);
         });
+
+        it('should return the most recent version', () => {
+            store.receiveApplicationVersions([{
+                application_id: 'kio',
+                id: 'squirrel',
+                last_modified: '2015-05-28T16:30:00Z'
+            }, {
+                application_id: 'kio',
+                id: 'not-a-squirrel',
+                last_modified: '2015-05-24T16:30:00Z'
+            }]);
+            let latest = store.getLatestApplicationVersion('kio');
+            expect(latest.id).to.equal('squirrel');
+        });
     });
 
     describe('approvals', () => {

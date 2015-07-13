@@ -43,7 +43,8 @@ class ApplicationList extends React.Component {
             otherApps = this.stores.kio.getOtherApplications(this.state.term, userTeamIds),
             shortApps = !showAll && otherApps.length > showCount ? _.slice(otherApps, 0, showCount) : otherApps,
             remainingAppsCount = otherApps.length - showCount,
-            teamApps = this.stores.kio.getTeamApplications(this.state.term, userTeamIds);
+            teamApps = this.stores.kio.getTeamApplications(this.state.term, userTeamIds),
+            latestVersions = teamApps.map(app => this.stores.kio.getLatestApplicationVersion(app.id));
 
         return <div className='applicationList'>
                     <h2 className='applicationList-headline'>Applications</h2>
@@ -78,11 +79,12 @@ class ApplicationList extends React.Component {
                                 <tr>
                                     <th>Application</th>
                                     <th>Team</th>
+                                    <th>Latest version</th>
                                 </tr>
                             </thead>
                             <tbody data-block='team-apps'>
                             {teamApps.map(
-                                ta =>
+                                (ta, i) =>
                                     <tr key={ta.id}
                                         className={'app ' + (ta.active ? '' : 'is-inactive')}>
                                         <td>
@@ -95,6 +97,25 @@ class ApplicationList extends React.Component {
                                             </Link>
                                         </td>
                                         <td>{ta.team_id}</td>
+                                        {latestVersions[i] ?
+                                            <td>
+                                                <Link className='btn btn-default btn-small'
+                                                    to='application-verApproval'
+                                                    params={{
+                                                        versionId: latestVersions[i].id,
+                                                        applicationId: ta.id
+                                                    }}> <Icon name='check' />
+                                                </Link> <Link
+                                                    to='application-verDetail'
+                                                    params={{
+                                                        versionId: latestVersions[i].id,
+                                                        applicationId: ta.id
+                                                    }}>
+                                                    {latestVersions[i].id}
+                                                </Link>
+                                            </td>
+                                            :
+                                            null}
                                     </tr>
                             )}
                             </tbody>
@@ -120,6 +141,7 @@ class ApplicationList extends React.Component {
                                                 </Link>
                                             </td>
                                             <td>{other.team_id}</td>
+                                            <td></td>
                                         </tr>
                                 )}
                             </tbody>
