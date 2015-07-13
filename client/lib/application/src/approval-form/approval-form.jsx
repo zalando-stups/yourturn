@@ -5,10 +5,10 @@ import ApprovalCard from './approval-card.jsx';
 import 'common/asset/less/application/approval-form.less';
 
 const EXPLANATIONS = {
-    SPECIFICATION: 'Tickets are properly specified and have useful content.',
-    CODE_CHANGE: 'The approver asserts that there are no unwanted code changes, i.e. did a code review.',
-    TEST: 'The tests are okay, however they look like for this application.',
-    DEPLOY: 'The approver asserts that the code status in the deployment artifact for this version is ready to deploy.'
+    SPECIFICATION: 'You assert that tickets are properly specified and have useful content.',
+    CODE_CHANGE: 'You assert that there are no unwanted code changes, i.e. you did a code review.',
+    TEST: 'You assert that the tests are okay, however they look like for this application.',
+    DEPLOY: 'You assert that the code status in the deployment artifact for this version is ready to deploy.'
 };
 
 class ApprovalForm extends React.Component {
@@ -179,6 +179,7 @@ class ApprovalForm extends React.Component {
                                     {EXPLANATIONS[this.state.selectedType] ?
                                         <div>
                                             <small
+                                                className='u-info'
                                                 data-block='approvalType-explanation'>
                                                 {EXPLANATIONS[this.state.selectedType]}
                                             </small>
