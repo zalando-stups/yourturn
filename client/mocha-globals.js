@@ -4,20 +4,33 @@ var chai = require('chai'),
     domino = require('domino'),
     assign = require('object-assign'),
     HTML = '<!doctype html><html><body></body></html>',
-    React = require('react/addons'),
-    TestUtils = require('react-testutils-additions'),
     Mitm = require('mitm'),
     OAuth = require('oauth2-client-js'),
-    localStorage = new OAuth.MemoryStorage();
+    localStorage = new OAuth.MemoryStorage(),
+    React,
+    TestUtils;
 
-// necessary because when React is loaded it looks for a window
-// if it's not available, this result is stored
-// however we create a virtual window further down
-// so override that
-//
-// http://stackoverflow.com/a/26872245
-require('react/lib/ExecutionEnvironment').canUseDOM = true;
+global.window = domino.createWindow(HTML);
+global.document = global.window.document;
+global.$ = require('jquery'); // needs a document
 
+function reset() {
+    localStorage.set('stups-access_token', 'access_token');
+    global.window.localStorage = localStorage;
+    global.navigator = global.window.navigator;
+
+    // necessary because when React is loaded it looks for a window
+    // if it's not available, this result is stored
+    // however we create a virtual window further down
+    // so override that
+    //
+    // http://stackoverflow.com/a/26872245
+    React = require('react/addons');
+    TestUtils = require('react-testutils-additions');
+    require('react/lib/ExecutionEnvironment').canUseDOM = true;
+}
+
+reset();
 
 /**
  * STUB ROUTER
@@ -66,11 +79,6 @@ TestUtils.findRenderedDOMComponentWithAttributeValue = function (component, attr
     return doms[0];
 };
 
-localStorage.set('stups-access_token', 'access_token');
-global.window = {
-    localStorage: localStorage
-};
-
 global.render = function (Component, props) {
     var clazz = Wrapper(Component, props),
         element = React.createElement(clazz),
@@ -84,15 +92,7 @@ global.render = function (Component, props) {
     return component;
 };
 
-global.reset = function () {
-    global.window = domino.createWindow(HTML);
-    global.document = global.window.document;
-    global.$ = require('jquery'); // needs a document
-    global.window.localStorage = localStorage;
-    global.navigator = {
-        userAgent: 'mocha'
-    };
-};
+global.reset = reset;
 
 // globals for tests
 global.sinon = sinon;
