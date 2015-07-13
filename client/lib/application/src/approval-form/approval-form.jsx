@@ -36,7 +36,6 @@ class ApprovalForm extends React.Component {
     }
 
     selectType(type) {
-        console.log(type);
         this.setState({
             selectedType: type,
             useCustomType: type === 'CUSTOM'
