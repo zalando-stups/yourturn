@@ -11,7 +11,7 @@ function requireTeam(flux) {
         }
         return ACTIONS.fetchUserTeams(tokeninfo.uid);
     }
-    return Promise.resolve();
+    return Promise.resolve([]);
 }
 
 export {

@@ -75,6 +75,11 @@ class ApplicationList extends React.Component {
                     <h4>Your Applications</h4>
                     {teamApps.length ?
                         <table className='table'>
+                            <colgroup>
+                                <col width='50%' />
+                                <col width='0*' />
+                                <col width='50%' />
+                            </colgroup>
                             <thead>
                                 <tr>
                                     <th>Application</th>
@@ -97,8 +102,9 @@ class ApplicationList extends React.Component {
                                             </Link>
                                         </td>
                                         <td>{ta.team_id}</td>
+                                        <td>
                                         {latestVersions[i] ?
-                                            <td>
+                                            <div>
                                                 <Link className='btn btn-default btn-small'
                                                     to='application-verApproval'
                                                     params={{
@@ -113,9 +119,10 @@ class ApplicationList extends React.Component {
                                                     }}>
                                                     {latestVersions[i].id}
                                                 </Link>
-                                            </td>
+                                            </div>
                                             :
                                             null}
+                                        </td>
                                     </tr>
                             )}
                             </tbody>
@@ -154,7 +161,7 @@ class ApplicationList extends React.Component {
                             <div
                                 onClick={this.showAll.bind(this)}
                                 className='btn btn-default'>
-                                Display remaining {remainingAppsCount > 1 ? 'applications' : 'application'}
+                                Display remaining {remainingAppsCount} {remainingAppsCount > 1 ? 'applications' : 'application'}
                             </div>
                         </div>
                         :
