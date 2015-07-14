@@ -27,6 +27,7 @@ var LODASH_FUNCS = [
         'pluck',
         'reverse',
         'sortBy',
+        'slice',
         'take',
         'times',
         'value',

@@ -12,11 +12,19 @@ class ApplicationList extends React.Component {
             user: props.globalFlux.getStore('user')
         };
         this.state = {
-            term: ''
+            term: '',
+            showCount: 20,
+            showAll: false
         };
 
         this._forceUpdate = this.forceUpdate.bind(this);
         this.stores.user.on('change', this._forceUpdate);
+    }
+
+    showAll() {
+        this.setState({
+            showAll: true
+        });
     }
 
     componentWillUnmount() {
@@ -30,13 +38,13 @@ class ApplicationList extends React.Component {
     }
 
     render() {
-        const OTHER_APPS_COUNT = 20;
-        let userTeamIds = _.pluck(this.stores.user.getUserTeams(), 'id'),
+        let {term, showCount, showAll} = this.state,
+            userTeamIds = _.pluck(this.stores.user.getUserTeams(), 'id'),
             otherApps = this.stores.kio.getOtherApplications(this.state.term, userTeamIds),
-            otherAppsHiddenCount = otherApps.length - OTHER_APPS_COUNT < 0 ? 0 : otherApps.length - OTHER_APPS_COUNT,
+            shortApps = !showAll && otherApps.length > showCount ? _.slice(otherApps, 0, showCount) : otherApps,
+            remainingAppsCount = otherApps.length - showCount,
             teamApps = this.stores.kio.getTeamApplications(this.state.term, userTeamIds),
-            shortApps = otherApps.splice(0, OTHER_APPS_COUNT),
-            term = this.state.term;
+            latestVersions = teamApps.map(app => this.stores.kio.getLatestApplicationVersion(app.id));
 
         return <div className='applicationList'>
                     <h2 className='applicationList-headline'>Applications</h2>
@@ -66,50 +74,127 @@ class ApplicationList extends React.Component {
                     </div>
                     <h4>Your Applications</h4>
                     {teamApps.length ?
-                        <ul data-block='team-apps'>
+                        <table className='table'>
+                            <colgroup>
+                                <col width='50%' />
+                                <col width='0*' />
+                                <col width='50%' />
+                                <col width='0*' />
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th>Application</th>
+                                    <th>Team</th>
+                                    <th>Latest version</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody data-block='team-apps'>
                             {teamApps.map(
-                                ta =>
-                                    <li key={ta.id}
+                                (ta, i) =>
+                                    <tr key={ta.id}
                                         className={'app ' + (ta.active ? '' : 'is-inactive')}>
-                                        <Link
-                                            to='application-appDetail'
-                                            params={{
-                                                applicationId: ta.id
-                                            }}>
-                                            {ta.name}
-                                        </Link>
-                                    </li>
-                            )}
-                        </ul> :
-                        <span>No applications owned by your team.</span>
-                    }
-
-                    <h4>Other Applications</h4>
-                    {shortApps.length ?
-                        <div>
-                            <ul data-block='other-apps'>
-                                {shortApps.map(
-                                    oa =>
-                                        <li key={oa.id}
-                                            className={'app ' + oa.active ? '' : 'is-inactive'}>
+                                        <td>
                                             <Link
                                                 to='application-appDetail'
                                                 params={{
-                                                    applicationId: oa.id
+                                                    applicationId: ta.id
                                                 }}>
-                                                {oa.name}
+                                                {ta.name}
                                             </Link>
-                                        </li>
+                                        </td>
+                                        <td>{ta.team_id}</td>
+                                        <td>
+                                        {latestVersions[i] ?
+                                            <div>
+                                                {ta.active ?
+                                                    <Link
+                                                        className='btn btn-default btn-small applicationList-approvalButton'
+                                                        title={'Approve version ' + latestVersions[i].id + ' of ' + ta.name}
+                                                        to='application-verApproval'
+                                                        params={{
+                                                            versionId: latestVersions[i].id,
+                                                            applicationId: ta.id
+                                                        }}> <Icon name='check' />
+                                                    </Link>
+                                                    :
+                                                    null}
+                                                 <Link
+                                                    to='application-verDetail'
+                                                    params={{
+                                                        versionId: latestVersions[i].id,
+                                                        applicationId: ta.id
+                                                    }}>
+                                                    {latestVersions[i].id}
+                                                </Link>
+                                            </div>
+                                            :
+                                            null}
+                                        </td>
+                                        <td>
+                                            {ta.active ?
+                                                <Link
+                                                    className='btn btn-default btn-small'
+                                                    to='application-verCreate'
+                                                    title={'Create new version for ' + ta.name}
+                                                    params={{applicationId: ta.id}}>
+                                                    <Icon name='plus' />
+                                                </Link>
+                                                :
+                                                null}
+                                        </td>
+                                    </tr>
+                            )}
+                            </tbody>
+                        </table>
+                        :
+                        <span>No applications owned by your team.</span>
+                    }
+                    <h4>Other Applications</h4>
+                    {otherApps.length ?
+                        <table className='table'>
+                            <colgroup>
+                                <col width='100%' />
+                                <col width='0*' />
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th>Application</th>
+                                    <th>Team</th>
+                                </tr>
+                            </thead>
+                            <tbody data-block='other-apps'>
+                                {shortApps.map(
+                                    other =>
+                                        <tr key={other.id}
+                                            className={'app ' + (other.active ? '' : 'is-inactive')}>
+                                            <td>
+                                                <Link
+                                                    to='application-appDetail'
+                                                    params={{
+                                                        applicationId: other.id
+                                                    }}>
+                                                    {other.name}
+                                                </Link>
+                                            </td>
+                                            <td>{other.team_id}</td>
+                                        </tr>
                                 )}
-                            </ul>
-                            {otherAppsHiddenCount ?
-                                <small>
-                                    + <span data-block='other-apps-hidden-count'>{{otherAppsHiddenCount}}</span> hidden.
-                                </small> :
-                                null}
-                        </div>
+                            </tbody>
+                        </table>
                         :
                         <span>No applications owned by other teams.</span>
+                    }
+                    {!showAll && !term.length && remainingAppsCount > 0 ?
+                        <div className='btn-group'>
+                            <div
+                                onClick={this.showAll.bind(this)}
+                                className='btn btn-default'>
+                                Display remaining {remainingAppsCount} {remainingAppsCount > 1 ? 'applications' : 'application'}
+                            </div>
+                        </div>
+                        :
+                        null
                     }
                 </div>;
     }

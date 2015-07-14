@@ -3,6 +3,7 @@ import Icon from 'react-fa';
 import {Link} from 'react-router';
 import {constructLocalUrl} from 'common/src/data/services';
 import DOCKER_REGISTRY from 'DOCKER_REGISTRY';
+import 'common/asset/less/application/version-form.less';
 
 class VersionForm extends React.Component {
     constructor(props) {

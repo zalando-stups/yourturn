@@ -83,9 +83,6 @@ describe('The application list view', () => {
         expect(() => {
             TestUtils.findRenderedDOMComponentWithAttributeValue(list, 'data-block', 'other-apps');
         }).to.throw();
-        expect(() => {
-            TestUtils.findRenderedDOMComponentWithAttributeValue(list, 'data-block', 'other-apps-hidden-count');
-        }).to.throw();
     });
 
     it('should display a list of applications not owned by the user and no list of not owned by user', () => {
@@ -104,9 +101,6 @@ describe('The application list view', () => {
         expect(() => {
             TestUtils.findRenderedDOMComponentWithAttributeValue(list, 'data-block', 'team-apps');
         }).to.throw();
-        expect(() => {
-            TestUtils.findRenderedDOMComponentWithAttributeValue(list, 'data-block', 'other-apps-hidden-count');
-        }).to.throw();
     });
 
     it('should display the number of hidden applications on the not owned applications list', () => {
@@ -121,12 +115,9 @@ describe('The application list view', () => {
         .receiveApplications(apps);
 
         list = render(List, props);
-        let otherApps = TestUtils.findRenderedDOMComponentWithAttributeValue(list, 'data-block', 'other-apps'),
-            count = TestUtils.findRenderedDOMComponentWithAttributeValue(list, 'data-block', 'other-apps-hidden-count');
+        let otherApps = TestUtils.findRenderedDOMComponentWithAttributeValue(list, 'data-block', 'other-apps');
 
         expect($(React.findDOMNode(otherApps)).children().length).to.equal(20);
-        expect($(React.findDOMNode(count)).text()).to.equal('5');
-
         expect(() => {
             TestUtils.findRenderedDOMComponentWithAttributeValue(list, 'data-block', 'team-apps');
         }).to.throw();

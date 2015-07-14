@@ -38,7 +38,7 @@ describe('The kio store', () => {
             expect(store.getApplications().length).to.equal(2);
         });
 
-        it('should filter applications', () => {
+        it('should filter applications by id', () => {
             let results = [{
                 id: 'kio',
                 name: 'kio'
@@ -50,6 +50,21 @@ describe('The kio store', () => {
             expect(store.getApplications('kio').length).to.equal(1);
             expect(store.getApplications('Kio').length).to.equal(1);
             expect(store.getApplications('other').length).to.equal(0);
+        });
+
+        it('should filter applications by team_id', () => {
+            let results = [{
+                id: 'kio',
+                name: 'kio',
+                team_id: 'greendale'
+            }, {
+                id: 'twintip',
+                name: 'twintip',
+                team_id: 'stups'
+            }];
+            store.receiveApplications(results);
+            expect(store.getApplications('stups').length).to.equal(1);
+            expect(store.getApplications('greendale').length).to.equal(1);
         });
 
         it('should receive applications that match a list of team ids', () => {
@@ -203,7 +218,7 @@ describe('The kio store', () => {
             expect(store.getApplicationVersions('kio').length).to.equal(0);
         });
 
-        it('should filter properly', () => {
+        it('should filter by id', () => {
             store.receiveApplicationVersions([{
                 application_id: 'kio',
                 id: 'squirrel',
@@ -217,6 +232,20 @@ describe('The kio store', () => {
             expect(filtered.length).to.equal(1);
             let unfiltered = store.getApplicationVersions('kio');
             expect(unfiltered.length).to.equal(2);
+        });
+
+        it('should return the most recent version', () => {
+            store.receiveApplicationVersions([{
+                application_id: 'kio',
+                id: 'squirrel',
+                last_modified: '2015-05-28T16:30:00Z'
+            }, {
+                application_id: 'kio',
+                id: 'not-a-squirrel',
+                last_modified: '2015-05-24T16:30:00Z'
+            }]);
+            let latest = store.getLatestApplicationVersion('kio');
+            expect(latest.id).to.equal('squirrel');
         });
     });
 

@@ -171,7 +171,7 @@ class KioStore extends Store {
     getApplications(term) {
         let availableApps = _m.filter(app => !(app instanceof FetchResult), _m.vals(this.state.applications));
         if (term) {
-            availableApps = _m.filter(app => (_m.get(app, 'name')
+            availableApps = _m.filter(app => ((_m.get(app, 'name') + _m.get(app, 'team_id'))
                                                 .toLowerCase()
                                                 .indexOf(term.toLowerCase()) !== -1), availableApps);
         }
@@ -245,6 +245,11 @@ class KioStore extends Store {
             let version = _m.get(app, ver);
             return version ? _m.toJs(version) : false;
         }
+    }
+
+    getLatestApplicationVersion(id) {
+        let versions = this.getApplicationVersions(id);
+        return versions.length ? versions[0] : false;
     }
 
     receiveApprovals([applicationId, versionId, approvals]) {
