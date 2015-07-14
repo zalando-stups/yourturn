@@ -79,12 +79,14 @@ class ApplicationList extends React.Component {
                                 <col width='50%' />
                                 <col width='0*' />
                                 <col width='50%' />
+                                <col width='0*' />
                             </colgroup>
                             <thead>
                                 <tr>
                                     <th>Application</th>
                                     <th>Team</th>
                                     <th>Latest version</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody data-block='team-apps'>
@@ -105,13 +107,19 @@ class ApplicationList extends React.Component {
                                         <td>
                                         {latestVersions[i] ?
                                             <div>
-                                                <Link className='btn btn-default btn-small'
-                                                    to='application-verApproval'
-                                                    params={{
-                                                        versionId: latestVersions[i].id,
-                                                        applicationId: ta.id
-                                                    }}> <Icon name='check' />
-                                                </Link> <Link
+                                                {ta.active ?
+                                                    <Link
+                                                        className='btn btn-default btn-small applicationList-approvalButton'
+                                                        title={'Approve version ' + latestVersions[i].id + ' of ' + ta.name}
+                                                        to='application-verApproval'
+                                                        params={{
+                                                            versionId: latestVersions[i].id,
+                                                            applicationId: ta.id
+                                                        }}> <Icon name='check' />
+                                                    </Link>
+                                                    :
+                                                    null}
+                                                 <Link
                                                     to='application-verDetail'
                                                     params={{
                                                         versionId: latestVersions[i].id,
@@ -123,6 +131,18 @@ class ApplicationList extends React.Component {
                                             :
                                             null}
                                         </td>
+                                        <td>
+                                            {ta.active ?
+                                                <Link
+                                                    className='btn btn-default btn-small'
+                                                    to='application-verCreate'
+                                                    title={'Create new version for ' + ta.name}
+                                                    params={{applicationId: ta.id}}>
+                                                    <Icon name='plus' />
+                                                </Link>
+                                                :
+                                                null}
+                                        </td>
                                     </tr>
                             )}
                             </tbody>
@@ -133,6 +153,11 @@ class ApplicationList extends React.Component {
                     <h4>Other Applications</h4>
                     {otherApps.length ?
                         <table className='table'>
+                            <colgroup>
+                                <col width='50%' />
+                                <col width='0*' />
+                                <col width='50%' />
+                            </colgroup>
                             <tbody data-block='other-apps'>
                                 {shortApps.map(
                                     other =>
