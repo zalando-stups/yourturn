@@ -30,6 +30,7 @@
     "react-infinite-scroll": "0.1.5",
     "react-router": "0.13.3",
     "react-time": "2.5.0",
+    "react-typeahead": "1.1.0",
     "remarkable": "1.6.0",
     "superagent": "1.2.0",
     "superagent-oauth2-client": "0.0.17"

@@ -75,13 +75,6 @@ describe('The approval form view', () => {
         expect($(React.findDOMNode(approvals)).children().length).to.equal(2);
     });
 
-    it('should show all approval types in selectbox', () => {
-        flux.getStore(FLUX).receiveApprovalTypes([APP_ID, ['CHAOS', 'MORE_CHAOS']]);
-        form = render(ApprovalForm, props);
-        let select = TestUtils.findRenderedDOMComponentWithAttributeValue(form, 'data-block', 'approvalType-selection');
-        expect($(React.findDOMNode(select)).children().length).to.equal(2);
-    });
-
     it('should display an explanation of default approval types', () => {
         flux.getStore(FLUX).receiveApprovalTypes([APP_ID, TEST_APPROVAL_TYPES]);
         form = render(ApprovalForm, props);
@@ -92,12 +85,8 @@ describe('The approval form view', () => {
         flux.getStore(FLUX).receiveApprovalTypes([APP_ID, TEST_APPROVAL_TYPES]);
         form = render(ApprovalForm, props);
 
-        let select = TestUtils.findRenderedDOMComponentWithAttributeValue(form, 'data-block', 'approvalType-selection');
-        TestUtils.Simulate.change(select, {
-            target: {
-                value: 'UX'
-            }
-        });
+        let btn = TestUtils.findRenderedDOMComponentWithAttributeValue(form, 'data-block', 'custom-button');
+        TestUtils.Simulate.click(btn);
 
         expect(() => {
             TestUtils.findRenderedDOMComponentWithAttributeValue(form, 'data-block', 'approvalType-explanation');
