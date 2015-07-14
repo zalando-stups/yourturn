@@ -154,10 +154,15 @@ class ApplicationList extends React.Component {
                     {otherApps.length ?
                         <table className='table'>
                             <colgroup>
-                                <col width='50%' />
+                                <col width='100%' />
                                 <col width='0*' />
-                                <col width='50%' />
                             </colgroup>
+                            <thead>
+                                <tr>
+                                    <th>Application</th>
+                                    <th>Team</th>
+                                </tr>
+                            </thead>
                             <tbody data-block='other-apps'>
                                 {shortApps.map(
                                     other =>
@@ -173,7 +178,6 @@ class ApplicationList extends React.Component {
                                                 </Link>
                                             </td>
                                             <td>{other.team_id}</td>
-                                            <td></td>
                                         </tr>
                                 )}
                             </tbody>
