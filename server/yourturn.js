@@ -37,8 +37,9 @@ if (process.env.NEW_RELIC_APP_NAME) {
                             prev[cur[0]] = cur[1];
                             return prev;
                         }, {});
+        winston.info('Using appdynamics config: %s:', JSON.stringify(config, null, 4));
         require('appdynamics').profile(config);
-        winston.info('Successfully started appdynamics with config %s', JSON.stringify(config, null, 4));
+        winston.info('Successfully started appdynamics.');
     });
 }
 
