@@ -57,7 +57,7 @@ function getEnvironment() {
         var clientJsonPath = path.join(process.env.CREDENTIALS_DIR, 'client.json'),
             clientJsonFile,
             clientJson;
-        
+
         try {
             // try to read it
             clientJsonFile = fs.readFileSync(clientJsonPath);
@@ -65,7 +65,7 @@ function getEnvironment() {
             winston.error('Could not read client.json: %s', err.message);
             return env;
         }
-        
+
         try {
             // try to parse it as json
             clientJson = JSON.parse(clientJsonFile);
@@ -110,15 +110,15 @@ setInterval(writeEnv, 1000 * 60 * 60); // write this every hour
 
 // EXPRESS ROUTES BELOW
 
-server.get('/teams', function(req, res) {
+server.get('/teams/:teamId', function(req, res) {
     request
-        .get(process.env.YTENV_TEAM_BASE_URL + '/teams')
+        .get(process.env.YTENV_TEAM_BASE_URL + '/teams/' + req.params.teamId)
         .accept('json')
         // take OAuth token from request
         .set('Authorization', req.get('Authorization'))
         .end(function(err, response) {
             if (err) {
-                winston.error('Could not GET /teams: %d %s', err.status || 0, err.message);
+                winston.error('Could not GET /teams/%s: %d %s', req.params.teamId, err.status || 0, err.message);
                 return res.status(err.status || 0).send(err);
             }
             return res
@@ -145,9 +145,9 @@ server.get('/users/:userId', function(req, res) {
         });
 });
 
-server.get('/teams/:userId', function(req, res) {
+server.get('/membership/:userId', function(req, res) {
     request
-        .get(process.env.YTENV_TEAM_BASE_URL + '/user/' + req.params.userId)
+        .get(process.env.YTENV_TEAM_BASE_URL + '/teams?member=' + req.params.userId)
         .accept('json')
         .set('Authorization', req.get('Authorization'))
         .end(function(err, response) {

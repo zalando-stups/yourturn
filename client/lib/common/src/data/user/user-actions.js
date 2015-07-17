@@ -55,13 +55,29 @@ class UserActions extends Actions {
                 });
     }
 
-    fetchUserTeams(userId) {
+    fetchTeamDetails(teamId) {
         return request
-                .get(`${ENV_DEVELOPMENT ? 'http://localhost:5005' : ''}/teams/${userId}`)
+                .get(`${ENV_DEVELOPMENT ? 'http://localhost:5005' : ''}/teams/${teamId}`)
                 .accept('json')
                 .oauth(Provider, RequestConfig)
                 .exec(saveRoute)
                 .then(res => res.body)
+                .catch(e => {
+                    e.id = teamId;
+                    throw e;
+                });
+    }
+
+    fetchTeamMembership(userId) {
+        return request
+                .get(`${ENV_DEVELOPMENT ? 'http://localhost:5005' : ''}/membership/${userId}`)
+                .accept('json')
+                .oauth(Provider, RequestConfig)
+                .exec(saveRoute)
+                .then(res => Promise.all(res
+                                            .body
+                                            .map(team => team.id)
+                                            .map(teamId => this.fetchTeamDetails(teamId))))
                 .catch(e => {
                     e.id = userId;
                     throw e;

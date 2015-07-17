@@ -61,20 +61,23 @@ describe('The user store', () => {
     });
 
     it('should return teams without their accounts', () => {
-        store.receiveUserTeams(TEST_TEAMS);
-        let userTeams = store.getUserTeams();
+        store.receiveTeam(TEST_TEAMS[0]);
+        store.receiveTeam(TEST_TEAMS[1]);
+        let userTeams = store.getTeamMemberships();
         expect(userTeams[0]['infrastructure-accounts']).to.not.be.ok;
     });
 
     it('should return cloud accounts of a user', () => {
-        store.receiveUserTeams(TEST_TEAMS);
+        store.receiveTeam(TEST_TEAMS[0]);
+        store.receiveTeam(TEST_TEAMS[1]);
         let accounts = store.getUserCloudAccounts();
         expect(accounts.length).to.equal(2);
     });
 
     it('should sort teams', () => {
-        store.receiveUserTeams(TEST_TEAMS);
-        let userTeams = store.getUserTeams();
+        store.receiveTeam(TEST_TEAMS[0]);
+        store.receiveTeam(TEST_TEAMS[1]);
+        let userTeams = store.getTeamMemberships();
         expect(userTeams.length).to.equal(2);
         expect(userTeams[0].id).to.equal('greendale');
     });

@@ -22,9 +22,9 @@ function validateResponse(flux) {
                 var {uid} = tokeninfo;
 
                 ACTIONS
-                .fetchUserTeams(uid)
+                .fetchTeamMembership(uid)
                 .then(() => {
-                    let teams = STORE.getUserTeams(uid);
+                    let teams = STORE.getTeamMemberships(uid);
                     // 4) validate that at least one team exists
                     if (!teams || !teams.length) {
                         return reject(new Error('User is not part of a team.'));

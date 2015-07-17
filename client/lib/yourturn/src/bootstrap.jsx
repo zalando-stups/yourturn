@@ -40,7 +40,7 @@ YT_FLUX
     .then(info => {
         YT_FLUX
             .getActions('user')
-            .fetchUserTeams(info.uid);
+            .fetchTeamMembership(info.uid);
         YT_FLUX
             .getActions('user')
             .fetchUserInfo(info.uid);

@@ -1,28 +1,42 @@
 var express = require('express'),
     server = express();
 
-var user = {
-    npiccolotto: [{
-        id: 'stups',
-        'infrastructure-accounts': [
+var teams = {
+        stups: {
+            id: 'stups',
+            id_name: 'STUPS',
+            'infrastructure-accounts': [
+              {
+                id: '123456789',
+                type: 'aws'
+              }
+            ],
+            name: 'stups'
+          },
+          greendale: {
+            id: 'greendale',
+            id_name: 'Greendale',
+            'infrastructure-accounts': [
+              {
+                id: '10987654321',
+                type: 'aws'
+              }
+            ],
+            name: 'greendale'
+        }
+    },
+    user = {
+        npiccolotto: [{
+            id: 'stups',
+            id_name: 'STUPS',
+            name: 'Cloud Engineering / Paas'
+          },
           {
-            id: '123456789',
-            type: 'aws'
-          }
-        ],
-        name: 'stups'
-      },
-      {
-        id: 'greendale',
-        'infrastructure-accounts': [
-          {
-            id: '10987654321',
-            type: 'aws'
-          }
-        ],
-        name: 'greendale'
-    }]
-};
+            id: 'greendale',
+            id_name: 'Greendale',
+            name: 'IAM'
+        }]
+    };
 
 /** enable cors */
 server.use(function(req, res, next) {
@@ -32,6 +46,16 @@ server.use(function(req, res, next) {
 });
 
 server.get('/teams/:id', function(req,res){
+    setTimeout( function() {
+        var id = req.params.id;
+        if (!teams[id]) {
+            res.status(404).send();
+        }
+        res.status(200).send(teams[id]);
+    }, Math.random() * 2000 );
+});
+
+server.get('/membership/:id', function(req,res){
     setTimeout( function() {
         var id = req.params.id;
         if (!user[id]) {

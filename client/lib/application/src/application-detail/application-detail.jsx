@@ -34,7 +34,7 @@ class ApplicationDetail extends React.Component {
             {kio, twintip, user} = this.stores,
             versions = _.take(kio.getApplicationVersions(applicationId), 3),
             app = kio.getApplication(applicationId),
-            isOwnApplication = determineOwnApplication(app, user.getUserTeams()),
+            isOwnApplication = determineOwnApplication(app, user.getTeamMemberships()),
             api = twintip.getApi(applicationId);
 
         const LINK_PARAMS = {

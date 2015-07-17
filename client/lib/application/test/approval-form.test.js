@@ -94,7 +94,7 @@ describe('The approval form view', () => {
     });
 
     it('should disable the submit button in foreign applications', () => {
-        globalFlux.getStore('user').receiveUserTeams([TEST_TEAM]);
+        globalFlux.getStore('user').receiveTeam(TEST_TEAM);
         flux.getStore(FLUX).receiveApplication(TEST_APP);
 
         form = render(ApprovalForm, props);

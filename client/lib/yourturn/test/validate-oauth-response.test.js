@@ -29,9 +29,9 @@ describe('The oauth token validation', () => {
 
     function mock() {
         sinon.stub(flux.getActions('user'), 'fetchTokenInfo', () => Promise.resolve(TEST_TOKEN));
-        sinon.stub(flux.getActions('user'), 'fetchUserTeams', () => Promise.resolve(TEST_TEAMS));
+        sinon.stub(flux.getActions('user'), 'fetchTeamMembership', () => Promise.resolve(TEST_TEAMS));
         sinon.stub(flux.getStore('user'), 'getTokenInfo', () => TEST_TOKEN);
-        sinon.stub(flux.getStore('user'), 'getUserTeams', () => TEST_TEAMS);
+        sinon.stub(flux.getStore('user'), 'getTeamMemberships', () => TEST_TEAMS);
     }
 
     beforeEach(() => {

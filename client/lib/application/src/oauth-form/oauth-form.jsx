@@ -90,7 +90,7 @@ class OAuthForm extends React.Component {
         let {kio, mint, user, essentials} = this.stores,    // eslint-disable-line
             {applicationId} = this.props,
             application = kio.getApplication(applicationId),
-            isOwnApplication = user.getUserTeams().some(t => t.id === application.team_id),
+            isOwnApplication = user.getTeamMemberships().some(t => t.id === application.team_id),
             allRoScopes = essentials.getAllScopes().filter(s => s.is_resource_owner_scope),
             oauth = mint.getOAuthConfig(applicationId);
 
