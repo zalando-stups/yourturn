@@ -49,7 +49,7 @@ class LoginHandler extends React.Component {
 
                     YT_FLUX
                         .getActions('user')
-                        .fetchUserTeams(info.uid);
+                        .fetchTeamMembership(info.uid);
                     YT_FLUX
                         .getActions('user')
                         .fetchUserInfo(info.uid);

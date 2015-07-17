@@ -153,7 +153,7 @@ class ApprovalForm extends React.Component {
             application = kio.getApplication(applicationId),
             approvalTypes = kio.getApprovalTypes(applicationId),
             approvals = kio.getApprovals(applicationId, versionId),
-            isOwnApplication = user.getUserTeams().map(t => t.id).indexOf(application.team_id) >= 0;
+            isOwnApplication = user.getTeamMemberships().map(t => t.id).indexOf(application.team_id) >= 0;
         const LINK_PARAMS = {
             applicationId: applicationId,
             versionId: versionId
