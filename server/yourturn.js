@@ -34,7 +34,7 @@ if (process.env.NEW_RELIC_APP_NAME) {
                             return [camel(key), result[key][0]];
                         })
                         .reduce(function(prev, cur) {
-                            var key = cur[0] === 'applicationName' ? 'appName' : cur[0],
+                            var key = cur[0] === 'controllerHost' ? 'controllerHostName' : cur[0],
                                 val = cur[1];
                             // convert string values
                             if (val === 'true') {
