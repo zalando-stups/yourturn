@@ -27,14 +27,25 @@ if (process.env.NEW_RELIC_APP_NAME) {
             winston.error('Could not parse appdynamics config XML. Error: %s. Content: %s.', err.message, xmlFile);
             return;
         }
-
+        result = result['controller-info'];
         var config = Object
-                        .keys(result['controller-info'])
+                        .keys(result)
                         .map(function(key) {
-                            return [camel(key), result['controller-info'][key]];
+                            return [camel(key), result[key][0]];
                         })
                         .reduce(function(prev, cur) {
-                            prev[cur[0]] = cur[1];
+                            var key = cur[0],
+                                val = cur[1];
+                            // convert string values
+                            if (val === 'true') {
+                                prev[key] = true;
+                            } else if (val === 'false') {
+                                prev[key] = false;
+                            } else if (/[0-9]+/.test(val)) {
+                                prev[key] = parseInt(val, 10);
+                            } else {
+                                prev[key] = val;
+                            }
                             return prev;
                         }, {});
         winston.info('Using appdynamics config: %s:', JSON.stringify(config, null, 4));
