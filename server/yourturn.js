@@ -1,31 +1,72 @@
-// NEW RELIC
-// has to be first require!
-
-if (process.env.NEW_RELIC_APP_NAME) {
-    require('newrelic');
-}
-
-var express = require('express'),
-    compression = require('compression'),
+/* global require, process */
+var fs = require('fs'),
     winston = require('winston'),
-    server = express(),
-    request = require('superagent'),
-    fs = require('fs'),
-    path = require('path'),
-    index = fs.readFileSync('./index.html');
+    camel = require('camel-case'),
+    xml2js = require('xml2js').parseString;
 
-// configure logger
 winston.remove(winston.transports.Console);
 winston.add(winston.transports.Console, {
     timestamp: true,
     showLevel: true
 });
 
-var ONE_WEEK =  1000 *  // 1s
-                60 *    // 1m
-                60 *    // 1h
-                24 *    // 1d
-                7;      // 1w
+// NEW RELIC
+// has to be first require!
+if (process.env.NEW_RELIC_APP_NAME) {
+    require('newrelic');
+} else if (process.env.YTENV_USE_APPDYNAMICS) {
+// OR, YOU KNOW, APP DYNAMICS
+    var xmlFile;
+    try {
+        xmlFile = String(fs.readFileSync('/agents/appdynamics-jvm/conf/controller-info.xml'));
+    } catch(err) {
+        winston.error('Could not read appdynamics config XML.', err.message);
+    }
+    xml2js(xmlFile, function(err, result) {
+        if (err) {
+            winston.error('Could not parse appdynamics config XML. Error: %s. Content: %s.', err.message, xmlFile);
+            return;
+        }
+        result = result['controller-info'];
+        var config = Object
+                        .keys(result)
+                        .map(function(key) {
+                            return [camel(key), result[key][0]];
+                        })
+                        .reduce(function(prev, cur) {
+                            var key = cur[0] === 'controllerHost' ? 'controllerHostName' : cur[0],
+                                val = cur[1];
+                            // convert string values
+                            if (val === 'true') {
+                                prev[key] = true;
+                            } else if (val === 'false') {
+                                prev[key] = false;
+                            } else if (/^[0-9]+$/.test(val)) {
+                                prev[key] = parseInt(val, 10);
+                            } else {
+                                prev[key] = val;
+                            }
+                            return prev;
+                        }, {});
+        winston.info('Using appdynamics config: %s:', JSON.stringify(config, null, 4));
+        require('appdynamics').profile(config);
+        winston.info('Successfully started appdynamics.');
+    });
+}
+
+// THE REAL SHIT
+
+var express = require('express'),
+    compression = require('compression'),
+    server = express(),
+    request = require('superagent'),
+    path = require('path'),
+    index = fs.readFileSync('./index.html'),
+    ONE_WEEK =  1000 *    // 1s
+                  60 *    // 1m
+                  60 *    // 1h
+                  24 *    // 1d
+                   7;     // 1w
 server.use(compression());
 server.use('/dist', express.static('dist', {
     maxAge: ONE_WEEK
