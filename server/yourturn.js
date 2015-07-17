@@ -41,7 +41,7 @@ if (process.env.NEW_RELIC_APP_NAME) {
                                 prev[key] = true;
                             } else if (val === 'false') {
                                 prev[key] = false;
-                            } else if (/[0-9]+/.test(val)) {
+                            } else if (/^[0-9]+$/.test(val)) {
                                 prev[key] = parseInt(val, 10);
                             } else {
                                 prev[key] = val;
