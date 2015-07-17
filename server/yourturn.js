@@ -29,9 +29,9 @@ if (process.env.NEW_RELIC_APP_NAME) {
         }
 
         var config = Object
-                        .keys(result)
+                        .keys(result['controller-info'])
                         .map(function(key) {
-                            return [camel(key), result[key]];
+                            return [camel(key), result['controller-info'][key]];
                         })
                         .reduce(function(prev, cur) {
                             prev[cur[0]] = cur[1];
