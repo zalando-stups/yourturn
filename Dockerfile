@@ -18,7 +18,7 @@ ADD /scm-source.json /scm-source.json
 COPY ./server/newrelic.js /www/
 
 # appdynamics directory
-RUN mkdir /tmp/appd && chmod -R 0666 /tmp/appd
+RUN mkdir /tmp/appd && chmod -R 0777 /tmp/appd
 
 # copy resources
 COPY ./client/dist/ /www/dist/
