@@ -17,6 +17,9 @@ ADD /scm-source.json /scm-source.json
 # add newrelic configuration
 COPY ./server/newrelic.js /www/
 
+# appdynamics directory
+RUN mkdir /tmp/appd && chmod -R 0666 /tmp/appd
+
 # copy resources
 COPY ./client/dist/ /www/dist/
 COPY ./server/newrelic-browser.js /www/dist/
