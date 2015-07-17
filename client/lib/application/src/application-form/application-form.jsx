@@ -197,7 +197,7 @@ class ApplicationForm extends React.Component {
                                     name='yourturn_app_app_id'
                                     data-block='id-input'
                                     title='Starts with character, may end with digit, may have dashes in between.'
-                                    pattern='[A-Za-z][A-Za-z0-9\-]*[A-Za-z0-9]'
+                                    pattern='[a-z][a-z0-9\-]*[a-z0-9]'
                                     placeholder='pierone'
                                     type='text' />
                             </div>
