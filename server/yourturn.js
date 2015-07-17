@@ -1,31 +1,60 @@
-// NEW RELIC
-// has to be first require!
-
-if (process.env.NEW_RELIC_APP_NAME) {
-    require('newrelic');
-}
-
-var express = require('express'),
-    compression = require('compression'),
+/* global require, process */
+var fs = require('fs'),
     winston = require('winston'),
-    server = express(),
-    request = require('superagent'),
-    fs = require('fs'),
-    path = require('path'),
-    index = fs.readFileSync('./index.html');
+    camel = require('camel-case'),
+    xml2js = require('xml2js').parseString;
 
-// configure logger
 winston.remove(winston.transports.Console);
 winston.add(winston.transports.Console, {
     timestamp: true,
     showLevel: true
 });
 
-var ONE_WEEK =  1000 *  // 1s
-                60 *    // 1m
-                60 *    // 1h
-                24 *    // 1d
-                7;      // 1w
+// NEW RELIC
+// has to be first require!
+if (process.env.NEW_RELIC_APP_NAME) {
+    require('newrelic');
+} else if (process.env.YTENV_USE_APPDYNAMICS) {
+// OR, YOU KNOW, APP DYNAMICS
+    var xmlFile;
+    try {
+        xmlFile = String(fs.readFileSync('/agents/appdynamics-jvm/conf/controller-info.xml'));
+    } catch(err) {
+        winston.error('Could not read appdynamics config XML.', err.message);
+    }
+    xml2js(xmlFile, function(err, result) {
+        if (err) {
+            winston.error('Could not parse appdynamics config XML. Error: %s. Content: %s.', err.message, xmlFile);
+            return;
+        }
+
+        var config = Object
+                        .keys(result)
+                        .map(function(key) {
+                            return [camel(key), result[key]];
+                        })
+                        .reduce(function(prev, cur) {
+                            prev[cur[0]] = cur[1];
+                            return prev;
+                        }, {});
+        require('appdynamics').profile(config);
+        winston.info('Successfully started appdynamics with config %s', JSON.stringify(config, null, 4));
+    });
+}
+
+// THE REAL SHIT
+
+var express = require('express'),
+    compression = require('compression'),
+    server = express(),
+    request = require('superagent'),
+    path = require('path'),
+    index = fs.readFileSync('./index.html'),
+    ONE_WEEK =  1000 *    // 1s
+                  60 *    // 1m
+                  60 *    // 1h
+                  24 *    // 1d
+                   7;     // 1w
 server.use(compression());
 server.use('/dist', express.static('dist', {
     maxAge: ONE_WEEK
@@ -57,7 +86,7 @@ function getEnvironment() {
         var clientJsonPath = path.join(process.env.CREDENTIALS_DIR, 'client.json'),
             clientJsonFile,
             clientJson;
-        
+
         try {
             // try to read it
             clientJsonFile = fs.readFileSync(clientJsonPath);
@@ -65,7 +94,7 @@ function getEnvironment() {
             winston.error('Could not read client.json: %s', err.message);
             return env;
         }
-        
+
         try {
             // try to parse it as json
             clientJson = JSON.parse(clientJsonFile);

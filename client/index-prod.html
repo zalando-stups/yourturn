@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        
+
         <title>Your Turn</title>
         <style>${inline}</style>
         <link rel="icon" type="image/png" href="/dist/stups_favicon.png" />
@@ -78,6 +78,14 @@
         </div>
         <script src="/dist/env.js?v=${timestamp}"></script>
         <script src="/dist/bundle.js?v=${timestamp}"></script>
-        <script src="/dist/newrelic-browser.js?v=${timestamp}"></script>
+        <script>
+            if (YTENV_NEW_RELIC_BROWSER_APP_ID) {
+                // load new relic
+                var head = document.getElementsByTagName('head')[0],
+                    js = document.createElement('script');
+                js.src = '/dist/newrelic-browser.js?v=${timestamp}';
+                head.appendChild(js);
+            }
+        </script>
     </body>
 </html>

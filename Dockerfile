@@ -1,7 +1,10 @@
-FROM node:0.12.1
+FROM node:0.10.38
 
 MAINTAINER Zalando SE
 
+RUN npm install appdynamics@4.0.7
+RUN npm install xml2js@0.4.9
+RUN npm install camel-case@1.1.2
 RUN npm install newrelic@1.19.1
 RUN npm install winston@1.0.0
 RUN npm install superagent@1.2.0
