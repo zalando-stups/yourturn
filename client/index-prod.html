@@ -86,6 +86,13 @@
                 js.src = '/dist/newrelic-browser.js?v=${timestamp}';
                 head.appendChild(js);
             }
+            if (YTENV_APPDYNAMICS_KEY) {
+                window['adrum-start-time'] = new Date().getTime();
+                var head = document.getElementsByTagName('head')[0],
+                    js = document.createElement('script');
+                js.src = '/dist/appdynamics.js?v=${timestamp}';
+                head.appendChild(js);
+            }
         </script>
     </body>
 </html>

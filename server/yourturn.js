@@ -14,7 +14,7 @@ winston.add(winston.transports.Console, {
 // has to be first require!
 if (process.env.NEW_RELIC_APP_NAME) {
     require('newrelic');
-} else if (process.env.YTENV_USE_APPDYNAMICS) {
+} else if (process.env.YTENV_APPDYNAMICS_KEY) {
 // OR, YOU KNOW, APP DYNAMICS
     var xmlFile;
     try {
