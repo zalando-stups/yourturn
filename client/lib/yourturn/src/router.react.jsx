@@ -52,6 +52,9 @@ class LoginHandler extends React.Component {
                         .fetchTeamMembership(info.uid);
                     YT_FLUX
                         .getActions('user')
+                        .fetchAccounts(info.uid);
+                    YT_FLUX
+                        .getActions('user')
                         .fetchUserInfo(info.uid);
                     this.context.router.transitionTo(response.metadata.route || '/');
                 })

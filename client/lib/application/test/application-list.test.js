@@ -41,10 +41,10 @@ describe('The application list view', () => {
 
         globalFlux
         .getStore('user')
-        .receiveTeam({
-            id: 'stups',
+        .receiveAccounts([{
+            id: '123',
             name: 'stups'
-        });
+        }]);
 
         props = {
             flux: flux,

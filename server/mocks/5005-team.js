@@ -2,39 +2,28 @@ var express = require('express'),
     server = express();
 
 var teams = {
-        stups: {
-            id: 'stups',
-            id_name: 'STUPS',
-            'infrastructure-accounts': [
-              {
-                id: '123456789',
-                type: 'aws'
-              }
-            ],
-            name: 'stups'
-          },
-          greendale: {
-            id: 'greendale',
-            id_name: 'Greendale',
-            'infrastructure-accounts': [
-              {
-                id: '10987654321',
-                type: 'aws'
-              }
-            ],
-            name: 'greendale'
-        }
-    },
-    user = {
         npiccolotto: [{
             id: 'stups',
             id_name: 'STUPS',
-            name: 'Cloud Engineering / Paas'
-          },
-          {
+            name: 'stups'
+        }, {
             id: 'greendale',
             id_name: 'Greendale',
-            name: 'IAM'
+            name: 'greendale'
+        }]
+    },
+    accounts = {
+        npiccolotto: [{
+            id: '123456789',
+            name: 'stups',
+            type: 'aws',
+            description: 'STUPS account'
+        },
+        {
+            id: '0987654321',
+            name: 'stups-test',
+            type: 'aws',
+            description: 'STUPS test account'
         }]
     };
 
@@ -45,7 +34,7 @@ server.use(function(req, res, next) {
     next();
 });
 
-server.get('/teams/:id', function(req,res){
+server.get('/membership/:id', function(req, res) {
     setTimeout( function() {
         var id = req.params.id;
         if (!teams[id]) {
@@ -53,15 +42,15 @@ server.get('/teams/:id', function(req,res){
         }
         res.status(200).send(teams[id]);
     }, Math.random() * 2000 );
-});
+})
 
-server.get('/membership/:id', function(req,res){
+server.get('/accounts/:id', function(req,res){
     setTimeout( function() {
         var id = req.params.id;
-        if (!user[id]) {
+        if (!accounts[id]) {
             res.status(404).send();
         }
-        res.status(200).send(user[id]);
+        res.status(200).send(accounts[id]);
     }, Math.random() * 2000 );
 });
 

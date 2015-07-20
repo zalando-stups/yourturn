@@ -125,7 +125,7 @@ class ViolationList extends React.Component {
                                         type="checkbox"
                                         value={a.id}
                                         onChange={this.toggleAccount.bind(this, a.id)}
-                                        defaultChecked={showingAccounts.indexOf(a.id) >= 0}/> {a.team} <small>({a.id})</small>
+                                        defaultChecked={showingAccounts.indexOf(a.id) >= 0}/> {a.name} <small>({a.id})</small>
                                 </label>)}
                         </div>
                         <div>
