@@ -12,7 +12,8 @@ class UserStore extends Store {
             tokeninfo: _m.hashMap(),
             uid: false,
             users: _m.hashMap(),
-            teams: _m.hashMap()
+            teams: _m.vector(),
+            accounts: _m.vector()
         };
 
         this.register(
@@ -26,9 +27,15 @@ class UserStore extends Store {
             null);
 
         this.registerAsync(
-            userActions.fetchTeamDetails,
+            userActions.fetchTeamMembership,
             null,
-            this.receiveTeam,
+            this.receiveTeams,
+            null);
+
+        this.registerAsync(
+            userActions.fetchAccounts,
+            null,
+            this.receiveAccounts,
             null);
 
         this.registerAsync(
@@ -38,9 +45,9 @@ class UserStore extends Store {
             null);
     }
 
-    receiveTeam(team) {
+    receiveTeams(teams) {
         this.setState({
-            teams: _m.assoc(this.state.teams, team.id, _m.toClj(team))
+            teams: _m.toClj(teams)
         });
     }
 
@@ -50,29 +57,29 @@ class UserStore extends Store {
         });
     }
 
+    receiveAccounts(accounts) {
+        this.setState({
+            accounts: _m.toClj(accounts)
+        });
+    }
+
     getUserCloudAccounts() {
-        let teams = _m.toJs(this.state.teams);
-        return Object
-                .keys(teams)
-                .map(t => teams[t]['infrastructure-accounts']
-                            .map(acc => {
-                                acc.team = t;
-                                return acc;
-                            }))
-                .reduce((prev, cur) => {
-                    prev = prev.concat(cur);
-                    return prev;
-                }, []);
+        return _m.toJs(this.state.accounts);
     }
 
     getTeamMemberships() {
         let teams = _m.toJs(this.state.teams);
-        return Object
-                .keys(teams)
-                .sort()
-                .map(tId => ({
-                    id: tId,
-                    name: teams[tId].id_name
+        return teams
+                .sort((a, b) => {
+                    let aId = a.id,
+                        bId = b.id;
+                    return aId < bId ? -1 :
+                            bId < aId ? 1 :
+                                0;
+                })
+                .map(team => ({
+                    id: team.id,
+                    name: teams.id_name
                 }));
     }
 
@@ -120,7 +127,8 @@ class UserStore extends Store {
             tokeninfo: _m.hashMap(),
             uid: false,
             users: _m.hashMap(),
-            teams: _m.hashMap()
+            teams: _m.vector(),
+            accounts: _m.vector()
         });
     }
 }

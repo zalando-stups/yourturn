@@ -151,15 +151,15 @@ setInterval(writeEnv, 1000 * 60 * 60); // write this every hour
 
 // EXPRESS ROUTES BELOW
 
-server.get('/teams/:teamId', function(req, res) {
+server.get('/accounts/:userId', function(req, res) {
     request
-        .get(process.env.YTENV_TEAM_BASE_URL + '/teams/' + req.params.teamId)
+        .get(process.env.YTENV_TEAM_BASE_URL + '/accounts/aws?member=' + req.params.userId)
         .accept('json')
         // take OAuth token from request
         .set('Authorization', req.get('Authorization'))
         .end(function(err, response) {
             if (err) {
-                winston.error('Could not GET /teams/%s: %d %s', req.params.teamId, err.status || 0, err.message);
+                winston.error('Could not GET /accounts/%s: %d %s', req.params.userId, err.status || 0, err.message);
                 return res.status(err.status || 0).send(err);
             }
             return res

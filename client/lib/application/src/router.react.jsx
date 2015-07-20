@@ -3,7 +3,7 @@ import {Route, DefaultRoute} from 'react-router';
 import FluxComponent from 'flummox/component';
 import Flux from './flux';
 import {parseArtifact} from 'application/src/util';
-import {requireTeam} from 'common/src/util';
+import {requireAccounts} from 'common/src/util';
 
 import ApplicationList from './application-list/application-list.jsx';
 import ApplicationForm from './application-form/application-form.jsx';
@@ -45,9 +45,9 @@ AppListHandler.fetchData = function(state, globalFlux) {
     KIO_ACTIONS
     .fetchApplications()
     .then(apps =>
-        requireTeam(globalFlux)
-        .then(teams => {
-            let ids = teams.map(t => t.id);
+        requireAccounts(globalFlux)
+        .then(accs => {
+            let ids = accs.map(acc => acc.name);
             apps
             .filter(app => ids.indexOf(app.team_id) >= 0)
             .forEach(app => KIO_ACTIONS.fetchApplicationVersions(app.id));
@@ -78,7 +78,7 @@ CreateAppFormHandler.propTypes = {
 };
 CreateAppFormHandler.fetchData = function(state, globalFlux) {
     return Promise.all([
-        requireTeam(globalFlux),
+        requireAccounts(globalFlux),
         KIO_ACTIONS.fetchApplications()
     ]);
 };
@@ -122,7 +122,7 @@ EditAppFormHandler.propTypes = {
 EditAppFormHandler.fetchData = function(state, globalFlux) {
     return Promise.all([
             KIO_ACTIONS.fetchApplication(state.params.applicationId),
-            requireTeam(globalFlux)
+            requireAccounts(globalFlux)
         ]);
 };
 

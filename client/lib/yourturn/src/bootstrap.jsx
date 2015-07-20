@@ -43,6 +43,9 @@ YT_FLUX
             .fetchTeamMembership(info.uid);
         YT_FLUX
             .getActions('user')
+            .fetchAccounts(info.uid);
+        YT_FLUX
+            .getActions('user')
             .fetchUserInfo(info.uid);
     });
 
