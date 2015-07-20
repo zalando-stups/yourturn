@@ -9,8 +9,9 @@ import ApprovalForm from 'application/src/approval-form/approval-form.jsx';
 const FLUX = 'kio',
     APP_ID = 'kio',
     VER_ID = '0.1',
-    TEST_TEAM = {
-        id: 'asdf'
+    TEST_ACCOUNT = {
+        id: '234',
+        name: 'greendale'
     },
     TEST_APP = {
         id: APP_ID,
@@ -94,7 +95,7 @@ describe('The approval form view', () => {
     });
 
     it('should disable the submit button in foreign applications', () => {
-        globalFlux.getStore('user').receiveTeam(TEST_TEAM);
+        globalFlux.getStore('user').receiveAccounts([TEST_ACCOUNT]);
         flux.getStore(FLUX).receiveApplication(TEST_APP);
 
         form = render(ApprovalForm, props);

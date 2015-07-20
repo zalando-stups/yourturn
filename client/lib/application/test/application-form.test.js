@@ -62,9 +62,10 @@ describe('The application form view', () => {
                 applicationId: APP_ID,
                 edit: false
             };
-            globalFlux.getStore('user').receiveTeam({
-                id: 'stups'
-            });
+            globalFlux.getStore('user').receiveAccounts([{
+                id: '123',
+                name: 'stups'
+            }]);
             form = render(AppForm, props);
         });
 
@@ -93,9 +94,10 @@ describe('The application form view', () => {
                 applicationId: APP_ID,
                 edit: true
             };
-            globalFlux.getStore('user').receiveTeam({
-                id: 'stups'
-            });
+            globalFlux.getStore('user').receiveAccounts([{
+                id: '123',
+                name: 'stups'
+            }]);
             flux.getStore(FLUX).receiveApplication(TEST_APP);
             form = render(AppForm, props);
         });

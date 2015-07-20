@@ -24,7 +24,7 @@ class ApplicationForm extends React.Component {
             this.state.app = {
                 active: true,
                 required_approvers: 2,
-                team_id: user.getTeamMemberships()[0].id
+                team_id: user.getUserCloudAccounts()[0].id
             };
         }
 
@@ -95,7 +95,7 @@ class ApplicationForm extends React.Component {
         let {edit, applicationId} = this.props,
             storeApp = this.stores.kio.getApplication(applicationId),
             {app} = this.state,
-            teams = this.stores.user.getTeamMemberships();
+            accounts = this.stores.user.getUserCloudAccounts();
         return <div className='applicationForm'>
                     {edit ?
                         <div>
@@ -156,13 +156,13 @@ class ApplicationForm extends React.Component {
                                 :
                                 <select
                                     name='yourturn_app_team_id'
-                                    defaultValue={teams[0].id}
+                                    defaultValue={accounts[0].id}
                                     onChange={this.update.bind(this, 'team_id', 'value')}
                                     id='team_id'>
-                                    {teams.map(
-                                        t => <option
-                                                key={t.id}
-                                                value={t.id}>{t.id}</option>
+                                    {accounts.map(
+                                        a => <option
+                                                key={a.name}
+                                                value={a.name}>{a.name}</option>
                                     )}
                                 </select>
                             }

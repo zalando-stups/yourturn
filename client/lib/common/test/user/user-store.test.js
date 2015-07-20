@@ -6,18 +6,17 @@ import {Flummox} from 'flummox';
 const FLUX = 'user',
     TEST_TEAMS = [{
         id: 'stups',
-        name: 'stups',
-        'infrastructure-accounts': [{
-            id: '74129824892479',
-            type: 'aws'
-        }]
+        name: 'stups'
     }, {
         id: 'greendale',
-        name: 'greendale',
-        'infrastructure-accounts': [{
-            id: '8575378539035035',
-            type: 'gcc'
-        }]
+        name: 'greendale'
+    }],
+    TEST_ACCOUNTS = [{
+        id: '123',
+        name: 'stups'
+    }, {
+        id: '321',
+        name: 'greendale'
     }],
     TEST_USERINFO = {
         email: 'test@example.com'
@@ -61,22 +60,19 @@ describe('The user store', () => {
     });
 
     it('should return teams without their accounts', () => {
-        store.receiveTeam(TEST_TEAMS[0]);
-        store.receiveTeam(TEST_TEAMS[1]);
+        store.receiveTeams(TEST_TEAMS);
         let userTeams = store.getTeamMemberships();
         expect(userTeams[0]['infrastructure-accounts']).to.not.be.ok;
     });
 
     it('should return cloud accounts of a user', () => {
-        store.receiveTeam(TEST_TEAMS[0]);
-        store.receiveTeam(TEST_TEAMS[1]);
+        store.receiveAccounts(TEST_ACCOUNTS);
         let accounts = store.getUserCloudAccounts();
         expect(accounts.length).to.equal(2);
     });
 
     it('should sort teams', () => {
-        store.receiveTeam(TEST_TEAMS[0]);
-        store.receiveTeam(TEST_TEAMS[1]);
+        store.receiveTeams(TEST_TEAMS);
         let userTeams = store.getTeamMemberships();
         expect(userTeams.length).to.equal(2);
         expect(userTeams[0].id).to.equal('greendale');
