@@ -23,6 +23,7 @@ RUN mkdir /tmp/appd && chmod -R 0777 /tmp/appd
 # copy resources
 COPY ./client/dist/ /www/dist/
 COPY ./server/newrelic-browser.js /www/dist/
+COPY ./server/appdynamics.js /www/dist/
 COPY ./client/dist/index.html /www/
 COPY ./server/yourturn.js /www/
 
