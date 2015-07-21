@@ -8,20 +8,24 @@
 
     .violationList-accounts {
         padding: @padding-small 0;
+
         label {
             .transition(background, color);
             cursor: pointer;
+            white-space: nowrap;
+            display: inline-block;
             padding: 3px 5px;
             border-radius: 2*@border-radius;
             border: 1px solid;
-
             border-color: @gray-lighter;
             background: @white;
             color: @gray;
+            margin: @padding-tiniest 0;
+            margin-right: @padding-small;
+
             &:hover {
                 background: @gray-lighter;
             }
-
 
             &.is-checked {
                 border-color: @orange-dark;
@@ -31,15 +35,39 @@
                     background: @orange-dark;
                 }
             }
+
             input {
                 display: none;
             }
+
             &:before {
                 content: "\f0c2";
                 font-family: "FontAwesome";
             }
-            + label {
-                margin-left: @padding-small;
+        }
+
+        .typeahead {
+            flex: 1;
+            position: absolute;
+            width: 30em;
+            input {
+                width: 100%;
+            }
+        }
+
+        .input-group {
+            display: flex;
+            padding-bottom: @padding-small;
+            .fa {
+                user-select: none;
+                flex: 0 0 auto;
+                padding: @padding-tiniest @padding-tiny;
+                border: 1px solid @gray-light;
+                border-right: none;
+                color: @gray;
+                font-size: inherit;
+                line-height: inherit;
+                display: inline;
             }
         }
     }

@@ -3,6 +3,7 @@ import Icon from 'react-fa';
 import Timestamp from 'react-time';
 import Infinite from 'react-infinite-scroll';
 import moment from 'moment';
+import {Typeahead} from 'react-typeahead';
 import {DATE_FORMAT} from 'common/src/config';
 import Datepicker from 'common/src/datepicker.jsx';
 import Violation from 'violation/src/violation-card/violation-card.jsx';
@@ -15,6 +16,7 @@ class ViolationList extends React.Component {
         super();
         this.stores = {
             fullstop: props.flux.getStore('fullstop'),
+            team: props.flux.getStore('team'),
             user: props.globalFlux.getStore('user')
         };
         this.actions = props.flux.getActions('fullstop');
@@ -22,6 +24,8 @@ class ViolationList extends React.Component {
             showingResolved: false,
             dispatching: false,
             currentPage: 0,
+            accountSearch: '',
+            selectableAccounts: this.stores.user.getUserCloudAccounts(),
             showingAccounts: this.stores.user.getUserCloudAccounts().map(a => a.id),
             showingSince: moment().subtract(1, 'week').startOf('day').toDate()
         };
@@ -62,6 +66,35 @@ class ViolationList extends React.Component {
         setTimeout(() => this.loadMore(0), 0);
     }
 
+    addAccount(account) {
+        let {id} = account;
+        if (this.state.selectableAccounts.map(a => a.id).indexOf(id) >= 0) {
+            return;
+        }
+        this.state.selectableAccounts.push(account);
+        this.state.selectableAccounts
+            .sort((a, b) => {
+                    let aName = a.name.toLowerCase(),
+                        bName = b.name.toLowerCase();
+                    return aName < bName ?
+                            -1 :
+                            bName < aName ?
+                                1 : 0;
+                 });
+        this.state.showingAccounts.push(id);
+        this.setState({
+            selectableAccounts: this.state.selectableAccounts,
+            showingAccounts: this.state.showingAccounts,
+            accountSearch: ''
+        });
+    }
+
+    updateAccountSearch(evt) {
+        this.setState({
+            accountSearch: evt.target.value
+        });
+    }
+
     loadMore(page) {
         let {showingSince, showingAccounts, dispatching} = this.state;
         // need to keep track of which action was already dispatched
@@ -100,17 +133,18 @@ class ViolationList extends React.Component {
     }
 
     render() {
-        let {showingResolved, showingAccounts} = this.state,
-            accounts = this.stores.user.getUserCloudAccounts(),
+        let {showingResolved, showingAccounts, selectableAccounts, accountSearch} = this.state,
+            accounts = this.stores.team.getAccounts(),
             unresolvedViolations = this.stores.fullstop.getViolations(showingAccounts, false),
             resolvedViolations = this.stores.fullstop.getViolations(showingAccounts, true),
             violations = showingResolved ? resolvedViolations : unresolvedViolations,
             pagingInfo = this.stores.fullstop.getPagingInfo(),
             violationCards = violations.map((v, i) => <Violation
-                                key={v.id}
-                                autoFocus={i === 0}
-                                flux={this.props.flux}
-                                violation={v} />);
+                                                        key={v.id}
+                                                        autoFocus={i === 0}
+                                                        flux={this.props.flux}
+                                                        violation={v} />);
+
         return <div className='violationList'>
                     <h2 className='violationList-headline'>Violations</h2>
                     <div className='u-info'>
@@ -119,7 +153,18 @@ class ViolationList extends React.Component {
                     <div className='violationList-filtering'>
                         <div className='violationList-accounts'>
                             <div>Show violations in these accounts:</div>
-                            {accounts.map(a =>
+                            <div className='input-group'>
+                                <Icon name='plus' />
+                                <Typeahead
+                                    placeholder='stups-test'
+                                    options={accounts}
+                                    displayOption={option => `${option.name} (${option.id})`}
+                                    filterOption={(input, option) => (option.name + ' ' + option.id).indexOf(input) >= 0}
+                                    onKeyUp={this.updateAccountSearch.bind(this)}
+                                    onOptionSelected={this.addAccount.bind(this)}
+                                    maxVisible={10} />
+                            </div>
+                            {selectableAccounts.map(a =>
                                 <label className={showingAccounts.indexOf(a.id) >= 0 ? 'is-checked' : ''}>
                                     <input
                                         type="checkbox"

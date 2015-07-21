@@ -14,34 +14,4 @@
     .approvalForm-versionId {
         color: @gray;
     }
-
-    .typeahead {
-        .typeahead-selector {
-            padding: 0;
-            margin: 0;
-            list-style-type: none;
-
-            li {
-                border: 1px solid @gray-dark;
-                border-top: 0px;
-                padding-left: @padding-small;
-
-                .typeahead-option {
-                    .transition(background-color, color);
-                    background-image: none;
-                }
-
-                &:hover {
-                    cursor: pointer;
-                    background-color: @orange-lighter;
-                }
-
-                &.hover{
-                    .typeahead-option {
-                        color: @orange-dark !important;
-                    }
-                }
-            }
-        }
-    }
 }
