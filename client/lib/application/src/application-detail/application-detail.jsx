@@ -8,9 +8,8 @@ import Placeholder from './placeholder.jsx';
 import DefaultError from 'common/src/error.jsx';
 import 'common/asset/less/application/application-detail.less';
 
-function determineOwnApplication(app, teams) {
-    return teams
-            .some(t => t.id === app.team_id);
+function determineOwnApplication(app, accounts) {
+    return accounts.some(t => t.name === app.team_id);
 }
 
 class ApplicationDetail extends React.Component {
@@ -34,7 +33,7 @@ class ApplicationDetail extends React.Component {
             {kio, twintip, user} = this.stores,
             versions = _.take(kio.getApplicationVersions(applicationId), 3),
             app = kio.getApplication(applicationId),
-            isOwnApplication = determineOwnApplication(app, user.getTeamMemberships()),
+            isOwnApplication = determineOwnApplication(app, user.getUserCloudAccounts()),
             api = twintip.getApi(applicationId);
 
         const LINK_PARAMS = {

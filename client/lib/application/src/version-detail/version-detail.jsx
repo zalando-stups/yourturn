@@ -104,7 +104,7 @@ class VersionDetail extends React.Component {
             {team, artifact, tag} = parseArtifact(version.artifact),
             scmSource = pierone.getScmSource(team, artifact, tag),
             approvals = kio.getApprovals(applicationId, versionId),
-            isOwnApplication = user.getTeamMemberships().map(t => t.id).indexOf(application.team_id) >= 0;
+            isOwnApplication = user.getUserCloudAccounts().some(t => t.name === application.team_id);
 
         const LINK_PARAMS = {
             applicationId: applicationId,

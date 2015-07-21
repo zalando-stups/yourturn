@@ -104,8 +104,8 @@ class EditAppFormHandler extends React.Component {
 EditAppFormHandler.isAllowed = function(state, globalFlux) {
     let {applicationId} = state.params,
         application = KIO_STORE.getApplication(applicationId),
-        userTeams = globalFlux.getStore('user').getTeamMemberships(),
-        isOwnTeam = userTeams.map(t => t.id).indexOf(application.team_id) >= 0;
+        userTeams = globalFlux.getStore('user').getUserCloudAccounts(),
+        isOwnTeam = userTeams.map(t => t.name).indexOf(application.team_id) >= 0;
     if (!isOwnTeam) {
         let error = new Error();
         error.name = 'Forbidden';
@@ -377,8 +377,8 @@ class EditVersionFormHandler extends React.Component {
 EditVersionFormHandler.isAllowed = function(state, globalFlux) {
     let {applicationId} = state.params,
         application = KIO_STORE.getApplication(applicationId),
-        userTeams = globalFlux.getStore('user').getTeamMemberships(),
-        isOwnTeam = userTeams.map(t => t.id).indexOf(application.team_id) >= 0;
+        userTeams = globalFlux.getStore('user').getUserCloudAccounts(),
+        isOwnTeam = userTeams.map(t => t.name).indexOf(application.team_id) >= 0;
     if (!isOwnTeam) {
         let error = new Error();
         error.name = 'Forbidden';
