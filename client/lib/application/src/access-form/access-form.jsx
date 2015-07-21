@@ -79,7 +79,7 @@ class AccessForm extends React.Component {
             {kio, user, mint, essentials} = this.stores,
             allAppScopes = essentials.getAllScopes().filter(s => !s.is_resource_owner_scope),
             application = kio.getApplication(applicationId),
-            isOwnApplication = user.getTeamMemberships().some(t => t.id === application.team_id),
+            isOwnApplication = user.getUserCloudAccounts().some(t => t.name === application.team_id),
             oauth = mint.getOAuthConfig(applicationId);
 
         const LINK_PARAMS = {
