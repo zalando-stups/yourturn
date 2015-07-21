@@ -24,7 +24,7 @@ class ApplicationForm extends React.Component {
             this.state.app = {
                 active: true,
                 required_approvers: 2,
-                team_id: user.getUserCloudAccounts()[0].id
+                team_id: user.getUserCloudAccounts()[0].name
             };
         }
 
@@ -156,7 +156,7 @@ class ApplicationForm extends React.Component {
                                 :
                                 <select
                                     name='yourturn_app_team_id'
-                                    defaultValue={accounts[0].id}
+                                    defaultValue={accounts[0].name}
                                     onChange={this.update.bind(this, 'team_id', 'value')}
                                     id='team_id'>
                                     {accounts.map(
