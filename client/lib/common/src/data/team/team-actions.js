@@ -1,3 +1,4 @@
+/* global ENV_DEVELOPMENT */
 import {Actions} from 'flummox';
 import request from 'common/src/superagent';
 import {Provider, RequestConfig, saveRoute} from 'common/src/oauth-provider';

@@ -12,7 +12,8 @@ module.exports = {
         './lib/application/test/bootstrap',
         './lib/resource/test/bootstrap',
         './lib/common/test/bootstrap',
-        './lib/yourturn/test/bootstrap'
+        './lib/yourturn/test/bootstrap',
+        './lib/violation/test/bootstrap'
     ],
     target: 'node',
     node: {

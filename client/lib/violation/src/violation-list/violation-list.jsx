@@ -24,7 +24,6 @@ class ViolationList extends React.Component {
             showingResolved: false,
             dispatching: false,
             currentPage: 0,
-            accountSearch: '',
             selectableAccounts: this.stores.user.getUserCloudAccounts(),
             showingAccounts: this.stores.user.getUserCloudAccounts().map(a => a.id),
             showingSince: moment().subtract(1, 'week').startOf('day').toDate()
@@ -84,14 +83,7 @@ class ViolationList extends React.Component {
         this.state.showingAccounts.push(id);
         this.setState({
             selectableAccounts: this.state.selectableAccounts,
-            showingAccounts: this.state.showingAccounts,
-            accountSearch: ''
-        });
-    }
-
-    updateAccountSearch(evt) {
-        this.setState({
-            accountSearch: evt.target.value
+            showingAccounts: this.state.showingAccounts
         });
     }
 
@@ -133,7 +125,7 @@ class ViolationList extends React.Component {
     }
 
     render() {
-        let {showingResolved, showingAccounts, selectableAccounts, accountSearch} = this.state,
+        let {showingResolved, showingAccounts, selectableAccounts} = this.state,
             accounts = this.stores.team.getAccounts(),
             unresolvedViolations = this.stores.fullstop.getViolations(showingAccounts, false),
             resolvedViolations = this.stores.fullstop.getViolations(showingAccounts, true),
@@ -160,12 +152,13 @@ class ViolationList extends React.Component {
                                     options={accounts}
                                     displayOption={option => `${option.name} (${option.id})`}
                                     filterOption={(input, option) => (option.name + ' ' + option.id).indexOf(input) >= 0}
-                                    onKeyUp={this.updateAccountSearch.bind(this)}
                                     onOptionSelected={this.addAccount.bind(this)}
                                     maxVisible={10} />
                             </div>
                             {selectableAccounts.map(a =>
-                                <label className={showingAccounts.indexOf(a.id) >= 0 ? 'is-checked' : ''}>
+                                <label
+                                    key={a.id}
+                                    className={showingAccounts.indexOf(a.id) >= 0 ? 'is-checked' : ''}>
                                     <input
                                         type="checkbox"
                                         value={a.id}
@@ -195,7 +188,9 @@ class ViolationList extends React.Component {
                             Resolved
                         </div>
                     </div>
-                    <div className='violationList-list'>
+                    <div
+                        data-block='violation-list'
+                        className='violationList-list'>
                         <InfiniteList
                             loadMore={this.loadMore.bind(this, true)}
                             hasMore={!pagingInfo.last}
