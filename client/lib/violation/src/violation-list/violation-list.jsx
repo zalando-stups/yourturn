@@ -11,6 +11,13 @@ import 'common/asset/less/violation/violation-list.less';
 
 const InfiniteList = Infinite(React);
 
+function filterOptionFn(input, option) {
+    return input
+            .trim()
+            .split(' ')
+            .some(term => (option.name + option.id).indexOf(term) >= 0);
+}
+
 class ViolationList extends React.Component {
     constructor(props) {
         super();
@@ -22,6 +29,7 @@ class ViolationList extends React.Component {
         this.actions = props.flux.getActions('fullstop');
         this.state = {
             showingResolved: false,
+            resolvedOne: false,
             dispatching: false,
             currentPage: 0,
             selectableAccounts: this.stores.user.getUserCloudAccounts(),
@@ -87,6 +95,12 @@ class ViolationList extends React.Component {
         });
     }
 
+    onResolveViolation() {
+        this.setState({
+            resolvedOne: true
+        });
+    }
+
     loadMore(page) {
         let {showingSince, showingAccounts, dispatching} = this.state;
         // need to keep track of which action was already dispatched
@@ -125,7 +139,7 @@ class ViolationList extends React.Component {
     }
 
     render() {
-        let {showingResolved, showingAccounts, selectableAccounts} = this.state,
+        let {showingResolved, showingAccounts, selectableAccounts, resolvedOne} = this.state,
             accounts = this.stores.team.getAccounts(),
             unresolvedViolations = this.stores.fullstop.getViolations(showingAccounts, false),
             resolvedViolations = this.stores.fullstop.getViolations(showingAccounts, true),
@@ -133,7 +147,8 @@ class ViolationList extends React.Component {
             pagingInfo = this.stores.fullstop.getPagingInfo(),
             violationCards = violations.map((v, i) => <Violation
                                                         key={v.id}
-                                                        autoFocus={i === 0}
+                                                        autoFocus={resolvedOne && i === 0}
+                                                        onResolve={this.onResolveViolation.bind(this)}
                                                         flux={this.props.flux}
                                                         violation={v} />);
 
@@ -144,14 +159,15 @@ class ViolationList extends React.Component {
                     </div>
                     <div className='violationList-filtering'>
                         <div className='violationList-accounts'>
-                            <div>Show violations in these accounts:</div>
+                            <div>Add accounts:</div>
+                            <small>You can search by name or account number.</small>
                             <div className='input-group'>
-                                <Icon name='plus' />
+                                <Icon name='search' />
                                 <Typeahead
-                                    placeholder='stups-test'
+                                    placeholder='stups-test 123456'
                                     options={accounts}
                                     displayOption={option => `${option.name} (${option.id})`}
-                                    filterOption={(input, option) => (option.name + ' ' + option.id).indexOf(input) >= 0}
+                                    filterOption={filterOptionFn}
                                     onOptionSelected={this.addAccount.bind(this)}
                                     maxVisible={10} />
                             </div>

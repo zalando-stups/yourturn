@@ -34,6 +34,10 @@ class ViolationCard extends React.Component {
         .resolveViolation(
             violation.id,
             message);
+
+        if (this.props.onResolve) {
+            this.props.onResolve(violation, message);
+        }
     }
 
     render() {
@@ -109,6 +113,7 @@ ViolationCard.contextTypes = {
 };
 ViolationCard.propTypes = {
     autoFocus: React.PropTypes.bool,
+    onResolve: React.PropTypes.func,
     violation: React.PropTypes.object.isRequired,
     flux: React.PropTypes.object.isRequired
 };
