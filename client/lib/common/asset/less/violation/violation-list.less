@@ -64,10 +64,16 @@
                 padding: @padding-tiniest @padding-tiny;
                 border: 1px solid @gray-light;
                 border-right: none;
+                border-top-left-radius: @border-radius;
+                border-bottom-left-radius: @border-radius;
                 color: @gray;
                 font-size: inherit;
                 line-height: inherit;
                 display: inline;
+            }
+            input {
+                border-top-left-radius: 0px;
+                border-bottom-left-radius: 0px;
             }
         }
     }
