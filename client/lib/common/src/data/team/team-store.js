@@ -23,15 +23,16 @@ class TeamStore extends Store {
     }
 
     getAccounts() {
-        return _m.toJs(this.state.accounts)
-                 .sort((a, b) => {
+        return _m
+                .toJs(this.state.accounts)
+                .sort((a, b) => {
                     let aName = a.name.toLowerCase(),
                         bName = b.name.toLowerCase();
                     return aName < bName ?
                             -1 :
                             bName < aName ?
                                 1 : 0;
-                 });
+                });
     }
 
     _empty() {

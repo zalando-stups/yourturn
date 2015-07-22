@@ -31,7 +31,7 @@ ViolationListHandler.propTypes = {
 ViolationListHandler.fetchData = function(state, globalFlux) {
     TEAM_ACTIONS.fetchAccounts();
     return requireAccounts(globalFlux);
-}
+};
 
 class ViolationDetailHandler extends React.Component {
     constructor() {
