@@ -18,6 +18,13 @@ function filterOptionFn(input, option) {
             .some(term => (option.name + option.id).indexOf(term) >= 0);
 }
 
+function applyFilters(collection, filterFns) {
+    if (!filterFns || !filterFns.length) {
+        return collection;
+    }
+    return filterFns.reduce((prev, fn) => prev.filter(fn), collection);
+}
+
 class ViolationList extends React.Component {
     constructor(props) {
         super();
@@ -31,6 +38,8 @@ class ViolationList extends React.Component {
             resolvedOne: false,
             dispatching: false,
             currentPage: 0,
+            filters: [['Unresolved', v => v.comment === null, true],
+                      ['Resolved', v => v.comment !== null, false]],
             selectableAccounts: this.stores.user.getUserCloudAccounts(),
             showingAccounts: this.stores.user.getUserCloudAccounts().map(a => a.id),
             showingSince: moment().subtract(1, 'week').startOf('day').toDate()
@@ -131,11 +140,23 @@ class ViolationList extends React.Component {
         }
     }
 
+    toggleFilter(filter) {
+        this.state.filters.forEach(f => {
+            if (f[0] === filter[0]) {
+                f[2] = !f[2];
+            }
+        });
+        this.setState({
+            filters: this.state.filters
+        });
+    }
+
     render() {
-        let {showingAccounts, selectableAccounts, resolvedOne} = this.state,
+        let {showingAccounts, selectableAccounts, resolvedOne, filters} = this.state,
             accounts = this.stores.team.getAccounts(),
             userAccounts = this.stores.user.getUserCloudAccounts().map(a => a.id),
-            violations = this.stores.fullstop.getViolations(showingAccounts),
+            activeFilters = filters.filter(f => f[2]).map(f => f[1]),
+            violations = applyFilters(this.stores.fullstop.getViolations(showingAccounts), activeFilters),
             pagingInfo = this.stores.fullstop.getPagingInfo(),
             violationCards = violations.map((v, i) => <Violation
                                                         key={v.id}
@@ -152,7 +173,7 @@ class ViolationList extends React.Component {
                     </div>
                     <div className='violationList-filtering'>
                         <div className='violationList-accounts'>
-                            <div>Add accounts:</div>
+                            <div>Show violations in accounts:</div>
                             <small>You can search by name or account number.</small>
                             <div className='input-group'>
                                 <Icon name='search' />
@@ -169,7 +190,7 @@ class ViolationList extends React.Component {
                                     key={a.id}
                                     className={showingAccounts.indexOf(a.id) >= 0 ? 'is-checked' : ''}>
                                     <input
-                                        type="checkbox"
+                                        type='checkbox'
                                         value={a.id}
                                         onChange={this.toggleAccount.bind(this, a.id)}
                                         defaultChecked={showingAccounts.indexOf(a.id) >= 0}/> {a.name} <small>({a.id})</small>
@@ -181,9 +202,25 @@ class ViolationList extends React.Component {
                         <Datepicker
                             onChange={this.showSince.bind(this)}
                             selectedDay={this.state.showingSince} />
+                        <div className='violationList-filter'>
+                            <div>
+                                Filter violations by status:
+                            </div>
+                            {filters.map(f =>
+                                <label
+                                    key={f[0]}
+                                    className={f[2] ? 'is-checked' : ''}>
+                                    <input
+                                        type='checkbox'
+                                        value={f[0]}
+                                        onChange={this.toggleFilter.bind(this, f)}
+                                        checked={f[2]}/> {f[0]}
+                                </label>
+                            )}
+                        </div>
                     </div>
                     <div className='violationList-info'>
-                        Showing {violationCards.length}/{pagingInfo.total_elements} violations since <Timestamp format={DATE_FORMAT} value={this.state.showingSince} />.
+                        Fetched {violationCards.length}/{pagingInfo.total_elements} violations since <Timestamp format={DATE_FORMAT} value={this.state.showingSince} />.
                     </div>
                     <div
                         data-block='violation-list'

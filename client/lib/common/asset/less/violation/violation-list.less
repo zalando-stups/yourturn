@@ -7,6 +7,16 @@
     }
 
     .violationList-accounts {
+        label {
+            &:before {
+                content: "\f0c2";
+                font-family: "FontAwesome";
+            }
+        }
+    }
+
+    .violationList-accounts,
+    .violationList-filter {
         padding: @padding-small 0;
 
         label {
@@ -38,11 +48,6 @@
 
             input {
                 display: none;
-            }
-
-            &:before {
-                content: "\f0c2";
-                font-family: "FontAwesome";
             }
         }
 
