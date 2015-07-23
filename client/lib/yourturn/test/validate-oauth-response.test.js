@@ -18,26 +18,26 @@ const TOKEN = {
         uid: 'npiccolotto',
         realm: 'employees'
     },
-    TEAMS = [{
+    ACCOUNTS = [{
         id: 'stups'
     }];
 
 describe('The oauth token validation', () => {
     var flux,
         TEST_TOKEN,
-        TEST_TEAMS;
+        TEST_ACCOUNTS;
 
     function mock() {
         sinon.stub(flux.getActions('user'), 'fetchTokenInfo', () => Promise.resolve(TEST_TOKEN));
-        sinon.stub(flux.getActions('user'), 'fetchTeamMembership', () => Promise.resolve(TEST_TEAMS));
         sinon.stub(flux.getStore('user'), 'getTokenInfo', () => TEST_TOKEN);
-        sinon.stub(flux.getStore('user'), 'getTeamMemberships', () => TEST_TEAMS);
+        sinon.stub(flux.getActions('user'), 'fetchAccounts', () => Promise.resolve(TEST_ACCOUNTS));
+        sinon.stub(flux.getStore('user'), 'getUserCloudAccounts', () => TEST_ACCOUNTS);
     }
 
     beforeEach(() => {
         flux = new MockFlux();
         TEST_TOKEN = TOKEN;
-        TEST_TEAMS = TEAMS;
+        TEST_ACCOUNTS = ACCOUNTS;
     });
 
     it('should work in happy case', done => {
@@ -89,7 +89,7 @@ describe('The oauth token validation', () => {
     });
 
     it('should deny if user is not in any team', done => {
-        TEST_TEAMS = [];
+        TEST_ACCOUNTS = [];
         mock();
 
         validateResponse(flux)

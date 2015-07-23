@@ -4,13 +4,6 @@ import UserActions from 'common/src/data/user/user-actions';
 import {Flummox} from 'flummox';
 
 const FLUX = 'user',
-    TEST_TEAMS = [{
-        id: 'stups',
-        name: 'stups'
-    }, {
-        id: 'greendale',
-        name: 'greendale'
-    }],
     TEST_ACCOUNTS = [{
         id: '123',
         name: 'stups'
@@ -59,23 +52,10 @@ describe('The user store', () => {
         expect(store.getTokenInfo()).to.be.false;
     });
 
-    it('should return teams without their accounts', () => {
-        store.receiveTeams(TEST_TEAMS);
-        let userTeams = store.getTeamMemberships();
-        expect(userTeams[0]['infrastructure-accounts']).to.not.be.ok;
-    });
-
     it('should return cloud accounts of a user', () => {
         store.receiveAccounts(TEST_ACCOUNTS);
         let accounts = store.getUserCloudAccounts();
         expect(accounts.length).to.equal(2);
-    });
-
-    it('should sort teams', () => {
-        store.receiveTeams(TEST_TEAMS);
-        let userTeams = store.getTeamMemberships();
-        expect(userTeams.length).to.equal(2);
-        expect(userTeams[0].id).to.equal('greendale');
     });
 
     it('should return userinfo for a user', () => {

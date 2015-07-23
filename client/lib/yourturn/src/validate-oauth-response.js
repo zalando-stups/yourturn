@@ -22,12 +22,12 @@ function validateResponse(flux) {
                 var {uid} = tokeninfo;
 
                 ACTIONS
-                .fetchTeamMembership(uid)
+                .fetchAccounts(uid)
                 .then(() => {
-                    let teams = STORE.getTeamMemberships(uid);
+                    let accounts = STORE.getUserCloudAccounts();
                     // 4) validate that at least one team exists
-                    if (!teams || !teams.length) {
-                        return reject(new Error('User is not part of a team.'));
+                    if (!accounts || !accounts.length) {
+                        return reject(new Error('User does not have access to any AWS account.'));
                     }
                     return resolve();
                 })
