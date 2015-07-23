@@ -88,21 +88,24 @@ class ViolationCard extends React.Component {
                                 <blockquote className='violationCard-resolutionMessage'>{violation.comment}</blockquote>
                             </div>
                             :
-                            <form onSubmit={this.resolve.bind(this)} className='form'>
-                                <div className='input-group'>
-                                    <input
-                                        autoFocus={this.props.autoFocus}
-                                        value={this.state.message}
-                                        onChange={this.updateMessage.bind(this)}
-                                        placeholder='This is expected because I tested things.'
-                                        type='text' />
-                                    <button
-                                        type='submit'
-                                        className='btn btn-default'>
-                                        <Icon name='check' /> Resolve
-                                    </button>
-                                </div>
-                            </form>}
+                            this.props.editable ?
+                                <form onSubmit={this.resolve.bind(this)} className='form'>
+                                    <div className='input-group'>
+                                        <input
+                                            autoFocus={this.props.autoFocus}
+                                            value={this.state.message}
+                                            onChange={this.updateMessage.bind(this)}
+                                            placeholder='This is expected because I tested things.'
+                                            type='text' />
+                                        <button
+                                            type='submit'
+                                            className='btn btn-default'>
+                                            <Icon name='check' /> Resolve
+                                        </button>
+                                    </div>
+                                </form>
+                                :
+                                null}
                     </footer>
                 </div>;
     }
@@ -115,6 +118,7 @@ ViolationCard.propTypes = {
     autoFocus: React.PropTypes.bool,
     onResolve: React.PropTypes.func,
     violation: React.PropTypes.object.isRequired,
+    editable: React.PropTypes.bool,
     flux: React.PropTypes.object.isRequired
 };
 

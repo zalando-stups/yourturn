@@ -134,10 +134,12 @@ class ViolationList extends React.Component {
     render() {
         let {showingAccounts, selectableAccounts, resolvedOne} = this.state,
             accounts = this.stores.team.getAccounts(),
+            userAccounts = this.stores.user.getUserCloudAccounts().map(a => a.id),
             violations = this.stores.fullstop.getViolations(showingAccounts),
             pagingInfo = this.stores.fullstop.getPagingInfo(),
             violationCards = violations.map((v, i) => <Violation
                                                         key={v.id}
+                                                        editable={userAccounts.indexOf(v.account_id) >= 0}
                                                         autoFocus={resolvedOne && i === 0}
                                                         onResolve={this.onResolveViolation.bind(this)}
                                                         flux={this.props.flux}
