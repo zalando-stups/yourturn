@@ -17,27 +17,20 @@ class MockFlux extends Flummox {
 const TOKEN = {
         uid: 'npiccolotto',
         realm: 'employees'
-    },
-    ACCOUNTS = [{
-        id: 'stups'
-    }];
+    };
 
 describe('The oauth token validation', () => {
     var flux,
-        TEST_TOKEN,
-        TEST_ACCOUNTS;
+        TEST_TOKEN;
 
     function mock() {
         sinon.stub(flux.getActions('user'), 'fetchTokenInfo', () => Promise.resolve(TEST_TOKEN));
         sinon.stub(flux.getStore('user'), 'getTokenInfo', () => TEST_TOKEN);
-        sinon.stub(flux.getActions('user'), 'fetchAccounts', () => Promise.resolve(TEST_ACCOUNTS));
-        sinon.stub(flux.getStore('user'), 'getUserCloudAccounts', () => TEST_ACCOUNTS);
     }
 
     beforeEach(() => {
         flux = new MockFlux();
         TEST_TOKEN = TOKEN;
-        TEST_ACCOUNTS = ACCOUNTS;
     });
 
     it('should work in happy case', done => {
@@ -86,14 +79,5 @@ describe('The oauth token validation', () => {
         validateResponse(flux)
         .then(() => done())
         .catch(done);
-    });
-
-    it('should deny if user is not in any team', done => {
-        TEST_ACCOUNTS = [];
-        mock();
-
-        validateResponse(flux)
-        .then(() => done(1))
-        .catch(() => done());
     });
 });
