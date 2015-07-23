@@ -25,7 +25,7 @@
         "region": "eu-central-1",
         "message": "InstanceId: i-847167136 doesn't have any userData.",
         "violation_object": null,
-        "comment": null
+        "comment": "Yo whatever"
     },
     {
         "id": 8,

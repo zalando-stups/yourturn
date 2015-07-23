@@ -28,7 +28,6 @@ class ViolationList extends React.Component {
         };
         this.actions = props.flux.getActions('fullstop');
         this.state = {
-            showingResolved: false,
             resolvedOne: false,
             dispatching: false,
             currentPage: 0,
@@ -40,12 +39,6 @@ class ViolationList extends React.Component {
 
     componentWillMount() {
         this.loadMore(0);
-    }
-
-    showResolved(showResolved) {
-        this.setState({
-            showingResolved: showResolved
-        });
     }
 
     showSince(day) {
@@ -139,11 +132,9 @@ class ViolationList extends React.Component {
     }
 
     render() {
-        let {showingResolved, showingAccounts, selectableAccounts, resolvedOne} = this.state,
+        let {showingAccounts, selectableAccounts, resolvedOne} = this.state,
             accounts = this.stores.team.getAccounts(),
-            unresolvedViolations = this.stores.fullstop.getViolations(showingAccounts, false),
-            resolvedViolations = this.stores.fullstop.getViolations(showingAccounts, true),
-            violations = showingResolved ? resolvedViolations : unresolvedViolations,
+            violations = this.stores.fullstop.getViolations(showingAccounts),
             pagingInfo = this.stores.fullstop.getPagingInfo(),
             violationCards = violations.map((v, i) => <Violation
                                                         key={v.id}
@@ -191,18 +182,6 @@ class ViolationList extends React.Component {
                     </div>
                     <div className='violationList-info'>
                         Showing {violationCards.length}/{pagingInfo.total_elements} violations since <Timestamp format={DATE_FORMAT} value={this.state.showingSince} />.
-                    </div>
-                    <div className='tabs'>
-                        <div
-                            onClick={this.showResolved.bind(this, false)}
-                            className={'tab ' + (showingResolved ? '' : 'is-active')}>
-                            Unresolved
-                        </div>
-                        <div
-                            onClick={this.showResolved.bind(this, true)}
-                            className={'tab ' + (showingResolved ? 'is-active' : '')}>
-                            Resolved
-                        </div>
                     </div>
                     <div
                         data-block='violation-list'
