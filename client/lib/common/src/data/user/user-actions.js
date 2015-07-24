@@ -67,19 +67,6 @@ class UserActions extends Actions {
                     throw e;
                 });
     }
-
-    fetchTeamMembership(userId) {
-        return request
-                .get(`${ENV_DEVELOPMENT ? 'http://localhost:5005' : ''}/membership/${userId}`)
-                .accept('json')
-                .oauth(Provider, RequestConfig)
-                .exec(saveRoute)
-                .then(res => res.body)
-                .catch(e => {
-                    e.id = userId;
-                    throw e;
-                });
-    }
 }
 
 export default UserActions;

@@ -203,23 +203,6 @@ server.get('/users/:userId', function(req, res) {
         });
 });
 
-server.get('/membership/:userId', function(req, res) {
-    request
-        .get(process.env.YTENV_TEAM_BASE_URL + '/teams?member=' + req.params.userId)
-        .accept('json')
-        .set('Authorization', req.get('Authorization'))
-        .end(function(err, response) {
-            if (err) {
-                winston.error('Could not GET /teams/%s: %d %s', req.params.userId, err.status || 0, err.message);
-                return res.status(err.status || 0).send(err);
-            }
-            return res
-                    .status(200)
-                    .type('json')
-                    .send(response.text);
-        });
-});
-
 server.get('/tokeninfo', function(req, res) {
     request
         .get(process.env.YTENV_OAUTH_TOKENINFO_URL)

@@ -18,20 +18,8 @@ function validateResponse(flux) {
                 if (tokeninfo.realm !== 'employees' && tokeninfo.realm !== '/employees') {
                     return reject(new Error('Access token does not originate from "employees" realm.'));
                 }
-                // 3) fetch teams from team service
-                var {uid} = tokeninfo;
 
-                ACTIONS
-                .fetchTeamMembership(uid)
-                .then(() => {
-                    let teams = STORE.getTeamMemberships(uid);
-                    // 4) validate that at least one team exists
-                    if (!teams || !teams.length) {
-                        return reject(new Error('User is not part of a team.'));
-                    }
-                    return resolve();
-                })
-                .catch(e => reject(e));
+                resolve();
             })
             .catch(e => reject(e));
     });

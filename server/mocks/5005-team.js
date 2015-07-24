@@ -52,16 +52,6 @@ server.use(function(req, res, next) {
     next();
 });
 
-server.get('/membership/:id', function(req, res) {
-    setTimeout( function() {
-        var id = req.params.id;
-        if (!teams[id]) {
-            res.status(404).send();
-        }
-        res.status(200).send(teams[id]);
-    }, Math.random() * 2000 );
-})
-
 server.get('/accounts/?', function(req, res) {
     setTimeout(function() {
         res.status(200).send(accounts);
