@@ -34,6 +34,10 @@ class ViolationCard extends React.Component {
         .resolveViolation(
             violation.id,
             message);
+
+        if (this.props.onResolve) {
+            this.props.onResolve(violation, message);
+        }
     }
 
     render() {
@@ -43,7 +47,9 @@ class ViolationCard extends React.Component {
                     <Icon name='circle-o-notch' spin /> :
                     <DefaultError error={violation.getResult()} />;
         }
-        return <div className={'violationCard ' + (violation.comment != null ? 'is-resolved' : '')}>
+        return <div
+                    data-block='violation-card'
+                    className={'violationCard ' + (violation.comment != null ? 'is-resolved' : '')}>
                     <header>
                         <div className='violationCard-id'>
                             <Link
@@ -82,21 +88,24 @@ class ViolationCard extends React.Component {
                                 <blockquote className='violationCard-resolutionMessage'>{violation.comment}</blockquote>
                             </div>
                             :
-                            <form onSubmit={this.resolve.bind(this)} className='form'>
-                                <div className='input-group'>
-                                    <input
-                                        autoFocus={this.props.autoFocus}
-                                        value={this.state.message}
-                                        onChange={this.updateMessage.bind(this)}
-                                        placeholder='This is expected because I tested things.'
-                                        type='text' />
-                                    <button
-                                        type='submit'
-                                        className='btn btn-default'>
-                                        <Icon name='check' /> Resolve
-                                    </button>
-                                </div>
-                            </form>}
+                            this.props.editable ?
+                                <form onSubmit={this.resolve.bind(this)} className='form'>
+                                    <div className='input-group'>
+                                        <input
+                                            autoFocus={this.props.autoFocus}
+                                            value={this.state.message}
+                                            onChange={this.updateMessage.bind(this)}
+                                            placeholder='This is expected because I tested things.'
+                                            type='text' />
+                                        <button
+                                            type='submit'
+                                            className='btn btn-default'>
+                                            <Icon name='check' /> Resolve
+                                        </button>
+                                    </div>
+                                </form>
+                                :
+                                null}
                     </footer>
                 </div>;
     }
@@ -107,7 +116,9 @@ ViolationCard.contextTypes = {
 };
 ViolationCard.propTypes = {
     autoFocus: React.PropTypes.bool,
+    onResolve: React.PropTypes.func,
     violation: React.PropTypes.object.isRequired,
+    editable: React.PropTypes.bool,
     flux: React.PropTypes.object.isRequired
 };
 

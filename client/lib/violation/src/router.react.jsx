@@ -4,9 +4,11 @@ import FlummoxComponent from 'flummox/component';
 import Flux from './flux';
 import ViolationList from './violation-list/violation-list.jsx';
 import ViolationDetail from './violation-detail/violation-detail.jsx';
+import {requireAccounts} from 'common/src/util';
 
 const VIO_FLUX = new Flux(),
-    VIO_ACTIONS = VIO_FLUX.getActions('fullstop');
+    FS_ACTIONS = VIO_FLUX.getActions('fullstop'),
+    TEAM_ACTIONS = VIO_FLUX.getActions('team');
 
 
 class ViolationListHandler extends React.Component {
@@ -17,7 +19,7 @@ class ViolationListHandler extends React.Component {
         return <FlummoxComponent
                     flux={VIO_FLUX}
                     globalFlux={this.props.globalFlux}
-                    connectToStores={['fullstop']}>
+                    connectToStores={['fullstop', 'team']}>
                     <ViolationList />
                 </FlummoxComponent>;
     }
@@ -25,6 +27,10 @@ class ViolationListHandler extends React.Component {
 ViolationListHandler.displayName = 'ViolationListHandler';
 ViolationListHandler.propTypes = {
     globalFlux: React.PropTypes.object.isRequired
+};
+ViolationListHandler.fetchData = function(state, globalFlux) {
+    TEAM_ACTIONS.fetchAccounts();
+    return requireAccounts(globalFlux);
 };
 
 class ViolationDetailHandler extends React.Component {
@@ -43,7 +49,7 @@ class ViolationDetailHandler extends React.Component {
 
 }
 ViolationDetailHandler.fetchData = function (state) {
-    VIO_ACTIONS.fetchViolation(state.params.violationId);
+    FS_ACTIONS.fetchViolation(state.params.violationId);
 };
 ViolationDetailHandler.displayName = 'ViolationDetailHandler';
 ViolationDetailHandler.propTypes = {

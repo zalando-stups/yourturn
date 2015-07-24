@@ -116,16 +116,15 @@ describe('The fullstop store', () => {
     });
 
     it('should store page metadata info', () => {
-        store.receiveViolations([{number: 0}, VIOLATIONS]);
+        store.receiveViolations([{last: false}, VIOLATIONS]);
         let meta = store.getPagingInfo();
         expect(meta).to.be.ok;
-        expect(meta.page).to.equal(0);
+        expect(meta.last).to.be.false;
     });
 
     it('should set placeholders for page metadata on load', () => {
         store.beginFetchViolations();
         let meta = store.getPagingInfo();
         expect(meta).to.be.ok;
-        expect(meta.total_elements).to.equal('?');
     });
 });

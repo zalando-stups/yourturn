@@ -36,9 +36,7 @@ class FullstopStore extends Store {
     beginFetchViolations() {
         this.setState({
             pagingInfo: _m.toClj({
-                total_elements: '?',
-                last: true,
-                page: 0
+                last: true
             })
         });
     }
@@ -69,9 +67,7 @@ class FullstopStore extends Store {
             violations: all,
             pagingInfo: metadata ?
                             _m.toClj({
-                                total_elements: metadata.total_elements,
-                                last: metadata.last,
-                                page: metadata.number
+                                last: metadata.last
                             }) :
                             this.state.pagingInfo
         });
@@ -112,9 +108,7 @@ class FullstopStore extends Store {
         this.setState({
             violations: _m.hashMap(),
             pagingInfo: _m.toClj({
-                total_elements: 0,
-                last: true,
-                page: 0
+                last: true
             })
         });
     }

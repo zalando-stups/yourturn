@@ -12,5 +12,7 @@ import './notification/notification-store.test';
 import './pierone/pierone-actions.test';
 import './pierone/pierone-store.test';
 import './search/search-store.test';
+import './team/team-actions.test';
+import './team/team-store.test';
 import './twintip/twintip-store.test';
 import './user/user-store.test';
