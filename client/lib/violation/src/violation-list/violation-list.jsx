@@ -1,10 +1,8 @@
 import React from 'react';
 import Icon from 'react-fa';
-import Timestamp from 'react-time';
 import Infinite from 'react-infinite-scroll';
 import moment from 'moment';
 import {Typeahead} from 'react-typeahead';
-import {DATE_FORMAT} from 'common/src/config';
 import Datepicker from 'common/src/datepicker.jsx';
 import Violation from 'violation/src/violation-card/violation-card.jsx';
 import 'common/asset/less/violation/violation-list.less';
