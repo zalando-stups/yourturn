@@ -12,7 +12,6 @@ class UserStore extends Store {
             tokeninfo: _m.hashMap(),
             uid: false,
             users: _m.hashMap(),
-            teams: _m.vector(),
             accounts: _m.vector()
         };
 
@@ -27,12 +26,6 @@ class UserStore extends Store {
             null);
 
         this.registerAsync(
-            userActions.fetchTeamMembership,
-            null,
-            this.receiveTeams,
-            null);
-
-        this.registerAsync(
             userActions.fetchAccounts,
             null,
             this.receiveAccounts,
@@ -43,12 +36,6 @@ class UserStore extends Store {
             null,
             this.receiveUserInfo,
             null);
-    }
-
-    receiveTeams(teams) {
-        this.setState({
-            teams: _m.toClj(teams)
-        });
     }
 
     receiveUserInfo([user, info]) {
@@ -65,22 +52,6 @@ class UserStore extends Store {
 
     getUserCloudAccounts() {
         return _m.toJs(this.state.accounts);
-    }
-
-    getTeamMemberships() {
-        let teams = _m.toJs(this.state.teams);
-        return teams
-                .sort((a, b) => {
-                    let aId = a.id,
-                        bId = b.id;
-                    return aId < bId ? -1 :
-                            bId < aId ? 1 :
-                                0;
-                })
-                .map(team => ({
-                    id: team.id,
-                    name: teams.id_name
-                }));
     }
 
     getUserInfo(user) {
@@ -127,7 +98,6 @@ class UserStore extends Store {
             tokeninfo: _m.hashMap(),
             uid: false,
             users: _m.hashMap(),
-            teams: _m.vector(),
             accounts: _m.vector()
         });
     }
