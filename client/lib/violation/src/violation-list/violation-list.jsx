@@ -83,6 +83,7 @@ class ViolationList extends React.Component {
             selectableAccounts: this.state.selectableAccounts,
             showingAccounts: this.state.showingAccounts
         });
+        setTimeout(() => this.loadMore(0), 0);
     }
 
     loadMore(page) {
