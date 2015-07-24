@@ -18,13 +18,6 @@ function filterOptionFn(input, option) {
             .some(term => (option.name + option.id).indexOf(term) >= 0);
 }
 
-function applyFilters(collection, filterFns) {
-    if (!filterFns || !filterFns.length) {
-        return collection;
-    }
-    return filterFns.reduce((prev, fn) => prev.filter(fn), collection);
-}
-
 class ViolationList extends React.Component {
     constructor(props) {
         super();
@@ -35,11 +28,8 @@ class ViolationList extends React.Component {
         };
         this.actions = props.flux.getActions('fullstop');
         this.state = {
-            resolvedOne: false,
             dispatching: false,
             currentPage: 0,
-            filters: [['Unresolved', v => v.comment === null, true],
-                      ['Resolved', v => v.comment !== null, false]],
             selectableAccounts: this.stores.user.getUserCloudAccounts(),
             showingAccounts: this.stores.user.getUserCloudAccounts().map(a => a.id),
             showingSince: moment().subtract(1, 'week').startOf('day').toDate()
@@ -97,12 +87,6 @@ class ViolationList extends React.Component {
         });
     }
 
-    onResolveViolation() {
-        this.setState({
-            resolvedOne: true
-        });
-    }
-
     loadMore(page) {
         let {showingSince, showingAccounts, dispatching} = this.state;
         // need to keep track of which action was already dispatched
@@ -140,29 +124,16 @@ class ViolationList extends React.Component {
         }
     }
 
-    toggleFilter(filter) {
-        this.state.filters.forEach(f => {
-            if (f[0] === filter[0]) {
-                f[2] = !f[2];
-            }
-        });
-        this.setState({
-            filters: this.state.filters
-        });
-    }
-
     render() {
-        let {showingAccounts, selectableAccounts, resolvedOne, filters} = this.state,
+        let {showingAccounts, selectableAccounts} = this.state,
             accounts = this.stores.team.getAccounts(),
             userAccounts = this.stores.user.getUserCloudAccounts().map(a => a.id),
-            activeFilters = filters.filter(f => f[2]).map(f => f[1]),
-            violations = applyFilters(this.stores.fullstop.getViolations(showingAccounts), activeFilters),
+            violations = this.stores.fullstop.getViolations(showingAccounts),
             pagingInfo = this.stores.fullstop.getPagingInfo(),
             violationCards = violations.map((v, i) => <Violation
                                                         key={v.id}
                                                         editable={userAccounts.indexOf(v.account_id) >= 0}
-                                                        autoFocus={resolvedOne && i === 0}
-                                                        onResolve={this.onResolveViolation.bind(this)}
+                                                        autoFocus={i === 0}
                                                         flux={this.props.flux}
                                                         violation={v} />);
 
@@ -202,25 +173,9 @@ class ViolationList extends React.Component {
                         <Datepicker
                             onChange={this.showSince.bind(this)}
                             selectedDay={this.state.showingSince} />
-                        <div className='violationList-filter'>
-                            <div>
-                                Filter violations by status:
-                            </div>
-                            {filters.map(f =>
-                                <label
-                                    key={f[0]}
-                                    className={f[2] ? 'is-checked' : ''}>
-                                    <input
-                                        type='checkbox'
-                                        value={f[0]}
-                                        onChange={this.toggleFilter.bind(this, f)}
-                                        checked={f[2]}/> {f[0]}
-                                </label>
-                            )}
-                        </div>
                     </div>
                     <div className='violationList-info'>
-                        Fetched {violationCards.length}/{pagingInfo.total_elements} violations since <Timestamp format={DATE_FORMAT} value={this.state.showingSince} />.
+                        Fetched {violationCards.length} violations. {pagingInfo.last ? '' : 'Scroll down to load more.'}
                     </div>
                     <div
                         data-block='violation-list'

@@ -2,8 +2,9 @@
 
 .violationList {
     max-width: @content-width-regular;
-    .tabs {
-        margin-bottom: @padding-small;
+
+    .violationList-list {
+        margin: @padding-big 0;
     }
 
     .violationList-accounts {
@@ -15,8 +16,7 @@
         }
     }
 
-    .violationList-accounts,
-    .violationList-filter {
+    .violationList-accounts {
         padding: @padding-small 0;
 
         label {
@@ -82,11 +82,6 @@
                 border-bottom-left-radius: 0px;
             }
         }
-    }
-
-    .violationList-filtering {
-        padding-bottom: @padding-big;
-        margin-left: @padding-small;
     }
 
     .violationList-info {

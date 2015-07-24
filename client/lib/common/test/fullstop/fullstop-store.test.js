@@ -126,6 +126,5 @@ describe('The fullstop store', () => {
         store.beginFetchViolations();
         let meta = store.getPagingInfo();
         expect(meta).to.be.ok;
-        expect(meta.total_elements).to.equal('?');
     });
 });
