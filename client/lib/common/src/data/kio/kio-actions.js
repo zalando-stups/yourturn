@@ -29,7 +29,12 @@ class KioActions extends Actions {
 
     saveApplication(id, app) {
         let copy = _.extend({}, app);
+        // remove fields not liked by kio
         copy.id = undefined;
+        copy.created = undefined;
+        copy.created_by = undefined;
+        copy.last_modified = undefined;
+        copy.last_modified_by = undefined;
         return request
                 .put(`${Services.kio.url}${Services.kio.root}/${id}`)
                 .type('json')
