@@ -48,6 +48,7 @@ if (process.env.NEW_RELIC_APP_NAME) {
                             }
                             return prev;
                         }, {});
+        config.noNodeNameSuffix = true;
         winston.info('Using appdynamics config: %s:', JSON.stringify(config, null, 4));
         require('appdynamics').profile(config);
         winston.info('Successfully started appdynamics.');
