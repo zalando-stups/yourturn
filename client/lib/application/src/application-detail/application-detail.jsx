@@ -128,6 +128,12 @@ class ApplicationDetail extends React.Component {
                                 </td>
                             </tr>
                             <tr>
+                                <th>Specification Type</th>
+                                <td>
+                                    {app.specification_type}
+                                </td>
+                            </tr>
+                            <tr>
                                 <th>Documentation</th>
                                 <td>
                                     <a href={app.documentation_url}>

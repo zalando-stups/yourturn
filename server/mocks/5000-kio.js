@@ -18,7 +18,8 @@ var applications = {
         active: true,
         team_id: 'stups',
         id: 'kio',
-        required_approvers: 2
+        required_approvers: 2,
+        specification_type: 'asf'
     },
     pierone: {
         documentation_url: 'https://github.com/zalando-stups/pierone',
@@ -31,7 +32,8 @@ var applications = {
         active: false,
         team_id: 'stups',
         id: 'pierone',
-        required_approvers: 2
+        required_approvers: 2,
+        specification_type: 'asf'
     },
     tzjztjtzj: {
         id: 'tzjztjtzj',
@@ -40,7 +42,8 @@ var applications = {
         description: 'Test application 2',
         url: 'https://test2.example.org',
         scm_url: 'git://github.com/zalando-stups/test2',
-        required_approvers: 2
+        required_approvers: 2,
+        specification_type: null
     }
 };
 
