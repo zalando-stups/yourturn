@@ -27,6 +27,11 @@ describe('The kio actions', () => {
             actions.saveApplication(APP_ID);
         });
 
+        it('#saveApplicationCriticality', () => {
+            mitm.on('request', assertOAuthHeader);
+            actions.saveApplicationCriticality(APP_ID);
+        });
+
         it('#fetchApplications', () => {
             mitm.on('request', assertOAuthHeader);
             actions.fetchApplications();

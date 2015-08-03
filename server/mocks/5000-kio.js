@@ -18,7 +18,8 @@ var applications = {
         active: true,
         team_id: 'stups',
         id: 'kio',
-        required_approvers: 2
+        required_approvers: 2,
+        criticality_level: 3
     },
     pierone: {
         documentation_url: 'https://github.com/zalando-stups/pierone',
@@ -31,7 +32,8 @@ var applications = {
         active: false,
         team_id: 'stups',
         id: 'pierone',
-        required_approvers: 2
+        required_approvers: 2,
+        criticality_level: 2
     },
     tzjztjtzj: {
         id: 'tzjztjtzj',
@@ -40,7 +42,8 @@ var applications = {
         description: 'Test application 2',
         url: 'https://test2.example.org',
         scm_url: 'git://github.com/zalando-stups/test2',
-        required_approvers: 2
+        required_approvers: 2,
+        criticality_level: 2
     }
 };
 
@@ -134,6 +137,15 @@ server.put('/apps/:id', function(req, res) {
         var id = req.params.id;
         req.body.id = id;
         applications[id] = req.body;
+        res.status(200).send();
+    }, Math.random() * 2000 );
+});
+
+server.put('/apps/:id/criticality', function(req, res) {
+    setTimeout( function() {
+        var id = req.params.id,
+            criticality_level = req.body.criticality_level;
+        applications[id].criticality_level = criticality_level;
         res.status(200).send();
     }, Math.random() * 2000 );
 });

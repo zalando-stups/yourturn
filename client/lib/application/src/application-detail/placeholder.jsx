@@ -92,7 +92,7 @@ class ApplicationDetailPlaceholder extends React.Component {
                                 </td>
                             </tr>
                             <tr>
-                                <th>Required Approvers</th>
+                                <th>Criticality Level</th>
                                 <td className='u-placeholder-text'>1</td>
                             </tr>
                             <tr>
