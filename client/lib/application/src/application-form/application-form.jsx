@@ -278,6 +278,17 @@ class ApplicationForm extends React.Component {
                                 type='url' />
                         </div>
                         <div className='form-group'>
+                            <label htmlFor='specification_type'>Specification Type</label>
+                            <small>What system you use for managing your specifications.</small>
+                            <input
+                                placeholder='JIRA'
+                                id='specification_type'
+                                value={app.specification_type}
+                                onChange={this.update.bind(this, 'specification_type', 'value')}
+                                name='yourturn_app_specification_url'
+                                type='text' />
+                        </div>
+                        <div className='form-group'>
                             <label htmlFor='requiredApprovers'>Required Approvers</label>
                             <small>fullstop. will complain if you deploy a version of {app.name || app.id} that was not approved by this many different people.</small>
                             <input
