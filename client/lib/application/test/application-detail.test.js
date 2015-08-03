@@ -1,4 +1,4 @@
-/* global global, expect, $, TestUtils, reset, render, React */
+/* global expect, $, TestUtils, reset, render, React */
 import {Flummox} from 'flummox';
 import KioStore from 'common/src/data/kio/kio-store';
 import KioActions from 'common/src/data/kio/kio-actions';
