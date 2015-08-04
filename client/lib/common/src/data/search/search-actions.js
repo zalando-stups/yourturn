@@ -35,6 +35,7 @@ class SearchActions extends Actions {
                 .get(`${Services[service].url}${Services[service].root}`)
                 .query(`${Services[service].searchQuery}=${term}`)
                 .accept('json')
+                .set('Accept-Encoding', 'gzip')
                 .oauth(Provider, RequestConfig)
                 .exec(saveRoute)
                 .then(res => {

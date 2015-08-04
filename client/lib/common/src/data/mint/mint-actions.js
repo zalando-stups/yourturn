@@ -8,6 +8,7 @@ class MintActions extends Actions {
         return request
                     .get(`${Services.mint.url}${Services.mint.root}/${applicationId}`)
                     .accept('json')
+                    .set('Accept-Encoding', 'gzip')
                     .oauth(Provider, RequestConfig)
                     .exec(saveRoute)
                     .then(res => [applicationId, res.body])
@@ -36,6 +37,7 @@ class MintActions extends Actions {
         return request
                     .put(`${Services.mint.url}${Services.mint.root}/${applicationId}`)
                     .accept('json')
+                    .set('Accept-Encoding', 'gzip')
                     .type('json')
                     .send(configToSend)
                     .oauth(Provider, RequestConfig)

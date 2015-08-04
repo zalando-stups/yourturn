@@ -155,6 +155,7 @@ server.get('/accounts/?', function(req, res) {
     request
         .get(process.env.YTENV_TEAM_BASE_URL + '/accounts/aws')
         .accept('json')
+        .set('Accept-Encoding', 'gzip')
         // take OAuth token from request
         .set('Authorization', req.get('Authorization'))
         .end(function(err, response) {
@@ -173,6 +174,7 @@ server.get('/accounts/:userId', function(req, res) {
     request
         .get(process.env.YTENV_TEAM_BASE_URL + '/accounts/aws?member=' + req.params.userId)
         .accept('json')
+        .set('Accept-Encoding', 'gzip')
         // take OAuth token from request
         .set('Authorization', req.get('Authorization'))
         .end(function(err, response) {
@@ -191,6 +193,7 @@ server.get('/users/:userId', function(req, res) {
     request
         .get(process.env.YTENV_USER_BASE_URL + '/employees/' + req.params.userId)
         .accept('json')
+        .set('Accept-Encoding', 'gzip')
         .set('Authorization', req.get('Authorization'))
         .end(function(err, response) {
             if (err) {
@@ -208,6 +211,7 @@ server.get('/tokeninfo', function(req, res) {
     request
         .get(process.env.YTENV_OAUTH_TOKENINFO_URL)
         .accept('json')
+        .set('Accept-Encoding', 'gzip')
         .query({
             access_token: req.query.access_token
         })

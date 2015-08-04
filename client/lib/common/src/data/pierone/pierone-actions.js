@@ -9,6 +9,7 @@ class PieroneActions extends Actions {
         return request
                 .get(`${Services.pierone.url}/teams/${team}/artifacts/${artifact}/tags/${tag}/scm-source`)
                 .accept('json')
+                .set('Accept-Encoding', 'gzip')
                 .oauth(Provider, RequestConfig)
                 .exec(saveRoute)
                 .then(res => [team, artifact, tag, res.body])
@@ -24,6 +25,7 @@ class PieroneActions extends Actions {
         return request
                 .get(`${Services.pierone.url}/teams/${team}/artifacts/${artifact}/tags`)
                 .accept('json')
+                .set('Accept-Encoding', 'gzip')
                 .oauth(Provider, RequestConfig)
                 .exec(saveRoute)
                 .then(res => [team, artifact, res.body])
