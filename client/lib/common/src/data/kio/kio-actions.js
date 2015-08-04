@@ -54,6 +54,7 @@ class KioActions extends Actions {
                 .put(`${Services.kio.url}${Services.kio.root}/${id}/criticality`)
                 .type('json')
                 .accept('json')
+                .set('Accept-Encoding', 'gzip')
                 .send({
                     criticality_level: criticality
                 })
