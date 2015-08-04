@@ -86,6 +86,14 @@ class OAuthForm extends React.Component {
         });
     }
 
+    onRenewCredentials() {
+        return this
+                .props
+                .flux
+                .getActions('mint')
+                .renewCredentials(this.props.applicationId);
+    }
+
     render() {
         let {kio, mint, user, essentials} = this.stores,    // eslint-disable-line
             {applicationId} = this.props,
@@ -155,7 +163,9 @@ class OAuthForm extends React.Component {
                             </button>
                         </div>
                     </form>
-                    <OAuthSyncInfo oauth={oauth} />
+                    <OAuthSyncInfo
+                        onRenewCredentials={isOwnApplication ? this.onRenewCredentials.bind(this) : false}
+                        oauth={oauth} />
                 </div>;
     }
 }

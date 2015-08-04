@@ -41,6 +41,14 @@ class AccessForm extends React.Component {
         });
     }
 
+    onRenewCredentials() {
+        return this
+                .props
+                .flux
+                .getActions('mint')
+                .renewCredentials(this.props.applicationId);
+    }
+
     save(evt) {
         evt.preventDefault();
 
@@ -135,7 +143,9 @@ class AccessForm extends React.Component {
                             </button>
                         </div>
                     </form>
-                    <OAuthSyncInfo oauth={oauth} />
+                    <OAuthSyncInfo
+                        onRenewCredentials={isOwnApplication ? this.onRenewCredentials.bind(this) : false}
+                        oauth={oauth} />
                 </div>;
     }
 }
