@@ -58,6 +58,12 @@ server.put('/apps/:id', function(req, res) {
         apps[id].s3_buckets = req.body.s3_buckets ? req.body.s3_buckets : [];
         res.status(200).send();
     }, Math.random() * 2000 );
-})
+});
+
+server.post('/apps/:id/renewal', function(req, res) {
+    setTimeout( function() {
+        res.status(200).send();
+    }, Math.random() * 2000 );
+});
 
 module.exports = server;

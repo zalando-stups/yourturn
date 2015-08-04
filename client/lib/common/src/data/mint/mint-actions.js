@@ -45,6 +45,17 @@ class MintActions extends Actions {
                         throw e;
                     });
     }
+
+    renewCredentials(applicationId) {
+        return request
+                    .post(`${Services.mint.url}${Services.mint.root}/${applicationId}/renewal`)
+                    .oauth(Provider, RequestConfig)
+                    .exec(saveRoute)
+                    .catch(err => {
+                        err.id = applicationId;
+                        throw err;
+                    });
+    }
 }
 
 export default MintActions;
