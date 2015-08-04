@@ -10,6 +10,7 @@ class EssentialsActions extends Actions {
         return request
                 .get(`${Services.essentials.url}${Services.essentials.root}`)
                 .accept('json')
+                .set('Accept-Encoding', 'gzip')
                 .oauth(Provider, RequestConfig)
                 .exec(saveRoute)
                 .then(response => Promise.all(response.body.map(res => this.fetchScopes(res.id))));
@@ -19,6 +20,7 @@ class EssentialsActions extends Actions {
         return request
                 .get(`${Services.essentials.url}${Services.essentials.root}/${resourceId}/scopes`)
                 .accept('json')
+                .set('Accept-Encoding', 'gzip')
                 .oauth(Provider, RequestConfig)
                 .exec(saveRoute)
                 .then(res => [resourceId, res.body]);
@@ -30,6 +32,7 @@ class EssentialsActions extends Actions {
         return request
                 .put(`${Services.essentials.url}${Services.essentials.root}/${resourceId}`)
                 .type('json')
+                .set('Accept-Encoding', 'gzip')
                 .accept('json')
                 .oauth(Provider, RequestConfig)
                 .send(copy)
@@ -46,6 +49,7 @@ class EssentialsActions extends Actions {
         return request
                 .put(`${Services.essentials.url}${Services.essentials.root}/${resourceId}/scopes/${scopeId}`)
                 .type('json')
+                .set('Accept-Encoding', 'gzip')
                 .accept('json')
                 .oauth(Provider, RequestConfig)
                 .send(copy)
@@ -60,6 +64,7 @@ class EssentialsActions extends Actions {
         return request
                 .get(`${Services.essentials.url}${Services.essentials.root}/${resourceId}`)
                 .accept('json')
+                .set('Accept-Encoding', 'gzip')
                 .oauth(Provider, RequestConfig)
                 .exec(saveRoute)
                 .then(res => res.body)
@@ -73,6 +78,7 @@ class EssentialsActions extends Actions {
         return request
                 .get(`${Services.essentials.url}${Services.essentials.root}`)
                 .accept('json')
+                .set('Accept-Encoding', 'gzip')
                 .oauth(Provider, RequestConfig)
                 .exec(saveRoute)
                 .then(res => res.body);
@@ -82,6 +88,7 @@ class EssentialsActions extends Actions {
         return request
                 .get(`${Services.essentials.url}${Services.essentials.root}/${resourceId}/scopes/${scopeId}`)
                 .accept('json')
+                .set('Accept-Encoding', 'gzip')
                 .oauth(Provider, RequestConfig)
                 .exec(saveRoute)
                 .then(res => [resourceId, res.body])
@@ -99,6 +106,7 @@ class EssentialsActions extends Actions {
                     scope_id: scopeId
                 })
                 .accept('json')
+                .set('Accept-Encoding', 'gzip')
                 .oauth(Provider, RequestConfig)
                 .exec(saveRoute)
                 .then(res => [resourceId, scopeId, res.body])

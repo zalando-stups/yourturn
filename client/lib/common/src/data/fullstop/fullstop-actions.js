@@ -8,6 +8,7 @@ class FullstopActions extends Actions {
         return request
                 .get(`${FULLSTOP_BASE_URL}/violations`)
                 .accept('json')
+                .set('Accept-Encoding', 'gzip')
                 .query({
                     accounts: accounts,
                     size: size || 10,
@@ -23,6 +24,7 @@ class FullstopActions extends Actions {
         return request
                 .get(`${FULLSTOP_BASE_URL}/violations/${violationId}`)
                 .accept('json')
+                .set('Accept-Encoding', 'gzip')
                 .oauth(Provider, RequestConfig)
                 .exec(saveRoute)
                 .then(res => res.body)
@@ -36,6 +38,7 @@ class FullstopActions extends Actions {
         return request
                 .post(`${FULLSTOP_BASE_URL}/violations/${violationId}/resolution`)
                 .accept('json')
+                .set('Accept-Encoding', 'gzip')
                 .type('text/plain')
                 .send(message)
                 .oauth(Provider, RequestConfig)
