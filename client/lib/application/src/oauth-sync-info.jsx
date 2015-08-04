@@ -102,7 +102,10 @@ class OAuthSyncInfo extends React.Component {
                         </tbody>
                     </table>
                     {oauth.has_problems ?
-                        <p className='u-warning'>mint has problems syncing credentials. Please check that all configured S3 buckets exist and give write access to mint-worker.</p>
+                        <div className='u-warning'>
+                            <p>mint has problems syncing credentials. Please check that all configured S3 buckets exist and give write access to mint-worker.</p>
+                            <pre>{oauth.message}</pre>
+                        </div>
                         :
                         null}
                 </div>;
