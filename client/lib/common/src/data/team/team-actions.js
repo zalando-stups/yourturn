@@ -8,7 +8,6 @@ class FullstopActions extends Actions {
         return request
                 .get(`${ENV_DEVELOPMENT ? 'http://localhost:5005' : ''}/accounts`)
                 .accept('json')
-                .set('Accept-Encoding', 'gzip')
                 .oauth(Provider, RequestConfig)
                 .exec(saveRoute)
                 .then(res => res.body);

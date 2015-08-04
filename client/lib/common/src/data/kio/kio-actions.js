@@ -9,7 +9,6 @@ class KioActions extends Actions {
         return request
                 .get(`${Services.kio.url}${Services.kio.root}`)
                 .accept('json')
-                .set('Accept-Encoding', 'gzip')
                 .oauth(Provider, RequestConfig)
                 .exec(saveRoute)
                 .then(res => res.body);
@@ -19,7 +18,6 @@ class KioActions extends Actions {
         return request
                 .get(`${Services.kio.url}${Services.kio.root}/${id}`)
                 .accept('json')
-                .set('Accept-Encoding', 'gzip')
                 .oauth(Provider, RequestConfig)
                 .exec(saveRoute)
                 .then(res => res.body)
@@ -41,7 +39,6 @@ class KioActions extends Actions {
                 .put(`${Services.kio.url}${Services.kio.root}/${id}`)
                 .type('json')
                 .accept('json')
-                .set('Accept-Encoding', 'gzip')
                 .send(copy)
                 .oauth(Provider, RequestConfig)
                 .exec(saveRoute)
@@ -56,7 +53,6 @@ class KioActions extends Actions {
         return request
                 .get(`${Services.kio.url}${Services.kio.root}/${id}/versions`)
                 .accept('json')
-                .set('Accept-Encoding', 'gzip')
                 .oauth(Provider, RequestConfig)
                 .exec(saveRoute)
                 .then(res => res.body)
@@ -70,7 +66,6 @@ class KioActions extends Actions {
         return request
                 .get(`${Services.kio.url}${Services.kio.root}/${id}/versions/${ver}`)
                 .accept('json')
-                .set('Accept-Encoding', 'gzip')
                 .oauth(Provider, RequestConfig)
                 .exec(saveRoute)
                 .then(res => res.body)
@@ -88,7 +83,6 @@ class KioActions extends Actions {
                 .put(`${Services.kio.url}${Services.kio.root}/${applicationId}/versions/${versionId}`)
                 .type('json')
                 .accept('json')
-                .set('Accept-Encoding', 'gzip')
                 .send(copy)
                 .oauth(Provider, RequestConfig)
                 .exec(saveRoute)
@@ -104,7 +98,6 @@ class KioActions extends Actions {
         return request
                 .get(`${Services.kio.url}${Services.kio.root}/${applicationId}/approvals`)
                 .accept('json')
-                .set('Accept-Encoding', 'gzip')
                 .oauth(Provider, RequestConfig)
                 .exec(saveRoute)
                 .then(res => [
@@ -124,7 +117,6 @@ class KioActions extends Actions {
         return request
                 .get(`${Services.kio.url}${Services.kio.root}/${applicationId}/versions/${versionId}/approvals`)
                 .accept('json')
-                .set('Accept-Encoding', 'gzip')
                 .oauth(Provider, RequestConfig)
                 .exec(saveRoute)
                 .then(res => [applicationId, versionId, res.body])
@@ -140,7 +132,6 @@ class KioActions extends Actions {
                 .post(`${Services.kio.url}${Services.kio.root}/${applicationId}/versions/${versionId}/approvals`)
                 .type('json')
                 .accept('json')
-                .set('Accept-Encoding', 'gzip')
                 .send(approval)
                 .oauth(Provider, RequestConfig)
                 .exec(saveRoute)

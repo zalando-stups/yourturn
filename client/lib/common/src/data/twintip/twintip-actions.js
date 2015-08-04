@@ -8,7 +8,6 @@ class TwintipActions extends Actions {
         return request
                 .get(`${Services.twintip.url}${Services.twintip.root}/${id}`)
                 .accept('json')
-                .set('Accept-Encoding', 'gzip')
                 .oauth(Provider, RequestConfig)
                 .exec(saveRoute)
                 .then(res => res.body)

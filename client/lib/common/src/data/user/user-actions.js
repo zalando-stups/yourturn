@@ -15,7 +15,6 @@ class UserActions extends Actions {
                     access_token: token
                 })
                 .accept('json')
-                .set('Accept-Encoding', 'gzip')
                 .exec()
                 .then(res => {
                     let body = res.body;
@@ -47,7 +46,6 @@ class UserActions extends Actions {
         return request
                 .get(`${ENV_DEVELOPMENT ? 'http://localhost:5009' : ''}/users/${userId}`)
                 .accept('json')
-                .set('Accept-Encoding', 'gzip')
                 .oauth(Provider, RequestConfig)
                 .exec(saveRoute)
                 .then(res => [userId, res.body])
@@ -61,7 +59,6 @@ class UserActions extends Actions {
         return request
                 .get(`${ENV_DEVELOPMENT ? 'http://localhost:5005' : ''}/accounts/${userId}`)
                 .accept('json')
-                .set('Accept-Encoding', 'gzip')
                 .oauth(Provider, RequestConfig)
                 .exec(saveRoute)
                 .then(res => res.body)
