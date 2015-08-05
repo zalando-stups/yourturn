@@ -23,7 +23,6 @@ class ApplicationForm extends React.Component {
         } else {
             this.state.app = {
                 active: true,
-                required_approvers: 2,
                 team_id: user.getUserCloudAccounts()[0].name
             };
         }
@@ -276,19 +275,6 @@ class ApplicationForm extends React.Component {
                                 onChange={this.update.bind(this, 'specification_url', 'value')}
                                 name='yourturn_app_specification_url'
                                 type='url' />
-                        </div>
-                        <div className='form-group'>
-                            <label htmlFor='requiredApprovers'>Required Approvers</label>
-                            <small>fullstop. will complain if you deploy a version of {app.name || app.id} that was not approved by this many different people.</small>
-                            <input
-                                type='number'
-                                data-block='required-approvers'
-                                id='requiredApprovers'
-                                name='yourturn_app_required_approvers'
-                                min='1'
-                                required={true}
-                                defaultValue={app.required_approvers}
-                                onChange={this.update.bind(this, 'required_approvers', 'value')} />
                         </div>
                         <div className='form-group'>
                             <label htmlFor='description'>Description</label>

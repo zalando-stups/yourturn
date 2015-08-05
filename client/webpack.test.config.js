@@ -55,6 +55,7 @@ module.exports = {
         DOCKER_REGISTRY: 'YTENV_DOCKER_REGISTRY',
         SERVICE_URL_TLD: 'YTENV_SERVICE_URL_TLD',
         RESOURCE_WHITELIST: 'YTENV_RESOURCE_WHITELIST',
+        APPLICATION_WHITELIST: 'YTENV_APPLICATION_WHITELIST',
         // needed because otherwise two react instances
         // are running in tests and they trip each other up
         react: 'var React'

@@ -7,6 +7,14 @@ import FetchResult from 'common/src/fetch-result';
 import Placeholder from './placeholder.jsx';
 import DefaultError from 'common/src/error.jsx';
 import 'common/asset/less/application/application-detail.less';
+import {APPLICATION_WHITELIST} from 'common/src/config';
+
+function isWhitelisted(uid) {
+    if (APPLICATION_WHITELIST.length === 0) {
+        return true;
+    }
+    return uid && APPLICATION_WHITELIST.indexOf(uid) >= 0;
+}
 
 function determineOwnApplication(app, accounts) {
     return accounts.some(t => t.name === app.team_id);
@@ -20,6 +28,10 @@ class ApplicationDetail extends React.Component {
             kio: props.flux.getStore('kio'),
             twintip: props.flux.getStore('twintip')
         };
+        this.state = {
+            criticalityUpdatePending: false
+        };
+        this.actions = props.flux.getActions('kio');
         this._forceUpdate = this.forceUpdate.bind(this);
         this.stores.user.on('change', this._forceUpdate);
     }
@@ -28,11 +40,42 @@ class ApplicationDetail extends React.Component {
         this.stores.user.off('change', this._forceUpdate);
     }
 
+    onUpdateCriticality(app, amount) {
+        this.setState({
+            criticalityUpdatePending: true
+        });
+
+        this
+        .actions
+        .saveApplicationCriticality(app.id, app.criticality_level + amount)
+        .then(() => {
+            this.actions.fetchApplication(app.id);
+            this.setState({
+                criticalityUpdatePending: false
+            });
+        })
+        .catch(err => {
+            this
+            .props
+            .globalFlux
+            .getActions('notification')
+            .addNotification(
+                `Could not update criticality of ${app.name}. ${err}`,
+                'error'
+            );
+            this.setState({
+                criticalityUpdatePending: true
+            });
+        });
+    }
+
     render() {
         let {applicationId} = this.props,
             {kio, twintip, user} = this.stores,
+            {uid} = user.getTokenInfo(),
             versions = _.take(kio.getApplicationVersions(applicationId), 3),
             app = kio.getApplication(applicationId),
+            {criticality_level} = app,
             isOwnApplication = determineOwnApplication(app, user.getUserCloudAccounts()),
             api = twintip.getApi(applicationId);
 
@@ -148,8 +191,40 @@ class ApplicationDetail extends React.Component {
                                 </td>
                             </tr>
                             <tr>
-                                <th>Required Approvers</th>
-                                <td>{app.required_approvers}</td>
+                                <th>Criticality Level</th>
+                                <td>{isWhitelisted(uid) ?
+                                        <div className='btn btn-default btn-small'
+                                             data-block='decrease-criticality-button'
+                                             title='Decrease criticality by one'
+                                             role='button'
+                                             onClick={this.onUpdateCriticality.bind(this, app, -1)}
+                                             disabled={criticality_level === 1}>
+                                            <Icon name='minus' />
+                                        </div>
+                                        :
+                                        null
+                                } {this.state.criticalityUpdatePending ?
+                                        <Icon
+                                            spin
+                                            className='applicationDetail-criticality'
+                                            name='circle-o-notch' />
+                                        :
+                                        <span className='applicationDetail-criticality'
+                                              data-criticality={app.criticality_level}>
+                                            {app.criticality_level}
+                                        </span>
+                                    } {isWhitelisted(uid) ?
+                                        <div className='btn btn-default btn-small'
+                                             data-block='increase-criticality-button'
+                                             title='Increase criticality by one'
+                                             role='button'
+                                             onClick={this.onUpdateCriticality.bind(this, app, 1)}
+                                             disabled={criticality_level === 3}>
+                                            <Icon name='plus' />
+                                        </div>
+                                        :
+                                        null
+                                }</td>
                             </tr>
                             <tr>
                                 <th>Recently updated versions</th>
@@ -197,7 +272,8 @@ class ApplicationDetail extends React.Component {
 }
 ApplicationDetail.displayName = 'ApplicationDetail';
 ApplicationDetail.propTypes = {
-    applicationId: React.PropTypes.string.isRequired
+    applicationId: React.PropTypes.string.isRequired,
+    globalFlux: React.PropTypes.object.isRequired
 };
 ApplicationDetail.contextTypes = {
     router: React.PropTypes.func.isRequired
