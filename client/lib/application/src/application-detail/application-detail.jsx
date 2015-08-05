@@ -195,6 +195,8 @@ class ApplicationDetail extends React.Component {
                                 <td>{isWhitelisted(uid) ?
                                         <div className='btn btn-default btn-small'
                                              data-block='decrease-criticality-button'
+                                             title='Decrease criticality by one'
+                                             role='button'
                                              onClick={this.onUpdateCriticality.bind(this, app, -1)}
                                              disabled={criticality_level === 1}>
                                             <Icon name='minus' />
@@ -202,11 +204,20 @@ class ApplicationDetail extends React.Component {
                                         :
                                         null
                                 } {this.state.criticalityUpdatePending ?
-                                    <Icon spin name='circle-o-notch' />
-                                    :
-                                    app.criticality_level} {isWhitelisted(uid) ?
+                                        <Icon
+                                            spin
+                                            className='applicationDetail-criticality'
+                                            name='circle-o-notch' />
+                                        :
+                                        <span className='applicationDetail-criticality'
+                                              data-criticality={app.criticality_level}>
+                                            {app.criticality_level}
+                                        </span>
+                                    } {isWhitelisted(uid) ?
                                         <div className='btn btn-default btn-small'
                                              data-block='increase-criticality-button'
+                                             title='Increase criticality by one'
+                                             role='button'
                                              onClick={this.onUpdateCriticality.bind(this, app, 1)}
                                              disabled={criticality_level === 3}>
                                             <Icon name='plus' />
