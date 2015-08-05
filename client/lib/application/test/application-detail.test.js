@@ -1,4 +1,4 @@
-/* globals expect, $, TestUtils, reset, render, React */
+/* global expect, $, TestUtils, reset, render, React */
 import {Flummox} from 'flummox';
 import KioStore from 'common/src/data/kio/kio-store';
 import KioActions from 'common/src/data/kio/kio-actions';
@@ -10,7 +10,8 @@ import Detail from 'application/src/application-detail/application-detail.jsx';
 
 const APP = 'kio',
       API = 'twintip',
-      ID = 'kio';
+      ID = 'kio',
+      USER = 'user';
 
 class MockFlux extends Flummox {
     constructor() {
@@ -28,8 +29,8 @@ class GlobalFlux extends Flummox {
     constructor() {
         super();
 
-        this.createActions('user', UserActions);
-        this.createStore('user', UserStore, this);
+        this.createActions(USER, UserActions);
+        this.createStore(USER, UserStore, this);
     }
 }
 
@@ -44,6 +45,7 @@ describe('The application detail view', () => {
         reset();
         flux = new MockFlux();
         globalFlux = new GlobalFlux();
+
         flux.getStore(API).receiveApi({
             application_id: ID
         });
@@ -100,5 +102,12 @@ describe('The application detail view', () => {
         flux.getStore(APP).receiveApplication(TEST_APP);
         detail = render(Detail, props);
         expect($(React.findDOMNode(detail)).find('[data-block="description"] h1').length).to.equal(1);
+    });
+
+    it('should display buttons to alter criticality', () => {
+        flux.getStore(APP).receiveApplication(TEST_APP);
+        detail = render(Detail, props);
+        TestUtils.findRenderedDOMComponentWithAttributeValue(detail, 'data-block', 'increase-criticality-button');
+        TestUtils.findRenderedDOMComponentWithAttributeValue(detail, 'data-block', 'decrease-criticality-button');
     });
 });

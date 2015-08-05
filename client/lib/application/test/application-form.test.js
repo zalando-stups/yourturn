@@ -78,11 +78,6 @@ describe('The application form view', () => {
             let checkbox = TestUtils.findRenderedDOMComponentWithAttributeValue(form, 'data-block', 'active-checkbox');
             expect($(React.findDOMNode(checkbox)).is(':checked')).to.be.true;
         });
-
-        it('should require two approvers by default', () => {
-            let approvers = TestUtils.findRenderedDOMComponentWithAttributeValue(form, 'data-block', 'required-approvers');
-            expect(approvers.props.defaultValue).to.equal(2);
-        });
     });
 
     describe('in edit mode', () => {

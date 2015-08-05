@@ -49,6 +49,23 @@ class KioActions extends Actions {
                 });
     }
 
+    saveApplicationCriticality(id, criticality) {
+        return request
+                .put(`${Services.kio.url}${Services.kio.root}/${id}/criticality`)
+                .type('json')
+                .accept('json')
+                .send({
+                    criticality_level: criticality
+                })
+                .oauth(Provider, RequestConfig)
+                .exec(saveRoute)
+                .then(res => res.body)
+                .catch(err => {
+                    err.id = id;
+                    throw err;
+                });
+    }
+
     fetchApplicationVersions(id) {
         return request
                 .get(`${Services.kio.url}${Services.kio.root}/${id}/versions`)
