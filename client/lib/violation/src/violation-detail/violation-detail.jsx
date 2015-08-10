@@ -36,6 +36,7 @@ ViolationDetail.displayName = 'ViolationDetail';
 ViolationDetail.propTypes = {
     violationId: React.PropTypes.string.isRequired,
     flux: React.PropTypes.object.isRequired,
-    globalFlux: React.PropTypes.object.isRequired
+    globalFlux: React.PropTypes.object.isRequired,
+    autoFocus: React.PropTypes.bool
 };
 export default ViolationDetail;

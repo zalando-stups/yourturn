@@ -190,7 +190,8 @@ class ViolationList extends React.Component {
 }
 ViolationList.displayName = 'ViolationList';
 ViolationList.propTypes = {
-    flux: React.PropTypes.object.isRequired
+    flux: React.PropTypes.object.isRequired,
+    globalFlux: React.PropTypes.object.isRequired
 };
 
 export default ViolationList;
