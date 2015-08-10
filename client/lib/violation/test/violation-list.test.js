@@ -36,28 +36,82 @@ const FULLSTOP = 'fullstop',
         description: 'STUPS test account'
     }],
     VIOLATIONS = [{
-        id: 6,
-        event_id: '87924782487624-da63-422b-83c1-b7c52497e0c5',
+        id: 2445,
+        version: 0,
+        event_id: '963645c3-1234-1234-1234-7696d09f6993',
         account_id: '123456789',
         region: 'eu-central-1',
-        message: 'Instances with ids: ["i-847167136"] was started with wrong images: [ami-38efd225]',
-        comment: null
+        meta_info: 'KeyPair must be blank, but was [\'testmonkey\']',
+        comment: null,
+        instance_id: null,
+        plugin_fully_qualified_class_name: null,
+        violation_type: {
+            id: 'EC2_WITH_KEYPAIR',
+            help_text: 'EC2 instance should not have a ssh key.',
+            violation_severity: 0,
+            version: 0,
+            created: '2015-08-05T09:21:52.297Z',
+            created_by: 'npiccolotto',
+            last_modified: null,
+            last_modified_by: null,
+            audit_relevant: true
+        },
+        created: '2015-06-11T15:39:06.022Z',
+        created_by: 'FULLSTOP',
+        last_modified: '2015-06-11T15:39:06.022Z',
+        last_modified_by: 'FULLSTOP'
     },
     {
-        id: 7,
-        event_id: '87924782487624-da63-422b-83c1-b7c52497e0c5',
+        id: 2447,
+        version: 0,
+        event_id: 'd69f8c64-1234-1234-1234-4a7ebb098cfe',
+        account_id: '0987654321',
+        region: 'eu-central-1',
+        meta_info: 'KeyPair must be blank, but was [\'testsanta\']',
+        comment: null,
+        instance_id: null,
+        plugin_fully_qualified_class_name: null,
+        violation_type: {
+            id: 'EC2_WITH_KEYPAIR',
+            help_text: 'EC2 instance should not have a ssh key.',
+            violation_severity: 0,
+            version: 0,
+            created: '2015-08-05T09:21:52.297Z',
+            created_by: 'npiccolotto',
+            last_modified: null,
+            last_modified_by: null,
+            audit_relevant: false
+        },
+        created: '2015-06-11T15:43:22.924Z',
+        created_by: 'FULLSTOP',
+        last_modified: '2015-06-11T15:43:22.924Z',
+        last_modified_by: 'FULLSTOP'
+    },
+    {
+        id: 2448,
+        version: 0,
+        event_id: 'e83c9bb8-1234-1234-1234-0ec3071796d2',
         account_id: '123456789',
         region: 'eu-central-1',
-        message: 'InstanceId: i-847167136 doesnt have any userData.',
-        comment: null
-    },
-    {
-        id: 8,
-        event_id: '87924782487624-da63-422b-83c1-b7c52497e0c5',
-        account_id: '1029384756',
-        region: 'eu-central-1',
-        message: 'KeyPair must be blank, but was ["app-pierone"]',
-        comment: null
+        meta_info: 'KeyPair must be blank, but was [\'testsanta\']',
+        comment: null,
+        instance_id: null,
+        plugin_fully_qualified_class_name: null,
+        violation_type: {
+            id: 'EC2_WITH_KEYPAIR',
+            help_text: 'EC2 instance should not have a ssh key.',
+            violation_severity: 0,
+            version: 0,
+            created: '2015-08-05T09:21:52.297Z',
+            created_by: 'npiccolotto',
+            last_modified: null,
+            last_modified_by: null,
+            audit_relevant: false
+        },
+        created: '2015-06-11T15:43:23.188Z',
+        created_by: 'FULLSTOP',
+        last_modified: '2015-06-11T15:43:23.188Z',
+        last_modified_by: 'FULLSTOP'
     }];
 
 class MockFlux extends Flummox {
@@ -83,9 +137,9 @@ class GlobalFlux extends Flummox {
 
 describe('The violation list view', () => {
     var flux,
-        globalFlux,
-        props,
-        violationList;
+    globalFlux,
+    props,
+    violationList;
 
     beforeEach(() => {
         reset();

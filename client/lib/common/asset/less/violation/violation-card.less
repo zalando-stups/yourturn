@@ -2,12 +2,25 @@
 
 .violationCard {
         padding: @padding-small;
-        border: 1px solid @red;
+        border: 1px solid @gray-light;
         border-radius: @border-radius;
-        border-left: 10px solid @red;
+        border-left: 10px solid @gray-light;
+
+        &.is-audit-relevant:not(.is-resolved) {
+            border-color: @red;
+        }
 
         &.is-resolved {
             border-color: @green;
+        }
+
+
+        table.table {
+            th,
+            td {
+                width: auto;
+            }
+            margin: @padding 0;
         }
 
         strong,
@@ -20,13 +33,7 @@
                 content: '#';
             }
         }
-        .violationCard-violationMessage {
-            font-family: 'Monaco', monospace;
-            // font-size: .8em;
-            margin-top: @padding-small;
-            margin-bottom: @padding-small;
-            margin-left: 0;
-        }
+
         .violationCard-resolutionMessage {
             margin-top: @padding-small;
             margin-bottom: @padding-small;
