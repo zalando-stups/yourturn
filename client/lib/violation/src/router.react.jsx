@@ -41,6 +41,7 @@ class ViolationDetailHandler extends React.Component {
     render() {
         return <FlummoxComponent
                     flux={VIO_FLUX}
+                    globalFlux={this.props.globalFlux}
                     connectToStores={['fullstop']}>
                     <ViolationDetail
                         violationId={this.props.params.violationId} />
@@ -48,8 +49,10 @@ class ViolationDetailHandler extends React.Component {
     }
 
 }
-ViolationDetailHandler.fetchData = function (state) {
+ViolationDetailHandler.fetchData = function (state, globalFlux) {
     FS_ACTIONS.fetchViolation(state.params.violationId);
+    TEAM_ACTIONS.fetchAccounts();
+    return requireAccounts(globalFlux);
 };
 ViolationDetailHandler.displayName = 'ViolationDetailHandler';
 ViolationDetailHandler.propTypes = {

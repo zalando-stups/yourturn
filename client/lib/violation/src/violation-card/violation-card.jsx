@@ -27,13 +27,6 @@ class ViolationCard extends React.Component {
         }
         let {violation} = this.props,
             {message} = this.state;
-        this
-        .props
-        .flux
-        .getActions('fullstop')
-        .resolveViolation(
-            violation.id,
-            message);
 
         if (this.props.onResolve) {
             this.props.onResolve(violation, message);
@@ -47,9 +40,12 @@ class ViolationCard extends React.Component {
                     <Icon name='circle-o-notch' spin /> :
                     <DefaultError error={violation.getResult()} />;
         }
+        let {violation_type} = violation;
         return <div
                     data-block='violation-card'
-                    className={'violationCard ' + (violation.comment != null ? 'is-resolved' : '')}>
+                    className={'violationCard ' +
+                                (violation.comment != null ? 'is-resolved ' : '') +
+                                (violation_type.audit_relevant ? 'is-audit-relevant' : '')}>
                     <header>
                         <div className='violationCard-id'>
                             <Link
@@ -63,7 +59,7 @@ class ViolationCard extends React.Component {
                             <Icon
                                 fixedWidth
                                 name='calendar-o'
-                                title='Time when this violation was discovered' /> <Timestamp value={violation.timestamp} format={DATE_FORMAT} />
+                                title='Time when this violation was discovered' /> <Timestamp value={violation_type.timestamp} format={DATE_FORMAT} />
                         </div>
                         <div>
                             <Icon
@@ -77,7 +73,43 @@ class ViolationCard extends React.Component {
                                 name='map-marker'
                                 title='Which region this violation happened in' /> {violation.region}
                         </div>
+                        {violation.instance_id ?
+                            <div>
+                                <Icon
+                                    fixedWidth
+                                    name='server'
+                                    title='Which instance caused this violation' /> {violation.instance_id}
+                            </div>
+                            :
+                            null}
                     </header>
+                    <table className='table'>
+                        <colgroup>
+                            <col width='0*' />
+                            <col width='0.5*' />
+                        </colgroup>
+                        <tbody>
+                            <tr>
+                                <th>Type</th>
+                                <td>{violation_type.id}</td>
+                            </tr>
+                            <tr>
+                                <th>Info</th>
+                                <td>{violation_type.help_text}</td>
+                            </tr>
+                            {violation.meta_info ?
+                                <tr>
+                                    <th>Metadata</th>
+                                    <td>
+                                        <code>
+                                            {violation.meta_info}
+                                        </code>
+                                    </td>
+                                </tr>
+                                :
+                                null}
+                        </tbody>
+                    </table>
                     <blockquote className='violationCard-violationMessage'>
                         {violation.message}
                     </blockquote>

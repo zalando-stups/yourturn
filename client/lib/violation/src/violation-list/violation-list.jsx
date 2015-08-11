@@ -4,7 +4,7 @@ import Infinite from 'react-infinite-scroll';
 import moment from 'moment';
 import {Typeahead} from 'react-typeahead';
 import Datepicker from 'common/src/datepicker.jsx';
-import Violation from 'violation/src/violation-card/violation-card.jsx';
+import Violation from 'violation/src/violation-detail/violation-detail.jsx';
 import 'common/asset/less/violation/violation-list.less';
 
 const InfiniteList = Infinite(React);
@@ -126,15 +126,14 @@ class ViolationList extends React.Component {
     render() {
         let {showingAccounts, selectableAccounts} = this.state,
             accounts = this.stores.team.getAccounts(),
-            userAccounts = this.stores.user.getUserCloudAccounts().map(a => a.id),
-            violations = this.stores.fullstop.getViolations(showingAccounts),
+            violations = this.stores.fullstop.getViolations(showingAccounts).map(v => v.id),
             pagingInfo = this.stores.fullstop.getPagingInfo(),
             violationCards = violations.map((v, i) => <Violation
-                                                        key={v.id}
-                                                        editable={userAccounts.indexOf(v.account_id) >= 0}
+                                                        key={v}
                                                         autoFocus={i === 0}
                                                         flux={this.props.flux}
-                                                        violation={v} />);
+                                                        globalFlux={this.props.globalFlux}
+                                                        violationId={v} />);
 
         return <div className='violationList'>
                     <h2 className='violationList-headline'>Violations</h2>
@@ -191,7 +190,8 @@ class ViolationList extends React.Component {
 }
 ViolationList.displayName = 'ViolationList';
 ViolationList.propTypes = {
-    flux: React.PropTypes.object.isRequired
+    flux: React.PropTypes.object.isRequired,
+    globalFlux: React.PropTypes.object.isRequired
 };
 
 export default ViolationList;
