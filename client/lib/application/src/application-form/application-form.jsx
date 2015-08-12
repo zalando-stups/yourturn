@@ -81,7 +81,7 @@ class ApplicationForm extends React.Component {
 
     update(field, prop, evt) {
         this.state.app[field] = evt.target[prop];
-        if (this.state.autocompleteServiceUrl) {
+        if (!this.props.edit && this.state.autocompleteServiceUrl) {
             this.state.app.service_url = `${this.state.app.id || 'app'}.${this.state.app.team_id}.${SERVICE_URL_TLD}`;
         }
         this.setState({
@@ -146,30 +146,22 @@ class ApplicationForm extends React.Component {
                         <div className='form-group'>
                             <label htmlFor='team_id'>Team ID</label>
                             <small>The ID of the owning team.</small>
-                            {edit ?
-                                <input
-                                    id='team_id'
-                                    value={app.team_id}
-                                    disabled='disabled'
-                                    type='text' />
-                                :
-                                <select
-                                    name='yourturn_app_team_id'
-                                    defaultValue={accounts[0].name}
-                                    onChange={this.update.bind(this, 'team_id', 'value')}
-                                    id='team_id'>
-                                    {accounts.map(
-                                        a => <option
-                                                key={a.name}
-                                                value={a.name}>{a.name}</option>
-                                    )}
-                                </select>
-                            }
+                            <select
+                                name='yourturn_app_team_id'
+                                defaultValue={accounts[0].name}
+                                onChange={this.update.bind(this, 'team_id', 'value')}
+                                id='team_id'>
+                                {accounts.map(
+                                    a => <option
+                                            key={a.name}
+                                            value={a.name}>{a.name}</option>
+                                )}
+                            </select>
                         </div>
                         <div className='form-group createApplication-applicationId'>
                             <label htmlFor='app_id'>Application ID</label>
                             <small>The ID of the application.</small>
-                            <div className={'input-group'}>
+                            <div className='input-group'>
                                 <div className='input-addon'>
                                     {this.state.appIdTaken && !edit ?
                                         <Icon
