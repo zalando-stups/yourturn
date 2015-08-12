@@ -67,14 +67,14 @@ class ApplicationForm extends React.Component {
         .then(() => {
             this.context.router.transitionTo(constructLocalUrl('application', [this.state.app.id]));
         })
-        .catch(() => {
+        .catch(e => {
             let verb = this.props.edit ? 'update' : 'create';
             this
             .props
             .globalFlux
             .getActions('notification')
             .addNotification(
-                `Could not ${verb} application ${app.name}.`,
+                `Could not ${verb} application ${app.name}. (${e.message})`,
                 'error'
             );
         });
