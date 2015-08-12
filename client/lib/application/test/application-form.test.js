@@ -78,6 +78,13 @@ describe('The application form view', () => {
             let checkbox = TestUtils.findRenderedDOMComponentWithAttributeValue(form, 'data-block', 'active-checkbox');
             expect($(React.findDOMNode(checkbox)).is(':checked')).to.be.true;
         });
+
+        it('should disable save button without accounts', () => {
+            globalFlux.getStore('user').receiveAccounts([]);
+            form = render(AppForm, props);
+            let btn = TestUtils.findRenderedDOMComponentWithAttributeValue(form, 'data-block', 'save-button');
+            expect($(React.findDOMNode(btn)).is('[disabled="true"]')).to.be.false;
+        });
     });
 
     describe('in edit mode', () => {
@@ -110,6 +117,10 @@ describe('The application form view', () => {
         it('should disable the ID input', () => {
             let input = TestUtils.findRenderedDOMComponentWithAttributeValue(form, 'data-block', 'id-input');
             expect($(React.findDOMNode(input)).is(':disabled')).to.be.true;
+        });
+
+        it('should allow to edit the team', () => {
+            TestUtils.findRenderedDOMComponentWithAttributeValue(form, 'data-block', 'team-input');
         });
 
         it('should call the correct action', () => {
