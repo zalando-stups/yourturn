@@ -12,7 +12,8 @@ class ApplicationForm extends React.Component {
             user: props.globalFlux.getStore('user'),
             kio: props.flux.getStore('kio')
         };
-        let {kio, user} = this.stores;
+        let {kio, user} = this.stores,
+            cloudAccounts = user.getUserCloudAccounts();
         this.state = {
             autocompleteServiceUrl: true
         };
@@ -23,7 +24,7 @@ class ApplicationForm extends React.Component {
         } else {
             this.state.app = {
                 active: true,
-                team_id: user.getUserCloudAccounts()[0].name
+                team_id: cloudAccounts.length ? cloudAccounts[0].name : undefined
             };
         }
 
@@ -66,14 +67,14 @@ class ApplicationForm extends React.Component {
         .then(() => {
             this.context.router.transitionTo(constructLocalUrl('application', [this.state.app.id]));
         })
-        .catch(() => {
+        .catch(e => {
             let verb = this.props.edit ? 'update' : 'create';
             this
             .props
             .globalFlux
             .getActions('notification')
             .addNotification(
-                `Could not ${verb} application ${app.name}.`,
+                `Could not ${verb} application ${app.name}. (${e.message})`,
                 'error'
             );
         });
@@ -95,6 +96,7 @@ class ApplicationForm extends React.Component {
             storeApp = this.stores.kio.getApplication(applicationId),
             {app} = this.state,
             accounts = this.stores.user.getUserCloudAccounts();
+
         return <div className='applicationForm'>
                     {edit ?
                         <div>
@@ -146,17 +148,24 @@ class ApplicationForm extends React.Component {
                         <div className='form-group'>
                             <label htmlFor='team_id'>Team ID</label>
                             <small>The ID of the owning team.</small>
-                            <select
-                                name='yourturn_app_team_id'
-                                defaultValue={accounts[0].name}
-                                onChange={this.update.bind(this, 'team_id', 'value')}
-                                id='team_id'>
-                                {accounts.map(
-                                    a => <option
-                                            key={a.name}
-                                            value={a.name}>{a.name}</option>
-                                )}
-                            </select>
+                            {accounts.length ?
+                                <select
+                                    data-block='team-input'
+                                    name='yourturn_app_team_id'
+                                    defaultValue={accounts[0].name}
+                                    onChange={this.update.bind(this, 'team_id', 'value')}
+                                    id='team_id'>
+                                    {accounts.map(
+                                        a => <option
+                                                key={a.name}
+                                                value={a.name}>{a.name}</option>
+                                    )}
+                                </select>
+                                :
+                                <div className='u-warning'>
+                                    You have to be part of a team!
+                                </div>
+                            }
                         </div>
                         <div className='form-group createApplication-applicationId'>
                             <label htmlFor='app_id'>Application ID</label>
@@ -282,6 +291,8 @@ class ApplicationForm extends React.Component {
                         <div className='btn-group'>
                             <button
                                 type='submit'
+                                data-block='save-button'
+                                disabled={accounts.length === 0}
                                 className='btn btn-primary'>
                                 <Icon name='save' /> Save
                             </button>
