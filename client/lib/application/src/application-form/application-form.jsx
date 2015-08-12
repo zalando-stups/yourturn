@@ -82,7 +82,7 @@ class ApplicationForm extends React.Component {
 
     update(field, prop, evt) {
         this.state.app[field] = evt.target[prop];
-        if (this.state.autocompleteServiceUrl) {
+        if (!this.props.edit && this.state.autocompleteServiceUrl) {
             this.state.app.service_url = `${this.state.app.id || 'app'}.${this.state.app.team_id}.${SERVICE_URL_TLD}`;
         }
         this.setState({
@@ -170,7 +170,7 @@ class ApplicationForm extends React.Component {
                         <div className='form-group createApplication-applicationId'>
                             <label htmlFor='app_id'>Application ID</label>
                             <small>The ID of the application.</small>
-                            <div className={'input-group'}>
+                            <div className='input-group'>
                                 <div className='input-addon'>
                                     {this.state.appIdTaken && !edit ?
                                         <Icon
