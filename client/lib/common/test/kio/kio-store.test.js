@@ -67,43 +67,6 @@ describe('The kio store', () => {
             expect(store.getApplications('greendale').length).to.equal(1);
         });
 
-        it('should receive applications that match a list of team ids', () => {
-            let results = [{
-                id: 'kio',
-                name: 'kio',
-                team_id: 'stups'
-            }, {
-                id: 'twintip',
-                name: 'twintip',
-                team_id: 'stups'
-            }, {
-                id: 'openam',
-                name: 'OpenAM',
-                team_id: 'iam'
-            }];
-            store.receiveApplications(results);
-            expect(store.getTeamApplications(null, ['stups']).length).to.equal(2);
-        });
-
-        it('should receive applications that dont match a list of team ids', () => {
-            let results = [{
-                id: 'kio',
-                name: 'kio',
-                team_id: 'stups'
-            }, {
-                id: 'twintip',
-                name: 'twintip',
-                team_id: 'stups'
-            }, {
-                id: 'openam',
-                name: 'OpenAM',
-                team_id: 'iam'
-            }];
-            store.receiveApplications(results);
-            expect(store.getOtherApplications(null, ['stups']).length).to.equal(1);
-        });
-
-
         it('should receive a single application', () => {
             let result = {
                 id: 'kio',

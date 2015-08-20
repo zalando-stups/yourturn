@@ -8,3 +8,7 @@ before_script:
 script:
   # test and cover
   - npm run-script test-coverage
+
+notifications:
+  email:
+    on_failure: change

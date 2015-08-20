@@ -39,11 +39,12 @@ class ApplicationList extends React.Component {
 
     render() {
         let {term, showCount, showAll} = this.state,
+            apps = this.stores.kio.getApplications(this.state.term),
             userAccIds = _.pluck(this.stores.user.getUserCloudAccounts(), 'name'),
-            otherApps = this.stores.kio.getOtherApplications(this.state.term, userAccIds),
+            otherApps = apps.filter(app => userAccIds.indexOf(app.team_id) < 0),
+            teamApps = apps.filter(app => userAccIds.indexOf(app.team_id) >= 0),
             shortApps = !showAll && otherApps.length > showCount ? _.slice(otherApps, 0, showCount) : otherApps,
             remainingAppsCount = otherApps.length - showCount,
-            teamApps = this.stores.kio.getTeamApplications(this.state.term, userAccIds),
             latestVersions = teamApps.map(app => this.stores.kio.getLatestApplicationVersion(app.id));
 
         return <div className='applicationList'>
