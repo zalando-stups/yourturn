@@ -138,7 +138,7 @@ class ScopeForm extends React.Component {
                                     autoFocus={true}
                                     required={true}
                                     onKeyUp={this.setCustomValidity.bind(this)}
-                                    pattern='[A-Za-z]\w+[A-Za-z]'
+                                    pattern='[a-z][a-z0-9-_]*[a-z0-9]'
                                     placeholder='read'
                                     disabled={edit}
                                     value={scope.id}
