@@ -121,7 +121,7 @@ EditableList.propTypes = {
     placeholder: React.PropTypes.string,
     itemName: React.PropTypes.string,
     items: React.PropTypes.array,
-    markedItems: React.propTypes.array,
+    markedItems: React.PropTypes.array,
     onChange: React.PropTypes.func.isRequired
 };
 
