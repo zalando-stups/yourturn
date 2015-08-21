@@ -41,10 +41,12 @@ describe('The kio store', () => {
         it('should filter applications by id', () => {
             let results = [{
                 id: 'kio',
-                name: 'kio'
+                name: 'kio',
+                team_id: 'stups'
             }, {
                 id: 'twintip',
-                name: 'twintip'
+                name: 'twintip',
+                team_id: 'stups'
             }];
             store.receiveApplications(results);
             expect(store.getApplications('kio').length).to.equal(1);
