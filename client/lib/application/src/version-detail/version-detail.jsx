@@ -24,7 +24,7 @@ class ScmCommitInfo extends React.Component {
                     <tr>
                         <th>Artifact Source</th>
                         <td>
-                            <Icon name='circle-o-notch' spin />
+                            <Icon name='circle-o-notch u-spinner' spin />
                         </td>
                     </tr>;
         }
@@ -59,7 +59,7 @@ class ScmAuthorInfo extends React.Component {
                     <tr>
                         <th>Artifact Author</th>
                         <td>
-                            <Icon name='circle-o-notch' spin />
+                            <Icon name='circle-o-notch u-spinner' spin />
                         </td>
                     </tr>;
         }

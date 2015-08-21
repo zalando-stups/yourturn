@@ -26,6 +26,20 @@ describe('The kio store', () => {
     });
 
     describe('applications', () => {
+        it('should have a fetch status of false by default', () => {
+            expect(store.getApplicationsFetchStatus()).to.be.false;
+        });
+
+        it('should provide a fetch status for applications', () => {
+            store.beginFetchApplications();
+            expect(store.getApplicationsFetchStatus() instanceof Pending).to.be.true;
+        });
+
+        it('should provide a failed fetch status for applications', () => {
+            store.failFetchApplications();
+            expect(store.getApplicationsFetchStatus() instanceof Failed).to.be.true;
+        });
+
         it('should receive applications', () => {
             let results = [{
                 id: 'kio',

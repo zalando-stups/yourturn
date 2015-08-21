@@ -39,7 +39,8 @@ class ApplicationList extends React.Component {
 
     render() {
         let {term, showCount, showAll} = this.state,
-            apps = this.stores.kio.getApplications(this.state.term),
+            apps = this.stores.kio.getApplications(term),
+            fetchStatus = this.stores.kio.getApplicationsFetchStatus(),
             userAccIds = _.pluck(this.stores.user.getUserCloudAccounts(), 'name'),
             otherApps = apps.filter(app => userAccIds.indexOf(app.team_id) < 0),
             teamApps = apps.filter(app => userAccIds.indexOf(app.team_id) >= 0),
@@ -73,7 +74,9 @@ class ApplicationList extends React.Component {
                                 placeholder='Kio' />
                         </div>
                     </div>
-                    <h4>Your Applications</h4>
+                    <h4>Your Applications {fetchStatus !== false && fetchStatus.isPending() ?
+                                            <Icon name='circle-o-notch u-spinner' spin /> :
+                                            null}</h4>
                     {teamApps.length ?
                         <table className='table'>
                             <colgroup>
@@ -151,7 +154,9 @@ class ApplicationList extends React.Component {
                         :
                         <span>No applications owned by your team.</span>
                     }
-                    <h4>Other Applications</h4>
+                    <h4>Other Applications {fetchStatus !== false && fetchStatus.isPending() ?
+                                                <Icon name='circle-o-notch u-spinner' spin /> :
+                                                null}</h4>
                     {otherApps.length ?
                         <table className='table'>
                             <colgroup>
