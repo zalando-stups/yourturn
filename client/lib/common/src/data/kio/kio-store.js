@@ -2,7 +2,6 @@ import {Store} from 'flummox';
 import Immutable from 'immutable';
 import fuzzysearch from 'fuzzysearch';
 import {Pending, Failed} from 'common/src/fetch-result';
-import FetchResult from 'common/src/fetch-result';
 
 class KioStore extends Store {
     constructor(flux) {
