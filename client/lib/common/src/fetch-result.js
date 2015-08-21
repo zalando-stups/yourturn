@@ -28,6 +28,11 @@ class FetchResult {
     isDone() {
         return this.status === FetchResultStatus.DONE;
     }
+
+    /** bogus method for easier handling in stores */
+    toJS() {
+        return this;
+    }
 }
 
 class PendingResult extends FetchResult {

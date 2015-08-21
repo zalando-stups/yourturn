@@ -140,8 +140,7 @@ class KioStore extends Store {
         let newState = versions.reduce(
                             (map, ver) => {
                                 ver.last_modified = Date.parse(ver.last_modified);
-                                map.setIn([ver.application_id, ver.id], Immutable.Map(ver));
-                                return map;
+                                return map.setIn([ver.application_id, ver.id], Immutable.Map(ver));
                             },
                             this.state.versions);
         this.setState({
@@ -167,14 +166,12 @@ class KioStore extends Store {
      */
     getApplications(term) {
         let availableApps = this.state.applications
-                                // behold the evil fast check whether an app is a FetchResult or not
-                                // (shaves 10 ms off render() in applicationList)
-                                .filter(app => !app.isResult)
+                                .valueSeq()
+                                .filter(app => !app.getResult)
                                 .filter(app => term ?
                                                 fuzzysearch(term.toLowerCase(), `${app.get('name')} ${app.get('team_id')}`) :
                                                 true)
-                                .sortBy(app => app.get('id').toLowerCase())
-                                .valueSeq()
+                                .sortBy(app => app.get('name').toLowerCase())
                                 .toJS();
         return availableApps;
     }
@@ -188,7 +185,9 @@ class KioStore extends Store {
      */
     getApplication(id) {
         let app = this.state.applications.get(id);
-        return app ? app.toJS() : false;
+        return app ?
+                app.toJS() :
+                false;
     }
 
     /**
@@ -199,16 +198,19 @@ class KioStore extends Store {
     getApplicationVersions(id, filter) {
         let versions = this.state
                             .versions
-                            .get(id)
-                            .valueSeq()
-                            .filter(v => !v.getResult)
-                            .filter(v => filter ?
-                                            fuzzysearch(filter, v.get('id')) :
-                                            true)
-                            .sortBy(v => v.get('last_modified'))
-                            .reverse()
-                            .toJS();
-        return versions;
+                            .get(id);
+        if (versions) {
+            return versions
+                        .valueSeq()
+                        .filter(v => !v.getResult)
+                        .filter(v => filter ?
+                                        fuzzysearch(filter, v.get('id')) :
+                                        true)
+                        .sortBy(v => v.get('last_modified'))
+                        .reverse()
+                        .toJS();
+        }
+        return [];
     }
 
 
@@ -272,7 +274,7 @@ class KioStore extends Store {
      */
     getApprovals(applicationId, versionId) {
         let approvals = this.state.approvals.getIn([applicationId, versionId]);
-        approvals = approvals ? approvals.toJS() : [];
+        approvals = approvals ? approvals.valueSeq().toJS() : [];
         return approvals.sort((a, b) => a.timestamp < b.timestamp ?
                                             -1 :
                                             b.timestamp < a.timestamp ?
@@ -287,7 +289,8 @@ class KioStore extends Store {
         this.setState({
             applications: Immutable.Map(),
             versions: Immutable.Map(),
-            approvals: Immutable.Map()
+            approvals: Immutable.Map(),
+            approvalTypes: Immutable.Map()
         });
     }
 }
