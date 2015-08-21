@@ -7,6 +7,7 @@ class EditableList extends React.Component {
         super();
         this.state = {
             items: props.items || [],
+            limbo: [],
             input: ''
         };
     }
@@ -37,19 +38,34 @@ class EditableList extends React.Component {
         }
     }
 
+    undoDeleteItem(item) {
+        let idx = this.state.limbo.indexOf(item);
+        if (idx >= 0) {
+            this.state.limbo.splice(idx, 1);
+            this.state.items.push(item);
+            this.setState({
+                items: this.state.items,
+                limbo: this.state.limbo
+            });
+            this.props.onChange(this.state.items);
+        }
+    }
+
     deleteItem(item) {
         let idx = this.state.items.indexOf(item);
         if (idx >= 0) {
+            this.state.limbo.push(item);
             this.state.items.splice(idx, 1);
             this.setState({
-                items: this.state.items
+                items: this.state.items,
+                limbo: this.state.limbo
             });
             this.props.onChange(this.state.items);
         }
     }
 
     render() {
-        let {items, input} = this.state;
+        let {items, input, limbo} = this.state;
         return <div className='editableList'>
                     <div className='input-group'>
                         <input
@@ -62,23 +78,38 @@ class EditableList extends React.Component {
                         <button
                             type='submit'
                             onClick={this.addItem.bind(this)}
-                            className='btn btn-default'><Icon name='plus' /> Add {this.props.itemName || 'item'}
+                            className='btn btn-default'>
+                                <Icon name='plus' /> Add {this.props.itemName || 'item'}
                         </button>
                     </div>
                     {items
+                        .concat(limbo)
                         .sort()
                         .map(
                             item =>
-                                <div
-                                    key={item}
-                                    className='list-item'>
-                                    <span data-block='editable-list-item'>{item}</span>
+                                items.indexOf(item) >= 0 ?
                                     <div
-                                        onClick={this.deleteItem.bind(this, item)}
-                                        className='btn btn-danger'>
-                                        <Icon name='close' /> Remove
-                                    </div>
-                                </div>)}
+                                        key={item}
+                                        className='list-item'>
+                                        <span
+                                            data-is-marked={this.props.markedItems.indexOf(item) >= 0}
+                                            data-block='editable-list-item'>{item}</span>
+                                        <div
+                                            onClick={this.deleteItem.bind(this, item)}
+                                            className='btn btn-danger'>
+                                            <Icon name='close' /> Remove
+                                        </div>
+                                    </div> :
+                                    <div
+                                        key={item}
+                                        className='list-item'>
+                                        <span data-is-in-limbo='true'>{item}</span>
+                                        <div
+                                            onClick={this.undoDeleteItem.bind(this, item)}
+                                            className='btn btn-default'>
+                                            <Icon name='undo' /> Undo
+                                        </div>
+                                    </div>)}
                 </div>;
     }
 }
@@ -90,6 +121,7 @@ EditableList.propTypes = {
     placeholder: React.PropTypes.string,
     itemName: React.PropTypes.string,
     items: React.PropTypes.array,
+    markedItems: React.PropTypes.array,
     onChange: React.PropTypes.func.isRequired
 };
 

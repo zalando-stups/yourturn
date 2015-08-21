@@ -1,5 +1,6 @@
 import React from 'react';
 import Icon from 'react-fa';
+import _ from 'lodash';
 import {Link} from 'react-router';
 import OAuthSyncInfo from 'application/src/oauth-sync-info.jsx';
 import ScopeList from 'application/src/scope-list.jsx';
@@ -110,21 +111,17 @@ class AccessForm extends React.Component {
                             <Icon name='chevron-left' /> {application.name}
                         </Link>
                     </div>
+                    <OAuthSyncInfo
+                        onRenewCredentials={isOwnApplication ? this.onRenewCredentials.bind(this) : false}
+                        oauth={oauth} />
                     <form
                         data-block='form'
                         onSubmit={this.save.bind(this)}
                         className='form'>
-                        <div className='form-group'>
-                            <label>Application Scopes</label>
-                            <small>{application.name} has the permission to access data with these scopes:</small>
-                            <ScopeList
-                                selected={oauth.scopes}
-                                scopes={allAppScopes}
-                                onSelect={this.updateScopes.bind(this)} />
-                        </div>
+
                         <div className='form-group'>
                             <label>Credential Distribution</label>
-                            <small>Activate credential distribution into these S3 buckets (<a href='http://docs.aws.amazon.com/AmazonS3/latest/dev/BucketRestrictions.html'>Naming Conventions</a>):</small>
+                            <small>Activate credential distribution into these S3 buckets (<a href='http://docs.aws.amazon.com/AmazonS3/latest/dev/BucketRestrictions.html'>Naming Conventions</a>). A <code>*</code> indicates unsaved changes.</small>
                             <EditableList
                                 placeholder='my-s3-bucket'
                                 itemName={'bucket'}
@@ -132,6 +129,7 @@ class AccessForm extends React.Component {
                                 maxlength={64}
                                 onChange={this.updateBuckets.bind(this)}
                                 items={oauth.s3_buckets}
+                                markedItems={_.difference(this.state.s3_buckets, oauth.s3_buckets)}
                                 pattern={'^[a-z0-9][a-z0-9\-\.]*[a-z0-9]$'} />
                         </div>
                         <div className='btn-group'>
@@ -142,10 +140,24 @@ class AccessForm extends React.Component {
                                 <Icon name='save' /> Save
                             </button>
                         </div>
+                        <div className='form-group'>
+                            <label>Application Scopes</label>
+                            <small>{application.name} has the permission to access data with these scopes:</small>
+                            <ScopeList
+                                selected={oauth.scopes}
+                                scopes={allAppScopes}
+                                onSelect={this.updateScopes.bind(this)} />
+                        </div>
+                        <div className='btn-group'>
+                            <button
+                                type='submit'
+                                data-block='save-button'
+                                className={`btn btn-primary ${isOwnApplication ? '' : 'btn-disabled'}`}>
+                                <Icon name='save' /> Save
+                            </button>
+                        </div>
                     </form>
-                    <OAuthSyncInfo
-                        onRenewCredentials={isOwnApplication ? this.onRenewCredentials.bind(this) : false}
-                        oauth={oauth} />
+
                 </div>;
     }
 }

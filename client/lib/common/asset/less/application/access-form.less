@@ -7,4 +7,28 @@
         margin-bottom: @padding-small;
         color: @gray;
     }
+
+    [data-is-marked="true"] {
+        color: multiply(@gray-lighter, @green);
+        &:before {
+            content: '* ';
+        }
+        &:after {
+            content: '(will be saved)';
+            display: inline-block;
+            margin-left: @padding-tiny;
+        }
+    }
+
+    [data-is-in-limbo="true"] {
+        color: multiply(@gray-lighter, @red);
+        &:before {
+            content: '* ';
+        }
+        &:after {
+            content: '(will be removed)';
+            display: inline-bock;
+            margin-left: @padding-tiny;
+        }
+    }
 }
