@@ -206,7 +206,7 @@ class ApplicationDetail extends React.Component {
                                 } {this.state.criticalityUpdatePending ?
                                         <Icon
                                             spin
-                                            className='applicationDetail-criticality'
+                                            className='applicationDetail-criticality u-spinner'
                                             name='circle-o-notch' />
                                         :
                                         <span className='applicationDetail-criticality'

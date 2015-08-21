@@ -37,7 +37,7 @@ class ViolationCard extends React.Component {
         let {violation} = this.props;
         if (violation instanceof FetchResult) {
             return violation.isPending() ?
-                    <Icon name='circle-o-notch' spin /> :
+                    <Icon name='circle-o-notch u-spinner' spin /> :
                     <DefaultError error={violation.getResult()} />;
         }
         let {violation_type} = violation;

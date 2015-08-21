@@ -181,7 +181,7 @@ class ViolationList extends React.Component {
                         <InfiniteList
                             loadMore={this.loadMore.bind(this, true)}
                             hasMore={!pagingInfo.last}
-                            loader={<Icon spin name='circle-o-notch' />}>
+                            loader={<Icon spin name='circle-o-notch u-spinner' />}>
                             {violationCards}
                         </InfiniteList>
                     </div>

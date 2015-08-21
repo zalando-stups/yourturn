@@ -10,6 +10,7 @@ class KioStore extends Store {
         const kioActions = flux.getActions('kio');
 
         this.state = {
+            fetchApplications: false,   // false = nothing's going on. else fetchresult.
             applications: Immutable.Map(),
             versions: Immutable.Map(),
             approvals: Immutable.Map(),
@@ -51,9 +52,17 @@ class KioStore extends Store {
             this.receiveApprovalTypes);
     }
 
-    // intentionally left as noop for now
-    beginFetchApplications() { }
-    failFetchApplications() { }
+    beginFetchApplications() {
+        // only show loading indicator first time!
+        this.setState({
+            fetchApplications: new Pending()
+        });
+    }
+    failFetchApplications() {
+        this.setState({
+            fetchApplications: new Failed()
+        });
+    }
 
     beginFetchApplicationVersions() { }
     failFetchApplicationVersions() { }
@@ -113,7 +122,9 @@ class KioStore extends Store {
      * @param  {object} app
      */
     receiveApplication(app) {
-        this.receiveApplications([app]);
+        this.setState({
+            applications: this.state.applications.set(app.id, Immutable.Map(app))
+        });
     }
 
     /**
@@ -126,7 +137,8 @@ class KioStore extends Store {
                             (map, app) => map.set(app.id, Immutable.Map(app)),
                             this.state.applications);
         this.setState({
-            applications: newState
+            applications: newState,
+            fetchApplications: false
         });
     }
 
@@ -164,6 +176,10 @@ class KioStore extends Store {
      * @return {Array} Available applications
      */
     getApplications(term) {
+        if (this.state.applications.getResult) {
+            return this.state.applications;
+        }
+
         let availableApps = this.state.applications
                                 .valueSeq()
                                 .filter(app => !app.getResult)
@@ -173,6 +189,10 @@ class KioStore extends Store {
                                 .sortBy(app => app.get('name').toLowerCase())
                                 .toJS();
         return availableApps;
+    }
+
+    getApplicationsFetchStatus() {
+        return this.state.fetchApplications;
     }
 
     /**
