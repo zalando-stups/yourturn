@@ -169,7 +169,7 @@ class KioStore extends Store {
                                 .valueSeq()
                                 .filter(app => !app.getResult)
                                 .filter(app => term ?
-                                                fuzzysearch(term.toLowerCase(), `${app.get('name')} ${app.get('team_id')}`) :
+                                                fuzzysearch(term.toLowerCase(), `${app.get('name').toLowerCase()} ${app.get('team_id').toLowerCase()}`) :
                                                 true)
                                 .sortBy(app => app.get('name').toLowerCase())
                                 .toJS();
