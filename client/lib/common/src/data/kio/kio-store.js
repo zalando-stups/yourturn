@@ -10,7 +10,7 @@ class KioStore extends Store {
         const kioActions = flux.getActions('kio');
 
         this.state = {
-            fetchApplications: false,   // false = nothing's going on. else fetchresult.
+            fetchApplications: false, // false = nothing's going on. else fetchresult.
             applications: Immutable.Map(),
             versions: Immutable.Map(),
             approvals: Immutable.Map(),
