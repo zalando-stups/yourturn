@@ -1,5 +1,5 @@
 import {Store} from 'flummox';
-import _m from 'mori';
+import Immutable from 'immutable';
 import {Pending, Failed} from 'common/src/fetch-result';
 
 class MintStore extends Store {
@@ -9,7 +9,7 @@ class MintStore extends Store {
         const mintActions = flux.getActions('mint');
 
         this.state = {
-            applications: _m.hashMap()
+            applications: Immutable.Map()
         };
 
         this.registerAsync(
@@ -26,7 +26,7 @@ class MintStore extends Store {
      */
     beginFetchOAuthConfig(appId) {
         this.setState({
-            applications: _m.assoc(this.state.applications, appId, new Pending())
+            applications: this.state.applications.set(appId, new Pending())
         });
     }
 
@@ -38,7 +38,7 @@ class MintStore extends Store {
      */
     failFetchOAuthConfig(err) {
         this.setState({
-            applications: _m.assoc(this.state.applications, err.id, new Failed(err))
+            applications: this.state.applications.set(err.id, new Failed(err))
         });
     }
 
@@ -47,7 +47,7 @@ class MintStore extends Store {
      */
     receiveOAuthConfig([applicationId, config]) {
         this.setState({
-            applications: _m.assoc(this.state.applications, applicationId, config)
+            applications: this.state.applications.set(applicationId, Immutable.fromJS(config))
         });
     }
 
@@ -58,8 +58,8 @@ class MintStore extends Store {
      * @return {Object|false} Empty configuration if unavailable.
      */
     getOAuthConfig(applicationId) {
-        let config = _m.get(this.state.applications, applicationId);
-        return config ? _m.toJs(config) : false;
+        let config = this.state.applications.get(applicationId);
+        return config ? config.toJS() : false;
     }
 
     /**
@@ -67,7 +67,7 @@ class MintStore extends Store {
      */
     _empty() {
         this.setState({
-            applications: _m.hashMap()
+            applications: Immutable.Map()
         });
     }
 }

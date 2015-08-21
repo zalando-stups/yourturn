@@ -1,7 +1,7 @@
 /**
  * @license
  * lodash 3.9.3 (Custom Build) <https://lodash.com/>
- * Build: `lodash modern include="chain,debounce,extend,filter,findLastIndex,flatten,forOwn,groupBy,intersection,pluck,reverse,sortBy,slice,take,times,value,values" -d -o lib/common/src/lodash.custom.js`
+ * Build: `lodash modern include="chain,debounce,difference,extend,filter,findLastIndex,flatten,forOwn,groupBy,intersection,pluck,reverse,sortBy,slice,take,times,value,values" -d -o lib/common/src/lodash.custom.js`
  * Copyright 2012-2015 The Dojo Foundation <http://dojofoundation.org/>
  * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
  * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
@@ -1011,6 +1011,53 @@
       return result || {};
     };
   }());
+
+  /**
+   * The base implementation of `_.difference` which accepts a single array
+   * of values to exclude.
+   *
+   * @private
+   * @param {Array} array The array to inspect.
+   * @param {Array} values The values to exclude.
+   * @returns {Array} Returns the new array of filtered values.
+   */
+  function baseDifference(array, values) {
+    var length = array ? array.length : 0,
+        result = [];
+
+    if (!length) {
+      return result;
+    }
+    var index = -1,
+        indexOf = getIndexOf(),
+        isCommon = indexOf == baseIndexOf,
+        cache = (isCommon && values.length >= 200) ? createCache(values) : null,
+        valuesLength = values.length;
+
+    if (cache) {
+      indexOf = cacheIndexOf;
+      isCommon = false;
+      values = cache;
+    }
+    outer:
+    while (++index < length) {
+      var value = array[index];
+
+      if (isCommon && value === value) {
+        var valuesIndex = valuesLength;
+        while (valuesIndex--) {
+          if (values[valuesIndex] === value) {
+            continue outer;
+          }
+        }
+        result.push(value);
+      }
+      else if (indexOf(values, value, 0) < 0) {
+        result.push(value);
+      }
+    }
+    return result;
+  }
 
   /**
    * The base implementation of `_.forEach` without support for callback
@@ -2608,6 +2655,28 @@
   }
 
   /*------------------------------------------------------------------------*/
+
+  /**
+   * Creates an array of unique `array` values not included in the other
+   * provided arrays using [`SameValueZero`](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-samevaluezero)
+   * for equality comparisons.
+   *
+   * @static
+   * @memberOf _
+   * @category Array
+   * @param {Array} array The array to inspect.
+   * @param {...Array} [values] The arrays of values to exclude.
+   * @returns {Array} Returns the new array of filtered values.
+   * @example
+   *
+   * _.difference([1, 2, 3], [4, 2]);
+   * // => [1, 3]
+   */
+  var difference = restParam(function(array, values) {
+    return isArrayLike(array)
+      ? baseDifference(array, baseFlatten(values, false, true))
+      : [];
+  });
 
   /**
    * This method is like `_.findIndex` except that it iterates over elements
@@ -4322,6 +4391,7 @@
   lodash.chain = chain;
   lodash.constant = constant;
   lodash.debounce = debounce;
+  lodash.difference = difference;
   lodash.filter = filter;
   lodash.flatten = flatten;
   lodash.forOwn = forOwn;
