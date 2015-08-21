@@ -66,7 +66,6 @@ class EditableList extends React.Component {
 
     render() {
         let {items, input, limbo} = this.state;
-        console.log(this.props.markedItems);
         return <div className='editableList'>
                     <div className='input-group'>
                         <input
@@ -122,6 +121,7 @@ EditableList.propTypes = {
     placeholder: React.PropTypes.string,
     itemName: React.PropTypes.string,
     items: React.PropTypes.array,
+    markedItems: React.propTypes.array,
     onChange: React.PropTypes.func.isRequired
 };
 
