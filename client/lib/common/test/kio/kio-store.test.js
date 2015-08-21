@@ -41,10 +41,12 @@ describe('The kio store', () => {
         it('should filter applications by id', () => {
             let results = [{
                 id: 'kio',
-                name: 'kio'
+                name: 'kio',
+                team_id: 'stups'
             }, {
                 id: 'twintip',
-                name: 'twintip'
+                name: 'twintip',
+                team_id: 'stups'
             }];
             store.receiveApplications(results);
             expect(store.getApplications('kio').length).to.equal(1);
@@ -66,43 +68,6 @@ describe('The kio store', () => {
             expect(store.getApplications('stups').length).to.equal(1);
             expect(store.getApplications('greendale').length).to.equal(1);
         });
-
-        it('should receive applications that match a list of team ids', () => {
-            let results = [{
-                id: 'kio',
-                name: 'kio',
-                team_id: 'stups'
-            }, {
-                id: 'twintip',
-                name: 'twintip',
-                team_id: 'stups'
-            }, {
-                id: 'openam',
-                name: 'OpenAM',
-                team_id: 'iam'
-            }];
-            store.receiveApplications(results);
-            expect(store.getTeamApplications(null, ['stups']).length).to.equal(2);
-        });
-
-        it('should receive applications that dont match a list of team ids', () => {
-            let results = [{
-                id: 'kio',
-                name: 'kio',
-                team_id: 'stups'
-            }, {
-                id: 'twintip',
-                name: 'twintip',
-                team_id: 'stups'
-            }, {
-                id: 'openam',
-                name: 'OpenAM',
-                team_id: 'iam'
-            }];
-            store.receiveApplications(results);
-            expect(store.getOtherApplications(null, ['stups']).length).to.equal(1);
-        });
-
 
         it('should receive a single application', () => {
             let result = {
