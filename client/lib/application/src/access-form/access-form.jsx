@@ -144,7 +144,7 @@ class AccessForm extends React.Component {
                             <label>Application Scopes</label>
                             <small>{application.name} has the permission to access data with these scopes:</small>
                             <ScopeList
-                                selected={oauth.scopes}
+                                selected={this.state.scopes}
                                 scopes={allAppScopes}
                                 onSelect={this.updateScopes.bind(this)} />
                         </div>
