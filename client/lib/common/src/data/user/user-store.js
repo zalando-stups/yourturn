@@ -1,5 +1,5 @@
 import {Store} from 'flummox';
-import _m from 'mori';
+import Immutable from 'immutable';
 import Config from 'common/src/config';
 
 class UserStore extends Store {
@@ -9,10 +9,10 @@ class UserStore extends Store {
         const userActions = flux.getActions('user');
 
         this.state = {
-            tokeninfo: _m.hashMap(),
+            tokeninfo: Immutable.Map(),
             uid: false,
-            users: _m.hashMap(),
-            accounts: _m.vector()
+            users: Immutable.Map(),
+            accounts: Immutable.List()
         };
 
         this.register(
@@ -40,41 +40,41 @@ class UserStore extends Store {
 
     receiveUserInfo([user, info]) {
         this.setState({
-            users: _m.assoc(this.state.users, user, _m.toClj(info))
+            users: this.state.users.set(user, Immutable.fromJS(info))
         });
     }
 
     receiveAccounts(accounts) {
         this.setState({
-            accounts: _m.toClj(accounts)
+            accounts: Immutable.fromJS(accounts)
         });
     }
 
     getUserCloudAccounts() {
-        return _m.toJs(this.state.accounts);
+        return this.state.accounts.toJS();
     }
 
     getUserInfo(user) {
         let info;
         if (user) {
             // specific user
-            info = _m.get(this.state.users, user, false);
+            info = this.state.users.get(user, false);
         } else {
             // current user
             let {uid} = this.getTokenInfo();
-            info = uid ? _m.get(this.state.users, uid, false) : false;
+            info = uid ? this.state.users.get(uid, false) : false;
         }
-        return _m.toJs(info);
+        return info ? info.toJS() : false;
     }
 
     receiveTokenInfo(tokeninfo) {
         this.setState({
-            tokeninfo: _m.toClj(tokeninfo)
+            tokeninfo: Immutable.fromJS(tokeninfo)
         });
     }
 
     getTokenInfo() {
-        return _m.toJs(this.state.tokeninfo);
+        return this.state.tokeninfo ? this.state.tokeninfo.toJS() : false;
     }
 
     deleteTokenInfo() {
@@ -85,7 +85,7 @@ class UserStore extends Store {
 
     // QUICKFIX #133
     isWhitelisted() {
-        let token = _m.toJs(this.state.tokeninfo);
+        let token = this.state.tokeninfo.toJS();
         // ignore whitelist if it's empty
         if (Config.RESOURCE_WHITELIST.length === 0) {
             return true;
@@ -95,10 +95,10 @@ class UserStore extends Store {
 
     _empty() {
         this.setState({
-            tokeninfo: _m.hashMap(),
+            tokeninfo: Immutable.Map(),
             uid: false,
-            users: _m.hashMap(),
-            accounts: _m.vector()
+            users: Immutable.Map(),
+            accounts: Immutable.List()
         });
     }
 }
