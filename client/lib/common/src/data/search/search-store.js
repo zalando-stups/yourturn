@@ -1,6 +1,6 @@
 import {Store} from 'flummox';
 import {Services, getLocalUrlForService} from 'common/src/data/services';
-import _m from 'mori';
+import Immutable from 'immutable';
 
 function sortDesc(a, b) {
     return a < b ? 1 :
@@ -15,7 +15,7 @@ class SearchStore extends Store {
         const searchActions = flux.getActions('search');
 
         this.state = {
-            results: _m.hashMap()
+            results: Immutable.Map()
         };
 
         this.register(searchActions.clearSearchResults, this.clearSearchResults);
@@ -34,7 +34,7 @@ class SearchStore extends Store {
      */
     clearSearchResults(term) {
         this.setState({
-            results: _m.dissoc(this.state.results, term)
+            results: this.state.results.delete(term)
         });
     }
 
@@ -49,33 +49,20 @@ class SearchStore extends Store {
      * respective search term. Creates a new entry if none is
      * available.
      *
-     * @param  {Array} results
+     * @param  {Array} resultSet
      */
-    receiveSearchResultsFrom(results) {
-        const TERM = results._term,
-            SOURCE = results._source,
-        // check if term exists in state
-            EXISTS = _m.get(this.state.results, TERM) !== null;
-        // if not, make it a new seq
-        let old = EXISTS ? _m.get(this.state.results, TERM) : _m.vector(),
-        // convert results in vector
-            newResults = _m.toClj(results);
-        // add a _source field so the view can display where this result came from
-        newResults = _m.map(res => _m.assoc(res, '_source', SOURCE), newResults);
-        // add a _url field so that we can link inside yourturn
-        newResults = _m.map(
-            res => _m.assoc(
-                        res,
-                        '_url',
-                        getLocalUrlForService(SOURCE, _m.get(res, Services[SOURCE].id))),
-            newResults);
-        // append results in seq
-        old = _m.into(old, newResults);
-        // sort seq by matched_rank desc
-        old = _m.sortBy(res => _m.get(res, 'matched_rank'), sortDesc, old);
-        // PROFIT
+    receiveSearchResultsFrom(resultSet) {
+        const TERM = resultSet._term,
+            SOURCE = resultSet._source;
+        let {results} = this.state,
+            newState = Immutable
+                        .fromJS(resultSet)
+                        .map(res => res.set('_source', SOURCE))
+                        .map(res => res.set('_url', getLocalUrlForService(SOURCE, res.get(Services[SOURCE].id))))
+                        .concat(results.get(TERM, Immutable.List()))
+                        .sortBy(res => res.get('matched_rank'), sortDesc);
         this.setState({
-            results: _m.assoc(this.state.results, TERM, old)
+            results: this.state.results.set(TERM, newState)
         });
     }
 
@@ -86,7 +73,8 @@ class SearchStore extends Store {
      * @return {Array} Is empty if no results are available.
      */
     getSearchResults(term) {
-        return _m.toJs(_m.get(this.state.results, term)) || [];
+        let results = this.state.results.get(term);
+        return results ? results.toJS() : [];
     }
 
     /**
@@ -97,7 +85,7 @@ class SearchStore extends Store {
      * @return {Boolean} True if `term` is associated with the underlying hashmap.
      */
     hasResults(term) {
-        return _m.get(this.state.results, term) !== null;
+        return this.state.results.has(term);
     }
 }
 
