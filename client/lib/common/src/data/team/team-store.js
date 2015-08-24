@@ -1,5 +1,5 @@
 import {Store} from 'flummox';
-import _m from 'mori';
+import Immutable from 'immutable';
 
 class TeamStore extends Store {
     constructor(flux) {
@@ -18,26 +18,19 @@ class TeamStore extends Store {
 
     receiveAccounts(accounts) {
         this.setState({
-            accounts: _m.toClj(accounts)
+            accounts: Immutable.fromJS(accounts)
         });
     }
 
     getAccounts() {
-        return _m
-                .toJs(this.state.accounts)
-                .sort((a, b) => {
-                    let aName = a.name.toLowerCase(),
-                        bName = b.name.toLowerCase();
-                    return aName < bName ?
-                            -1 :
-                            bName < aName ?
-                                1 : 0;
-                });
+        return this.state.accounts
+                .sortBy(a => a.get('name').toLowerCase())
+                .toJS();
     }
 
     _empty() {
         this.setState({
-            accounts: _m.vector()
+            accounts: Immutable.List()
         });
     }
 }
