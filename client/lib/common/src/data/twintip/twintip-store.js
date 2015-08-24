@@ -1,5 +1,5 @@
 import {Store} from 'flummox';
-import _m from 'mori';
+import Immutable from 'immutable';
 import {Pending, Failed} from 'common/src/fetch-result';
 
 class TwintipStore extends Store {
@@ -9,7 +9,7 @@ class TwintipStore extends Store {
         const twintipActions = flux.getActions('twintip');
 
         this.state = {
-            apis: _m.hashMap()
+            apis: Immutable.Map()
         };
 
         this.registerAsync(
@@ -26,7 +26,7 @@ class TwintipStore extends Store {
      */
     beginFetchApi(id) {
         this.setState({
-            apis: _m.assoc(this.state.apis, id, new Pending())
+            apis: this.state.apis.set(id, new Pending())
         });
     }
 
@@ -37,7 +37,7 @@ class TwintipStore extends Store {
      */
     failFetchApi(err) {
         this.setState({
-            apis: _m.assoc(this.state.apis, err.id, new Failed(err))
+            apis: this.state.apis.set(err.id, new Failed(err))
         });
     }
 
@@ -48,7 +48,7 @@ class TwintipStore extends Store {
      */
     receiveApi(api) {
         this.setState({
-            apis: _m.assoc(this.state.apis, api.application_id, api)
+            apis: this.state.apis.set(api.application_id, Immutable.fromJS(api))
         });
     }
 
@@ -60,13 +60,13 @@ class TwintipStore extends Store {
      * @return {object} The API with this id
      */
     getApi(id) {
-        let api = _m.get(this.state.apis, id);
-        return _m.toJs(api);
+        let api = this.state.apis.get(id);
+        return api ? api.toJS() : false;
     }
 
     _empty() {
         this.setState({
-            apis: _m.hashMap()
+            apis: Immutable.Map()
         });
     }
 }
