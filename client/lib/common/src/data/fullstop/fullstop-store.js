@@ -1,5 +1,5 @@
 import {Store} from 'flummox';
-import _m from 'mori';
+import Immutable from 'immutable';
 import {Pending, Failed} from 'common/src/fetch-result';
 
 class FullstopStore extends Store {
@@ -35,7 +35,7 @@ class FullstopStore extends Store {
 
     beginFetchViolations() {
         this.setState({
-            pagingInfo: _m.toClj({
+            pagingInfo: Immutable.Map({
                 last: true
             })
         });
@@ -43,12 +43,12 @@ class FullstopStore extends Store {
     failFetchViolations() { }
     beginFetchViolation(violationId) {
         this.setState({
-            violations: _m.assoc(this.state.violations, String(violationId), new Pending())
+            violations: this.state.violations.set(String(violationId), new Pending())
         });
     }
     failFetchViolation(err) {
         this.setState({
-            violations: _m.assoc(this.state.violations, String(err.violationId), new Failed(err))
+            violations: this.state.violations.set(String(err.violationId), new Failed(err))
         });
     }
 
@@ -60,13 +60,13 @@ class FullstopStore extends Store {
         let all = violations.reduce(
                             (coll, v) => {
                                 v.timestamp = Date.parse(v.created) || 0;
-                                return _m.assoc(coll, String(v.id), _m.toClj(v));
+                                return coll.set(String(v.id), Immutable.fromJS(v));
                             },
                             this.state.violations);
         this.setState({
             violations: all,
             pagingInfo: metadata ?
-                            _m.toClj({
+                            Immutable.Map({
                                 last: metadata.last
                             }) :
                             this.state.pagingInfo
@@ -75,39 +75,41 @@ class FullstopStore extends Store {
 
     deleteViolations() {
         this.setState({
-            violations: _m.hashMap()
+            violations: Immutable.Map()
         });
     }
 
     getPagingInfo() {
-        return _m.toJs(this.state.pagingInfo);
+        return this.state.pagingInfo.toJS();
     }
 
     getViolation(violationId) {
-        return _m.toJs(_m.get(this.state.violations, String(violationId)));
+        let violation = this.state.violations.get(String(violationId));
+        return violation ? violation.toJS() : false;
     }
 
     getViolations(accounts, resolved) {
-        let violations = _m.vals(this.state.violations);
+        let violations = this.state.violations.valueSeq();
         // collect violations from accounts
         if (accounts) {
-            violations = _m.filter(v => accounts.indexOf(_m.get(v, 'account_id')) >= 0, violations);
+            violations = violations.filter(v => accounts.indexOf(v.get('account_id')) >= 0);
         }
 
         // filter by resolution
         if (resolved === true) {
-            violations = _m.filter(v => _m.get(v, 'comment') !== null, violations);
+            violations = violations.filter(v => v.get('comment') !== null);
         } else if (resolved === false) {
-            violations = _m.filter(v => _m.get(v, 'comment') === null, violations);
+            violations = violations.filter(v => v.get('comment') === null);
         }
-        violations = _m.sortBy(v => _m.get(v, 'timestamp'), violations);
-        return _m.toJs(violations);
+        return violations
+                .sortBy(v => v.get('timestamp'))
+                .toJS();
     }
 
     _empty() {
         this.setState({
-            violations: _m.hashMap(),
-            pagingInfo: _m.toClj({
+            violations: Immutable.Map(),
+            pagingInfo: Immutable.fromJS({
                 last: true
             })
         });
