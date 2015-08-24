@@ -1,6 +1,6 @@
 /** global Date */
 import {Store} from 'flummox';
-import _m from 'mori';
+import Immutable from 'immutable';
 
 var lastId = 0;
 
@@ -11,7 +11,7 @@ class NotificationStore extends Store {
         const notificationActions = flux.getActions('notification');
 
         this.state = {
-            notifications: _m.vector()
+            notifications: Immutable.List()
         };
 
         this.register(notificationActions.addNotification, this.receiveNotification);
@@ -25,7 +25,7 @@ class NotificationStore extends Store {
     receiveNotification([message, type]) {
         lastId += 1;
         this.setState({
-            notifications: _m.conj(this.state.notifications, _m.toClj({
+            notifications: this.state.notifications.push(Immutable.Map({
                 type: type || 'default',
                 message: message,
                 id: lastId,
@@ -41,7 +41,7 @@ class NotificationStore extends Store {
      */
     deleteNotification(id) {
         this.setState({
-            notifications: _m.filter(n => _m.get(n, 'id') !== id, this.state.notifications)
+            notifications: this.state.notifications.filter(n => n.get('id') !== id)
         });
     }
 
@@ -53,7 +53,7 @@ class NotificationStore extends Store {
     deleteOldNotifications(ms) {
         let now = Date.now();
         this.setState({
-            notifications: _m.filter(n => _m.get(n, 'created') > (now - ms), this.state.notifications)
+            notifications: this.state.notifications.filter(n => n.get('created') > (now - ms))
         });
     }
 
@@ -61,12 +61,12 @@ class NotificationStore extends Store {
      * Returns all notifications.
      */
     getNotifications() {
-        return _m.toJs(this.state.notifications);
+        return this.state.notifications.toJS();
     }
 
     _empty() {
         this.setState({
-            notifications: _m.vector()
+            notifications: Immutable.List()
         });
     }
 }
