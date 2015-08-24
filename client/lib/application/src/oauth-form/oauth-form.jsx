@@ -151,7 +151,7 @@ class OAuthForm extends React.Component {
                             <small>{application.name} can ask the resource owners for these scopes to be granted:</small>
                             <ScopeList
                                 onSelect={this.updateScopes.bind(this)}
-                                selected={oauth.scopes}
+                                selected={this.state.scopes}
                                 scopes={allRoScopes} />
                         </div>
 
