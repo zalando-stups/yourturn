@@ -1,7 +1,6 @@
 import {Store} from 'flummox';
-import _m from 'mori';
+import Immutable from 'immutable';
 import {Pending, Failed} from 'common/src/fetch-result';
-import FetchResult from 'common/src/fetch-result';
 
 class PieroneStore extends Store {
     constructor(flux) {
@@ -9,10 +8,7 @@ class PieroneStore extends Store {
 
         const pieroneActions = flux.getActions('pierone');
 
-        this.state = {
-            scmSources: _m.hashMap(),
-            tags: _m.hashMap()
-        };
+        this._empty();
 
         this.registerAsync(
             pieroneActions.fetchScmSource,
@@ -32,13 +28,12 @@ class PieroneStore extends Store {
 
     receiveTags([team, artifact, tags]) {
         this.setState({
-            tags: _m.assocIn(this.state.tags, [team, artifact], _m.toClj(tags))
+            tags: this.state.tags.setIn([team, artifact], Immutable.fromJS(tags))
         });
     }
 
     getTags(team, artifact) {
-        let exists = _m.getIn(this.state.tags, [team, artifact]);
-        return exists ? _m.toJs(exists) : [];
+        return this.state.tags.getIn([team, artifact], Immutable.List()).toJS();
     }
 
     /**
@@ -50,7 +45,7 @@ class PieroneStore extends Store {
      */
     beginFetchScmSource(team, artifact, tag) {
         this.setState({
-            scmSources: _m.assocIn(this.state.scmSources, [team, artifact, tag], new Pending())
+            scmSources: this.state.scmSources.setIn([team, artifact, tag], new Pending())
         });
     }
 
@@ -64,17 +59,17 @@ class PieroneStore extends Store {
         let {team, artifact, tag} = err;
         if (err.status === 404) {
             return this.setState({
-                scmSources: _m.assocIn(this.state.scmSources, [team, artifact, tag], false)
+                scmSources: this.state.scmSources.setIn([team, artifact, tag], false)
             });
         }
         this.setState({
-            scmSources: _m.assocIn(this.state.scmSources, [team, artifact, tag], new Failed(err))
+            scmSources: this.state.scmSources.setIn([team, artifact, tag], new Failed(err))
         });
     }
 
     receiveScmSource([team, artifact, tag, scmSource]) {
         this.setState({
-            scmSources: _m.assocIn(this.state.scmSources, [team, artifact, tag], _m.toClj(scmSource))
+            scmSources: this.state.scmSources.setIn([team, artifact, tag], Immutable.fromJS(scmSource))
         });
     }
 
@@ -87,14 +82,8 @@ class PieroneStore extends Store {
      * @return {Object|false} scm-source JSON or false if not available
      */
     getScmSource(team, artifact, tag) {
-        let exists = _m.getIn(this.state.scmSources, [team, artifact, tag]);
-        if (exists instanceof FetchResult) {
-            return exists;
-        }
-        if (exists && exists !== false) {
-            return _m.toJs(exists);
-        }
-        return false;
+        let exists = this.state.scmSources.getIn([team, artifact, tag]);
+        return exists ? exists.toJS() : false;
     }
 
     /**
@@ -102,7 +91,8 @@ class PieroneStore extends Store {
      */
     _empty() {
         this.state = {
-            scmSources: _m.hashMap()
+            scmSources: Immutable.Map(),
+            tags: Immutable.Map()
         };
     }
 }
