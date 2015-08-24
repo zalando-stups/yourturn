@@ -1,8 +1,7 @@
 import {Store} from 'flummox';
-import _m from 'mori';
-import _ from 'common/src/lodash.custom';
+import Immutable from 'immutable';
 import {Pending, Failed} from 'common/src/fetch-result';
-import FetchResult from 'common/src/fetch-result';
+import fuzzy from 'fuzzysearch';
 
 class EssentialsStore extends Store {
     constructor(flux) {
@@ -11,9 +10,9 @@ class EssentialsStore extends Store {
         const essentialsActions = flux.getActions('essentials');
 
         this.state = {
-            resources: _m.hashMap(),
-            scopes: _m.hashMap(),
-            applications: _m.hashMap()
+            resources: Immutable.Map(),
+            scopes: Immutable.Map(),
+            applications: Immutable.Map()
         };
 
         this.registerAsync(
@@ -62,7 +61,7 @@ class EssentialsStore extends Store {
      */
     beginFetchResource(resourceId) {
         this.setState({
-            resources: _m.assoc(this.state.resources, resourceId, new Pending())
+            resources: this.state.resources.set(resourceId, new Pending())
         });
     }
 
@@ -73,7 +72,7 @@ class EssentialsStore extends Store {
      */
     failFetchResource(err) {
         this.setState({
-            resources: _m.assoc(this.state.resources, err.id, new Failed(err))
+            resources: this.state.resources.set(err.id, new Failed(err))
         });
     }
 
@@ -84,9 +83,8 @@ class EssentialsStore extends Store {
      * @param  {Object} scopeId    ID of the scope
      */
     beginFetchScope(resourceId, scopeId) {
-        let scope = _m.assocIn(this.state.scopes, [resourceId, scopeId], new Pending());
         this.setState({
-            scopes: scope
+            scopes: this.state.scopes.setIn([resourceId, scopeId], new Pending())
         });
     }
 
@@ -97,7 +95,7 @@ class EssentialsStore extends Store {
      */
     failFetchScope(err) {
         this.setState({
-            scopes: _m.assoc(this.state.scopes, err.id, new Failed(err))
+            scopes: this.state.scopes.set(err.id, new Failed(err))
         });
     }
 
@@ -107,10 +105,8 @@ class EssentialsStore extends Store {
     receiveScopes([resourceId, scopes]) {
         let state = scopes
                     .reduce((map, scp) => {
-                        let resource = _m.get(map, resourceId) || _m.hashMap();
                         scp.resource_type_id = resourceId;
-                        resource = _m.assoc(resource, scp.id, _m.toClj(scp));
-                        return _m.assoc(map, resourceId, resource);
+                        return map.setIn([resourceId, scp.id], Immutable.fromJS(scp));
                     }, this.state.scopes);
         this.setState({
             scopes: state
@@ -123,7 +119,7 @@ class EssentialsStore extends Store {
      * @param  {Array} resources The resources to save.
      */
     receiveResources(resources) {
-        let state = resources.reduce((map, res) => _m.assoc(map, res.id, _m.toClj(res)), this.state.resources);
+        let state = resources.reduce((map, res) => map.set(res.id, Immutable.fromJS(res)), this.state.resources);
         this.setState({
             resources: state
         });
@@ -145,7 +141,7 @@ class EssentialsStore extends Store {
      */
     receiveResource(resource) {
         this.setState({
-            resources: _m.assoc(this.state.resources, resource.id, _m.toClj(resource))
+            resources: this.state.resources.set(resource.id, Immutable.fromJS(resource))
         });
     }
 
@@ -155,7 +151,7 @@ class EssentialsStore extends Store {
      */
     receiveScopeApplications([resourceId, scopeId, applications]) {
         this.setState({
-            applications: _m.assoc(this.state.applications, `${resourceId}.${scopeId}`, _m.toClj(applications))
+            applications: this.state.applications.set(`${resourceId}.${scopeId}`, Immutable.fromJS(applications))
         });
     }
 
@@ -166,8 +162,8 @@ class EssentialsStore extends Store {
      * @return {obj|false} false if it doesn’t exist.
      */
     getResource(resourceId) {
-        let resource = _m.get(this.state.resources, resourceId);
-        return resource ? _m.toJs(resource) : false;
+        let resource = this.state.resources.get(resourceId);
+        return resource ? resource.toJS() : false;
     }
 
     /**
@@ -176,14 +172,14 @@ class EssentialsStore extends Store {
      * @return {array} An empty array if there are none.
      */
     getResources(term) {
-        let filtered = _m.filter(e => !(e instanceof FetchResult), _m.vals(this.state.resources)),
-            entries = _m.sortBy(e => _m.get(e, 'name').toLowerCase(), filtered);
-        if (term) {
-            entries = _m.filter(res => (_m.get(res, 'name')
-                                            .toLowerCase()
-                                            .indexOf(term.toLowerCase()) !== -1), entries);
-        }
-        return entries ? _m.toJs(entries) : [];
+        let lcTerm = term ? term.toLowerCase() : '';
+
+        return this.state.resources
+                .valueSeq()
+                .filter(r => !r.getResult)
+                .filter(r => term ? fuzzy(lcTerm, r.get('name').toLowerCase()) : true)
+                .sortBy(r => r.get('name').toLowerCase())
+                .toJS();
     }
 
     /**
@@ -196,10 +192,10 @@ class EssentialsStore extends Store {
      * @return {obj|false} False if not found.
      */
     getScope(resourceId, scopeId) {
-        let scopes = _m.get(this.state.scopes, resourceId);
+        let scopes = this.state.scopes.get(resourceId);
         if (scopes) {
-            let scope = _m.get(scopes, scopeId);
-            return scope ? _m.toJs(scope) : false;
+            let scope = scopes.get(scopeId);
+            return scope ? scope.toJS() : false;
         }
         return false;
     }
@@ -211,9 +207,12 @@ class EssentialsStore extends Store {
      * @return {array} Empty array if there are not scopes.
      */
     getScopes(resourceId) {
-        let entries = _m.filter(e => !(e instanceof FetchResult), _m.vals(_m.get(this.state.scopes, resourceId)));
-        entries = _m.sortBy(e => _m.get(e, 'id').toLowerCase(), entries);
-        return entries ? _m.toJs(entries) : [];
+        return this.state.scopes
+                    .get(resourceId, Immutable.Map())
+                    .valueSeq()
+                    .filter(s => !s.getResult)
+                    .sortBy(s => s.get('id').toLowerCase())
+                    .toJS();
     }
 
     /**
@@ -222,10 +221,13 @@ class EssentialsStore extends Store {
      * @return {Array} Scopes
      */
     getAllScopes() {
-        let entries = _m.map(res => _m.vals(_m.get(res, 1)), this.state.scopes);
-        entries = _m.flatten(entries);
-        entries = _m.sortBy(e => _m.get(e, 'id').toLowerCase(), entries);
-        return entries ? _m.toJs(entries) : [];
+        return this.state.scopes
+                .valueSeq()
+                .map(s => s.valueSeq())
+                .flatten(true) // only one level
+                .filter(s => !s.getResult)
+                .sortBy(s => s.get('id').toLowerCase())
+                .toJS();
     }
 
     /**
@@ -236,8 +238,10 @@ class EssentialsStore extends Store {
      * @return {array} Empty array if there are no applications with this scope.
      */
     getScopeApplications(resourceId, scopeId) {
-        var apps = _m.get(this.state.applications, `${resourceId}.${scopeId}`, _m.vector());
-        return _.sortBy(_m.toJs(apps), a => a.id ? a.id.toLowerCase() : null);
+        let apps = this.state.applications.get(`${resourceId}.${scopeId}`, Immutable.Seq());
+        return apps
+                .sortBy(a => a.get('id').toLowerCase())
+                .toJS();
     }
 
     /**
@@ -245,9 +249,9 @@ class EssentialsStore extends Store {
      */
     _empty() {
         this.state = {
-            resources: _m.hashMap(),
-            scopes: _m.hashMap(),
-            applications: _m.hashMap()
+            resources: Immutable.Map(),
+            scopes: Immutable.Map(),
+            applications: Immutable.Map()
         };
     }
 }

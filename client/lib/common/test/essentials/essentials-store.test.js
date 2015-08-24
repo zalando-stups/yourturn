@@ -82,7 +82,8 @@ describe('The essentials store', () => {
 
     it('#getResources should not return fetch results', () => {
         store.receiveResource({
-            id: 'customer'
+            id: 'customer',
+            name: 'customer'
         });
         store.beginFetchResource('sales_order');
         let resources = store.getResources();
