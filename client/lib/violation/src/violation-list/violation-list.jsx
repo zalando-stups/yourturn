@@ -22,7 +22,7 @@ class ViolationList extends React.Component {
         this.stores = {
             fullstop: props.flux.getStore('fullstop'),
             team: props.flux.getStore('team'),
-            user: props.globalFlux.getStore('user')
+            user: props.flux.getStore('user')
         };
         this.actions = props.flux.getActions('fullstop');
         this.state = {
@@ -132,7 +132,6 @@ class ViolationList extends React.Component {
                                                         key={v}
                                                         autoFocus={i === 0}
                                                         flux={this.props.flux}
-                                                        globalFlux={this.props.globalFlux}
                                                         violationId={v} />);
 
         return <div className='violationList'>
@@ -190,8 +189,7 @@ class ViolationList extends React.Component {
 }
 ViolationList.displayName = 'ViolationList';
 ViolationList.propTypes = {
-    flux: React.PropTypes.object.isRequired,
-    globalFlux: React.PropTypes.object.isRequired
+    flux: React.PropTypes.object.isRequired
 };
 
 export default ViolationList;

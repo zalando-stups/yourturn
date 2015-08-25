@@ -54,7 +54,7 @@ class ScopeForm extends React.Component {
                 let verb = this.props.edit ? 'update' : 'create';
                 this
                 .props
-                .globalFlux
+                .flux
                 .getActions('notification')
                 .addNotification(
                     `Could not ${verb} scope ${scope.id} for resource ${resource.name}.`,
@@ -262,8 +262,8 @@ ScopeForm.displayName = 'ScopeForm';
 ScopeForm.propTypes = {
     scopeId: React.PropTypes.string.isRequired,
     resourceId: React.PropTypes.string.isRequired,
-    globalFlux: React.PropTypes.object.isRequired,
-    edit: React.PropTypes.bool
+    edit: React.PropTypes.bool,
+    flux: React.PropTypes.object.isRequired
 };
 ScopeForm.contextTypes = {
     router: React.PropTypes.func.isRequired

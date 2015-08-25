@@ -7,7 +7,7 @@ class ViolationDetail extends React.Component {
         super();
         this.stores = {
             fullstop: props.flux.getStore('fullstop'),
-            user: props.globalFlux.getStore('user')
+            user: props.flux.getStore('user')
         };
         this.actions = props.flux.getActions('fullstop');
     }
@@ -36,7 +36,6 @@ ViolationDetail.displayName = 'ViolationDetail';
 ViolationDetail.propTypes = {
     violationId: React.PropTypes.string.isRequired,
     flux: React.PropTypes.object.isRequired,
-    globalFlux: React.PropTypes.object.isRequired,
     autoFocus: React.PropTypes.bool
 };
 export default ViolationDetail;

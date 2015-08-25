@@ -21,12 +21,6 @@ class MockFlux extends Flummox {
 
         this.createActions(ESSENTIALS, EssentialsActions);
         this.createStore(ESSENTIALS, EssentialsStore, this);
-    }
-}
-
-class GlobalFlux extends Flummox {
-    constructor() {
-        super();
 
         this.createActions('user', UserActions);
         this.createStore('user', UserStore, this);
@@ -35,17 +29,14 @@ class GlobalFlux extends Flummox {
 
 describe('The scope detail view', () => {
     var flux,
-        globalFlux,
         props,
         detail;
 
     beforeEach(() => {
         reset();
         flux = new MockFlux();
-        globalFlux = new GlobalFlux();
         props = {
             flux: flux,
-            globalFlux: globalFlux,
             resourceId: RES_ID,
             scopeId: SCP_ID
         };

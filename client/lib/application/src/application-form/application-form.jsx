@@ -9,7 +9,7 @@ class ApplicationForm extends React.Component {
     constructor(props) {
         super();
         this.stores = {
-            user: props.globalFlux.getStore('user'),
+            user: props.flux.getStore('user'),
             kio: props.flux.getStore('kio')
         };
         let {kio, user} = this.stores,
@@ -29,13 +29,6 @@ class ApplicationForm extends React.Component {
                 team_id: cloudAccounts.length ? cloudAccounts[0].name : undefined
             };
         }
-
-        this._forceUpdate = this.forceUpdate.bind(this);
-        this.stores.user.on('change', this._forceUpdate);
-    }
-
-    componentWillUnmount() {
-        this.stores.user.off('change', this._forceUpdate);
     }
 
     disableAutocomplete() {
@@ -73,7 +66,7 @@ class ApplicationForm extends React.Component {
             let verb = this.props.edit ? 'update' : 'create';
             this
             .props
-            .globalFlux
+            .flux
             .getActions('notification')
             .addNotification(
                 `Could not ${verb} application ${app.name}. (${e.message})`,
@@ -307,8 +300,7 @@ ApplicationForm.displayName = 'ApplicationForm';
 ApplicationForm.propTypes = {
     applicationId: React.PropTypes.string,
     flux: React.PropTypes.object.isRequired,
-    edit: React.PropTypes.bool,
-    globalFlux: React.PropTypes.object.isRequired
+    edit: React.PropTypes.bool
 };
 ApplicationForm.contextTypes = {
     router: React.PropTypes.func.isRequired

@@ -41,7 +41,7 @@ class ApprovalForm extends React.Component {
         super();
         this.stores = {
             kio: props.flux.getStore('kio'),
-            user: props.globalFlux.getStore('user')
+            user: props.flux.getStore('user')
         };
         this.actions = props.flux.getActions('kio');
         this.state = {
@@ -51,13 +51,6 @@ class ApprovalForm extends React.Component {
             notes: '',
             loading: false
         };
-
-        this._forceUpdate = this.forceUpdate.bind(this);
-        this.stores.user.on('change', this._forceUpdate);
-    }
-
-    componentWillUnmount() {
-        this.stores.user.off('change', this._forceUpdate);
     }
 
     selectType(type) {
@@ -93,7 +86,7 @@ class ApprovalForm extends React.Component {
                 // custom type checked, but empty
                 return this
                         .props
-                        .globalFlux
+                        .flux
                         .getActions('notification')
                         .addNotification(
                             'Conflict: You checked the "Custom" box, but did not enter an approval type.',
@@ -133,7 +126,7 @@ class ApprovalForm extends React.Component {
 
             this
             .props
-            .globalFlux
+            .flux
             .getActions('notification')
             .addNotification(
                 `Could not approve version ${versionId} of ${application.name}. ${err.message}`,
@@ -286,9 +279,9 @@ class ApprovalForm extends React.Component {
 }
 ApprovalForm.displayName = 'ApprovalForm';
 ApprovalForm.propTypes = {
-    globalFlux: React.PropTypes.object.isRequired,
     applicationId: React.PropTypes.string.isRequired,
-    versionId: React.PropTypes.string.isRequired
+    versionId: React.PropTypes.string.isRequired,
+    flux: React.PropTypes.object.isRequired
 };
 ApprovalForm.contextTypes = {
     router: React.PropTypes.func.isRequired

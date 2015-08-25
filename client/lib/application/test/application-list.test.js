@@ -15,12 +15,6 @@ class AppFlux extends Flummox {
 
         this.createActions(FLUX_ID, KioActions);
         this.createStore(FLUX_ID, KioStore, this);
-    }
-}
-
-class GlobalFlux extends Flummox {
-    constructor() {
-        super();
 
         this.createActions('user', UserActions);
         this.createStore('user', UserStore, this);
@@ -29,7 +23,6 @@ class GlobalFlux extends Flummox {
 
 describe('The application list view', () => {
     var flux,
-        globalFlux,
         props,
         list;
 
@@ -37,9 +30,8 @@ describe('The application list view', () => {
     beforeEach(() => {
         reset();
         flux = new AppFlux();
-        globalFlux = new GlobalFlux();
 
-        globalFlux
+        flux
         .getStore('user')
         .receiveAccounts([{
             id: '123',
@@ -47,8 +39,7 @@ describe('The application list view', () => {
         }]);
 
         props = {
-            flux: flux,
-            globalFlux: globalFlux
+            flux: flux
         };
 
         list = render(List, props);

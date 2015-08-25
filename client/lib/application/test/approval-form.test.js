@@ -38,12 +38,6 @@ class MockFlux extends Flummox {
 
         this.createActions(FLUX, KioActions);
         this.createStore(FLUX, KioStore, this);
-    }
-}
-
-class GlobalFlux extends Flummox {
-    constructor() {
-        super();
 
         this.createActions('user', UserActions);
         this.createStore('user', UserStore, this);
@@ -52,17 +46,14 @@ class GlobalFlux extends Flummox {
 
 describe('The approval form view', () => {
     var flux,
-        globalFlux,
         props,
         form;
 
     beforeEach(() => {
         reset();
         flux = new MockFlux();
-        globalFlux = new GlobalFlux();
         props = {
             flux: flux,
-            globalFlux: globalFlux,
             applicationId: APP_ID,
             versionId: VER_ID
         };
@@ -95,7 +86,7 @@ describe('The approval form view', () => {
     });
 
     it('should disable the submit button in foreign applications', () => {
-        globalFlux.getStore('user').receiveAccounts([TEST_ACCOUNT]);
+        flux.getStore('user').receiveAccounts([TEST_ACCOUNT]);
         flux.getStore(FLUX).receiveApplication(TEST_APP);
 
         form = render(ApprovalForm, props);

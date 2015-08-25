@@ -32,12 +32,6 @@ class MockFlux extends Flummox {
 
         this.createActions('pierone', PieroneActions);
         this.createStore('pierone', PieroneStore, this);
-    }
-}
-
-class GlobalFlux extends Flummox {
-    constructor() {
-        super();
 
         this.createActions('user', UserActions);
         this.createStore('user', UserStore, this);
@@ -46,18 +40,15 @@ class GlobalFlux extends Flummox {
 
 describe('The version detail view', () => {
     var flux,
-        globalFlux,
         props,
         detail;
 
     beforeEach(() => {
         reset();
         flux = new MockFlux();
-        globalFlux = new GlobalFlux();
         flux.getStore(FLUX).receiveApplicationVersion(TEST_VERSION);
         props = {
             flux: flux,
-            globalFlux: globalFlux,
             applicationId: APP,
             versionId: VER
         };

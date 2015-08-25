@@ -1,7 +1,7 @@
 import React from 'react';
 import {Route, DefaultRoute} from 'react-router';
 import FluxComponent from 'flummox/component';
-import Flux from './flux';
+import FLUX from 'yourturn/src/flux';
 import {parseArtifact} from 'application/src/util';
 import {requireAccounts} from 'common/src/util';
 
@@ -15,11 +15,10 @@ import VersionForm from './version-form/version-form.jsx';
 import VersionDetail from './version-detail/version-detail.jsx';
 import ApprovalForm from './approval-form/approval-form.jsx';
 
-const APP_FLUX = new Flux(),
-      MINT_ACTIONS = APP_FLUX.getActions('mint'),
-      PIERONE_ACTIONS = APP_FLUX.getActions('pierone'),
-      KIO_ACTIONS = APP_FLUX.getActions('kio'),
-      KIO_STORE = APP_FLUX.getStore('kio');
+const MINT_ACTIONS = FLUX.getActions('mint'),
+      PIERONE_ACTIONS = FLUX.getActions('pierone'),
+      KIO_ACTIONS = FLUX.getActions('kio'),
+      KIO_STORE = FLUX.getStore('kio');
 
 class AppListHandler extends React.Component {
     constructor() {
@@ -28,8 +27,7 @@ class AppListHandler extends React.Component {
 
     render() {
         return <FluxComponent
-                    flux={APP_FLUX}
-                    globalFlux={this.props.globalFlux}
+                    flux={FLUX}
                     connectToStores={['kio']}>
 
                     <ApplicationList />
@@ -38,14 +36,13 @@ class AppListHandler extends React.Component {
 }
 AppListHandler.displayName = 'AppListHandler';
 AppListHandler.propTypes = {
-    globalFlux: React.PropTypes.object.isRequired,
     params: React.PropTypes.object.isRequired
 };
-AppListHandler.fetchData = function(state, globalFlux) {
+AppListHandler.fetchData = function() {
     KIO_ACTIONS
     .fetchApplications()
     .then(apps =>
-        requireAccounts(globalFlux)
+        requireAccounts(FLUX)
         .then(accs => {
             let ids = accs.map(acc => acc.name);
             apps
@@ -62,8 +59,7 @@ class CreateAppFormHandler extends React.Component {
 
     render() {
         return <FluxComponent
-                    flux={APP_FLUX}
-                    globalFlux={this.props.globalFlux}
+                    flux={FLUX}
                     connectToStores={['kio']}>
 
                     <ApplicationForm
@@ -73,12 +69,11 @@ class CreateAppFormHandler extends React.Component {
 }
 CreateAppFormHandler.displayName = 'CreateAppFormHandler';
 CreateAppFormHandler.propTypes = {
-    globalFlux: React.PropTypes.object.isRequired,
     params: React.PropTypes.object.isRequired
 };
-CreateAppFormHandler.fetchData = function(state, globalFlux) {
+CreateAppFormHandler.fetchData = function() {
     return Promise.all([
-        requireAccounts(globalFlux),
+        requireAccounts(FLUX),
         KIO_ACTIONS.fetchApplications()
     ]);
 };
@@ -91,8 +86,7 @@ class EditAppFormHandler extends React.Component {
 
     render() {
         return <FluxComponent
-                    flux={APP_FLUX}
-                    globalFlux={this.props.globalFlux}
+                    flux={FLUX}
                     connectToStores={['kio']}>
 
                     <ApplicationForm
@@ -101,10 +95,10 @@ class EditAppFormHandler extends React.Component {
                 </FluxComponent>;
     }
 }
-EditAppFormHandler.isAllowed = function(state, globalFlux) {
+EditAppFormHandler.isAllowed = function(state) {
     let {applicationId} = state.params,
         application = KIO_STORE.getApplication(applicationId),
-        userTeams = globalFlux.getStore('user').getUserCloudAccounts(),
+        userTeams = FLUX.getStore('user').getUserCloudAccounts(),
         isOwnTeam = userTeams.map(t => t.name).indexOf(application.team_id) >= 0;
     if (!isOwnTeam) {
         let error = new Error();
@@ -116,13 +110,12 @@ EditAppFormHandler.isAllowed = function(state, globalFlux) {
 };
 EditAppFormHandler.displayName = 'EditAppFormHandler';
 EditAppFormHandler.propTypes = {
-    globalFlux: React.PropTypes.object.isRequired,
     params: React.PropTypes.object.isRequired
 };
-EditAppFormHandler.fetchData = function(state, globalFlux) {
+EditAppFormHandler.fetchData = function(state) {
     return Promise.all([
             KIO_ACTIONS.fetchApplication(state.params.applicationId),
-            requireAccounts(globalFlux)
+            requireAccounts(FLUX)
         ]);
 };
 
@@ -134,8 +127,7 @@ class AppDetailHandler extends React.Component {
 
     render() {
         return <FluxComponent
-                    flux={APP_FLUX}
-                    globalFlux={this.props.globalFlux}
+                    flux={FLUX}
                     connectToStores={['kio', 'pierone', 'twintip']}>
 
                     <ApplicationDetail
@@ -145,13 +137,12 @@ class AppDetailHandler extends React.Component {
 }
 AppDetailHandler.displayName = 'AppDetailHandler';
 AppDetailHandler.propTypes = {
-    globalFlux: React.PropTypes.object.isRequired,
     params: React.PropTypes.object.isRequired
 };
 AppDetailHandler.fetchData = function(state) {
     KIO_ACTIONS.fetchApplication(state.params.applicationId);
     KIO_ACTIONS.fetchApplicationVersions(state.params.applicationId);
-    APP_FLUX.getActions('twintip').fetchApi(state.params.applicationId);
+    FLUX.getActions('twintip').fetchApi(state.params.applicationId);
 };
 
 
@@ -162,8 +153,7 @@ class OAuthFormHandler extends React.Component {
 
     render() {
         return <FluxComponent
-                    flux={APP_FLUX}
-                    globalFlux={this.props.globalFlux}
+                    flux={FLUX}
                     connectToStores={['mint', 'essentials', 'kio']}>
 
                     <OAuthForm
@@ -173,12 +163,11 @@ class OAuthFormHandler extends React.Component {
 }
 OAuthFormHandler.displayName = 'OAuthFormHandler';
 OAuthFormHandler.propTypes = {
-    globalFlux: React.PropTypes.object.isRequired,
     params: React.PropTypes.object.isRequired
 };
 OAuthFormHandler.fetchData = function(state) {
     let id = state.params.applicationId;
-    APP_FLUX.getActions('essentials').fetchAllScopes();
+    FLUX.getActions('essentials').fetchAllScopes();
     if (!KIO_STORE.getApplication(id)) {
         KIO_ACTIONS.fetchApplication(id);
     }
@@ -193,8 +182,7 @@ class AccessFormHandler extends React.Component {
 
     render() {
         return <FluxComponent
-                    flux={APP_FLUX}
-                    globalFlux={this.props.globalFlux}
+                    flux={FLUX}
                     connectToStores={['mint', 'essentials', 'kio']}>
 
                     <AccessForm
@@ -204,12 +192,11 @@ class AccessFormHandler extends React.Component {
 }
 AccessFormHandler.displayName = 'AccessFormHandler';
 AccessFormHandler.propTypes = {
-    globalFlux: React.PropTypes.object.isRequired,
     params: React.PropTypes.object.isRequired
 };
 AccessFormHandler.fetchData = function(state) {
     let id = state.params.applicationId;
-    APP_FLUX.getActions('essentials').fetchAllScopes();
+    FLUX.getActions('essentials').fetchAllScopes();
     if (!KIO_STORE.getApplication(id)) {
         KIO_ACTIONS.fetchApplication(id);
     }
@@ -224,7 +211,7 @@ class VersionListHandler extends React.Component {
 
     render() {
         return <FluxComponent
-                    flux={APP_FLUX}
+                    flux={FLUX}
                     connectToStores={['kio']}>
 
                     <VersionList
@@ -234,7 +221,6 @@ class VersionListHandler extends React.Component {
 }
 VersionListHandler.displayName = 'VersionListHandler';
 VersionListHandler.propTypes = {
-    globalFlux: React.PropTypes.object.isRequired,
     params: React.PropTypes.object.isRequired
 };
 VersionListHandler.fetchData = function(state) {
@@ -252,8 +238,7 @@ class VersionDetailHandler extends React.Component {
 
     render() {
         return <FluxComponent
-                    flux={APP_FLUX}
-                    globalFlux={this.props.globalFlux}
+                    flux={FLUX}
                     connectToStores={['kio', 'pierone']}>
 
                     <VersionDetail
@@ -264,7 +249,6 @@ class VersionDetailHandler extends React.Component {
 }
 VersionDetailHandler.displayName = 'VersionDetailHandler';
 VersionDetailHandler.propTypes = {
-    globalFlux: React.PropTypes.object.isRequired,
     params: React.PropTypes.object.isRequired
 };
 VersionDetailHandler.fetchData = function(state) {
@@ -296,8 +280,7 @@ class ApprovalFormHandler extends React.Component {
 
     render() {
         return <FluxComponent
-                    flux={APP_FLUX}
-                    globalFlux={this.props.globalFlux}
+                    flux={FLUX}
                     connectToStores={['kio', 'pierone']}>
 
                     <ApprovalForm
@@ -308,7 +291,6 @@ class ApprovalFormHandler extends React.Component {
 }
 ApprovalFormHandler.displayName = 'ApprovalFormHandler';
 ApprovalFormHandler.propTypes = {
-    globalFlux: React.PropTypes.object.isRequired,
     params: React.PropTypes.object.isRequired
 };
 ApprovalFormHandler.fetchData = function(state) {
@@ -331,8 +313,7 @@ class CreateVersionFormHandler extends React.Component {
 
     render() {
         return <FluxComponent
-                    flux={APP_FLUX}
-                    globalFlux={this.props.globalFlux}
+                    flux={FLUX}
                     connectToStores={['kio']}>
 
                     <VersionForm
@@ -344,15 +325,29 @@ class CreateVersionFormHandler extends React.Component {
 }
 CreateVersionFormHandler.displayName = 'CreateVersionFormHandler';
 CreateVersionFormHandler.propTypes = {
-    globalFlux: React.PropTypes.object.isRequired,
     params: React.PropTypes.object.isRequired
 };
 CreateVersionFormHandler.fetchData = function(state) {
     let {applicationId} = state.params;
     return Promise.all([
-        !!KIO_STORE.getApplication(applicationId) ? Promise.resolve() : KIO_ACTIONS.fetchApplication(applicationId),
+        !!KIO_STORE.getApplication(applicationId) ?
+            Promise.resolve() :
+            KIO_ACTIONS.fetchApplication(applicationId),
         KIO_ACTIONS.fetchApplicationVersions(applicationId)
     ]);
+};
+CreateVersionFormHandler.isAllowed = function(state) {
+    let {applicationId} = state.params,
+        application = KIO_STORE.getApplication(applicationId),
+        userTeams = FLUX.getStore('user').getUserCloudAccounts(),
+        isOwnTeam = userTeams.map(t => t.name).indexOf(application.team_id) >= 0;
+    if (!isOwnTeam) {
+        let error = new Error();
+        error.name = 'Forbidden';
+        error.message = 'You can only add versions for your own applications!';
+        error.status = 'u1F62D';
+        return error;
+    }
 };
 
 
@@ -363,8 +358,7 @@ class EditVersionFormHandler extends React.Component {
 
     render() {
         return <FluxComponent
-                    flux={APP_FLUX}
-                    globalFlux={this.props.globalFlux}
+                    flux={FLUX}
                     connectToStores={['kio']}>
 
                     <VersionForm
@@ -374,10 +368,10 @@ class EditVersionFormHandler extends React.Component {
                 </FluxComponent>;
     }
 }
-EditVersionFormHandler.isAllowed = function(state, globalFlux) {
+EditVersionFormHandler.isAllowed = function(state) {
     let {applicationId} = state.params,
         application = KIO_STORE.getApplication(applicationId),
-        userTeams = globalFlux.getStore('user').getUserCloudAccounts(),
+        userTeams = FLUX.getStore('user').getUserCloudAccounts(),
         isOwnTeam = userTeams.map(t => t.name).indexOf(application.team_id) >= 0;
     if (!isOwnTeam) {
         let error = new Error();
@@ -389,7 +383,6 @@ EditVersionFormHandler.isAllowed = function(state, globalFlux) {
 };
 EditVersionFormHandler.displayName = 'EditVersionFormHandler';
 EditVersionFormHandler.propTypes = {
-    globalFlux: React.PropTypes.object.isRequired,
     params: React.PropTypes.object.isRequired
 };
 EditVersionFormHandler.fetchData = function(state) {
