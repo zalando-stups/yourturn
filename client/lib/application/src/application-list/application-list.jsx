@@ -9,26 +9,19 @@ class ApplicationList extends React.Component {
         super();
         this.stores = {
             kio: props.flux.getStore('kio'),
-            user: props.globalFlux.getStore('user')
+            user: props.flux.getStore('user')
         };
         this.state = {
             term: '',
             showCount: 20,
             showAll: false
         };
-
-        this._forceUpdate = this.forceUpdate.bind(this);
-        this.stores.user.on('change', this._forceUpdate);
     }
 
     showAll() {
         this.setState({
             showAll: true
         });
-    }
-
-    componentWillUnmount() {
-        this.stores.user.off('change', this._forceUpdate);
     }
 
     filter(evt) {

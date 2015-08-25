@@ -2,15 +2,14 @@ import React from 'react';
 import FlummoxComponent from 'flummox/component';
 import {Route, DefaultRoute} from 'react-router';
 import Config from 'common/src/config';
-import Flux from './flux';
+import FLUX from 'yourturn/src/flux';
 import ResourceForm from './resource-form/resource-form.jsx';
 import ResourceList from './resource-list/resource-list.jsx';
 import ResourceDetail from './resource-detail/resource-detail.jsx';
 import ScopeDetail from './scope-detail/scope-detail.jsx';
 import ScopeForm from './scope-form/scope-form.jsx';
 
-const RES_FLUX = new Flux(),
-      RES_ACTIONS = RES_FLUX.getActions('essentials');
+const RES_ACTIONS = FLUX.getActions('essentials');
 
 // QUICKFIX #133
 function isWhitelisted(token) {
@@ -50,26 +49,24 @@ class CreateResourceFormHandler extends React.Component {
 
     render() {
         return <FlummoxComponent
-                    flux={RES_FLUX}
-                    globalFlux={this.props.globalFlux}
+                    flux={FLUX}
                     connectToStores={['essentials']}>
                     <ResourceForm
                         edit={false} />
                 </FlummoxComponent>;
     }
 }
-CreateResourceFormHandler.isAllowed = function(state, globalFlux) {
-    return requireWhitelisted(globalFlux);
+CreateResourceFormHandler.isAllowed = function() {
+    return requireWhitelisted(FLUX);
 };
 CreateResourceFormHandler.displayName = 'CreateResourceFormHandler';
 CreateResourceFormHandler.propTypes = {
-    globalFlux: React.PropTypes.object.isRequired,
     params: React.PropTypes.object
 };
-CreateResourceFormHandler.fetchData = function(state, globalFlux) {
+CreateResourceFormHandler.fetchData = function() {
     return Promise.all([
         RES_ACTIONS.fetchResources(),
-        requireToken(globalFlux)
+        requireToken(FLUX)
     ]);
 };
 
@@ -81,8 +78,7 @@ class EditResourceFormHandler extends React.Component {
 
     render() {
         return <FlummoxComponent
-                    flux={RES_FLUX}
-                    globalFlux={this.props.globalFlux}
+                    flux={FLUX}
                     connectToStores={['essentials']}>
                     <ResourceForm
                         resourceId={this.props.params.resourceId}
@@ -90,18 +86,17 @@ class EditResourceFormHandler extends React.Component {
                 </FlummoxComponent>;
     }
 }
-EditResourceFormHandler.isAllowed = function(state, globalFlux) {
-    return requireWhitelisted(globalFlux);
+EditResourceFormHandler.isAllowed = function() {
+    return requireWhitelisted(FLUX);
 };
 EditResourceFormHandler.displayName = 'EditResourceFormHandler';
 EditResourceFormHandler.propTypes = {
-    globalFlux: React.PropTypes.object.isRequired,
     params: React.PropTypes.object
 };
-EditResourceFormHandler.fetchData = function(state, globalFlux) {
+EditResourceFormHandler.fetchData = function(state) {
     return Promise.all([
         RES_ACTIONS.fetchResource(state.params.resourceId),
-        requireToken(globalFlux)
+        requireToken(FLUX)
     ]);
 };
 
@@ -111,8 +106,7 @@ class ResourceListHandler extends React.Component {
     }
     render() {
         return <FlummoxComponent
-                    flux={RES_FLUX}
-                    globalFlux={this.props.globalFlux}
+                    flux={FLUX}
                     connectToStores={['essentials']}>
                     <ResourceList />
                 </FlummoxComponent>;
@@ -120,7 +114,6 @@ class ResourceListHandler extends React.Component {
 }
 ResourceListHandler.displayName = 'ResourceListHandler';
 ResourceListHandler.propTypes = {
-    globalFlux: React.PropTypes.object.isRequired,
     params: React.PropTypes.object
 };
 ResourceListHandler.fetchData = function() {
@@ -134,8 +127,7 @@ class ResourceDetailHandler extends React.Component {
     }
     render() {
         return <FlummoxComponent
-                    flux={RES_FLUX}
-                    globalFlux={this.props.globalFlux}
+                    flux={FLUX}
                     connectToStores={['essentials']}>
                     <ResourceDetail
                         resourceId={this.props.params.resourceId} />
@@ -144,7 +136,6 @@ class ResourceDetailHandler extends React.Component {
 }
 ResourceDetailHandler.displayName = 'ResourceDetailHandler';
 ResourceDetailHandler.propTypes = {
-    globalFlux: React.PropTypes.object.isRequired,
     params: React.PropTypes.object
 };
 ResourceDetailHandler.fetchData = function(state) {
@@ -159,8 +150,7 @@ class ScopeDetailHandler extends React.Component {
     }
     render() {
         return <FlummoxComponent
-                    flux={RES_FLUX}
-                    globalFlux={this.props.globalFlux}
+                    flux={FLUX}
                     connectToStores={['essentials']}>
                     <ScopeDetail
                         resourceId={this.props.params.resourceId}
@@ -170,7 +160,6 @@ class ScopeDetailHandler extends React.Component {
 }
 ScopeDetailHandler.displayName = 'ScopeDetailHandler';
 ScopeDetailHandler.propTypes = {
-    globalFlux: React.PropTypes.object.isRequired,
     params: React.PropTypes.object
 };
 ScopeDetailHandler.fetchData = function(state) {
@@ -187,8 +176,7 @@ class EditScopeFormHandler extends React.Component {
 
     render() {
         return <FlummoxComponent
-                    flux={RES_FLUX}
-                    globalFlux={this.props.globalFlux}
+                    flux={FLUX}
                     connectToStores={['essentials']}>
                     <ScopeForm
                         resourceId={this.props.params.resourceId}
@@ -197,20 +185,19 @@ class EditScopeFormHandler extends React.Component {
                 </FlummoxComponent>;
     }
 }
-EditScopeFormHandler.isAllowed = function(state, globalFlux) {
-    return requireWhitelisted(globalFlux);
+EditScopeFormHandler.isAllowed = function() {
+    return requireWhitelisted(FLUX);
 };
 EditScopeFormHandler.displayName = 'EditScopeFormHandler';
 EditScopeFormHandler.propTypes = {
-    globalFlux: React.PropTypes.object.isRequired,
     params: React.PropTypes.object
 };
-EditScopeFormHandler.fetchData = function(state, globalFlux) {
+EditScopeFormHandler.fetchData = function(state) {
     let {resourceId, scopeId} = state.params;
     RES_ACTIONS.fetchResource(resourceId);
     return Promise.all([
         RES_ACTIONS.fetchScope(resourceId, scopeId),
-        requireToken(globalFlux)
+        requireToken(FLUX)
     ]);
 };
 
@@ -222,8 +209,7 @@ class CreateScopeFormHandler extends React.Component {
 
     render() {
         return <FlummoxComponent
-                    flux={RES_FLUX}
-                    globalFlux={this.props.globalFlux}
+                    flux={FLUX}
                     connectToStores={['essentials']}>
                     <ScopeForm
                         resourceId={this.props.params.resourceId}
@@ -232,20 +218,19 @@ class CreateScopeFormHandler extends React.Component {
                 </FlummoxComponent>;
     }
 }
-CreateScopeFormHandler.isAllowed = function(state, globalFlux) {
-    return requireWhitelisted(globalFlux);
+CreateScopeFormHandler.isAllowed = function() {
+    return requireWhitelisted(FLUX);
 };
 CreateScopeFormHandler.displayName = 'CreateScopeFormHandler';
 CreateScopeFormHandler.propTypes = {
-    globalFlux: React.PropTypes.object.isRequired,
     params: React.PropTypes.object
 };
-CreateScopeFormHandler.fetchData = function(state, globalFlux) {
+CreateScopeFormHandler.fetchData = function(state) {
     let {resourceId} = state.params;
     RES_ACTIONS.fetchResource(resourceId);
     return Promise.all([
         RES_ACTIONS.fetchScopes(resourceId),
-        requireToken(globalFlux)
+        requireToken(FLUX)
     ]);
 };
 

@@ -12,7 +12,7 @@ class OAuthForm extends React.Component {
         this.stores = {
             kio: props.flux.getStore('kio'),
             mint: props.flux.getStore('mint'),
-            user: props.globalFlux.getStore('user'),
+            user: props.flux.getStore('user'),
             essentials: props.flux.getStore('essentials')
         };
 
@@ -22,13 +22,6 @@ class OAuthForm extends React.Component {
             redirectUrl: oauthConfig.redirect_url,
             isClientConfidential: oauthConfig.is_client_confidential
         };
-
-        this._forceUpdate = this.forceUpdate.bind(this);
-        this.stores.user.on('change', this._forceUpdate);
-    }
-
-    componentWillUnmount() {
-        this.stores.user.off('change', this._forceUpdate);
     }
 
     updateScopes(selectedScopes) {
@@ -78,7 +71,7 @@ class OAuthForm extends React.Component {
         .catch(e => {
             this
             .props
-            .globalFlux
+            .flux
             .getActions('notification')
             .addNotification(
                 'Could not save OAuth client configuration for ' + applicationId + '. ' + e.message,
@@ -172,8 +165,7 @@ class OAuthForm extends React.Component {
 OAuthForm.displayName = 'OAuthForm';
 OAuthForm.propTypes = {
     applicationId: React.PropTypes.string.isRequired,
-    flux: React.PropTypes.object.isRequired,
-    globalFlux: React.PropTypes.object.isRequired
+    flux: React.PropTypes.object.isRequired
 };
 OAuthForm.contextTypes = {
     router: React.PropTypes.func.isRequired

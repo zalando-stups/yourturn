@@ -1,5 +1,6 @@
 import React from 'react';
 import {RouteHandler} from 'react-router';
+import FLUX from 'yourturn/src/flux';
 import FlummoxComponent from 'flummox/component';
 import Sidebar from './sidebar/sidebar.jsx';
 import NotificationBar from './notification-bar/notification-bar.jsx';
@@ -10,25 +11,23 @@ class YourTurn extends React.Component {
     }
 
     render() {
-        let flux = this.props.globalFlux;
         return <div className='yourturn'>
                     <FlummoxComponent
-                        flux={flux}
+                        flux={FLUX}
                         connectToStores={['notification']}>
                         <NotificationBar />
                     </FlummoxComponent>
                     <div className='grid with-gutter'>
                         <div className='grid-col col-1-4'>
                             <FlummoxComponent
-                                flux={flux}
+                                flux={FLUX}
                                 connectToStores={['user']}>
                                 <Sidebar />
                             </FlummoxComponent>
                         </div>
                         <div className='grid-col'>
                             <div className='yourturn-view'>
-                                <RouteHandler
-                                    globalFlux={this.props.globalFlux} />
+                                <RouteHandler />
                             </div>
                         </div>
                     </div>
@@ -36,7 +35,4 @@ class YourTurn extends React.Component {
     }
 }
 YourTurn.displayName = 'YourTurn';
-YourTurn.propTypes = {
-    globalFlux: React.PropTypes.object.isRequired
-};
 export default YourTurn;

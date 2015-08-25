@@ -15,19 +15,13 @@ class AccessForm extends React.Component {
             kio: props.flux.getStore('kio'),
             mint: props.flux.getStore('mint'),
             essentials: props.flux.getStore('essentials'),
-            user: props.globalFlux.getStore('user')
+            user: props.flux.getStore('user')
         };
         let oauth = this.stores.mint.getOAuthConfig(props.applicationId);
         this.state = {
             s3_buckets: oauth.s3_buckets,
             scopes: oauth.scopes
         };
-        this._forceUpdate = this.forceUpdate.bind(this);
-        this.stores.user.on('change', this._forceUpdate);
-    }
-
-    componentWillUnmount() {
-        this.stores.user.off('change', this._forceUpdate);
     }
 
     updateScopes(selectedScopes) {
@@ -75,7 +69,7 @@ class AccessForm extends React.Component {
         .catch(e => {
             this
             .props
-            .globalFlux
+            .flux
             .getActions('notification')
             .addNotification(
                 'Could not save OAuth client configuration for ' + applicationId + '. ' + e.message,
@@ -164,8 +158,7 @@ class AccessForm extends React.Component {
 AccessForm.displayName = 'AccessForm';
 AccessForm.propTypes = {
     applicationId: React.PropTypes.string.isRequired,
-    flux: React.PropTypes.object.isRequired,
-    globalFlux: React.PropTypes.object.isRequired
+    flux: React.PropTypes.object.isRequired
 };
 AccessForm.contextTypes = {
     router: React.PropTypes.func.isRequired

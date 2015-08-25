@@ -26,12 +26,6 @@ class AppFlux extends Flummox {
 
         this.createActions(FLUX, KioActions);
         this.createStore(FLUX, KioStore, this);
-    }
-}
-
-class GlobalFlux extends Flummox {
-    constructor() {
-        super();
 
         this.createActions('user', UserActions);
         this.createStore('user', UserStore, this);
@@ -40,14 +34,12 @@ class GlobalFlux extends Flummox {
 
 describe('The application form view', () => {
     var flux,
-        globalFlux,
         actionSpy,
         props,
         form;
 
     beforeEach(() => {
         flux = new AppFlux();
-        globalFlux = new GlobalFlux();
         actionSpy = sinon.stub(flux.getActions(FLUX), 'saveApplication', function () {
             return Promise.resolve();
         });
@@ -58,11 +50,10 @@ describe('The application form view', () => {
             reset();
             props = {
                 flux: flux,
-                globalFlux: globalFlux,
                 applicationId: APP_ID,
                 edit: false
             };
-            globalFlux.getStore('user').receiveAccounts([{
+            flux.getStore('user').receiveAccounts([{
                 id: '123',
                 name: 'stups'
             }]);
@@ -80,7 +71,7 @@ describe('The application form view', () => {
         });
 
         it('should disable save button without accounts', () => {
-            globalFlux.getStore('user').receiveAccounts([]);
+            flux.getStore('user').receiveAccounts([]);
             form = render(AppForm, props);
             let btn = TestUtils.findRenderedDOMComponentWithAttributeValue(form, 'data-block', 'save-button');
             expect($(React.findDOMNode(btn)).is('[disabled="true"]')).to.be.false;
@@ -92,11 +83,10 @@ describe('The application form view', () => {
             reset();
             props = {
                 flux: flux,
-                globalFlux: globalFlux,
                 applicationId: APP_ID,
                 edit: true
             };
-            globalFlux.getStore('user').receiveAccounts([{
+            flux.getStore('user').receiveAccounts([{
                 id: '123',
                 name: 'stups'
             }]);

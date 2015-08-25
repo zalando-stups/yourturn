@@ -123,12 +123,6 @@ class MockFlux extends Flummox {
 
         this.createActions(TEAM, TeamActions);
         this.createStore(TEAM, TeamStore, this);
-    }
-}
-
-class GlobalFlux extends Flummox {
-    constructor() {
-        super();
 
         this.createActions(USER, UserActions);
         this.createStore(USER, UserStore, this);
@@ -137,14 +131,12 @@ class GlobalFlux extends Flummox {
 
 describe('The violation list view', () => {
     var flux,
-    globalFlux,
-    props,
-    violationList;
+        props,
+        violationList;
 
     beforeEach(() => {
         reset();
         flux = new MockFlux();
-        globalFlux = new GlobalFlux();
 
         flux
         .getStore(FULLSTOP)
@@ -154,13 +146,12 @@ describe('The violation list view', () => {
         .getStore(TEAM)
         .receiveAccounts(ACCOUNTS);
 
-        globalFlux
+        flux
         .getStore(USER)
         .receiveAccounts(USER_ACCOUNTS);
 
         props = {
-            flux: flux,
-            globalFlux: globalFlux
+            flux: flux
         };
 
         violationList = render(ViolationList, props);

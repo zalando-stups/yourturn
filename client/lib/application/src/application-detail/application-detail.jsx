@@ -24,7 +24,7 @@ class ApplicationDetail extends React.Component {
     constructor(props) {
         super();
         this.stores = {
-            user: props.globalFlux.getStore('user'),
+            user: props.flux.getStore('user'),
             kio: props.flux.getStore('kio'),
             twintip: props.flux.getStore('twintip')
         };
@@ -32,12 +32,6 @@ class ApplicationDetail extends React.Component {
             criticalityUpdatePending: false
         };
         this.actions = props.flux.getActions('kio');
-        this._forceUpdate = this.forceUpdate.bind(this);
-        this.stores.user.on('change', this._forceUpdate);
-    }
-
-    componentWillUnmount() {
-        this.stores.user.off('change', this._forceUpdate);
     }
 
     onUpdateCriticality(app, amount) {
@@ -57,7 +51,7 @@ class ApplicationDetail extends React.Component {
         .catch(err => {
             this
             .props
-            .globalFlux
+            .flux
             .getActions('notification')
             .addNotification(
                 `Could not update criticality of ${app.name}. ${err}`,
@@ -273,7 +267,7 @@ class ApplicationDetail extends React.Component {
 ApplicationDetail.displayName = 'ApplicationDetail';
 ApplicationDetail.propTypes = {
     applicationId: React.PropTypes.string.isRequired,
-    globalFlux: React.PropTypes.object.isRequired
+    flux: React.PropTypes.object.isRequired
 };
 ApplicationDetail.contextTypes = {
     router: React.PropTypes.func.isRequired

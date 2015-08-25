@@ -12,14 +12,8 @@ class ScopeDetail extends React.Component {
         super();
         this.stores = {
             essentials: props.flux.getStore('essentials'),
-            user: props.globalFlux.getStore('user')
+            user: props.flux.getStore('user')
         };
-        this._forceUpdate = this.forceUpdate.bind(this);
-        this.stores.user.on('change', this._forceUpdate);
-    }
-
-    componentWillUnmount() {
-        this.stores.user.off('change', this._forceUpdate);
     }
 
     render() {

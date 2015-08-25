@@ -22,12 +22,6 @@ class MockFlux extends Flummox {
 
         this.createActions(API, TwintipActions);
         this.createStore(API, TwintipStore, this);
-    }
-}
-
-class GlobalFlux extends Flummox {
-    constructor() {
-        super();
 
         this.createActions(USER, UserActions);
         this.createStore(USER, UserStore, this);
@@ -36,7 +30,6 @@ class GlobalFlux extends Flummox {
 
 describe('The application detail view', () => {
     var flux,
-        globalFlux,
         TEST_APP,
         props,
         detail;
@@ -44,7 +37,6 @@ describe('The application detail view', () => {
     beforeEach(() => {
         reset();
         flux = new MockFlux();
-        globalFlux = new GlobalFlux();
 
         flux.getStore(API).receiveApi({
             application_id: ID
@@ -62,7 +54,6 @@ describe('The application detail view', () => {
         };
         props = {
             flux: flux,
-            globalFlux: globalFlux,
             applicationId: ID
         };
         detail = render(Detail, props);

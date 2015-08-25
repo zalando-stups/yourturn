@@ -13,11 +13,11 @@ let router = Router.create({
     location: Router.HistoryLocation
 });
 
-function isAllowed(state, globalFlux) {
+function isAllowed(state) {
     let errors = state
                     .routes
                     .map(route => route.handler.isAllowed ?
-                        route.handler.isAllowed(state, globalFlux) :
+                        route.handler.isAllowed(state) :
                         true)
                     .filter(allowed => allowed instanceof Error);
     if (errors.length) {
@@ -26,10 +26,10 @@ function isAllowed(state, globalFlux) {
     return true;
 }
 
-function fetchData(routes, state, globalFlux) {
+function fetchData(routes, state) {
     let promises = routes
                     .filter(route => route.handler.fetchData !== undefined)
-                    .map(route => route.handler.fetchData(state, globalFlux));
+                    .map(route => route.handler.fetchData(state));
     return Promise.all(promises);
 }
 
@@ -53,14 +53,14 @@ router.run(
             // before checking if user is allowed to see stuff,
             // we have to fetch the data
             // (i.e. to know the team of an application)
-            let authError = isAllowed(state, YT_FLUX);
+            let authError = isAllowed(state);
             if (authError !== true) {
                 // if auth error true => everythings good
                 // I KNOW!
                 React.render(<DefaultError error={authError} />,
                              document.body);
             } else {
-                React.render(<Handler globalFlux={YT_FLUX} />,
+                React.render(<Handler flux={YT_FLUX}/>,
                              document.body);
             }
         });

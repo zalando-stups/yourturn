@@ -51,7 +51,7 @@ class ResourceForm extends React.Component {
         .catch(err => {
             this
             .props
-            .globalFlux
+            .flux
             .getActions('notification')
             .addNotification(
                 `Could not save resource ${resource.name}. ${err.message}`,
@@ -209,9 +209,9 @@ class ResourceForm extends React.Component {
 }
 ResourceForm.displayName = 'ResourceForm';
 ResourceForm.propTypes = {
-    globalFlux: React.PropTypes.object.isRequired,
     edit: React.PropTypes.bool,
-    resourceId: React.PropTypes.string.isRequired
+    resourceId: React.PropTypes.string.isRequired,
+    flux: React.PropTypes.object.isRequired
 };
 ResourceForm.contextTypes = {
     router: React.PropTypes.func.isRequired

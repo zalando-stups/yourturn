@@ -40,12 +40,6 @@ class MockFlux extends Flummox {
 
         this.createActions('essentials', EssentialsActions);
         this.createStore('essentials', EssentialsStore, this);
-    }
-}
-
-class GlobalFlux extends Flummox {
-    constructor() {
-        super();
 
         this.createActions('user', UserActions);
         this.createStore('user', UserStore, this);
@@ -54,7 +48,6 @@ class GlobalFlux extends Flummox {
 
 describe('The access control form view', () => {
     var flux,
-        globalFlux,
         actionSpy,
         props,
         form;
@@ -62,7 +55,6 @@ describe('The access control form view', () => {
     beforeEach(() => {
         reset();
         flux = new MockFlux();
-        globalFlux = new GlobalFlux();
         flux.getStore('essentials').receiveScopes(['customer', [{
             id: 'read_all'
         }]]);
@@ -72,7 +64,6 @@ describe('The access control form view', () => {
         });
         props = {
             flux: flux,
-            globalFlux: globalFlux,
             applicationId: 'kio'
         };
         form = render(AccessForm, props);

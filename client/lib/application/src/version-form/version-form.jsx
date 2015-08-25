@@ -80,7 +80,7 @@ class VersionForm extends React.Component {
         .catch(err => {
             this
             .props
-            .globalFlux
+            .flux
             .getActions('notification')
             .addNotification(
                 `Could not ${verb} version ${version.id} of ${application.name}. ${err.message}`,
@@ -223,7 +223,7 @@ VersionForm.propTypes = {
     applicationId: React.PropTypes.string.isRequired,
     versionId: React.PropTypes.string,
     edit: React.PropTypes.bool,
-    globalFlux: React.PropTypes.object.isRequired
+    flux: React.PropTypes.object.isRequired
 };
 VersionForm.contextTypes = {
     router: React.PropTypes.func.isRequired

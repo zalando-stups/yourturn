@@ -40,12 +40,6 @@ class MockFlux extends Flummox {
 
         this.createActions('essentials', EssentialsActions);
         this.createStore('essentials', EssentialsStore, this);
-    }
-}
-
-class GlobalFlux extends Flummox {
-    constructor() {
-        super();
 
         this.createActions('user', UserActions);
         this.createStore('user', UserStore, this);
@@ -54,7 +48,6 @@ class GlobalFlux extends Flummox {
 
 describe('The oauth form view', () => {
     var flux,
-        globalFlux,
         actionSpy,
         props,
         form;
@@ -62,13 +55,11 @@ describe('The oauth form view', () => {
     beforeEach(() => {
         reset();
         flux = new MockFlux();
-        globalFlux = new GlobalFlux();
         actionSpy = sinon.stub(flux.getActions('mint'), 'saveOAuthConfig', () => {
             return Promise.resolve();
         });
         props = {
             flux: flux,
-            globalFlux: globalFlux,
             applicationId: 'kio'
         };
         flux.getStore('mint').receiveOAuthConfig(['kio', MOCK_KIO]);
