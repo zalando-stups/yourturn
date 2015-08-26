@@ -238,7 +238,7 @@ class EssentialsStore extends Store {
      * @return {array} Empty array if there are no applications with this scope.
      */
     getScopeApplications(resourceId, scopeId) {
-        let apps = this.state.applications.get(`${resourceId}.${scopeId}`, Immutable.Seq());
+        let apps = this.state.applications.get(`${resourceId}.${scopeId}`, Immutable.List());
         return apps
                 .sortBy(a => a.get('id').toLowerCase())
                 .toJS();
