@@ -82,7 +82,7 @@ class ScopeDetail extends React.Component {
                                 <th>Applications</th>
                                 <td>
                                     {applications.length ?
-                                        <ul>
+                                        <ul data-block='app-list'>
                                             {applications.map(
                                                 app => <li key={app.id}>
                                                             <Link
