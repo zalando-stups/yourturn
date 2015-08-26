@@ -166,6 +166,7 @@ ScopeDetailHandler.fetchData = function(state) {
     let {resourceId, scopeId} = state.params;
     RES_ACTIONS.fetchResource(resourceId);
     RES_ACTIONS.fetchScope(resourceId, scopeId);
+    RES_ACTIONS.fetchScopeApplications(resourceId, scopeId);
 };
 
 

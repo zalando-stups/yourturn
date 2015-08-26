@@ -20,7 +20,7 @@ class ScopeDetail extends React.Component {
         let {resourceId, scopeId} = this.props,
             {user, essentials} = this.stores,
             scope = essentials.getScope(resourceId, scopeId),
-            applications = essentials.getScopeApplications(scopeId),
+            applications = essentials.getScopeApplications(resourceId, scopeId),
             whitelisted = user.isWhitelisted();
         const LINK_PARAMS = {
             resourceId: resourceId,
