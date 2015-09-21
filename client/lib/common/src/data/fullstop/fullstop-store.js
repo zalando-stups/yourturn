@@ -1,8 +1,54 @@
-import {Store} from 'flummox';
 import Immutable from 'immutable';
 import {Pending, Failed} from 'common/src/fetch-result';
+import Types from './fullstop-types';
+import * as Getters from './fullstop-getter';
+import {Store} from 'flummox';
 
-class FullstopStore extends Store {
+function FullstopStore(state, action) {
+    let {type, payload} = action;
+    if (type === Types.BEGIN_FETCH_VIOLATIONS) {
+        return state.set('pagingInfo', Immutable.Map({ last: true }));
+    } else if (type === Types.BEGIN_FETCH_VIOLATION) {
+        return state.setIn(['violations', String(payload)], new Pending());
+    } else if (type === Types.FAIL_FETCH_VIOLATION) {
+        return state.setIn(['violations', String(payload.violationId)], new Failed(payload));
+    } else if (type === Types.RECEIVE_VIOLATION) {
+        return FullstopStore(state, {
+            type: Types.RECEIVE_VIOLATIONS,
+            payload: [undefined, [payload]]
+        });
+    } else if (type === Types.RECEIVE_VIOLATIONS) {
+        let [metadata, violations] = payload,
+            all = violations.reduce(
+                            (coll, v) => {
+                                v.timestamp = Date.parse(v.created) || 0;
+                                return coll.set(String(v.id), Immutable.fromJS(v));
+                            },
+                            state.get('violations'));
+        state = state.set('violations', all);
+        if (metadata) {
+            state = state.set('pagingInfo', Immutable.Map({ last: metadata.last }));
+        }
+        return state;
+    } else if (type === Types.DELETE_VIOLATIONS) {
+        return state.set('violations', Immutable.Map());
+    } else if (type === '@@INIT') {
+        return Immutable.fromJS({
+            violations: {},
+            pagingInfo: {
+                last: true
+            }
+        });
+    }
+    return state;
+}
+
+export {
+    FullstopStore as FullstopStore
+};
+
+// wrap in flummox store
+export default class FullstopStoreWrapper extends Store {
     constructor(flux) {
         super();
 
@@ -33,87 +79,78 @@ class FullstopStore extends Store {
             this.failFetchViolation);
     }
 
-    beginFetchViolations() {
-        this.setState({
-            pagingInfo: Immutable.Map({
-                last: true
+    _empty() {
+        this.state = {
+            redux: FullstopStore(undefined, {
+                type: '@@INIT'
             })
-        });
-    }
-    failFetchViolations() { }
-    beginFetchViolation(violationId) {
-        this.setState({
-            violations: this.state.violations.set(String(violationId), new Pending())
-        });
-    }
-    failFetchViolation(err) {
-        this.setState({
-            violations: this.state.violations.set(String(err.violationId), new Failed(err))
-        });
-    }
-
-    receiveViolation(violation) {
-        this.receiveViolations([undefined, [violation]]);
-    }
-
-    receiveViolations([metadata, violations]) {
-        let all = violations.reduce(
-                            (coll, v) => {
-                                v.timestamp = Date.parse(v.created) || 0;
-                                return coll.set(String(v.id), Immutable.fromJS(v));
-                            },
-                            this.state.violations);
-        this.setState({
-            violations: all,
-            pagingInfo: metadata ?
-                            Immutable.Map({
-                                last: metadata.last
-                            }) :
-                            this.state.pagingInfo
-        });
+        };
     }
 
     deleteViolations() {
         this.setState({
-            violations: Immutable.Map()
+            redux: FullstopStore(this.state.redux, {
+                type: Types.DELETE_VIOLATIONS
+            })
+        });
+    }
+
+    beginFetchViolations() {
+        this.setState({
+            redux: FullstopStore(this.state.redux, {
+                type: Types.BEGIN_FETCH_VIOLATIONS
+            })
+        });
+    }
+
+    failFetchViolations() {
+    }
+
+    receiveViolations([metadata, violations]) {
+        this.setState({
+            redux: FullstopStore(this.state.redux, {
+                type: Types.RECEIVE_VIOLATIONS,
+                payload: [metadata, violations]
+            })
+        });
+    }
+
+    beginFetchViolation(id) {
+        this.setState({
+            redux: FullstopStore(this.state.redux, {
+                type: Types.BEGIN_FETCH_VIOLATION,
+                payload: id
+            })
+        });
+    }
+
+    failFetchViolation(err) {
+        this.setState({
+            redux: FullstopStore(this.state.redux, {
+                type: Types.FAIL_FETCH_VIOLATION,
+                payload: err
+            })
+        });
+    }
+
+    receiveViolation(violation) {
+        this.setState({
+            redux: FullstopStore(this.state.redux, {
+                type: Types.RECEIVE_VIOLATION,
+                payload: violation
+            })
         });
     }
 
     getPagingInfo() {
-        return this.state.pagingInfo.toJS();
+        return Getters.getPagingInfo(this.state.redux);
     }
 
     getViolation(violationId) {
-        let violation = this.state.violations.get(String(violationId));
-        return violation ? violation.toJS() : false;
+        return Getters.getViolation(this.state.redux, violationId);
     }
 
     getViolations(accounts, resolved) {
-        let violations = this.state.violations.valueSeq();
-        // collect violations from accounts
-        if (accounts) {
-            violations = violations.filter(v => accounts.indexOf(v.get('account_id')) >= 0);
-        }
-
-        // filter by resolution
-        if (resolved === true) {
-            violations = violations.filter(v => v.get('comment') !== null);
-        } else if (resolved === false) {
-            violations = violations.filter(v => v.get('comment') === null);
-        }
-        return violations
-                .sortBy(v => v.get('timestamp'))
-                .toJS();
-    }
-
-    _empty() {
-        this.setState({
-            violations: Immutable.Map(),
-            pagingInfo: Immutable.fromJS({
-                last: true
-            })
-        });
+        return Getters.getViolations(this.state.redux, accounts, resolved);
     }
 }
-
-export default FullstopStore;

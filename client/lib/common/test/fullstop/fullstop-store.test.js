@@ -1,6 +1,8 @@
 /* globals expect */
-import FullstopStore from 'common/src/data/fullstop/fullstop-store';
+import Immutable from 'immutable';
+import FullstopStoreWrapper, {FullstopStore} from 'common/src/data/fullstop/fullstop-store';
 import FullstopActions from 'common/src/data/fullstop/fullstop-actions';
+import * as Action from 'common/src/data/fullstop/fullstop-types';
 import FetchResult from 'common/src/fetch-result';
 import {Flummox} from 'flummox';
 
@@ -63,13 +65,13 @@ class MockFlux extends Flummox {
         super();
 
         this.createActions('fullstop', FullstopActions);
-        this.createStore('fullstop', FullstopStore, this);
+        this.createStore('fullstop', FullstopStoreWrapper, this);
     }
 }
 
 describe('The fullstop store', () => {
     var store,
-    flux = new MockFlux();
+        flux = new MockFlux();
 
     beforeEach(() => {
         store = flux.getStore('fullstop');
@@ -150,5 +152,55 @@ describe('The fullstop store', () => {
         store.beginFetchViolations();
         let meta = store.getPagingInfo();
         expect(meta).to.be.ok;
+    });
+});
+
+var DEFAULT_STATE = Immutable.fromJS({
+    violations: {}
+});
+
+describe('The redux fullstop store', () => {
+    it('should return the state if action does not match', () => {
+        let state = FullstopStore(4, {
+            type: 'unknown'
+        });
+        expect(state).to.equal(4);
+    });
+
+    it('should return empty state on init', () => {
+        let state = FullstopStore(undefined, {
+            type: '@@INIT'
+        });
+        expect(state.get('violations').valueSeq().count()).to.equal(0);
+    });
+
+    it('should receive a violation', () => {
+        let state = FullstopStore(DEFAULT_STATE, {
+                type: Action.RECEIVE_VIOLATION,
+                payload: VIOLATION_A
+            });
+        let violations = state.get('violations').valueSeq().toJS();
+        expect(violations.length).to.equal(1);
+        expect(violations[0].id).to.equal(VIOLATION_A.id);
+    });
+
+    it('should receive more violations', () => {
+        let state = FullstopStore(DEFAULT_STATE, {
+            type: Action.RECEIVE_VIOLATIONS,
+            payload: [{ last: true }, VIOLATIONS]
+        });
+        expect(state.get('violations').valueSeq().count()).to.equal(VIOLATIONS.length);
+    });
+
+    it('should exchange an existing violation', () => {
+        let state = FullstopStore(DEFAULT_STATE, {
+            type: Action.RECEIVE_VIOLATION,
+            payload: VIOLATION_A
+        });
+        state = FullstopStore(state, {
+            type: Action.RECEIVE_VIOLATION,
+            payload: VIOLATION_A
+        });
+        expect(state.get('violations').valueSeq().count()).to.equal(1);
     });
 });
