@@ -59,7 +59,7 @@ class ViolationCard extends React.Component {
                             <Icon
                                 fixedWidth
                                 name='calendar-o'
-                                title='Time when this violation was discovered' /> <Timestamp value={violation_type.timestamp} format={DATE_FORMAT} />
+                                title='Time when this violation was discovered' /> <Timestamp value={violation.timestamp} format={DATE_FORMAT} />
                         </div>
                         <div>
                             <Icon
