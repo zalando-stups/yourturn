@@ -19,6 +19,10 @@ function TwintipStore(state = Immutable.Map(), action) {
     return state;
 }
 
+export {
+    TwintipStore as TwintipStore
+};
+
 class TwintipStoreWrapper extends Store {
     constructor(flux) {
         super();
