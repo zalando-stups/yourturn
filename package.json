@@ -34,7 +34,8 @@
     "react-typeahead": "1.1.1",
     "remarkable": "1.6.0",
     "superagent": "1.2.0",
-    "superagent-oauth2-client": "0.0.17"
+    "superagent-oauth2-client": "0.0.17",
+    "uniqueid": "0.1.0"
   },
   "devDependencies": {
     "@zalando/node-scm-source": "0.2.2",

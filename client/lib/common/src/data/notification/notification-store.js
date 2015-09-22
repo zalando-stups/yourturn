@@ -1,18 +1,46 @@
 /** global Date */
+import uniq from 'uniqueid';
+import * as Type from './notification-types';
 import {Store} from 'flummox';
-import Immutable from 'immutable';
 
-var lastId = 0;
+function NotificationStore(notifications = [], action) {
+    if (!action) {
+        return notifications;
+    }
 
-class NotificationStore extends Store {
+    if (action.type === Type.ADD_NOTIFICATION) {
+        // add
+        let [message, type] = action.payload;
+        notifications = notifications.concat([{
+                    type: type || 'default',
+                    message: message,
+                    id: uniq(),
+                    created: Date.now()
+                }]);
+    } else if (action.type === Type.REMOVE_NOTIFICATION) {
+        // remove
+        let id = action.payload;
+        notifications = notifications.filter(n => n.id !== id);
+    } else if (action.type === Type.REMOVE_NOTIFICATIONS_OLDER_THAN) {
+        // remove old
+        let now = Date.now(),
+            ms = action.payload;
+        notifications = notifications.filter(n => n.created > (now - ms));
+    }
+    return notifications;
+}
+
+export {
+    NotificationStore as NotificationStore
+};
+
+export default class NotificationStoreWrapper extends Store {
     constructor(flux) {
         super();
 
         const notificationActions = flux.getActions('notification');
 
-        this.state = {
-            notifications: Immutable.List()
-        };
+        this._empty();
 
         this.register(notificationActions.addNotification, this.receiveNotification);
         this.register(notificationActions.removeNotification, this.deleteNotification);
@@ -23,14 +51,11 @@ class NotificationStore extends Store {
      * Saves notification.
      */
     receiveNotification([message, type]) {
-        lastId += 1;
         this.setState({
-            notifications: this.state.notifications.push(Immutable.Map({
-                type: type || 'default',
-                message: message,
-                id: lastId,
-                created: Date.now()
-            }))
+            redux: NotificationStore(this.state.redux, {
+                type: Type.ADD_NOTIFICATION,
+                payload: [message, type]
+            })
         });
     }
 
@@ -41,7 +66,10 @@ class NotificationStore extends Store {
      */
     deleteNotification(id) {
         this.setState({
-            notifications: this.state.notifications.filter(n => n.get('id') !== id)
+            redux: NotificationStore(this.state.redux, {
+                type: Type.REMOVE_NOTIFICATION,
+                payload: id
+            })
         });
     }
 
@@ -51,9 +79,11 @@ class NotificationStore extends Store {
      * @param  {number} ms The age of the notification in ms.
      */
     deleteOldNotifications(ms) {
-        let now = Date.now();
         this.setState({
-            notifications: this.state.notifications.filter(n => n.get('created') > (now - ms))
+            redux: NotificationStore(this.state.redux, {
+                type: Type.REMOVE_NOTIFICATIONS_OLDER_THAN,
+                payload: ms
+            })
         });
     }
 
@@ -61,14 +91,12 @@ class NotificationStore extends Store {
      * Returns all notifications.
      */
     getNotifications() {
-        return this.state.notifications.toJS();
+        return this.state.redux;
     }
 
     _empty() {
         this.setState({
-            notifications: Immutable.List()
+            redux: NotificationStore()
         });
     }
 }
-
-export default NotificationStore;
