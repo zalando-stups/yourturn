@@ -1,6 +1,6 @@
 /** global Date */
 import uniq from 'uniqueid';
-import * as Type from './notification-types';
+import * as Types from './notification-types';
 import {Store} from 'flummox';
 
 function NotificationStore(notifications = [], action) {
@@ -8,7 +8,7 @@ function NotificationStore(notifications = [], action) {
         return notifications;
     }
 
-    if (action.type === Type.ADD_NOTIFICATION) {
+    if (action.type === Types.ADD_NOTIFICATION) {
         // add
         let [message, type] = action.payload;
         notifications = notifications.concat([{
@@ -17,11 +17,11 @@ function NotificationStore(notifications = [], action) {
                     id: uniq(),
                     created: Date.now()
                 }]);
-    } else if (action.type === Type.REMOVE_NOTIFICATION) {
+    } else if (action.type === Types.REMOVE_NOTIFICATION) {
         // remove
         let id = action.payload;
         notifications = notifications.filter(n => n.id !== id);
-    } else if (action.type === Type.REMOVE_NOTIFICATIONS_OLDER_THAN) {
+    } else if (action.type === Types.REMOVE_NOTIFICATIONS_OLDER_THAN) {
         // remove old
         let now = Date.now(),
             ms = action.payload;
@@ -53,7 +53,7 @@ export default class NotificationStoreWrapper extends Store {
     receiveNotification([message, type]) {
         this.setState({
             redux: NotificationStore(this.state.redux, {
-                type: Type.ADD_NOTIFICATION,
+                type: Types.ADD_NOTIFICATION,
                 payload: [message, type]
             })
         });
@@ -67,7 +67,7 @@ export default class NotificationStoreWrapper extends Store {
     deleteNotification(id) {
         this.setState({
             redux: NotificationStore(this.state.redux, {
-                type: Type.REMOVE_NOTIFICATION,
+                type: Types.REMOVE_NOTIFICATION,
                 payload: id
             })
         });
@@ -81,7 +81,7 @@ export default class NotificationStoreWrapper extends Store {
     deleteOldNotifications(ms) {
         this.setState({
             redux: NotificationStore(this.state.redux, {
-                type: Type.REMOVE_NOTIFICATIONS_OLDER_THAN,
+                type: Types.REMOVE_NOTIFICATIONS_OLDER_THAN,
                 payload: ms
             })
         });

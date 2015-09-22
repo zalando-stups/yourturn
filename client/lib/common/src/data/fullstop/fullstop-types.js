@@ -1,3 +1,5 @@
+import {createActionTypes} from 'common/src/util';
+
 const TYPES = [
     'BEGIN_FETCH_VIOLATIONS',
     'FAIL_FETCH_VIOLATIONS',
@@ -8,8 +10,4 @@ const TYPES = [
     'DELETE_VIOLATIONS'
 ];
 
-export default TYPES.reduce((obj, t) => {
-    obj[t] = t;
-    return obj;
-},
-{});
+export default createActionTypes(TYPES);

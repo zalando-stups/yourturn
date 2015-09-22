@@ -1,9 +1,9 @@
 import {createActionTypes} from 'common/src/util';
 
 const TYPES = [
-    'ADD_NOTIFICATION',
-    'REMOVE_NOTIFICATION',
-    'REMOVE_NOTIFICATIONS_OLDER_THAN'
+    'BEGIN_FETCH_API',
+    'RECEIVE_API',
+    'FAIL_FETCH_API'
 ];
 
 export default createActionTypes(TYPES);

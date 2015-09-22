@@ -3,18 +3,22 @@ import request from 'common/src/superagent';
 import {Services} from 'common/src/data/services';
 import {Provider, RequestConfig, saveRoute} from 'common/src/oauth-provider';
 
+function _fetchApi(id) {
+    return request
+        .get(`${Services.twintip.url}${Services.twintip.root}/${id}`)
+        .accept('json')
+        .oauth(Provider, RequestConfig)
+        .exec(saveRoute)
+        .then(res => res.body)
+        .catch(err => {
+            err.id = id;
+            throw err;
+        });
+}
+
 class TwintipActions extends Actions {
     fetchApi(id) {
-        return request
-                .get(`${Services.twintip.url}${Services.twintip.root}/${id}`)
-                .accept('json')
-                .oauth(Provider, RequestConfig)
-                .exec(saveRoute)
-                .then(res => res.body)
-                .catch(err => {
-                    err.id = id;
-                    throw err;
-                });
+        return _fetchApi(id);
     }
 }
 
