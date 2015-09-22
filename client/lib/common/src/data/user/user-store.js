@@ -1,19 +1,53 @@
 import {Store} from 'flummox';
 import Immutable from 'immutable';
-import Config from 'common/src/config';
+import Types from './user-types';
+import * as Getter from './user-getter';
 
-class UserStore extends Store {
+function UserStore(state, action) {
+    const DEFAULT_STATE = Immutable.fromJS({
+        tokeninfo: {},
+        uid: false,
+        users: {},
+        accounts: []
+    });
+
+    if (!state) {
+        return DEFAULT_STATE;
+    }
+
+    if (!action) {
+        return state;
+    }
+
+    let {type, payload} = action;
+
+    if (type === Types.RECEIVE_USERINFO) {
+        let [user, info] = payload;
+        return state.setIn(['users', user], Immutable.fromJS(info));
+    } else if (type === Types.RECEIVE_TOKENINFO) {
+        return state.set('tokeninfo', Immutable.fromJS(payload));
+    } else if (type === Types.RECEIVE_ACCOUNTS) {
+        return state.set('accounts', Immutable.fromJS(payload));
+    } else if (type === Types.DELETE_TOKENINFO) {
+        return state.set('tokeninfo', false);
+    } else if (type === '@@INIT') {
+        return DEFAULT_STATE;
+    }
+
+    return state;
+}
+
+export {
+    UserStore as UserStore
+};
+
+class UserStoreWrapper extends Store {
     constructor(flux) {
         super();
 
         const userActions = flux.getActions('user');
 
-        this.state = {
-            tokeninfo: Immutable.Map(),
-            uid: false,
-            users: Immutable.Map(),
-            accounts: Immutable.List()
-        };
+        this._empty();
 
         this.register(
             userActions.deleteTokenInfo,
@@ -40,67 +74,61 @@ class UserStore extends Store {
 
     receiveUserInfo([user, info]) {
         this.setState({
-            users: this.state.users.set(user, Immutable.fromJS(info))
+            redux: UserStore(this.state.redux, {
+                type: Types.RECEIVE_USERINFO,
+                payload: [user, info]
+            })
         });
     }
 
     receiveAccounts(accounts) {
         this.setState({
-            accounts: Immutable.fromJS(accounts)
+            redux: UserStore(this.state.redux, {
+                type: Types.RECEIVE_ACCOUNTS,
+                payload: accounts
+            })
         });
-    }
-
-    getUserCloudAccounts() {
-        return this.state.accounts.toJS();
-    }
-
-    getUserInfo(user) {
-        let info;
-        if (user) {
-            // specific user
-            info = this.state.users.get(user, false);
-        } else {
-            // current user
-            let {uid} = this.getTokenInfo();
-            info = uid ? this.state.users.get(uid, false) : false;
-        }
-        return info ? info.toJS() : false;
     }
 
     receiveTokenInfo(tokeninfo) {
         this.setState({
-            tokeninfo: Immutable.fromJS(tokeninfo)
+            redux: UserStore(this.state.redux, {
+                type: Types.RECEIVE_TOKENINFO,
+                payload: tokeninfo
+            })
         });
-    }
-
-    getTokenInfo() {
-        return this.state.tokeninfo ? this.state.tokeninfo.toJS() : false;
     }
 
     deleteTokenInfo() {
         this.setState({
-            tokeninfo: false
+            redux: UserStore(this.state.redux, {
+                type: Types.DELETE_TOKENINFO
+            })
         });
+    }
+
+    getUserCloudAccounts() {
+        return Getter.getUserCloudAccounts(this.state.redux);
+    }
+
+    getUserInfo(user) {
+        return Getter.getUserInfo(this.state.redux, user);
+    }
+
+    getTokenInfo() {
+        return Getter.getTokenInfo(this.state.redux);
     }
 
     // QUICKFIX #133
     isWhitelisted() {
-        let token = this.state.tokeninfo.toJS();
-        // ignore whitelist if it's empty
-        if (Config.RESOURCE_WHITELIST.length === 0) {
-            return true;
-        }
-        return token && Config.RESOURCE_WHITELIST.indexOf(token.uid) >= 0;
+        return Getter.isWhitelisted(this.state.redux);
     }
 
     _empty() {
-        this.setState({
-            tokeninfo: Immutable.Map(),
-            uid: false,
-            users: Immutable.Map(),
-            accounts: Immutable.List()
-        });
+        this.state = {
+            redux: UserStore()
+        };
     }
 }
 
-export default UserStore;
+export default UserStoreWrapper;

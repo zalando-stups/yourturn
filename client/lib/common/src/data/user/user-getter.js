@@ -1,0 +1,40 @@
+import Config from 'common/src/config';
+
+function getUserCloudAccounts(state) {
+    return state.get('accounts').toJS();
+}
+
+function getUserInfo(state, user) {
+    let info;
+    if (user) {
+        // specific user
+        info = state.getIn(['users', user], false);
+    } else {
+        // current user
+        let {uid} = getTokenInfo(state);
+        info = uid ? state.getIn(['users', uid], false) : false;
+    }
+    return info ? info.toJS() : false;
+}
+
+function getTokenInfo(state) {
+    let info = state.get('tokeninfo', false);
+    return info ? info.toJS() : false;
+}
+
+// QUICKFIX #133
+function isWhitelisted(state) {
+    let token = state.get('tokeninfo').toJS();
+    // ignore whitelist if it's empty
+    if (Config.RESOURCE_WHITELIST.length === 0) {
+        return true;
+    }
+    return token && Config.RESOURCE_WHITELIST.indexOf(token.uid) >= 0;
+}
+
+export {
+    getTokenInfo as getTokenInfo,
+    isWhitelisted as isWhitelisted,
+    getUserCloudAccounts as getUserCloudAccounts,
+    getUserInfo as getUserInfo
+};
