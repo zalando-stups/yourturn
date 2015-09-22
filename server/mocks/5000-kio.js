@@ -89,7 +89,8 @@ var approvals = {
             "version_id": "1",
             "approval_type": "TESTED",
             "user_id": "tobi",
-            "approved_at": "2015-04-25T16:40:00"
+            "approved_at": "2015-04-25T16:40:00",
+            "notes": "hello"
         }]
     }
 };

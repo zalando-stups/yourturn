@@ -17,6 +17,7 @@ import ApprovalForm from './approval-form/approval-form.jsx';
 
 const MINT_ACTIONS = FLUX.getActions('mint'),
       PIERONE_ACTIONS = FLUX.getActions('pierone'),
+      USER_ACTIONS = FLUX.getActions('user'),
       KIO_ACTIONS = FLUX.getActions('kio'),
       KIO_STORE = FLUX.getStore('kio');
 
@@ -281,7 +282,7 @@ class ApprovalFormHandler extends React.Component {
     render() {
         return <FluxComponent
                     flux={FLUX}
-                    connectToStores={['kio', 'pierone']}>
+                    connectToStores={['kio', 'pierone', 'user']}>
 
                     <ApprovalForm
                         applicationId={this.props.params.applicationId}
@@ -301,7 +302,11 @@ ApprovalFormHandler.fetchData = function(state) {
     if (!KIO_STORE.getApplicationVersion(applicationId, versionId)) {
         KIO_ACTIONS.fetchApplicationVersion(applicationId, versionId);
     }
-    KIO_ACTIONS.fetchApprovals(applicationId, versionId);
+    KIO_ACTIONS
+        .fetchApprovals(applicationId, versionId)
+        .then((args) => args[2]
+                        .map(a => a.user_id)
+                                .forEach(u => USER_ACTIONS.fetchUserInfo(u)));
     return KIO_ACTIONS.fetchApprovalTypes(applicationId);
 };
 

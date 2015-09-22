@@ -177,6 +177,7 @@ class ApprovalForm extends React.Component {
                                 {approvals.map(
                                     (a, i) => <ApprovalCard
                                                 key={i}
+                                                userinfo={this.stores.user.getUserInfo(a.user_id)}
                                                 approval={a} />)}
                             </div>
                         </div>
