@@ -33,7 +33,7 @@ class ApprovalCard extends React.Component {
                                 <Gravatar
                                     size={75}
                                     email={userinfo.email} />
-                                <div>
+                                <div title={approval.user_id}>
                                     {userinfo ? userinfo.name.split(' ')[0] : approval.user_id}
                                 </div>
                             </div>
