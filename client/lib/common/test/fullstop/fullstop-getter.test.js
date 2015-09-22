@@ -1,3 +1,5 @@
+/* global expect */
+
 import Immutable from 'immutable';
 import * as Getter from 'common/src/data/fullstop/fullstop-getter';
 
