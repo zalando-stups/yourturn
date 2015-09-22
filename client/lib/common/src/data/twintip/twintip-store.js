@@ -1,16 +1,35 @@
 import {Store} from 'flummox';
 import Immutable from 'immutable';
+import * as Types from './twintip-types';
+import * as Getter from './twintip-getter';
 import {Pending, Failed} from 'common/src/fetch-result';
 
-class TwintipStore extends Store {
+function TwintipStore(state = Immutable.Map(), action) {
+    if (!action) {
+        return state;
+    }
+    let {type, payload} = action;
+    if (type === Types.RECEIVE_API) {
+        return state.set(payload.application_id, Immutable.fromJS(payload));
+    } else if (type === Types.BEGIN_FETCH_API) {
+        return state.set(payload, new Pending());
+    } else if (type === Types.FAIL_FETCH_API) {
+        return state.set(payload.id, new Failed(payload));
+    }
+    return state;
+}
+
+export {
+    TwintipStore as TwintipStore
+};
+
+class TwintipStoreWrapper extends Store {
     constructor(flux) {
         super();
 
         const twintipActions = flux.getActions('twintip');
 
-        this.state = {
-            apis: Immutable.Map()
-        };
+        this._empty();
 
         this.registerAsync(
             twintipActions.fetchApi,
@@ -26,7 +45,10 @@ class TwintipStore extends Store {
      */
     beginFetchApi(id) {
         this.setState({
-            apis: this.state.apis.set(id, new Pending())
+            redux: TwintipStore(this.state.redux, {
+                type: Types.BEGIN_FETCH_API,
+                payload: id
+            })
         });
     }
 
@@ -37,7 +59,10 @@ class TwintipStore extends Store {
      */
     failFetchApi(err) {
         this.setState({
-            apis: this.state.apis.set(err.id, new Failed(err))
+            redux: TwintipStore(this.state.redux, {
+                type: Types.FAIL_FETCH_API,
+                payload: err
+            })
         });
     }
 
@@ -48,27 +73,22 @@ class TwintipStore extends Store {
      */
     receiveApi(api) {
         this.setState({
-            apis: this.state.apis.set(api.application_id, Immutable.fromJS(api))
+            redux: TwintipStore(this.state.redux, {
+                type: Types.RECEIVE_API,
+                payload: api
+            })
         });
     }
 
-    /**
-     * Returns the API for application with `id`. Does not care about its state, e.g. whether or not
-     * it's Pending or Failed.
-     *
-     * @param  {String} id
-     * @return {object} The API with this id
-     */
     getApi(id) {
-        let api = this.state.apis.get(id);
-        return api ? api.toJS() : false;
+        return Getter.getApi(this.state.redux, id);
     }
 
     _empty() {
-        this.setState({
-            apis: Immutable.Map()
-        });
+        this.state = {
+            redux: TwintipStore()
+        };
     }
 }
 
-export default TwintipStore;
+export default TwintipStoreWrapper;

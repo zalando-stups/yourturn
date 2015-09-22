@@ -14,6 +14,15 @@ function requireAccounts(flux) {
     return Promise.resolve(STORE.getUserCloudAccounts());
 }
 
+function createActionTypes(types) {
+    return types.reduce((obj, t) => {
+        obj[t] = t;
+        return obj;
+    },
+    {});
+}
+
 export {
-    requireAccounts as requireAccounts
+    requireAccounts as requireAccounts,
+    createActionTypes as createActionTypes
 };
