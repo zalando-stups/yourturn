@@ -302,11 +302,11 @@ ApprovalFormHandler.fetchData = function(state) {
     if (!KIO_STORE.getApplicationVersion(applicationId, versionId)) {
         KIO_ACTIONS.fetchApplicationVersion(applicationId, versionId);
     }
-    let userInfos = KIO_ACTIONS
-                        .fetchApprovals(applicationId, versionId)
-                        .then(([app, version, approvals]) => approvals
-                                                                .map(a => a.user_id)
-                                                                .forEach(u => USER_ACTIONS.fetchUserInfo(u)));
+    KIO_ACTIONS
+        .fetchApprovals(applicationId, versionId)
+        .then((args) => args[2]
+                        .map(a => a.user_id)
+                                .forEach(u => USER_ACTIONS.fetchUserInfo(u)));
     return KIO_ACTIONS.fetchApprovalTypes(applicationId);
 };
 
