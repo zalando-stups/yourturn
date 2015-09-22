@@ -9,7 +9,7 @@ const TYPES = [
 ];
 
 export default TYPES.reduce((obj, t) => {
-                    obj[t] = t;
-                    return obj;
-                },
-                {});
+    obj[t] = t;
+    return obj;
+},
+{});

@@ -178,8 +178,8 @@ describe('The redux fullstop store', () => {
         let state = FullstopStore(DEFAULT_STATE, {
                 type: Action.RECEIVE_VIOLATION,
                 payload: VIOLATION_A
-            });
-        let violations = state.get('violations').valueSeq().toJS();
+            }),
+            violations = state.get('violations').valueSeq().toJS();
         expect(violations.length).to.equal(1);
         expect(violations[0].id).to.equal(VIOLATION_A.id);
     });
@@ -187,7 +187,10 @@ describe('The redux fullstop store', () => {
     it('should receive more violations', () => {
         let state = FullstopStore(DEFAULT_STATE, {
             type: Action.RECEIVE_VIOLATIONS,
-            payload: [{ last: true }, VIOLATIONS]
+            payload: [{
+                last: true
+            },
+            VIOLATIONS]
         });
         expect(state.get('violations').valueSeq().count()).to.equal(VIOLATIONS.length);
     });

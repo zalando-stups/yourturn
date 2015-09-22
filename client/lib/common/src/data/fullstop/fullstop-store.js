@@ -4,10 +4,14 @@ import Types from './fullstop-types';
 import * as Getters from './fullstop-getter';
 import {Store} from 'flummox';
 
+const DEFAULT_PAGING = {
+    last: true
+};
+
 function FullstopStore(state, action) {
     let {type, payload} = action;
     if (type === Types.BEGIN_FETCH_VIOLATIONS) {
-        return state.set('pagingInfo', Immutable.Map({ last: true }));
+        return state.set('pagingInfo', Immutable.Map(DEFAULT_PAGING));
     } else if (type === Types.BEGIN_FETCH_VIOLATION) {
         return state.setIn(['violations', String(payload)], new Pending());
     } else if (type === Types.FAIL_FETCH_VIOLATION) {
@@ -20,14 +24,16 @@ function FullstopStore(state, action) {
     } else if (type === Types.RECEIVE_VIOLATIONS) {
         let [metadata, violations] = payload,
             all = violations.reduce(
-                            (coll, v) => {
-                                v.timestamp = Date.parse(v.created) || 0;
-                                return coll.set(String(v.id), Immutable.fromJS(v));
-                            },
-                            state.get('violations'));
+                (coll, v) => {
+                    v.timestamp = Date.parse(v.created) || 0;
+                    return coll.set(String(v.id), Immutable.fromJS(v));
+                },
+                state.get('violations'));
         state = state.set('violations', all);
         if (metadata) {
-            state = state.set('pagingInfo', Immutable.Map({ last: metadata.last }));
+            state = state.set('pagingInfo', Immutable.Map({
+                last: metadata.last
+            }));
         }
         return state;
     } else if (type === Types.DELETE_VIOLATIONS) {
@@ -35,9 +41,7 @@ function FullstopStore(state, action) {
     } else if (type === '@@INIT') {
         return Immutable.fromJS({
             violations: {},
-            pagingInfo: {
-                last: true
-            }
+            pagingInfo: DEFAULT_PAGING
         });
     }
     return state;
