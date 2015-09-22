@@ -1,4 +1,5 @@
 import React from 'react';
+import Gravatar from 'react-gravatar';
 import Icon from 'react-fa';
 import Timestamp from 'react-time';
 import {DATE_FORMAT} from 'common/src/config';
@@ -20,34 +21,46 @@ class ApprovalCard extends React.Component {
     }
 
     render() {
-        let {approval} = this.props,
+        let {approval, userinfo} = this.props,
             {open} = this.state;
         return <div
                     onClick={this.toggle.bind(this)}
-                    className='approvalCard'>
+                    className={'approvalCard' + (approval.notes ? ' has-notes' : '')}>
                     <header>
+
                         <div className='grid'>
-                            <span className='approvalCard-approvalType grid-col'>
-                                <Icon name='check' /> {approval.approval_type}
-                            </span>
-                            <span className='grid-col'>from <strong>{approval.user_id}</strong></span>
-                            {approval.notes ?
-                                <span>
-                                    <Icon name='comment' />
-                                </span>
-                                :
-                                null}
+                            <div className='grid-col col-1-3 approvalCard-approver'>
+                                <Gravatar
+                                    size={75}
+                                    email={userinfo.email} />
+                                <div>
+                                    {userinfo ? userinfo.name.split(' ')[0] : approval.user_id}
+                                </div>
+                            </div>
+                            <div className='grid-col col-2-3 approvalCard-meta'>
+                                <small className='approvalCard-time'>
+                                    <Icon
+                                        fixedWidth
+                                        name='calendar-o'/> <Timestamp
+                                            format={DATE_FORMAT}
+                                            value={approval.timestamp} />
+                                </small>
+                                {approval.notes ?
+                                    <div className='approvalCard-notes-icon'>
+                                        <Icon fixedWidth name='comment' /> Click to see approval notes
+                                    </div> :
+                                    null}
+                                <div className='approvalCard-approvalType'>
+                                    <Icon fixedWidth name='check' /> {approval.approval_type}
+                                </div>
+                            </div>
                         </div>
                     </header>
                     {open ?
                         <div className='approvalCard-details'>
-                            <div className='approvalCard-time'>
-                                on <Timestamp
-                                        format={DATE_FORMAT}
-                                        value={approval.timestamp} />
-                            </div>
                             {approval.notes ?
                                 <div className='approvalCard-notes'>
+                                    <h4>Notes</h4>
                                     <Markdown src={approval.notes} />
                                 </div>
                                 :
@@ -61,6 +74,7 @@ class ApprovalCard extends React.Component {
 }
 ApprovalCard.displayName = 'ApprovalCard';
 ApprovalCard.propTypes = {
-    approval: React.PropTypes.object.isRequired
+    approval: React.PropTypes.object.isRequired,
+    userinfo: React.PropTypes.object.isRequired
 };
 export default ApprovalCard;

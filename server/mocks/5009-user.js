@@ -5,6 +5,10 @@ var users = {
     npiccolotto: {
         email: 'nikolaus.piccolotto@zalando.de',
         name: 'Nikolaus Piccolotto'
+    },
+    tobi: {
+        email: 'tobias.sarnowski@zalando.de',
+        name: 'Tobias Sarnowski'
     }
 };
 
