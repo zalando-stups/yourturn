@@ -18,8 +18,7 @@ function fetchAllScopes() {
             .get(`${Services.essentials.url}${Services.essentials.root}`)
             .accept('json')
             .oauth(Provider, RequestConfig)
-            .exec(saveRoute)
-            .then(response => Promise.all(response.body.map(res => fetchScopes(res.id))));
+            .exec(saveRoute);
 }
 
 function saveResource(resourceId, resource) {
@@ -109,7 +108,8 @@ function fetchScopeApplications(resourceId, scopeId) {
 class EssentialsActions extends Actions {
 
     fetchAllScopes() {
-        return fetchAllScopes();
+        return fetchAllScopes()
+                .then(response => Promise.all(response.body.map(res => this.fetchScopes(res.id))));
     }
 
     fetchScopes(resourceId) {
