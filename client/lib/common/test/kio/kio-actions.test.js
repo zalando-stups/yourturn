@@ -1,5 +1,16 @@
 /* globals Mitm, expect */
-import KioActions from 'common/src/data/kio/kio-actions';
+import {
+    fetchApplications,
+    fetchApplication,
+    saveApplication,
+    saveApplicationCriticality,
+    fetchApplicationVersions,
+    fetchApplicationVersion,
+    saveApplicationVersion,
+    fetchApprovalTypes,
+    fetchApprovals,
+    saveApproval
+} from 'common/src/data/kio/kio-actions';
 
 const APP_ID = 'kio',
       VER_ID = '0.1';
@@ -10,13 +21,12 @@ function assertOAuthHeader(req) {
 }
 
 describe('The kio actions', () => {
-    var actions,
-        mitm;
+    var mitm;
 
     beforeEach(() => {
         mitm = Mitm();
-        actions = new KioActions();
     });
+
     afterEach(() => {
         mitm.disable();
     });
@@ -24,52 +34,52 @@ describe('The kio actions', () => {
     describe('should have oauth enabled', () => {
         it('#saveApplication', () => {
             mitm.on('request', assertOAuthHeader);
-            actions.saveApplication(APP_ID);
+            saveApplication(APP_ID);
         });
 
         it('#saveApplicationCriticality', () => {
             mitm.on('request', assertOAuthHeader);
-            actions.saveApplicationCriticality(APP_ID);
+            saveApplicationCriticality(APP_ID);
         });
 
         it('#fetchApplications', () => {
             mitm.on('request', assertOAuthHeader);
-            actions.fetchApplications();
+            fetchApplications();
         });
 
         it('#fetchApplication', () => {
             mitm.on('request', assertOAuthHeader);
-            actions.fetchApplication(APP_ID);
+            fetchApplication(APP_ID);
         });
 
         it('#fetchApplicationVersions', () => {
             mitm.on('request', assertOAuthHeader);
-            actions.fetchApplicationVersions(APP_ID);
+            fetchApplicationVersions(APP_ID);
         });
 
         it('#fetchApplicationVersion', () => {
             mitm.on('request', assertOAuthHeader);
-            actions.fetchApplicationVersion(APP_ID, VER_ID);
+            fetchApplicationVersion(APP_ID, VER_ID);
         });
 
         it('#saveApplicationVersion', () => {
             mitm.on('request', assertOAuthHeader);
-            actions.saveApplicationVersion(APP_ID, VER_ID, {});
+            saveApplicationVersion(APP_ID, VER_ID, {});
         });
 
         it('#fetchApprovalTypes', () => {
             mitm.on('request', assertOAuthHeader);
-            actions.fetchApprovalTypes(APP_ID);
+            fetchApprovalTypes(APP_ID);
         });
 
         it('#fetchApprovals', () => {
             mitm.on('request', assertOAuthHeader);
-            actions.fetchApprovals(APP_ID, VER_ID);
+            fetchApprovals(APP_ID, VER_ID);
         });
 
         it('#saveApproval', () => {
             mitm.on('request', assertOAuthHeader);
-            actions.saveApproval(APP_ID, VER_ID, {});
+            saveApproval(APP_ID, VER_ID, {});
         });
     });
 });

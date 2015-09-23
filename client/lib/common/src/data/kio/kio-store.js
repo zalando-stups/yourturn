@@ -1,21 +1,24 @@
 import {Store} from 'flummox';
-import Immutable from 'immutable';
-import fuzzysearch from 'fuzzysearch';
-import {Pending, Failed} from 'common/src/fetch-result';
+import * as Getter from './kio-getter';
+import Types from './kio-types';
+import {combineReducers} from 'redux';
+import applications from './application-store';
+import versions from './version-store';
+import approvals from './approval-store';
 
-class KioStore extends Store {
+var KioStore = combineReducers({
+    applications,
+    versions,
+    approvals
+});
+
+class KioStoreWrapper extends Store {
     constructor(flux) {
         super();
 
         const kioActions = flux.getActions('kio');
 
-        this.state = {
-            fetchApplications: false, // false = nothing's going on. else fetchresult.
-            applications: Immutable.Map(),
-            versions: Immutable.Map(),
-            approvals: Immutable.Map(),
-            approvalTypes: Immutable.Map()
-        };
+        this._empty();
 
         this.registerAsync(
             kioActions.fetchApplications,
@@ -31,9 +34,9 @@ class KioStore extends Store {
 
         this.registerAsync(
             kioActions.fetchApplicationVersions,
-            this.beginFetchApplicationVersions,
+            null,
             this.receiveApplicationVersions,
-            this.failFetchApplications);
+            null);
 
         this.registerAsync(
             kioActions.fetchApplicationVersion,
@@ -43,9 +46,9 @@ class KioStore extends Store {
 
         this.registerAsync(
             kioActions.fetchApprovals,
-            this.beginFetchApprovals,
+            null,
             this.receiveApprovals,
-            this.failFetchApprovals);
+            null);
 
         this.register(
             kioActions.fetchApprovalTypes,
@@ -53,22 +56,19 @@ class KioStore extends Store {
     }
 
     beginFetchApplications() {
-        // only show loading indicator first time!
         this.setState({
-            fetchApplications: new Pending()
+            redux: KioStore(this.state.redux, {
+                type: Types.BEGIN_FETCH_APPLICATIONS
+            })
         });
     }
     failFetchApplications() {
         this.setState({
-            fetchApplications: new Failed()
+            redux: KioStore(this.state.redux, {
+                type: Types.FAIL_FETCH_APPLICATIONS
+            })
         });
     }
-
-    beginFetchApplicationVersions() { }
-    failFetchApplicationVersions() { }
-
-    beginFetchApprovals() { }
-    failFetchApprovals() { }
 
     /**
      * Replaces application with `id` with a Pending state.
@@ -77,7 +77,10 @@ class KioStore extends Store {
      */
     beginFetchApplication(id) {
         this.setState({
-            applications: this.state.applications.set(id, new Pending())
+            redux: KioStore(this.state.redux, {
+                type: Types.BEGIN_FETCH_APPLICATION,
+                payload: id
+            })
         });
     }
 
@@ -89,7 +92,10 @@ class KioStore extends Store {
      */
     beginFetchApplicationVersion(id, ver) {
         this.setState({
-            versions: this.state.versions.setIn([id, ver], new Pending())
+            redux: KioStore(this.state.redux, {
+                type: Types.BEGIN_FETCH_APPLICATION_VERSION,
+                payload: [id, ver]
+            })
         });
     }
 
@@ -101,7 +107,10 @@ class KioStore extends Store {
      */
     failFetchApplication(err) {
         this.setState({
-            applications: this.state.applications.set(err.id, new Failed(err))
+            redux: KioStore(this.state.redux, {
+                type: Types.FAIL_FETCH_APPLICATION,
+                payload: err
+            })
         });
     }
 
@@ -112,7 +121,10 @@ class KioStore extends Store {
      */
     failFetchApplicationVersion(err) {
         this.setState({
-            versions: this.state.versions.setIn([err.id, err.ver], new Failed(err))
+            redux: KioStore(this.state.redux, {
+                type: Types.FAIL_FETCH_APPLICATION_VERSION,
+                payload: err
+            })
         });
     }
 
@@ -123,7 +135,10 @@ class KioStore extends Store {
      */
     receiveApplication(app) {
         this.setState({
-            applications: this.state.applications.set(app.id, Immutable.Map(app))
+            redux: KioStore(this.state.redux, {
+                type: Types.RECEIVE_APPLICATION,
+                payload: app
+            })
         });
     }
 
@@ -133,29 +148,25 @@ class KioStore extends Store {
      * @param  {Array} apps
      */
     receiveApplications(apps) {
-        let newState = apps.reduce(
-                            (map, app) => map.set(app.id, Immutable.Map(app)),
-                            this.state.applications);
         this.setState({
-            applications: newState,
-            fetchApplications: false
+            redux: KioStore(this.state.redux, {
+                type: Types.RECEIVE_APPLICATIONS,
+                payload: apps
+            })
         });
     }
 
     /**
      * Adds application versions to store.
      *
-     * @param  {Array} versions
+     * @param  {Array} appVersions
      */
-    receiveApplicationVersions(versions) {
-        let newState = versions.reduce(
-                            (map, ver) => {
-                                ver.last_modified = Date.parse(ver.last_modified);
-                                return map.setIn([ver.application_id, ver.id], Immutable.Map(ver));
-                            },
-                            this.state.versions);
+    receiveApplicationVersions(appVersions) {
         this.setState({
-            versions: newState
+            redux: KioStore(this.state.redux, {
+                type: Types.RECEIVE_APPLICATION_VERSIONS,
+                payload: appVersions
+            })
         });
     }
 
@@ -168,150 +179,64 @@ class KioStore extends Store {
         this.receiveApplicationVersions([ver]);
     }
 
-
-    /**
-     * Returns all applications that are available (as in not Pending or Failed) RIGHT NAO!
-     *
-     * @param  {string} term Filters list of applications by names that contain term
-     * @return {Array} Available applications
-     */
-    getApplications(term) {
-        if (this.state.applications.getResult) {
-            return this.state.applications;
-        }
-
-        let availableApps = this.state.applications
-                                .valueSeq()
-                                .filter(app => !app.getResult)
-                                .filter(app => term ?
-                                                fuzzysearch(term.toLowerCase(), `${app.get('id').toLowerCase()} ${app.get('name').toLowerCase()} ${app.get('team_id').toLowerCase()}`) :
-                                                true)
-                                .sortBy(app => app.get('name').toLowerCase())
-                                .toJS();
-        return availableApps;
-    }
-
-    getApplicationsFetchStatus() {
-        return this.state.fetchApplications;
-    }
-
-    /**
-     * Returns the application with `id`. Does not care about its state, e.g. whether or not
-     * it's Pending or Failed. Returns null if there is no application with this id.
-     *
-     * @param  {String} id
-     * @return {object} The application with this id
-     */
-    getApplication(id) {
-        let app = this.state.applications.get(id);
-        return app ?
-                app.toJS() :
-                false;
-    }
-
-    /**
-     * Returns all versions for a given application
-     *
-     * @return {Array} Available versions
-     */
-    getApplicationVersions(id, filter) {
-        let versions = this.state
-                            .versions
-                            .get(id);
-        if (versions) {
-            return versions
-                        .valueSeq()
-                        .filter(v => !v.getResult)
-                        .filter(v => filter ?
-                                        fuzzysearch(filter, v.get('id')) :
-                                        true)
-                        .sortBy(v => v.get('last_modified'))
-                        .reverse()
-                        .toJS();
-        }
-        return [];
-    }
-
-
-    /**
-     * Returns the application version with `id`. Does not care about its state, e.g. whether or not
-     * it's Pending or Failed. Returns null if there is no version with this id.
-     *
-     * @param  {String} id
-     * @param  {String} ver
-     * @return {object} The application version with this id and ver
-     */
-    getApplicationVersion(id, ver) {
-        let version = this.state.versions.getIn([id, ver]);
-        return version ? version.toJS() : false;
-    }
-
-    getLatestApplicationVersion(id) {
-        let versions = this.getApplicationVersions(id);
-        return versions.length ? versions[0] : false;
-    }
-
-    receiveApprovals([applicationId, versionId, approvals]) {
-        function getKey(apr) {
-            return `${apr.user_id}.${apr.approved_at}.${apr.approval_type}`;
-        }
-
-        let newState = approvals.reduce(
-                            (app, approval) => {
-                                // convert to timestamp
-                                approval.timestamp = Date.parse(approval.approved_at);
-                                return app.set(getKey(approval), Immutable.Map(approval));
-                            },
-                            Immutable.Map());
+    receiveApprovals([applicationId, versionId, verApprovals]) {
         this.setState({
-            approvals: this.state.approvals.setIn([applicationId, versionId], newState)
+            redux: KioStore(this.state.redux, {
+                type: Types.RECEIVE_APPROVALS,
+                payload: [applicationId, versionId, verApprovals]
+            })
         });
     }
 
     receiveApprovalTypes([applicationId, approvalTypes]) {
         this.setState({
-            approvalTypes: this.state.approvalTypes.set(applicationId, Immutable.fromJS(approvalTypes))
+            redux: KioStore(this.state.redux, {
+                type: Types.RECEIVE_APPROVAL_TYPES,
+                payload: [applicationId, approvalTypes]
+            })
         });
     }
 
-    /**
-     * Returns all used approval types in versions of an application.
-     *
-     * @param  {String} applicationId ID of the application
-     * @return {Array}                The used approval types
-     */
+    getApplications(term) {
+        return Getter.getApplications(this.state.redux.applications, term);
+    }
+
+    getApplicationsFetchStatus() {
+        return Getter.getApplicationsFetchStatus(this.state.redux.applications);
+    }
+
+    getApplication(id) {
+        return Getter.getApplication(this.state.redux.applications, id);
+    }
+
+    getApplicationVersions(id, filter) {
+        return Getter.getApplicationVersions(this.state.redux.versions, id, filter);
+    }
+
+    getApplicationVersion(id, ver) {
+        return Getter.getApplicationVersion(this.state.redux.versions, id, ver);
+    }
+
+    getLatestApplicationVersion(id) {
+        return Getter.getLatestApplicationVersion(this.state.redux.versions, id);
+    }
+
     getApprovalTypes(applicationId) {
-        return this.state.approvalTypes.get(applicationId, []);
+        return Getter.getApprovalTypes(this.state.redux.approvals, applicationId);
     }
 
-    /**
-     * Returns approvals for an application version.
-     *
-     * @param  {String} applicationId ID of the application
-     * @param  {String} versionId     ID of the version
-     * @return {Array}                Approvals sorted by date asc
-     */
     getApprovals(applicationId, versionId) {
-        let approvals = this.state.approvals.getIn([applicationId, versionId]);
-        approvals = approvals ? approvals.valueSeq().toJS() : [];
-        return approvals.sort((a, b) => a.timestamp < b.timestamp ?
-                                            -1 :
-                                            b.timestamp < a.timestamp ?
-                                                1 : 0);
+        return Getter.getApprovals(this.state.redux.approvals, applicationId, versionId);
     }
-
 
     /**
      * Only for testing!
      */
     _empty() {
         this.setState({
-            applications: Immutable.Map(),
-            versions: Immutable.Map(),
-            approvals: Immutable.Map(),
-            approvalTypes: Immutable.Map()
+            redux: KioStore()
         });
     }
 }
 
-export default KioStore;
+export default KioStoreWrapper;

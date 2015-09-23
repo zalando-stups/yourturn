@@ -4,161 +4,214 @@ import request from 'common/src/superagent';
 import {Services} from 'common/src/data/services';
 import {Provider, RequestConfig, saveRoute} from 'common/src/oauth-provider';
 
+function fetchApplications() {
+    return request
+            .get(`${Services.kio.url}${Services.kio.root}`)
+            .accept('json')
+            .oauth(Provider, RequestConfig)
+            .exec(saveRoute)
+            .then(res => res.body);
+}
+
+function fetchApplication(id) {
+    return request
+            .get(`${Services.kio.url}${Services.kio.root}/${id}`)
+            .accept('json')
+            .oauth(Provider, RequestConfig)
+            .exec(saveRoute)
+            .then(res => res.body)
+            .catch(err => {
+                err.id = id;
+                throw err;
+            });
+}
+
+function saveApplication(id, app) {
+    let copy = _.extend({}, app);
+    // remove fields not liked by kio
+    copy.id = undefined;
+    copy.created = undefined;
+    copy.created_by = undefined;
+    copy.last_modified = undefined;
+    copy.last_modified_by = undefined;
+    copy.criticality_level = undefined;
+    return request
+            .put(`${Services.kio.url}${Services.kio.root}/${id}`)
+            .type('json')
+            .accept('json')
+            .send(copy)
+            .oauth(Provider, RequestConfig)
+            .exec(saveRoute)
+            .then(res => res.body)
+            .catch(err => {
+                err.id = id;
+                throw err;
+            });
+}
+
+function saveApplicationCriticality(id, criticality) {
+    return request
+            .put(`${Services.kio.url}${Services.kio.root}/${id}/criticality`)
+            .type('json')
+            .accept('json')
+            .send({
+                criticality_level: criticality
+            })
+            .oauth(Provider, RequestConfig)
+            .exec(saveRoute)
+            .then(res => res.body)
+            .catch(err => {
+                err.id = id;
+                throw err;
+            });
+}
+
+function fetchApplicationVersions(id) {
+    return request
+            .get(`${Services.kio.url}${Services.kio.root}/${id}/versions`)
+            .accept('json')
+            .oauth(Provider, RequestConfig)
+            .exec(saveRoute)
+            .then(res => res.body)
+            .catch(err => {
+                err.id = id;
+                throw err;
+            });
+}
+
+function fetchApplicationVersion(id, ver) {
+    return request
+            .get(`${Services.kio.url}${Services.kio.root}/${id}/versions/${ver}`)
+            .accept('json')
+            .oauth(Provider, RequestConfig)
+            .exec(saveRoute)
+            .then(res => res.body)
+            .catch(err => {
+                err.id = id;
+                err.ver = ver;
+                throw err;
+            });
+}
+
+function saveApplicationVersion(applicationId, versionId, version) {
+    let copy = _.extend({}, version);
+    copy.id = undefined;
+    return request
+            .put(`${Services.kio.url}${Services.kio.root}/${applicationId}/versions/${versionId}`)
+            .type('json')
+            .accept('json')
+            .send(copy)
+            .oauth(Provider, RequestConfig)
+            .exec(saveRoute)
+            .then(res => res.body)
+            .catch(err => {
+                err.applicationId = applicationId;
+                err.versionId = versionId;
+                throw err;
+            });
+}
+
+function fetchApprovalTypes(applicationId) {
+    return request
+            .get(`${Services.kio.url}${Services.kio.root}/${applicationId}/approvals`)
+            .accept('json')
+            .oauth(Provider, RequestConfig)
+            .exec(saveRoute)
+            .then(res => [
+                applicationId,
+                // specification, test, deploy and code change always have to be there
+                (res.body.concat(['SPECIFICATION', 'TEST', 'DEPLOY', 'CODE_CHANGE']))
+                    .filter((i, idx, arr) => arr.lastIndexOf(i) === idx)
+                    .sort()
+            ])
+            .catch(err => {
+                err.applicationId = applicationId;
+                throw err;
+            });
+}
+
+function fetchApprovals(applicationId, versionId) {
+    return request
+            .get(`${Services.kio.url}${Services.kio.root}/${applicationId}/versions/${versionId}/approvals`)
+            .accept('json')
+            .oauth(Provider, RequestConfig)
+            .exec(saveRoute)
+            .then(res => [applicationId, versionId, res.body])
+            .catch(err => {
+                err.applicationId = applicationId;
+                err.versionId = versionId;
+                throw err;
+            });
+}
+
+function saveApproval(applicationId, versionId, approval) {
+    return request
+            .post(`${Services.kio.url}${Services.kio.root}/${applicationId}/versions/${versionId}/approvals`)
+            .type('json')
+            .accept('json')
+            .send(approval)
+            .oauth(Provider, RequestConfig)
+            .exec(saveRoute)
+            .then(res => res.body)
+            .catch(err => {
+                err.applicationId = applicationId;
+                err.versionId = versionId;
+                throw err;
+            });
+}
+
+export {
+    fetchApplications,
+    fetchApplication,
+    saveApplication,
+    saveApplicationCriticality,
+    fetchApplicationVersions,
+    fetchApplicationVersion,
+    saveApplicationVersion,
+    fetchApprovalTypes,
+    fetchApprovals,
+    saveApproval
+};
+
 class KioActions extends Actions {
     fetchApplications() {
-        return request
-                .get(`${Services.kio.url}${Services.kio.root}`)
-                .accept('json')
-                .oauth(Provider, RequestConfig)
-                .exec(saveRoute)
-                .then(res => res.body);
+        return fetchApplications();
     }
 
     fetchApplication(id) {
-        return request
-                .get(`${Services.kio.url}${Services.kio.root}/${id}`)
-                .accept('json')
-                .oauth(Provider, RequestConfig)
-                .exec(saveRoute)
-                .then(res => res.body)
-                .catch(err => {
-                    err.id = id;
-                    throw err;
-                });
+        return fetchApplication(id);
     }
 
     saveApplication(id, app) {
-        let copy = _.extend({}, app);
-        // remove fields not liked by kio
-        copy.id = undefined;
-        copy.created = undefined;
-        copy.created_by = undefined;
-        copy.last_modified = undefined;
-        copy.last_modified_by = undefined;
-        copy.criticality_level = undefined;
-        return request
-                .put(`${Services.kio.url}${Services.kio.root}/${id}`)
-                .type('json')
-                .accept('json')
-                .send(copy)
-                .oauth(Provider, RequestConfig)
-                .exec(saveRoute)
-                .then(res => res.body)
-                .catch(err => {
-                    err.id = id;
-                    throw err;
-                });
+        return saveApplication(id, app);
     }
 
     saveApplicationCriticality(id, criticality) {
-        return request
-                .put(`${Services.kio.url}${Services.kio.root}/${id}/criticality`)
-                .type('json')
-                .accept('json')
-                .send({
-                    criticality_level: criticality
-                })
-                .oauth(Provider, RequestConfig)
-                .exec(saveRoute)
-                .then(res => res.body)
-                .catch(err => {
-                    err.id = id;
-                    throw err;
-                });
+        return saveApplicationCriticality(id, criticality);
     }
 
     fetchApplicationVersions(id) {
-        return request
-                .get(`${Services.kio.url}${Services.kio.root}/${id}/versions`)
-                .accept('json')
-                .oauth(Provider, RequestConfig)
-                .exec(saveRoute)
-                .then(res => res.body)
-                .catch(err => {
-                    err.id = id;
-                    throw err;
-                });
+        return fetchApplicationVersions(id);
     }
 
     fetchApplicationVersion(id, ver) {
-        return request
-                .get(`${Services.kio.url}${Services.kio.root}/${id}/versions/${ver}`)
-                .accept('json')
-                .oauth(Provider, RequestConfig)
-                .exec(saveRoute)
-                .then(res => res.body)
-                .catch(err => {
-                    err.id = id;
-                    err.ver = ver;
-                    throw err;
-                });
+        return fetchApplicationVersion(id, ver);
     }
 
     saveApplicationVersion(applicationId, versionId, version) {
-        let copy = _.extend({}, version);
-        copy.id = undefined;
-        return request
-                .put(`${Services.kio.url}${Services.kio.root}/${applicationId}/versions/${versionId}`)
-                .type('json')
-                .accept('json')
-                .send(copy)
-                .oauth(Provider, RequestConfig)
-                .exec(saveRoute)
-                .then(res => res.body)
-                .catch(err => {
-                    err.applicationId = applicationId;
-                    err.versionId = versionId;
-                    throw err;
-                });
+        return saveApplicationVersion(applicationId, versionId, version);
     };
 
     fetchApprovalTypes(applicationId) {
-        return request
-                .get(`${Services.kio.url}${Services.kio.root}/${applicationId}/approvals`)
-                .accept('json')
-                .oauth(Provider, RequestConfig)
-                .exec(saveRoute)
-                .then(res => [
-                    applicationId,
-                    // specification, test, deploy and code change always have to be there
-                    (res.body.concat(['SPECIFICATION', 'TEST', 'DEPLOY', 'CODE_CHANGE']))
-                        .filter((i, idx, arr) => arr.lastIndexOf(i) === idx)
-                        .sort()
-                ])
-                .catch(err => {
-                    err.applicationId = applicationId;
-                    throw err;
-                });
+        return fetchApprovalTypes(applicationId);
     }
 
     fetchApprovals(applicationId, versionId) {
-        return request
-                .get(`${Services.kio.url}${Services.kio.root}/${applicationId}/versions/${versionId}/approvals`)
-                .accept('json')
-                .oauth(Provider, RequestConfig)
-                .exec(saveRoute)
-                .then(res => [applicationId, versionId, res.body])
-                .catch(err => {
-                    err.applicationId = applicationId;
-                    err.versionId = versionId;
-                    throw err;
-                });
+        return fetchApprovals(applicationId, versionId);
     }
 
     saveApproval(applicationId, versionId, approval) {
-        return request
-                .post(`${Services.kio.url}${Services.kio.root}/${applicationId}/versions/${versionId}/approvals`)
-                .type('json')
-                .accept('json')
-                .send(approval)
-                .oauth(Provider, RequestConfig)
-                .exec(saveRoute)
-                .then(res => res.body)
-                .catch(err => {
-                    err.applicationId = applicationId;
-                    err.versionId = versionId;
-                    throw err;
-                });
+        return saveApproval(applicationId, versionId, approval);
     }
 }
 
