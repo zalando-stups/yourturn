@@ -1,16 +1,39 @@
 import {Store} from 'flummox';
 import Immutable from 'immutable';
 import {Pending, Failed} from 'common/src/fetch-result';
+import Types from './mint-types';
+import * as Getter from './mint-getter';
 
-class MintStore extends Store {
+function MintStore(state = Immutable.Map(), action) {
+    if (!action) {
+        return state;
+    }
+
+    let {type, payload} = action;
+
+    if (type === Types.BEGIN_FETCH_OAUTH_CONFIG) {
+        return state.set(payload, new Pending());
+    } else if (type === Types.FAIL_FETCH_OAUTH_CONFIG) {
+        return state.set(payload.id, new Failed(payload));
+    } else if (type === Types.RECEIVE_OAUTH_CONFIG) {
+        let [applicationId, config] = payload;
+        return state.set(applicationId, Immutable.fromJS(config));
+    }
+
+    return state;
+}
+
+export {
+    MintStore
+};
+
+class MintStoreWrapper extends Store {
     constructor(flux) {
         super();
 
         const mintActions = flux.getActions('mint');
 
-        this.state = {
-            applications: Immutable.Map()
-        };
+        this._empty();
 
         this.registerAsync(
             mintActions.fetchOAuthConfig,
@@ -26,7 +49,10 @@ class MintStore extends Store {
      */
     beginFetchOAuthConfig(appId) {
         this.setState({
-            applications: this.state.applications.set(appId, new Pending())
+            redux: MintStore(this.state.redux, {
+                type: Types.BEGIN_FETCH_OAUTH_CONFIG,
+                payload: appId
+            })
         });
     }
 
@@ -38,7 +64,10 @@ class MintStore extends Store {
      */
     failFetchOAuthConfig(err) {
         this.setState({
-            applications: this.state.applications.set(err.id, new Failed(err))
+            redux: MintStore(this.state.redux, {
+                type: Types.FAIL_FETCH_OAUTH_CONFIG,
+                payload: err
+            })
         });
     }
 
@@ -47,19 +76,15 @@ class MintStore extends Store {
      */
     receiveOAuthConfig([applicationId, config]) {
         this.setState({
-            applications: this.state.applications.set(applicationId, Immutable.fromJS(config))
+            redux: MintStore(this.state.redux, {
+                type: Types.RECEIVE_OAUTH_CONFIG,
+                payload: [applicationId, config]
+            })
         });
     }
 
-    /**
-     * Returns OAuth configuration for application with `id`. Empty config otherwise.
-     *
-     * @param  {String} applicationId ID of the application
-     * @return {Object|false} Empty configuration if unavailable.
-     */
     getOAuthConfig(applicationId) {
-        let config = this.state.applications.get(applicationId);
-        return config ? config.toJS() : false;
+        return Getter.getOAuthConfig(this.state.redux, applicationId);
     }
 
     /**
@@ -67,9 +92,9 @@ class MintStore extends Store {
      */
     _empty() {
         this.setState({
-            applications: Immutable.Map()
+            redux: MintStore()
         });
     }
 }
 
-export default MintStore;
+export default MintStoreWrapper;

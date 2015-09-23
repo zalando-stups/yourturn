@@ -1,5 +1,9 @@
 /* globals Mitm, expect */
-import MintActions from 'common/src/data/mint/mint-actions';
+import {
+    renewCredentials,
+    saveOAuthConfig,
+    fetchOAuthConfig
+} from 'common/src/data/mint/mint-actions';
 
 const APP_ID = 'kio';
 
@@ -9,12 +13,10 @@ function assertOAuthHeader(req) {
 }
 
 describe('The mint actions', () => {
-    var actions,
-        mitm;
+    var mitm;
 
     beforeEach(() => {
         mitm = Mitm();
-        actions = new MintActions();
     });
     afterEach(() => {
         mitm.disable();
@@ -23,12 +25,17 @@ describe('The mint actions', () => {
     describe('should have oauth enabled', () => {
         it('#fetchOAuthConfig', () => {
             mitm.on('request', assertOAuthHeader);
-            actions.fetchOAuthConfig(APP_ID);
+            fetchOAuthConfig(APP_ID);
         });
 
         it('#saveOAuthConfig', () => {
             mitm.on('request', assertOAuthHeader);
-            actions.saveOAuthConfig(APP_ID, {});
+            saveOAuthConfig(APP_ID, {});
+        });
+
+        it('#renewCredentials', () => {
+            mitm.on('request', assertOAuthHeader);
+            renewCredentials(APP_ID);
         });
     });
 });
