@@ -1,5 +1,9 @@
 /* globals Mitm, expect */
-import FullstopActions from 'common/src/data/fullstop/fullstop-actions';
+import {
+    fetchViolations,
+    fetchViolation,
+    resolveViolation
+} from 'common/src/data/fullstop/fullstop-actions';
 
 function assertOAuthHeader(req) {
     expect(req.headers.authorization).to.be.defined;
@@ -7,13 +11,12 @@ function assertOAuthHeader(req) {
 }
 
 describe('The fullstop actions', () => {
-    var actions,
-        mitm;
+    var mitm;
 
     beforeEach(() => {
         mitm = Mitm();
-        actions = new FullstopActions();
     });
+
     afterEach(() => {
         mitm.disable();
     });
@@ -21,17 +24,17 @@ describe('The fullstop actions', () => {
     describe('should have oauth enabled', () => {
         it('#fetchViolations', () => {
             mitm.on('request', assertOAuthHeader);
-            actions.fetchViolations([]);
+            fetchViolations([]);
         });
 
         it('#fetchViolation', () => {
             mitm.on('request', assertOAuthHeader);
-            actions.fetchViolation(123);
+            fetchViolation(123);
         });
 
         it('#resolveViolation', () => {
             mitm.on('request', assertOAuthHeader);
-            actions.resolveViolation(1, '');
+            resolveViolation(1, '');
         });
     });
 });
