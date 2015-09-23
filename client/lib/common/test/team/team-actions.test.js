@@ -1,18 +1,16 @@
 /* globals Mitm, expect */
-import TeamActions from 'common/src/data/team/team-actions';
+import {fetchAccounts} from 'common/src/data/team/team-actions';
 
 function assertOAuthHeader(req) {
     expect(req.headers.authorization).to.be.defined;
     expect(req.headers.authorization).to.equal('Bearer access_token');
 }
 
-describe('The pierone actions', () => {
-    var actions,
-        mitm;
+describe('The team actions', () => {
+    var mitm;
 
     beforeEach(() => {
         mitm = Mitm();
-        actions = new TeamActions();
     });
 
     afterEach(() => {
@@ -22,7 +20,7 @@ describe('The pierone actions', () => {
     describe('should have oauth enabled', () => {
         it('#fetchAccounts', () => {
             mitm.on('request', assertOAuthHeader);
-            actions.fetchAccounts();
+            fetchAccounts();
         });
     });
 });
