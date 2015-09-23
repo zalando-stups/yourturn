@@ -1,6 +1,6 @@
 /* global expect */
 
-import Immutable from 'Immutable';
+import Immutable from 'immutable';
 import {getUserInfo} from 'common/src/data/user/user-getter';
 
 describe('The user getter', () => {
