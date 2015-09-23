@@ -1,7 +1,27 @@
 import {Store} from 'flummox';
 import Immutable from 'immutable';
+import Types from './team-types';
+import * as Getter from './team-getter';
 
-class TeamStore extends Store {
+function TeamStore(state = Immutable.List(), action) {
+    if (!action) {
+        return state;
+    }
+
+    let {type, payload} = action;
+
+    if (type === Types.RECEIVE_ACCOUNTS) {
+        return Immutable.fromJS(payload);
+    }
+
+    return state;
+}
+
+export {
+    TeamStore as TeamStore
+};
+
+class TeamStoreWrapper extends Store {
     constructor(flux) {
         super();
 
@@ -18,21 +38,22 @@ class TeamStore extends Store {
 
     receiveAccounts(accounts) {
         this.setState({
-            accounts: Immutable.fromJS(accounts)
+            redux: TeamStore(this.state.redux, {
+                type: Types.RECEIVE_ACCOUNTS,
+                payload: accounts
+            })
         });
     }
 
     getAccounts() {
-        return this.state.accounts
-                .sortBy(a => a.get('name').toLowerCase())
-                .toJS();
+        return Getter.getAccounts(this.state.redux);
     }
 
     _empty() {
         this.setState({
-            accounts: Immutable.List()
+            redux: TeamStore()
         });
     }
 }
 
-export default TeamStore;
+export default TeamStoreWrapper;

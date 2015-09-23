@@ -1,6 +1,7 @@
 /* globals expect */
-import TeamStore from 'common/src/data/team/team-store';
+import TeamStoreWrapper, {TeamStore} from 'common/src/data/team/team-store';
 import TeamActions from 'common/src/data/team/team-actions';
+import Types from 'common/src/data/team/team-types';
 import {Flummox} from 'flummox';
 
 const ACCOUNTS = [{
@@ -27,9 +28,20 @@ class MockFlux extends Flummox {
         super();
 
         this.createActions('team', TeamActions);
-        this.createStore('team', TeamStore, this);
+        this.createStore('team', TeamStoreWrapper, this);
     }
 }
+
+describe('The team redux store', () => {
+    it('should receive accounts', () => {
+        let state = TeamStore();
+        state = TeamStore(state, {
+            type: Types.RECEIVE_ACCOUNTS,
+            payload: ACCOUNTS
+        });
+        expect(state.count()).to.equal(ACCOUNTS.length);
+    });
+});
 
 describe('The team store', () => {
     var store,

@@ -2,15 +2,15 @@
 // import * as Type from './notification-types';
 import {Actions} from 'flummox';
 
-function _addNotification(message, type) {
+function addNotification(message, type) {
     return [message, type];
 }
 
-function _removeNotification(id) {
+function removeNotification(id) {
     return id;
 }
 
-function _removeNotificationsOlderThan(ms) {
+function removeNotificationsOlderThan(ms) {
     return ms;
 }
 
@@ -18,15 +18,15 @@ function _removeNotificationsOlderThan(ms) {
 class NotificationActions extends Actions {
 
     addNotification(message, type) {
-        return _addNotification(message, type);
+        return addNotification(message, type);
     }
 
     removeNotification(id) {
-        return _removeNotification(id);
+        return removeNotification(id);
     }
 
     removeNotificationsOlderThan(ms) {
-        return _removeNotificationsOlderThan(ms);
+        return removeNotificationsOlderThan(ms);
     }
 }
 
@@ -36,8 +36,8 @@ export default NotificationActions;
 //     removeNotification = createAction(Type.REMOVE),
 //     removeNotificationsOlderThan = createAction(Type.REMOVE_OLD);
 
-// export {
-//     addNotification as addNotification,
-//     removeNotification as removeNotification,
-//     removeNotificationsOlderThan as removeNotificationsOlderThan
-// };
+export {
+    addNotification as addNotification,
+    removeNotification as removeNotification,
+    removeNotificationsOlderThan as removeNotificationsOlderThan
+};
