@@ -102,7 +102,7 @@ class EssentialsStoreWrapper extends Store {
     /**
      * Receives resources and saves them into the store.
      *
-     * @param  {Array} resources The resources to save.
+     * @param {Array} res The resources to save.
      */
     receiveResources(res) {
         this.setState({

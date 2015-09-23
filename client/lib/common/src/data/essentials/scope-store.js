@@ -23,9 +23,9 @@ function ScopeStore(state = Immutable.Map(), action) {
     } else if (type === Types.RECEIVE_SCOPES) {
         let [resourceId, scopes] = payload;
         return scopes.reduce((map, scp) => {
-                        scp.resource_type_id = resourceId;
-                        return map.setIn([resourceId, scp.id], Immutable.fromJS(scp));
-                    }, state);
+            scp.resource_type_id = resourceId;
+            return map.setIn([resourceId, scp.id], Immutable.fromJS(scp));
+        }, state);
     }
 
     return state;
