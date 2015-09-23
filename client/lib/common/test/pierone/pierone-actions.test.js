@@ -1,5 +1,5 @@
 /* globals Mitm, expect */
-import PieroneActions from 'common/src/data/pierone/pierone-actions';
+import {fetchScmSource, fetchTags} from 'common/src/data/pierone/pierone-actions';
 
 const TEAM = 'stups',
     ARTIFACT = 'kio',
@@ -11,12 +11,10 @@ function assertOAuthHeader(req) {
 }
 
 describe('The pierone actions', () => {
-    var actions,
-        mitm;
+    var mitm;
 
     beforeEach(() => {
         mitm = Mitm();
-        actions = new PieroneActions();
     });
     afterEach(() => {
         mitm.disable();
@@ -25,12 +23,12 @@ describe('The pierone actions', () => {
     describe('should have oauth enabled', () => {
         it('#fetchScmSource', () => {
             mitm.on('request', assertOAuthHeader);
-            actions.fetchScmSource(TEAM, ARTIFACT, TAG);
+            fetchScmSource(TEAM, ARTIFACT, TAG);
         });
 
         it('#fetchTags', () => {
             mitm.on('request', assertOAuthHeader);
-            actions.fetchTags(TEAM, ARTIFACT);
+            fetchTags(TEAM, ARTIFACT);
         });
     });
 });

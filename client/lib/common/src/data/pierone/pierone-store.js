@@ -1,8 +1,44 @@
 import {Store} from 'flummox';
 import Immutable from 'immutable';
 import {Pending, Failed} from 'common/src/fetch-result';
+import Types from './pierone-types';
+import * as Getter from './pierone-getter';
 
-class PieroneStore extends Store {
+function PieroneStore(state = Immutable.fromJS({
+    scmSources: {},
+    tags: {}
+}), action) {
+    if (!action) {
+        return state;
+    }
+
+    let {type, payload} = action;
+
+    if (type === Types.BEGIN_FETCH_SCM_SOURCE) {
+        let [team, artifact, tag] = payload;
+        return state.setIn(['scmSources', team, artifact, tag], new Pending());
+    } else if (type === Types.FAIL_FETCH_SCM_SOURCE) {
+        let {team, artifact, tag} = payload;
+        if (payload.status === 404) {
+            return state.setIn(['scmSources', team, artifact, tag], false);
+        }
+        return state.setIn(['scmSources', team, artifact, tag], new Failed(payload));
+    } else if (type === Types.RECEIVE_SCM_SOURCE) {
+        let [team, artifact, tag, scmSource] = payload;
+        return state.setIn(['scmSources', team, artifact, tag], Immutable.fromJS(scmSource));
+    } else if (type === Types.RECEIVE_TAGS) {
+        let [team, artifact, tags] = payload;
+        return state.setIn(['tags', team, artifact], Immutable.fromJS(tags));
+    }
+
+    return state;
+}
+
+export {
+    PieroneStore as PieroneStore
+};
+
+class PieroneStoreWrapper extends Store {
     constructor(flux) {
         super();
 
@@ -18,22 +54,22 @@ class PieroneStore extends Store {
 
         this.registerAsync(
             pieroneActions.fetchTags,
-            this.beginFetchTags,
+            null,
             this.receiveTags,
-            this.failFetchTags);
+            null);
     }
-
-    beginFetchTags() { }
-    failFetchTags() { }
 
     receiveTags([team, artifact, tags]) {
         this.setState({
-            tags: this.state.tags.setIn([team, artifact], Immutable.fromJS(tags))
+            redux: PieroneStore(this.state.redux, {
+                type: Types.RECEIVE_TAGS,
+                payload: [team, artifact, tags]
+            })
         });
     }
 
     getTags(team, artifact) {
-        return this.state.tags.getIn([team, artifact], Immutable.List()).toJS();
+        return Getter.getTags(this.state.redux, team, artifact);
     }
 
     /**
@@ -45,7 +81,10 @@ class PieroneStore extends Store {
      */
     beginFetchScmSource(team, artifact, tag) {
         this.setState({
-            scmSources: this.state.scmSources.setIn([team, artifact, tag], new Pending())
+            redux: PieroneStore(this.state.redux, {
+                type: Types.BEGIN_FETCH_SCM_SOURCE,
+                payload: [team, artifact, tag]
+            })
         });
     }
 
@@ -56,20 +95,20 @@ class PieroneStore extends Store {
      * @param  {Error} err
      */
     failFetchScmSource(err) {
-        let {team, artifact, tag} = err;
-        if (err.status === 404) {
-            return this.setState({
-                scmSources: this.state.scmSources.setIn([team, artifact, tag], false)
-            });
-        }
         this.setState({
-            scmSources: this.state.scmSources.setIn([team, artifact, tag], new Failed(err))
+            redux: PieroneStore(this.state.redux, {
+                type: Types.FAIL_FETCH_SCM_SOURCE,
+                payload: err
+            })
         });
     }
 
     receiveScmSource([team, artifact, tag, scmSource]) {
         this.setState({
-            scmSources: this.state.scmSources.setIn([team, artifact, tag], Immutable.fromJS(scmSource))
+            redux: PieroneStore(this.state.redux, {
+                type: Types.RECEIVE_SCM_SOURCE,
+                payload: [team, artifact, tag, scmSource]
+            })
         });
     }
 
@@ -82,8 +121,7 @@ class PieroneStore extends Store {
      * @return {Object|false} scm-source JSON or false if not available
      */
     getScmSource(team, artifact, tag) {
-        let exists = this.state.scmSources.getIn([team, artifact, tag]);
-        return exists ? exists.toJS() : false;
+        return Getter.getScmSource(this.state.redux, team, artifact, tag);
     }
 
     /**
@@ -91,10 +129,9 @@ class PieroneStore extends Store {
      */
     _empty() {
         this.state = {
-            scmSources: Immutable.Map(),
-            tags: Immutable.Map()
+            redux: PieroneStore()
         };
     }
 }
 
-export default PieroneStore;
+export default PieroneStoreWrapper;
