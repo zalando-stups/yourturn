@@ -1,19 +1,29 @@
 import {Store} from 'flummox';
-import Immutable from 'immutable';
-import {Pending, Failed} from 'common/src/fetch-result';
-import fuzzy from 'fuzzysearch';
+import Types from './essentials-types';
+import * as Getter from './essentials-getter';
 
-class EssentialsStore extends Store {
+import {combineReducers} from 'redux';
+import resources from './resource-store';
+import scopes from './scope-store';
+import scopeApps from './application-store';
+
+var EssentialsStore = combineReducers({
+    resources,
+    scopes,
+    scopeApps
+});
+
+export {
+    EssentialsStore
+};
+
+class EssentialsStoreWrapper extends Store {
     constructor(flux) {
         super();
 
         const essentialsActions = flux.getActions('essentials');
 
-        this.state = {
-            resources: Immutable.Map(),
-            scopes: Immutable.Map(),
-            applications: Immutable.Map()
-        };
+        this._empty();
 
         this.registerAsync(
             essentialsActions.fetchResource,
@@ -23,9 +33,9 @@ class EssentialsStore extends Store {
 
         this.registerAsync(
             essentialsActions.fetchResources,
-            this.beginFetchResources,
+            null,
             this.receiveResources,
-            this.failFetchResources);
+            null);
 
         this.registerAsync(
             essentialsActions.fetchScope,
@@ -35,24 +45,16 @@ class EssentialsStore extends Store {
 
         this.registerAsync(
             essentialsActions.fetchScopes,
-            this.beginFetchScopes,
+            null,
             this.receiveScopes,
-            this.failFetchScopes);
+            null);
 
         this.registerAsync(
             essentialsActions.fetchScopeApplications,
-            this.beginFetchApplications,
+            null,
             this.receiveScopeApplications,
-            this.failFetchScopeApplications);
+            null);
     }
-
-    // intentionally left as noop for now
-    beginFetchResources() { }
-    failFetchResources() { }
-    beginFetchScopes() { }
-    failFetchScopes() { }
-    beginFetchScopeApplications() { }
-    failFetchScopeApplications() { }
 
     /**
      * Sets a Pending result for this resource.
@@ -61,7 +63,10 @@ class EssentialsStore extends Store {
      */
     beginFetchResource(resourceId) {
         this.setState({
-            resources: this.state.resources.set(resourceId, new Pending())
+            redux: EssentialsStore(this.state.redux, {
+                type: Types.BEGIN_FETCH_RESOURCE,
+                payload: resourceId
+            })
         });
     }
 
@@ -72,7 +77,39 @@ class EssentialsStore extends Store {
      */
     failFetchResource(err) {
         this.setState({
-            resources: this.state.resources.set(err.id, new Failed(err))
+            redux: EssentialsStore(this.state.redux, {
+                type: Types.FAIL_FETCH_RESOURCE,
+                payload: err
+            })
+        });
+    }
+
+    /**
+     * Receives a single resource and saves it. Other resources
+     * with the same ID are overwritten.
+     *
+     * @param  {object} resource The resource
+     */
+    receiveResource(resource) {
+        this.setState({
+            redux: EssentialsStore(this.state.redux, {
+                type: Types.RECEIVE_RESOURCE,
+                payload: resource
+            })
+        });
+    }
+
+    /**
+     * Receives resources and saves them into the store.
+     *
+     * @param  {Array} resources The resources to save.
+     */
+    receiveResources(res) {
+        this.setState({
+            redux: EssentialsStore(this.state.redux, {
+                type: Types.RECEIVE_RESOURCES,
+                payload: res
+            })
         });
     }
 
@@ -84,7 +121,10 @@ class EssentialsStore extends Store {
      */
     beginFetchScope(resourceId, scopeId) {
         this.setState({
-            scopes: this.state.scopes.setIn([resourceId, scopeId], new Pending())
+            redux: EssentialsStore(this.state.redux, {
+                type: Types.BEGIN_FETCH_SCOPE,
+                payload: [resourceId, scopeId]
+            })
         });
     }
 
@@ -95,35 +135,25 @@ class EssentialsStore extends Store {
      */
     failFetchScope(err) {
         this.setState({
-            scopes: this.state.scopes.set(err.id, new Failed(err))
+            redux: EssentialsStore(this.state.redux, {
+                type: Types.FAIL_FETCH_SCOPE,
+                payload: err
+            })
         });
     }
 
     /**
      * Receives scopes for a resource and saves them into the store.
      */
-    receiveScopes([resourceId, scopes]) {
-        let state = scopes
-                    .reduce((map, scp) => {
-                        scp.resource_type_id = resourceId;
-                        return map.setIn([resourceId, scp.id], Immutable.fromJS(scp));
-                    }, this.state.scopes);
+    receiveScopes([resourceId, scps]) {
         this.setState({
-            scopes: state
+            redux: EssentialsStore(this.state.redux, {
+                type: Types.RECEIVE_SCOPES,
+                payload: [resourceId, scps]
+            })
         });
     }
 
-    /**
-     * Receives resources and saves them into the store.
-     *
-     * @param  {Array} resources The resources to save.
-     */
-    receiveResources(resources) {
-        let state = resources.reduce((map, res) => map.set(res.id, Immutable.fromJS(res)), this.state.resources);
-        this.setState({
-            resources: state
-        });
-    }
 
     /**
      * Receives a single scope and saves it in the store.
@@ -133,17 +163,6 @@ class EssentialsStore extends Store {
         this.receiveScopes([resourceId, [scope]]);
     }
 
-    /**
-     * Receives a single resource and saves it. Other resources
-     * with the same ID are overwritten.
-     *
-     * @param  {object} resource The resource
-     */
-    receiveResource(resource) {
-        this.setState({
-            resources: this.state.resources.set(resource.id, Immutable.fromJS(resource))
-        });
-    }
 
     /**
      * Receives a list of applications that have a Scope
@@ -151,97 +170,35 @@ class EssentialsStore extends Store {
      */
     receiveScopeApplications([resourceId, scopeId, applications]) {
         this.setState({
-            applications: this.state.applications.set(`${resourceId}.${scopeId}`, Immutable.fromJS(applications))
+            redux: EssentialsStore(this.state.redux, {
+                type: Types.RECEIVE_SCOPE_APPLICATIONS,
+                payload: [resourceId, scopeId, applications]
+            })
         });
     }
 
-    /**
-     * Returns the resource with this ID, false otherwise.
-     *
-     * @param  {string} resourceId ID of the desired resource
-     * @return {obj|false} false if it doesn’t exist.
-     */
     getResource(resourceId) {
-        let resource = this.state.resources.get(resourceId);
-        return resource ? resource.toJS() : false;
+        return Getter.getResource(this.state.redux.resources, resourceId);
     }
 
-    /**
-     * Returns the IDs of all available resources.
-     *
-     * @return {array} An empty array if there are none.
-     */
     getResources(term) {
-        let lcTerm = term ? term.toLowerCase() : '';
-
-        return this.state.resources
-                .valueSeq()
-                .filter(r => !r.getResult)
-                .filter(r => term ? fuzzy(lcTerm, r.get('name').toLowerCase()) : true)
-                .sortBy(r => r.get('name').toLowerCase())
-                .toJS();
+        return Getter.getResources(this.state.redux.resources, term);
     }
 
-    /**
-     * Returns the scope with this ID for this resource.
-     * If there is no such resource or scope, false is
-     * returned.
-     *
-     * @param  {string} resourceId ID of the resource
-     * @param  {string} scopeId ID of the scope
-     * @return {obj|false} False if not found.
-     */
     getScope(resourceId, scopeId) {
-        let scopes = this.state.scopes.get(resourceId);
-        if (scopes) {
-            let scope = scopes.get(scopeId);
-            return scope ? scope.toJS() : false;
-        }
-        return false;
+        return Getter.getScope(this.state.redux.scopes, resourceId, scopeId);
     }
 
-    /**
-     * Returns all the scopes for this resource.
-     *
-     * @param  {string} resourceId ID of the resource
-     * @return {array} Empty array if there are not scopes.
-     */
     getScopes(resourceId) {
-        return this.state.scopes
-                    .get(resourceId, Immutable.Map())
-                    .valueSeq()
-                    .filter(s => !s.getResult)
-                    .sortBy(s => s.get('id').toLowerCase())
-                    .toJS();
+        return Getter.getScopes(this.state.redux.scopes, resourceId);
     }
 
-    /**
-     * Returns all scopes of all resource types.
-     *
-     * @return {Array} Scopes
-     */
     getAllScopes() {
-        return this.state.scopes
-                .valueSeq()
-                .map(s => s.valueSeq())
-                .flatten(true) // only one level
-                .filter(s => !s.getResult)
-                .sortBy(s => s.get('id').toLowerCase())
-                .toJS();
+        return Getter.getAllScopes(this.state.redux.scopes);
     }
 
-    /**
-     * Returns all the applications for a given scope.
-     *
-     * @param  {string} resourceId ID of the resource
-     * @param  {string} scopeId ID of the scope
-     * @return {array} Empty array if there are no applications with this scope.
-     */
     getScopeApplications(resourceId, scopeId) {
-        let apps = this.state.applications.get(`${resourceId}.${scopeId}`, Immutable.List());
-        return apps
-                .sortBy(a => a.get('id').toLowerCase())
-                .toJS();
+        return Getter.getScopeApplications(this.state.redux.scopeApps, resourceId, scopeId);
     }
 
     /**
@@ -249,11 +206,9 @@ class EssentialsStore extends Store {
      */
     _empty() {
         this.state = {
-            resources: Immutable.Map(),
-            scopes: Immutable.Map(),
-            applications: Immutable.Map()
+            redux: EssentialsStore()
         };
     }
 }
 
-export default EssentialsStore;
+export default EssentialsStoreWrapper;
