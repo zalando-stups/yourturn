@@ -1,8 +1,8 @@
 /* globals expect */
 import EssentialsStore from 'common/src/data/essentials/essentials-store';
 import EssentialsActions from 'common/src/data/essentials/essentials-actions';
-import FetchResult from 'common/src/fetch-result';
 import {Flummox} from 'flummox';
+import FetchResult from 'common/src/fetch-result';
 
 class MockFlux extends Flummox {
     constructor() {

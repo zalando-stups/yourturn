@@ -1,5 +1,14 @@
 /* globals Mitm, expect */
-import EssentialsActions from 'common/src/data/essentials/essentials-actions';
+import {
+    fetchAllScopes,
+    fetchScopes,
+    saveResource,
+    saveScope,
+    fetchResource,
+    fetchResources,
+    fetchScope,
+    fetchScopeApplications
+} from 'common/src/data/essentials/essentials-actions';
 
 const RES_ID = 'customer',
       SCP_ID = 'read';
@@ -10,12 +19,10 @@ function assertOAuthHeader(req) {
 }
 
 describe('The essentials actions', () => {
-    var actions,
-        mitm;
+    var mitm;
 
     beforeEach(() => {
         mitm = Mitm();
-        actions = new EssentialsActions();
     });
     afterEach(() => {
         mitm.disable();
@@ -24,42 +31,42 @@ describe('The essentials actions', () => {
     describe('should have oauth enabled', () => {
         it('#fetchAllScopes', () => {
             mitm.on('request', assertOAuthHeader);
-            actions.fetchAllScopes();
+            fetchAllScopes();
         });
 
         it('#fetchScopes', () => {
             mitm.on('request', assertOAuthHeader);
-            actions.fetchScopes(RES_ID);
+            fetchScopes(RES_ID);
         });
 
         it('#saveResource', () => {
             mitm.on('request', assertOAuthHeader);
-            actions.saveResource(RES_ID, {});
+            saveResource(RES_ID, {});
         });
 
         it('#saveScope', () => {
             mitm.on('request', assertOAuthHeader);
-            actions.saveScope(RES_ID, SCP_ID, {});
+            saveScope(RES_ID, SCP_ID, {});
         });
 
         it('#fetchResource', () => {
             mitm.on('request', assertOAuthHeader);
-            actions.fetchResource(RES_ID);
+            fetchResource(RES_ID);
         });
 
         it('#fetchResources', () => {
             mitm.on('request', assertOAuthHeader);
-            actions.fetchResources();
+            fetchResources();
         });
 
         it('#fetchScope', () => {
             mitm.on('request', assertOAuthHeader);
-            actions.fetchScope(RES_ID, SCP_ID);
+            fetchScope(RES_ID, SCP_ID);
         });
 
         it('#fetchScopeApplications', () => {
             mitm.on('request', assertOAuthHeader);
-            actions.fetchScopeApplications(RES_ID, SCP_ID);
+            fetchScopeApplications(RES_ID, SCP_ID);
         });
     });
 });

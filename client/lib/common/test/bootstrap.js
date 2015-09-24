@@ -1,7 +1,11 @@
 import './fetch-result.test';
 
+import './essentials/application-store.test';
 import './essentials/essentials-actions.test';
+import './essentials/essentials-getter.test';
 import './essentials/essentials-store.test';
+import './essentials/resource-store.test';
+import './essentials/scope-store.test';
 import './fullstop/fullstop-actions.test';
 import './fullstop/fullstop-getter.test';
 import './fullstop/fullstop-store.test';
