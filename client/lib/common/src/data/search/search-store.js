@@ -1,6 +1,8 @@
 import {Store} from 'flummox';
 import {Services, getLocalUrlForService} from 'common/src/data/services';
 import Immutable from 'immutable';
+import Types from './search-types';
+import * as Getter from './search-getter';
 
 function sortDesc(a, b) {
     return a < b ? 1 :
@@ -8,14 +10,41 @@ function sortDesc(a, b) {
                     0;
 }
 
-class SearchStore extends Store {
+function SearchStore(state = Immutable.Map(), action) {
+    if (!action) {
+        return state;
+    }
+
+    let {type, payload} = action;
+
+    if (type === Types.RECEIVE_SEARCH_RESULTS) {
+        let {_term, _source} = payload,
+            newState = Immutable
+                        .fromJS(payload)
+                        .map(res => res.set('_source', _source))
+                        .map(res => res.set('_url', getLocalUrlForService(_source, res.get(Services[_source].id))))
+                        .concat(state.get(_term, Immutable.List()))
+                        .sortBy(res => res.get('matched_rank'), sortDesc);
+        return state.set(_term, newState);
+    } else if (type === Types.CLEAR_SEARCH_RESULTS) {
+        return state.delete(payload);
+    }
+
+    return state;
+}
+
+export {
+    SearchStore
+};
+
+class SearchStoreWrapper extends Store {
     constructor(flux) {
         super();
 
         const searchActions = flux.getActions('search');
 
         this.state = {
-            results: Immutable.Map()
+            redux: SearchStore()
         };
 
         this.register(searchActions.clearSearchResults, this.clearSearchResults);
@@ -34,7 +63,10 @@ class SearchStore extends Store {
      */
     clearSearchResults(term) {
         this.setState({
-            results: this.state.results.delete(term)
+            redux: SearchStore(this.state.redux, {
+                type: Types.CLEAR_SEARCH_RESULTS,
+                payload: term
+            })
         });
     }
 
@@ -52,17 +84,11 @@ class SearchStore extends Store {
      * @param  {Array} resultSet
      */
     receiveSearchResultsFrom(resultSet) {
-        const TERM = resultSet._term,
-            SOURCE = resultSet._source;
-        let {results} = this.state,
-            newState = Immutable
-                        .fromJS(resultSet)
-                        .map(res => res.set('_source', SOURCE))
-                        .map(res => res.set('_url', getLocalUrlForService(SOURCE, res.get(Services[SOURCE].id))))
-                        .concat(results.get(TERM, Immutable.List()))
-                        .sortBy(res => res.get('matched_rank'), sortDesc);
         this.setState({
-            results: this.state.results.set(TERM, newState)
+            redux: SearchStore(this.state.redux, {
+                type: Types.RECEIVE_SEARCH_RESULTS,
+                payload: resultSet
+            })
         });
     }
 
@@ -73,8 +99,7 @@ class SearchStore extends Store {
      * @return {Array} Is empty if no results are available.
      */
     getSearchResults(term) {
-        let results = this.state.results.get(term);
-        return results ? results.toJS() : [];
+        return Getter.getSearchResults(this.state.redux, term);
     }
 
     /**
@@ -85,8 +110,8 @@ class SearchStore extends Store {
      * @return {Boolean} True if `term` is associated with the underlying hashmap.
      */
     hasResults(term) {
-        return this.state.results.has(term);
+        return Getter.hasResults(this.state.redux, term);
     }
 }
 
-export default SearchStore;
+export default SearchStoreWrapper;

@@ -1,6 +1,7 @@
 import React from 'react';
 import Icon from 'react-fa';
 import _ from 'lodash';
+import {Services} from 'common/src/data/services';
 import 'common/asset/less/yourturn/search.less';
 
 class Search extends React.Component {
@@ -27,7 +28,10 @@ class Search extends React.Component {
             if (this.store.hasResults(term)) {
                 this.actions.clearSearchResults(term);
             }
-            this.actions.fetchSearchResults(term);
+            Object
+                .keys(Services)
+                .filter(key => !!Services[key].searchQuery)
+                .forEach(key => this.actions.fetchSearchResultsFrom(key, term));
         }
     }
 
