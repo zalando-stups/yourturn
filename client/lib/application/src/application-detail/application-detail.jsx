@@ -127,6 +127,15 @@ class ApplicationDetail extends React.Component {
                                 <Icon name='circle-o' size='lg' /> Inactive
                             </span>
                         }
+                        {app.publicly_accessible ?
+                            <span
+                                title={'Root path can be accessed without credentials'}
+                                data-block='public-badge'
+                                className='applicationDetail-public'>
+                                <Icon name='globe' size='lg' /> Public
+                            </span>
+                            :
+                            null}
                         { app.subtitle }
                     </h4>
 

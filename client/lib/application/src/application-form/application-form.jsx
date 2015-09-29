@@ -26,6 +26,7 @@ class ApplicationForm extends React.Component {
         } else {
             this.state.app = {
                 active: true,
+                publicly_accessible: false,
                 team_id: cloudAccounts.length ? cloudAccounts[0].name : undefined
             };
         }
@@ -139,6 +140,19 @@ class ApplicationForm extends React.Component {
                                     onChange={this.update.bind(this, 'active', 'checked')}
                                     type='checkbox' /> Active application
                             </label>
+                            <small>Inactive applications cannot obtain OAuth credentials.</small>
+                        </div>
+                        <div className='form-group'>
+                            <label htmlFor='is-public'>
+                                <input
+                                    id='is-public'
+                                    data-block='is-public-checkbox'
+                                    name='yourturn_app_active'
+                                    checked={app.publicly_accessible}
+                                    onChange={this.update.bind(this, 'publicly_accessible', 'checked')}
+                                    type='checkbox' /> Is accessible without OAuth credentials
+                            </label>
+                            <small>If this application is meant to be publicly available on its root path (like YOUR TURN), i.e. does not return an error on <code>GET /</code>.</small>
                         </div>
                         <div className='form-group'>
                             <label htmlFor='team_id'>Team ID</label>
