@@ -19,7 +19,8 @@ var applications = {
         team_id: 'stups',
         id: 'kio',
         required_approvers: 2,
-        criticality_level: 3
+        criticality_level: 3,
+        publicly_accessible: true
     },
     pierone: {
         documentation_url: 'https://github.com/zalando-stups/pierone',
@@ -33,7 +34,8 @@ var applications = {
         team_id: 'stups',
         id: 'pierone',
         required_approvers: 2,
-        criticality_level: 2
+        criticality_level: 2,
+        publicly_accessible: true
     },
     tzjztjtzj: {
         id: 'tzjztjtzj',
@@ -43,7 +45,8 @@ var applications = {
         url: 'https://test2.example.org',
         scm_url: 'git://github.com/zalando-stups/test2',
         required_approvers: 2,
-        criticality_level: 2
+        criticality_level: 2,
+        publicly_accessible: true
     }
 };
 

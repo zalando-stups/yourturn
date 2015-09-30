@@ -50,7 +50,8 @@ describe('The application detail view', () => {
             name: 'Kio',
             active: true,
             team_id: 'stups',
-            id: ID
+            id: ID,
+            publicly_accessible: true
         };
         props = {
             flux: flux,
@@ -100,5 +101,11 @@ describe('The application detail view', () => {
         detail = render(Detail, props);
         TestUtils.findRenderedDOMComponentWithAttributeValue(detail, 'data-block', 'increase-criticality-button');
         TestUtils.findRenderedDOMComponentWithAttributeValue(detail, 'data-block', 'decrease-criticality-button');
+    });
+
+    it('should display a "is public" badge', () => {
+        flux.getStore(APP).receiveApplication(TEST_APP);
+        detail = render(Detail, props);
+        TestUtils.findRenderedDOMComponentWithAttributeValue(detail, 'data-block', 'public-badge');
     });
 });
