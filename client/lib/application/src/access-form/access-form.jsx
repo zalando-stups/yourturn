@@ -7,6 +7,12 @@ import ScopeList from 'application/src/scope-list.jsx';
 import EditableList from 'application/src/editable-list.jsx';
 import {constructLocalUrl} from 'common/src/data/services';
 import 'common/asset/less/application/access-form.less';
+import MINT_BUCKET_TEMPLATE from 'MINT_BUCKET_TEMPLATE';
+
+function getDefaultBucket(account) {
+    return MINT_BUCKET_TEMPLATE
+            .replace('${id}', account.id);
+}
 
 class AccessForm extends React.Component {
     constructor(props) {
@@ -27,6 +33,12 @@ class AccessForm extends React.Component {
     updateScopes(selectedScopes) {
         this.setState({
             scopes: selectedScopes
+        });
+    }
+
+    addBucket(bucket) {
+        this.setState({
+            s3_buckets: this.state.s3_buckets.concat([bucket])
         });
     }
 
@@ -82,6 +94,7 @@ class AccessForm extends React.Component {
             {kio, user, mint, essentials} = this.stores,
             allAppScopes = essentials.getAllScopes().filter(s => !s.is_resource_owner_scope),
             application = kio.getApplication(applicationId),
+            defaultAccount = user.getUserCloudAccounts().filter(a => a.name === application.team_id)[0],
             isOwnApplication = user.getUserCloudAccounts().some(t => t.name === application.team_id),
             oauth = mint.getOAuthConfig(applicationId);
 
@@ -116,13 +129,25 @@ class AccessForm extends React.Component {
                         <div className='form-group'>
                             <label>Credential Distribution</label>
                             <small>Activate credential distribution into these S3 buckets (<a href='http://docs.aws.amazon.com/AmazonS3/latest/dev/BucketRestrictions.html'>Naming Conventions</a>). A <code>*</code> indicates unsaved changes.</small>
+                            { this.state.s3_buckets.length === 0 && defaultAccount ?
+                                <div data-block='mint-bucket-suggestion'>
+                                    <small>Psst, your mint bucket is probably: </small>
+                                    <span
+                                        data-block='mint-bucket-add-suggestion'
+                                        onClick={this.addBucket.bind(this, getDefaultBucket(defaultAccount))}
+                                        className='btn btn-default btn-smaller'>
+                                        <Icon name='plus' /> <span>{getDefaultBucket(defaultAccount)}</span>
+                                    </span>
+                                </div>
+                                :
+                                null}
                             <EditableList
                                 placeholder='my-s3-bucket'
                                 itemName={'bucket'}
                                 minlength={3}
                                 maxlength={64}
                                 onChange={this.updateBuckets.bind(this)}
-                                items={oauth.s3_buckets}
+                                items={this.state.s3_buckets}
                                 markedItems={_.difference(this.state.s3_buckets, oauth.s3_buckets)}
                                 pattern={'^[a-z0-9][a-z0-9\-\.]*[a-z0-9]$'} />
                         </div>

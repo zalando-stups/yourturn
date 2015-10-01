@@ -10,7 +10,7 @@ import UserStore from 'common/src/data/user/user-store';
 import UserActions from 'common/src/data/user/user-actions';
 import AccessForm from 'application/src/access-form/access-form.jsx';
 
-const MOCK_KIO = {
+const OAUTH_KIO = {
     id: 'kio',
     username: 'kio-robot',
     last_password_rotation: '2015-01-01T12:42:41Z',
@@ -20,13 +20,21 @@ const MOCK_KIO = {
     has_problems: false,
     redirect_url: 'http://example.com/oauth',
     s3_buckets: [
-        'kio-stups-bucket'
     ],
     scopes: [{
         resource_type_id: 'customer',
         scope_id: 'read_all'
     }]
-};
+},
+APP_KIO = {
+    id: 'kio',
+    team_id: 'stups',
+    active: true
+},
+ACCOUNTS = [{
+    id: '123',
+    name: 'stups'
+}];
 
 class MockFlux extends Flummox {
     constructor() {
@@ -58,10 +66,13 @@ describe('The access control form view', () => {
         flux.getStore('essentials').receiveScopes(['customer', [{
             id: 'read_all'
         }]]);
-        flux.getStore('mint').receiveOAuthConfig(['kio', MOCK_KIO]);
+        flux.getStore('mint').receiveOAuthConfig(['kio', OAUTH_KIO]);
+        flux.getStore('kio').receiveApplication(APP_KIO);
+        flux.getStore('user').receiveAccounts(ACCOUNTS);
         actionSpy = sinon.stub(flux.getActions('mint'), 'saveOAuthConfig', () => {
             return Promise.resolve();
         });
+
         props = {
             flux: flux,
             applicationId: 'kio'
@@ -73,5 +84,26 @@ describe('The access control form view', () => {
         let f = TestUtils.findRenderedDOMComponentWithAttributeValue(form, 'data-block', 'form');
         TestUtils.Simulate.submit(f);
         expect(actionSpy.calledOnce).to.be.true;
+    });
+
+    it('should suggest a mint bucket', () => {
+        TestUtils.findRenderedDOMComponentWithAttributeValue(form, 'data-block', 'mint-bucket-suggestion');
+    });
+
+    it('should add suggested bucket to list', () => {
+        expect(() => {
+            TestUtils.findRenderedDOMComponentWithAttributeValue(form, 'data-block', 'editable-list-item');
+        }).to.throw;
+        let btn = TestUtils.findRenderedDOMComponentWithAttributeValue(form, 'data-block', 'mint-bucket-add-suggestion');
+        TestUtils.Simulate.click(btn);
+        TestUtils.findRenderedDOMComponentWithAttributeValue(form, 'data-block', 'editable-list-item');
+    });
+
+    it('should not suggest after adding', () => {
+        let btn = TestUtils.findRenderedDOMComponentWithAttributeValue(form, 'data-block', 'mint-bucket-add-suggestion');
+        TestUtils.Simulate.click(btn);
+        expect(() => {
+            TestUtils.findRenderedDOMComponentWithAttributeValue(form, 'data-block', 'mint-bucket-suggestion');
+        }).to.throw;
     });
 });
