@@ -18,6 +18,14 @@ class EditableList extends React.Component {
         });
     }
 
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.items.length !== this.props.items.length) {
+            this.setState({
+                items: nextProps.items
+            });
+        }
+    }
+
     addItem(evt) {
         evt.preventDefault();
         let regex = new RegExp(this.props.pattern);
