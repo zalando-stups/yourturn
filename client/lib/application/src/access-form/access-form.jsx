@@ -11,7 +11,7 @@ import MINT_BUCKET_TEMPLATE from 'MINT_BUCKET_TEMPLATE';
 
 function getDefaultBucket(account) {
     return MINT_BUCKET_TEMPLATE
-            .replace("${id}", account.id);
+            .replace('${id}', account.id);
 }
 
 class AccessForm extends React.Component {
@@ -130,9 +130,10 @@ class AccessForm extends React.Component {
                             <label>Credential Distribution</label>
                             <small>Activate credential distribution into these S3 buckets (<a href='http://docs.aws.amazon.com/AmazonS3/latest/dev/BucketRestrictions.html'>Naming Conventions</a>). A <code>*</code> indicates unsaved changes.</small>
                             { this.state.s3_buckets.length === 0 && defaultAccount ?
-                                <div>
+                                <div data-block='mint-bucket-suggestion'>
                                     <small>Psst, your mint bucket is probably: </small>
                                     <span
+                                        data-block='mint-bucket-add-suggestion'
                                         onClick={this.addBucket.bind(this, getDefaultBucket(defaultAccount))}
                                         className='btn btn-default btn-smaller'>
                                         <Icon name='plus' /> <span>{getDefaultBucket(defaultAccount)}</span>

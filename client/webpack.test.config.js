@@ -56,6 +56,7 @@ module.exports = {
         SERVICE_URL_TLD: 'YTENV_SERVICE_URL_TLD',
         RESOURCE_WHITELIST: 'YTENV_RESOURCE_WHITELIST',
         APPLICATION_WHITELIST: 'YTENV_APPLICATION_WHITELIST',
+        MINT_BUCKET_TEMPLATE: 'YTENV_MINT_BUCKET_TEMPLATE',
         // needed because otherwise two react instances
         // are running in tests and they trip each other up
         react: 'var React'
