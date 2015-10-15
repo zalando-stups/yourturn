@@ -44,9 +44,9 @@ function resolveViolation(violationId, message) {
             .then(res => res.body);
 }
 
-// function _deleteViolations() {
-//     return true;
-// }
+function deleteViolations() {
+    return true;
+}
 
 // for now wrap in flummox actions
 export default class FullstopActions extends Actions {
@@ -61,6 +61,10 @@ export default class FullstopActions extends Actions {
     fetchViolations() {
         return fetchViolations.apply(this, arguments);
     }
+
+    deleteViolations() {
+        return deleteViolations();
+    }
 }
 
 /* this is for later, when all is redux */
@@ -73,5 +77,6 @@ export default class FullstopActions extends Actions {
 export {
     fetchViolations as fetchViolations,
     fetchViolation as fetchViolation,
-    resolveViolation as resolveViolation
+    resolveViolation as resolveViolation,
+    deleteViolations as deleteViolations
 };
