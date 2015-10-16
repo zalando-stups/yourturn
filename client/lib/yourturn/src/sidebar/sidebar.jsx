@@ -9,7 +9,9 @@ class Sidebar extends React.Component {
     constructor(props) {
         super();
         this.actions = props.flux.getActions('user');
-        this.store = props.flux.getStore('user');
+        this.stores = {
+            user: props.flux.getStore('user')
+        };
         this.interval = false;
         this.state = {
             isTokenValid: true
@@ -30,7 +32,7 @@ class Sidebar extends React.Component {
     }
 
     updateExpiryDate() {
-        let tokeninfo = this.store.getTokenInfo(),
+        let tokeninfo = this.stores.user.getTokenInfo(),
             NOW = Date.now();
         this.setState({
             currentDate: NOW, // to enforce state change
@@ -51,8 +53,8 @@ class Sidebar extends React.Component {
     }
 
     render() {
-        let tokeninfo = this.store.getTokenInfo(),
-            userinfo = this.store.getUserInfo(),
+        let tokeninfo = this.stores.user.getTokenInfo(),
+            userinfo = this.stores.user.getUserInfo(),
             {router} = this.context;
         return <aside className='sidebar'>
                     <div className='sidebar-content'>
