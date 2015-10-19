@@ -3,14 +3,15 @@ function camelCase(word) {
 }
 
 module.exports = function(file, api) {
-    if (/^router/.test(file.path)) {
+    if (!/.jsx$/.test(file.path)) {
+        // ignore non-jsx
+        return;
+    }
+    if (/router/.test(file.path)) {
         // do not touch routers here
         return;
     }
-    if (/test.js$/.test(file.path)) {
-        // also do not touch tests
-        return;
-    }
+    
 
     let j = api.jscodeshift,
             result = j(file.source);
