@@ -8,9 +8,13 @@
 # Step 1
 
 * Leaf components expect their actions and stores via props.
-* Route Handlers pass flummox stores and actions down. (Update to React 0.14 first bc of context).
+* Route Handlers pass flummox stores and actions down.
+
+As of October 20th this is done.
+
+Leaf components are not completely unaware of their flux implementation, they just expect some methods available on their store and actions objects.
 
 # Step 2
 
-* Update Route Handlers to Redux.
-* Maybe figure out a way to run Flummox and Redux simultaneously. Otherwise just drop Flummox at this point.
+* Route handlers: Pass actual redux stores and bound action handlers down
+* Maybe figure out a way to run Flummox and Redux simultaneously.
