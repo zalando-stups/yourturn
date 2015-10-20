@@ -8,9 +8,9 @@ class Search extends React.Component {
     constructor(props) {
         super();
         this.stores = {
-            search: props.flux.getStore('search')
+            search: props.searchStore
         };
-        this.actions = props.flux.getActions('search');
+        this.actions = props.searchActions;
         this.state = {
             term: ''
         };

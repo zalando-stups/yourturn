@@ -31,7 +31,9 @@ class AppListHandler extends React.Component {
                     flux={FLUX}
                     connectToStores={['kio']}>
 
-                    <ApplicationList />
+                    <ApplicationList
+                        userStore={FLUX.getStore('user')}
+                        kioStore={FLUX.getStore("kio")} />
                 </FluxComponent>;
     }
 }
@@ -64,7 +66,11 @@ class CreateAppFormHandler extends React.Component {
                     connectToStores={['kio']}>
 
                     <ApplicationForm
-                        edit={false} />
+                        edit={false}
+                        notificationActions={FLUX.getActions('notification')}
+                        kioActions={FLUX.getActions('kio')}
+                        userStore={FLUX.getStore('user')}
+                        kioStore={FLUX.getStore("kio")} />
                 </FluxComponent>;
     }
 }
@@ -92,7 +98,11 @@ class EditAppFormHandler extends React.Component {
 
                     <ApplicationForm
                         edit={true}
-                        applicationId={this.props.params.applicationId} />
+                        applicationId={this.props.params.applicationId}
+                        notificationActions={FLUX.getActions('notification')}
+                        userStore={FLUX.getStore('user')}
+                        kioActions={FLUX.getActions('kio')}
+                        kioStore={FLUX.getStore("kio")} />
                 </FluxComponent>;
     }
 }
@@ -132,7 +142,13 @@ class AppDetailHandler extends React.Component {
                     connectToStores={['kio', 'pierone', 'twintip']}>
 
                     <ApplicationDetail
-                        applicationId={this.props.params.applicationId} />
+                        applicationId={this.props.params.applicationId}
+                        kioStore={FLUX.getStore("kio")}
+                        kioActions={FLUX.getActions('kio')}
+                        pieroneStore={FLUX.getStore("pierone")}
+                        twintipStore={FLUX.getStore("twintip")}
+                        notificationActions={FLUX.getActions('notification')}
+                        userStore={FLUX.getStore('user')} />
                 </FluxComponent>;
     }
 }
@@ -158,7 +174,13 @@ class OAuthFormHandler extends React.Component {
                     connectToStores={['mint', 'essentials', 'kio']}>
 
                     <OAuthForm
-                        applicationId={this.props.params.applicationId} />
+                        applicationId={this.props.params.applicationId}
+                        mintActions={FLUX.getActions("mint")}
+                        notificationActions={FLUX.getActions("notification")}
+                        mintStore={FLUX.getStore("mint")}
+                        userStore={FLUX.getStore("user")}
+                        essentialsStore={FLUX.getStore("essentials")}
+                        kioStore={FLUX.getStore("kio")} />
                 </FluxComponent>;
     }
 }
@@ -187,7 +209,13 @@ class AccessFormHandler extends React.Component {
                     connectToStores={['mint', 'essentials', 'kio']}>
 
                     <AccessForm
-                        applicationId={this.props.params.applicationId} />
+                        applicationId={this.props.params.applicationId}
+                        mintActions={FLUX.getActions("mint")}
+                        notificationActions={FLUX.getActions("notification")}
+                        mintStore={FLUX.getStore("mint")}
+                        userStore={FLUX.getStore("user")}
+                        essentialsStore={FLUX.getStore("essentials")}
+                        kioStore={FLUX.getStore("kio")} />
                 </FluxComponent>;
     }
 }
@@ -216,7 +244,8 @@ class VersionListHandler extends React.Component {
                     connectToStores={['kio']}>
 
                     <VersionList
-                        applicationId={this.props.params.applicationId} />
+                        applicationId={this.props.params.applicationId}
+                        kioStore={FLUX.getStore("kio")} />
                 </FluxComponent>;
     }
 }
@@ -244,7 +273,10 @@ class VersionDetailHandler extends React.Component {
 
                     <VersionDetail
                         applicationId={this.props.params.applicationId}
-                        versionId={this.props.params.versionId} />
+                        versionId={this.props.params.versionId}
+                        kioStore={FLUX.getStore("kio")}
+                        userStore={FLUX.getStore("user")}
+                        pieroneStore={FLUX.getStore("pierone")} />
                 </FluxComponent>;
     }
 }
@@ -286,7 +318,11 @@ class ApprovalFormHandler extends React.Component {
 
                     <ApprovalForm
                         applicationId={this.props.params.applicationId}
-                        versionId={this.props.params.versionId} />
+                        versionId={this.props.params.versionId}
+                        kioActions={FLUX.getActions("kio")}
+                        kioStore={FLUX.getStore("kio")}
+                        pieroneStore={FLUX.getStore("pierone")}
+                        userStore={FLUX.getStore("user")} />
                 </FluxComponent>;
     }
 }
@@ -324,7 +360,10 @@ class CreateVersionFormHandler extends React.Component {
                     <VersionForm
                         edit={false}
                         applicationId={this.props.params.applicationId}
-                        versionId={this.props.params.versionId} />
+                        versionId={this.props.params.versionId}
+                        kioActions={FLUX.getActions("kio")}
+                        notificationActions={FLUX.getActions("notification")}
+                        kioStore={FLUX.getStore("kio")} />
                 </FluxComponent>;
     }
 }
@@ -369,7 +408,10 @@ class EditVersionFormHandler extends React.Component {
                     <VersionForm
                         edit={true}
                         applicationId={this.props.params.applicationId}
-                        versionId={this.props.params.versionId} />
+                        versionId={this.props.params.versionId}
+                        notificationActions={FLUX.getActions("notification")}
+                        kioActions={FLUX.getActions("kio")}
+                        kioStore={FLUX.getStore("kio")} />
                 </FluxComponent>;
     }
 }

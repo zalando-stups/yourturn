@@ -18,10 +18,10 @@ class AccessForm extends React.Component {
     constructor(props) {
         super();
         this.stores = {
-            kio: props.flux.getStore('kio'),
-            mint: props.flux.getStore('mint'),
-            essentials: props.flux.getStore('essentials'),
-            user: props.flux.getStore('user')
+            kio: props.kioStore,
+            mint: props.mintStore,
+            essentials: props.essentialsStore,
+            user: props.userStore
         };
         let oauth = this.stores.mint.getOAuthConfig(props.applicationId);
         this.state = {
@@ -49,10 +49,7 @@ class AccessForm extends React.Component {
     }
 
     onRenewCredentials() {
-        return this
-                .props
-                .flux
-                .getActions('mint')
+        return this.props.mintActions
                 .renewCredentials(this.props.applicationId);
     }
 
@@ -72,17 +69,11 @@ class AccessForm extends React.Component {
         oauthConfig.scopes = ownerscopes.concat(appscopes);
         oauthConfig.s3_buckets = this.state.s3_buckets;
 
-        this
-        .props
-        .flux
-        .getActions('mint')
+        this.props.mintActions
         .saveOAuthConfig(applicationId, oauthConfig)
         .then(() => this.context.router.transitionTo(constructLocalUrl('application', [applicationId])))
         .catch(e => {
-            this
-            .props
-            .flux
-            .getActions('notification')
+            this.props.notificationActions
             .addNotification(
                 'Could not save OAuth client configuration for ' + applicationId + '. ' + e.message,
                 'error');

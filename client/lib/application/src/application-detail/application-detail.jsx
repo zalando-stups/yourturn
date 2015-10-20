@@ -24,14 +24,14 @@ class ApplicationDetail extends React.Component {
     constructor(props) {
         super();
         this.stores = {
-            user: props.flux.getStore('user'),
-            kio: props.flux.getStore('kio'),
-            twintip: props.flux.getStore('twintip')
+            user: props.userStore,
+            kio: props.kioStore,
+            twintip: props.twintipStore
         };
         this.state = {
             criticalityUpdatePending: false
         };
-        this.actions = props.flux.getActions('kio');
+        this.actions = props.kioActions;
     }
 
     onUpdateCriticality(app, amount) {
@@ -49,10 +49,7 @@ class ApplicationDetail extends React.Component {
             });
         })
         .catch(err => {
-            this
-            .props
-            .flux
-            .getActions('notification')
+            this.props.notificationActions
             .addNotification(
                 `Could not update criticality of ${app.name}. ${err}`,
                 'error'

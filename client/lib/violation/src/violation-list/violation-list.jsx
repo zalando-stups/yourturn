@@ -20,11 +20,11 @@ class ViolationList extends React.Component {
     constructor(props) {
         super();
         this.stores = {
-            fullstop: props.flux.getStore('fullstop'),
-            team: props.flux.getStore('team'),
-            user: props.flux.getStore('user')
+            fullstop: props.fullstopStore,
+            team: props.teamStore,
+            user: props.userStore
         };
-        this.actions = props.flux.getActions('fullstop');
+        this.actions = this.props.fullstopActions;
         this.state = {
             dispatching: false,
             currentPage: 0,

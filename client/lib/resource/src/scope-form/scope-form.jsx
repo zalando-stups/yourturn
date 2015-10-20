@@ -8,9 +8,9 @@ class ScopeForm extends React.Component {
         super();
         let {resourceId, scopeId, edit} = props;
         this.stores = {
-            essentials: props.flux.getStore('essentials')
+            essentials: props.essentialsStore
         };
-        this.actions = props.flux.getActions('essentials');
+        this.actions = this.props.essentialsActions;
         this.state = {
             scope: edit ? this.stores.essentials.getScope(resourceId, scopeId) : { is_resource_owner_scope: false },
             scopeIdTaken: false
@@ -52,10 +52,7 @@ class ScopeForm extends React.Component {
             })
             .catch(() => {
                 let verb = this.props.edit ? 'update' : 'create';
-                this
-                .props
-                .flux
-                .getActions('notification')
+                this.props.notificationActions
                 .addNotification(
                     `Could not ${verb} scope ${scope.id} for resource ${resource.name}.`,
                     'error'

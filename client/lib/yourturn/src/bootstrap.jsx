@@ -33,16 +33,15 @@ function fetchData(routes, state) {
     return Promise.all(promises);
 }
 
+let userActions = YT_FLUX.getActions('user');
+
 // render the rest
-YT_FLUX
-    .getActions('user')
+userActions
     .fetchTokenInfo()
     .then(info => {
-        YT_FLUX
-            .getActions('user')
+        userActions
             .fetchAccounts(info.uid);
-        YT_FLUX
-            .getActions('user')
+        userActions
             .fetchUserInfo(info.uid);
     });
 
@@ -71,7 +70,6 @@ router.run(
  * Continually dismiss old notifications.
  */
 setInterval(() => {
-    YT_FLUX
-    .getActions('notification')
+    YT_FLUX.getActions('notification')
     .removeNotificationsOlderThan(5000);
 }, 5000);

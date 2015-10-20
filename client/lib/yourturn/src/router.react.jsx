@@ -86,7 +86,9 @@ class SearchHandler extends React.Component {
         return <FlummoxComponent
                     connectToStores={['search']}
                     flux={YT_FLUX}>
-                    <Search />
+                    <Search
+                        searchActions={YT_FLUX.getActions('search')}
+                        searchStore={YT_FLUX.getStore('search')}/>
                 </FlummoxComponent>;
     }
 }

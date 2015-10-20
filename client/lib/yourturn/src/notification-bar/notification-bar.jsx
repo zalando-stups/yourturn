@@ -23,8 +23,8 @@ Notification.displayName = 'Notification';
 class NotificationBar extends React.Component {
     constructor(props) {
         super();
-        this.store = props.flux.getStore('notification');
-        this.actions = props.flux.getActions('notification');
+        this.store = props.notificationStore;
+        this.actions = props.notificationActions;
     }
 
     dismiss(id) {

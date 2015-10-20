@@ -8,8 +8,8 @@ class ApplicationList extends React.Component {
     constructor(props) {
         super();
         this.stores = {
-            kio: props.flux.getStore('kio'),
-            user: props.flux.getStore('user')
+            kio: props.kioStore,
+            user: props.userStore
         };
         this.state = {
             term: '',

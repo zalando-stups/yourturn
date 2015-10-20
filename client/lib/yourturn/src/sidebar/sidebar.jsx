@@ -8,9 +8,9 @@ import 'common/asset/less/yourturn/sidebar.less';
 class Sidebar extends React.Component {
     constructor(props) {
         super();
-        this.actions = props.flux.getActions('user');
+        this.actions = props.userActions;
         this.stores = {
-            user: props.flux.getStore('user')
+            user: props.userStore
         };
         this.interval = false;
         this.state = {

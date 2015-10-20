@@ -40,10 +40,10 @@ class ApprovalForm extends React.Component {
     constructor(props) {
         super();
         this.stores = {
-            kio: props.flux.getStore('kio'),
-            user: props.flux.getStore('user')
+            kio: props.kioStore,
+            user: props.userStore
         };
-        this.actions = props.flux.getActions('kio');
+        this.actions = props.kioActions;
         this.state = {
             useCustomType: false,
             customType: '',
@@ -84,10 +84,7 @@ class ApprovalForm extends React.Component {
             if (!customType.length) {
                 // invariant!
                 // custom type checked, but empty
-                return this
-                        .props
-                        .flux
-                        .getActions('notification')
+                return this.props.notificationActions
                         .addNotification(
                             'Conflict: You checked the "Custom" box, but did not enter an approval type.',
                             'error');
@@ -124,10 +121,7 @@ class ApprovalForm extends React.Component {
                 loading: false
             });
 
-            this
-            .props
-            .flux
-            .getActions('notification')
+            this.props.notificationActions
             .addNotification(
                 `Could not approve version ${versionId} of ${application.name}. ${err.message}`,
                 'error');

@@ -9,9 +9,9 @@ class ResourceForm extends React.Component {
         super();
         let {edit, resourceId, flux} = props;
         this.stores = {
-            essentials: flux.getStore('essentials')
+            essentials: props.essentialsStore
         };
-        this.actions = flux.getActions('essentials');
+        this.actions = this.props.essentialsActions;
         this.state = {
             resource: edit ? this.stores.essentials.getResource(resourceId) : {resource_owners: []}
         };
@@ -49,10 +49,7 @@ class ResourceForm extends React.Component {
             this.context.router.transitionTo(constructLocalUrl('resource-type', [resource.id]));
         })
         .catch(err => {
-            this
-            .props
-            .flux
-            .getActions('notification')
+            this.props.notificationActions
             .addNotification(
                 `Could not save resource ${resource.name}. ${err.message}`,
                 'error'

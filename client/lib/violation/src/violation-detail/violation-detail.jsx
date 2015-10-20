@@ -6,10 +6,10 @@ class ViolationDetail extends React.Component {
     constructor(props) {
         super();
         this.stores = {
-            fullstop: props.flux.getStore('fullstop'),
-            user: props.flux.getStore('user')
+            fullstop: props.fullstopStore,
+            user: props.userStore
         };
-        this.actions = props.flux.getActions('fullstop');
+        this.actions = this.props.fullstopActions;
     }
 
     resolveViolation(violation, message) {
