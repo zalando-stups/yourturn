@@ -7,14 +7,37 @@ module.exports = function(file, api) {
         // ignore non-jsx
         return;
     }
-    if (/router/.test(file.path)) {
-        // do not touch routers here
-        return;
-    }
-    
 
     let j = api.jscodeshift,
             result = j(file.source);
+
+    if (/router/.test(file.path)) {
+        // reflect new component api in route handlers
+        result
+            .find(j.JSXElement)
+            .filter(jsx => jsx.value.openingElement.name.name  === 'FluxComponent')
+            .forEach(jsx => {
+                var stores = jsx.value.openingElement.attributes
+                    .filter(attr => attr.name.name === 'connectToStores')
+                    .map(attr => attr.value.expression.elements)
+                    .reduce((arr, attr) => arr.concat(attr), [])
+                    .map(attr => attr.value);
+                var child = jsx.value.children.filter(child => child.type === 'JSXElement')[0];
+                stores.forEach(store => {
+                    // kioStore={FLUX.getStore('kio')}
+                    var attr = j.jsxAttribute(
+                                j.jsxIdentifier(store + 'Store'),
+                                j.jsxExpressionContainer(
+                                    j.callExpression(
+                                        j.memberExpression(
+                                            j.identifier('FLUX'),
+                                            j.identifier('getStore')),
+                                        [j.literal(store)]))); 
+                    child.openingElement.attributes.push(attr);
+                });
+            });
+        return result.toSource();
+    }
 
     // this.stores = { 'user' : props.flux.getStore('user') } => this.stores = { 'user': props.userStore }
     result
@@ -65,32 +88,17 @@ module.exports = function(file, api) {
         .insertBefore(declaration);
     });
 
-    // this.action = props.flux.getActions('user') => delete
+    // flux.getActions('user') => this.props.userActions
     result
-        .find(j.AssignmentExpression)
-        .filter(assignment => assignment.value.right.type === 'CallExpression')
         .find(j.CallExpression)
         .filter(call => call.value.callee.type === 'MemberExpression')
         .filter(call => call.value.callee.property.name === 'getActions')
-        .closest(j.AssignmentExpression)
-        .remove();
-        
-    // flux.getActions('blahr').foo() => blahrActionsFoo()
-    result
-        .find(j.MemberExpression)
-        .filter(member => member.value.property.name === 'getActions')
-        .closest(j.CallExpression)
-        .filter(call => call.parentPath.value.type === 'MemberExpression')
-        .map(call => call.parentPath.parentPath)
-        .replaceWith(expr => {
-            let method = expr.value.callee.property.name,
-                args = expr.value.arguments,
-                actions = expr.value.callee.object.arguments[0].value;
-            return j.callExpression(
+        .replaceWith(call => {
+            return j.memberExpression(
                     j.memberExpression(
-                      j.memberExpression(j.thisExpression(), j.identifier('props')),
-                      j.identifier(actions + 'Actions' + camelCase(method))),
-                    args);
+                        j.thisExpression(),
+                        j.identifier('props')),
+                    j.identifier(call.value.arguments[0].value + 'Actions'));
         });
 
     return result.toSource();
