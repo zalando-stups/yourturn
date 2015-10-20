@@ -16,21 +16,19 @@ import VersionDetail from './version-detail/version-detail.jsx';
 import ApprovalForm from './approval-form/approval-form.jsx';
 
 const MINT_ACTIONS = FLUX.getActions('mint'),
-      MINT_STORE = FLUX.getStore('mint')
+      MINT_STORE = FLUX.getStore('mint'),
       PIERONE_ACTIONS = FLUX.getActions('pierone'),
       PIERONE_STORE = FLUX.getStore('pierone'),
       USER_STORE = FLUX.getStore('user'),
       USER_ACTIONS = FLUX.getActions('user'),
       KIO_ACTIONS = FLUX.getActions('kio'),
       KIO_STORE = FLUX.getStore('kio'),
-      MINT_ACTIONS = FLUX.getActions('mint'),
-      MINT_STORE = FLUX.getStore('mint'),
       ESSENTIALS_ACTIONS = FLUX.getActions('essentials'),
       ESSENTIALS_STORE = FLUX.getStore('essentials'),
       NOTIFICATION_ACTIONS = FLUX.getActions('notification'),
       NOTIFICATION_STORE = FLUX.getStore('notification'),
       TWINTIP_ACTIONS = FLUX.getActions('twintip'),
-      TWINTIP_STORE = FLUX.getStore('twintip'),;
+      TWINTIP_STORE = FLUX.getStore('twintip');
 
 class AppListHandler extends React.Component {
     constructor() {
@@ -159,7 +157,7 @@ class AppDetailHandler extends React.Component {
                         pieroneStore={PIERONE_STORE}
                         twintipStore={TWINTIP_STORE}
                         notificationActions={NOTIFICATION_ACTIONS}
-                        userStore={USER_STORE>
+                        userStore={USER_STORE} />
                 </FluxComponent>;
     }
 }
@@ -287,7 +285,7 @@ class VersionDetailHandler extends React.Component {
                         versionId={this.props.params.versionId}
                         kioStore={KIO_STORE}
                         userStore={USER_STORE}
-                        pieroneStore={PIERONE_STORE>
+                        pieroneStore={PIERONE_STORE} />
                 </FluxComponent>;
     }
 }
@@ -333,7 +331,7 @@ class ApprovalFormHandler extends React.Component {
                         kioActions={KIO_ACTIONS}
                         kioStore={KIO_STORE}
                         pieroneStore={PIERONE_STORE}
-                        userStore={USER_STORE>
+                        userStore={USER_STORE} />
                 </FluxComponent>;
     }
 }

@@ -10,12 +10,13 @@ module.exports = function(file, api) {
 
     let j = api.jscodeshift,
             result = j(file.source);
-
+    console.log(file.path);
     if (/router/.test(file.path)) {
         // reflect new component api in route handlers
         result
             .find(j.JSXElement)
-            .filter(jsx => jsx.value.openingElement.name.name  === 'FluxComponent')
+            .filter(jsx => jsx.value.openingElement.name.name  === 'FluxComponent' ||
+                           jsx.value.openingElement.name.name === 'FlummoxComponent')
             .forEach(jsx => {
                 var stores = jsx.value.openingElement.attributes
                     .filter(attr => attr.name.name === 'connectToStores')

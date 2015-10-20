@@ -7,11 +7,11 @@ import 'common/asset/less/resource/resource-form.less';
 class ResourceForm extends React.Component {
     constructor(props) {
         super();
-        let {edit, resourceId, flux} = props;
+        let {edit, resourceId} = props;
         this.stores = {
             essentials: props.essentialsStore
         };
-        this.actions = this.props.essentialsActions;
+        this.actions = props.essentialsActions;
         this.state = {
             resource: edit ? this.stores.essentials.getResource(resourceId) : {resource_owners: []}
         };

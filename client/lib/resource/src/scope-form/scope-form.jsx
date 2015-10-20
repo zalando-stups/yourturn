@@ -10,7 +10,7 @@ class ScopeForm extends React.Component {
         this.stores = {
             essentials: props.essentialsStore
         };
-        this.actions = this.props.essentialsActions;
+        this.actions = props.essentialsActions;
         this.state = {
             scope: edit ? this.stores.essentials.getScope(resourceId, scopeId) : { is_resource_owner_scope: false },
             scopeIdTaken: false
