@@ -4,8 +4,7 @@ import EssentialsStore from 'common/src/data/essentials/essentials-store';
 import EssentialsActions from 'common/src/data/essentials/essentials-actions';
 import Form from 'resource/src/resource-form/resource-form.jsx';
 
-const ESSENTIALS = 'essentials',
-    RES_ID = 'sales_order',
+const RES_ID = 'sales_order',
     TEST_RES = {
         id: 'sales_order',
         name: 'Sales Order',
@@ -17,8 +16,8 @@ class MockFlux extends Flummox {
     constructor() {
         super();
 
-        this.createActions(ESSENTIALS, EssentialsActions);
-        this.createStore(ESSENTIALS, EssentialsStore, this);
+        this.createActions('essentials', EssentialsActions);
+        this.createStore('essentials', EssentialsStore, this);
     }
 }
 
@@ -30,7 +29,7 @@ describe('The resource form view', () => {
 
     beforeEach(() => {
         flux = new MockFlux();
-        actionSpy = sinon.stub(flux.getActions(ESSENTIALS), 'saveResource', function () {
+        actionSpy = sinon.stub(flux.getActions('essentials'), 'saveResource', function () {
             return Promise.resolve();
         });
     });
@@ -39,7 +38,8 @@ describe('The resource form view', () => {
     describe('in create mode', () => {
         beforeEach(() => {
             form = new Form({
-                flux: flux
+                essentialsStore: flux.getStore('essentials'),
+                essentialsActions: flux.getActions('essentials')
             });
         });
     });
@@ -47,11 +47,12 @@ describe('The resource form view', () => {
     describe('in edit mode', () => {
         beforeEach(() => {
             reset();
-            flux.getStore(ESSENTIALS).receiveResource(TEST_RES);
+            flux.getStore('essentials').receiveResource(TEST_RES);
             props = {
-                flux: flux,
                 resourceId: RES_ID,
-                edit: true
+                edit: true,
+                essentialsStore: flux.getStore('essentials'),
+                essentialsActions: flux.getActions('essentials')
             };
             form = render(Form, props);
         });

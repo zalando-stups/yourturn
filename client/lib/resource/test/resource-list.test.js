@@ -6,14 +6,12 @@ import UserStore from 'common/src/data/user/user-store';
 import UserActions from 'common/src/data/user/user-actions';
 import List from 'resource/src/resource-list/resource-list.jsx';
 
-const FLUX_ID = 'essentials';
-
 class MockFlux extends Flummox {
     constructor() {
         super();
 
-        this.createActions(FLUX_ID, EssentialsActions);
-        this.createStore(FLUX_ID, EssentialsStore, this);
+        this.createActions('essentials', EssentialsActions);
+        this.createStore('essentials', EssentialsStore, this);
 
         this.createActions('user', UserActions);
         this.createStore('user', UserStore, this);
@@ -29,7 +27,8 @@ describe('The resource list view', () => {
         reset();
         flux = new MockFlux();
         props = {
-            flux: flux
+            essentialsStore: flux.getStore('essentials'),
+            userStore: flux.getStore('user')
         };
         list = render(List, props);
     });
@@ -42,7 +41,7 @@ describe('The resource list view', () => {
 
     it('should display a list of resources', () => {
         flux
-        .getStore(FLUX_ID)
+        .getStore('essentials')
         .receiveResources([{
             id: 'sales_order',
             name: 'Sales Order'

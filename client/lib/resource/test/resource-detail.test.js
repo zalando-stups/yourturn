@@ -6,8 +6,7 @@ import UserStore from 'common/src/data/user/user-store';
 import UserActions from 'common/src/data/user/user-actions';
 import Detail from 'resource/src/resource-detail/resource-detail.jsx';
 
-const ESSENTIALS = 'essentials',
-      ID = 'sales_order',
+const ID = 'sales_order',
       TEST_RES = {
             id: 'sales_order',
             name: 'Sales Order',
@@ -19,8 +18,8 @@ class MockFlux extends Flummox {
     constructor() {
         super();
 
-        this.createActions(ESSENTIALS, EssentialsActions);
-        this.createStore(ESSENTIALS, EssentialsStore, this);
+        this.createActions('essentials', EssentialsActions);
+        this.createStore('essentials', EssentialsStore, this);
 
         this.createActions('user', UserActions);
         this.createStore('user', UserStore, this);
@@ -35,10 +34,11 @@ describe('The resource detail view', () => {
     beforeEach(() => {
         reset();
         flux = new MockFlux();
-        flux.getStore(ESSENTIALS).receiveResource(TEST_RES);
+        flux.getStore('essentials').receiveResource(TEST_RES);
         props = {
-            flux: flux,
-            resourceId: ID
+            resourceId: ID,
+            essentialsStore: flux.getStore('essentials'),
+            userStore: flux.getStore('user')
         };
         detail = render(Detail, props);
     });

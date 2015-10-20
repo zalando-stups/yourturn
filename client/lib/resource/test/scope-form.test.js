@@ -4,15 +4,14 @@ import EssentialsStore from 'common/src/data/essentials/essentials-store';
 import EssentialsActions from 'common/src/data/essentials/essentials-actions';
 import Form from 'resource/src/scope-form/scope-form.jsx';
 
-const ESSENTIALS = 'essentials',
-      RES_ID = 'sales_order';
+const RES_ID = 'sales_order';
 
 class MockFlux extends Flummox {
     constructor() {
         super();
 
-        this.createActions(ESSENTIALS, EssentialsActions);
-        this.createStore(ESSENTIALS, EssentialsStore, this);
+        this.createActions('essentials', EssentialsActions);
+        this.createStore('essentials', EssentialsStore, this);
     }
 }
 
@@ -30,7 +29,8 @@ describe('The scope form view', () => {
         beforeEach(() => {
             reset();
             props = {
-                flux: flux
+                essentialsStore: flux.getStore('essentials'),
+                essentialsActions: flux.getActions('essentials')
             };
             form = render(Form, props);
         });
@@ -46,9 +46,10 @@ describe('The scope form view', () => {
         beforeEach(() => {
             reset();
             props = {
-                flux: flux,
                 resourceId: RES_ID,
-                edit: true
+                edit: true,
+                essentialsStore: flux.getStore('essentials'),
+                essentialsActions: flux.getActions('essentials')
             };
             form = render(Form, props);
         });

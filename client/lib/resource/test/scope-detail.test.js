@@ -6,8 +6,7 @@ import UserStore from 'common/src/data/user/user-store';
 import UserActions from 'common/src/data/user/user-actions';
 import Detail from 'resource/src/scope-detail/scope-detail.jsx';
 
-const ESSENTIALS = 'essentials',
-        RES_ID = 'sales_order',
+const RES_ID = 'sales_order',
         SCP_ID = 'read',
         TEST_SCP = {
             id: 'read',
@@ -22,8 +21,8 @@ class MockFlux extends Flummox {
     constructor() {
         super();
 
-        this.createActions(ESSENTIALS, EssentialsActions);
-        this.createStore(ESSENTIALS, EssentialsStore, this);
+        this.createActions('essentials', EssentialsActions);
+        this.createStore('essentials', EssentialsStore, this);
 
         this.createActions('user', UserActions);
         this.createStore('user', UserStore, this);
@@ -39,12 +38,13 @@ describe('The scope detail view', () => {
         reset();
         flux = new MockFlux();
         props = {
-            flux: flux,
             resourceId: RES_ID,
-            scopeId: SCP_ID
+            scopeId: SCP_ID,
+            essentialsStore: flux.getStore('essentials'),
+            userStore: flux.getStore('user')
         };
-        flux.getStore(ESSENTIALS).receiveScope([RES_ID, TEST_SCP]);
-        flux.getStore(ESSENTIALS).receiveScopeApplications([RES_ID, SCP_ID, [TEST_APP]]);
+        flux.getStore('essentials').receiveScope([RES_ID, TEST_SCP]);
+        flux.getStore('essentials').receiveScopeApplications([RES_ID, SCP_ID, [TEST_APP]]);
         detail = render(Detail, props);
     });
 
