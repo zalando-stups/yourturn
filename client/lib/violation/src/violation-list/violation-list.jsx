@@ -191,7 +191,10 @@ class ViolationList extends React.Component {
 }
 ViolationList.displayName = 'ViolationList';
 ViolationList.propTypes = {
-    flux: React.PropTypes.object.isRequired
+    fullstopStore: React.PropTypes.object.isRequired,
+    teamStore: React.PropTypes.object.isRequired,
+    userStore: React.PropTypes.object.isRequired,
+    fullstopActions: React.PropTypes.object.isRequired
 };
 
 export default ViolationList;

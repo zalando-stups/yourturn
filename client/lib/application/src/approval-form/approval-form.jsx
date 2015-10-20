@@ -276,7 +276,10 @@ ApprovalForm.displayName = 'ApprovalForm';
 ApprovalForm.propTypes = {
     applicationId: React.PropTypes.string.isRequired,
     versionId: React.PropTypes.string.isRequired,
-    flux: React.PropTypes.object.isRequired
+    notificationActions: React.PropTypes.object.isRequired,
+    kioActions: React.PropTypes.object.isRequired,
+    kioStore: React.PropTypes.object.isRequired,
+    userStore: React.PropTypes.object.isRequired
 };
 ApprovalForm.contextTypes = {
     router: React.PropTypes.func.isRequired

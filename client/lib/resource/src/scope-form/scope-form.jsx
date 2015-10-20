@@ -260,7 +260,9 @@ ScopeForm.propTypes = {
     scopeId: React.PropTypes.string.isRequired,
     resourceId: React.PropTypes.string.isRequired,
     edit: React.PropTypes.bool,
-    flux: React.PropTypes.object.isRequired
+    essentialsActions: React.PropTypes.object.isRequired,
+    notificationActions: React.PropTypes.object.isRequired,
+    essentialsStore: React.PropTypes.object.isRequired
 };
 ScopeForm.contextTypes = {
     router: React.PropTypes.func.isRequired

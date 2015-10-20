@@ -208,7 +208,9 @@ ResourceForm.displayName = 'ResourceForm';
 ResourceForm.propTypes = {
     edit: React.PropTypes.bool,
     resourceId: React.PropTypes.string.isRequired,
-    flux: React.PropTypes.object.isRequired
+    essentialsStore: React.PropTypes.object.isRequired,
+    essentialsActions: React.PropTypes.object.isRequired,
+    notificationActions: React.PropTypes.object.isRequired
 };
 ResourceForm.contextTypes = {
     router: React.PropTypes.func.isRequired

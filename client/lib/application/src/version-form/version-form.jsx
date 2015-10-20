@@ -220,7 +220,9 @@ VersionForm.propTypes = {
     applicationId: React.PropTypes.string.isRequired,
     versionId: React.PropTypes.string,
     edit: React.PropTypes.bool,
-    flux: React.PropTypes.object.isRequired
+    kioActions: React.PropTypes.object.isRequired,
+    notificationActions: React.PropTypes.object.isRequired,
+    kioStore: React.PropTypes.object.isRequired
 };
 VersionForm.contextTypes = {
     router: React.PropTypes.func.isRequired

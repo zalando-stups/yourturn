@@ -273,7 +273,11 @@ class ApplicationDetail extends React.Component {
 ApplicationDetail.displayName = 'ApplicationDetail';
 ApplicationDetail.propTypes = {
     applicationId: React.PropTypes.string.isRequired,
-    flux: React.PropTypes.object.isRequired
+    notificationActions: React.PropTypes.object.isRequired,
+    kioActions: React.PropTypes.object.isRequired,
+    userStore: React.PropTypes.object.isRequired,
+    kioStore: React.PropTypes.object.isRequired,
+    twintipStore: React.PropTypes.object.isRequired
 };
 ApplicationDetail.contextTypes = {
     router: React.PropTypes.func.isRequired

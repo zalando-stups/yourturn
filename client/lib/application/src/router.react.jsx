@@ -23,11 +23,8 @@ const MINT_ACTIONS = FLUX.getActions('mint'),
       USER_ACTIONS = FLUX.getActions('user'),
       KIO_ACTIONS = FLUX.getActions('kio'),
       KIO_STORE = FLUX.getStore('kio'),
-      ESSENTIALS_ACTIONS = FLUX.getActions('essentials'),
       ESSENTIALS_STORE = FLUX.getStore('essentials'),
       NOTIFICATION_ACTIONS = FLUX.getActions('notification'),
-      NOTIFICATION_STORE = FLUX.getStore('notification'),
-      TWINTIP_ACTIONS = FLUX.getActions('twintip'),
       TWINTIP_STORE = FLUX.getStore('twintip');
 
 class AppListHandler extends React.Component {

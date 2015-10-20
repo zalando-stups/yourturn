@@ -174,7 +174,12 @@ class AccessForm extends React.Component {
 AccessForm.displayName = 'AccessForm';
 AccessForm.propTypes = {
     applicationId: React.PropTypes.string.isRequired,
-    flux: React.PropTypes.object.isRequired
+    mintActions: React.PropTypes.object.isRequired,
+    notificationActions: React.PropTypes.object.isRequired,
+    kioStore: React.PropTypes.object.isRequired,
+    mintStore: React.PropTypes.object.isRequired,
+    userStore: React.PropTypes.object.isRequired,
+    essentialsStore: React.PropTypes.object.isRequired
 };
 AccessForm.contextTypes = {
     router: React.PropTypes.func.isRequired

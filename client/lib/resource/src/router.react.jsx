@@ -9,20 +9,11 @@ import ResourceDetail from './resource-detail/resource-detail.jsx';
 import ScopeDetail from './scope-detail/scope-detail.jsx';
 import ScopeForm from './scope-form/scope-form.jsx';
 
-const MINT_ACTIONS = FLUX.getActions('mint'),
-      MINT_STORE = FLUX.getStore('mint'),
-      PIERONE_ACTIONS = FLUX.getActions('pierone'),
-      PIERONE_STORE = FLUX.getStore('pierone'),
-      USER_STORE = FLUX.getStore('user'),
+const USER_STORE = FLUX.getStore('user'),
       USER_ACTIONS = FLUX.getActions('user'),
-      KIO_ACTIONS = FLUX.getActions('kio'),
-      KIO_STORE = FLUX.getStore('kio'),
       ESSENTIALS_ACTIONS = FLUX.getActions('essentials'),
       ESSENTIALS_STORE = FLUX.getStore('essentials'),
-      NOTIFICATION_ACTIONS = FLUX.getActions('notification'),
-      NOTIFICATION_STORE = FLUX.getStore('notification'),
-      TWINTIP_ACTIONS = FLUX.getActions('twintip'),
-      TWINTIP_STORE = FLUX.getStore('twintip');
+      NOTIFICATION_ACTIONS = FLUX.getActions('notification');
 
 // QUICKFIX #133
 function isWhitelisted(token) {
@@ -33,7 +24,7 @@ function isWhitelisted(token) {
     return token && Config.RESOURCE_WHITELIST.indexOf(token.uid) >= 0;
 }
 
-function requireToken(flux) {
+function requireToken() {
     const ACTIONS = USER_ACTIONS,
           STORE = USER_STORE;
     let tokeninfo = STORE.getTokenInfo();
@@ -43,7 +34,7 @@ function requireToken(flux) {
     return Promise.resolve(tokeninfo);
 }
 
-function requireWhitelisted(flux) {
+function requireWhitelisted() {
     let token = USER_STORE.getTokenInfo();
     if (!isWhitelisted(token)) {
         let error = new Error();
@@ -82,7 +73,7 @@ CreateResourceFormHandler.propTypes = {
 CreateResourceFormHandler.fetchData = function() {
     return Promise.all([
         ESSENTIALS_ACTIONS.fetchResources(),
-        requireToken(FLUX)
+        requireToken()
     ]);
 };
 
@@ -115,7 +106,7 @@ EditResourceFormHandler.propTypes = {
 EditResourceFormHandler.fetchData = function(state) {
     return Promise.all([
         ESSENTIALS_ACTIONS.fetchResource(state.params.resourceId),
-        requireToken(FLUX)
+        requireToken()
     ]);
 };
 
@@ -226,7 +217,7 @@ EditScopeFormHandler.fetchData = function(state) {
     ESSENTIALS_ACTIONS.fetchResource(resourceId);
     return Promise.all([
         ESSENTIALS_ACTIONS.fetchScope(resourceId, scopeId),
-        requireToken(FLUX)
+        requireToken()
     ]);
 };
 
@@ -262,7 +253,7 @@ CreateScopeFormHandler.fetchData = function(state) {
     ESSENTIALS_ACTIONS.fetchResource(resourceId);
     return Promise.all([
         ESSENTIALS_ACTIONS.fetchScopes(resourceId),
-        requireToken(FLUX)
+        requireToken()
     ]);
 };
 

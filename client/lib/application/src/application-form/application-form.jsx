@@ -307,8 +307,11 @@ class ApplicationForm extends React.Component {
 ApplicationForm.displayName = 'ApplicationForm';
 ApplicationForm.propTypes = {
     applicationId: React.PropTypes.string,
-    flux: React.PropTypes.object.isRequired,
-    edit: React.PropTypes.bool
+    edit: React.PropTypes.bool,
+    kioActions: React.PropTypes.object.isRequired,
+    notificationActions: React.PropTypes.object.isRequired,
+    userStore: React.PropTypes.object.isRequired,
+    kioStore: React.PropTypes.object.isRequired
 };
 ApplicationForm.contextTypes = {
     router: React.PropTypes.func.isRequired
