@@ -7,7 +7,7 @@ class VersionList extends React.Component {
     constructor(props) {
         super();
         this.stores = {
-            kio: props.flux.getStore('kio')
+            kio: props.kioStore
         };
         this.state = {
             term: ''

@@ -25,8 +25,8 @@ describe('The version list view', () => {
         reset();
         flux = new MockFlux();
         props = {
-            flux: flux,
-            applicationId: APP_ID
+            applicationId: APP_ID,
+            kioStore: flux.getStore('kio')
         };
         list = render(List, props);
     });

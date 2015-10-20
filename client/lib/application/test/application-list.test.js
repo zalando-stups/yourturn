@@ -7,14 +7,12 @@ import UserStore from 'common/src/data/user/user-store';
 import UserActions from 'common/src/data/user/user-actions';
 import List from 'application/src/application-list/application-list.jsx';
 
-const FLUX_ID = 'kio';
-
 class AppFlux extends Flummox {
     constructor() {
         super();
 
-        this.createActions(FLUX_ID, KioActions);
-        this.createStore(FLUX_ID, KioStore, this);
+        this.createActions('kio', KioActions);
+        this.createStore('kio', KioStore, this);
 
         this.createActions('user', UserActions);
         this.createStore('user', UserStore, this);
@@ -39,7 +37,8 @@ describe('The application list view', () => {
         }]);
 
         props = {
-            flux: flux
+            userStore: flux.getStore('user'),
+            kioStore: flux.getStore('kio')
         };
 
         list = render(List, props);
@@ -56,7 +55,7 @@ describe('The application list view', () => {
 
     it('should display a list of applications owned by user and no list of not owned by user', () => {
         flux
-        .getStore(FLUX_ID)
+        .getStore('kio')
         .receiveApplications([{
             id: 'kio',
             name: 'Kio',
@@ -78,7 +77,7 @@ describe('The application list view', () => {
 
     it('should display a list of applications not owned by the user and no list of not owned by user', () => {
         flux
-        .getStore(FLUX_ID)
+        .getStore('kio')
         .receiveApplications([{
             id: 'openam',
             name: 'OpenAM',
@@ -102,7 +101,7 @@ describe('The application list view', () => {
             apps = _.times(25, n => _.extend({id: n}, app), []);
 
         flux
-        .getStore(FLUX_ID)
+        .getStore('kio')
         .receiveApplications(apps);
 
         list = render(List, props);

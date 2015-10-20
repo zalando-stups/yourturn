@@ -20,11 +20,11 @@ class ViolationList extends React.Component {
     constructor(props) {
         super();
         this.stores = {
-            fullstop: props.flux.getStore('fullstop'),
-            team: props.flux.getStore('team'),
-            user: props.flux.getStore('user')
+            fullstop: props.fullstopStore,
+            team: props.teamStore,
+            user: props.userStore
         };
-        this.actions = props.flux.getActions('fullstop');
+        this.actions = props.fullstopActions;
         this.state = {
             dispatching: false,
             currentPage: 0,
@@ -131,7 +131,9 @@ class ViolationList extends React.Component {
             violationCards = violations.map((v, i) => <Violation
                                                         key={v}
                                                         autoFocus={i === 0}
-                                                        flux={this.props.flux}
+                                                        fullstopStore={this.props.fullstopStore}
+                                                        fullstopActions={this.props.fullstopActions}
+                                                        userStore={this.props.userStore}
                                                         violationId={v} />);
 
         return <div className='violationList'>
@@ -189,7 +191,10 @@ class ViolationList extends React.Component {
 }
 ViolationList.displayName = 'ViolationList';
 ViolationList.propTypes = {
-    flux: React.PropTypes.object.isRequired
+    fullstopStore: React.PropTypes.object.isRequired,
+    teamStore: React.PropTypes.object.isRequired,
+    userStore: React.PropTypes.object.isRequired,
+    fullstopActions: React.PropTypes.object.isRequired
 };
 
 export default ViolationList;

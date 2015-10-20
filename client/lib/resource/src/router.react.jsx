@@ -9,7 +9,11 @@ import ResourceDetail from './resource-detail/resource-detail.jsx';
 import ScopeDetail from './scope-detail/scope-detail.jsx';
 import ScopeForm from './scope-form/scope-form.jsx';
 
-const RES_ACTIONS = FLUX.getActions('essentials');
+const USER_STORE = FLUX.getStore('user'),
+      USER_ACTIONS = FLUX.getActions('user'),
+      ESSENTIALS_ACTIONS = FLUX.getActions('essentials'),
+      ESSENTIALS_STORE = FLUX.getStore('essentials'),
+      NOTIFICATION_ACTIONS = FLUX.getActions('notification');
 
 // QUICKFIX #133
 function isWhitelisted(token) {
@@ -20,9 +24,9 @@ function isWhitelisted(token) {
     return token && Config.RESOURCE_WHITELIST.indexOf(token.uid) >= 0;
 }
 
-function requireToken(flux) {
-    const ACTIONS = flux.getActions('user'),
-          STORE = flux.getStore('user');
+function requireToken() {
+    const ACTIONS = USER_ACTIONS,
+          STORE = USER_STORE;
     let tokeninfo = STORE.getTokenInfo();
     if (!tokeninfo.uid) {
         return ACTIONS.fetchTokenInfo();
@@ -30,8 +34,8 @@ function requireToken(flux) {
     return Promise.resolve(tokeninfo);
 }
 
-function requireWhitelisted(flux) {
-    let token = flux.getStore('user').getTokenInfo();
+function requireWhitelisted() {
+    let token = USER_STORE.getTokenInfo();
     if (!isWhitelisted(token)) {
         let error = new Error();
         error.name = 'Not whitelisted';
@@ -52,6 +56,9 @@ class CreateResourceFormHandler extends React.Component {
                     flux={FLUX}
                     connectToStores={['essentials']}>
                     <ResourceForm
+                        essentialsStore={ESSENTIALS_STORE}
+                        essentialsActions={ESSENTIALS_ACTIONS}
+                        notificationActions={ESSENTIALS_ACTIONS}
                         edit={false} />
                 </FlummoxComponent>;
     }
@@ -65,8 +72,8 @@ CreateResourceFormHandler.propTypes = {
 };
 CreateResourceFormHandler.fetchData = function() {
     return Promise.all([
-        RES_ACTIONS.fetchResources(),
-        requireToken(FLUX)
+        ESSENTIALS_ACTIONS.fetchResources(),
+        requireToken()
     ]);
 };
 
@@ -82,7 +89,10 @@ class EditResourceFormHandler extends React.Component {
                     connectToStores={['essentials']}>
                     <ResourceForm
                         resourceId={this.props.params.resourceId}
-                        edit={true} />
+                        edit={true}
+                        notificationActions={NOTIFICATION_ACTIONS}
+                        essentialsActions={ESSENTIALS_ACTIONS}
+                        essentialsStore={ESSENTIALS_STORE} />
                 </FlummoxComponent>;
     }
 }
@@ -95,8 +105,8 @@ EditResourceFormHandler.propTypes = {
 };
 EditResourceFormHandler.fetchData = function(state) {
     return Promise.all([
-        RES_ACTIONS.fetchResource(state.params.resourceId),
-        requireToken(FLUX)
+        ESSENTIALS_ACTIONS.fetchResource(state.params.resourceId),
+        requireToken()
     ]);
 };
 
@@ -108,7 +118,9 @@ class ResourceListHandler extends React.Component {
         return <FlummoxComponent
                     flux={FLUX}
                     connectToStores={['essentials']}>
-                    <ResourceList />
+                    <ResourceList
+                        userStore={USER_STORE}
+                        essentialsStore={ESSENTIALS_STORE} />
                 </FlummoxComponent>;
     }
 }
@@ -117,7 +129,7 @@ ResourceListHandler.propTypes = {
     params: React.PropTypes.object
 };
 ResourceListHandler.fetchData = function() {
-    RES_ACTIONS.fetchResources();
+    ESSENTIALS_ACTIONS.fetchResources();
 };
 
 
@@ -130,7 +142,9 @@ class ResourceDetailHandler extends React.Component {
                     flux={FLUX}
                     connectToStores={['essentials']}>
                     <ResourceDetail
-                        resourceId={this.props.params.resourceId} />
+                        resourceId={this.props.params.resourceId}
+                        userStore={USER_STORE}
+                        essentialsStore={ESSENTIALS_STORE} />
                 </FlummoxComponent>;
     }
 }
@@ -139,8 +153,8 @@ ResourceDetailHandler.propTypes = {
     params: React.PropTypes.object
 };
 ResourceDetailHandler.fetchData = function(state) {
-    RES_ACTIONS.fetchResource(state.params.resourceId);
-    RES_ACTIONS.fetchScopes(state.params.resourceId);
+    ESSENTIALS_ACTIONS.fetchResource(state.params.resourceId);
+    ESSENTIALS_ACTIONS.fetchScopes(state.params.resourceId);
 };
 
 
@@ -154,7 +168,9 @@ class ScopeDetailHandler extends React.Component {
                     connectToStores={['essentials']}>
                     <ScopeDetail
                         resourceId={this.props.params.resourceId}
-                        scopeId={this.props.params.scopeId} />
+                        scopeId={this.props.params.scopeId}
+                        userStore={USER_STORE}
+                        essentialsStore={ESSENTIALS_STORE} />
                 </FlummoxComponent>;
     }
 }
@@ -164,9 +180,9 @@ ScopeDetailHandler.propTypes = {
 };
 ScopeDetailHandler.fetchData = function(state) {
     let {resourceId, scopeId} = state.params;
-    RES_ACTIONS.fetchResource(resourceId);
-    RES_ACTIONS.fetchScope(resourceId, scopeId);
-    RES_ACTIONS.fetchScopeApplications(resourceId, scopeId);
+    ESSENTIALS_ACTIONS.fetchResource(resourceId);
+    ESSENTIALS_ACTIONS.fetchScope(resourceId, scopeId);
+    ESSENTIALS_ACTIONS.fetchScopeApplications(resourceId, scopeId);
 };
 
 
@@ -182,7 +198,10 @@ class EditScopeFormHandler extends React.Component {
                     <ScopeForm
                         resourceId={this.props.params.resourceId}
                         scopeId={this.props.params.scopeId}
-                        edit={true} />
+                        edit={true}
+                        notificationActions={NOTIFICATION_ACTIONS}
+                        essentialsActions={ESSENTIALS_ACTIONS}
+                        essentialsStore={ESSENTIALS_STORE} />
                 </FlummoxComponent>;
     }
 }
@@ -195,10 +214,10 @@ EditScopeFormHandler.propTypes = {
 };
 EditScopeFormHandler.fetchData = function(state) {
     let {resourceId, scopeId} = state.params;
-    RES_ACTIONS.fetchResource(resourceId);
+    ESSENTIALS_ACTIONS.fetchResource(resourceId);
     return Promise.all([
-        RES_ACTIONS.fetchScope(resourceId, scopeId),
-        requireToken(FLUX)
+        ESSENTIALS_ACTIONS.fetchScope(resourceId, scopeId),
+        requireToken()
     ]);
 };
 
@@ -215,7 +234,10 @@ class CreateScopeFormHandler extends React.Component {
                     <ScopeForm
                         resourceId={this.props.params.resourceId}
                         scopeId={this.props.params.scopeId}
-                        edit={false} />
+                        edit={false}
+                        notificationActions={NOTIFICATION_ACTIONS}
+                        essentialsActions={ESSENTIALS_ACTIONS}
+                        essentialsStore={ESSENTIALS_STORE} />
                 </FlummoxComponent>;
     }
 }
@@ -228,10 +250,10 @@ CreateScopeFormHandler.propTypes = {
 };
 CreateScopeFormHandler.fetchData = function(state) {
     let {resourceId} = state.params;
-    RES_ACTIONS.fetchResource(resourceId);
+    ESSENTIALS_ACTIONS.fetchResource(resourceId);
     return Promise.all([
-        RES_ACTIONS.fetchScopes(resourceId),
-        requireToken(FLUX)
+        ESSENTIALS_ACTIONS.fetchScopes(resourceId),
+        requireToken()
     ]);
 };
 

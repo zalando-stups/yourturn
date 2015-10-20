@@ -9,9 +9,9 @@ class VersionForm extends React.Component {
     constructor(props) {
         super();
         this.stores = {
-            kio: props.flux.getStore('kio')
+            kio: props.kioStore
         };
-        this.actions = props.flux.getActions('kio');
+        this.actions = props.kioActions;
 
         let version = this.stores.kio.getApplicationVersion(props.applicationId, props.versionId),
             {edit} = props;
@@ -78,10 +78,7 @@ class VersionForm extends React.Component {
         .saveApplicationVersion(applicationId, version.id, version)
         .then(() => this.context.router.transitionTo(constructLocalUrl('application-version', [applicationId, version.id])))
         .catch(err => {
-            this
-            .props
-            .flux
-            .getActions('notification')
+            this.props.notificationActions
             .addNotification(
                 `Could not ${verb} version ${version.id} of ${application.name}. ${err.message}`,
                 'error');
@@ -223,7 +220,9 @@ VersionForm.propTypes = {
     applicationId: React.PropTypes.string.isRequired,
     versionId: React.PropTypes.string,
     edit: React.PropTypes.bool,
-    flux: React.PropTypes.object.isRequired
+    kioActions: React.PropTypes.object.isRequired,
+    notificationActions: React.PropTypes.object.isRequired,
+    kioStore: React.PropTypes.object.isRequired
 };
 VersionForm.contextTypes = {
     router: React.PropTypes.func.isRequired

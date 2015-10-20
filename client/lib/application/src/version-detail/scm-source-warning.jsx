@@ -7,7 +7,7 @@ class ScmSourceWarning extends React.Component {
     constructor(props) {
         super();
         this.stores = {
-            pierone: props.flux.getStore('pierone')
+            pierone: props.pieroneStore
         };
     }
 

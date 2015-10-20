@@ -66,10 +66,12 @@ describe('The version form view', () => {
             flux.getStore(FLUX).receiveApplication(TEST_APP);
             flux.getStore(FLUX).receiveApplicationVersion(TEST_VERSION);
             props = {
-                flux: flux,
                 applicationId: APP_ID,
                 versionId: VER_ID,
-                edit: false
+                edit: false,
+                kioStore: flux.getStore('kio'),
+                kioActions: flux.getActions('kio'),
+                userStore: flux.getStore('user')
             };
             form = render(VersionForm, props);
         });
@@ -81,10 +83,12 @@ describe('The version form view', () => {
             flux.getStore(FLUX).receiveApplication(TEST_APP);
             flux.getStore(FLUX).receiveApplicationVersion(TEST_VERSION);
             props = {
-                flux: flux,
                 applicationId: APP_ID,
                 versionId: VER_ID,
-                edit: true
+                edit: true,
+                kioStore: flux.getStore('kio'),
+                kioActions: flux.getActions('kio'),
+                userStore: flux.getStore('user')
             };
             form = render(VersionForm, props);
         });

@@ -16,10 +16,16 @@ import VersionDetail from './version-detail/version-detail.jsx';
 import ApprovalForm from './approval-form/approval-form.jsx';
 
 const MINT_ACTIONS = FLUX.getActions('mint'),
+      MINT_STORE = FLUX.getStore('mint'),
       PIERONE_ACTIONS = FLUX.getActions('pierone'),
+      PIERONE_STORE = FLUX.getStore('pierone'),
+      USER_STORE = FLUX.getStore('user'),
       USER_ACTIONS = FLUX.getActions('user'),
       KIO_ACTIONS = FLUX.getActions('kio'),
-      KIO_STORE = FLUX.getStore('kio');
+      KIO_STORE = FLUX.getStore('kio'),
+      ESSENTIALS_STORE = FLUX.getStore('essentials'),
+      NOTIFICATION_ACTIONS = FLUX.getActions('notification'),
+      TWINTIP_STORE = FLUX.getStore('twintip');
 
 class AppListHandler extends React.Component {
     constructor() {
@@ -31,7 +37,9 @@ class AppListHandler extends React.Component {
                     flux={FLUX}
                     connectToStores={['kio']}>
 
-                    <ApplicationList />
+                    <ApplicationList
+                        userStore={USER_STORE}
+                        kioStore={KIO_STORE} />
                 </FluxComponent>;
     }
 }
@@ -64,7 +72,11 @@ class CreateAppFormHandler extends React.Component {
                     connectToStores={['kio']}>
 
                     <ApplicationForm
-                        edit={false} />
+                        edit={false}
+                        notificationActions={NOTIFICATION_ACTIONS}
+                        kioActions={KIO_ACTIONS}
+                        userStore={USER_STORE}
+                        kioStore={KIO_STORE} />
                 </FluxComponent>;
     }
 }
@@ -92,14 +104,18 @@ class EditAppFormHandler extends React.Component {
 
                     <ApplicationForm
                         edit={true}
-                        applicationId={this.props.params.applicationId} />
+                        applicationId={this.props.params.applicationId}
+                        notificationActions={NOTIFICATION_ACTIONS}
+                        userStore={USER_STORE}
+                        kioActions={KIO_ACTIONS}
+                        kioStore={KIO_STORE} />
                 </FluxComponent>;
     }
 }
 EditAppFormHandler.isAllowed = function(state) {
     let {applicationId} = state.params,
         application = KIO_STORE.getApplication(applicationId),
-        userTeams = FLUX.getStore('user').getUserCloudAccounts(),
+        userTeams = USER_STORE.getUserCloudAccounts(),
         isOwnTeam = userTeams.map(t => t.name).indexOf(application.team_id) >= 0;
     if (!isOwnTeam) {
         let error = new Error();
@@ -132,7 +148,13 @@ class AppDetailHandler extends React.Component {
                     connectToStores={['kio', 'pierone', 'twintip']}>
 
                     <ApplicationDetail
-                        applicationId={this.props.params.applicationId} />
+                        applicationId={this.props.params.applicationId}
+                        kioStore={KIO_STORE}
+                        kioActions={KIO_ACTIONS}
+                        pieroneStore={PIERONE_STORE}
+                        twintipStore={TWINTIP_STORE}
+                        notificationActions={NOTIFICATION_ACTIONS}
+                        userStore={USER_STORE} />
                 </FluxComponent>;
     }
 }
@@ -158,7 +180,13 @@ class OAuthFormHandler extends React.Component {
                     connectToStores={['mint', 'essentials', 'kio']}>
 
                     <OAuthForm
-                        applicationId={this.props.params.applicationId} />
+                        applicationId={this.props.params.applicationId}
+                        mintActions={MINT_ACTIONS}
+                        notificationActions={NOTIFICATION_ACTIONS}
+                        mintStore={MINT_STORE}
+                        userStore={USER_STORE}
+                        essentialsStore={ESSENTIALS_STORE}
+                        kioStore={KIO_STORE} />
                 </FluxComponent>;
     }
 }
@@ -187,7 +215,13 @@ class AccessFormHandler extends React.Component {
                     connectToStores={['mint', 'essentials', 'kio']}>
 
                     <AccessForm
-                        applicationId={this.props.params.applicationId} />
+                        applicationId={this.props.params.applicationId}
+                        mintActions={MINT_ACTIONS}
+                        notificationActions={NOTIFICATION_ACTIONS}
+                        mintStore={MINT_STORE}
+                        userStore={USER_STORE}
+                        essentialsStore={ESSENTIALS_STORE}
+                        kioStore={KIO_STORE} />
                 </FluxComponent>;
     }
 }
@@ -216,7 +250,8 @@ class VersionListHandler extends React.Component {
                     connectToStores={['kio']}>
 
                     <VersionList
-                        applicationId={this.props.params.applicationId} />
+                        applicationId={this.props.params.applicationId}
+                        kioStore={KIO_STORE} />
                 </FluxComponent>;
     }
 }
@@ -244,7 +279,10 @@ class VersionDetailHandler extends React.Component {
 
                     <VersionDetail
                         applicationId={this.props.params.applicationId}
-                        versionId={this.props.params.versionId} />
+                        versionId={this.props.params.versionId}
+                        kioStore={KIO_STORE}
+                        userStore={USER_STORE}
+                        pieroneStore={PIERONE_STORE} />
                 </FluxComponent>;
     }
 }
@@ -286,7 +324,11 @@ class ApprovalFormHandler extends React.Component {
 
                     <ApprovalForm
                         applicationId={this.props.params.applicationId}
-                        versionId={this.props.params.versionId} />
+                        versionId={this.props.params.versionId}
+                        kioActions={KIO_ACTIONS}
+                        kioStore={KIO_STORE}
+                        pieroneStore={PIERONE_STORE}
+                        userStore={USER_STORE} />
                 </FluxComponent>;
     }
 }
@@ -324,7 +366,10 @@ class CreateVersionFormHandler extends React.Component {
                     <VersionForm
                         edit={false}
                         applicationId={this.props.params.applicationId}
-                        versionId={this.props.params.versionId} />
+                        versionId={this.props.params.versionId}
+                        kioActions={KIO_ACTIONS}
+                        notificationActions={NOTIFICATION_ACTIONS}
+                        kioStore={KIO_STORE} />
                 </FluxComponent>;
     }
 }
@@ -344,7 +389,7 @@ CreateVersionFormHandler.fetchData = function(state) {
 CreateVersionFormHandler.isAllowed = function(state) {
     let {applicationId} = state.params,
         application = KIO_STORE.getApplication(applicationId),
-        userTeams = FLUX.getStore('user').getUserCloudAccounts(),
+        userTeams = USER_STORE.getUserCloudAccounts(),
         isOwnTeam = userTeams.map(t => t.name).indexOf(application.team_id) >= 0;
     if (!isOwnTeam) {
         let error = new Error();
@@ -369,14 +414,17 @@ class EditVersionFormHandler extends React.Component {
                     <VersionForm
                         edit={true}
                         applicationId={this.props.params.applicationId}
-                        versionId={this.props.params.versionId} />
+                        versionId={this.props.params.versionId}
+                        notificationActions={NOTIFICATION_ACTIONS}
+                        kioActions={KIO_ACTIONS}
+                        kioStore={KIO_STORE} />
                 </FluxComponent>;
     }
 }
 EditVersionFormHandler.isAllowed = function(state) {
     let {applicationId} = state.params,
         application = KIO_STORE.getApplication(applicationId),
-        userTeams = FLUX.getStore('user').getUserCloudAccounts(),
+        userTeams = USER_STORE.getUserCloudAccounts(),
         isOwnTeam = userTeams.map(t => t.name).indexOf(application.team_id) >= 0;
     if (!isOwnTeam) {
         let error = new Error();

@@ -83,9 +83,9 @@ class VersionDetail extends React.Component {
     constructor(props) {
         super();
         this.stores = {
-            kio: props.flux.getStore('kio'),
-            pierone: props.flux.getStore('pierone'),
-            user: props.flux.getStore('user')
+            kio: props.kioStore,
+            pierone: props.pieroneStore,
+            user: props.userStore
         };
     }
 
@@ -163,7 +163,7 @@ class VersionDetail extends React.Component {
                     </table>
 
                     <ScmSourceWarning
-                        flux={this.props.flux}
+                        pieroneStore={this.stores.pierone}
                         scmSource={scmSource}
                         application={application}
                         version={version} />

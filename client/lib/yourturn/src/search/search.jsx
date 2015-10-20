@@ -7,8 +7,10 @@ import 'common/asset/less/yourturn/search.less';
 class Search extends React.Component {
     constructor(props) {
         super();
-        this.store = props.flux.getStore('search');
-        this.actions = props.flux.getActions('search');
+        this.stores = {
+            search: props.searchStore
+        };
+        this.actions = props.searchActions;
         this.state = {
             term: ''
         };
@@ -25,7 +27,7 @@ class Search extends React.Component {
         if (!term.length) {
             this.actions.clearSearchResults(term);
         } else {
-            if (this.store.hasResults(term)) {
+            if (this.stores.search.hasResults(term)) {
                 this.actions.clearSearchResults(term);
             }
             Object
@@ -41,7 +43,7 @@ class Search extends React.Component {
 
     render() {
         let {term} = this.state,
-            results = this.store.getSearchResults(term);
+            results = this.stores.search.getSearchResults(term);
 
         return <div className='search'>
                     <h2>Search</h2>

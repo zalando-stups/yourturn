@@ -9,8 +9,8 @@ class ApplicationForm extends React.Component {
     constructor(props) {
         super();
         this.stores = {
-            user: props.flux.getStore('user'),
-            kio: props.flux.getStore('kio')
+            user: props.userStore,
+            kio: props.kioStore
         };
         let {kio, user} = this.stores,
             cloudAccounts = user.getUserCloudAccounts();
@@ -55,20 +55,14 @@ class ApplicationForm extends React.Component {
 
         app.service_url = app.service_url ? 'https://' + app.service_url : '';
 
-        this
-        .props
-        .flux
-        .getActions('kio')
+        this.props.kioActions
         .saveApplication(this.state.app.id, this.state.app)
         .then(() => {
             this.context.router.transitionTo(constructLocalUrl('application', [this.state.app.id]));
         })
         .catch(e => {
             let verb = this.props.edit ? 'update' : 'create';
-            this
-            .props
-            .flux
-            .getActions('notification')
+            this.props.notificationActions
             .addNotification(
                 `Could not ${verb} application ${app.name}. (${e.message})`,
                 'error'
@@ -313,8 +307,11 @@ class ApplicationForm extends React.Component {
 ApplicationForm.displayName = 'ApplicationForm';
 ApplicationForm.propTypes = {
     applicationId: React.PropTypes.string,
-    flux: React.PropTypes.object.isRequired,
-    edit: React.PropTypes.bool
+    edit: React.PropTypes.bool,
+    kioActions: React.PropTypes.object.isRequired,
+    notificationActions: React.PropTypes.object.isRequired,
+    userStore: React.PropTypes.object.isRequired,
+    kioStore: React.PropTypes.object.isRequired
 };
 ApplicationForm.contextTypes = {
     router: React.PropTypes.func.isRequired

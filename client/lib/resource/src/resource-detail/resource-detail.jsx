@@ -11,8 +11,8 @@ class ResourceDetail extends React.Component {
     constructor(props) {
         super();
         this.stores = {
-            essentials: props.flux.getStore('essentials'),
-            user: props.flux.getStore('user')
+            essentials: props.essentialsStore,
+            user: props.userStore
         };
     }
 

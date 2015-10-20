@@ -6,8 +6,11 @@ import ViolationList from './violation-list/violation-list.jsx';
 import ViolationDetail from './violation-detail/violation-detail.jsx';
 import {requireAccounts} from 'common/src/util';
 
-const FS_ACTIONS = FLUX.getActions('fullstop'),
-      TEAM_ACTIONS = FLUX.getActions('team');
+const FULLSTOP_ACTIONS = FLUX.getActions('fullstop'),
+      FULLSTOP_STORE = FLUX.getStore('fullstop'),
+      USER_STORE = FLUX.getStore('user'),
+      TEAM_ACTIONS = FLUX.getActions('team'),
+      TEAM_STORE = FLUX.getStore('team');
 
 
 class ViolationListHandler extends React.Component {
@@ -18,7 +21,11 @@ class ViolationListHandler extends React.Component {
         return <FlummoxComponent
                     flux={FLUX}
                     connectToStores={['fullstop', 'team']}>
-                    <ViolationList />
+                    <ViolationList
+                        userStore={USER_STORE}
+                        fullstopActions={FULLSTOP_ACTIONS}
+                        fullstopStore={FULLSTOP_STORE}
+                        teamStore={TEAM_STORE} />
                 </FlummoxComponent>;
     }
 }
@@ -38,13 +45,16 @@ class ViolationDetailHandler extends React.Component {
                     flux={FLUX}
                     connectToStores={['fullstop']}>
                     <ViolationDetail
-                        violationId={this.props.params.violationId} />
+                        violationId={this.props.params.violationId}
+                        userStore={USER_STORE}
+                        fullstopActions={FULLSTOP_ACTIONS}
+                        fullstopStore={FULLSTOP_STORE} />
                 </FlummoxComponent>;
     }
 
 }
 ViolationDetailHandler.fetchData = function (state) {
-    FS_ACTIONS.fetchViolation(state.params.violationId);
+    FULLSTOP_ACTIONS.fetchViolation(state.params.violationId);
     TEAM_ACTIONS.fetchAccounts();
     return requireAccounts(FLUX);
 };

@@ -15,14 +15,16 @@ class YourTurn extends React.Component {
                     <FlummoxComponent
                         flux={FLUX}
                         connectToStores={['notification']}>
-                        <NotificationBar />
+                        <NotificationBar notificationStore={FLUX.getStore('notification')}/>
                     </FlummoxComponent>
                     <div className='grid with-gutter'>
                         <div className='grid-col col-1-4'>
                             <FlummoxComponent
                                 flux={FLUX}
                                 connectToStores={['user']}>
-                                <Sidebar />
+                                <Sidebar
+                                    userActions={FLUX.getActions('user')}
+                                    userStore={FLUX.getStore('user')} />
                             </FlummoxComponent>
                         </div>
                         <div className='grid-col'>

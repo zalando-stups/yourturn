@@ -10,10 +10,10 @@ class OAuthForm extends React.Component {
     constructor(props) {
         super();
         this.stores = {
-            kio: props.flux.getStore('kio'),
-            mint: props.flux.getStore('mint'),
-            user: props.flux.getStore('user'),
-            essentials: props.flux.getStore('essentials')
+            kio: props.kioStore,
+            mint: props.mintStore,
+            user: props.userStore,
+            essentials: props.essentialsStore
         };
 
         let oauthConfig = this.stores.mint.getOAuthConfig(props.applicationId);
@@ -62,17 +62,11 @@ class OAuthForm extends React.Component {
         oauthConfig.redirect_url = this.state.redirectUrl;
         oauthConfig.is_client_confidential = this.state.isClientConfidential;
 
-        this
-        .props
-        .flux
-        .getActions('mint')
+        this.props.mintActions
         .saveOAuthConfig(applicationId, oauthConfig)
         .then(() => this.context.router.transitionTo(constructLocalUrl('application', [applicationId])))
         .catch(e => {
-            this
-            .props
-            .flux
-            .getActions('notification')
+            this.props.notificationActions
             .addNotification(
                 'Could not save OAuth client configuration for ' + applicationId + '. ' + e.message,
                 'error');
@@ -80,10 +74,7 @@ class OAuthForm extends React.Component {
     }
 
     onRenewCredentials() {
-        return this
-                .props
-                .flux
-                .getActions('mint')
+        return this.props.mintActions
                 .renewCredentials(this.props.applicationId);
     }
 
@@ -165,7 +156,12 @@ class OAuthForm extends React.Component {
 OAuthForm.displayName = 'OAuthForm';
 OAuthForm.propTypes = {
     applicationId: React.PropTypes.string.isRequired,
-    flux: React.PropTypes.object.isRequired
+    mintActions: React.PropTypes.object.isRequired,
+    notificationActions: React.PropTypes.object.isRequired,
+    kioStore: React.PropTypes.object.isRequired,
+    mintStore: React.PropTypes.object.isRequired,
+    userStore: React.PropTypes.object.isRequired,
+    essentialsStore: React.PropTypes.object.isRequired
 };
 OAuthForm.contextTypes = {
     router: React.PropTypes.func.isRequired

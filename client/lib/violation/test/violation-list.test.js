@@ -151,7 +151,10 @@ describe('The violation list view', () => {
         .receiveAccounts(USER_ACCOUNTS);
 
         props = {
-            flux: flux
+            fullstopStore: flux.getStore('fullstop'),
+            teamStore: flux.getStore('team'),
+            userStore: flux.getStore('user'),
+            fullstopActions: flux.getActions('fullstop')
         };
 
         violationList = render(ViolationList, props);

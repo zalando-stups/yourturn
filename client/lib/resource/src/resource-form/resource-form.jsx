@@ -7,11 +7,11 @@ import 'common/asset/less/resource/resource-form.less';
 class ResourceForm extends React.Component {
     constructor(props) {
         super();
-        let {edit, resourceId, flux} = props;
+        let {edit, resourceId} = props;
         this.stores = {
-            essentials: flux.getStore('essentials')
+            essentials: props.essentialsStore
         };
-        this.actions = flux.getActions('essentials');
+        this.actions = props.essentialsActions;
         this.state = {
             resource: edit ? this.stores.essentials.getResource(resourceId) : {resource_owners: []}
         };
@@ -49,10 +49,7 @@ class ResourceForm extends React.Component {
             this.context.router.transitionTo(constructLocalUrl('resource-type', [resource.id]));
         })
         .catch(err => {
-            this
-            .props
-            .flux
-            .getActions('notification')
+            this.props.notificationActions
             .addNotification(
                 `Could not save resource ${resource.name}. ${err.message}`,
                 'error'
@@ -211,7 +208,9 @@ ResourceForm.displayName = 'ResourceForm';
 ResourceForm.propTypes = {
     edit: React.PropTypes.bool,
     resourceId: React.PropTypes.string.isRequired,
-    flux: React.PropTypes.object.isRequired
+    essentialsStore: React.PropTypes.object.isRequired,
+    essentialsActions: React.PropTypes.object.isRequired,
+    notificationActions: React.PropTypes.object.isRequired
 };
 ResourceForm.contextTypes = {
     router: React.PropTypes.func.isRequired
