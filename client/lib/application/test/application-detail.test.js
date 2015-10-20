@@ -54,8 +54,10 @@ describe('The application detail view', () => {
             publicly_accessible: true
         };
         props = {
-            flux: flux,
-            applicationId: ID
+            applicationId: ID,
+            kioStore: flux.getStore('kio'),
+            twintipStore: flux.getStore('twintip'),
+            userStore: flux.getStore('user')
         };
         detail = render(Detail, props);
     });

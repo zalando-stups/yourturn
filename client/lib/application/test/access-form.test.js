@@ -74,8 +74,12 @@ describe('The access control form view', () => {
         });
 
         props = {
-            flux: flux,
-            applicationId: 'kio'
+            applicationId: 'kio',
+            kioStore: flux.getStore('kio'),
+            essentialsStore: flux.getStore('essentials'),
+            userStore: flux.getStore('user'),
+            mintStore: flux.getStore('mint'),
+            mintActions: flux.getActions('mint')
         };
         form = render(AccessForm, props);
     });

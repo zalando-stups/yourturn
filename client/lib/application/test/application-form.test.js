@@ -49,9 +49,11 @@ describe('The application form view', () => {
         beforeEach(() => {
             reset();
             props = {
-                flux: flux,
                 applicationId: APP_ID,
-                edit: false
+                edit: false,
+                kioStore: flux.getStore('kio'),
+                userStore: flux.getStore('user'),
+                kioActions: flux.getActions('kio')
             };
             flux.getStore('user').receiveAccounts([{
                 id: '123',
@@ -82,9 +84,11 @@ describe('The application form view', () => {
         beforeEach(() => {
             reset();
             props = {
-                flux: flux,
                 applicationId: APP_ID,
-                edit: true
+                edit: true,
+                kioStore: flux.getStore('kio'),
+                userStore: flux.getStore('user'),
+                kioActions: flux.getActions('kio')
             };
             flux.getStore('user').receiveAccounts([{
                 id: '123',

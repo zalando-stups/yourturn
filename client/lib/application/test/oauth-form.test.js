@@ -59,8 +59,12 @@ describe('The oauth form view', () => {
             return Promise.resolve();
         });
         props = {
-            flux: flux,
-            applicationId: 'kio'
+            applicationId: 'kio',
+            mintActions: flux.getActions('mint'),
+            kioStore: flux.getStore('kio'),
+            userStore: flux.getStore('user'),
+            mintStore: flux.getStore('mint'),
+            essentialsStore: flux.getStore('essentials')
         };
         flux.getStore('mint').receiveOAuthConfig(['kio', MOCK_KIO]);
         form = render(OAuthForm, props);

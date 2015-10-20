@@ -8,8 +8,7 @@ import UserStore from 'common/src/data/user/user-store';
 import UserActions from 'common/src/data/user/user-actions';
 import Detail from 'application/src/version-detail/version-detail.jsx';
 
-const FLUX = 'kio',
-    TEAM = 'stups',
+const TEAM = 'stups',
     VER = '0.1',
     APP = 'kio',
     TEST_VERSION = {
@@ -27,8 +26,8 @@ class MockFlux extends Flummox {
     constructor() {
         super();
 
-        this.createActions(FLUX, KioActions);
-        this.createStore(FLUX, KioStore, this);
+        this.createActions('kio', KioActions);
+        this.createStore('kio', KioStore, this);
 
         this.createActions('pierone', PieroneActions);
         this.createStore('pierone', PieroneStore, this);
@@ -46,11 +45,13 @@ describe('The version detail view', () => {
     beforeEach(() => {
         reset();
         flux = new MockFlux();
-        flux.getStore(FLUX).receiveApplicationVersion(TEST_VERSION);
+        flux.getStore('kio').receiveApplicationVersion(TEST_VERSION);
         props = {
-            flux: flux,
             applicationId: APP,
-            versionId: VER
+            versionId: VER,
+            kioStore: flux.getStore('kio'),
+            userStore: flux.getStore('user'),
+            pieroneStore: flux.getStore('pierone')
         };
         detail = render(Detail, props);
     });
