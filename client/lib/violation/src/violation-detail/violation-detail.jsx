@@ -9,7 +9,7 @@ class ViolationDetail extends React.Component {
             fullstop: props.fullstopStore,
             user: props.userStore
         };
-        this.actions = this.props.fullstopActions;
+        this.actions = props.fullstopActions;
     }
 
     resolveViolation(violation, message) {

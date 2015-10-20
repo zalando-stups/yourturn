@@ -24,7 +24,7 @@ class ViolationList extends React.Component {
             team: props.teamStore,
             user: props.userStore
         };
-        this.actions = this.props.fullstopActions;
+        this.actions = props.fullstopActions;
         this.state = {
             dispatching: false,
             currentPage: 0,
@@ -131,7 +131,9 @@ class ViolationList extends React.Component {
             violationCards = violations.map((v, i) => <Violation
                                                         key={v}
                                                         autoFocus={i === 0}
-                                                        flux={this.props.flux}
+                                                        fullstopStore={this.props.fullstopStore}
+                                                        fullstopActions={this.props.fullstopActions}
+                                                        userStore={this.props.userStore}
                                                         violationId={v} />);
 
         return <div className='violationList'>
