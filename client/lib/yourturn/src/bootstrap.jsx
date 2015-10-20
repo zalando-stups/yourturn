@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import Router from 'react-router';
 import ROUTES from './router.react.jsx';
 import YT_FLUX from './flux';
@@ -57,11 +58,11 @@ router.run(
             if (authError !== true) {
                 // if auth error true => everythings good
                 // I KNOW!
-                React.render(<DefaultError error={authError} />,
-                             document.body);
+                ReactDOM.render(<DefaultError error={authError} />,
+                                document.body);
             } else {
-                React.render(<Handler flux={YT_FLUX}/>,
-                             document.body);
+                ReactDOM.render(<Handler flux={YT_FLUX}/>,
+                                document.body);
             }
         });
     });
