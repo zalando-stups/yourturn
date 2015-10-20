@@ -16,10 +16,21 @@ import VersionDetail from './version-detail/version-detail.jsx';
 import ApprovalForm from './approval-form/approval-form.jsx';
 
 const MINT_ACTIONS = FLUX.getActions('mint'),
+      MINT_STORE = FLUX.getStore('mint')
       PIERONE_ACTIONS = FLUX.getActions('pierone'),
+      PIERONE_STORE = FLUX.getStore('pierone'),
+      USER_STORE = FLUX.getStore('user'),
       USER_ACTIONS = FLUX.getActions('user'),
       KIO_ACTIONS = FLUX.getActions('kio'),
-      KIO_STORE = FLUX.getStore('kio');
+      KIO_STORE = FLUX.getStore('kio'),
+      MINT_ACTIONS = FLUX.getActions('mint'),
+      MINT_STORE = FLUX.getStore('mint'),
+      ESSENTIALS_ACTIONS = FLUX.getActions('essentials'),
+      ESSENTIALS_STORE = FLUX.getStore('essentials'),
+      NOTIFICATION_ACTIONS = FLUX.getActions('notification'),
+      NOTIFICATION_STORE = FLUX.getStore('notification'),
+      TWINTIP_ACTIONS = FLUX.getActions('twintip'),
+      TWINTIP_STORE = FLUX.getStore('twintip'),;
 
 class AppListHandler extends React.Component {
     constructor() {
@@ -32,8 +43,8 @@ class AppListHandler extends React.Component {
                     connectToStores={['kio']}>
 
                     <ApplicationList
-                        userStore={FLUX.getStore('user')}
-                        kioStore={FLUX.getStore("kio")} />
+                        userStore={USER_STORE}
+                        kioStore={KIO_STORE} />
                 </FluxComponent>;
     }
 }
@@ -67,10 +78,10 @@ class CreateAppFormHandler extends React.Component {
 
                     <ApplicationForm
                         edit={false}
-                        notificationActions={FLUX.getActions('notification')}
-                        kioActions={FLUX.getActions('kio')}
-                        userStore={FLUX.getStore('user')}
-                        kioStore={FLUX.getStore("kio")} />
+                        notificationActions={NOTIFICATION_ACTIONS}
+                        kioActions={KIO_ACTIONS}
+                        userStore={USER_STORE}
+                        kioStore={KIO_STORE} />
                 </FluxComponent>;
     }
 }
@@ -99,17 +110,17 @@ class EditAppFormHandler extends React.Component {
                     <ApplicationForm
                         edit={true}
                         applicationId={this.props.params.applicationId}
-                        notificationActions={FLUX.getActions('notification')}
-                        userStore={FLUX.getStore('user')}
-                        kioActions={FLUX.getActions('kio')}
-                        kioStore={FLUX.getStore("kio")} />
+                        notificationActions={NOTIFICATION_ACTIONS}
+                        userStore={USER_STORE}
+                        kioActions={KIO_ACTIONS}
+                        kioStore={KIO_STORE} />
                 </FluxComponent>;
     }
 }
 EditAppFormHandler.isAllowed = function(state) {
     let {applicationId} = state.params,
         application = KIO_STORE.getApplication(applicationId),
-        userTeams = FLUX.getStore('user').getUserCloudAccounts(),
+        userTeams = USER_STORE.getUserCloudAccounts(),
         isOwnTeam = userTeams.map(t => t.name).indexOf(application.team_id) >= 0;
     if (!isOwnTeam) {
         let error = new Error();
@@ -143,12 +154,12 @@ class AppDetailHandler extends React.Component {
 
                     <ApplicationDetail
                         applicationId={this.props.params.applicationId}
-                        kioStore={FLUX.getStore("kio")}
-                        kioActions={FLUX.getActions('kio')}
-                        pieroneStore={FLUX.getStore("pierone")}
-                        twintipStore={FLUX.getStore("twintip")}
-                        notificationActions={FLUX.getActions('notification')}
-                        userStore={FLUX.getStore('user')} />
+                        kioStore={KIO_STORE}
+                        kioActions={KIO_ACTIONS}
+                        pieroneStore={PIERONE_STORE}
+                        twintipStore={TWINTIP_STORE}
+                        notificationActions={NOTIFICATION_ACTIONS}
+                        userStore={USER_STORE>
                 </FluxComponent>;
     }
 }
@@ -175,12 +186,12 @@ class OAuthFormHandler extends React.Component {
 
                     <OAuthForm
                         applicationId={this.props.params.applicationId}
-                        mintActions={FLUX.getActions("mint")}
-                        notificationActions={FLUX.getActions("notification")}
-                        mintStore={FLUX.getStore("mint")}
-                        userStore={FLUX.getStore("user")}
-                        essentialsStore={FLUX.getStore("essentials")}
-                        kioStore={FLUX.getStore("kio")} />
+                        mintActions={MINT_ACTIONS}
+                        notificationActions={NOTIFICATION_ACTIONS}
+                        mintStore={MINT_STORE}
+                        userStore={USER_STORE}
+                        essentialsStore={ESSENTIALS_STORE}
+                        kioStore={KIO_STORE} />
                 </FluxComponent>;
     }
 }
@@ -210,12 +221,12 @@ class AccessFormHandler extends React.Component {
 
                     <AccessForm
                         applicationId={this.props.params.applicationId}
-                        mintActions={FLUX.getActions("mint")}
-                        notificationActions={FLUX.getActions("notification")}
-                        mintStore={FLUX.getStore("mint")}
-                        userStore={FLUX.getStore("user")}
-                        essentialsStore={FLUX.getStore("essentials")}
-                        kioStore={FLUX.getStore("kio")} />
+                        mintActions={MINT_ACTIONS}
+                        notificationActions={NOTIFICATION_ACTIONS}
+                        mintStore={MINT_STORE}
+                        userStore={USER_STORE}
+                        essentialsStore={ESSENTIALS_STORE}
+                        kioStore={KIO_STORE} />
                 </FluxComponent>;
     }
 }
@@ -245,7 +256,7 @@ class VersionListHandler extends React.Component {
 
                     <VersionList
                         applicationId={this.props.params.applicationId}
-                        kioStore={FLUX.getStore("kio")} />
+                        kioStore={KIO_STORE} />
                 </FluxComponent>;
     }
 }
@@ -274,9 +285,9 @@ class VersionDetailHandler extends React.Component {
                     <VersionDetail
                         applicationId={this.props.params.applicationId}
                         versionId={this.props.params.versionId}
-                        kioStore={FLUX.getStore("kio")}
-                        userStore={FLUX.getStore("user")}
-                        pieroneStore={FLUX.getStore("pierone")} />
+                        kioStore={KIO_STORE}
+                        userStore={USER_STORE}
+                        pieroneStore={PIERONE_STORE>
                 </FluxComponent>;
     }
 }
@@ -319,10 +330,10 @@ class ApprovalFormHandler extends React.Component {
                     <ApprovalForm
                         applicationId={this.props.params.applicationId}
                         versionId={this.props.params.versionId}
-                        kioActions={FLUX.getActions("kio")}
-                        kioStore={FLUX.getStore("kio")}
-                        pieroneStore={FLUX.getStore("pierone")}
-                        userStore={FLUX.getStore("user")} />
+                        kioActions={KIO_ACTIONS}
+                        kioStore={KIO_STORE}
+                        pieroneStore={PIERONE_STORE}
+                        userStore={USER_STORE>
                 </FluxComponent>;
     }
 }
@@ -361,9 +372,9 @@ class CreateVersionFormHandler extends React.Component {
                         edit={false}
                         applicationId={this.props.params.applicationId}
                         versionId={this.props.params.versionId}
-                        kioActions={FLUX.getActions("kio")}
-                        notificationActions={FLUX.getActions("notification")}
-                        kioStore={FLUX.getStore("kio")} />
+                        kioActions={KIO_ACTIONS}
+                        notificationActions={NOTIFICATION_ACTIONS}
+                        kioStore={KIO_STORE} />
                 </FluxComponent>;
     }
 }
@@ -383,7 +394,7 @@ CreateVersionFormHandler.fetchData = function(state) {
 CreateVersionFormHandler.isAllowed = function(state) {
     let {applicationId} = state.params,
         application = KIO_STORE.getApplication(applicationId),
-        userTeams = FLUX.getStore('user').getUserCloudAccounts(),
+        userTeams = USER_STORE.getUserCloudAccounts(),
         isOwnTeam = userTeams.map(t => t.name).indexOf(application.team_id) >= 0;
     if (!isOwnTeam) {
         let error = new Error();
@@ -409,16 +420,16 @@ class EditVersionFormHandler extends React.Component {
                         edit={true}
                         applicationId={this.props.params.applicationId}
                         versionId={this.props.params.versionId}
-                        notificationActions={FLUX.getActions("notification")}
-                        kioActions={FLUX.getActions("kio")}
-                        kioStore={FLUX.getStore("kio")} />
+                        notificationActions={NOTIFICATION_ACTIONS}
+                        kioActions={KIO_ACTIONS}
+                        kioStore={KIO_STORE} />
                 </FluxComponent>;
     }
 }
 EditVersionFormHandler.isAllowed = function(state) {
     let {applicationId} = state.params,
         application = KIO_STORE.getApplication(applicationId),
-        userTeams = FLUX.getStore('user').getUserCloudAccounts(),
+        userTeams = USER_STORE.getUserCloudAccounts(),
         isOwnTeam = userTeams.map(t => t.name).indexOf(application.team_id) >= 0;
     if (!isOwnTeam) {
         let error = new Error();
