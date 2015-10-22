@@ -206,4 +206,51 @@ describe('The redux fullstop store', () => {
         });
         expect(state.get('violations').valueSeq().count()).to.equal(1);
     });
+
+    it('should have default search parameters', () => {
+        let state = FullstopStore(),
+            params = state.get('searchParams').toJS();
+        expect(params.from).to.be.ok;
+        expect(params.to).to.be;
+        expect(params.accounts).to.be.ok;
+        expect(params.violationTypes).to.be.ok;
+    });
+
+    it('should not implicitly overwrite defaults', () => {
+        let oldState = FullstopStore(),
+            state = FullstopStore(oldState, {
+                type: Action.UPDATE_SEARCH_PARAMS,
+                payload: {
+                    accounts: ['test']
+                }
+            }),
+            oldParams = oldState.get('searchParams').toJS(),
+            params = state.get('searchParams').toJS();
+
+        expect(params.from).to.equal(oldParams.from);
+        expect(params.to).to.equal(oldParams.to);
+        expect(params.accounts.length).to.equal(1);
+        expect(oldParams.accounts.length).to.equal(0);
+        expect(params.accounts[0]).to.equal('test');
+    });
+
+    it('should explicitly overwrite stuff', () => {
+        let initial = FullstopStore(),
+            oneState = FullstopStore(initial, {
+                type: Action.UPDATE_SEARCH_PARAMS,
+                payload: {
+                    accounts: ['bar', 'baz']
+                }
+            }),
+            twoState = FullstopStore(oneState, {
+                type: Action.UPDATE_SEARCH_PARAMS,
+                payload: {
+                    accounts: ['foo']
+                }
+            }),
+            params = twoState.get('searchParams').toJS();
+
+        expect(params.accounts.length).to.equal(1);
+        expect(params.accounts[0]).to.equal('foo');
+    });
 });

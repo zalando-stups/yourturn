@@ -1,4 +1,5 @@
 import Immutable from 'immutable';
+import moment from 'moment';
 import {Pending, Failed} from 'common/src/fetch-result';
 import Types from './fullstop-types';
 import * as Getters from './fullstop-getter';
@@ -9,6 +10,20 @@ const DEFAULT_PAGING = {
 };
 
 function FullstopStore(state, action) {
+    if (!action || action.type === '@@INIT') {
+        return Immutable.fromJS({
+            violations: {},
+            pagingInfo: DEFAULT_PAGING,
+            searchParams: {
+                page: 0,
+                accounts: [],
+                from: moment().subtract(1, 'week').startOf('day'),
+                to: moment(),
+                violationTypes: []
+            }
+        });
+    }
+
     let {type, payload} = action;
     if (type === Types.BEGIN_FETCH_VIOLATIONS) {
         return state.set('pagingInfo', Immutable.Map(DEFAULT_PAGING));
@@ -38,11 +53,14 @@ function FullstopStore(state, action) {
         return state;
     } else if (type === Types.DELETE_VIOLATIONS) {
         return state.set('violations', Immutable.Map());
-    } else if (type === '@@INIT') {
-        return Immutable.fromJS({
-            violations: {},
-            pagingInfo: DEFAULT_PAGING
+    } else if (type === Types.UPDATE_SEARCH_PARAMS) {
+        let currentParams = state.get('searchParams');
+        Object
+        .keys(payload)
+        .forEach(param => {
+            currentParams = currentParams.set(param, payload[param]);
         });
+        return state.set('searchParams', currentParams);
     }
     return state;
 }
@@ -81,13 +99,15 @@ export default class FullstopStoreWrapper extends Store {
             this.beginFetchViolation,
             this.receiveViolation,
             this.failFetchViolation);
+
+        this.register(
+            fullstopActions.updateSearchParams,
+            this.receiveSearchParams);
     }
 
     _empty() {
         this.state = {
-            redux: FullstopStore(undefined, {
-                type: '@@INIT'
-            })
+            redux: FullstopStore()
         };
     }
 
@@ -146,6 +166,15 @@ export default class FullstopStoreWrapper extends Store {
         });
     }
 
+    receiveSearchParams(params) {
+        this.setState({
+            redux: FullstopStore(this.state.redux, {
+                type: Types.UPDATE_SEARCH_PARAMS,
+                payload: params
+            })
+        });
+    }
+
     getPagingInfo() {
         return Getters.getPagingInfo(this.state.redux);
     }
@@ -156,5 +185,9 @@ export default class FullstopStoreWrapper extends Store {
 
     getViolations(accounts, resolved) {
         return Getters.getViolations(this.state.redux, accounts, resolved);
+    }
+
+    getSearchParams() {
+        return Getters.getSearchParams(this.state.redux);
     }
 }

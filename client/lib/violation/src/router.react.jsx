@@ -5,6 +5,7 @@ import FLUX from 'yourturn/src/flux';
 import ViolationList from './violation-list/violation-list.jsx';
 import ViolationDetail from './violation-detail/violation-detail.jsx';
 import {requireAccounts} from 'common/src/util';
+import moment from 'moment';
 
 const FULLSTOP_ACTIONS = FLUX.getActions('fullstop'),
       FULLSTOP_STORE = FLUX.getStore('fullstop'),
@@ -12,6 +13,19 @@ const FULLSTOP_ACTIONS = FLUX.getActions('fullstop'),
       TEAM_ACTIONS = FLUX.getActions('team'),
       TEAM_STORE = FLUX.getStore('team');
 
+function parseQueryParams(params) {
+    let result = {};
+    if (params.accounts) {
+        result.accounts = params.accounts;
+    }
+    if (params.from) {
+        result.from = moment(params.from);
+    }
+    if (params.to) {
+        result.to = moment(params.to);
+    }
+    return result;
+}
 
 class ViolationListHandler extends React.Component {
     constructor() {
@@ -30,10 +44,25 @@ class ViolationListHandler extends React.Component {
     }
 }
 ViolationListHandler.displayName = 'ViolationListHandler';
-ViolationListHandler.fetchData = function() {
-    TEAM_ACTIONS.fetchAccounts();
+ViolationListHandler.fetchData = function(router) {
+    // if there are query params we have to pre-set those as search parameters
+    if (router.query) {
+        FULLSTOP_ACTIONS.updateSearchParams(parseQueryParams(router.query));
+        FULLSTOP_ACTIONS.fetchViolations(FULLSTOP_STORE.getSearchParams());
+    }
+    // if there aren't any teams from team service yet, fetch them NAO
+    if (!TEAM_STORE.getAccounts().length) {
+        TEAM_ACTIONS.fetchAccounts();
+    }
     return requireAccounts(FLUX);
 };
+ViolationListHandler.propTypes = {
+    query: React.PropTypes.object.isRequired
+};
+ViolationListHandler.contextTypes = {
+    router: React.PropTypes.func.isRequired
+};
+
 
 class ViolationDetailHandler extends React.Component {
     constructor() {
