@@ -77,7 +77,7 @@ class ViolationList extends React.Component {
         Object.keys(params).forEach(k => {
             if (moment.isMoment(params[k])) {
                 // dates have to parsed to timestamp again
-                params[k] = params[k].toDate();
+                params[k] = params[k].toISOString();
             }
         });
         context.router.transitionTo('violation-vioList', {}, merge(context.router.getCurrentQuery(), params));
@@ -166,7 +166,7 @@ class ViolationList extends React.Component {
             searchParams = this.stores.fullstop.getSearchParams(),
             selectableAccounts = this.stores.team.getAccounts(),
             activeAccountIds = searchParams.accounts,
-            showingSince = searchParams.from.toDate(),
+            showingSince = searchParams.from.toISOString(),
             violations = this.stores.fullstop.getViolations(activeAccountIds).map(v => v.id),
             pagingInfo = this.stores.fullstop.getPagingInfo(),
             violationCards = violations.map((v, i) => <Violation

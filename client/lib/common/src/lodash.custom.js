@@ -1,7 +1,7 @@
 /**
  * @license
  * lodash 3.9.3 (Custom Build) <https://lodash.com/>
- * Build: `lodash modern include="chain,debounce,difference,extend,filter,findLastIndex,flatten,forOwn,groupBy,intersection,pluck,reverse,sortBy,slice,take,times,value,values" -d -o lib/common/src/lodash.custom.js`
+ * Build: `lodash modern include="chain,debounce,difference,extend,filter,findLastIndex,flatten,forOwn,groupBy,intersection,isEmpty,pluck,reverse,sortBy,slice,take,times,value,values" -d -o lib/common/src/lodash.custom.js`
  * Copyright 2012-2015 The Dojo Foundation <http://dojofoundation.org/>
  * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
  * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
@@ -3738,6 +3738,44 @@
   };
 
   /**
+   * Checks if `value` is empty. A value is considered empty unless it is an
+   * `arguments` object, array, string, or jQuery-like collection with a length
+   * greater than `0` or an object with own enumerable properties.
+   *
+   * @static
+   * @memberOf _
+   * @category Lang
+   * @param {Array|Object|string} value The value to inspect.
+   * @returns {boolean} Returns `true` if `value` is empty, else `false`.
+   * @example
+   *
+   * _.isEmpty(null);
+   * // => true
+   *
+   * _.isEmpty(true);
+   * // => true
+   *
+   * _.isEmpty(1);
+   * // => true
+   *
+   * _.isEmpty([1, 2, 3]);
+   * // => false
+   *
+   * _.isEmpty({ 'a': 1 });
+   * // => false
+   */
+  function isEmpty(value) {
+    if (value == null) {
+      return true;
+    }
+    if (isArrayLike(value) && (isArray(value) || isString(value) || isArguments(value) ||
+        (isObjectLike(value) && isFunction(value.splice)))) {
+      return !value.length;
+    }
+    return !keys(value).length;
+  }
+
+  /**
    * Checks if `value` is classified as a `Function` object.
    *
    * @static
@@ -3811,6 +3849,26 @@
       return reIsNative.test(fnToString.call(value));
     }
     return isObjectLike(value) && reIsHostCtor.test(value);
+  }
+
+  /**
+   * Checks if `value` is classified as a `String` primitive or object.
+   *
+   * @static
+   * @memberOf _
+   * @category Lang
+   * @param {*} value The value to check.
+   * @returns {boolean} Returns `true` if `value` is correctly classified, else `false`.
+   * @example
+   *
+   * _.isString('abc');
+   * // => true
+   *
+   * _.isString(1);
+   * // => false
+   */
+  function isString(value) {
+    return typeof value == 'string' || (isObjectLike(value) && objToString.call(value) == stringTag);
   }
 
   /**
@@ -4432,9 +4490,11 @@
   lodash.indexOf = indexOf;
   lodash.isArguments = isArguments;
   lodash.isArray = isArray;
+  lodash.isEmpty = isEmpty;
   lodash.isFunction = isFunction;
   lodash.isNative = isNative;
   lodash.isObject = isObject;
+  lodash.isString = isString;
   lodash.isTypedArray = isTypedArray;
   lodash.last = last;
   lodash.noop = noop;
