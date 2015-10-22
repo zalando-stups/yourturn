@@ -24,7 +24,7 @@ describe('The fullstop actions', () => {
     describe('should have oauth enabled', () => {
         it('#fetchViolations', () => {
             mitm.on('request', assertOAuthHeader);
-            fetchViolations([]);
+            fetchViolations({});
         });
 
         it('#fetchViolation', () => {

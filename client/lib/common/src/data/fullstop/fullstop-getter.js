@@ -30,8 +30,13 @@ function getViolations(state, accounts, resolved) {
             .toJS();
 }
 
+function getSearchParams(state) {
+    return state.get('searchParams').toJS();
+}
+
 export {
-    getViolations as getViolations,
-    getViolation as getViolation,
-    getPagingInfo as getPagingInfo
+    getViolations,
+    getViolation,
+    getPagingInfo,
+    getSearchParams
 };

@@ -5,6 +5,8 @@ import moment from 'moment';
 import {Typeahead} from 'react-typeahead';
 import Datepicker from 'common/src/datepicker.jsx';
 import Violation from 'violation/src/violation-detail/violation-detail.jsx';
+import {merge} from 'common/src/util';
+import 'promise.prototype.finally';
 import 'common/asset/less/violation/violation-list.less';
 
 const InfiniteList = Infinite(React);
@@ -17,7 +19,7 @@ function filterOptionFn(input, option) {
 }
 
 class ViolationList extends React.Component {
-    constructor(props) {
+    constructor(props, context) {
         super();
         this.stores = {
             fullstop: props.fullstopStore,
@@ -25,51 +27,96 @@ class ViolationList extends React.Component {
             user: props.userStore
         };
         this.actions = props.fullstopActions;
+        // make initial list of accounts
+        let selectableAccounts = this.stores.team.getAccounts(), // these we can in theory select
+            activeAccountIds = this.stores.fullstop.getSearchParams().accounts, // these are actively searched for
+            selectedAccounts = this.stores.user.getUserCloudAccounts(); // these the user has access to
+        // if there are no active account ids, use those of selected accounts
+        // otherwise select accounts with active account ids
+        //
+        // GOD is this confusing
+        if (activeAccountIds.length) {
+            Array.prototype.push.apply(selectedAccounts, selectableAccounts.filter(a => activeAccountIds.indexOf(a.id) >= 0));
+            // deduplicate
+            selectedAccounts = selectedAccounts
+                                .reduce((accs, cur) => {
+                                    if (accs.map(a => a.id).indexOf(cur.id) < 0) {
+                                        accs.push(cur);
+                                    }
+                                    return accs;
+                                },
+                                []);
+        } else {
+            Array.prototype.push.apply(activeAccountIds, selectedAccounts.map(a => a.id));
+            this.updateSearch({
+                accounts: activeAccountIds
+            }, context);
+        }
         this.state = {
-            dispatching: false,
-            currentPage: 0,
-            selectableAccounts: this.stores.user.getUserCloudAccounts(),
-            showingAccounts: this.stores.user.getUserCloudAccounts().map(a => a.id),
-            showingSince: moment().subtract(1, 'week').startOf('day').toDate()
+            selectedAccounts,
+            dispatching: false
         };
-    }
-
-    componentWillMount() {
-        this.loadMore(0);
     }
 
     showSince(day) {
         this.actions.deleteViolations();
-        this.setState({
-            showingSince: day,
-            currentPage: 0
+        this.updateSearch({
+            from: moment(day),
+            page: 0
         });
-        setTimeout(() => this.loadMore(0), 0);
+        this.actions.fetchViolations(this.stores.fullstop.getSearchParams());
     }
 
+    /**
+     * Updates search parameters in fullstop store and query params in route.
+     * @param  {Object} params  The new params
+     * @param  {Object} context Router context
+     */
+    updateSearch(params, context = this.context) {
+        this.actions.updateSearchParams(params);
+        Object.keys(params).forEach(k => {
+            if (moment.isMoment(params[k])) {
+                // dates have to parsed to timestamp again
+                params[k] = params[k].toISOString();
+            }
+        });
+        context.router.transitionTo('violation-vioList', {}, merge(context.router.getCurrentQuery(), params));
+    }
+
+    /**
+     * Add or remove this account from search parameters.
+     *
+     * @param  {String} accountId
+     */
     toggleAccount(accountId) {
-        let {showingAccounts} = this.state,
-            index = showingAccounts.indexOf(accountId);
+        let activeAccountIds = this.stores.fullstop.getSearchParams().accounts,
+            index = activeAccountIds.indexOf(accountId);
         if (index >= 0) {
             // remove
-            showingAccounts.splice(index, 1);
+            activeAccountIds.splice(index, 1);
         } else {
             // add
-            showingAccounts.push(accountId);
+            activeAccountIds.push(accountId);
         }
-        this.setState({
-            showingAccounts: showingAccounts
+        this.updateSearch({
+            accounts: activeAccountIds,
+            page: 0
         });
-        setTimeout(() => this.loadMore(0), 0);
+        this.actions.fetchViolations(this.stores.fullstop.getSearchParams());
     }
 
-    addAccount(account) {
+    /**
+     * Selects this account, i.e. adds it to list of toggleable accounts.
+     *
+     * @param  {Object} account
+     */
+    selectAccount(account) {
         let {id} = account;
-        if (this.state.selectableAccounts.map(a => a.id).indexOf(id) >= 0) {
+        if (this.state.selectedAccounts.map(a => a.id).indexOf(id) >= 0) {
             return;
         }
-        this.state.selectableAccounts.push(account);
-        this.state.selectableAccounts
+        this.state.selectedAccounts.push(account);
+        this.state.selectedAccounts
             .sort((a, b) => {
                     let aName = a.name.toLowerCase(),
                         bName = b.name.toLowerCase();
@@ -78,55 +125,49 @@ class ViolationList extends React.Component {
                             bName < aName ?
                                 1 : 0;
                  });
-        this.state.showingAccounts.push(id);
-        this.setState({
-            selectableAccounts: this.state.selectableAccounts,
-            showingAccounts: this.state.showingAccounts
+        let activeAccountIds = this.stores.fullstop.getSearchParams().accounts;
+        activeAccountIds.push(id);
+        this.updateSearch({
+            accounts: activeAccountIds,
+            page: 0
         });
-        setTimeout(() => this.loadMore(0), 0);
+        this.setState({
+            selectableAccounts: this.state.selectableAccounts
+        });
+        this.actions.fetchViolations(this.stores.fullstop.getSearchParams());
     }
 
+    /**
+     * Used by infinite list, used to fetch next page of results.
+     *
+     * @param  {Number} page The page to fetch
+     */
     loadMore(page) {
-        let {showingSince, showingAccounts, dispatching} = this.state;
-        // need to keep track of which action was already dispatched
-        if (!dispatching) {
-            if (typeof page === 'number') {
+        // we get an error if we don't track this ;_;
+        if (!this.state.dispatching) {
+            this.setState({
+                dispatching: true
+            });
+            this.updateSearch({
+                page
+            });
+            this.actions
+            .fetchViolations(this.stores.fullstop.getSearchParams())
+            .finally(() => {
                 this.setState({
-                    dispatching: true
+                    dispatching: false
                 });
-                this
-                .actions
-                .fetchViolations(showingAccounts, showingSince.toISOString(), 10, page)
-                .then(() => this.setState({
-                    dispatching: false
-                }))
-                .catch(() => this.setState({
-                    dispatching: false
-                }));
-            } else if (page === true) {
-                // use current page
-                page = this.state.currentPage + 1;
-                this.setState({
-                    currentPage: page,
-                    dispatching: true
-                });
-                this
-                .actions
-                .fetchViolations(showingAccounts, showingSince.toISOString(), 10, page)
-                .then(() => this.setState({
-                    dispatching: false
-                }))
-                .catch(() => this.setState({
-                    dispatching: false
-                }));
-            }
+            });
         }
     }
 
     render() {
-        let {showingAccounts, selectableAccounts} = this.state,
-            accounts = this.stores.team.getAccounts(),
-            violations = this.stores.fullstop.getViolations(showingAccounts).map(v => v.id),
+        let {selectedAccounts} = this.state,
+            searchParams = this.stores.fullstop.getSearchParams(),
+            selectableAccounts = this.stores.team.getAccounts(),
+            activeAccountIds = searchParams.accounts,
+            showingSince = searchParams.from.toDate(),
+            violations = this.stores.fullstop.getViolations(activeAccountIds).map(v => v.id),
             pagingInfo = this.stores.fullstop.getPagingInfo(),
             violationCards = violations.map((v, i) => <Violation
                                                         key={v}
@@ -149,21 +190,21 @@ class ViolationList extends React.Component {
                                 <Icon name='search' />
                                 <Typeahead
                                     placeholder='stups-test 123456'
-                                    options={accounts}
+                                    options={selectableAccounts}
                                     displayOption={option => `${option.name} (${option.id})`}
                                     filterOption={filterOptionFn}
-                                    onOptionSelected={this.addAccount.bind(this)}
+                                    onOptionSelected={this.selectAccount.bind(this)}
                                     maxVisible={10} />
                             </div>
-                            {selectableAccounts.map(a =>
+                            {selectedAccounts.map(a =>
                                 <label
                                     key={a.id}
-                                    className={showingAccounts.indexOf(a.id) >= 0 ? 'is-checked' : ''}>
+                                    className={activeAccountIds.indexOf(a.id) >= 0 ? 'is-checked' : ''}>
                                     <input
                                         type='checkbox'
                                         value={a.id}
                                         onChange={this.toggleAccount.bind(this, a.id)}
-                                        defaultChecked={showingAccounts.indexOf(a.id) >= 0}/> {a.name} <small>({a.id})</small>
+                                        defaultChecked={activeAccountIds.indexOf(a.id) >= 0}/> {a.name} <small>({a.id})</small>
                                 </label>)}
                         </div>
                         <div>
@@ -171,7 +212,7 @@ class ViolationList extends React.Component {
                         </div>
                         <Datepicker
                             onChange={this.showSince.bind(this)}
-                            selectedDay={this.state.showingSince} />
+                            selectedDay={showingSince} />
                     </div>
                     <div className='violationList-info'>
                         Fetched {violationCards.length} violations. {pagingInfo.last ? '' : 'Scroll down to load more.'}
@@ -180,7 +221,7 @@ class ViolationList extends React.Component {
                         data-block='violation-list'
                         className='violationList-list'>
                         <InfiniteList
-                            loadMore={this.loadMore.bind(this, true)}
+                            loadMore={this.loadMore.bind(this)}
                             hasMore={!pagingInfo.last}
                             loader={<Icon spin name='circle-o-notch u-spinner' />}>
                             {violationCards}
@@ -195,6 +236,9 @@ ViolationList.propTypes = {
     teamStore: React.PropTypes.object.isRequired,
     userStore: React.PropTypes.object.isRequired,
     fullstopActions: React.PropTypes.object.isRequired
+};
+ViolationList.contextTypes = {
+    router: React.PropTypes.func.isRequired
 };
 
 export default ViolationList;

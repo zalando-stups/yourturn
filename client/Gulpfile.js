@@ -25,6 +25,7 @@ var LODASH_FUNCS = [
         'forOwn',
         'groupBy',
         'intersection',
+        'isEmpty',
         'pluck',
         'reverse',
         'sortBy',

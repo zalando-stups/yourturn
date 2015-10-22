@@ -22,7 +22,18 @@ function createActionTypes(types) {
     {});
 }
 
+function merge(dest, src) {
+    let result = dest || {};
+    Object
+    .keys(src)
+    .forEach(k => {
+        result[k] = src[k];
+    });
+    return result;
+}
+
 export {
-    requireAccounts as requireAccounts,
-    createActionTypes as createActionTypes
+    requireAccounts,
+    createActionTypes,
+    merge
 };

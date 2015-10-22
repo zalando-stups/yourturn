@@ -7,7 +7,8 @@ const TYPES = [
     'BEGIN_FETCH_VIOLATION',
     'FAIL_FETCH_VIOLATION',
     'RECEIVE_VIOLATION',
-    'DELETE_VIOLATIONS'
+    'DELETE_VIOLATIONS',
+    'UPDATE_SEARCH_PARAMS'
 ];
 
 export default createActionTypes(TYPES);

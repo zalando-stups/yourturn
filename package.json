@@ -6,6 +6,7 @@
     "start": "cd client && node server.js",
     "lint": "cd client && ../node_modules/gulp/bin/gulp.js lint",
     "format": "cd client && ../node_modules/gulp/bin/gulp.js format",
+    "lodash": "cd client && gulp lodash",
     "test": "cd client && webpack --config webpack.test.config.js && mocha -r mocha-globals.js dist/test.js",
     "test-coverage": "cd client && ../node_modules/webpack/bin/webpack.js --config webpack.test.config.js && ../node_modules/istanbul/lib/cli.js cover ../node_modules/mocha/bin/_mocha --report lcovonly -- -r mocha-globals.js dist/test.js && cat ./coverage/lcov.info | ../node_modules/coveralls/bin/coveralls.js"
   },
@@ -24,6 +25,7 @@
     "fuzzysearch": "1.0.3",
     "immutable": "3.7.4",
     "oauth2-client-js": "0.0.14",
+    "promise.prototype.finally": "^1.0.1",
     "react": "0.13.3",
     "react-day-picker": "1.0.1",
     "react-fa": "3.3.1",

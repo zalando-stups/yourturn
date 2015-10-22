@@ -5,15 +5,15 @@ import request from 'common/src/superagent';
 import {Provider, RequestConfig, saveRoute} from 'common/src/oauth-provider';
 import {Actions} from 'flummox';
 
-function fetchViolations(accounts, since, size, page) {
+function fetchViolations(params) {
     return request
             .get(`${FULLSTOP_BASE_URL}/violations`)
             .accept('json')
             .query({
-                accounts: accounts,
-                size: size || 10,
-                since: since || (new Date()).toISOString(),
-                page: page || 0
+                accounts: params.accounts,
+                size: params.size || 10,
+                since: params.from ? params.from.toISOString() : (new Date()).toISOString(),
+                page: params.page || 0
             })
             .oauth(Provider, RequestConfig)
             .exec(saveRoute)
@@ -48,6 +48,10 @@ function deleteViolations() {
     return true;
 }
 
+function updateSearchParams(params) {
+    return params;
+}
+
 // for now wrap in flummox actions
 export default class FullstopActions extends Actions {
     resolveViolation() {
@@ -65,6 +69,10 @@ export default class FullstopActions extends Actions {
     deleteViolations() {
         return deleteViolations();
     }
+
+    updateSearchParams(params) {
+        return updateSearchParams(params);
+    }
 }
 
 /* this is for later, when all is redux */
@@ -78,5 +86,6 @@ export {
     fetchViolations as fetchViolations,
     fetchViolation as fetchViolation,
     resolveViolation as resolveViolation,
-    deleteViolations as deleteViolations
+    deleteViolations as deleteViolations,
+    updateSearchParams as updateSearchParams
 };
