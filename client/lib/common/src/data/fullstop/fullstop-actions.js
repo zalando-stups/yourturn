@@ -9,7 +9,12 @@ function fetchViolations(params) {
     return request
             .get(`${FULLSTOP_BASE_URL}/violations`)
             .accept('json')
-            .query(params)
+            .query({
+                accounts: params.accounts,
+                size: params.size || 10,
+                since: params.from,
+                page: params.page || 0
+            })
             .oauth(Provider, RequestConfig)
             .exec(saveRoute)
             .then(res => [res.body, res.body.content]);
