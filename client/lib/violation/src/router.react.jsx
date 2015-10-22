@@ -6,6 +6,7 @@ import ViolationList from './violation-list/violation-list.jsx';
 import ViolationDetail from './violation-detail/violation-detail.jsx';
 import {requireAccounts} from 'common/src/util';
 import moment from 'moment';
+import _ from 'lodash';
 
 const FULLSTOP_ACTIONS = FLUX.getActions('fullstop'),
       FULLSTOP_STORE = FLUX.getStore('fullstop'),
@@ -46,7 +47,7 @@ class ViolationListHandler extends React.Component {
 ViolationListHandler.displayName = 'ViolationListHandler';
 ViolationListHandler.fetchData = function(router) {
     // if there are query params we have to pre-set those as search parameters
-    if (router.query) {
+    if (!_.isEmpty(router.query)) {
         FULLSTOP_ACTIONS.updateSearchParams(parseQueryParams(router.query));
         FULLSTOP_ACTIONS.fetchViolations(FULLSTOP_STORE.getSearchParams());
     }

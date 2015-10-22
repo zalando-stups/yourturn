@@ -61,9 +61,7 @@ class ViolationList extends React.Component {
     showSince(day) {
         this.actions.deleteViolations();
         this.updateSearch({
-            from: moment(day)
-        });
-        this.updateSearch({
+            from: moment(day),
             page: 0
         });
         this.actions.fetchViolations(this.stores.fullstop.getSearchParams());

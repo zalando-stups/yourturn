@@ -12,7 +12,7 @@ function fetchViolations(params) {
             .query({
                 accounts: params.accounts,
                 size: params.size || 10,
-                since: params.from,
+                since: params.from.toDate(),
                 page: params.page || 0
             })
             .oauth(Provider, RequestConfig)
