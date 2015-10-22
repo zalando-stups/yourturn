@@ -166,7 +166,7 @@ class ViolationList extends React.Component {
             searchParams = this.stores.fullstop.getSearchParams(),
             selectableAccounts = this.stores.team.getAccounts(),
             activeAccountIds = searchParams.accounts,
-            showingSince = searchParams.from.toISOString(),
+            showingSince = searchParams.from.toDate(),
             violations = this.stores.fullstop.getViolations(activeAccountIds).map(v => v.id),
             pagingInfo = this.stores.fullstop.getPagingInfo(),
             violationCards = violations.map((v, i) => <Violation
