@@ -1,0 +1,41 @@
+[{
+    "account": "123456789",
+    "type": "WRONG_APPLICATION_MASTERDATA",
+    "quantity": 694
+  },
+  {
+    "account": "123456789",
+    "type": "APPLICATION_VERSION_NOT_PRESENT_IN_KIO",
+    "quantity": 3
+  },
+  {
+    "account": "123456789",
+    "type": "UNSECURED_ENDPOINT",
+    "quantity": 1
+  },
+  {
+    "account": "123456789",
+    "type": "WRONG_APPLICATION_MASTERDATA",
+    "quantity": 1
+  },
+  {
+    "account": "123456789",
+    "type": "APPLICATION_VERSION_NOT_PRESENT_IN_KIO",
+    "quantity": 4268
+  },
+  {
+    "account": "123456789",
+    "type": "EC2_WITH_A_SNAPSHOT_IMAGE",
+    "quantity": 5
+  },
+  {
+    "account": "123456789",
+    "type": "UNSECURED_ENDPOINT",
+    "quantity": 4
+  },
+  {
+    "account": "123456789",
+    "type": "WRONG_APPLICATION_MASTERDATA",
+    "quantity": 4278
+  }
+]

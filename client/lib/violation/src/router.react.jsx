@@ -48,8 +48,13 @@ ViolationListHandler.displayName = 'ViolationListHandler';
 ViolationListHandler.fetchData = function(router) {
     // if there are query params we have to pre-set those as search parameters
     if (!_.isEmpty(router.query)) {
+        let searchParams = FULLSTOP_STORE.getSearchParams();
         FULLSTOP_ACTIONS.updateSearchParams(parseQueryParams(router.query));
-        FULLSTOP_ACTIONS.fetchViolations(FULLSTOP_STORE.getSearchParams());
+        FULLSTOP_ACTIONS.fetchViolations(searchParams);
+        FULLSTOP_ACTIONS.fetchViolationCount(searchParams);
+    }
+    if (!FULLSTOP_STORE.getViolationTypes().length) {
+        FULLSTOP_ACTIONS.fetchViolationTypes();
     }
     // if there aren't any teams from team service yet, fetch them NAO
     if (!TEAM_STORE.getAccounts().length) {

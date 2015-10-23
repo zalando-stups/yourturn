@@ -2,6 +2,7 @@ import React from 'react';
 import moment from 'moment';
 import Datepicker from 'common/src/datepicker.jsx';
 import AccountSelector from 'violation/src/account-selector.jsx';
+import Charts from 'react-d3-components';
 import {merge} from 'common/src/util';
 import 'promise.prototype.finally';
 
@@ -81,8 +82,10 @@ class ViolationOverview extends React.Component {
             searchParams = this.stores.fullstop.getSearchParams(),
             selectableAccounts = this.stores.team.getAccounts(),
             activeAccountIds = searchParams.accounts,
-            showingSince = searchParams.from.toDate();
+            showingSince = searchParams.from.toDate(),
+            violationCount = this.stores.fullstop.getViolationCount();
 
+        console.log(violationCount.map(c => ({ x: c.type, y: c.quantity })));
         return <div className='violation-overview'>
                     <AccountSelector
                         selectableAccounts={selectableAccounts}
@@ -95,6 +98,16 @@ class ViolationOverview extends React.Component {
                     <Datepicker
                         onChange={this.showSince.bind(this)}
                         selectedDay={showingSince} />
+                    {violationCount.length ?
+                        <Charts.BarChart
+                            data={{
+                                label: 'Violation Count',
+                                values: violationCount.map(c => ({ x: c.type, y: c.quantity }))
+                            }}
+                            width={600}
+                            height={300}
+                            margin={{top: 50, left: 50, right: 50, bottom: 50}} /> :
+                        null}
                 </div>;
     }
 }
