@@ -1,9 +1,7 @@
 import React from 'react';
-import Icon from 'react-fa';
 import moment from 'moment';
 import Datepicker from 'common/src/datepicker.jsx';
 import AccountSelector from 'violation/src/account-selector.jsx';
-import Violation from 'violation/src/violation-detail/violation-detail.jsx';
 import {merge} from 'common/src/util';
 import 'promise.prototype.finally';
 

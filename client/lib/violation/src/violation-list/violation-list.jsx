@@ -9,7 +9,7 @@ import 'common/asset/less/violation/violation-list.less';
 const InfiniteList = Infinite(React);
 
 class ViolationList extends React.Component {
-    constructor(props, context) {
+    constructor(props) {
         super();
         this.stores = {
             fullstop: props.fullstopStore,
@@ -17,7 +17,6 @@ class ViolationList extends React.Component {
             user: props.userStore
         };
         this.actions = props.fullstopActions;
-        // make initial list of accounts
         this.state = {
             dispatching: false
         };
@@ -35,7 +34,7 @@ class ViolationList extends React.Component {
                 dispatching: true
             });
             this.actions.updateSearchParams({
-                page: 0
+                page: page
             });
             this.actions
             .fetchViolations(this.stores.fullstop.getSearchParams())

@@ -13,7 +13,7 @@ class AccountSelector extends React.Component {
     constructor(props) {
         super();
         this.state = {
-            selectedAccounts: props.selectedAccounts || []
+            selectedAccounts: props.selectedAccounts || []
         };
     }
 
@@ -84,11 +84,12 @@ class AccountSelector extends React.Component {
                 </div>;
     }
 }
+AccountSelector.displayName = 'AccountSelector';
 AccountSelector.propTypes = {
     selectableAccounts: React.PropTypes.array.isRequired,
     activeAccountIds: React.PropTypes.array.isRequired,
-    selectedAccounts: React.PropTypes.array
+    selectedAccounts: React.PropTypes.array,
+    onToggleAccount: React.PropTypes.func.isRequired
 };
-
 
 export default AccountSelector;
