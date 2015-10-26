@@ -130,7 +130,7 @@ class ViolationOverview extends React.Component {
                     <Datepicker
                         onChange={this.showSince.bind(this)}
                         selectedDay={showingSince} />
-                    <AutoWidth>
+                    <AutoWidth className='violation-overview-table'>
                         <SortableTable
                             rows={violationCount}>
                             <Table.Column
@@ -163,6 +163,7 @@ class ViolationOverview extends React.Component {
 
                     {chartData.length ?
                         <AutoWidth className='violation-overview-chart'>
+                            <strong>Violations in {this.stores.team.getAccount(searchParams.inspectedAccount).name} account</strong>
                             <Charts.BarChart
                                 data={{
                                     label: 'Violation Count',
@@ -171,6 +172,7 @@ class ViolationOverview extends React.Component {
                                             .map(c => ({ x: c.type, y: c.quantity }))
                                 }}
                                 tooltipHtml={(x, y0, y) => y.toString()}
+                                tooltipMode='element'
                                 height={300}
                                 margin={{top: 25, left: 50, right: 25, bottom: 25}}
                                 yAxis={{label: '# Violations'}} />

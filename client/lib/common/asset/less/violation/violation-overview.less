@@ -1,19 +1,38 @@
 @import "../variables";
 
 .violation-overview {
-    .violation-overview-table-cell-account {
-        cursor: pointer;
-        &:hover {
-            color: @orange;
+    .violation-overview-table {
+        padding-top: @padding-small;
+        .violation-overview-table-cell-account {
+            cursor: pointer;
+            &:hover {
+                color: @orange;
+            }
         }
     }
+
     .violation-overview-chart {
+        padding-top: @padding-small;
+
         text {
             font-size: 12px;
         }
         .x.axis .tick text {
             transform: rotate(-90deg)translate(5px, -15px);
             text-anchor: start;
+            pointer-events: none;
+        }
+
+        rect.bar {
+            fill: @blue-light;
+            opacity: .5;
+        }
+
+        .tooltip {
+            background: #333;
+            color: white;
+            padding: 0 @padding-tiniest;
+            border-radius: @border-radius;
         }
     }
 }
