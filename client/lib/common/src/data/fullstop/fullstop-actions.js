@@ -54,7 +54,6 @@ function fetchViolationTypes() {
 }
 
 function fetchViolationCount(params) {
-    console.log(params);
     return request
             .get(`${FULLSTOP_BASE_URL}/violation-count`)
             .query({
