@@ -3,6 +3,8 @@ import moment from 'moment';
 import Datepicker from 'common/src/datepicker.jsx';
 import AccountSelector from 'violation/src/account-selector.jsx';
 import Charts from 'react-d3-components';
+import Table from 'fixed-data-table';
+import SortableTable from 'common/src/table.jsx';
 import {merge} from 'common/src/util';
 import 'promise.prototype.finally';
 
@@ -98,6 +100,22 @@ class ViolationOverview extends React.Component {
                     <Datepicker
                         onChange={this.showSince.bind(this)}
                         selectedDay={showingSince} />
+                    <SortableTable
+                        rows={violationCount}>
+                        <Table.Column
+                            label="Account"
+                            width={200}
+                            dataKey={"account"} />
+                        <Table.Column
+                            label="Violation Type"
+                            width={200}
+                            dataKey={"type"} />
+                        <Table.Column
+                            label="#"
+                            width={200}
+                            dataKey={"quantity"} />
+                    </SortableTable>;
+
                     {violationCount.length ?
                         <Charts.BarChart
                             data={{
