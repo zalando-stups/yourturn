@@ -14,7 +14,7 @@ function FullstopStore(state, action) {
         return Immutable.fromJS({
             violations: {},
             violationCount: [],
-            violationTypes: {},
+            violationTypes: [],
             pagingInfo: DEFAULT_PAGING,
             searchParams: {
                 page: 0,
