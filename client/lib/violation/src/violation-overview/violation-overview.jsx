@@ -3,8 +3,9 @@ import moment from 'moment';
 import Datepicker from 'common/src/datepicker.jsx';
 import AccountSelector from 'violation/src/account-selector.jsx';
 import Charts from 'react-d3-components';
+import AutoWidth from 'common/src/automatic-width.jsx';
 import Table from 'fixed-data-table';
-import SortableTable from 'common/src/table.jsx';
+import SortableTable from 'common/src/sortable-table.jsx';
 import {merge} from 'common/src/util';
 import 'promise.prototype.finally';
 
@@ -100,31 +101,35 @@ class ViolationOverview extends React.Component {
                     <Datepicker
                         onChange={this.showSince.bind(this)}
                         selectedDay={showingSince} />
-                    <SortableTable
-                        rows={violationCount}>
-                        <Table.Column
-                            label="Account"
-                            width={200}
-                            dataKey={"account"} />
-                        <Table.Column
-                            label="Violation Type"
-                            width={200}
-                            dataKey={"type"} />
-                        <Table.Column
-                            label="#"
-                            width={200}
-                            dataKey={"quantity"} />
-                    </SortableTable>;
+                        <AutoWidth>
+                            <SortableTable
+                                rows={violationCount}>
+                                <Table.Column
+                                    label="Account"
+                                    width={200}
+                                    dataKey={"account"} />
+                                <Table.Column
+                                    label="Violation Type"
+                                    width={200}
+                                    dataKey={"type"} />
+                                <Table.Column
+                                    label="#"
+                                    width={200}
+                                    dataKey={"quantity"} />
+                            </SortableTable>
+                        </AutoWidth>
 
                     {violationCount.length ?
-                        <Charts.BarChart
-                            data={{
-                                label: 'Violation Count',
-                                values: violationCount.map(c => ({ x: c.type, y: c.quantity }))
-                            }}
-                            width={600}
-                            height={300}
-                            margin={{top: 50, left: 50, right: 50, bottom: 50}} /> :
+                        <AutoWidth>
+                            <Charts.BarChart
+                                data={{
+                                    label: 'Violation Count',
+                                    values: violationCount.map(c => ({ x: c.type, y: c.quantity }))
+                                }}
+                                height={300}
+                                margin={{top: 50, left: 50, right: 50, bottom: 50}} />
+                        </AutoWidth>
+                        :
                         null}
                 </div>;
     }
