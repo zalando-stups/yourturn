@@ -48,8 +48,8 @@ ViolationListHandler.displayName = 'ViolationListHandler';
 ViolationListHandler.fetchData = function(router) {
     // if there are query params we have to pre-set those as search parameters
     if (!_.isEmpty(router.query)) {
-        let searchParams = FULLSTOP_STORE.getSearchParams();
         FULLSTOP_ACTIONS.updateSearchParams(parseQueryParams(router.query));
+        let searchParams = FULLSTOP_STORE.getSearchParams();
         FULLSTOP_ACTIONS.fetchViolations(searchParams);
         FULLSTOP_ACTIONS.fetchViolationCount(searchParams);
     }

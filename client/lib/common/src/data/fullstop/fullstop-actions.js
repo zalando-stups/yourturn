@@ -12,7 +12,7 @@ function fetchViolations(params) {
             .query({
                 accounts: params.accounts,
                 size: params.size || 10,
-                since: params.from ? params.from.toISOString() : (new Date()).toISOString(),
+                since: params.from ? params.from.toISOString() : '',
                 page: params.page || 0
             })
             .oauth(Provider, RequestConfig)
@@ -54,9 +54,14 @@ function fetchViolationTypes() {
 }
 
 function fetchViolationCount(params) {
+    console.log(params);
     return request
             .get(`${FULLSTOP_BASE_URL}/violation-count`)
-            .query(params)
+            .query({
+                accounts: params.accounts,
+                to: params.to ? params.to.toISOString() : (new Date()).toISOString(),
+                from: params.from ? params.from.toISOString() : ''
+            })
             .accept('json')
             .oauth(Provider, RequestConfig)
             .exec(saveRoute)
