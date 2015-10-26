@@ -11,7 +11,7 @@ class AutomaticWidth extends React.Component {
 
      _resizeHandler() {
         let dom = this.refs.autowidthWrapper.getDOMNode();
-        if (dom.clientWidth !== this.state.width) {
+        if (dom.clientWidth !== this.state.width && dom.clientWidth > 0) {
             this.setState({
                 width: dom.clientWidth
             });

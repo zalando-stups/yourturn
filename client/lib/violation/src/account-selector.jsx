@@ -1,6 +1,7 @@
 import React from 'react';
 import Icon from 'react-fa';
 import {Typeahead} from 'react-typeahead';
+import 'common/asset/less/common/account-selector.less';
 
 function filterOptionFn(input, option) {
     return input
@@ -58,7 +59,7 @@ class AccountSelector extends React.Component {
     render() {
         let {selectableAccounts, activeAccountIds} = this.props,
             {selectedAccounts} = this.state;
-        return <div className='violationList-accounts'>
+        return <div className='account-selector'>
                     <div>Show violations in accounts:</div>
                     <small>You can search by name or account number.</small>
                     <div className='input-group'>

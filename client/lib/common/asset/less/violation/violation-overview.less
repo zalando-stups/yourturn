@@ -1,6 +1,9 @@
 @import "../variables";
 
 .violation-overview {
+    padding-top: @padding-small;
+
+
     .violation-overview-table {
         padding-top: @padding-small;
         .violation-overview-table-cell-account {
@@ -11,9 +14,15 @@
         }
     }
 
+    .violation-overview-collapsible {
+        padding-top: @padding-small;
+        header {
+            cursor: pointer;
+        }
+    }
+
     .violation-overview-chart {
         padding-top: @padding-small;
-
         text {
             font-size: 12px;
         }

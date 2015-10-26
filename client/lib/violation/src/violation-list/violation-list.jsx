@@ -72,6 +72,7 @@ class ViolationList extends React.Component {
                     <div className='violationList-info'>
                         Fetched {violationCards.length} violations. {pagingInfo.last ? '' : 'Scroll down to load more.'}
                     </div>
+                    <h4>Violations</h4>
                     <div
                         data-block='violation-list'
                         className='violationList-list'>

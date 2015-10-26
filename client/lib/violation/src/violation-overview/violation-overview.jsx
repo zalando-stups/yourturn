@@ -4,6 +4,7 @@ import _ from 'lodash';
 import Datepicker from 'common/src/datepicker.jsx';
 import AccountSelector from 'violation/src/account-selector.jsx';
 import Charts from 'react-d3-components';
+import Collapsible from 'common/src/collapsible.jsx';
 import AutoWidth from 'common/src/automatic-width.jsx';
 import Table from 'fixed-data-table';
 import SortableTable from 'common/src/sortable-table.jsx';
@@ -130,55 +131,59 @@ class ViolationOverview extends React.Component {
                     <Datepicker
                         onChange={this.showSince.bind(this)}
                         selectedDay={showingSince} />
-                    <AutoWidth className='violation-overview-table'>
-                        <SortableTable
-                            rows={violationCount}>
-                            <Table.Column
-                                cellRenderer={this.accountCellRenderer.bind(this)}
-                                label='ID'
-                                width={200}
-                                flexGrow={1}
-                                dataKey={'account'} />
-                            <Table.Column
-                                label='Account'
-                                width={200}
-                                flexGrow={1}
-                                dataKey={'accountName'} />
-                            <Table.Column
-                                label='Violation Type'
-                                width={200}
-                                flexGrow={1}
-                                dataKey={'type'} />
-                            <Table.Column
-                                label=':('
-                                width={50}
-                                flexGrow={1}
-                                dataKey='typeSeverity' />
-                            <Table.Column
-                                label='#'
-                                width={100}
-                                dataKey={'quantity'} />
-                        </SortableTable>
-                    </AutoWidth>
-
-                    {chartData.length ?
-                        <AutoWidth className='violation-overview-chart'>
-                            <strong>Violations in {this.stores.team.getAccount(searchParams.inspectedAccount).name} account</strong>
-                            <Charts.BarChart
-                                data={{
-                                    label: 'Violation Count',
-                                    values: _.sortBy(chartData, 'quantity')
-                                            .reverse()
-                                            .map(c => ({ x: c.type, y: c.quantity }))
-                                }}
-                                tooltipHtml={(x, y0, y) => y.toString()}
-                                tooltipMode='element'
-                                height={300}
-                                margin={{top: 25, left: 50, right: 25, bottom: 25}}
-                                yAxis={{label: '# Violations'}} />
+                    <Collapsible
+                        className='violation-overview-collapsible'
+                        header={<strong>Analysis</strong>}>
+                        <AutoWidth className='violation-overview-table'>
+                            <SortableTable
+                                rows={violationCount}>
+                                <Table.Column
+                                    cellRenderer={this.accountCellRenderer.bind(this)}
+                                    label='ID'
+                                    width={200}
+                                    flexGrow={1}
+                                    dataKey={'account'} />
+                                <Table.Column
+                                    label='Account'
+                                    width={200}
+                                    flexGrow={1}
+                                    dataKey={'accountName'} />
+                                <Table.Column
+                                    label='Violation Type'
+                                    width={200}
+                                    flexGrow={1}
+                                    dataKey={'type'} />
+                                <Table.Column
+                                    label=':('
+                                    width={50}
+                                    flexGrow={1}
+                                    dataKey='typeSeverity' />
+                                <Table.Column
+                                    label='#'
+                                    width={100}
+                                    dataKey={'quantity'} />
+                            </SortableTable>
                         </AutoWidth>
-                        :
-                        null}
+
+                        {chartData.length ?
+                            <AutoWidth className='violation-overview-chart'>
+                                <strong>Violations in {this.stores.team.getAccount(searchParams.inspectedAccount).name} account</strong>
+                                <Charts.BarChart
+                                    data={{
+                                        label: 'Violation Count',
+                                        values: _.sortBy(chartData, 'quantity')
+                                                .reverse()
+                                                .map(c => ({ x: c.type, y: c.quantity }))
+                                    }}
+                                    tooltipHtml={(x, y0, y) => y.toString()}
+                                    tooltipMode='element'
+                                    height={300}
+                                    margin={{top: 25, left: 50, right: 25, bottom: 25}}
+                                    yAxis={{label: '# Violations'}} />
+                            </AutoWidth>
+                            :
+                            null}
+                    </Collapsible>
                 </div>;
     }
 }
