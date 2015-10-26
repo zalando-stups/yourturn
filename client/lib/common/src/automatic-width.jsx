@@ -32,7 +32,7 @@ class AutomaticWidth extends React.Component {
     }
 
     render() {
-        return <div ref='autowidthWrapper'>
+        return <div ref='autowidthWrapper' {...this.props}>
                     {React.Children.map(this.props.children, c =>
                         React.addons.cloneWithProps(c, {
                             width: this.state.width

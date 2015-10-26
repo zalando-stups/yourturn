@@ -1,5 +1,6 @@
 import React from 'react';
 import moment from 'moment';
+import _ from 'lodash';
 import Datepicker from 'common/src/datepicker.jsx';
 import AccountSelector from 'violation/src/account-selector.jsx';
 import Charts from 'react-d3-components';
@@ -7,7 +8,7 @@ import AutoWidth from 'common/src/automatic-width.jsx';
 import Table from 'fixed-data-table';
 import SortableTable from 'common/src/sortable-table.jsx';
 import {merge} from 'common/src/util';
-import 'promise.prototype.finally';
+import 'common/asset/less/violation/violation-overview.less';
 
 class ViolationOverview extends React.Component {
     constructor(props, context) {
@@ -21,7 +22,9 @@ class ViolationOverview extends React.Component {
         // make initial list of accounts
         let selectableAccounts = this.stores.team.getAccounts(), // these we can in theory select
             activeAccountIds = this.stores.fullstop.getSearchParams().accounts, // these are actively searched for
-            selectedAccounts = this.stores.user.getUserCloudAccounts(); // these the user has access to
+            selectedAccounts = this.stores.user.getUserCloudAccounts(), // these the user has access to
+            inspectedAccount = this.stores.fullstop.getSearchParams().inspectedAccount; // this the user has selected for the chart
+
         // if there are no active account ids, use those of selected accounts
         // otherwise select accounts with active account ids
         //
@@ -37,10 +40,15 @@ class ViolationOverview extends React.Component {
                                     return accs;
                                 },
                                 []);
+            inspectedAccount = inspectedAccount || selectedAccounts[0].id;
+            this.updateSearch({
+                inspectedAccount
+            }, context);
         } else {
             Array.prototype.push.apply(activeAccountIds, selectedAccounts.map(a => a.id));
             this.updateSearch({
-                accounts: activeAccountIds
+                accounts: activeAccountIds,
+                inspectedAccount: inspectedAccount || activeAccountIds[0]
             }, context);
         }
         this.state = {
@@ -80,15 +88,36 @@ class ViolationOverview extends React.Component {
         });
     }
 
+    selectAccount(account) {
+        this.updateSearch({
+            inspectedAccount: account
+        });
+    }
+
+    accountCellRenderer(account) {
+        return <span
+                    className='violation-overview-table-cell-account'
+                    onClick={this.selectAccount.bind(this, account)}>{account}</span>;
+    }
+
     render() {
         let {selectedAccounts} = this.state,
             searchParams = this.stores.fullstop.getSearchParams(),
             selectableAccounts = this.stores.team.getAccounts(),
             activeAccountIds = searchParams.accounts,
             showingSince = searchParams.from.toDate(),
-            violationCount = this.stores.fullstop.getViolationCount();
+            violationCount = this.stores.fullstop
+                                .getViolationCount()
+                                .map(c => ({
+                                    type: c.type,
+                                    typeHelp: this.stores.fullstop.getViolationType(c.type).help_text,
+                                    typeSeverity: this.stores.fullstop.getViolationType(c.type).violation_severity,
+                                    account: c.account,
+                                    accountName: this.stores.team.getAccount(c.account).name,
+                                    quantity: c.quantity
+                                })),
+            chartData = violationCount.filter(c => c.account === searchParams.inspectedAccount);
 
-        console.log(violationCount.map(c => ({ x: c.type, y: c.quantity })));
         return <div className='violation-overview'>
                     <AccountSelector
                         selectableAccounts={selectableAccounts}
@@ -101,33 +130,50 @@ class ViolationOverview extends React.Component {
                     <Datepicker
                         onChange={this.showSince.bind(this)}
                         selectedDay={showingSince} />
-                        <AutoWidth>
-                            <SortableTable
-                                rows={violationCount}>
-                                <Table.Column
-                                    label="Account"
-                                    width={200}
-                                    dataKey={"account"} />
-                                <Table.Column
-                                    label="Violation Type"
-                                    width={200}
-                                    dataKey={"type"} />
-                                <Table.Column
-                                    label="#"
-                                    width={200}
-                                    dataKey={"quantity"} />
-                            </SortableTable>
-                        </AutoWidth>
+                    <AutoWidth>
+                        <SortableTable
+                            rows={violationCount}>
+                            <Table.Column
+                                cellRenderer={this.accountCellRenderer.bind(this)}
+                                label='ID'
+                                width={200}
+                                flexGrow={1}
+                                dataKey={'account'} />
+                            <Table.Column
+                                label='Account'
+                                width={200}
+                                flexGrow={1}
+                                dataKey={'accountName'} />
+                            <Table.Column
+                                label='Violation Type'
+                                width={200}
+                                flexGrow={1}
+                                dataKey={'type'} />
+                            <Table.Column
+                                label=':('
+                                width={50}
+                                flexGrow={1}
+                                dataKey='typeSeverity' />
+                            <Table.Column
+                                label='#'
+                                width={100}
+                                dataKey={'quantity'} />
+                        </SortableTable>
+                    </AutoWidth>
 
-                    {violationCount.length ?
-                        <AutoWidth>
+                    {chartData.length ?
+                        <AutoWidth className='violation-overview-chart'>
                             <Charts.BarChart
                                 data={{
                                     label: 'Violation Count',
-                                    values: violationCount.map(c => ({ x: c.type, y: c.quantity }))
+                                    values: _.sortBy(chartData, 'quantity')
+                                            .reverse()
+                                            .map(c => ({ x: c.type, y: c.quantity }))
                                 }}
+                                tooltipHtml={(x, y0, y) => y.toString()}
                                 height={300}
-                                margin={{top: 50, left: 50, right: 50, bottom: 50}} />
+                                margin={{top: 25, left: 50, right: 25, bottom: 25}}
+                                yAxis={{label: '# Violations'}} />
                         </AutoWidth>
                         :
                         null}

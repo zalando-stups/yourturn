@@ -14,7 +14,7 @@ function FullstopStore(state, action) {
         return Immutable.fromJS({
             violations: {},
             violationCount: [],
-            violationTypes: [],
+            violationTypes: {},
             pagingInfo: DEFAULT_PAGING,
             searchParams: {
                 page: 0,
@@ -64,7 +64,12 @@ function FullstopStore(state, action) {
         });
         return state.set('searchParams', currentParams);
     } else if (type === Types.RECEIVE_VIOLATION_TYPES) {
-        return state.set('violationTypes', Immutable.fromJS(payload));
+        let types = payload.reduce((all, t) => {
+            all[t.id] = t;
+            return all;
+        },
+        {});
+        return state.set('violationTypes', Immutable.fromJS(types));
     } else if (type === Types.RECEIVE_VIOLATION_COUNT) {
         return state.set('violationCount', Immutable.fromJS(payload));
     }
@@ -229,6 +234,10 @@ export default class FullstopStoreWrapper extends Store {
 
     getViolationTypes() {
         return Getters.getViolationTypes(this.state.redux);
+    }
+
+    getViolationType(type) {
+        return Getters.getViolationType(this.state.redux, type);
     }
 
     getViolationCount() {

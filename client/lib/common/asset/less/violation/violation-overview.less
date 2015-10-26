@@ -1,0 +1,19 @@
+@import "../variables";
+
+.violation-overview {
+    .violation-overview-table-cell-account {
+        cursor: pointer;
+        &:hover {
+            color: @orange;
+        }
+    }
+    .violation-overview-chart {
+        text {
+            font-size: 12px;
+        }
+        .x.axis .tick text {
+            transform: rotate(-90deg)translate(5px, -15px);
+            text-anchor: start;
+        }
+    }
+}

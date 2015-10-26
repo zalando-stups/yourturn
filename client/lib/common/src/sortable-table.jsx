@@ -14,9 +14,16 @@ class SortableTable extends React.Component {
         };
     }
 
-    componentWillReceiveProps(nextProps) {
+    componentWillReceiveProps(nextProps) {
+        let rows = nextProps.rows;
+        if (this.state.sortBy) {
+            rows = _.sortBy(rows, this.state.sortBy);
+        }
+        if (!this.state.sortAsc) {
+            rows = rows.reverse();
+        }
         this.setState({
-            width: nextProps.width
+            rows: rows
         });
     }
 
@@ -43,19 +50,20 @@ class SortableTable extends React.Component {
     }
 
     render() {
-        console.log(this.props.width);
-        return <Table.Table
-                    rowHeight={50}
-                    rowGetter={idx => this.state.rows[idx]}
-                    rowsCount={this.state.rows.length}
-                    height={500}
-                    width={this.props.width || 500}
-                    headerHeight={50}>
-                    {this.props.children.map(c => {
-                        c.props.headerRenderer = this.renderHeader.bind(this);
-                        return c;
-                    })}
-                </Table.Table>
+        return <div>
+                    <Table.Table
+                        rowHeight={50}
+                        rowGetter={idx => this.state.rows[idx]}
+                        rowsCount={this.state.rows.length}
+                        height={500}
+                        width={this.props.width || 500}
+                        headerHeight={50}>
+                        {this.props.children.map(c => {
+                            c.props.headerRenderer = this.renderHeader.bind(this);
+                            return c;
+                        })}
+                    </Table.Table>
+                </div>
     }
 }
 
