@@ -41,5 +41,8 @@ class AutomaticWidth extends React.Component {
                 </div>;
     }
 }
-
+AutomaticWidth.displayName = 'AutomaticWidth';
+AutomaticWidth.propTypes = {
+    children: React.PropTypes.oneOf([React.PropTypes.array, React.PropTypes.object])
+};
 export default AutomaticWidth;

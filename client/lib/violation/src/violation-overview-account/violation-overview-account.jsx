@@ -1,7 +1,7 @@
 import React from 'react';
 
 class ViolationOverviewAccount extends React.Component {
-    constructor(props) {
+    constructor() {
         super();
         this.state = {
         };

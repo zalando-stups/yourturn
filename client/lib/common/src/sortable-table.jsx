@@ -56,15 +56,19 @@ class SortableTable extends React.Component {
                         rowGetter={idx => this.state.rows[idx]}
                         rowsCount={this.state.rows.length}
                         height={500}
-                        width={this.props.width || 500}
+                        width={this.props.width || 500}
                         headerHeight={50}>
                         {this.props.children.map(c => {
                             c.props.headerRenderer = this.renderHeader.bind(this);
                             return c;
                         })}
                     </Table.Table>
-                </div>
+                </div>;
     }
 }
-
+SortableTable.displayName = 'SortableTable';
+SortableTable.propTypes = {
+    width: React.PropTypes.number,
+    children: React.PropTypes.oneOf([React.PropTypes.array, React.PropTypes.object])
+};
 export default SortableTable;
