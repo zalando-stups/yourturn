@@ -5,7 +5,7 @@ import Datepicker from 'common/src/datepicker.jsx';
 import AccountSelector from 'violation/src/account-selector.jsx';
 import Charts from 'react-d3-components';
 import Collapsible from 'common/src/collapsible.jsx';
-import AutoWidth from 'common/src/automatic-width.jsx';
+import AutoWidth from '@zalando/react-automatic-width';
 import Table from 'fixed-data-table';
 import SortableTable from 'common/src/sortable-table.jsx';
 import {merge} from 'common/src/util';

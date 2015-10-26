@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/zalando-stups/yourturn",
   "dependencies": {
+    "@zalando/react-automatic-width": "0.0.3",
     "fixed-data-table": "0.4.7",
     "flummox": "3.5.2",
     "fuzzysearch": "1.0.3",
