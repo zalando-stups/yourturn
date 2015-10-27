@@ -53,11 +53,11 @@ class SortableTable extends React.Component {
         return <div>
                     <Table.Table
                         rowHeight={50}
+                        headerHeight={50}
                         rowGetter={idx => this.state.rows[idx]}
                         rowsCount={this.state.rows.length}
-                        height={300}
                         width={this.props.width || 500}
-                        headerHeight={50}>
+                        {...this.props}>
                         {this.props.children.map(c => {
                             c.props.headerRenderer = this.renderHeader.bind(this);
                             return c;

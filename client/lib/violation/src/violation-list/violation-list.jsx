@@ -81,9 +81,21 @@ class ViolationList extends React.Component {
     }
 
     toggleAccount(activeAccountIds) {
+        // check if inspected account is still among active account ids
+        let params = this.stores.fullstop.getSearchParams(),
+            {inspectedAccount} = params;
+        if (inspectedAccount) {
+            if (activeAccountIds.indexOf(inspectedAccount) < 0) {
+                // IT IS NOT
+                inspectedAccount = activeAccountIds[0] || null;
+            }
+        } else {
+            inspectedAccount = activeAccountIds[0] || null;
+        }
         this.updateSearch({
             accounts: activeAccountIds,
-            page: 0
+            page: 0,
+            inspectedAccount
         });
     }
 
