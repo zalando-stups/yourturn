@@ -11,8 +11,13 @@ then
     exit 1
 fi
 
+# create new version
+npm version "$1"
+# build
 npm install
 cd client
 gulp build
 cd ..
+# push
 docker build -t "$DEFAULT_DOCKER_REGISTRY/stups/yourturn:$1" . && docker push "$DEFAULT_DOCKER_REGISTRY/stups/yourturn:$1"
+git push --tags
