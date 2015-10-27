@@ -12,6 +12,12 @@ function filterOptionFn(input, option) {
             .some(term => fuzzysearch(term, option.name + option.id));
 }
 
+function getDisplayedAccounts(selected, filter) {
+    return filter ?
+            selected.filter(a => fuzzysearch(filter, a.name)) :
+            selected;
+}
+
 class AccountSelector extends React.Component {
     constructor(props) {
         super();
@@ -60,6 +66,20 @@ class AccountSelector extends React.Component {
         }
     }
 
+    _toggleAll() {
+        let displayedIds = getDisplayedAccounts(this.state.selectedAccounts, this.state.filter).map(a => a.id),
+            activeIds = this.props.activeAccountIds.concat(displayedIds);
+        // dedup
+        activeIds = activeIds.filter((el, idx, all) => all.lastIndexOf(el) === idx);
+        this.props.onToggleAccount(activeIds);
+    }
+
+    _untoggleAll() {
+        let displayedIds = getDisplayedAccounts(this.state.selectedAccounts, this.state.filter).map(a => a.id),
+            activeIds = this.props.activeAccountIds.filter(a => displayedIds.indexOf(a) < 0);
+        this.props.onToggleAccount(activeIds);
+    }
+
     _filter(evt) {
         this.setState({
             filter: evt.target.value
@@ -69,9 +89,7 @@ class AccountSelector extends React.Component {
     render() {
         let {selectableAccounts, activeAccountIds} = this.props,
             {selectedAccounts} = this.state,
-            displayedAccounts = this.state.filter ?
-                                    selectedAccounts.filter(a => fuzzysearch(this.state.filter, a.name)) :
-                                    selectedAccounts,
+            displayedAccounts = getDisplayedAccounts(selectedAccounts, this.state.filter),
             partitionedAccounts = _.partition(displayedAccounts, a => activeAccountIds.indexOf(a.id) >= 0),
             activeAccounts = partitionedAccounts[0],
             inactiveAccounts = partitionedAccounts[1];
@@ -106,6 +124,14 @@ class AccountSelector extends React.Component {
                                 placeholder='Search in selected accounts'
                                 type='text'/>
                         </div>}
+                    <div className='account-selector-toggle-buttons btn-group'>
+                        <div onClick={this._toggleAll.bind(this)} className='btn btn-default'>
+                            <Icon name='check-square-o'/> Toggle all
+                        </div>
+                        <div onClick={this._untoggleAll.bind(this)} className='btn btn-default'>
+                            <Icon name='square-o' /> Untoggle all
+                        </div>
+                    </div>
                     <div className='account-selector-list'>
                     {_.sortBy(activeAccounts, 'name')
                         .map(a =>
