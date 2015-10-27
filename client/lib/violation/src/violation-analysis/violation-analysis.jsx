@@ -53,68 +53,68 @@ class ViolationAnalysis extends React.Component {
             violationCount = this.stores.fullstop.getViolationCount(),
             chartData = [];
 
-        if (violationCount.length) {
+        if (searchParams.accounts.length && violationCount.length) {
             violationCount = violationCount.map(c => ({
                                     type: c.type,
                                     typeHelp: this.stores.fullstop.getViolationType(c.type).help_text,
                                     typeSeverity: this.stores.fullstop.getViolationType(c.type).violation_severity,
                                     account: c.account,
-                                    accountName: this.stores.team.getAccount(c.account).name,
+                                    accountName: this.stores.team.getAccount(c.account) ? this.stores.team.getAccount(c.account).name : '?',
                                     quantity: c.quantity
                                 }));
             chartData = violationCount.filter(c => c.account === searchParams.inspectedAccount);
 
-        return <div className='violation-analysis'>
-                    <AutoWidth className='violation-analysis-table'>
-                        <SortableTable
-                            rows={violationCount}>
-                            <Table.Column
-                                cellRenderer={this.accountCellRenderer.bind(this)}
-                                label='ID'
-                                width={200}
-                                flexGrow={1}
-                                dataKey={'account'} />
-                            <Table.Column
-                                label='Account'
-                                width={200}
-                                flexGrow={1}
-                                dataKey={'accountName'} />
-                            <Table.Column
-                                label='Violation Type'
-                                width={200}
-                                flexGrow={1}
-                                dataKey={'type'} />
-                            <Table.Column
-                                label=':('
-                                width={50}
-                                flexGrow={1}
-                                dataKey='typeSeverity' />
-                            <Table.Column
-                                label='#'
-                                width={100}
-                                dataKey={'quantity'} />
-                        </SortableTable>
-                    </AutoWidth>
-
-                    {chartData.length ?
-                        <AutoWidth className='violation-analysis-chart'>
-                            <strong>Account {this.stores.team.getAccount(searchParams.inspectedAccount).name}</strong>
-                            <Charts.BarChart
-                                data={{
-                                    label: 'Violation Count',
-                                    values: _.sortBy(chartData, 'quantity')
-                                            .reverse()
-                                            .map(c => ({ x: c.type, y: c.quantity }))
-                                }}
-                                tooltipHtml={(x, y0, y) => y.toString()}
-                                tooltipMode='element'
-                                height={300}
-                                margin={{top: 25, left: 50, right: 25, bottom: 25}}
-                                yAxis={{label: '# Violations', innerTickSize: -1000}} />
+            return <div className='violation-analysis'>
+                        <AutoWidth className='violation-analysis-table'>
+                            <SortableTable
+                                rows={violationCount}>
+                                <Table.Column
+                                    cellRenderer={this.accountCellRenderer.bind(this)}
+                                    label='ID'
+                                    width={200}
+                                    flexGrow={1}
+                                    dataKey={'account'} />
+                                <Table.Column
+                                    label='Account'
+                                    width={200}
+                                    flexGrow={1}
+                                    dataKey={'accountName'} />
+                                <Table.Column
+                                    label='Violation Type'
+                                    width={200}
+                                    flexGrow={1}
+                                    dataKey={'type'} />
+                                <Table.Column
+                                    label=':('
+                                    width={50}
+                                    flexGrow={1}
+                                    dataKey='typeSeverity' />
+                                <Table.Column
+                                    label='#'
+                                    width={100}
+                                    dataKey={'quantity'} />
+                            </SortableTable>
                         </AutoWidth>
-                        :
-                        null}
-                </div>;
+
+                        {chartData.length ?
+                            <AutoWidth className='violation-analysis-chart'>
+                                <strong>Account {this.stores.team.getAccount(searchParams.inspectedAccount).name}</strong>
+                                <Charts.BarChart
+                                    data={{
+                                        label: 'Violation Count',
+                                        values: _.sortBy(chartData, 'quantity')
+                                                .reverse()
+                                                .map(c => ({ x: c.type, y: c.quantity }))
+                                    }}
+                                    tooltipHtml={(x, y0, y) => y.toString()}
+                                    tooltipMode='element'
+                                    height={300}
+                                    margin={{top: 25, left: 50, right: 25, bottom: 25}}
+                                    yAxis={{label: '# Violations', innerTickSize: -1000}} />
+                            </AutoWidth>
+                            :
+                            null}
+                    </div>;
         }
 
         return <div className='violation-analysis-empty'>
