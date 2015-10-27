@@ -1,4 +1,5 @@
 import React from 'react';
+import Icon from 'react-fa';
 import moment from 'moment';
 import _ from 'lodash';
 import Charts from 'react-d3-components';
@@ -49,16 +50,18 @@ class ViolationAnalysis extends React.Component {
 
     render() {
         let searchParams = this.stores.fullstop.getSearchParams(),
-            violationCount = this.stores.fullstop
-                                .getViolationCount()
-                                .map(c => ({
+            violationCount = this.stores.fullstop.getViolationCount(),
+            chartData = [];
+
+        if (violationCount.length) {
+            violationCount = violationCount.map(c => ({
                                     type: c.type,
                                     typeHelp: this.stores.fullstop.getViolationType(c.type).help_text,
                                     typeSeverity: this.stores.fullstop.getViolationType(c.type).violation_severity,
                                     account: c.account,
                                     accountName: this.stores.team.getAccount(c.account).name,
                                     quantity: c.quantity
-                                })),
+                                }));
             chartData = violationCount.filter(c => c.account === searchParams.inspectedAccount);
 
         return <div className='violation-analysis'>
@@ -112,6 +115,12 @@ class ViolationAnalysis extends React.Component {
                         :
                         null}
                 </div>;
+        }
+
+        return <div className='violation-analysis-empty'>
+                    <div><Icon name='smile-o' size='4x' /></div>
+                    <span>No violations!</span>
+                </div>
     }
 }
 ViolationAnalysis.displayName = 'ViolationAnalysis';
