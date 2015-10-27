@@ -78,7 +78,7 @@ class ViolationAnalysis extends React.Component {
                                 tooltipHtml={(x, y0, y) => y.toString()}
                                 tooltipMode='element'
                                 height={300}
-                                margin={{top: 25, left: 50, right: 25, bottom: 25}}
+                                margin={{top: 50, left: 50, right: 25, bottom: 25}}
                                 yAxis={{label: '# Violations', innerTickSize: -1000}} />
                         </AutoWidth>
                         :

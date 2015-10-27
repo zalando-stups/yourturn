@@ -5,23 +5,26 @@ import _ from 'lodash';
 import fuzzysearch from 'fuzzysearch';
 import 'common/asset/css/fixed-data-table.min.css';
 
+const ASC = 'asc',
+    DESC = 'desc';
+
 class SortableTable extends React.Component {
     constructor(props) {
         super();
         this.state = {
             rows: props.rows,
-            sortBy: '',
-            sortAsc: true,
+            sortBy: [],
+            sortOrder: [],
             filter: ''
         };
     }
 
     componentWillReceiveProps(nextProps) {
         let rows = nextProps.rows;
-        if (this.state.sortBy) {
-            rows = _.sortBy(rows, this.state.sortBy);
+        if (this.state.sortBy.length) {
+            rows = _.sortBy(rows, this.state.sortBy[0]);
         }
-        if (!this.state.sortAsc) {
+        if (!this.state.sortBy[0] === ASC) {
             rows = rows.reverse();
         }
         this.setState({
@@ -30,20 +33,36 @@ class SortableTable extends React.Component {
     }
 
     _sortBy(key) {
-        if (this.state.sortBy === key) {
+        if (!this.state.sortBy.length) {
+            // sort by key desc by default
+            console.log('first sort', [key], [DESC], _.sortByOrder(this.state.rows, [key], [DESC]));
             this.setState({
-                rows: this.state.sortAsc ?
-                        _.sortBy(this.state.rows, key).reverse() :
-                        _.sortBy(this.state.rows, key),
-                sortBy: key,
-                sortAsc: !this.state.sortAsc
+                rows: _.sortByOrder(this.state.rows, [key], [DESC]),
+                sortBy: [key],
+                sortOrder: [DESC]
             });
         } else {
-            this.setState({
-                rows: _.sortBy(this.state.rows, key),
-                sortBy: key,
-                sortAsc: true
-            });
+            // so this was sorted before
+            // check if key is the same
+            if (this.state.sortBy[0] == key) {
+                // it is, so just flip order
+                // HAHA!
+                let newOrder = [ this.state.sortOrder[0] === ASC ? DESC : ASC ].concat(this.state.sortOrder.splice(1));
+                console.log('flip order', this.state.sortBy, newOrder);
+                this.setState({
+                    sortOrder: newOrder,
+                    rows: _.sortByOrder(this.state.rows, this.state.sortBy, newOrder)
+                });
+            } else {
+                let newBy = [key].concat(this.state.sortBy.length ? [this.state.sortBy[0]] : []),
+                    newOrder = [DESC].concat(this.state.sortOrder.length ? [this.state.sortOrder[0]] : []);
+                console.log('sort with different key', newBy, newOrder);
+                this.setState({
+                    sortOrder: newOrder,
+                    sortBy: newBy,
+                    rows: _.sortByOrder(this.state.rows, newBy, newOrder)
+                });
+            }
         }
     }
 
@@ -88,6 +107,7 @@ class SortableTable extends React.Component {
 SortableTable.displayName = 'SortableTable';
 SortableTable.propTypes = {
     width: React.PropTypes.number,
+    filterExprFn: React.PropTypes.func,
     children: React.PropTypes.oneOf([React.PropTypes.array, React.PropTypes.object])
 };
 export default SortableTable;
