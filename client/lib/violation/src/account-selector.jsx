@@ -16,18 +16,18 @@ class AccountSelector extends React.Component {
     constructor(props) {
         super();
         this.state = {
-            allAdded: props.selectedAccounts ? props.selectedAccounts.length === props.selectableAccounts.length : false,
+            allSelected: props.selectedAccounts ? props.selectedAccounts.length === props.selectableAccounts.length : false,
             filter: '',
             selectedAccounts: props.selectedAccounts || []
         };
     }
 
-    _addAll() {
-        let selectedAccountIds = this.state.selectedAccounts.map(a => a.id),
-            toSelect = this.props.selectableAccounts.filter(a => selectedAccountIds.indexOf(a.id) < 0);
-        toSelect.forEach(this._selectAccount.bind(this));
+    _selectAll() {
+        this.props.onToggleAccount(this.props.selectableAccounts.map(a => a.id));
+
         this.setState({
-            allAdded: true
+            allSelected: true,
+            selectedAccounts: _.sortBy(this.props.selectableAccounts, 'name')
         });
     }
 
@@ -37,17 +37,8 @@ class AccountSelector extends React.Component {
             return;
         }
         this.state.selectedAccounts.push(account);
-        this.state.selectedAccounts
-            .sort((a, b) => {
-                    let aName = a.name.toLowerCase(),
-                        bName = b.name.toLowerCase();
-                    return aName < bName ?
-                            -1 :
-                            bName < aName ?
-                                1 : 0;
-                 });
         this.setState({
-            selectedAccounts: this.state.selectedAccounts
+            selectedAccounts: _.sortBy(this.state.selectedAccounts, 'name')
         });
         let {activeAccountIds} = this.props;
         if (activeAccountIds.indexOf(account.id) < 0) {
@@ -80,16 +71,19 @@ class AccountSelector extends React.Component {
             {selectedAccounts} = this.state,
             displayedAccounts = this.state.filter ?
                                     selectedAccounts.filter(a => fuzzysearch(this.state.filter, a.name)) :
-                                    selectedAccounts;
+                                    selectedAccounts,
+            partitionedAccounts = _.partition(displayedAccounts, a => activeAccountIds.indexOf(a.id) >= 0),
+            activeAccounts = partitionedAccounts[0],
+            inactiveAccounts = partitionedAccounts[1];
         return <div className='account-selector'>
                     <div>Show violations in accounts:</div>
-                    {!this.state.allAdded ?
+                    {!this.state.allSelected ?
                         <div>
                             <div>
                                 <small>You can search by name or account number or <span
-                                    onClick={this._addAll.bind(this)}
+                                    onClick={this._selectAll.bind(this)}
                                     className='btn btn-default btn-small'>
-                                    <Icon name='plus' /> Add all accounts
+                                    <Icon name='plus' /> Select all accounts
                                 </span>
                             </small>
                             </div>
@@ -113,7 +107,18 @@ class AccountSelector extends React.Component {
                                 type='text'/>
                         </div>}
                     <div className='account-selector-list'>
-                    {_.sortBy(displayedAccounts, 'name')
+                    {_.sortBy(activeAccounts, 'name')
+                        .map(a =>
+                        <label
+                            key={a.id}
+                            className={activeAccountIds.indexOf(a.id) >= 0 ? 'is-checked' : ''}>
+                            <input
+                                type='checkbox'
+                                value={a.id}
+                                onChange={this._toggleAccount.bind(this, a.id)}
+                                defaultChecked={activeAccountIds.indexOf(a.id) >= 0}/> {a.name} <small>({a.id})</small>
+                        </label>)}
+                    {_.sortBy(inactiveAccounts, 'name')
                         .map(a =>
                         <label
                             key={a.id}
