@@ -3,6 +3,11 @@
 .account-selector {
     padding: @padding-small 0;
 
+    .account-selector-list {
+        max-height: 300px;
+        overflow: auto;
+    }
+
     label {
         .transition(background, color);
         cursor: pointer;
@@ -52,6 +57,7 @@
 
     .input-group {
         display: flex;
+        width: 30em;
         padding-bottom: @padding-small;
         .fa {
             user-select: none;
@@ -69,6 +75,7 @@
         input {
             border-top-left-radius: 0px;
             border-bottom-left-radius: 0px;
+            width: 100%;
         }
     }
 }

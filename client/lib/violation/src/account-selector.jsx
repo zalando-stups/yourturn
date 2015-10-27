@@ -1,21 +1,34 @@
 import React from 'react';
 import Icon from 'react-fa';
+import _ from 'lodash';
 import {Typeahead} from 'react-typeahead';
+import fuzzysearch from 'fuzzysearch';
 import 'common/asset/less/common/account-selector.less';
 
 function filterOptionFn(input, option) {
     return input
             .trim()
             .split(' ')
-            .some(term => (option.name + option.id).indexOf(term) >= 0);
+            .some(term => fuzzysearch(term, option.name + option.id));
 }
 
 class AccountSelector extends React.Component {
     constructor(props) {
         super();
         this.state = {
+            allAdded: props.selectedAccounts ? props.selectedAccounts.length === props.selectableAccounts.length : false,
+            filter: '',
             selectedAccounts: props.selectedAccounts || []
         };
+    }
+
+    _addAll() {
+        let selectedAccountIds = this.state.selectedAccounts.map(a => a.id),
+            toSelect = this.props.selectableAccounts.filter(a => selectedAccountIds.indexOf(a.id) < 0);
+        toSelect.forEach(this._selectAccount.bind(this));
+        this.setState({
+            allAdded: true
+        });
     }
 
     _selectAccount(account) {
@@ -56,23 +69,52 @@ class AccountSelector extends React.Component {
         }
     }
 
+    _filter(evt) {
+        this.setState({
+            filter: evt.target.value
+        });
+    }
+
     render() {
         let {selectableAccounts, activeAccountIds} = this.props,
-            {selectedAccounts} = this.state;
+            {selectedAccounts} = this.state,
+            displayedAccounts = this.state.filter ?
+                                    selectedAccounts.filter(a => fuzzysearch(this.state.filter, a.name)) :
+                                    selectedAccounts;
         return <div className='account-selector'>
                     <div>Show violations in accounts:</div>
-                    <small>You can search by name or account number.</small>
-                    <div className='input-group'>
-                        <Icon name='search' />
-                        <Typeahead
-                            placeholder='stups-test 123456'
-                            options={selectableAccounts}
-                            displayOption={option => `${option.name} (${option.id})`}
-                            filterOption={filterOptionFn}
-                            onOptionSelected={this._selectAccount.bind(this)}
-                            maxVisible={10} />
-                    </div>
-                    {selectedAccounts.map(a =>
+                    {!this.state.allAdded ?
+                        <div>
+                            <div>
+                                <small>You can search by name or account number or <span
+                                    onClick={this._addAll.bind(this)}
+                                    className='btn btn-default btn-small'>
+                                    <Icon name='plus' /> Add all accounts
+                                </span>
+                            </small>
+                            </div>
+                            <div className='input-group'>
+                                <Icon name='search' />
+                                <Typeahead
+                                    placeholder='stups-test 123456'
+                                    options={selectableAccounts}
+                                    displayOption={option => `${option.name} (${option.id})`}
+                                    filterOption={filterOptionFn}
+                                    onOptionSelected={this._selectAccount.bind(this)}
+                                    maxVisible={10} />
+                            </div>
+                        </div>
+                        :
+                        <div className='input-group'>
+                            <Icon name='search' />
+                            <input
+                                onChange={this._filter.bind(this)}
+                                placeholder='Search in selected accounts'
+                                type='text'/>
+                        </div>}
+                    <div className='account-selector-list'>
+                    {_.sortBy(displayedAccounts, 'name')
+                        .map(a =>
                         <label
                             key={a.id}
                             className={activeAccountIds.indexOf(a.id) >= 0 ? 'is-checked' : ''}>
@@ -82,6 +124,7 @@ class AccountSelector extends React.Component {
                                 onChange={this._toggleAccount.bind(this, a.id)}
                                 defaultChecked={activeAccountIds.indexOf(a.id) >= 0}/> {a.name} <small>({a.id})</small>
                         </label>)}
+                    </div>
                 </div>;
     }
 }
