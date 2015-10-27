@@ -120,7 +120,7 @@ class ViolationAnalysis extends React.Component {
         return <div className='violation-analysis-empty'>
                     <div><Icon name='smile-o' size='4x' /></div>
                     <span>No violations!</span>
-                </div>
+                </div>;
     }
 }
 ViolationAnalysis.displayName = 'ViolationAnalysis';

@@ -1,21 +1,40 @@
 import React from 'react';
 import Icon from 'react-fa';
+import _ from 'lodash';
 import {Typeahead} from 'react-typeahead';
+import fuzzysearch from 'fuzzysearch';
 import 'common/asset/less/common/account-selector.less';
 
 function filterOptionFn(input, option) {
     return input
             .trim()
             .split(' ')
-            .some(term => (option.name + option.id).indexOf(term) >= 0);
+            .some(term => fuzzysearch(term, option.name + option.id));
+}
+
+function getDisplayedAccounts(selected, filter) {
+    return filter ?
+            selected.filter(a => fuzzysearch(filter, a.name)) :
+            selected;
 }
 
 class AccountSelector extends React.Component {
     constructor(props) {
         super();
         this.state = {
+            allSelected: props.selectedAccounts ? props.selectedAccounts.length === props.selectableAccounts.length : false,
+            filter: '',
             selectedAccounts: props.selectedAccounts || []
         };
+    }
+
+    _selectAll() {
+        this.props.onToggleAccount(this.props.selectableAccounts.map(a => a.id));
+
+        this.setState({
+            allSelected: true,
+            selectedAccounts: _.sortBy(this.props.selectableAccounts, 'name')
+        });
     }
 
     _selectAccount(account) {
@@ -24,17 +43,8 @@ class AccountSelector extends React.Component {
             return;
         }
         this.state.selectedAccounts.push(account);
-        this.state.selectedAccounts
-            .sort((a, b) => {
-                    let aName = a.name.toLowerCase(),
-                        bName = b.name.toLowerCase();
-                    return aName < bName ?
-                            -1 :
-                            bName < aName ?
-                                1 : 0;
-                 });
         this.setState({
-            selectedAccounts: this.state.selectedAccounts
+            selectedAccounts: _.sortBy(this.state.selectedAccounts, 'name')
         });
         let {activeAccountIds} = this.props;
         if (activeAccountIds.indexOf(account.id) < 0) {
@@ -56,23 +66,75 @@ class AccountSelector extends React.Component {
         }
     }
 
+    _toggleAll() {
+        let displayedIds = getDisplayedAccounts(this.state.selectedAccounts, this.state.filter).map(a => a.id),
+            activeIds = this.props.activeAccountIds.concat(displayedIds);
+        // dedup
+        activeIds = activeIds.filter((el, idx, all) => all.lastIndexOf(el) === idx);
+        this.props.onToggleAccount(activeIds);
+    }
+
+    _untoggleAll() {
+        let displayedIds = getDisplayedAccounts(this.state.selectedAccounts, this.state.filter).map(a => a.id),
+            activeIds = this.props.activeAccountIds.filter(a => displayedIds.indexOf(a) < 0);
+        this.props.onToggleAccount(activeIds);
+    }
+
+    _filter(evt) {
+        this.setState({
+            filter: evt.target.value
+        });
+    }
+
     render() {
         let {selectableAccounts, activeAccountIds} = this.props,
-            {selectedAccounts} = this.state;
+            {selectedAccounts} = this.state,
+            displayedAccounts = getDisplayedAccounts(selectedAccounts, this.state.filter),
+            partitionedAccounts = _.partition(displayedAccounts, a => activeAccountIds.indexOf(a.id) >= 0),
+            activeAccounts = partitionedAccounts[0],
+            inactiveAccounts = partitionedAccounts[1];
         return <div className='account-selector'>
                     <div>Show violations in accounts:</div>
-                    <small>You can search by name or account number.</small>
-                    <div className='input-group'>
-                        <Icon name='search' />
-                        <Typeahead
-                            placeholder='stups-test 123456'
-                            options={selectableAccounts}
-                            displayOption={option => `${option.name} (${option.id})`}
-                            filterOption={filterOptionFn}
-                            onOptionSelected={this._selectAccount.bind(this)}
-                            maxVisible={10} />
+                    {!this.state.allSelected ?
+                        <div>
+                            <div>
+                                <small>You can search by name or account number or <span
+                                    onClick={this._selectAll.bind(this)}
+                                    className='btn btn-default btn-small'>
+                                    <Icon name='plus' /> Select all accounts
+                                </span>
+                            </small>
+                            </div>
+                            <div className='input-group'>
+                                <Icon name='search' />
+                                <Typeahead
+                                    placeholder='stups-test 123456'
+                                    options={selectableAccounts}
+                                    displayOption={option => `${option.name} (${option.id})`}
+                                    filterOption={filterOptionFn}
+                                    onOptionSelected={this._selectAccount.bind(this)}
+                                    maxVisible={10} />
+                            </div>
+                        </div>
+                        :
+                        <div className='input-group'>
+                            <Icon name='search' />
+                            <input
+                                onChange={this._filter.bind(this)}
+                                placeholder='Search in selected accounts'
+                                type='text'/>
+                        </div>}
+                    <div className='account-selector-toggle-buttons btn-group'>
+                        <div onClick={this._toggleAll.bind(this)} className='btn btn-default'>
+                            <Icon name='check-square-o'/> Toggle all
+                        </div>
+                        <div onClick={this._untoggleAll.bind(this)} className='btn btn-default'>
+                            <Icon name='square-o' /> Untoggle all
+                        </div>
                     </div>
-                    {selectedAccounts.map(a =>
+                    <div className='account-selector-list'>
+                    {_.sortBy(activeAccounts, 'name')
+                        .map(a =>
                         <label
                             key={a.id}
                             className={activeAccountIds.indexOf(a.id) >= 0 ? 'is-checked' : ''}>
@@ -82,6 +144,18 @@ class AccountSelector extends React.Component {
                                 onChange={this._toggleAccount.bind(this, a.id)}
                                 defaultChecked={activeAccountIds.indexOf(a.id) >= 0}/> {a.name} <small>({a.id})</small>
                         </label>)}
+                    {_.sortBy(inactiveAccounts, 'name')
+                        .map(a =>
+                        <label
+                            key={a.id}
+                            className={activeAccountIds.indexOf(a.id) >= 0 ? 'is-checked' : ''}>
+                            <input
+                                type='checkbox'
+                                value={a.id}
+                                onChange={this._toggleAccount.bind(this, a.id)}
+                                defaultChecked={activeAccountIds.indexOf(a.id) >= 0}/> {a.name} <small>({a.id})</small>
+                        </label>)}
+                    </div>
                 </div>;
     }
 }
