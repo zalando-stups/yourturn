@@ -25,6 +25,12 @@ function parseQueryParams(params) {
     if (params.to) {
         result.to = moment(params.to);
     }
+    if (params.inspectedAccount) {
+        result.inspectedAccount = params.inspectedAccount;
+    }
+    if (params.activeTab) {
+        result.activeTab = parseInt(params.activeTab, 10);
+    }
     return result;
 }
 
@@ -46,16 +52,23 @@ class ViolationListHandler extends React.Component {
 }
 ViolationListHandler.displayName = 'ViolationListHandler';
 ViolationListHandler.fetchData = function(router) {
+    let promises = [];
     // if there are query params we have to pre-set those as search parameters
     if (!_.isEmpty(router.query)) {
         FULLSTOP_ACTIONS.updateSearchParams(parseQueryParams(router.query));
-        FULLSTOP_ACTIONS.fetchViolations(FULLSTOP_STORE.getSearchParams());
+        let searchParams = FULLSTOP_STORE.getSearchParams();
+        FULLSTOP_ACTIONS.fetchViolations(searchParams);
+        FULLSTOP_ACTIONS.fetchViolationCount(searchParams);
+    }
+    if (!FULLSTOP_STORE.getViolationTypes().length) {
+        promises.push(FULLSTOP_ACTIONS.fetchViolationTypes());
     }
     // if there aren't any teams from team service yet, fetch them NAO
     if (!TEAM_STORE.getAccounts().length) {
         TEAM_ACTIONS.fetchAccounts();
     }
-    return requireAccounts(FLUX);
+    promises.push(requireAccounts(FLUX));
+    return Promise.all(promises);
 };
 ViolationListHandler.propTypes = {
     query: React.PropTypes.object.isRequired

@@ -1,0 +1,46 @@
+[{
+    "account": "0987654321",
+    "type": "WRONG_APPLICATION_MASTERDATA",
+    "quantity": 33
+  },
+  {
+    "account": "123456789",
+    "type": "APPLICATION_VERSION_NOT_PRESENT_IN_KIO",
+    "quantity": 3
+  },
+  {
+    "account": "0987654321",
+    "type": "UNSECURED_ENDPOINT",
+    "quantity": 1
+  },
+  {
+    "account": "0987654321",
+    "type": "WRONG_APPLICATION_MASTERDATA",
+    "quantity": 1
+  },
+  {
+    "account": "0987654321",
+    "type": "APPLICATION_VERSION_NOT_PRESENT_IN_KIO",
+    "quantity": 81
+  },
+  {
+    "account": "123456789",
+    "type": "EC2_WITH_A_SNAPSHOT_IMAGE",
+    "quantity": 5
+  },
+  {
+    "account": "123456789",
+    "type": "UNSECURED_ENDPOINT",
+    "quantity": 4
+  },
+  {
+    "account": "123456789",
+    "type": "WRONG_APPLICATION_MASTERDATA",
+    "quantity": 63
+  },
+  {
+    "account": "1029384756",
+    "type": "WRONG_APPLICATION_MASTERDATA",
+    "quantity": 128
+  }
+]

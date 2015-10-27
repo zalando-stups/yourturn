@@ -3,7 +3,10 @@ var express = require('express'),
     server = express(),
     bodyParser = require('body-parser'),
     fs = require('fs'),
-    VIOLATIONS = JSON.parse(fs.readFileSync(__dirname + '/fullstop-violations.json'));
+    VIOLATIONS = JSON.parse(fs.readFileSync(__dirname + '/fullstop-violations.json')),
+    VIOLATION_TYPES = JSON.parse(fs.readFileSync(__dirname + '/fullstop-violation-types.json')),
+    VIOLATION_COUNT = JSON.parse(fs.readFileSync(__dirname + '/fullstop-violation-count.json'));
+
 server.use(bodyParser.text());
 /** enable cors */
 server.use(function(req, res, next) {
@@ -68,6 +71,18 @@ server.post('/violations/:violationId/resolution', function(req, res) {
     // add new
     VIOLATIONS = VIOLATIONS.concat(violation);
     res.status(200).send(violation[0]);
+});
+
+server.get('/violation-types', function(req, res) {
+    setTimeout(function() {
+        res.status(200).send(VIOLATION_TYPES);
+    }, Math.random() * 2000);
+});
+
+server.get('/violation-count', function(req, res) {
+    setTimeout(function() {
+        res.status(200).send(VIOLATION_COUNT);
+    }, Math.random() * 2000);
 });
 
 module.exports = server;

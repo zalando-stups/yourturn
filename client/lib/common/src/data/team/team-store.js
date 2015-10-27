@@ -49,6 +49,10 @@ class TeamStoreWrapper extends Store {
         return Getter.getAccounts(this.state.redux);
     }
 
+    getAccount(id) {
+        return Getter.getAccount(this.state.redux, id);
+    }
+
     _empty() {
         this.setState({
             redux: TeamStore()

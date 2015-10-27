@@ -13,6 +13,8 @@ function FullstopStore(state, action) {
     if (!action || action.type === '@@INIT') {
         return Immutable.fromJS({
             violations: {},
+            violationCount: [],
+            violationTypes: {},
             pagingInfo: DEFAULT_PAGING,
             searchParams: {
                 page: 0,
@@ -61,6 +63,15 @@ function FullstopStore(state, action) {
             currentParams = currentParams.set(param, payload[param]);
         });
         return state.set('searchParams', currentParams);
+    } else if (type === Types.RECEIVE_VIOLATION_TYPES) {
+        let types = payload.reduce((all, t) => {
+            all[t.id] = t;
+            return all;
+        },
+        {});
+        return state.set('violationTypes', Immutable.fromJS(types));
+    } else if (type === Types.RECEIVE_VIOLATION_COUNT) {
+        return state.set('violationCount', Immutable.fromJS(payload));
     }
     return state;
 }
@@ -87,6 +98,18 @@ export default class FullstopStoreWrapper extends Store {
             this.beginFetchViolations,
             this.receiveViolations,
             this.failFetchViolations);
+
+        this.registerAsync(
+            fullstopActions.fetchViolationTypes,
+            null,
+            this.receiveViolationTypes,
+            null);
+
+        this.registerAsync(
+            fullstopActions.fetchViolationCount,
+            null,
+            this.receiveViolationCount,
+            null);
 
         this.registerAsync(
             fullstopActions.fetchViolation,
@@ -175,6 +198,24 @@ export default class FullstopStoreWrapper extends Store {
         });
     }
 
+    receiveViolationTypes(types) {
+        this.setState({
+            redux: FullstopStore(this.state.redux, {
+                type: Types.RECEIVE_VIOLATION_TYPES,
+                payload: types
+            })
+        });
+    }
+
+    receiveViolationCount(counts) {
+        this.setState({
+            redux: FullstopStore(this.state.redux, {
+                type: Types.RECEIVE_VIOLATION_COUNT,
+                payload: counts
+            })
+        });
+    }
+
     getPagingInfo() {
         return Getters.getPagingInfo(this.state.redux);
     }
@@ -189,5 +230,17 @@ export default class FullstopStoreWrapper extends Store {
 
     getSearchParams() {
         return Getters.getSearchParams(this.state.redux);
+    }
+
+    getViolationTypes() {
+        return Getters.getViolationTypes(this.state.redux);
+    }
+
+    getViolationType(type) {
+        return Getters.getViolationType(this.state.redux, type);
+    }
+
+    getViolationCount() {
+        return Getters.getViolationCount(this.state.redux);
     }
 }

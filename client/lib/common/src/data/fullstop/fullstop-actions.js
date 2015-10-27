@@ -12,7 +12,7 @@ function fetchViolations(params) {
             .query({
                 accounts: params.accounts,
                 size: params.size || 10,
-                since: params.from ? params.from.toISOString() : (new Date()).toISOString(),
+                since: params.from ? params.from.toISOString() : '',
                 page: params.page || 0
             })
             .oauth(Provider, RequestConfig)
@@ -44,6 +44,29 @@ function resolveViolation(violationId, message) {
             .then(res => res.body);
 }
 
+function fetchViolationTypes() {
+    return request
+            .get(`${FULLSTOP_BASE_URL}/violation-types`)
+            .accept('json')
+            .oauth(Provider, RequestConfig)
+            .exec(saveRoute)
+            .then(res => res.body);
+}
+
+function fetchViolationCount(params) {
+    return request
+            .get(`${FULLSTOP_BASE_URL}/violation-count`)
+            .query({
+                accounts: params.accounts,
+                to: params.to ? params.to.toISOString() : (new Date()).toISOString(),
+                from: params.from ? params.from.toISOString() : ''
+            })
+            .accept('json')
+            .oauth(Provider, RequestConfig)
+            .exec(saveRoute)
+            .then(res => res.body);
+}
+
 function deleteViolations() {
     return true;
 }
@@ -66,6 +89,14 @@ export default class FullstopActions extends Actions {
         return fetchViolations.apply(this, arguments);
     }
 
+    fetchViolationTypes() {
+        return fetchViolationTypes();
+    }
+
+    fetchViolationCount() {
+        return fetchViolationCount.apply(this, arguments);
+    }
+
     deleteViolations() {
         return deleteViolations();
     }
@@ -83,9 +114,11 @@ export default class FullstopActions extends Actions {
 //     deleteViolations = createAction(Types.DELETE_VIOLATIONS);
 
 export {
-    fetchViolations as fetchViolations,
-    fetchViolation as fetchViolation,
-    resolveViolation as resolveViolation,
-    deleteViolations as deleteViolations,
-    updateSearchParams as updateSearchParams
+    fetchViolations,
+    fetchViolation,
+    fetchViolationTypes,
+    fetchViolationCount,
+    resolveViolation,
+    deleteViolations,
+    updateSearchParams
 };

@@ -4,6 +4,14 @@ function getAccounts(state) {
             .toJS();
 }
 
+function getAccount(state, id) {
+    let result = state
+                    .filter(a => a.get('id') === id)
+                    .toJS();
+    return result.length ? result[0] : null;
+}
+
 export {
-    getAccounts as getAccounts
+    getAccounts,
+    getAccount
 };

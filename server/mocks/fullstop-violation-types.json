@@ -1,0 +1,21 @@
+[{
+    "id": "EC2_WITH_A_SNAPSHOT_IMAGE",
+    "help_text": "EC2 instance should not have a ssh key.",
+    "violation_severity": 1
+  },
+  {
+    "id": "WRONG_APPLICATION_MASTERDATA",
+    "help_text": "Source not present in pierone.",
+    "violation_severity": 2
+  },
+  {
+    "id": "UNSECURED_ENDPOINT",
+    "help_text": "Image in pierone not found.",
+    "violation_severity": 2
+  },
+  {
+    "id": "APPLICATION_VERSION_NOT_PRESENT_IN_KIO",
+    "help_text": "blahr.",
+    "violation_severity": 4
+  }
+]
