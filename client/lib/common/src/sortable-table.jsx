@@ -2,6 +2,7 @@ import React from 'react';
 import Icon from 'react-fa';
 import Table from 'fixed-data-table';
 import _ from 'lodash';
+import fuzzysearch from 'fuzzysearch';
 import 'common/asset/css/fixed-data-table.min.css';
 
 class SortableTable extends React.Component {
@@ -10,7 +11,8 @@ class SortableTable extends React.Component {
         this.state = {
             rows: props.rows,
             sortBy: '',
-            sortAsc: true
+            sortAsc: true,
+            filter: ''
         };
     }
 
@@ -27,7 +29,7 @@ class SortableTable extends React.Component {
         });
     }
 
-    sortBy(key) {
+    _sortBy(key) {
         if (this.state.sortBy === key) {
             this.setState({
                 rows: this.state.sortAsc ?
@@ -45,21 +47,38 @@ class SortableTable extends React.Component {
         }
     }
 
-    renderHeader(label, dataKey) {
-        return <div onClick={this.sortBy.bind(this, dataKey)}>{label} <Icon name='sort' /></div>;
+    _renderHeader(label, dataKey) {
+        return <div onClick={this._sortBy.bind(this, dataKey)}>{label} <Icon name='sort' /></div>;
+    }
+
+    _filter(evt) {
+        this.setState({
+            filter: evt.target.value
+        });
     }
 
     render() {
+        let displayedRows = this.state.filter ?
+                                this.state.rows.filter(r => fuzzysearch(this.state.filter, this.props.filterExprFn(r))) :
+                                this.state.rows;
         return <div>
+                    <small>You can search for accounts or violation types.</small>
+                    <div className='input-group'>
+                        <Icon name='search' />
+                        <input
+                            onChange={this._filter.bind(this)}
+                            placeholder='stups'
+                            type='search' />
+                    </div>
                     <Table.Table
                         rowHeight={50}
                         headerHeight={50}
-                        rowGetter={idx => this.state.rows[idx]}
-                        rowsCount={this.state.rows.length}
+                        rowGetter={idx => displayedRows[idx]}
+                        rowsCount={displayedRows.length}
                         width={this.props.width || 500}
                         {...this.props}>
                         {this.props.children.map(c => {
-                            c.props.headerRenderer = this.renderHeader.bind(this);
+                            c.props.headerRenderer = this._renderHeader.bind(this);
                             return c;
                         })}
                     </Table.Table>

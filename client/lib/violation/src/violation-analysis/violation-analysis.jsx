@@ -85,7 +85,8 @@ class ViolationAnalysis extends React.Component {
                         null}
                         <AutoWidth className='violation-analysis-table'>
                             <SortableTable
-                                height={1000}
+                                filterExprFn={row => (row.type + row.account + row.accountName).toLowerCase()}
+                                height={(violationCount.length + 1) * 50 + 2}
                                 rows={violationCount}>
                                 <Table.Column
                                     cellRenderer={this.accountCellRenderer.bind(this)}
