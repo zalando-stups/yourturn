@@ -25,6 +25,12 @@ function parseQueryParams(params) {
     if (params.to) {
         result.to = moment(params.to);
     }
+    if (params.inspectedAccount) {
+        result.inspectedAccount = params.inspectedAccount;
+    }
+    if (params.activeTab) {
+        result.activeTab = parseInt(params.activeTab, 10);
+    }
     return result;
 }
 

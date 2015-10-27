@@ -27,7 +27,6 @@ class ViolationDetail extends React.Component {
                         flux={this.props.flux}
                         editable={accounts.indexOf(violation.account_id) >= 0}
                         onResolve={this.resolveViolation.bind(this)}
-                        autoFocus={this.props.autoFocus || (violation && violation.comment != null)}
                         violation={violation} />
                 </div>;
     }
@@ -35,7 +34,6 @@ class ViolationDetail extends React.Component {
 ViolationDetail.displayName = 'ViolationDetail';
 ViolationDetail.propTypes = {
     violationId: React.PropTypes.string.isRequired,
-    flux: React.PropTypes.object.isRequired,
-    autoFocus: React.PropTypes.bool
+    flux: React.PropTypes.object.isRequired
 };
 export default ViolationDetail;

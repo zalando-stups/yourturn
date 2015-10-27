@@ -127,7 +127,7 @@ class ViolationCard extends React.Component {
                                             autoFocus={this.props.autoFocus}
                                             value={this.state.message}
                                             onChange={this.updateMessage.bind(this)}
-                                            placeholder='This is expected because I tested things.'
+                                            placeholder='Please explain why it happened.'
                                             type='text' />
                                         <button
                                             type='submit'

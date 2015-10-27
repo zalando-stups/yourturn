@@ -1,12 +1,12 @@
 @import "../variables";
 
-.violation-overview {
+.violation-analysis {
     padding-top: @padding-small;
 
 
-    .violation-overview-table {
+    .violation-analysis-table {
         padding-top: @padding-small;
-        .violation-overview-table-cell-account {
+        .violation-analysis-table-cell-account {
             cursor: pointer;
             &:hover {
                 color: @orange;
@@ -14,14 +14,14 @@
         }
     }
 
-    .violation-overview-collapsible {
+    .violation-analysis-collapsible {
         padding-top: @padding-small;
         header {
             cursor: pointer;
         }
     }
 
-    .violation-overview-chart {
+    .violation-analysis-chart {
         padding-top: @padding-small;
         text {
             font-size: 12px;
@@ -32,9 +32,14 @@
             pointer-events: none;
         }
 
+        .y.axis .tick line {
+            stroke: @gray-light;
+            opacity: .25;
+            pointer-events: none;
+        }
+
         rect.bar {
-            fill: @blue-light;
-            opacity: .5;
+            fill: lighten(@blue-light, 15%);
         }
 
         .tooltip {
