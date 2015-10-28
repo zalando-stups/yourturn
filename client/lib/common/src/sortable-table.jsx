@@ -60,7 +60,14 @@ class SortableTable extends React.Component {
     }
 
     _renderHeader(label, dataKey) {
-        return <div onClick={this._sortBy.bind(this, dataKey)}>{label} <Icon name='sort' /></div>;
+        let sortedByMe = this.state.sortBy.indexOf(dataKey);
+        return <div
+                    style={sortedByMe === 0 ? {color: 'steelblue'} : null}
+                    onClick={this._sortBy.bind(this, dataKey)}>
+                    {label} {sortedByMe >= 0 ?
+                                (this.state.sortOrder[sortedByMe] === ASC ? <Icon name='sort-asc' /> : <Icon name='sort-desc' />) :
+                                <Icon name='sort' />}
+                </div>;
     }
 
     _filter(evt) {
