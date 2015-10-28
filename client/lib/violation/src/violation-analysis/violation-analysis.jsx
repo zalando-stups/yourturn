@@ -110,11 +110,13 @@ class ViolationAnalysis extends React.Component {
                                 <Table.Column
                                     label=':('
                                     width={50}
+                                    cellRenderer={c => <span className='sortable-table-align-right'>{c}</span>}
                                     flexGrow={1}
                                     dataKey='typeSeverity' />
                                 <Table.Column
                                     label='#'
                                     width={100}
+                                    cellRenderer={c => <span className='sortable-table-align-right'>{c}</span>}
                                     dataKey={'quantity'} />
                             </SortableTable>
                         </AutoWidth>
