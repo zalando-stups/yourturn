@@ -113,7 +113,7 @@ ViolationDetailHandler.propTypes = {
 class ViolationShortUrlHandler extends React.Component {
     constructor(props, context) {
         super();
-        context.router.transitionTo('violation-vioList', null, lzw.decompressFromEncodedURIComponent(props.params.shortened));
+        context.router.transitionTo('violation-vioList', null, JSON.parse(lzw.decompressFromEncodedURIComponent(props.params.shortened)));
     }
 
     render() {
