@@ -2,7 +2,6 @@ import React from 'react';
 import Icon from 'react-fa';
 import Table from 'fixed-data-table';
 import _ from 'lodash';
-import fuzzysearch from 'fuzzysearch';
 import 'common/asset/css/fixed-data-table.min.css';
 
 const ASC = 'asc',
@@ -35,32 +34,26 @@ class SortableTable extends React.Component {
     _sortBy(key) {
         if (!this.state.sortBy.length) {
             // sort by key desc by default
-            console.log('first sort', [key], [DESC], _.sortByOrder(this.state.rows, [key], [DESC]));
             this.setState({
-                rows: _.sortByOrder(this.state.rows, [key], [DESC]),
                 sortBy: [key],
                 sortOrder: [DESC]
             });
         } else {
             // so this was sorted before
             // check if key is the same
-            if (this.state.sortBy[0] == key) {
+            if (this.state.sortBy[0] === key) {
                 // it is, so just flip order
                 // HAHA!
                 let newOrder = [ this.state.sortOrder[0] === ASC ? DESC : ASC ].concat(this.state.sortOrder.splice(1));
-                console.log('flip order', this.state.sortBy, newOrder);
                 this.setState({
-                    sortOrder: newOrder,
-                    rows: _.sortByOrder(this.state.rows, this.state.sortBy, newOrder)
+                    sortOrder: newOrder
                 });
             } else {
                 let newBy = [key].concat(this.state.sortBy.length ? [this.state.sortBy[0]] : []),
                     newOrder = [DESC].concat(this.state.sortOrder.length ? [this.state.sortOrder[0]] : []);
-                console.log('sort with different key', newBy, newOrder);
                 this.setState({
                     sortOrder: newOrder,
-                    sortBy: newBy,
-                    rows: _.sortByOrder(this.state.rows, newBy, newOrder)
+                    sortBy: newBy
                 });
             }
         }
@@ -72,14 +65,16 @@ class SortableTable extends React.Component {
 
     _filter(evt) {
         this.setState({
-            filter: evt.target.value
+            filter: evt.target.value ? evt.target.value.toLowerCase() : ''
         });
     }
 
     render() {
         let displayedRows = this.state.filter ?
-                                this.state.rows.filter(r => fuzzysearch(this.state.filter, this.props.filterExprFn(r))) :
+                                this.state.rows.filter(r => this.props.filterExprFn(r).indexOf(this.state.filter) >= 0) :
                                 this.state.rows;
+
+        displayedRows = _.sortByOrder(displayedRows, this.state.sortBy, this.state.sortOrder);
         return <div>
                     <small>You can search for accounts or violation types.</small>
                     <div className='input-group'>
