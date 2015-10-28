@@ -18,7 +18,7 @@ function removeNotificationsOlderThan(ms) {
 class NotificationActions extends Actions {
 
     addNotification(message, type) {
-        return addNotification(message, type);
+        return addNotification(message, type || 'default');
     }
 
     removeNotification(id) {

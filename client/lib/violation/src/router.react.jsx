@@ -6,11 +6,14 @@ import ViolationList from './violation-list/violation-list.jsx';
 import ViolationDetail from './violation-detail/violation-detail.jsx';
 import {requireAccounts} from 'common/src/util';
 import moment from 'moment';
+import Icon from 'react-fa';
+import lzw from 'lz-string';
 import _ from 'lodash';
 
 const FULLSTOP_ACTIONS = FLUX.getActions('fullstop'),
       FULLSTOP_STORE = FLUX.getStore('fullstop'),
       USER_STORE = FLUX.getStore('user'),
+      NOTIFICATION_ACTIONS = FLUX.getActions('notification'),
       TEAM_ACTIONS = FLUX.getActions('team'),
       TEAM_STORE = FLUX.getStore('team');
 
@@ -43,6 +46,7 @@ class ViolationListHandler extends React.Component {
                     flux={FLUX}
                     connectToStores={['fullstop', 'team']}>
                     <ViolationList
+                        notificationActions={NOTIFICATION_ACTIONS}
                         userStore={USER_STORE}
                         fullstopActions={FULLSTOP_ACTIONS}
                         fullstopStore={FULLSTOP_STORE}
@@ -106,9 +110,28 @@ ViolationDetailHandler.propTypes = {
     params: React.PropTypes.object.isRequired
 };
 
+class ViolationShortUrlHandler extends React.Component {
+    constructor(props, context) {
+        super();
+        context.router.transitionTo('violation-vioList', null, lzw.decompressFromEncodedURIComponent(props.params.shortened));
+    }
+
+    render() {
+        return <div><Icon name='circle-o-noth' spin /> Redirecting...</div>;
+    }
+}
+ViolationShortUrlHandler.displayName = 'ViolationShortUrlHandler';
+ViolationShortUrlHandler.propTypes = {
+    params: React.PropTypes.object.isRequired
+};
+ViolationShortUrlHandler.contextTypes = {
+    router: React.PropTypes.func.isRequired
+};
+
 const ROUTES =
     <Route name='violation-vioList' path='violation'>
         <DefaultRoute handler={ViolationListHandler} />
+        <Route name='violation-short' path='v/:shortened' handler={ViolationShortUrlHandler} />
         <Route name='violation-vioDetail' path=':violationId' handler={ViolationDetailHandler} />
     </Route>;
 
