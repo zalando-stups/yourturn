@@ -3,8 +3,10 @@ import Icon from 'react-fa';
 import Infinite from 'react-infinite-scroll';
 import Tabs from 'react-tabs';
 import moment from 'moment';
+import lzw from 'lz-string';
 import {merge} from 'common/src/util';
 import Datepicker from 'common/src/datepicker.jsx';
+import Clipboard from 'react-copy-to-clipboard';
 import AccountSelector from 'violation/src/account-selector.jsx';
 import ViolationAnalysis from 'violation/src/violation-analysis/violation-analysis.jsx';
 import Violation from 'violation/src/violation-detail/violation-detail.jsx';
@@ -60,7 +62,8 @@ class ViolationList extends React.Component {
         }
         this.state = {
             selectedAccounts,
-            dispatching: false
+            dispatching: false,
+            shortUrl: ''
         };
     }
 
@@ -131,6 +134,10 @@ class ViolationList extends React.Component {
         }
     }
 
+    _handleCopy() {
+        this.props.notificationActions.addNotification('Copied URL to clipboard', 'info');
+    }
+
     selectTab(current) {
         this.updateSearch({
             activeTab: current
@@ -145,6 +152,7 @@ class ViolationList extends React.Component {
             showingSince = searchParams.from.toDate(),
             violations = this.stores.fullstop.getViolations(activeAccountIds).map(v => v.id),
             pagingInfo = this.stores.fullstop.getPagingInfo(),
+            shareURL = '/violation/v/' + lzw.compressToEncodedURIComponent(JSON.stringify(this.context.router.getCurrentQuery())),
             violationCards = violations.map(v => <Violation
                                                     key={v}
                                                     fullstopStore={this.props.fullstopStore}
@@ -176,6 +184,13 @@ class ViolationList extends React.Component {
                             <Tabs.Tab>Violations</Tabs.Tab>
                         </Tabs.TabList>
                         <Tabs.TabPanel>
+                            <Clipboard
+                                onCopy={this._handleCopy.bind(this)}
+                                text={window.location.origin + shareURL}>
+                                <div className='btn btn-default'>
+                                    <Icon name='bullhorn' /> Copy sharing URL
+                                </div>
+                            </Clipboard>
                             <ViolationAnalysis
                                 teamStore={this.stores.team}
                                 userStore={this.stores.user}
@@ -203,7 +218,8 @@ ViolationList.propTypes = {
     fullstopStore: React.PropTypes.object.isRequired,
     teamStore: React.PropTypes.object.isRequired,
     userStore: React.PropTypes.object.isRequired,
-    fullstopActions: React.PropTypes.object.isRequired
+    fullstopActions: React.PropTypes.object.isRequired,
+    notificationActions: React.PropTypes.object.isRequired
 };
 ViolationList.contextTypes = {
     router: React.PropTypes.func.isRequired

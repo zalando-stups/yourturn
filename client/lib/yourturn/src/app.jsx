@@ -15,7 +15,9 @@ class YourTurn extends React.Component {
                     <FlummoxComponent
                         flux={FLUX}
                         connectToStores={['notification']}>
-                        <NotificationBar notificationStore={FLUX.getStore('notification')}/>
+                        <NotificationBar
+                            notificationActions={FLUX.getActions('notification')}
+                            notificationStore={FLUX.getStore('notification')}/>
                     </FlummoxComponent>
                     <div className='grid with-gutter'>
                         <div className='grid-col col-1-4'>
