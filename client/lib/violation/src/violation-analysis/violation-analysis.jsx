@@ -2,6 +2,7 @@ import React from 'react';
 import Icon from 'react-fa';
 import moment from 'moment';
 import _ from 'lodash';
+import d3 from 'd3';
 import Charts from 'react-d3-components';
 import AutoWidth from '@zalando/react-automatic-width';
 import Table from 'fixed-data-table';
@@ -63,6 +64,8 @@ class ViolationAnalysis extends React.Component {
                                     quantity: c.quantity
                                 }));
             chartData = violationCount.filter(c => c.account === searchParams.inspectedAccount);
+            let maxQuantity = chartData.reduce((prev, cur) => prev > cur.quantity ? prev : cur.quantity, 0),
+                yScale = d3.scale.linear().domain([0, maxQuantity]).range([225, 0]).nice();
 
             return <div className='violation-analysis'>
                     {chartData.length ?
@@ -79,6 +82,7 @@ class ViolationAnalysis extends React.Component {
                                 tooltipMode='element'
                                 height={300}
                                 margin={{top: 50, left: 50, right: 25, bottom: 25}}
+                                yScale={yScale}
                                 yAxis={{label: '# Violations', innerTickSize: -1000}} />
                         </AutoWidth>
                         :
@@ -106,11 +110,13 @@ class ViolationAnalysis extends React.Component {
                                 <Table.Column
                                     label=':('
                                     width={50}
+                                    cellRenderer={c => <span className='sortable-table-align-right'>{c}</span>}
                                     flexGrow={1}
                                     dataKey='typeSeverity' />
                                 <Table.Column
                                     label='#'
                                     width={100}
+                                    cellRenderer={c => <span className='sortable-table-align-right'>{c}</span>}
                                     dataKey={'quantity'} />
                             </SortableTable>
                         </AutoWidth>
