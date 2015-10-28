@@ -82,7 +82,7 @@ class SortableTable extends React.Component {
                                 this.state.rows;
 
         displayedRows = _.sortByOrder(displayedRows, this.state.sortBy, this.state.sortOrder);
-        return <div>
+        return <div className='sortable-table'>
                     <small>You can search for accounts or violation types.</small>
                     <div className='input-group'>
                         <Icon name='search' />

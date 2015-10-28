@@ -10,6 +10,15 @@
 
     .violation-analysis-table {
         padding-top: @padding-small;
+
+        .violation-severity-3 {
+            background: @red-lightest;
+            color: @red;
+        }
+        .violation-severity-4 {
+            background: @red;
+            color: white;
+        }
         .violation-analysis-table-cell-account {
             cursor: pointer;
             &:hover {
@@ -76,7 +85,17 @@
         }
     }
 
-    .sorted-table-primary-sort-key {
-        color: @blue;
+    .sortable-table {
+
+        .sortable-table-align-right {
+            text-align: right;
+            width: 100%;
+            display: inline-block;
+        }
+
+        .sortable-table-primary-sort-key {
+            color: @blue;
+        }
+
     }
 }

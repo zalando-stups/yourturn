@@ -74,8 +74,7 @@ class ViolationAnalysis extends React.Component {
                             <Charts.BarChart
                                 data={{
                                     label: 'Violation Count',
-                                    values: _.sortBy(chartData, 'quantity')
-                                            .reverse()
+                                    values: _.sortByOrder(chartData, ['quantity'], ['desc'])
                                             .map(c => ({ x: c.type, y: c.quantity }))
                                 }}
                                 tooltipHtml={(x, y0, y) => y.toString()}
@@ -83,7 +82,7 @@ class ViolationAnalysis extends React.Component {
                                 height={300}
                                 margin={{top: 50, left: 50, right: 25, bottom: 25}}
                                 yScale={yScale}
-                                yAxis={{label: '# Violations', innerTickSize: -1000}} />
+                                yAxis={{label: '# Violations', innerTickSize: -10000}} />
                         </AutoWidth>
                         :
                         null}
@@ -93,29 +92,29 @@ class ViolationAnalysis extends React.Component {
                                 height={Math.min((violationCount.length + 1) * 50 + 2, 1500)}
                                 rows={violationCount}>
                                 <Table.Column
-                                    cellRenderer={this.accountCellRenderer.bind(this)}
                                     label='ID'
                                     width={160}
+                                    cellRenderer={this.accountCellRenderer.bind(this)}
                                     dataKey={'account'} />
                                 <Table.Column
                                     label='Account'
                                     width={200}
-                                    flexGrow={1}
                                     dataKey={'accountName'} />
                                 <Table.Column
                                     label='Violation Type'
                                     width={200}
-                                    flexGrow={1}
+                                    flexGrow={3}
                                     dataKey={'type'} />
                                 <Table.Column
-                                    label=':('
-                                    width={50}
-                                    cellRenderer={c => <span className='sortable-table-align-right'>{c}</span>}
+                                    label='Severity'
+                                    width={100}
                                     flexGrow={1}
+                                    cellRenderer={c => <span className={'sortable-table-align-right ' + 'violation-severity-' + c}>{c}</span>}
                                     dataKey='typeSeverity' />
                                 <Table.Column
-                                    label='#'
+                                    label='Count'
                                     width={100}
+                                    flexGrow={1}
                                     cellRenderer={c => <span className='sortable-table-align-right'>{c}</span>}
                                     dataKey={'quantity'} />
                             </SortableTable>
