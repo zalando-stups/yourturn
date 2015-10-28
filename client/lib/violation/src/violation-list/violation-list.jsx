@@ -138,10 +138,18 @@ class ViolationList extends React.Component {
         this.props.notificationActions.addNotification('Copied URL to clipboard', 'info');
     }
 
-    selectTab(current) {
+    _selectTab(current) {
         this.updateSearch({
             activeTab: current
         });
+    }
+
+    _toggleShowResolved(type) {
+        let searchParams = this.stores.fullstop.getSearchParams(),
+            newParams = {};
+        newParams['show' + type] = !searchParams['show' + type];
+        newParams.page = 0;
+        this.updateSearch(newParams);
     }
 
     render() {
@@ -177,7 +185,7 @@ class ViolationList extends React.Component {
                         activeAccountIds={activeAccountIds}
                         onToggleAccount={this.toggleAccount.bind(this)} />
                     <Tabs.Tabs
-                        onSelect={this.selectTab.bind(this)}
+                        onSelect={this._selectTab.bind(this)}
                         selectedIndex={searchParams.activeTab}>
                         <Tabs.TabList>
                             <Tabs.Tab>Cross-Account Analysis</Tabs.Tab>
@@ -198,6 +206,21 @@ class ViolationList extends React.Component {
                                 fullstopStore={this.stores.fullstop} />
                         </Tabs.TabPanel>
                         <Tabs.TabPanel>
+                            <small>You can filter by resolved or unresolved violations.</small>
+                            <div className='btn-group'>
+                                <div
+                                    data-selected={searchParams.showResolved}
+                                    onClick={this._toggleShowResolved.bind(this, 'Resolved')}
+                                    className='btn btn-default'>
+                                    <Icon name='check-circle' /> Show resolved
+                                </div>
+                                <div
+                                    data-selected={searchParams.showUnresolved}
+                                    onClick={this._toggleShowResolved.bind(this, 'Unresolved')}
+                                    className='btn btn-default'>
+                                    <Icon name='circle-o' /> Show unresolved
+                                </div>
+                            </div>
                             <div
                                 data-block='violation-list'
                                 className='violationList-list'>
