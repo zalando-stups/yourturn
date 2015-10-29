@@ -34,6 +34,12 @@ function parseQueryParams(params) {
     if (params.activeTab) {
         result.activeTab = parseInt(params.activeTab, 10);
     }
+    if (params.showUnresolved) {
+        result.showUnresolved = params.showUnresolved === 'true';
+    }
+    if (params.showResolved) {
+        result.showResolved = params.showResolved === 'true';
+    }
     return result;
 }
 

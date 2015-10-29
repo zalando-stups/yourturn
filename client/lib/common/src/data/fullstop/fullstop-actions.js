@@ -12,8 +12,14 @@ function fetchViolations(params) {
             .query({
                 accounts: params.accounts,
                 size: params.size || 10,
-                since: params.from ? params.from.toISOString() : '',
-                page: params.page || 0
+                from: params.from ? params.from.toISOString() : '',
+                to: (params.to || new Date()).toISOString(),
+                page: params.page || 0,
+                checked: params.showResolved && !params.showUnresolved ?
+                            true :
+                            !params.showResolved && params.showUnresolved ?
+                                false :
+                                undefined
             })
             .oauth(Provider, RequestConfig)
             .exec(saveRoute)

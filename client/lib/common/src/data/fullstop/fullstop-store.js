@@ -21,7 +21,9 @@ function FullstopStore(state, action) {
                 accounts: [],
                 from: moment().subtract(1, 'week').startOf('day'),
                 to: moment(),
-                violationTypes: []
+                violationTypes: [],
+                showUnresolved: true,
+                showResolved: false
             }
         });
     }

@@ -73,6 +73,7 @@ class ViolationList extends React.Component {
      * @param  {Object} context Router context
      */
     updateSearch(params, context = this.context) {
+        this.actions.deleteViolations();
         this.actions.updateSearchParams(params);
         Object.keys(params).forEach(k => {
             if (moment.isMoment(params[k])) {
@@ -103,9 +104,15 @@ class ViolationList extends React.Component {
     }
 
     showSince(day) {
-        this.actions.deleteViolations();
         this.updateSearch({
             from: moment(day),
+            page: 0
+        });
+    }
+
+    showUntil(day) {
+        this.updateSearch({
+            to: moment(day),
             page: 0
         });
     }
@@ -138,10 +145,18 @@ class ViolationList extends React.Component {
         this.props.notificationActions.addNotification('Copied URL to clipboard', 'info');
     }
 
-    selectTab(current) {
+    _selectTab(current) {
         this.updateSearch({
             activeTab: current
         });
+    }
+
+    _toggleShowResolved(type) {
+        let searchParams = this.stores.fullstop.getSearchParams(),
+            newParams = {};
+        newParams['show' + type] = !searchParams['show' + type];
+        newParams.page = 0;
+        this.updateSearch(newParams);
     }
 
     render() {
@@ -150,6 +165,7 @@ class ViolationList extends React.Component {
             selectableAccounts = this.stores.team.getAccounts(),
             activeAccountIds = searchParams.accounts,
             showingSince = searchParams.from.toDate(),
+            showingUntil = searchParams.to.toDate(),
             violations = this.stores.fullstop.getViolations(activeAccountIds).map(v => v.id),
             pagingInfo = this.stores.fullstop.getPagingInfo(),
             shareURL = '/violation/v/' + lzw.compressToEncodedURIComponent(JSON.stringify(this.context.router.getCurrentQuery())),
@@ -166,18 +182,23 @@ class ViolationList extends React.Component {
                         Violations of the STUPS policy and bad practices in accounts you have access to.
                     </div>
                     <div>
-                        Show violations since:
+                        Show violations between:
                     </div>
-                    <Datepicker
-                        onChange={this.showSince.bind(this)}
-                        selectedDay={showingSince} />
+                    <div className='violationList-datepicker'>
+                        <Datepicker
+                            onChange={this.showSince.bind(this)}
+                            selectedDay={showingSince} />
+                        <Datepicker
+                            onChange={this.showUntil.bind(this)}
+                            selectedDay={showingUntil} />
+                    </div>
                     <AccountSelector
                         selectableAccounts={selectableAccounts}
                         selectedAccounts={selectedAccounts}
                         activeAccountIds={activeAccountIds}
                         onToggleAccount={this.toggleAccount.bind(this)} />
                     <Tabs.Tabs
-                        onSelect={this.selectTab.bind(this)}
+                        onSelect={this._selectTab.bind(this)}
                         selectedIndex={searchParams.activeTab}>
                         <Tabs.TabList>
                             <Tabs.Tab>Cross-Account Analysis</Tabs.Tab>
@@ -198,16 +219,40 @@ class ViolationList extends React.Component {
                                 fullstopStore={this.stores.fullstop} />
                         </Tabs.TabPanel>
                         <Tabs.TabPanel>
-                            <div
-                                data-block='violation-list'
-                                className='violationList-list'>
-                                <InfiniteList
-                                    loadMore={this.loadMore.bind(this)}
-                                    hasMore={!pagingInfo.last}
-                                    loader={<Icon spin name='circle-o-notch u-spinner' />}>
-                                    {violationCards}
-                                </InfiniteList>
+                            <small>You can filter by resolved or unresolved violations.</small>
+                            <div className='btn-group'>
+                                <div
+                                    data-selected={searchParams.showResolved}
+                                    onClick={this._toggleShowResolved.bind(this, 'Resolved')}
+                                    className='btn btn-default'>
+                                    <Icon name='check-circle' /> Show resolved
+                                </div>
+                                <div
+                                    data-selected={searchParams.showUnresolved}
+                                    onClick={this._toggleShowResolved.bind(this, 'Unresolved')}
+                                    className='btn btn-default'>
+                                    <Icon name='circle-o' /> Show unresolved
+                                </div>
                             </div>
+                            {violationCards.length ?
+                                <div
+                                    data-block='violation-list'
+                                    className='violationList-list'>
+                                    <InfiniteList
+                                        loadMore={this.loadMore.bind(this)}
+                                        hasMore={!pagingInfo.last}
+                                        loader={<Icon spin name='circle-o-notch u-spinner' />}>
+                                        {violationCards}
+                                    </InfiniteList>
+                                </div>
+                                :
+                                <div>
+                                    <div>
+                                        <Icon name='smile-o' size='4x' />
+                                    </div>
+                                    <span>No violations!</span>
+                                </div>
+                            }
                         </Tabs.TabPanel>
                     </Tabs.Tabs>
                 </div>;

@@ -200,25 +200,25 @@ class ApprovalForm extends React.Component {
                                             data-selected={this.state.selectedType === 'SPECIFICATION'}
                                             data-block='spec-button'
                                             onClick={this.selectType.bind(this, 'SPECIFICATION')}
-                                            className='btn btn-default'>
+                                            className='btn btn-default btn-no-unselect'>
                                             <Icon name='file-text-o' /> Specification
                                         </div>
                                         <div
                                             data-selected={this.state.selectedType === 'CODE_CHANGE'}
                                             onClick={this.selectType.bind(this, 'CODE_CHANGE')}
-                                            className='btn btn-default'>
+                                            className='btn btn-default btn-no-unselect'>
                                             <Icon name='code' /> Code Change
                                         </div>
                                         <div
                                             data-selected={this.state.selectedType === 'TEST'}
                                             onClick={this.selectType.bind(this, 'TEST')}
-                                            className='btn btn-default'>
+                                            className='btn btn-default btn-no-unselect'>
                                             <Icon name='check-circle-o' /> Test
                                         </div>
                                         <div
                                             data-selected={this.state.selectedType === 'DEPLOY'}
                                             onClick={this.selectType.bind(this, 'DEPLOY')}
-                                            className='btn btn-default'>
+                                            className='btn btn-default btn-no-unselect'>
                                             <Icon name='cloud-upload' /> Deploy
                                         </div>
                                         <div

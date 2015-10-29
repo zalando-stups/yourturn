@@ -38,12 +38,15 @@
         border-width: 1px;
     }
 
+
     &.btn-pressed,
     &[selected],
     &[data-selected="true"] {
-        pointer-events: none;
         border-width: 1px;
         color: @orange !important;
+        &.btn-no-unselect {
+            pointer-events: none;
+        }
     }
 
     &.btn-small {
