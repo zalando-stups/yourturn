@@ -192,6 +192,21 @@ class ViolationList extends React.Component {
                             onChange={this.showUntil.bind(this)}
                             selectedDay={showingUntil} />
                     </div>
+                    <small>You can filter by resolved or unresolved violations.</small>
+                    <div className='btn-group'>
+                        <div
+                            data-selected={searchParams.showResolved}
+                            onClick={this._toggleShowResolved.bind(this, 'Resolved')}
+                            className='btn btn-default'>
+                            <Icon name='check-circle' /> Show resolved
+                        </div>
+                        <div
+                            data-selected={searchParams.showUnresolved}
+                            onClick={this._toggleShowResolved.bind(this, 'Unresolved')}
+                            className='btn btn-default'>
+                            <Icon name='circle-o' /> Show unresolved
+                        </div>
+                    </div>
                     <AccountSelector
                         selectableAccounts={selectableAccounts}
                         selectedAccounts={selectedAccounts}
@@ -226,21 +241,6 @@ class ViolationList extends React.Component {
                                 fullstopStore={this.props.fullstopStore} />
                         </Tabs.TabPanel>
                         <Tabs.TabPanel>
-                            <small>You can filter by resolved or unresolved violations.</small>
-                            <div className='btn-group'>
-                                <div
-                                    data-selected={searchParams.showResolved}
-                                    onClick={this._toggleShowResolved.bind(this, 'Resolved')}
-                                    className='btn btn-default'>
-                                    <Icon name='check-circle' /> Show resolved
-                                </div>
-                                <div
-                                    data-selected={searchParams.showUnresolved}
-                                    onClick={this._toggleShowResolved.bind(this, 'Unresolved')}
-                                    className='btn btn-default'>
-                                    <Icon name='circle-o' /> Show unresolved
-                                </div>
-                            </div>
                             <div
                                 data-block='violation-list'
                                 className='violationList-list'>
