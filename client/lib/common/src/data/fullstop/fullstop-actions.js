@@ -65,7 +65,12 @@ function fetchViolationCount(params) {
             .query({
                 accounts: params.accounts,
                 to: params.to ? params.to.toISOString() : (new Date()).toISOString(),
-                from: params.from ? params.from.toISOString() : ''
+                from: params.from ? params.from.toISOString() : '',
+                resolved: params.showResolved && !params.showUnresolved ?
+                            true :
+                            !params.showResolved && params.showUnresolved ?
+                                false :
+                                undefined
             })
             .accept('json')
             .oauth(Provider, RequestConfig)
