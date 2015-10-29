@@ -73,6 +73,7 @@ class ViolationList extends React.Component {
      * @param  {Object} context Router context
      */
     updateSearch(params, context = this.context) {
+        this.actions.deleteViolations();
         this.actions.updateSearchParams(params);
         Object.keys(params).forEach(k => {
             if (moment.isMoment(params[k])) {
@@ -103,7 +104,6 @@ class ViolationList extends React.Component {
     }
 
     showSince(day) {
-        this.actions.deleteViolations();
         this.updateSearch({
             from: moment(day),
             page: 0
