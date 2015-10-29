@@ -3,6 +3,7 @@ import Icon from 'react-fa';
 import _ from 'lodash';
 import {Typeahead} from 'react-typeahead';
 import fuzzysearch from 'fuzzysearch';
+import Collapsible from 'common/src/collapsible.jsx';
 import 'common/asset/less/common/account-selector.less';
 
 function filterOptionFn(input, option) {
@@ -144,17 +145,24 @@ class AccountSelector extends React.Component {
                                 onChange={this._toggleAccount.bind(this, a.id)}
                                 defaultChecked={activeAccountIds.indexOf(a.id) >= 0}/> {a.name} <small>({a.id})</small>
                         </label>)}
-                    {_.sortBy(inactiveAccounts, 'name')
-                        .map(a =>
-                        <label
-                            key={a.id}
-                            className={activeAccountIds.indexOf(a.id) >= 0 ? 'is-checked' : ''}>
-                            <input
-                                type='checkbox'
-                                value={a.id}
-                                onChange={this._toggleAccount.bind(this, a.id)}
-                                defaultChecked={activeAccountIds.indexOf(a.id) >= 0}/> {a.name} <small>({a.id})</small>
-                        </label>)}
+                    {inactiveAccounts.length ?
+                        <Collapsible
+                            header={'Untoggled accounts'}>
+                        {_.sortBy(inactiveAccounts, 'name')
+                            .map(a =>
+                            <label
+                                key={a.id}
+                                className={activeAccountIds.indexOf(a.id) >= 0 ? 'is-checked' : ''}>
+                                <input
+                                    type='checkbox'
+                                    value={a.id}
+                                    onChange={this._toggleAccount.bind(this, a.id)}
+                                    defaultChecked={activeAccountIds.indexOf(a.id) >= 0}/> {a.name} <small>({a.id})</small>
+                            </label>)}
+                        </Collapsible>
+                        :
+                        null
+                    }
                     </div>
                 </div>;
     }
