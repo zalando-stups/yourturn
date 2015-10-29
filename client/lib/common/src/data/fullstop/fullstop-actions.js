@@ -12,7 +12,8 @@ function fetchViolations(params) {
             .query({
                 accounts: params.accounts,
                 size: params.size || 10,
-                since: params.from ? params.from.toISOString() : '',
+                from: params.from ? params.from.toISOString() : '',
+                to: (params.to || new Date()).toISOString(),
                 page: params.page || 0,
                 checked: params.showResolved && !params.showUnresolved ?
                             true :

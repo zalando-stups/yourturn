@@ -110,6 +110,13 @@ class ViolationList extends React.Component {
         });
     }
 
+    showUntil(day) {
+        this.updateSearch({
+            to: moment(day),
+            page: 0
+        });
+    }
+
     /**
      * Used by infinite list, used to fetch next page of results.
      *
@@ -158,6 +165,7 @@ class ViolationList extends React.Component {
             selectableAccounts = this.stores.team.getAccounts(),
             activeAccountIds = searchParams.accounts,
             showingSince = searchParams.from.toDate(),
+            showingUntil = searchParams.to.toDate(),
             violations = this.stores.fullstop.getViolations(activeAccountIds).map(v => v.id),
             pagingInfo = this.stores.fullstop.getPagingInfo(),
             shareURL = '/violation/v/' + lzw.compressToEncodedURIComponent(JSON.stringify(this.context.router.getCurrentQuery())),
@@ -174,11 +182,16 @@ class ViolationList extends React.Component {
                         Violations of the STUPS policy and bad practices in accounts you have access to.
                     </div>
                     <div>
-                        Show violations since:
+                        Show violations between:
                     </div>
-                    <Datepicker
-                        onChange={this.showSince.bind(this)}
-                        selectedDay={showingSince} />
+                    <div className='violationList-datepicker'>
+                        <Datepicker
+                            onChange={this.showSince.bind(this)}
+                            selectedDay={showingSince} />
+                        <Datepicker
+                            onChange={this.showUntil.bind(this)}
+                            selectedDay={showingUntil} />
+                    </div>
                     <AccountSelector
                         selectableAccounts={selectableAccounts}
                         selectedAccounts={selectedAccounts}
@@ -221,16 +234,25 @@ class ViolationList extends React.Component {
                                     <Icon name='circle-o' /> Show unresolved
                                 </div>
                             </div>
-                            <div
-                                data-block='violation-list'
-                                className='violationList-list'>
-                                <InfiniteList
-                                    loadMore={this.loadMore.bind(this)}
-                                    hasMore={!pagingInfo.last}
-                                    loader={<Icon spin name='circle-o-notch u-spinner' />}>
-                                    {violationCards}
-                                </InfiniteList>
-                            </div>
+                            {violationCards.length ?
+                                <div
+                                    data-block='violation-list'
+                                    className='violationList-list'>
+                                    <InfiniteList
+                                        loadMore={this.loadMore.bind(this)}
+                                        hasMore={!pagingInfo.last}
+                                        loader={<Icon spin name='circle-o-notch u-spinner' />}>
+                                        {violationCards}
+                                    </InfiniteList>
+                                </div>
+                                :
+                                <div>
+                                    <div>
+                                        <Icon name='smile-o' size='4x' />
+                                    </div>
+                                    <span>No violations!</span>
+                                </div>
+                            }
                         </Tabs.TabPanel>
                     </Tabs.Tabs>
                 </div>;
