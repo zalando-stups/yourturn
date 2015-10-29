@@ -69,6 +69,9 @@ ViolationListHandler.fetchData = function(router) {
         let searchParams = FULLSTOP_STORE.getSearchParams();
         FULLSTOP_ACTIONS.fetchViolations(searchParams);
         FULLSTOP_ACTIONS.fetchViolationCount(searchParams);
+        if (FULLSTOP_STORE.getViolationCountIn(searchParams.inspectedAccount).length === 0) {
+            FULLSTOP_ACTIONS.fetchViolationCountIn(searchParams.inspectedAccount, searchParams);
+        }
     }
     if (!FULLSTOP_STORE.getViolationTypes().length) {
         promises.push(FULLSTOP_ACTIONS.fetchViolationTypes());

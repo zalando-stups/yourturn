@@ -1,0 +1,32 @@
+@import "../variables";
+
+.violation-account-overview {
+    .violation-account-overview-chart {
+        padding-top: @padding-small;
+        text {
+            font-size: 12px;
+        }
+        .x.axis .tick text {
+            transform: rotate(-90deg)translate(5px, -15px);
+            text-anchor: start;
+            pointer-events: none;
+        }
+
+        .y.axis .tick line {
+            stroke: @gray-light;
+            opacity: .25;
+            pointer-events: none;
+        }
+
+        rect.bar {
+            fill: lighten(@blue-light, 15%);
+        }
+
+        .tooltip {
+            background: #333;
+            color: white;
+            padding: 0 @padding-tiniest;
+            border-radius: @border-radius;
+        }
+    }
+}

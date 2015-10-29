@@ -7,6 +7,7 @@ import lzw from 'lz-string';
 import {merge} from 'common/src/util';
 import Datepicker from 'common/src/datepicker.jsx';
 import Clipboard from 'react-copy-to-clipboard';
+import AccountOverview from 'violation/src/violation-overview-account/violation-overview-account.jsx';
 import AccountSelector from 'violation/src/account-selector.jsx';
 import ViolationAnalysis from 'violation/src/violation-analysis/violation-analysis.jsx';
 import Violation from 'violation/src/violation-detail/violation-detail.jsx';
@@ -168,14 +169,13 @@ class ViolationList extends React.Component {
             showingUntil = searchParams.to.toDate(),
             violations = this.stores.fullstop.getViolations(activeAccountIds).map(v => v.id),
             pagingInfo = this.stores.fullstop.getPagingInfo(),
-            shareURL = '/violation/v/' + lzw.compressToEncodedURIComponent(JSON.stringify(this.context.router.getCurrentQuery())),
+            shareURL = '/violation/v/' + lzw.compressToEncodedURIComponent(JSON.stringify(searchParams)),
             violationCards = violations.map(v => <Violation
                                                     key={v}
                                                     fullstopStore={this.props.fullstopStore}
                                                     fullstopActions={this.props.fullstopActions}
                                                     userStore={this.props.userStore}
                                                     violationId={v} />);
-
         return <div className='violationList'>
                     <h2 className='violationList-headline'>Violations</h2>
                     <div className='u-info'>
@@ -197,26 +197,33 @@ class ViolationList extends React.Component {
                         selectedAccounts={selectedAccounts}
                         activeAccountIds={activeAccountIds}
                         onToggleAccount={this.toggleAccount.bind(this)} />
+
+                    <Clipboard
+                        onCopy={this._handleCopy.bind(this)}
+                        text={window.location.origin + shareURL}>
+                        <div className='btn btn-default'>
+                            <Icon name='bullhorn' /> Copy sharing URL
+                        </div>
+                    </Clipboard>
+
                     <Tabs.Tabs
                         onSelect={this._selectTab.bind(this)}
                         selectedIndex={searchParams.activeTab}>
                         <Tabs.TabList>
                             <Tabs.Tab>Cross-Account Analysis</Tabs.Tab>
+                            <Tabs.Tab>Account Analysis</Tabs.Tab>
                             <Tabs.Tab>Violations</Tabs.Tab>
                         </Tabs.TabList>
                         <Tabs.TabPanel>
-                            <Clipboard
-                                onCopy={this._handleCopy.bind(this)}
-                                text={window.location.origin + shareURL}>
-                                <div className='btn btn-default'>
-                                    <Icon name='bullhorn' /> Copy sharing URL
-                                </div>
-                            </Clipboard>
                             <ViolationAnalysis
                                 teamStore={this.stores.team}
                                 userStore={this.stores.user}
                                 fullstopActions={this.actions}
                                 fullstopStore={this.stores.fullstop} />
+                        </Tabs.TabPanel>
+                        <Tabs.TabPanel>
+                            <AccountOverview
+                                fullstopStore={this.props.fullstopStore} />
                         </Tabs.TabPanel>
                         <Tabs.TabPanel>
                             <small>You can filter by resolved or unresolved violations.</small>
@@ -234,25 +241,16 @@ class ViolationList extends React.Component {
                                     <Icon name='circle-o' /> Show unresolved
                                 </div>
                             </div>
-                            {violationCards.length ?
-                                <div
-                                    data-block='violation-list'
-                                    className='violationList-list'>
-                                    <InfiniteList
-                                        loadMore={this.loadMore.bind(this)}
-                                        hasMore={!pagingInfo.last}
-                                        loader={<Icon spin name='circle-o-notch u-spinner' />}>
-                                        {violationCards}
-                                    </InfiniteList>
-                                </div>
-                                :
-                                <div>
-                                    <div>
-                                        <Icon name='smile-o' size='4x' />
-                                    </div>
-                                    <span>No violations!</span>
-                                </div>
-                            }
+                            <div
+                                data-block='violation-list'
+                                className='violationList-list'>
+                                <InfiniteList
+                                    loadMore={this.loadMore.bind(this)}
+                                    hasMore={!pagingInfo.last}
+                                    loader={<Icon spin name='circle-o-notch u-spinner' />}>
+                                    {violationCards}
+                                </InfiniteList>
+                            </div>
                         </Tabs.TabPanel>
                     </Tabs.Tabs>
                 </div>;

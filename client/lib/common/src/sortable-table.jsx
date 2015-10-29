@@ -3,6 +3,7 @@ import Icon from 'react-fa';
 import Table from 'fixed-data-table';
 import _ from 'lodash';
 import 'common/asset/css/fixed-data-table.min.css';
+import 'common/asset/less/common/sortable-table.less';
 
 const ASC = 'asc',
     DESC = 'desc';
