@@ -15,4 +15,4 @@ export default function updateSearch(params, context = this.context, actions = t
         }
     });
     context.router.transitionTo('violation-vioList', {}, merge(context.router.getCurrentQuery(), params));
-};
+}

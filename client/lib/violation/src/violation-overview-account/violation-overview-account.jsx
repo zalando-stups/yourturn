@@ -2,13 +2,13 @@ import React from 'react';
 import AutoWidth from '@zalando/react-automatic-width';
 import Table from 'fixed-data-table';
 import SorTable from 'common/src/sortable-table.jsx';
-import Collapsible from 'common/src/collapsible.jsx';
 import Charts from 'react-d3-components';
+import _ from 'lodash';
 import d3 from 'd3';
 import 'common/asset/less/violation/violation-account-overview.less';
 
 class ViolationOverviewAccount extends React.Component {
-    constructor(props) {
+    constructor() {
         super();
     }
 

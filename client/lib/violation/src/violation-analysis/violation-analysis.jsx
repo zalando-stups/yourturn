@@ -5,11 +5,11 @@ import d3 from 'd3';
 import Charts from 'react-d3-components';
 import AutoWidth from '@zalando/react-automatic-width';
 import Table from 'fixed-data-table';
-import SortableTable from 'common/src/sortable-table.jsx'
+import SortableTable from 'common/src/sortable-table.jsx';
 import 'common/asset/less/violation/violation-analysis.less';
 
 class ViolationAnalysis extends React.Component {
-    constructor(props) {
+    constructor() {
         super();
     }
 
@@ -117,7 +117,7 @@ ViolationAnalysis.propTypes = {
     violationTypes: React.PropTypes.array,
     onConfigurationChange: React.PropTypes.func,
     accounts: React.PropTypes.array,
-    account: React.PropTypes.string,
+    account: React.PropTypes.string
 };
 
 export default ViolationAnalysis;
