@@ -30,7 +30,6 @@ class ViolationList extends React.Component {
             selectableAccounts = this.stores.team.getAccounts(), // these we can in theory select
             activeAccountIds = searchParams.accounts, // these are actively searched for
             selectedAccounts = this.stores.user.getUserCloudAccounts(), // these the user has access to
-            inspectedAccount = searchParams.inspectedAccount, // this the user has selected for the chart
             activeTab = searchParams.activeTab;
 
         // if there are no active account ids, use those of selected accounts
@@ -48,16 +47,13 @@ class ViolationList extends React.Component {
                                     return accs;
                                 },
                                 []);
-            inspectedAccount = inspectedAccount || selectedAccounts[0].id;
             updateSearch.call(this, {
-                inspectedAccount,
                 activeTab: activeTab || 0
             }, context);
         } else {
             Array.prototype.push.apply(activeAccountIds, selectedAccounts.map(a => a.id));
             updateSearch.call(this, {
                 accounts: activeAccountIds,
-                inspectedAccount: inspectedAccount || activeAccountIds[0],
                 activeTab: activeTab || 0
             }, context);
         }
@@ -69,21 +65,9 @@ class ViolationList extends React.Component {
     }
 
     toggleAccount(activeAccountIds) {
-        // check if inspected account is still among active account ids
-        let params = this.stores.fullstop.getSearchParams(),
-            {inspectedAccount} = params;
-        if (inspectedAccount) {
-            if (activeAccountIds.indexOf(inspectedAccount) < 0) {
-                // IT IS NOT
-                inspectedAccount = activeAccountIds[0] || null;
-            }
-        } else {
-            inspectedAccount = activeAccountIds[0] || null;
-        }
         updateSearch.call(this, {
             accounts: activeAccountIds,
-            page: 0,
-            inspectedAccount
+            page: 0
         });
     }
 
@@ -140,6 +124,14 @@ class ViolationList extends React.Component {
             newParams = {};
         newParams['show' + type] = !searchParams['show' + type];
         newParams.page = 0;
+        updateSearch.call(this, newParams);
+    }
+
+    _updateSearch(tab, params) {
+        let newParams = Object.keys(params).reduce((prev, cur) => {
+            prev[tab + '_' + cur] = params[cur];
+            return prev;
+        }, {});
         updateSearch.call(this, newParams);
     }
 
@@ -219,19 +211,19 @@ class ViolationList extends React.Component {
                         </Tabs.TabList>
                         <Tabs.TabPanel>
                             <ViolationAnalysis
-                                account={searchParams.inspectedAccount}
+                                account={searchParams.cross ? searchParams.cross.inspectedAccount : activeAccountIds[0]}
                                 accounts={allAccounts}
-                                onConfigurationChange={updateSearch.bind(this)}
+                                onConfigurationChange={this._updateSearch.bind(this, 'cross')}
                                 violationTypes={violationTypes}
-                                violationCount={this.stores.fullstop.getViolationCount(searchParams)} />
+                                violationCount={this.stores.fullstop.getViolationCount()} />
                         </Tabs.TabPanel>
                         <Tabs.TabPanel>
                             <AccountOverview
-                                onConfigurationChange={updateSearch.bind(this)}
-                                account={searchParams.inspectedAccount}
+                                onConfigurationChange={this._updateSearch.bind(this, 'single')}
+                                account={searchParams.cross ? searchParams.cross.inspectedAccount : activeAccountIds[0]}
                                 application={searchParams.inspectedApplication}
                                 violationTypes={violationTypes}
-                                violationCount={this.stores.fullstop.getViolationCountIn(searchParams.inspectedAccount)} />
+                                violationCount={this.stores.fullstop.getViolationCountIn(searchParams.cross ? searchParams.cross.inspectedAccount : activeAccountIds[0])} />
                         </Tabs.TabPanel>
                         <Tabs.TabPanel>
                             <div

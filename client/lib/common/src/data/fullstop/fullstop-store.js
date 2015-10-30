@@ -22,7 +22,6 @@ function FullstopStore(state, action) {
                 accounts: [],
                 from: moment().subtract(1, 'week').startOf('day'),
                 to: moment(),
-                violationTypes: [],
                 showUnresolved: true,
                 showResolved: false
             }

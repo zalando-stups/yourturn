@@ -19,6 +19,7 @@ const FULLSTOP_ACTIONS = FLUX.getActions('fullstop'),
 
 function parseQueryParams(params) {
     let result = {};
+    // global parameters
     if (params.accounts) {
         result.accounts = params.accounts;
     }
@@ -27,9 +28,6 @@ function parseQueryParams(params) {
     }
     if (params.to) {
         result.to = moment(params.to);
-    }
-    if (params.inspectedAccount) {
-        result.inspectedAccount = params.inspectedAccount;
     }
     if (params.activeTab) {
         result.activeTab = parseInt(params.activeTab, 10);
@@ -40,6 +38,20 @@ function parseQueryParams(params) {
     if (params.showResolved) {
         result.showResolved = params.showResolved === 'true';
     }
+
+    // tab-specific parameters
+    Object
+    .keys(params)
+    .forEach(param => {
+        // they look like tab_variableCamelCase
+        let [tab, variable] = param.split('_');
+        if (variable) {
+            if (!result[tab]) {
+                result[tab] = {};
+            }
+            result[tab][variable] = params[param];
+        }
+    });
     return result;
 }
 
@@ -67,11 +79,15 @@ ViolationListHandler.fetchData = function(router) {
     if (!_.isEmpty(router.query)) {
         FULLSTOP_ACTIONS.updateSearchParams(parseQueryParams(router.query));
         let searchParams = FULLSTOP_STORE.getSearchParams();
-        FULLSTOP_ACTIONS.fetchViolations(searchParams);
+        // tab-specific loadings
+        // tab 1
         FULLSTOP_ACTIONS.fetchViolationCount(searchParams);
-        if (FULLSTOP_STORE.getViolationCountIn(searchParams.inspectedAccount).length === 0) {
-            FULLSTOP_ACTIONS.fetchViolationCountIn(searchParams.inspectedAccount, searchParams);
-        }
+        // tab 2
+        FULLSTOP_ACTIONS.fetchViolationCountIn(
+            searchParams.cross ? searchParams.cross.inspectedAccount : searchParams.accounts[0],
+            searchParams);
+        // tab 3
+        FULLSTOP_ACTIONS.fetchViolations(searchParams);
     }
     if (!Object.keys(FULLSTOP_STORE.getViolationTypes()).length) {
         promises.push(FULLSTOP_ACTIONS.fetchViolationTypes());
