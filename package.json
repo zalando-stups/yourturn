@@ -1,6 +1,6 @@
 {
   "name": "yourturn",
-  "version": "0.65.1",
+  "version": "0.65.2",
   "description": "",
   "scripts": {
     "start": "cd client && node server.js",
