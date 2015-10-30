@@ -45,6 +45,7 @@ class ViolationAnalysis extends React.Component {
 
     accountCellRenderer(account) {
         return <span
+                    title={account}
                     className='violation-analysis-table-cell-account'
                     onClick={this.selectAccount.bind(this, account)}>{account}</span>;
     }
@@ -99,23 +100,25 @@ class ViolationAnalysis extends React.Component {
                                 <Table.Column
                                     label='Account'
                                     width={200}
+                                    cellRenderer={c => <span title={c}>{c}</span>}
                                     dataKey={'accountName'} />
                                 <Table.Column
                                     label='Violation Type'
                                     width={200}
                                     flexGrow={3}
+                                    cellRenderer={c => <span title={c}>{c}</span>}
                                     dataKey={'type'} />
                                 <Table.Column
                                     label='Severity'
                                     width={100}
                                     flexGrow={1}
-                                    cellRenderer={c => <span className={'sortable-table-align-right ' + 'violation-severity-' + c}>{c}</span>}
+                                    cellRenderer={c => <span title={c} className={'sortable-table-align-right ' + 'violation-severity-' + c}>{c}</span>}
                                     dataKey='typeSeverity' />
                                 <Table.Column
                                     label='Count'
                                     width={100}
                                     flexGrow={1}
-                                    cellRenderer={c => <span className='sortable-table-align-right'>{c}</span>}
+                                    cellRenderer={c => <span title={c} className='sortable-table-align-right'>{c}</span>}
                                     dataKey={'quantity'} />
                             </SortableTable>
                         </AutoWidth>
