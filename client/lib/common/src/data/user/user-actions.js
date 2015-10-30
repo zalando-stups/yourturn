@@ -46,7 +46,7 @@ function fetchAccessToken() {
 
 function fetchUserInfo(userId) {
     return request
-            .get(`${USER_BASE_URL}/users/${userId}`)
+            .get(`${USER_BASE_URL}/employees/${userId}`)
             .accept('json')
             .oauth(Provider, RequestConfig)
             .exec(saveRoute)
@@ -59,7 +59,10 @@ function fetchUserInfo(userId) {
 
 function fetchAccounts(userId) {
     return request
-            .get(`${TEAM_BASE_URL}/accounts/${userId}`)
+            .get(`${TEAM_BASE_URL}/accounts/aws`)
+            .query({
+                member: userId
+            })
             .accept('json')
             .oauth(Provider, RequestConfig)
             .exec(saveRoute)

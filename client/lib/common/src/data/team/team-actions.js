@@ -5,7 +5,7 @@ import {Provider, RequestConfig, saveRoute} from 'common/src/oauth-provider';
 
 function fetchAccounts() {
     return request
-        .get(`${TEAM_BASE_URL}/accounts`)
+        .get(`${TEAM_BASE_URL}/accounts/aws`)
         .accept('json')
         .oauth(Provider, RequestConfig)
         .exec(saveRoute)
