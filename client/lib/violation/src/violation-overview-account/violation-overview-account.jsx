@@ -53,6 +53,7 @@ class ViolationOverviewAccount extends React.Component {
                         </AutoWidth>
                         <AutoWidth className='violation-account-overview-table'>
                             <SorTable
+                                helpText='You can search for applications, versions and violation types.'
                                 height={Math.min((violationCount.length + 1) * 50 + 2, 1500)}
                                 filterExprFn={row => `${row.application} ${row.version} ${row.type}`}
                                 rows={violationCount}>

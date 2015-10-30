@@ -6,7 +6,6 @@ import moment from 'moment';
 import lzw from 'lz-string';
 import {merge} from 'common/src/util';
 import Datepicker from 'common/src/datepicker.jsx';
-import updateSearch from 'violation/src/update-search';
 import Clipboard from 'react-copy-to-clipboard';
 import AccountOverview from 'violation/src/violation-overview-account/violation-overview-account.jsx';
 import AccountSelector from 'violation/src/account-selector.jsx';
