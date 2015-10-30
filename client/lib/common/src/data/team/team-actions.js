@@ -1,11 +1,11 @@
+/* global ENV_DEVELOPMENT */
 import {Actions} from 'flummox';
-import TEAM_BASE_URL from 'TEAM_BASE_URL';
 import request from 'common/src/superagent';
 import {Provider, RequestConfig, saveRoute} from 'common/src/oauth-provider';
 
 function fetchAccounts() {
     return request
-        .get(`${TEAM_BASE_URL}/accounts`)
+        .get(`${ENV_DEVELOPMENT ? 'http://localhost:5005' : ''}/accounts`)
         .accept('json')
         .oauth(Provider, RequestConfig)
         .exec(saveRoute)
