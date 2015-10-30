@@ -2,6 +2,7 @@
 import {Actions} from 'flummox';
 import request from 'common/src/superagent';
 import USER_BASE_URL from 'USER_BASE_URL';
+import TEAM_BASE_URL from 'TEAM_BASE_URL';
 import OAUTH_TOKENINFO_URL from 'OAUTH_TOKENINFO_URL';
 import {Provider, RequestConfig, saveRoute} from 'common/src/oauth-provider';
 
@@ -58,7 +59,7 @@ function fetchUserInfo(userId) {
 
 function fetchAccounts(userId) {
     return request
-            .get(`${USER_BASE_URL}/accounts/${userId}`)
+            .get(`${TEAM_BASE_URL}/accounts/${userId}`)
             .accept('json')
             .oauth(Provider, RequestConfig)
             .exec(saveRoute)
