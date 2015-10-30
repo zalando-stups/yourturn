@@ -3,6 +3,7 @@ import Icon from 'react-fa';
 import Table from 'fixed-data-table';
 import _ from 'lodash';
 import 'common/asset/css/fixed-data-table.min.css';
+import 'common/asset/less/common/sortable-table.less';
 
 const ASC = 'asc',
     DESC = 'desc';
@@ -83,7 +84,7 @@ class SortableTable extends React.Component {
 
         displayedRows = _.sortByOrder(displayedRows, this.state.sortBy, this.state.sortOrder);
         return <div className='sortable-table'>
-                    <small>You can search for accounts or violation types.</small>
+                    <small>{this.props.helpText}</small>
                     <div className='input-group'>
                         <Icon name='search' />
                         <input

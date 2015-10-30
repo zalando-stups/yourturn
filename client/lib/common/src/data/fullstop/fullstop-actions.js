@@ -65,12 +65,35 @@ function fetchViolationCount(params) {
             .query({
                 accounts: params.accounts,
                 to: params.to ? params.to.toISOString() : (new Date()).toISOString(),
-                from: params.from ? params.from.toISOString() : ''
+                from: params.from ? params.from.toISOString() : '',
+                resolved: params.showResolved && !params.showUnresolved ?
+                            true :
+                            !params.showResolved && params.showUnresolved ?
+                                false :
+                                undefined
             })
             .accept('json')
             .oauth(Provider, RequestConfig)
             .exec(saveRoute)
             .then(res => res.body);
+}
+
+function fetchViolationCountIn(account, params) {
+    return request
+            .get(`${FULLSTOP_BASE_URL}/violation-count/${account}`)
+            .query({
+                to: (params.to || new Date()).toISOString(),
+                from: params.from ? params.from.toISOString() : '',
+                resolved: params.showResolved && !params.showUnresolved ?
+                            true :
+                            !params.showResolved && params.showUnresolved ?
+                                false :
+                                undefined
+            })
+            .accept('json')
+            .oauth(Provider, RequestConfig)
+            .exec(saveRoute)
+            .then(res => [account, res.body]);
 }
 
 function deleteViolations() {
@@ -103,6 +126,10 @@ export default class FullstopActions extends Actions {
         return fetchViolationCount.apply(this, arguments);
     }
 
+    fetchViolationCountIn(account, params) {
+        return fetchViolationCountIn(account, params);
+    }
+
     deleteViolations() {
         return deleteViolations();
     }
@@ -124,6 +151,7 @@ export {
     fetchViolation,
     fetchViolationTypes,
     fetchViolationCount,
+    fetchViolationCountIn,
     resolveViolation,
     deleteViolations,
     updateSearchParams

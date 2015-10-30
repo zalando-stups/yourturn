@@ -1,0 +1,78 @@
+[{
+    "application": "yourturn",
+    "version": "issue-328-SNAPSHOT",
+    "type": "EC2_WITH_A_SNAPSHOT_IMAGE",
+    "quantity": 1
+  },
+  {
+    "application": "application-a",
+    "version": "41",
+    "type": "APPLICATION_VERSION_NOT_PRESENT_IN_KIO",
+    "quantity": 1
+  },
+  {
+    "application": "application-a",
+    "version": "41",
+    "type": "WRONG_APPLICATION_MASTERDATA",
+    "quantity": 1
+  },
+  {
+    "application": "application-b",
+    "version": "13",
+    "type": "APPLICATION_VERSION_NOT_PRESENT_IN_KIO",
+    "quantity": 1
+  },
+  {
+    "application": "application-b",
+    "version": "13",
+    "type": "EC2_WITH_A_SNAPSHOT_IMAGE",
+    "quantity": 1
+  },
+  {
+    "application": "application-b",
+    "version": "15",
+    "type": "APPLICATION_VERSION_NOT_PRESENT_IN_KIO",
+    "quantity": 1
+  },
+  {
+    "application": "application-b",
+    "version": "15",
+    "type": "EC2_WITH_A_SNAPSHOT_IMAGE",
+    "quantity": 1
+  },
+  {
+    "application": null,
+    "version": null,
+    "type": "EC2_WITH_KEYPAIR",
+    "quantity": 2
+  },
+  {
+    "application": null,
+    "version": null,
+    "type": "MISSING_SOURCE_IN_USER_DATA",
+    "quantity": 1
+  },
+  {
+    "application": null,
+    "version": null,
+    "type": "MISSING_USER_DATA",
+    "quantity": 2
+  },
+  {
+    "application": null,
+    "version": null,
+    "type": "UNSECURED_ENDPOINT",
+    "quantity": 11
+  },
+  {
+    "application": null,
+    "version": null,
+    "type": "WRONG_AMI",
+    "quantity": 2
+  },
+  {
+    "application": null,
+    "version": null,
+    "type": "WRONG_USER_DATA",
+    "quantity": 1
+}]

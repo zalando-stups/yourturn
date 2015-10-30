@@ -17,5 +17,30 @@
     "id": "APPLICATION_VERSION_NOT_PRESENT_IN_KIO",
     "help_text": "blahr.",
     "violation_severity": 4
+  },
+  {
+    "id": "EC2_WITH_KEYPAIR",
+    "help_text": "key paris",
+    "violation_severity": 3
+  },
+  {
+    "id": "MISSING_SOURCE_IN_USER_DATA",
+    "help_text": "asdf",
+    "violation_severity": 2
+  },
+  {
+    "id": "MISSING_USER_DATA",
+    "help_text": "fdsa",
+    "violation_severity": 2
+  },
+  {
+    "id": "WRONG_AMI",
+    "help_text": "key paris",
+    "violation_severity": 1
+  },
+  {
+    "id": "WRONG_USER_DATA",
+    "help_text": "asdf",
+    "violation_severity": 3
   }
 ]

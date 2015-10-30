@@ -14,6 +14,7 @@ function FullstopStore(state, action) {
         return Immutable.fromJS({
             violations: {},
             violationCount: [],
+            violationCountIn: [],
             violationTypes: {},
             pagingInfo: DEFAULT_PAGING,
             searchParams: {
@@ -21,7 +22,6 @@ function FullstopStore(state, action) {
                 accounts: [],
                 from: moment().subtract(1, 'week').startOf('day'),
                 to: moment(),
-                violationTypes: [],
                 showUnresolved: true,
                 showResolved: false
             }
@@ -74,6 +74,8 @@ function FullstopStore(state, action) {
         return state.set('violationTypes', Immutable.fromJS(types));
     } else if (type === Types.RECEIVE_VIOLATION_COUNT) {
         return state.set('violationCount', Immutable.fromJS(payload));
+    } else if (type === Types.RECEIVE_VIOLATION_COUNT_IN) {
+        return state.set('violationCountIn', Immutable.fromJS(payload));
     }
     return state;
 }
@@ -111,6 +113,12 @@ export default class FullstopStoreWrapper extends Store {
             fullstopActions.fetchViolationCount,
             null,
             this.receiveViolationCount,
+            null);
+
+        this.registerAsync(
+            fullstopActions.fetchViolationCountIn,
+            null,
+            this.receiveViolationCountIn,
             null);
 
         this.registerAsync(
@@ -218,6 +226,15 @@ export default class FullstopStoreWrapper extends Store {
         });
     }
 
+    receiveViolationCountIn([account, counts]) {
+        this.setState({
+            redux: FullstopStore(this.state.redux, {
+                type: Types.RECEIVE_VIOLATION_COUNT_IN,
+                payload: [account, counts]
+            })
+        });
+    }
+
     getPagingInfo() {
         return Getters.getPagingInfo(this.state.redux);
     }
@@ -244,5 +261,9 @@ export default class FullstopStoreWrapper extends Store {
 
     getViolationCount() {
         return Getters.getViolationCount(this.state.redux);
+    }
+
+    getViolationCountIn(account) {
+        return Getters.getViolationCountIn(this.state.redux, account);
     }
 }

@@ -35,10 +35,7 @@ function getSearchParams(state) {
 }
 
 function getViolationTypes(state) {
-    let types = state.get('violationTypes').toJS();
-    return Object
-            .keys(types)
-            .map(k => types[k]);
+    return state.get('violationTypes').toJS();
 }
 
 function getViolationType(state, type) {
@@ -49,6 +46,14 @@ function getViolationCount(state) {
     return state.get('violationCount').toJS();
 }
 
+function getViolationCountIn(state, account) {
+    let current = state.get('violationCountIn').toJS();
+    if (current[0] === account) {
+        return current[1];
+    }
+    return [];
+}
+
 export {
     getViolations,
     getViolation,
@@ -56,5 +61,6 @@ export {
     getSearchParams,
     getViolationType,
     getViolationTypes,
-    getViolationCount
+    getViolationCount,
+    getViolationCountIn
 };
