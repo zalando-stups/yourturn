@@ -27,53 +27,62 @@ class ViolationOverviewAccount extends React.Component {
                                     application: v.application || '',
                                     version: v.version || '',
                                     quantity: v.quantity,
-                                    type: v.type
+                                    type: v.type,
+                                    typeSeverity: this.stores.fullstop.getViolationType(v.type).violation_severity
                                 })),
             maxQuantity = violationCount.reduce((prev, cur) => prev > cur.quantity ? prev : cur.quantity, 0),
             yScale = d3.scale.linear().domain([0, maxQuantity]).range([225, 0]).nice();
         return <div className='violation-account-overview'>
+                    <strong>Account {searchParams.inspectedAccount}</strong>
                     {violationCount.length ?
                         <div>
-                        <AutoWidth className='violation-account-overview-chart'>
-                            <Charts.BarChart
-                                data={{
-                                    label: 'Violation Count',
-                                    values: _.sortByOrder(violationCount, ['quantity'], ['desc'])
-                                            .map(c => ({ x: c.type, y: c.quantity }))
-                                }}
-                                tooltipHtml={(x, y0, y) => y.toString()}
-                                tooltipMode='element'
-                                height={300}
-                                margin={{top: 50, left: 50, right: 25, bottom: 25}}
-                                yScale={yScale}
-                                yAxis={{label: '# Violations', innerTickSize: -10000}} />
-                        </AutoWidth>
-                        <AutoWidth>
-                            <SorTable
-                                height={Math.min((violationCount.length + 1) * 50 + 2, 1500)}
-                                filterExprFn={row => `${row.application} ${row.version} ${row.type}`}
-                                rows={violationCount}>
-                                <Table.Column
-                                    label='Violation Type'
-                                    width={200}
-                                    flexGrow={3}
-                                    dataKey='type' />
-                                <Table.Column
-                                    label='Application'
-                                    width={200}
-                                    dataKey='application' />
-                                <Table.Column
-                                    label='Version'
-                                    width={200}
-                                    dataKey='version' />
-                                <Table.Column
-                                    label='Count'
-                                    width={100}
-                                    flexGrow={1}
-                                    cellRenderer={c => <span className='sortable-table-align-right'>{c}</span>}
-                                    dataKey='quantity' />
-                            </SorTable>
-                        </AutoWidth>
+                            <AutoWidth className='violation-account-overview-chart'>
+                                <Charts.BarChart
+                                    data={{
+                                        label: 'Violation Count',
+                                        values: _.sortByOrder(violationCount, ['quantity'], ['desc'])
+                                                .map(c => ({ x: c.type, y: c.quantity }))
+                                    }}
+                                    tooltipHtml={(x, y0, y) => y.toString()}
+                                    tooltipMode='element'
+                                    height={300}
+                                    margin={{top: 50, left: 50, right: 25, bottom: 25}}
+                                    yScale={yScale}
+                                    yAxis={{label: '# Violations', innerTickSize: -10000}} />
+                            </AutoWidth>
+                            <AutoWidth className='violation-account-overview-table'>
+                                <SorTable
+                                    height={Math.min((violationCount.length + 1) * 50 + 2, 1500)}
+                                    filterExprFn={row => `${row.application} ${row.version} ${row.type}`}
+                                    rows={violationCount}>
+                                    <Table.Column
+                                        label='Application'
+                                        width={200}
+                                        cellRenderer={c => <span>{c}</span>}
+                                        dataKey='application' />
+                                    <Table.Column
+                                        label='Version'
+                                        width={200}
+                                        dataKey='version' />
+                                    <Table.Column
+                                        label='Violation Type'
+                                        width={200}
+                                        flexGrow={3}
+                                        dataKey='type' />
+                                    <Table.Column
+                                        label='Severity'
+                                        width={100}
+                                        flexGrow={1}
+                                        cellRenderer={c => <span className={'sortable-table-align-right ' + 'violation-severity-' + c}>{c}</span>}
+                                        dataKey='typeSeverity' />
+                                    <Table.Column
+                                        label='Count'
+                                        width={100}
+                                        flexGrow={1}
+                                        cellRenderer={c => <span className='sortable-table-align-right'>{c}</span>}
+                                        dataKey='quantity' />
+                                </SorTable>
+                            </AutoWidth>
                         </div>
                     : null}
                 </div>;
