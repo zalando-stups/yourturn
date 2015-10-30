@@ -147,12 +147,17 @@ class ViolationList extends React.Component {
         let searchParams = this.stores.fullstop.getSearchParams(),
             {selectedAccounts} = this.state,
             selectableAccounts = this.stores.team.getAccounts(),
+            allAccounts = selectableAccounts.reduce((prev, cur) => {
+                prev[cur.id] = cur;
+                return prev;
+            }, {}),
             activeAccountIds = searchParams.accounts,
             showingSince = searchParams.from.toDate(),
             showingUntil = searchParams.to.toDate(),
             violations = this.stores.fullstop.getViolations(activeAccountIds).map(v => v.id),
             pagingInfo = this.stores.fullstop.getPagingInfo(),
             shareURL = '/violation/v/' + lzw.compressToEncodedURIComponent(JSON.stringify(searchParams)),
+            violationTypes = this.stores.fullstop.getViolationTypes(),
             violationCards = violations.map(v => <Violation
                                                     key={v}
                                                     fullstopStore={this.props.fullstopStore}
@@ -214,17 +219,18 @@ class ViolationList extends React.Component {
                         </Tabs.TabList>
                         <Tabs.TabPanel>
                             <ViolationAnalysis
-                                teamStore={this.stores.team}
-                                userStore={this.stores.user}
-                                fullstopActions={this.actions}
-                                fullstopStore={this.stores.fullstop} />
+                                account={searchParams.inspectedAccount}
+                                accounts={allAccounts}
+                                onConfigurationChange={updateSearch.bind(this)}
+                                violationTypes={violationTypes}
+                                violationCount={this.stores.fullstop.getViolationCount(searchParams)} />
                         </Tabs.TabPanel>
                         <Tabs.TabPanel>
                             <AccountOverview
                                 onConfigurationChange={updateSearch.bind(this)}
                                 account={searchParams.inspectedAccount}
                                 application={searchParams.inspectedApplication}
-                                violationTypes={this.stores.fullstop.getViolationTypes()}
+                                violationTypes={violationTypes}
                                 violationCount={this.stores.fullstop.getViolationCountIn(searchParams.inspectedAccount)} />
                         </Tabs.TabPanel>
                         <Tabs.TabPanel>

@@ -4,7 +4,6 @@ import _ from 'lodash';
 import d3 from 'd3';
 import Charts from 'react-d3-components';
 import AutoWidth from '@zalando/react-automatic-width';
-import updateSearch from 'violation/src/update-search';
 import Table from 'fixed-data-table';
 import SortableTable from 'common/src/sortable-table.jsx'
 import 'common/asset/less/violation/violation-analysis.less';
@@ -12,18 +11,11 @@ import 'common/asset/less/violation/violation-analysis.less';
 class ViolationAnalysis extends React.Component {
     constructor(props) {
         super();
-        this.stores = {
-            fullstop: props.fullstopStore,
-            team: props.teamStore,
-            user: props.userStore
-        };
-        this.actions = props.fullstopActions;
     }
 
     selectAccount(account) {
-        updateSearch.call(this, {
-            inspectedAccount: account,
-            inspectedApplication: null
+        this.props.onConfigurationChange({
+            inspectedAccount: account
         });
     }
 
@@ -35,27 +27,31 @@ class ViolationAnalysis extends React.Component {
     }
 
     render() {
-        let searchParams = this.stores.fullstop.getSearchParams(),
-            violationCount = this.stores.fullstop.getViolationCount(),
+        let {violationCount, violationTypes} = this.props,
             chartData = [];
 
-        if (searchParams.accounts.length && violationCount.length) {
+        if (violationCount.length) {
             violationCount = violationCount.map(c => ({
                                     type: c.type,
-                                    typeHelp: this.stores.fullstop.getViolationType(c.type).help_text,
-                                    typeSeverity: this.stores.fullstop.getViolationType(c.type).violation_severity,
+                                    typeHelp: violationTypes[c.type].help_text,
+                                    typeSeverity: violationTypes[c.type].violation_severity,
                                     account: c.account,
-                                    accountName: this.stores.team.getAccount(c.account) ? this.stores.team.getAccount(c.account).name : '?',
+                                    accountName: this.props.accounts[c.account] ? this.props.accounts[c.account].name : '?',
                                     quantity: c.quantity
                                 }));
-            chartData = violationCount.filter(c => c.account === searchParams.inspectedAccount);
+            chartData = violationCount.filter(c => c.account === this.props.account);
+
             let maxQuantity = chartData.reduce((prev, cur) => prev > cur.quantity ? prev : cur.quantity, 0),
-                yScale = d3.scale.linear().domain([0, maxQuantity]).range([225, 0]).nice();
+                yScale = d3.scale
+                            .linear()
+                            .domain([0, maxQuantity])
+                            .range([225, 0])
+                            .nice();
 
             return <div className='violation-analysis'>
                     {chartData.length ?
                         <AutoWidth className='violation-analysis-chart'>
-                            <strong>Account {this.stores.team.getAccount(searchParams.inspectedAccount).name}</strong>
+                            <strong>Account {this.props.accounts[this.props.account].name}</strong>
                             <Charts.BarChart
                                 data={{
                                     label: 'Violation Count',
@@ -117,12 +113,11 @@ class ViolationAnalysis extends React.Component {
 }
 ViolationAnalysis.displayName = 'ViolationAnalysis';
 ViolationAnalysis.propTypes = {
-    fullstopStore: React.PropTypes.object.isRequired,
-    teamStore: React.PropTypes.object.isRequired,
-    userStore: React.PropTypes.object.isRequired
-};
-ViolationAnalysis.contextTypes = {
-    router: React.PropTypes.func.isRequired
+    violationCount: React.PropTypes.array,
+    violationTypes: React.PropTypes.array,
+    onConfigurationChange: React.PropTypes.func,
+    accounts: React.PropTypes.array,
+    account: React.PropTypes.string,
 };
 
 export default ViolationAnalysis;
