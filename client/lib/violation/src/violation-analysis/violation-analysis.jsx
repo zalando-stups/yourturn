@@ -51,7 +51,7 @@ class ViolationAnalysis extends React.Component {
             return <div className='violation-analysis'>
                     {chartData.length ?
                         <AutoWidth className='violation-analysis-chart'>
-                            <strong>Account {this.props.accounts[this.props.account].name}</strong>
+                            <strong>Account {this.props.accounts[this.props.account] ? this.props.accounts[this.props.account].name : '?'}</strong>
                             <Charts.BarChart
                                 data={{
                                     label: 'Violation Count',
