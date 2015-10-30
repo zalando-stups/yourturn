@@ -213,7 +213,6 @@ describe('The redux fullstop store', () => {
         expect(params.from).to.be.ok;
         expect(params.to).to.be;
         expect(params.accounts).to.be.ok;
-        expect(params.violationTypes).to.be.ok;
     });
 
     it('should not implicitly overwrite defaults', () => {

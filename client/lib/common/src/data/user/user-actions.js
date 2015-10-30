@@ -1,6 +1,8 @@
-/* globals Date, Promise, ENV_DEVELOPMENT */
+/* globals Date, Promise */
 import {Actions} from 'flummox';
 import request from 'common/src/superagent';
+import USER_BASE_URL from 'USER_BASE_URL';
+import OAUTH_TOKENINFO_URL from 'OAUTH_TOKENINFO_URL';
 import {Provider, RequestConfig, saveRoute} from 'common/src/oauth-provider';
 
 function fetchTokenInfo() {
@@ -9,7 +11,7 @@ function fetchTokenInfo() {
         return Promise.reject();
     }
     return request
-            .get(`${ENV_DEVELOPMENT ? 'http://localhost:5006' : ''}/tokeninfo`)
+            .get(`${OAUTH_TOKENINFO_URL}`)
             .query({
                 access_token: token
             })
@@ -43,7 +45,7 @@ function fetchAccessToken() {
 
 function fetchUserInfo(userId) {
     return request
-            .get(`${ENV_DEVELOPMENT ? 'http://localhost:5009' : ''}/users/${userId}`)
+            .get(`${USER_BASE_URL}/users/${userId}`)
             .accept('json')
             .oauth(Provider, RequestConfig)
             .exec(saveRoute)
@@ -56,7 +58,7 @@ function fetchUserInfo(userId) {
 
 function fetchAccounts(userId) {
     return request
-            .get(`${ENV_DEVELOPMENT ? 'http://localhost:5005' : ''}/accounts/${userId}`)
+            .get(`${USER_BASE_URL}/accounts/${userId}`)
             .accept('json')
             .oauth(Provider, RequestConfig)
             .exec(saveRoute)
