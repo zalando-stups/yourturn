@@ -4,6 +4,7 @@ import Infinite from 'react-infinite-scroll';
 import Tabs from 'react-tabs';
 import moment from 'moment';
 import lzw from 'lz-string';
+import {merge} from 'common/src/util';
 import Datepicker from 'common/src/datepicker.jsx';
 import updateSearch from 'violation/src/update-search';
 import Clipboard from 'react-copy-to-clipboard';
@@ -47,12 +48,12 @@ class ViolationList extends React.Component {
                                     return accs;
                                 },
                                 []);
-            updateSearch.call(this, {
+            this.updateSearch({
                 activeTab: activeTab || 0
             }, context);
         } else {
             Array.prototype.push.apply(activeAccountIds, selectedAccounts.map(a => a.id));
-            updateSearch.call(this, {
+            this.updateSearch({
                 accounts: activeAccountIds,
                 activeTab: activeTab || 0
             }, context);
@@ -65,21 +66,21 @@ class ViolationList extends React.Component {
     }
 
     toggleAccount(activeAccountIds) {
-        updateSearch.call(this, {
+        this.updateSearch({
             accounts: activeAccountIds,
             page: 0
         });
     }
 
     showSince(day) {
-        updateSearch.call(this, {
+        this.updateSearch({
             from: moment(day),
             page: 0
         });
     }
 
     showUntil(day) {
-        updateSearch.call(this, {
+        this.updateSearch({
             to: moment(day),
             page: 0
         });
@@ -114,7 +115,7 @@ class ViolationList extends React.Component {
     }
 
     _selectTab(current) {
-        updateSearch.call(this, {
+        this.updateSearch({
             activeTab: current
         });
     }
@@ -124,7 +125,7 @@ class ViolationList extends React.Component {
             newParams = {};
         newParams['show' + type] = !searchParams['show' + type];
         newParams.page = 0;
-        updateSearch.call(this, newParams);
+        this.updateSearch(newParams);
     }
 
     _updateSearch(tab, params) {
@@ -132,7 +133,19 @@ class ViolationList extends React.Component {
             prev[tab + '_' + cur] = params[cur];
             return prev;
         }, {});
-        updateSearch.call(this, newParams);
+        this.updateSearch(newParams);
+    }
+
+    updateSearch(params, context = this.context, actions = this.actions) {
+        actions.deleteViolations();
+        actions.updateSearchParams(params);
+        Object.keys(params).forEach(k => {
+            if (moment.isMoment(params[k])) {
+                // dates have to parsed to timestamp again
+                params[k] = params[k].toISOString();
+            }
+        });
+        context.router.transitionTo('violation-vioList', {}, merge(context.router.getCurrentQuery(), params));
     }
 
     render() {
@@ -221,6 +234,7 @@ class ViolationList extends React.Component {
                             <AccountOverview
                                 onConfigurationChange={this._updateSearch.bind(this, 'single')}
                                 account={searchParams.cross ? searchParams.cross.inspectedAccount : activeAccountIds[0]}
+                                accounts={allAccounts}
                                 application={searchParams.inspectedApplication}
                                 violationTypes={violationTypes}
                                 violationCount={this.stores.fullstop.getViolationCountIn(searchParams.cross ? searchParams.cross.inspectedAccount : activeAccountIds[0])} />
@@ -233,7 +247,11 @@ class ViolationList extends React.Component {
                                     loadMore={this.loadMore.bind(this)}
                                     hasMore={!pagingInfo.last}
                                     loader={<Icon spin name='circle-o-notch u-spinner' />}>
-                                    {violationCards}
+                                    {violationCards.length ?
+                                        violationCards :
+                                        <div>
+                                            <Icon name='smile-o' /> <span>No violations!</span>
+                                        </div>}
                                 </InfiniteList>
                             </div>
                         </Tabs.TabPanel>
