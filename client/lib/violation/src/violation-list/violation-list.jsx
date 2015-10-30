@@ -4,8 +4,8 @@ import Infinite from 'react-infinite-scroll';
 import Tabs from 'react-tabs';
 import moment from 'moment';
 import lzw from 'lz-string';
-import {merge} from 'common/src/util';
 import Datepicker from 'common/src/datepicker.jsx';
+import updateSearch from 'violation/src/update-search';
 import Clipboard from 'react-copy-to-clipboard';
 import AccountOverview from 'violation/src/violation-overview-account/violation-overview-account.jsx';
 import AccountSelector from 'violation/src/account-selector.jsx';
@@ -49,13 +49,13 @@ class ViolationList extends React.Component {
                                 },
                                 []);
             inspectedAccount = inspectedAccount || selectedAccounts[0].id;
-            this.updateSearch({
+            updateSearch.call(this, {
                 inspectedAccount,
                 activeTab: activeTab || 0
             }, context);
         } else {
             Array.prototype.push.apply(activeAccountIds, selectedAccounts.map(a => a.id));
-            this.updateSearch({
+            updateSearch.call(this, {
                 accounts: activeAccountIds,
                 inspectedAccount: inspectedAccount || activeAccountIds[0],
                 activeTab: activeTab || 0
@@ -66,23 +66,6 @@ class ViolationList extends React.Component {
             dispatching: false,
             shortUrl: ''
         };
-    }
-
-    /**
-     * Updates search parameters in fullstop store and query params in route.
-     * @param  {Object} params  The new params
-     * @param  {Object} context Router context
-     */
-    updateSearch(params, context = this.context) {
-        this.actions.deleteViolations();
-        this.actions.updateSearchParams(params);
-        Object.keys(params).forEach(k => {
-            if (moment.isMoment(params[k])) {
-                // dates have to parsed to timestamp again
-                params[k] = params[k].toISOString();
-            }
-        });
-        context.router.transitionTo('violation-vioList', {}, merge(context.router.getCurrentQuery(), params));
     }
 
     toggleAccount(activeAccountIds) {
@@ -97,7 +80,7 @@ class ViolationList extends React.Component {
         } else {
             inspectedAccount = activeAccountIds[0] || null;
         }
-        this.updateSearch({
+        updateSearch.call(this, {
             accounts: activeAccountIds,
             page: 0,
             inspectedAccount
@@ -105,14 +88,14 @@ class ViolationList extends React.Component {
     }
 
     showSince(day) {
-        this.updateSearch({
+        updateSearch.call(this, {
             from: moment(day),
             page: 0
         });
     }
 
     showUntil(day) {
-        this.updateSearch({
+        updateSearch.call(this, {
             to: moment(day),
             page: 0
         });
@@ -147,7 +130,7 @@ class ViolationList extends React.Component {
     }
 
     _selectTab(current) {
-        this.updateSearch({
+        updateSearch.call(this, {
             activeTab: current
         });
     }
@@ -157,7 +140,7 @@ class ViolationList extends React.Component {
             newParams = {};
         newParams['show' + type] = !searchParams['show' + type];
         newParams.page = 0;
-        this.updateSearch(newParams);
+        updateSearch.call(this, newParams);
     }
 
     render() {
@@ -238,7 +221,11 @@ class ViolationList extends React.Component {
                         </Tabs.TabPanel>
                         <Tabs.TabPanel>
                             <AccountOverview
-                                fullstopStore={this.props.fullstopStore} />
+                                onConfigurationChange={updateSearch.bind(this)}
+                                account={searchParams.inspectedAccount}
+                                application={searchParams.inspectedApplication}
+                                violationTypes={this.stores.fullstop.getViolationTypes()}
+                                violationCount={this.stores.fullstop.getViolationCountIn(searchParams.inspectedAccount)} />
                         </Tabs.TabPanel>
                         <Tabs.TabPanel>
                             <div

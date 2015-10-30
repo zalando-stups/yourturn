@@ -73,7 +73,7 @@ ViolationListHandler.fetchData = function(router) {
             FULLSTOP_ACTIONS.fetchViolationCountIn(searchParams.inspectedAccount, searchParams);
         }
     }
-    if (!FULLSTOP_STORE.getViolationTypes().length) {
+    if (!Object.keys(FULLSTOP_STORE.getViolationTypes()).length) {
         promises.push(FULLSTOP_ACTIONS.fetchViolationTypes());
     }
     // if there aren't any teams from team service yet, fetch them NAO

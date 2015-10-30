@@ -35,10 +35,7 @@ function getSearchParams(state) {
 }
 
 function getViolationTypes(state) {
-    let types = state.get('violationTypes').toJS();
-    return Object
-            .keys(types)
-            .map(k => types[k]);
+    return state.get('violationTypes').toJS();
 }
 
 function getViolationType(state, type) {

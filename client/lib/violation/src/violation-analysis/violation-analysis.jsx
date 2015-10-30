@@ -1,13 +1,12 @@
 import React from 'react';
 import Icon from 'react-fa';
-import moment from 'moment';
 import _ from 'lodash';
 import d3 from 'd3';
 import Charts from 'react-d3-components';
 import AutoWidth from '@zalando/react-automatic-width';
+import updateSearch from 'violation/src/update-search';
 import Table from 'fixed-data-table';
-import SortableTable from 'common/src/sortable-table.jsx';
-import {merge} from 'common/src/util';
+import SortableTable from 'common/src/sortable-table.jsx'
 import 'common/asset/less/violation/violation-analysis.less';
 
 class ViolationAnalysis extends React.Component {
@@ -21,25 +20,10 @@ class ViolationAnalysis extends React.Component {
         this.actions = props.fullstopActions;
     }
 
-    /**
-     * Updates search parameters in fullstop store and query params in route.
-     * @param  {Object} params  The new params
-     * @param  {Object} context Router context
-     */
-    updateSearch(params, context = this.context) {
-        this.actions.updateSearchParams(params);
-        Object.keys(params).forEach(k => {
-            if (moment.isMoment(params[k])) {
-                // dates have to parsed to timestamp again
-                params[k] = params[k].toISOString();
-            }
-        });
-        context.router.transitionTo('violation-vioList', {}, merge(context.router.getCurrentQuery(), params));
-    }
-
     selectAccount(account) {
-        this.updateSearch({
-            inspectedAccount: account
+        updateSearch.call(this, {
+            inspectedAccount: account,
+            inspectedApplication: null
         });
     }
 

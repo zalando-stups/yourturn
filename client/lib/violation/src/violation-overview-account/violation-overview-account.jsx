@@ -10,30 +10,31 @@ import 'common/asset/less/violation/violation-account-overview.less';
 class ViolationOverviewAccount extends React.Component {
     constructor(props) {
         super();
-        this.stores = {
-            fullstop: props.fullstopStore
-        };
-        this.state = {
-        };
+    }
+
+    _selectApp(app) {
+        this.props.onConfigurationChange({
+            application: app
+        });
     }
 
     render() {
-        let searchParams = this.stores.fullstop.getSearchParams(),
-            violationCount = this.stores.fullstop
-                                .getViolationCountIn(searchParams.accounts.length === 1 ?
-                                                        searchParams.accounts[0] :
-                                                        searchParams.inspectedAccount)
+        let violationCount = this.props
+                                .violationCount
                                 .map(v => ({
                                     application: v.application || '',
                                     version: v.version || '',
                                     quantity: v.quantity,
                                     type: v.type,
-                                    typeSeverity: this.stores.fullstop.getViolationType(v.type).violation_severity
+                                    typeSeverity: this.props.violationTypes[v.type].violation_severity
                                 })),
             maxQuantity = violationCount.reduce((prev, cur) => prev > cur.quantity ? prev : cur.quantity, 0),
-            yScale = d3.scale.linear().domain([0, maxQuantity]).range([225, 0]).nice();
+            yScale = d3.scale.linear()
+                        .domain([0, maxQuantity])
+                        .range([225, 0])
+                        .nice();
         return <div className='violation-account-overview'>
-                    <strong>Account {searchParams.inspectedAccount}</strong>
+                    <strong>Account {this.props.account} {this.props.application || ''}</strong>
                     {violationCount.length ?
                         <div>
                             <AutoWidth className='violation-account-overview-chart'>
@@ -58,7 +59,7 @@ class ViolationOverviewAccount extends React.Component {
                                     <Table.Column
                                         label='Application'
                                         width={200}
-                                        cellRenderer={c => <span title={c}>{c}</span>}
+                                        cellRenderer={c => <span onClick={this._selectApp.bind(this, c)} title={c}>{c}</span>}
                                         dataKey='application' />
                                     <Table.Column
                                         label='Version'
@@ -92,7 +93,12 @@ class ViolationOverviewAccount extends React.Component {
 }
 ViolationOverviewAccount.displayName = 'ViolationOverviewAccount';
 ViolationOverviewAccount.propTypes = {
-    fullstopStore: React.PropTypes.object.isRequired
+    account: React.PropTypes.string,
+    application: React.PropTypes.string,
+    violationCount: React.PropTypes.array,
+    violationTypes: React.PropTypes.array,
+    onConfigurationChange: React.PropTypes.func
 };
+
 
 export default ViolationOverviewAccount;
