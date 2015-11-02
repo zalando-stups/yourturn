@@ -49,7 +49,11 @@ function parseQueryParams(params) {
             if (!result[tab]) {
                 result[tab] = {};
             }
-            result[tab][variable] = params[param];
+            if (['true', 'false'].indexOf(params[param]) >= 0) {
+                result[tab][variable] = params[param] === 'true';
+            } else {
+                result[tab][variable] = params[param];
+            }
         }
     });
     return result;

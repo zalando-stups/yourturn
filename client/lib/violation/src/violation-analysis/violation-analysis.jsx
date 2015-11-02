@@ -15,21 +15,46 @@ class ViolationAnalysis extends React.Component {
 
     selectAccount(account) {
         this.props.onConfigurationChange({
-            inspectedAccount: account
+            inspectedAccount: account,
+            groupByAccount: true
         });
     }
 
-    accountCellRenderer(account) {
+    selectViolationType(type) {
+        this.props.onConfigurationChange({
+            groupByAccount: false,
+            violationType: type
+        });
+    }
+
+    accountCellRenderer(accountIdOrName) {
+        var account;
+
+        if (/^[0-9]+$/.test(accountIdOrName)) {
+            account = accountIdOrName;
+        } else {
+            account = Object
+                        .keys(this.props.accounts)
+                        .filter(acc => this.props.accounts[acc].name === accountIdOrName)
+                        .reduce(acc => acc.id);
+        }
         return <span
-                    title={account}
-                    className='violation-analysis-table-cell-account'
-                    onClick={this.selectAccount.bind(this, account)}>{account}</span>;
+                    title={accountIdOrName}
+                    className='sortable-table-highlight'
+                    onClick={this.selectAccount.bind(this, account)}>{accountIdOrName}</span>;
+    }
+
+    violationTypeCellRenderer(violationType) {
+        return <span title={violationType}
+                     className='sortable-table-highlight'
+                     onClick={this.selectViolationType.bind(this, violationType)}>
+                     {violationType}
+                </span>;
     }
 
     render() {
         let {violationCount, violationTypes} = this.props,
             chartData = [];
-
         if (violationCount.length) {
             violationCount = violationCount.map(c => ({
                                     type: c.type,
@@ -39,7 +64,9 @@ class ViolationAnalysis extends React.Component {
                                     accountName: this.props.accounts[c.account] ? this.props.accounts[c.account].name : '?',
                                     quantity: c.quantity
                                 }));
-            chartData = violationCount.filter(c => c.account === this.props.account);
+            chartData = this.props.groupByAccount ?
+                            violationCount.filter(c => c.account === this.props.account) :
+                            violationCount.filter(c => c.type === this.props.violationType);
 
             let maxQuantity = chartData.reduce((prev, cur) => prev > cur.quantity ? prev : cur.quantity, 0),
                 yScale = d3.scale
@@ -51,12 +78,16 @@ class ViolationAnalysis extends React.Component {
             return <div className='violation-analysis'>
                     {chartData.length ?
                         <AutoWidth className='violation-analysis-chart'>
-                            <strong>Account {this.props.accounts[this.props.account] ? this.props.accounts[this.props.account].name : '?'}</strong>
+                            <strong>
+                                {this.props.groupByAccount ?
+                                    <span>Account {this.props.accounts[this.props.account] ? this.props.accounts[this.props.account].name : '?'}</span> :
+                                    <span>Violation {this.props.violationType}</span>}
+                            </strong>
                             <Charts.BarChart
                                 data={{
                                     label: 'Violation Count',
                                     values: _.sortByOrder(chartData, ['quantity'], ['desc'])
-                                            .map(c => ({ x: c.type, y: c.quantity }))
+                                            .map(c => ({ x: this.props.groupByAccount ? c.type : c.accountName, y: c.quantity }))
                                 }}
                                 tooltipHtml={(x, y0, y) => y.toString()}
                                 tooltipMode='element'
@@ -81,13 +112,13 @@ class ViolationAnalysis extends React.Component {
                                 <Table.Column
                                     label='Account'
                                     width={200}
-                                    cellRenderer={c => <span title={c}>{c}</span>}
+                                    cellRenderer={this.accountCellRenderer.bind(this)}
                                     dataKey={'accountName'} />
                                 <Table.Column
                                     label='Violation Type'
                                     width={200}
                                     flexGrow={3}
-                                    cellRenderer={c => <span title={c}>{c}</span>}
+                                    cellRenderer={this.violationTypeCellRenderer.bind(this)}
                                     dataKey={'type'} />
                                 <Table.Column
                                     label='Severity'
@@ -111,6 +142,8 @@ class ViolationAnalysis extends React.Component {
 }
 ViolationAnalysis.displayName = 'ViolationAnalysis';
 ViolationAnalysis.propTypes = {
+    groupByAccount: React.PropTypes.bool,
+    violationType: React.PropTypes.string,
     violationCount: React.PropTypes.array,
     violationTypes: React.PropTypes.array,
     onConfigurationChange: React.PropTypes.func,
