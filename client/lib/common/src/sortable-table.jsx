@@ -111,6 +111,7 @@ SortableTable.displayName = 'SortableTable';
 SortableTable.propTypes = {
     width: React.PropTypes.number,
     filterExprFn: React.PropTypes.func,
+    helpText: React.PropTypes.string,
     children: React.PropTypes.oneOf([React.PropTypes.array, React.PropTypes.object])
 };
 export default SortableTable;

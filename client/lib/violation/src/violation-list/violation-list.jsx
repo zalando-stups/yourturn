@@ -233,7 +233,9 @@ class ViolationList extends React.Component {
                         </Tabs.TabList>
                         <Tabs.TabPanel>
                             <ViolationAnalysis
+                                groupByAccount={searchParams.cross && searchParams.cross.groupByAccount}
                                 account={searchParams.cross ? searchParams.cross.inspectedAccount : activeAccountIds[0]}
+                                violationType={searchParams.cross ? searchParams.cross.violationType : null}
                                 accounts={allAccounts}
                                 onConfigurationChange={this._updateSearch.bind(this, 'cross')}
                                 violationTypes={violationTypes}
