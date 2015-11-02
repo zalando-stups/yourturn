@@ -57,7 +57,7 @@ class ViolationOverviewAccount extends React.Component {
                                     label: 'Violation Count',
                                     values: _.sortByOrder(chartData, ['quantity'], ['desc'])
                                             .map(c => ({
-                                                x: this.props.groupByApplication ? c.type : c.application || '',
+                                                x: this.props.groupByApplication ? c.type : c.application || '',
                                                 y: c.quantity
                                             }))
                                 }}
@@ -111,6 +111,8 @@ class ViolationOverviewAccount extends React.Component {
 }
 ViolationOverviewAccount.displayName = 'ViolationOverviewAccount';
 ViolationOverviewAccount.propTypes = {
+    groupByApplication: React.PropTypes.bool,
+    violationType: React.PropTypes.string,
     account: React.PropTypes.string,
     accounts: React.PropTypes.array,
     application: React.PropTypes.string,
