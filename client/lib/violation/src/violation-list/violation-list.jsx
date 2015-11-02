@@ -170,7 +170,8 @@ class ViolationList extends React.Component {
             showingUntil = searchParams.to.toDate(),
             violations = this.stores.fullstop.getViolations(activeAccountIds).map(v => v.id),
             pagingInfo = this.stores.fullstop.getPagingInfo(),
-            shareURL = '/violation/v/' + lzw.compressToEncodedURIComponent(JSON.stringify(searchParams)),
+            shortURL = window.location.origin + '/violation/v/' + lzw.compressToEncodedURIComponent(JSON.stringify(searchParams)),
+            shareURL = shortURL.length < window.location.href.length ? shortURL : window.location.href,
             violationTypes = this.stores.fullstop.getViolationTypes(),
             violationCards = violations.map(v => <Violation
                                                     key={v}
@@ -217,7 +218,7 @@ class ViolationList extends React.Component {
 
                     <Clipboard
                         onCopy={this._handleCopy.bind(this)}
-                        text={window.location.origin + shareURL}>
+                        text={shareURL}>
                         <div className='btn btn-default'>
                             <Icon name='bullhorn' /> Copy sharing URL
                         </div>
