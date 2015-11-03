@@ -13,8 +13,16 @@ class ViolationOverviewAccount extends React.Component {
         super();
     }
 
+    _selectViolationType(type) {
+        this.props.onConfigurationChange({
+            groupByApplication: false,
+            violationType: type
+        });
+    }
+
     _selectApp(app) {
         this.props.onConfigurationChange({
+            groupByApplication: true,
             application: app
         });
     }
@@ -33,16 +41,25 @@ class ViolationOverviewAccount extends React.Component {
             yScale = d3.scale.linear()
                         .domain([0, maxQuantity])
                         .range([225, 0])
-                        .nice();
+                        .nice(),
+            chartData = this.props.groupByApplication ?
+                            violationCount.filter(v => v.application === this.props.application) :
+                            violationCount.filter(v => v.type === this.props.violationType),
+            subject = this.props.groupByApplication ?
+                        <strong>App {this.props.application}</strong> :
+                        <strong>Violation {this.props.violationType}</strong>;
         if (violationCount.length) {
             return <div className='violation-account-overview'>
-                        <strong>Account {this.props.accounts[this.props.account].name} {this.props.application || ''}</strong>
+                        <span>Account {this.props.accounts[this.props.account].name} / {subject}</span>
                         <AutoWidth className='violation-account-overview-chart'>
                             <Charts.BarChart
                                 data={{
                                     label: 'Violation Count',
-                                    values: _.sortByOrder(violationCount, ['quantity'], ['desc'])
-                                            .map(c => ({ x: c.type, y: c.quantity }))
+                                    values: _.sortByOrder(chartData, ['quantity'], ['desc'])
+                                            .map(c => ({
+                                                x: this.props.groupByApplication ? c.type : c.application || '',
+                                                y: c.quantity
+                                            }))
                                 }}
                                 tooltipHtml={(x, y0, y) => y.toString()}
                                 tooltipMode='element'
@@ -60,7 +77,7 @@ class ViolationOverviewAccount extends React.Component {
                                 <Table.Column
                                     label='Application'
                                     width={200}
-                                    cellRenderer={c => <span onClick={this._selectApp.bind(this, c)} title={c}>{c}</span>}
+                                    cellRenderer={c => <span className='sortable-table-highlight' onClick={this._selectApp.bind(this, c)} title={c}>{c}</span>}
                                     dataKey='application' />
                                 <Table.Column
                                     label='Version'
@@ -71,7 +88,7 @@ class ViolationOverviewAccount extends React.Component {
                                     label='Violation Type'
                                     width={200}
                                     flexGrow={3}
-                                    cellRenderer={c => <span title={c}>{c}</span>}
+                                    cellRenderer={c => <span className='sortable-table-highlight' onClick={this._selectViolationType.bind(this, c)} title={c}>{c}</span>}
                                     dataKey='type' />
                                 <Table.Column
                                     label='Severity'
@@ -94,6 +111,8 @@ class ViolationOverviewAccount extends React.Component {
 }
 ViolationOverviewAccount.displayName = 'ViolationOverviewAccount';
 ViolationOverviewAccount.propTypes = {
+    groupByApplication: React.PropTypes.bool,
+    violationType: React.PropTypes.string,
     account: React.PropTypes.string,
     accounts: React.PropTypes.array,
     application: React.PropTypes.string,
