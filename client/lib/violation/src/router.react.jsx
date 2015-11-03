@@ -2,7 +2,7 @@ import React from 'react';
 import {Route, DefaultRoute} from 'react-router';
 import FlummoxComponent from 'flummox/component';
 import FLUX from 'yourturn/src/flux';
-import ViolationList from './violation-list/violation-list.jsx';
+import Violation from './violation/violation.jsx';
 import ViolationDetail from './violation-detail/violation-detail.jsx';
 import {requireAccounts} from 'common/src/util';
 import moment from 'moment';
@@ -59,7 +59,7 @@ function parseQueryParams(params) {
     return result;
 }
 
-class ViolationListHandler extends React.Component {
+class ViolationHandler extends React.Component {
     constructor() {
         super();
     }
@@ -67,7 +67,7 @@ class ViolationListHandler extends React.Component {
         return <FlummoxComponent
                     flux={FLUX}
                     connectToStores={['fullstop', 'team']}>
-                    <ViolationList
+                    <Violation
                         notificationActions={NOTIFICATION_ACTIONS}
                         userStore={USER_STORE}
                         fullstopActions={FULLSTOP_ACTIONS}
@@ -76,8 +76,8 @@ class ViolationListHandler extends React.Component {
                 </FlummoxComponent>;
     }
 }
-ViolationListHandler.displayName = 'ViolationListHandler';
-ViolationListHandler.fetchData = function(router) {
+ViolationHandler.displayName = 'ViolationHandler';
+ViolationHandler.fetchData = function(router) {
     let promises = [];
     // if there are query params we have to pre-set those as search parameters
     if (!_.isEmpty(router.query)) {
@@ -103,10 +103,10 @@ ViolationListHandler.fetchData = function(router) {
     promises.push(requireAccounts(FLUX));
     return Promise.all(promises);
 };
-ViolationListHandler.propTypes = {
+ViolationHandler.propTypes = {
     query: React.PropTypes.object.isRequired
 };
-ViolationListHandler.contextTypes = {
+ViolationHandler.contextTypes = {
     router: React.PropTypes.func.isRequired
 };
 
@@ -142,7 +142,7 @@ ViolationDetailHandler.propTypes = {
 class ViolationShortUrlHandler extends React.Component {
     constructor(props, context) {
         super();
-        context.router.transitionTo('violation-vioList', null, JSON.parse(lzw.decompressFromEncodedURIComponent(props.params.shortened)));
+        context.router.transitionTo('violation', null, JSON.parse(lzw.decompressFromEncodedURIComponent(props.params.shortened)));
     }
 
     render() {
@@ -158,8 +158,8 @@ ViolationShortUrlHandler.contextTypes = {
 };
 
 const ROUTES =
-    <Route name='violation-vioList' path='violation'>
-        <DefaultRoute handler={ViolationListHandler} />
+    <Route name='violation' path='violation'>
+        <DefaultRoute handler={ViolationHandler} />
         <Route name='violation-short' path='v/:shortened' handler={ViolationShortUrlHandler} />
         <Route name='violation-vioDetail' path=':violationId' handler={ViolationDetailHandler} />
     </Route>;

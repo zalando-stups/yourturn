@@ -22,7 +22,7 @@ server.get('/violations', function(req, res) {
         var all = VIOLATIONS;
         if (req.query.checked) {
             var checked = req.query.checked === 'true';
-            all = all.filter(function(v) { return v.checked === checked; });
+            all = all.filter(function(v) { return !!v.comment === checked; });
         }
         res
             .status(200)

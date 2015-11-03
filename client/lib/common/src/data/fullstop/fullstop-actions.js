@@ -15,6 +15,7 @@ function fetchViolations(params) {
                 from: params.from ? params.from.toISOString() : '',
                 to: (params.to || new Date()).toISOString(),
                 page: params.page || 0,
+                type: params.list ? params.list.violationType : undefined,
                 checked: params.showResolved && !params.showUnresolved ?
                             true :
                             !params.showResolved && params.showUnresolved ?
