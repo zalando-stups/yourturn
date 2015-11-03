@@ -17,7 +17,7 @@ class Collapsible extends React.Component {
     }
 
     render() {
-        return <div className='collapsible' {...this.props}>
+        return <div className={'collapsible' + (this.state.collapsed ? ' is-collapsed' : '')} {...this.props}>
                     <header
                         onClick={this._collapse.bind(this)}>
                         {this.state.collapsed ?
@@ -33,6 +33,7 @@ class Collapsible extends React.Component {
 Collapsible.displayName = 'Collapsible';
 Collapsible.propTypes = {
     header: React.PropTypes.object,
+    initialCollapsed: React.PropTypes.bool,
     children: React.PropTypes.oneOf([React.PropTypes.array, React.PropTypes.object])
 };
 export default Collapsible;

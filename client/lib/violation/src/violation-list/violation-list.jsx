@@ -6,6 +6,7 @@ import moment from 'moment';
 import lzw from 'lz-string';
 import {merge} from 'common/src/util';
 import Datepicker from 'common/src/datepicker.jsx';
+import Collapsible from 'common/src/collapsible.jsx';
 import Clipboard from 'react-copy-to-clipboard';
 import AccountOverview from 'violation/src/violation-overview-account/violation-overview-account.jsx';
 import AccountSelector from 'violation/src/account-selector.jsx';
@@ -184,45 +185,51 @@ class ViolationList extends React.Component {
                     <div className='u-info'>
                         Violations of the STUPS policy and bad practices in accounts you have access to.
                     </div>
-                    <div>
-                        Show violations between:
-                    </div>
-                    <div className='violationList-datepicker'>
-                        <Datepicker
-                            onChange={this.showSince.bind(this)}
-                            selectedDay={showingSince} />
-                        <Datepicker
-                            onChange={this.showUntil.bind(this)}
-                            selectedDay={showingUntil} />
-                    </div>
-                    <small>You can filter by resolved or unresolved violations.</small>
-                    <div className='btn-group'>
-                        <div
-                            data-selected={searchParams.showResolved}
-                            onClick={this._toggleShowResolved.bind(this, 'Resolved')}
-                            className='btn btn-default'>
-                            <Icon name='check-circle' /> Show resolved
-                        </div>
-                        <div
-                            data-selected={searchParams.showUnresolved}
-                            onClick={this._toggleShowResolved.bind(this, 'Unresolved')}
-                            className='btn btn-default'>
-                            <Icon name='circle-o' /> Show unresolved
-                        </div>
-                    </div>
-                    <AccountSelector
-                        selectableAccounts={selectableAccounts}
-                        selectedAccounts={selectedAccounts}
-                        activeAccountIds={activeAccountIds}
-                        onToggleAccount={this.toggleAccount.bind(this)} />
-
                     <Clipboard
                         onCopy={this._handleCopy.bind(this)}
                         text={shareURL}>
-                        <div className='btn btn-default'>
+                        <div className='btn btn-default violationList-copy-url'>
                             <Icon name='bullhorn' /> Copy sharing URL
                         </div>
                     </Clipboard>
+                    <Collapsible
+                        header='Filters'>
+                        <div className='violationList-filter'>
+                            <small>Show violations between:</small>
+                            <div className='violationList-datepicker violationList-btn-group'>
+                                <Datepicker
+                                    onChange={this.showSince.bind(this)}
+                                    selectedDay={showingSince} />
+                                <Datepicker
+                                    onChange={this.showUntil.bind(this)}
+                                    selectedDay={showingUntil} />
+                            </div>
+                        </div>
+                        <div className='violationList-filter'>
+                            <small>You can filter by resolved or unresolved violations.</small>
+                            <div className='violationList-btn-group'>
+                                <div
+                                    data-selected={searchParams.showResolved}
+                                    onClick={this._toggleShowResolved.bind(this, 'Resolved')}
+                                    className='btn btn-default'>
+                                    <Icon name='check-circle' /> Show resolved
+                                </div>
+                                <div
+                                    data-selected={searchParams.showUnresolved}
+                                    onClick={this._toggleShowResolved.bind(this, 'Unresolved')}
+                                    className='btn btn-default'>
+                                    <Icon name='circle-o' /> Show unresolved
+                                </div>
+                            </div>
+                        </div>
+                        <div className='violationList-filter'>
+                            <AccountSelector
+                                selectableAccounts={selectableAccounts}
+                                selectedAccounts={selectedAccounts}
+                                activeAccountIds={activeAccountIds}
+                                onToggleAccount={this.toggleAccount.bind(this)} />
+                        </div>
+                    </Collapsible>
 
                     <Tabs.Tabs
                         onSelect={this._selectTab.bind(this)}
