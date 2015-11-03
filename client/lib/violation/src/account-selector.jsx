@@ -95,7 +95,6 @@ class AccountSelector extends React.Component {
             activeAccounts = partitionedAccounts[0],
             inactiveAccounts = partitionedAccounts[1];
         return <div className='account-selector'>
-                    <div>Show violations in accounts:</div>
                     {!this.state.allSelected ?
                         <div>
                             <div>
