@@ -44,15 +44,12 @@ function parseQueryParams(params) {
     .keys(params)
     .forEach(param => {
         // they look like tab_variableCamelCase
-        let [tab, variable] = param.split('_');
+        let [... variable] = param.split('_');
         if (variable) {
-            if (!result[tab]) {
-                result[tab] = {};
-            }
             if (['true', 'false'].indexOf(params[param]) >= 0) {
-                result[tab][variable] = params[param] === 'true';
+                result[param] = params[param] === 'true';
             } else {
-                result[tab][variable] = params[param];
+                result[param] = params[param];
             }
         }
     });
@@ -77,25 +74,48 @@ class ViolationHandler extends React.Component {
     }
 }
 ViolationHandler.displayName = 'ViolationHandler';
+ViolationHandler.willTransitionTo = function(transition, params, query) {
+    if (_.isEmpty(query)) {
+        let searchParams = FULLSTOP_STORE.getSearchParams(),
+            selectedAccounts = USER_STORE.getUserCloudAccounts(), // these the user has access to
+            {accounts, activeTab} = searchParams; // these accounts are selected and active
+        // if there are no active account ids, use those of selected accounts
+        // otherwise select accounts with active account ids
+        //
+        // GOD is this confusing
+        if (accounts.length) {
+            // everything is fine
+            transition.redirect('violation', {}, {
+                activeTab: activeTab || 0
+            });
+        } else {
+            // this might or might not have an effect since transition hook is fired before fetchData
+            Array.prototype.push.apply(accounts, selectedAccounts.map(a => a.id));
+            transition.redirect('violation', {}, {
+                accounts: accounts,
+                activeTab: activeTab || 0
+            });
+        }
+    }
+};
 ViolationHandler.fetchData = function(router) {
     let promises = [];
     // if there are query params we have to pre-set those as search parameters
-    if (!_.isEmpty(router.query)) {
-        FULLSTOP_ACTIONS.updateSearchParams(parseQueryParams(router.query));
-        let searchParams = FULLSTOP_STORE.getSearchParams();
-        // tab-specific loadings
-        // tab 1
-        FULLSTOP_ACTIONS.fetchViolationCount(searchParams);
-        // tab 2
-        FULLSTOP_ACTIONS.fetchViolationCountIn(
-            searchParams.cross ? searchParams.cross.inspectedAccount : searchParams.accounts[0],
-            searchParams);
-        // tab 3
-        FULLSTOP_ACTIONS.fetchViolations(searchParams);
-    }
+    FULLSTOP_ACTIONS.updateSearchParams(parseQueryParams(router.query));
+    let searchParams = FULLSTOP_STORE.getSearchParams();
+    // tab-specific loadings
+    // tab 1
+    FULLSTOP_ACTIONS.fetchViolationCount(searchParams);
+    // tab 2
+    FULLSTOP_ACTIONS.fetchViolationCountIn(
+        searchParams.cross ? searchParams.cross.inspectedAccount : searchParams.accounts[0],
+        searchParams);
+    // tab 3
+    FULLSTOP_ACTIONS.fetchViolations(searchParams);
     if (!Object.keys(FULLSTOP_STORE.getViolationTypes()).length) {
         promises.push(FULLSTOP_ACTIONS.fetchViolationTypes());
     }
+
     // if there aren't any teams from team service yet, fetch them NAO
     if (!TEAM_STORE.getAccounts().length) {
         TEAM_ACTIONS.fetchAccounts();

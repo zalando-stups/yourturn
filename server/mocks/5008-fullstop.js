@@ -30,7 +30,7 @@ server.get('/violations', function(req, res) {
             .send({
                 total_elements: all.length,
                 last: true,
-                page: 2,
+                number: 2,
                 content: all
             });
     }, Math.random() * 2000);

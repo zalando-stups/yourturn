@@ -1,6 +1,8 @@
 import React from 'react';
 import Icon from 'react-fa';
 import Tabs from 'react-tabs';
+import Select from 'react-select';
+import Infinityyy from 'common/src/infinity.jsx';
 import moment from 'moment';
 import lzw from 'lz-string';
 import {merge} from 'common/src/util';
@@ -11,9 +13,9 @@ import AccountOverview from 'violation/src/violation-overview-account/violation-
 import AccountSelector from 'violation/src/account-selector.jsx';
 import ViolationAnalysis from 'violation/src/violation-analysis/violation-analysis.jsx';
 import ViolationDetail from 'violation/src/violation-detail/violation-detail.jsx';
-import ViolationList from 'violation/src/violation-list/violation-list.jsx';
 import 'promise.prototype.finally';
 import 'common/asset/less/violation/violation.less';
+import 'common/asset/css/react-select.css';
 
 class Violation extends React.Component {
     constructor(props, context) {
@@ -28,14 +30,13 @@ class Violation extends React.Component {
         let searchParams = this.stores.fullstop.getSearchParams(),
             selectableAccounts = this.stores.team.getAccounts(), // these we can in theory select
             activeAccountIds = searchParams.accounts, // these are actively searched for
-            selectedAccounts = this.stores.user.getUserCloudAccounts(), // these the user has access to
-            activeTab = searchParams.activeTab;
+            selectedAccounts = this.stores.user.getUserCloudAccounts(); // these the user has access to
 
-        // if there are no active account ids, use those of selected accounts
-        // otherwise select accounts with active account ids
-        //
-        // GOD is this confusing
-        if (activeAccountIds.length) {
+        // situation:
+        // we want to preselect accounts that the user has access to
+        // BUT the accounts are not necessarily available when the transition hook from router is fired
+        // so we do another redirect here if necessary
+        if (!activeAccountIds.length) {
             Array.prototype.push.apply(selectedAccounts, selectableAccounts.filter(a => activeAccountIds.indexOf(a.id) >= 0));
             // deduplicate
             selectedAccounts = selectedAccounts
@@ -46,20 +47,14 @@ class Violation extends React.Component {
                                     return accs;
                                 },
                                 []);
-            this.updateSearch({
-                activeTab: activeTab || 0
-            }, context);
+            context.router.transitionTo('violation', {}, merge(context.router.getCurrentQuery(), {
+                accounts: selectedAccounts.map(a => a.id)
+            }));
         } else {
-            Array.prototype.push.apply(activeAccountIds, selectedAccounts.map(a => a.id));
-            this.updateSearch({
-                accounts: activeAccountIds,
-                activeTab: activeTab || 0
-            }, context);
+            selectedAccounts = selectableAccounts.filter(acc => activeAccountIds.indexOf(acc.id) >= 0);
         }
         this.state = {
-            selectedAccounts,
-            dispatching: false,
-            shortUrl: ''
+            selectedAccounts
         };
     }
 
@@ -100,22 +95,10 @@ class Violation extends React.Component {
      * @param  {Number} page The page to fetch
      */
     loadMore(page) {
-        // we get an error if we don't track this ;_;
-        if (!this.state.dispatching) {
-            this.setState({
-                dispatching: true
-            });
-            this.actions.updateSearchParams({
-                page: page
-            });
-            this.actions
-            .fetchViolations(this.stores.fullstop.getSearchParams())
-            .finally(() => {
-                this.setState({
-                    dispatching: false
-                });
-            });
-        }
+        this.actions.updateSearchParams({
+            page: page
+        });
+        this.actions.fetchViolations(this.stores.fullstop.getSearchParams());
     }
 
     _handleCopy() {
@@ -142,6 +125,13 @@ class Violation extends React.Component {
             return prev;
         }, {});
         this.updateSearch(newParams);
+    }
+
+    _filterViolationType(type) {
+        this.updateSearch({
+            list_violationType: type,
+            page: 0
+        });
     }
 
     updateSearch(params, context = this.context, actions = this.actions) {
@@ -239,9 +229,9 @@ class Violation extends React.Component {
                         </Tabs.TabList>
                         <Tabs.TabPanel>
                             <ViolationAnalysis
-                                groupByAccount={searchParams.cross ? searchParams.cross.groupByAccount : true}
-                                account={searchParams.cross ? searchParams.cross.inspectedAccount : activeAccountIds[0]}
-                                violationType={searchParams.cross ? searchParams.cross.violationType : null}
+                                groupByAccount={searchParams.cross_groupByAccount || true}
+                                account={searchParams.cross_inspectedAccount || activeAccountIds[0]}
+                                violationType={searchParams.cross_violationType || null}
                                 accounts={allAccounts}
                                 onConfigurationChange={this._updateSearch.bind(this, 'cross')}
                                 violationTypes={violationTypes}
@@ -250,27 +240,38 @@ class Violation extends React.Component {
                         <Tabs.TabPanel>
                             <AccountOverview
                                 onConfigurationChange={this._updateSearch.bind(this, 'single')}
-                                account={searchParams.cross ? searchParams.cross.inspectedAccount : activeAccountIds[0]}
+                                account={searchParams.cross_inspectedAccount || activeAccountIds[0]}
                                 accounts={allAccounts}
-                                groupByApplication={searchParams.single ? searchParams.single.groupByApplication : true}
-                                application={searchParams.single ? searchParams.single.application : ''}
-                                violationType={searchParams.single ? searchParams.single.violationType : ''}
+                                groupByApplication={searchParams.single_groupByApplication || true}
+                                application={searchParams.single_application || ''}
+                                violationType={searchParams.single_violationType || ''}
                                 violationTypes={violationTypes}
-                                violationCount={this.stores.fullstop.getViolationCountIn(searchParams.cross ? searchParams.cross.inspectedAccount : activeAccountIds[0])} />
+                                violationCount={this.stores.fullstop.getViolationCountIn(searchParams.cross_inspectedAccount || activeAccountIds[0])} />
                         </Tabs.TabPanel>
                         <Tabs.TabPanel>
-                            <ViolationList
-                                onConfigurationChange={this._updateSearch.bind(this, 'list')}
-                                violationType={searchParams.list ? searchParams.list.violationType : null}
-                                violationTypes={violationTypes}
-                                last={pagingInfo.last}
-                                loadMore={this.loadMore.bind(this)}>
-                                {violationCards.length ?
-                                    violationCards :
-                                    <div>
-                                        <Icon name='smile-o' /> <span>No violations!</span>
-                                    </div>}
-                            </ViolationList>
+                            <small>You can filter by violation type.</small>
+                            <Select
+                                className='violation-list-type-filter'
+                                placeholder='EC2_WITH_KEYPAIR'
+                                value={searchParams.list_violationType || ''}
+                                onChange={this._filterViolationType.bind(this)}
+                                options={Object.keys(violationTypes).sort().map(vt => ({label: vt, value: vt}))} />
+                            <div
+                                data-block='violation-list'
+                                className='violation-list'>
+                                <Infinityyy
+                                    scrollOffset={300}
+                                    onLoad={this.loadMore.bind(this)}
+                                    hasMore={!pagingInfo.last}
+                                    lastPage={pagingInfo.page}
+                                    loader={<Icon spin name='circle-o-notch u-spinner' />}>
+                                    {violationCards.length ?
+                                        violationCards :
+                                        <div>
+                                            <Icon name='smile-o' /> <span>No violations!</span>
+                                        </div>}
+                                </Infinityyy>
+                            </div>
                         </Tabs.TabPanel>
                     </Tabs.Tabs>
                 </div>;
