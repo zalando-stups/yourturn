@@ -15,7 +15,6 @@ function getViolations(state) {
     }
 
     return violations
-            .sortBy(v => v.get('timestamp'))
             .toJS();
 }
 
