@@ -44,7 +44,7 @@ function parseQueryParams(params) {
     .keys(params)
     .forEach(param => {
         // they look like tab_variableCamelCase
-        let [tab, variable] = param.split('_'); // eslint:ignore-line
+        let [tab, variable] = param.split('_'); // eslint-disable-line
         if (variable) {
             if (['true', 'false'].indexOf(params[param]) >= 0) {
                 result[param] = params[param] === 'true';
