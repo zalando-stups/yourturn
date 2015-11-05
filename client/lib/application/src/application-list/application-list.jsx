@@ -32,7 +32,7 @@ class ApplicationList extends React.Component {
         });
     }
 
-    updateShowInactive(id) {
+    updateShowInactive() {
         this.setState({
             showInactive: !this.state.showInactive
         });
@@ -96,13 +96,13 @@ class ApplicationList extends React.Component {
                                 <tr>
                                     <th>Application</th>
                                     <th>Team</th>
-                                    <th>Latest version</th>
+                                    <th>Latest&nbsp;version</th>
                                     <th></th>
                                 </tr>
                             </thead>
                             <tbody data-block='team-apps'>
                             {teamApps.filter(
-                                (ta, i) => (!ta.active && showInactive) || ta.active ).map(
+                                (ta) => (!ta.active && showInactive) || ta.active ).map(
                                 (ta, i) =>
                                     <tr key={ta.id}
                                         className={'app ' + (ta.active ? '' : 'is-inactive')}>
@@ -179,7 +179,7 @@ class ApplicationList extends React.Component {
                             </thead>
                             <tbody data-block='other-apps'>
                                 {shortApps.filter(
-                                    (ta, i) => (!ta.active && showInactive) || ta.active ).map(
+                                    (ta) => (!ta.active && showInactive) || ta.active ).map(
                                     other =>
                                         <tr key={other.id}
                                             className={'app ' + (other.active ? '' : 'is-inactive')}>
@@ -192,7 +192,7 @@ class ApplicationList extends React.Component {
                                                     {other.name}
                                                 </Link>
                                             </td>
-                                            <td>{other.team_id}</td>
+                                            <td><div className='team'>{other.team_id}</div></td>
                                         </tr>
                                 )}
                             </tbody>
