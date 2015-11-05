@@ -44,7 +44,7 @@ function parseQueryParams(params) {
     .keys(params)
     .forEach(param => {
         // they look like tab_variableCamelCase
-        let [... variable] = param.split('_');
+        let [tab, variable] = param.split('_'); // eslint:ignore-line
         if (variable) {
             if (['true', 'false'].indexOf(params[param]) >= 0) {
                 result[param] = params[param] === 'true';
@@ -78,7 +78,7 @@ ViolationHandler.willTransitionTo = function(transition, params, query) {
     if (_.isEmpty(query)) {
         let searchParams = FULLSTOP_STORE.getSearchParams(),
             selectedAccounts = USER_STORE.getUserCloudAccounts(), // these the user has access to
-            {accounts, activeTab} = searchParams; // these accounts are selected and active
+            {accounts} = searchParams; // these accounts are selected and active
         // if there are no active account ids, use those of selected accounts
         // otherwise select accounts with active account ids
         //
@@ -86,14 +86,15 @@ ViolationHandler.willTransitionTo = function(transition, params, query) {
         if (accounts.length) {
             // everything is fine
             transition.redirect('violation', {}, {
-                activeTab: activeTab || 0
+                activeTab: 0
             });
         } else {
             // this might or might not have an effect since transition hook is fired before fetchData
             Array.prototype.push.apply(accounts, selectedAccounts.map(a => a.id));
+            // and thus accounts could still be empty now
             transition.redirect('violation', {}, {
                 accounts: accounts,
-                activeTab: activeTab || 0
+                activeTab: 0
             });
         }
     }

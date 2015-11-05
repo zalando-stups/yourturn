@@ -47,8 +47,9 @@ class Violation extends React.Component {
                                     return accs;
                                 },
                                 []);
+            activeAccountIds = selectedAccounts.map(a => a.id);
             context.router.transitionTo('violation', {}, merge(context.router.getCurrentQuery(), {
-                accounts: selectedAccounts.map(a => a.id)
+                accounts: activeAccountIds
             }));
         } else {
             selectedAccounts = selectableAccounts.filter(acc => activeAccountIds.indexOf(acc.id) >= 0);
