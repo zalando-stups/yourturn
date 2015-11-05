@@ -50,7 +50,7 @@ class ViolationOverviewAccount extends React.Component {
                             violationCount.filter(v => v.application === this.props.application) :
                             violationCount.filter(v => v.type === this.props.violationType),
             subject = this.props.groupByApplication ?
-                        <strong>App {this.props.application}</strong> :
+                        <strong>{this.props.application ? 'App ' + this.props.application : ''}</strong> :
                         <strong>Violation {this.props.violationType}</strong>;
         return <div className='violation-account-overview'>
                     <span>Account {this.props.accounts[this.props.account].name} / {subject}</span>

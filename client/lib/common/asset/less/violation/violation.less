@@ -1,0 +1,48 @@
+@import "../variables";
+
+.violation {
+
+    .violation-copy-url {
+        margin-bottom: @padding-small 0;
+    }
+
+    .violation-datepicker {
+        display: flex;
+        flex-direction: row;
+    }
+
+    .violation-filter {
+        margin-bottom: @padding-small;
+    }
+
+    .violation-btn-group {
+        > :first-child {
+            margin-right: 3px;
+        }
+    }
+
+    .violation-info {
+        padding: @padding-tiniest @padding-tiny;
+        font-size: @small-font-size;
+        text-align: center;
+        position: fixed;
+        bottom: 0;
+        background: @gray-light;
+        color: @white;
+        z-index: 10;
+        border: 1px solid @white;
+        border-bottom: 0;
+    }
+
+    .Select-arrow {
+        margin-top: 5px;
+    }
+
+    .violation-list {
+        margin-bottom: 300px;
+    }
+
+    .violation-list-type-filter {
+        max-width: @content-width-regular;
+    }
+}
