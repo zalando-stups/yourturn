@@ -75,7 +75,7 @@ class ApplicationList extends React.Component {
                                 placeholder='Kio' />
                         </div>
                         <label>
-                            <input type='checkbox'
+                            <input data-block='show-inactive-checkbox' type='checkbox'
                                    checked={showInactive}
                                    onChange={this.updateShowInactive.bind(this)}>
                             </input> show inactive
