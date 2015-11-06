@@ -108,8 +108,8 @@ describe('The application list view', () => {
         .receiveApplications(apps);
 
         list = render(List, props);
-        let checkbox = TestUtils.findRenderedDOMComponentWithAttributeValue(list, 'data-block', 'show-inactive-checkbox');
-        let otherApps = TestUtils.findRenderedDOMComponentWithAttributeValue(list, 'data-block', 'other-apps');
+        let checkbox = TestUtils.findRenderedDOMComponentWithAttributeValue(list, 'data-block', 'show-inactive-checkbox'),
+            otherApps = TestUtils.findRenderedDOMComponentWithAttributeValue(list, 'data-block', 'other-apps');
 
         TestUtils.Simulate.change(checkbox); // show inactive apps
 
@@ -140,16 +140,16 @@ describe('The application list view', () => {
         }]);
 
         list = render(List, props);
-        let checkbox = TestUtils.findRenderedDOMComponentWithAttributeValue(list, 'data-block', 'show-inactive-checkbox');
-        let teamApps = TestUtils.findRenderedDOMComponentWithAttributeValue(list, 'data-block', 'team-apps');
-        let otherApps = TestUtils.findRenderedDOMComponentWithAttributeValue(list, 'data-block', 'other-apps');
+        let checkbox = TestUtils.findRenderedDOMComponentWithAttributeValue(list, 'data-block', 'show-inactive-checkbox'),
+            teamApps = TestUtils.findRenderedDOMComponentWithAttributeValue(list, 'data-block', 'team-apps'),
+            otherApps = TestUtils.findRenderedDOMComponentWithAttributeValue(list, 'data-block', 'other-apps');
 
         expect($(React.findDOMNode(teamApps)).children().length).to.equal(1); // default: two inactive apps (hidden) one active (shown)
 
         TestUtils.Simulate.change(checkbox); // show inactive apps
 
-        expect( $(React.findDOMNode(teamApps)).children().length
-              + $(React.findDOMNode(otherApps)).children().length ).to.equal(3);
+        expect($(React.findDOMNode(teamApps)).children().length
+             + $(React.findDOMNode(otherApps)).children().length).to.equal(3);
 
     });
 });
