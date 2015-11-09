@@ -109,7 +109,7 @@ ViolationHandler.fetchData = function(router) {
     FULLSTOP_ACTIONS.fetchViolationCount(searchParams);
     // tab 2
     FULLSTOP_ACTIONS.fetchViolationCountIn(
-        searchParams.cross ? searchParams.cross.inspectedAccount : searchParams.accounts[0],
+        searchParams.cross_inspectedAccount ? searchParams.cross_inspectedAccount : searchParams.accounts[0],
         searchParams);
     // tab 3
     FULLSTOP_ACTIONS.fetchViolations(searchParams);

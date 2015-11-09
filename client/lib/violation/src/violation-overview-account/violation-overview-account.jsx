@@ -31,8 +31,8 @@ class ViolationOverviewAccount extends React.Component {
         if (!this.props.violationCount.length) {
             return <div><Icon name='smile-o' /> <span>No violations!</span></div>;
         }
-
-        let violationCount = this.props
+        let groupByApplication = typeof this.props.groupByApplication === 'undefined' ? true : this.props.groupByApplication,
+            violationCount = this.props
                                 .violationCount
                                 .map(v => ({
                                     application: v.application || '',
@@ -46,10 +46,10 @@ class ViolationOverviewAccount extends React.Component {
                         .domain([0, maxQuantity])
                         .range([225, 0])
                         .nice(),
-            chartData = this.props.groupByApplication ?
+            chartData = groupByApplication ?
                             violationCount.filter(v => v.application === this.props.application) :
                             violationCount.filter(v => v.type === this.props.violationType),
-            subject = this.props.groupByApplication ?
+            subject = groupByApplication ?
                         <strong>{this.props.application ? 'App ' + this.props.application : ''}</strong> :
                         <strong>Violation {this.props.violationType}</strong>;
         return <div className='violation-account-overview'>
@@ -60,7 +60,7 @@ class ViolationOverviewAccount extends React.Component {
                                 label: 'Violation Count',
                                 values: _.sortByOrder(chartData, ['quantity'], ['desc'])
                                         .map(c => ({
-                                            x: this.props.groupByApplication ? c.type : c.application || '',
+                                            x: groupByApplication ? c.type : c.application || '',
                                             y: c.quantity
                                         }))
                             }}

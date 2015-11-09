@@ -230,7 +230,7 @@ class Violation extends React.Component {
                         </Tabs.TabList>
                         <Tabs.TabPanel>
                             <ViolationAnalysis
-                                groupByAccount={searchParams.cross_groupByAccount || true}
+                                groupByAccount={searchParams.cross_groupByAccount}
                                 account={searchParams.cross_inspectedAccount || activeAccountIds[0]}
                                 violationType={searchParams.cross_violationType || null}
                                 accounts={allAccounts}
@@ -243,7 +243,7 @@ class Violation extends React.Component {
                                 onConfigurationChange={this._updateSearch.bind(this, 'single')}
                                 account={searchParams.cross_inspectedAccount || activeAccountIds[0]}
                                 accounts={allAccounts}
-                                groupByApplication={searchParams.single_groupByApplication || true}
+                                groupByApplication={searchParams.single_groupByApplication}
                                 application={searchParams.single_application || ''}
                                 violationType={searchParams.single_violationType || ''}
                                 violationTypes={violationTypes}
