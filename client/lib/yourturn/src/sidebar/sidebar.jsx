@@ -136,10 +136,10 @@ class Sidebar extends React.Component {
                         </div>
                         <div
                             className='sidebar-item'
-                            data-active={router.isActive('violation-vioList')}
-                            onClick={this.transition.bind(this, 'violation-vioList')}>
+                            data-active={router.isActive('violation')}
+                            onClick={this.transition.bind(this, 'violation')}>
                             <Link
-                                to='violation-vioList'>
+                                to='violation'>
                                 Violations <Icon name='warning' />
                             </Link>
                         </div>

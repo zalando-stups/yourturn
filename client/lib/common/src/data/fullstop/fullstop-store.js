@@ -48,13 +48,13 @@ function FullstopStore(state, action) {
                     return coll.set(String(v.id), Immutable.fromJS(v));
                 },
                 state.get('violations'));
-        state = state.set('violations', all);
         if (metadata) {
             state = state.set('pagingInfo', Immutable.Map({
-                last: metadata.last
+                last: metadata.last,
+                page: metadata.number
             }));
         }
-        return state;
+        return state.set('violations', all);
     } else if (type === Types.DELETE_VIOLATIONS) {
         return state.set('violations', Immutable.Map());
     } else if (type === Types.UPDATE_SEARCH_PARAMS) {

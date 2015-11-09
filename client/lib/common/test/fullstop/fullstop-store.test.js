@@ -121,26 +121,6 @@ describe('The fullstop store', () => {
         expect(violations.length).to.equal(1);
     });
 
-    it('should filter violations by accounts', () => {
-        store.receiveViolations([null, VIOLATIONS]);
-        let violations = store.getViolations([VIOLATION_B.account_id]);
-        expect(violations.length).to.equal(1);
-        expect(violations[0].id).to.equal(VIOLATION_B.id);
-    });
-
-    it('should filter violations by resolution', () => {
-        store.receiveViolations([null, VIOLATIONS]);
-        let violations = store.getViolations(null, true);
-        expect(violations.length).to.equal(1);
-        expect(violations[0].id).to.equal(VIOLATION_B.id);
-    });
-
-    it('should filter violations by accounts and resolution', () => {
-        store.receiveViolations([null, VIOLATIONS]);
-        let violations = store.getViolations([VIOLATION_A.account_id], VIOLATION_B.comment != null);
-        expect(violations.length).to.equal(0);
-    });
-
     it('should store page metadata info', () => {
         store.receiveViolations([{last: false}, VIOLATIONS]);
         let meta = store.getPagingInfo();

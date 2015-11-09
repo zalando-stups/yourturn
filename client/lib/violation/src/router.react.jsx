@@ -2,7 +2,7 @@ import React from 'react';
 import {Route, DefaultRoute} from 'react-router';
 import FlummoxComponent from 'flummox/component';
 import FLUX from 'yourturn/src/flux';
-import ViolationList from './violation-list/violation-list.jsx';
+import Violation from './violation/violation.jsx';
 import ViolationDetail from './violation-detail/violation-detail.jsx';
 import {requireAccounts} from 'common/src/util';
 import moment from 'moment';
@@ -44,22 +44,19 @@ function parseQueryParams(params) {
     .keys(params)
     .forEach(param => {
         // they look like tab_variableCamelCase
-        let [tab, variable] = param.split('_');
+        let [tab, variable] = param.split('_'); // eslint-disable-line
         if (variable) {
-            if (!result[tab]) {
-                result[tab] = {};
-            }
             if (['true', 'false'].indexOf(params[param]) >= 0) {
-                result[tab][variable] = params[param] === 'true';
+                result[param] = params[param] === 'true';
             } else {
-                result[tab][variable] = params[param];
+                result[param] = params[param];
             }
         }
     });
     return result;
 }
 
-class ViolationListHandler extends React.Component {
+class ViolationHandler extends React.Component {
     constructor() {
         super();
     }
@@ -67,7 +64,7 @@ class ViolationListHandler extends React.Component {
         return <FlummoxComponent
                     flux={FLUX}
                     connectToStores={['fullstop', 'team']}>
-                    <ViolationList
+                    <Violation
                         notificationActions={NOTIFICATION_ACTIONS}
                         userStore={USER_STORE}
                         fullstopActions={FULLSTOP_ACTIONS}
@@ -76,26 +73,50 @@ class ViolationListHandler extends React.Component {
                 </FlummoxComponent>;
     }
 }
-ViolationListHandler.displayName = 'ViolationListHandler';
-ViolationListHandler.fetchData = function(router) {
+ViolationHandler.displayName = 'ViolationHandler';
+ViolationHandler.willTransitionTo = function(transition, params, query) {
+    if (_.isEmpty(query)) {
+        let searchParams = FULLSTOP_STORE.getSearchParams(),
+            selectedAccounts = USER_STORE.getUserCloudAccounts(), // these the user has access to
+            {accounts} = searchParams; // these accounts are selected and active
+        // if there are no active account ids, use those of selected accounts
+        // otherwise select accounts with active account ids
+        //
+        // GOD is this confusing
+        if (accounts.length) {
+            // everything is fine
+            transition.redirect('violation', {}, {
+                activeTab: 0
+            });
+        } else {
+            // this might or might not have an effect since transition hook is fired before fetchData
+            Array.prototype.push.apply(accounts, selectedAccounts.map(a => a.id));
+            // and thus accounts could still be empty now
+            transition.redirect('violation', {}, {
+                accounts: accounts,
+                activeTab: 0
+            });
+        }
+    }
+};
+ViolationHandler.fetchData = function(router) {
     let promises = [];
     // if there are query params we have to pre-set those as search parameters
-    if (!_.isEmpty(router.query)) {
-        FULLSTOP_ACTIONS.updateSearchParams(parseQueryParams(router.query));
-        let searchParams = FULLSTOP_STORE.getSearchParams();
-        // tab-specific loadings
-        // tab 1
-        FULLSTOP_ACTIONS.fetchViolationCount(searchParams);
-        // tab 2
-        FULLSTOP_ACTIONS.fetchViolationCountIn(
-            searchParams.cross ? searchParams.cross.inspectedAccount : searchParams.accounts[0],
-            searchParams);
-        // tab 3
-        FULLSTOP_ACTIONS.fetchViolations(searchParams);
-    }
+    FULLSTOP_ACTIONS.updateSearchParams(parseQueryParams(router.query));
+    let searchParams = FULLSTOP_STORE.getSearchParams();
+    // tab-specific loadings
+    // tab 1
+    FULLSTOP_ACTIONS.fetchViolationCount(searchParams);
+    // tab 2
+    FULLSTOP_ACTIONS.fetchViolationCountIn(
+        searchParams.cross ? searchParams.cross.inspectedAccount : searchParams.accounts[0],
+        searchParams);
+    // tab 3
+    FULLSTOP_ACTIONS.fetchViolations(searchParams);
     if (!Object.keys(FULLSTOP_STORE.getViolationTypes()).length) {
         promises.push(FULLSTOP_ACTIONS.fetchViolationTypes());
     }
+
     // if there aren't any teams from team service yet, fetch them NAO
     if (!TEAM_STORE.getAccounts().length) {
         TEAM_ACTIONS.fetchAccounts();
@@ -103,10 +124,10 @@ ViolationListHandler.fetchData = function(router) {
     promises.push(requireAccounts(FLUX));
     return Promise.all(promises);
 };
-ViolationListHandler.propTypes = {
+ViolationHandler.propTypes = {
     query: React.PropTypes.object.isRequired
 };
-ViolationListHandler.contextTypes = {
+ViolationHandler.contextTypes = {
     router: React.PropTypes.func.isRequired
 };
 
@@ -142,7 +163,7 @@ ViolationDetailHandler.propTypes = {
 class ViolationShortUrlHandler extends React.Component {
     constructor(props, context) {
         super();
-        context.router.transitionTo('violation-vioList', null, JSON.parse(lzw.decompressFromEncodedURIComponent(props.params.shortened)));
+        context.router.transitionTo('violation', null, JSON.parse(lzw.decompressFromEncodedURIComponent(props.params.shortened)));
     }
 
     render() {
@@ -158,8 +179,8 @@ ViolationShortUrlHandler.contextTypes = {
 };
 
 const ROUTES =
-    <Route name='violation-vioList' path='violation'>
-        <DefaultRoute handler={ViolationListHandler} />
+    <Route name='violation' path='violation'>
+        <DefaultRoute handler={ViolationHandler} />
         <Route name='violation-short' path='v/:shortened' handler={ViolationShortUrlHandler} />
         <Route name='violation-vioDetail' path=':violationId' handler={ViolationDetailHandler} />
     </Route>;

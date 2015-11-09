@@ -7,7 +7,6 @@ import './essentials/essentials-store.test';
 import './essentials/resource-store.test';
 import './essentials/scope-store.test';
 import './fullstop/fullstop-actions.test';
-import './fullstop/fullstop-getter.test';
 import './fullstop/fullstop-store.test';
 import './kio/application-store.test';
 import './kio/approval-store.test';

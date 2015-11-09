@@ -36,7 +36,7 @@ class ViolationAnalysis extends React.Component {
             account = Object
                         .keys(this.props.accounts)
                         .filter(acc => this.props.accounts[acc].name === accountIdOrName)
-                        .reduce(acc => acc.id);
+                        .reduce(acc => acc.id, '');
         }
         return <span
                     title={accountIdOrName}
