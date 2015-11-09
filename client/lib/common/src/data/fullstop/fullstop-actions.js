@@ -16,6 +16,8 @@ function fetchViolations(params) {
                 to: (params.to || new Date()).toISOString(),
                 page: params.page || 0,
                 type: params.list_violationType || undefined,
+                sort: 'created',
+                'sort.dir': params.sortAsc ? 'asc' : 'desc',
                 checked: params.showResolved && !params.showUnresolved ?
                             true :
                             !params.showResolved && params.showUnresolved ?

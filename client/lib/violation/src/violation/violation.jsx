@@ -17,6 +17,18 @@ import 'promise.prototype.finally';
 import 'common/asset/less/violation/violation.less';
 import 'common/asset/css/react-select.css';
 
+function sortAsc(a, b) {
+    return a.timestamp < b.timestamp ?
+            -1 : b.timestamp < a.timestamp ?
+              1 : 0;
+}
+
+function sortDesc(a, b) {
+    return a.timestamp > b.timestamp ?
+            -1 : b.timestamp > a.timestamp ?
+              1 : 0;
+}
+
 class Violation extends React.Component {
     constructor(props, context) {
         super();
@@ -112,6 +124,12 @@ class Violation extends React.Component {
         });
     }
 
+    _setSortDir(asc) {
+        this.updateSearch({
+            sortAsc: asc
+        });
+    }
+
     _toggleShowResolved(type) {
         let searchParams = this.stores.fullstop.getSearchParams(),
             newParams = {};
@@ -158,7 +176,10 @@ class Violation extends React.Component {
             activeAccountIds = searchParams.accounts,
             showingSince = searchParams.from.toDate(),
             showingUntil = searchParams.to.toDate(),
-            violations = this.stores.fullstop.getViolations().map(v => v.id),
+            // violations are sorted by id, kind of, if at all
+            violations = this.stores.fullstop.getViolations()
+                            .sort(searchParams.sortAsc ? sortAsc : sortDesc)
+                            .map(v => v.id),
             pagingInfo = this.stores.fullstop.getPagingInfo(),
             shortURL = window.location.origin + '/violation/v/' + lzw.compressToEncodedURIComponent(JSON.stringify(searchParams)),
             shareURL = shortURL.length < window.location.href.length ? shortURL : window.location.href,
@@ -250,6 +271,19 @@ class Violation extends React.Component {
                                 violationCount={this.stores.fullstop.getViolationCountIn(searchParams.cross_inspectedAccount || activeAccountIds[0])} />
                         </Tabs.TabPanel>
                         <Tabs.TabPanel>
+                            <small>Change sort order of violations:</small>
+                            <div className='btn-group'>
+                                <div className='btn btn-default'
+                                    onClick={this._setSortDir.bind(this, true)}
+                                    data-selected={searchParams.sortAsc}>
+                                    <Icon fixedWidth name='sort-numeric-asc' /> Oldest first
+                                </div>
+                                <div className='btn btn-default'
+                                    onClick={this._setSortDir.bind(this, false)}
+                                    data-selected={!searchParams.sortAsc}>
+                                    <Icon fixedWidth name='sort-numeric-desc' /> Newest first
+                                </div>
+                            </div>
                             <small>You can filter by violation type.</small>
                             <Select
                                 className='violation-list-type-filter'

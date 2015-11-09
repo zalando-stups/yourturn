@@ -23,7 +23,8 @@ function FullstopStore(state, action) {
                 from: moment().subtract(1, 'week').startOf('day'),
                 to: moment(),
                 showUnresolved: true,
-                showResolved: false
+                showResolved: false,
+                sortAsc: true
             }
         });
     }
