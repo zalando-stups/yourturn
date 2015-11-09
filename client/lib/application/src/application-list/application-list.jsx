@@ -14,9 +14,11 @@ class ApplicationList extends React.Component {
         this.state = {
             term: '',
             showCount: 20,
-            showAll: false
+            showAll: false,
+            showInactive: false
         };
     }
+
 
     showAll() {
         this.setState({
@@ -30,8 +32,14 @@ class ApplicationList extends React.Component {
         });
     }
 
+    updateShowInactive() {
+        this.setState({
+            showInactive: !this.state.showInactive
+        });
+    }
+
     render() {
-        let {term, showCount, showAll} = this.state,
+        let {term, showCount, showAll, showInactive} = this.state,
             apps = this.stores.kio.getApplications(term),
             fetchStatus = this.stores.kio.getApplicationsFetchStatus(),
             userAccIds = _.pluck(this.stores.user.getUserCloudAccounts(), 'name'),
@@ -66,6 +74,12 @@ class ApplicationList extends React.Component {
                                 aria-label='Enter your term'
                                 placeholder='Kio' />
                         </div>
+                        <label>
+                            <input data-block='show-inactive-checkbox' type='checkbox'
+                                   checked={showInactive}
+                                   onChange={this.updateShowInactive.bind(this)}>
+                            </input> show inactive
+                        </label>
                     </div>
                     <h4>Your Applications {fetchStatus !== false && fetchStatus.isPending() ?
                                             <Icon name='circle-o-notch u-spinner' spin /> :
@@ -82,12 +96,13 @@ class ApplicationList extends React.Component {
                                 <tr>
                                     <th>Application</th>
                                     <th>Team</th>
-                                    <th>Latest version</th>
+                                    <th>Latest&nbsp;version</th>
                                     <th></th>
                                 </tr>
                             </thead>
                             <tbody data-block='team-apps'>
-                            {teamApps.map(
+                            {teamApps.filter(
+                                (ta) => (!ta.active && showInactive) || ta.active ).map(
                                 (ta, i) =>
                                     <tr key={ta.id}
                                         className={'app ' + (ta.active ? '' : 'is-inactive')}>
@@ -163,7 +178,8 @@ class ApplicationList extends React.Component {
                                 </tr>
                             </thead>
                             <tbody data-block='other-apps'>
-                                {shortApps.map(
+                                {shortApps.filter(
+                                    (ta) => (!ta.active && showInactive) || ta.active ).map(
                                     other =>
                                         <tr key={other.id}
                                             className={'app ' + (other.active ? '' : 'is-inactive')}>
@@ -176,7 +192,7 @@ class ApplicationList extends React.Component {
                                                     {other.name}
                                                 </Link>
                                             </td>
-                                            <td>{other.team_id}</td>
+                                            <td><div className='team'>{other.team_id}</div></td>
                                         </tr>
                                 )}
                             </tbody>
