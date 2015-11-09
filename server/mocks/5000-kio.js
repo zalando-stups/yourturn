@@ -47,7 +47,37 @@ var applications = {
         required_approvers: 2,
         criticality_level: 2,
         publicly_accessible: true
-    }
+    },
+    blork: {
+        documentation_url: 'https://github.com/zalando-stups/kio',
+        specification_url: 'https://github.com/zalando-stups/kio/issues',
+        scm_url: 'https://github.com/zalando-stups/kio.git',
+        service_url: 'http://localhost:5000/',
+        description: '**An application registry to manage application base information.**',
+        subtitle: 'STUPS application registry',
+        name: 'Kio',
+        active: true,
+        team_id: 'blork-team',
+        id: 'blork',
+        required_approvers: 2,
+        criticality_level: 3,
+        publicly_accessible: true
+    },
+    foobar: {
+        documentation_url: 'https://github.com/zalando-stups/pierone',
+        specification_url: 'https://github.com/zalando-stups/pierone/issues',
+        scm_url: 'https://github.com/zalando-stups/pierone.git',
+        service_url: 'https://pierone.example.org/',
+        description: 'A Docker registry compliant repository for Docker images.',
+        subtitle: 'STUPS Docker registry',
+        name: 'Pier One',
+        active: false,
+        team_id: 'foobar-team',
+        id: 'foobar',
+        required_approvers: 2,
+        criticality_level: 2,
+        publicly_accessible: true
+    },
 };
 
 var versions = {
