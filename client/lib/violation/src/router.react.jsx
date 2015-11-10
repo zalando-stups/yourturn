@@ -38,6 +38,9 @@ function parseQueryParams(params) {
     if (params.showResolved) {
         result.showResolved = params.showResolved === 'true';
     }
+    if (params.sortAsc) {
+        result.sortAsc = params.sortAsc === 'true';
+    }
 
     // tab-specific parameters
     Object
