@@ -109,7 +109,7 @@ ViolationHandler.fetchData = function(router) {
     FULLSTOP_ACTIONS.fetchViolationCount(searchParams);
     // tab 2
     FULLSTOP_ACTIONS.fetchViolationCountIn(
-        searchParams.cross ? searchParams.cross.inspectedAccount : searchParams.accounts[0],
+        searchParams.cross_inspectedAccount ? searchParams.cross_inspectedAccount : searchParams.accounts[0],
         searchParams);
     // tab 3
     FULLSTOP_ACTIONS.fetchViolations(searchParams);
@@ -167,7 +167,7 @@ class ViolationShortUrlHandler extends React.Component {
     }
 
     render() {
-        return <div><Icon name='circle-o-noth' spin /> Redirecting...</div>;
+        return <div><Icon name='circle-o-notch' spin /> Redirecting...</div>;
     }
 }
 ViolationShortUrlHandler.displayName = 'ViolationShortUrlHandler';

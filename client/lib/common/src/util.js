@@ -28,9 +28,6 @@ function merge(dest, src) {
     .keys(src)
     .forEach(k => {
         result[k] = src[k];
-        if (typeof src[k] !== 'number' && !src[k]) {
-            delete result[k];
-        }
     });
 
     return result;
