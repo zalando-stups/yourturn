@@ -133,11 +133,12 @@ ViolationHandler.contextTypes = {
 
 
 class ViolationDetailHandler extends React.Component {
-    constructor() {
+    constructor(props) {
         super();
     }
 
     render() {
+        console.log('render props', this.props);
         return <FlummoxComponent
                     flux={FLUX}
                     connectToStores={['fullstop']}>
@@ -151,6 +152,7 @@ class ViolationDetailHandler extends React.Component {
 
 }
 ViolationDetailHandler.fetchData = function (state) {
+    console.log('fetch', arguments);
     FULLSTOP_ACTIONS.fetchViolation(state.params.violationId);
     TEAM_ACTIONS.fetchAccounts();
     return requireAccounts(FLUX);
@@ -167,7 +169,7 @@ class ViolationShortUrlHandler extends React.Component {
     }
 
     render() {
-        return <div><Icon name='circle-o-noth' spin /> Redirecting...</div>;
+        return <div><Icon name='circle-o-notch' spin /> Redirecting...</div>;
     }
 }
 ViolationShortUrlHandler.displayName = 'ViolationShortUrlHandler';

@@ -2,8 +2,6 @@ import React from 'react';
 import {Link} from 'react-router';
 import Icon from 'react-fa';
 import Timestamp from 'react-time';
-import FetchResult from 'common/src/fetch-result';
-import DefaultError from 'common/src/error.jsx';
 import {DATE_FORMAT} from 'common/src/config';
 import 'common/asset/less/violation/violation-card.less';
 
@@ -34,13 +32,8 @@ class ViolationCard extends React.Component {
     }
 
     render() {
-        let {violation} = this.props;
-        if (violation instanceof FetchResult) {
-            return violation.isPending() ?
-                    <Icon name='circle-o-notch u-spinner' spin /> :
-                    <DefaultError error={violation.getResult()} />;
-        }
-        let {violation_type} = violation;
+        let {violation} = this.props,
+            {violation_type} = violation;
         return <div
                     data-block='violation-card'
                     className={'violationCard ' +

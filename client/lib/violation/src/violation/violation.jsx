@@ -158,7 +158,7 @@ class Violation extends React.Component {
             activeAccountIds = searchParams.accounts,
             showingSince = searchParams.from.toDate(),
             showingUntil = searchParams.to.toDate(),
-            violations = this.stores.fullstop.getViolations().map(v => v.id),
+            violations = this.stores.fullstop.getViolations().filter(v => !!v.id).map(v => v.id),
             pagingInfo = this.stores.fullstop.getPagingInfo(),
             shortURL = window.location.origin + '/violation/v/' + lzw.compressToEncodedURIComponent(JSON.stringify(searchParams)),
             shareURL = shortURL.length < window.location.href.length ? shortURL : window.location.href,
