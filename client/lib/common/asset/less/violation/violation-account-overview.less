@@ -31,7 +31,12 @@
         }
 
         rect.bar {
+            .transition(stroke);
+            stroke: lighten(@blue-light, 15%);
             fill: lighten(@blue-light, 15%);
+            &:hover {
+                stroke: #333;
+            }
         }
 
         .tooltip {

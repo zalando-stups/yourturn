@@ -36,9 +36,9 @@ class ViolationCard extends React.Component {
             {violation_type} = violation;
         return <div
                     data-block='violation-card'
+                    data-severity={violation_type.violation_severity}
                     className={'violationCard ' +
-                                (violation.comment != null ? 'is-resolved ' : '') +
-                                (violation_type.audit_relevant ? 'is-audit-relevant' : '')}>
+                                (violation.comment != null ? 'is-resolved ' : '')}>
                     <header>
                         <div className='violationCard-id'>
                             <Link
