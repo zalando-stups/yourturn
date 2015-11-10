@@ -133,12 +133,11 @@ ViolationHandler.contextTypes = {
 
 
 class ViolationDetailHandler extends React.Component {
-    constructor(props) {
+    constructor() {
         super();
     }
 
     render() {
-        console.log('render props', this.props);
         return <FlummoxComponent
                     flux={FLUX}
                     connectToStores={['fullstop']}>
@@ -152,7 +151,6 @@ class ViolationDetailHandler extends React.Component {
 
 }
 ViolationDetailHandler.fetchData = function (state) {
-    console.log('fetch', arguments);
     FULLSTOP_ACTIONS.fetchViolation(state.params.violationId);
     TEAM_ACTIONS.fetchAccounts();
     return requireAccounts(FLUX);
