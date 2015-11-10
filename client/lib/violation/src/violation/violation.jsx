@@ -176,8 +176,9 @@ class Violation extends React.Component {
             activeAccountIds = searchParams.accounts,
             showingSince = searchParams.from.toDate(),
             showingUntil = searchParams.to.toDate(),
-            // violations are sorted by id, kind of, if at all
+            // violations are sorted by id, kind of, if at all, by default
             violations = this.stores.fullstop.getViolations()
+                            .filter(v => !!v.id)    // remove fetch results
                             .sort(searchParams.sortAsc ? sortAsc : sortDesc)
                             .map(v => v.id),
             pagingInfo = this.stores.fullstop.getPagingInfo(),
@@ -251,7 +252,7 @@ class Violation extends React.Component {
                         </Tabs.TabList>
                         <Tabs.TabPanel>
                             <ViolationAnalysis
-                                groupByAccount={searchParams.cross_groupByAccount || true}
+                                groupByAccount={searchParams.cross_groupByAccount}
                                 account={searchParams.cross_inspectedAccount || activeAccountIds[0]}
                                 violationType={searchParams.cross_violationType || null}
                                 accounts={allAccounts}
@@ -264,7 +265,7 @@ class Violation extends React.Component {
                                 onConfigurationChange={this._updateSearch.bind(this, 'single')}
                                 account={searchParams.cross_inspectedAccount || activeAccountIds[0]}
                                 accounts={allAccounts}
-                                groupByApplication={searchParams.single_groupByApplication || true}
+                                groupByApplication={searchParams.single_groupByApplication}
                                 application={searchParams.single_application || ''}
                                 violationType={searchParams.single_violationType || ''}
                                 violationTypes={violationTypes}

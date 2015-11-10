@@ -27,21 +27,11 @@ class ViolationAnalysis extends React.Component {
         });
     }
 
-    accountCellRenderer(accountIdOrName) {
-        var account;
-
-        if (/^[0-9]+$/.test(accountIdOrName)) {
-            account = accountIdOrName;
-        } else {
-            account = Object
-                        .keys(this.props.accounts)
-                        .filter(acc => this.props.accounts[acc].name === accountIdOrName)
-                        .reduce(acc => acc.id, '');
-        }
+    accountCellRenderer(a, b, data) {
         return <span
-                    title={accountIdOrName}
+                    title={data.accountName}
                     className='sortable-table-highlight'
-                    onClick={this.selectAccount.bind(this, account)}>{accountIdOrName}</span>;
+                    onClick={this.selectAccount.bind(this, data.account)}>{data.accountName}</span>;
     }
 
     violationTypeCellRenderer(violationType) {
@@ -53,8 +43,9 @@ class ViolationAnalysis extends React.Component {
     }
 
     render() {
-        let {violationCount, violationTypes} = this.props,
+        let {violationCount, violationTypes, groupByAccount} = this.props,
             chartData = [];
+        groupByAccount = groupByAccount === undefined ? true : groupByAccount;
         if (!violationCount.length) {
             return <div><Icon name='smile-o' /> <span>No violations!</span></div>;
         }
@@ -66,7 +57,7 @@ class ViolationAnalysis extends React.Component {
                                 accountName: this.props.accounts[c.account] ? this.props.accounts[c.account].name : '?',
                                 quantity: c.quantity
                             }));
-        chartData = this.props.groupByAccount ?
+        chartData = groupByAccount ?
                         violationCount.filter(c => c.account === this.props.account) :
                         violationCount.filter(c => c.type === this.props.violationType);
 
@@ -81,7 +72,7 @@ class ViolationAnalysis extends React.Component {
                 {chartData.length ?
                     <AutoWidth className='violation-analysis-chart'>
                         <strong>
-                            {this.props.groupByAccount ?
+                            {groupByAccount ?
                                 <span>Account {this.props.accounts[this.props.account] ? this.props.accounts[this.props.account].name : '?'}</span> :
                                 <span>Violation {this.props.violationType}</span>}
                         </strong>
@@ -89,7 +80,7 @@ class ViolationAnalysis extends React.Component {
                             data={{
                                 label: 'Violation Count',
                                 values: _.sortByOrder(chartData, ['quantity'], ['desc'])
-                                        .map(c => ({ x: this.props.groupByAccount ? c.type : c.accountName, y: c.quantity }))
+                                        .map(c => ({ x: groupByAccount ? c.type : c.accountName, y: c.quantity }))
                             }}
                             tooltipHtml={(x, y0, y) => y.toString()}
                             tooltipMode='element'
@@ -109,7 +100,7 @@ class ViolationAnalysis extends React.Component {
                             <Table.Column
                                 label='ID'
                                 width={160}
-                                cellRenderer={this.accountCellRenderer.bind(this)}
+                                cellRenderer={account => <span className='sortable-table-highlight' onClick={this.selectAccount.bind(this, account)}>{account}</span>}
                                 dataKey={'account'} />
                             <Table.Column
                                 label='Account'
