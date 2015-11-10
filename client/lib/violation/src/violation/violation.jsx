@@ -126,7 +126,8 @@ class Violation extends React.Component {
 
     _setSortDir(asc) {
         this.updateSearch({
-            sortAsc: asc
+            sortAsc: asc,
+            page: 0
         });
     }
 
