@@ -1,4 +1,4 @@
-/* globals expect, TestUtils, reset, render, sinon, Promise */
+/* globals expect, TestUtils, reset, render, sinon, Promise, $, React */
 import {Flummox} from 'flummox';
 import KioStore from 'common/src/data/kio/kio-store';
 import KioActions from 'common/src/data/kio/kio-actions';
@@ -97,6 +97,20 @@ describe('The version form view', () => {
             let f = TestUtils.findRenderedDOMComponentWithAttributeValue(form, 'data-block', 'form');
             TestUtils.Simulate.submit(f);
             expect(actionSpy.calledOnce).to.be.true;
+        });
+
+        it('should prepend docker:// prefix to artifact', () => {
+            let id = TestUtils.findRenderedDOMComponentWithAttributeValue(form, 'data-block', 'id-input');
+            id.value = VER_ID;
+            TestUtils.Simulate.change(id);
+            let artifact = TestUtils.findRenderedDOMComponentWithAttributeValue(form, 'data-block', 'artifact-input');
+            expect($(React.findDOMNode(artifact)).val()).to.equal(`docker.io/stups/${APP_ID}:${VER_ID}`);
+            let f = TestUtils.findRenderedDOMComponentWithAttributeValue(form, 'data-block', 'form');
+            TestUtils.Simulate.submit(f);
+            expect(actionSpy.calledOnce).to.be.true;
+            expect(actionSpy.firstCall.args[0]).to.equal(APP_ID);
+            expect(actionSpy.firstCall.args[1]).to.equal(VER_ID);
+            expect(actionSpy.firstCall.args[2].artifact).to.equal('docker://docker.io/stups/' + `${APP_ID}:${VER_ID}`);
         });
 
         it('should display a warning when there are approvals', () => {

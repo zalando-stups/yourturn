@@ -153,7 +153,9 @@ class VersionDetail extends React.Component {
                             </tr>
                             <tr>
                                 <th>Artifact</th>
-                                <td>{version.artifact}</td>
+                                <td>{version.artifact.startsWith('docker://') ?
+                                        version.artifact.substring('docker://'.length) :
+                                        version.artifact}</td>
                             </tr>
                             <ScmAuthorInfo
                                 scmSource={scmSource} />
