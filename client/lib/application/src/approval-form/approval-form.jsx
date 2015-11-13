@@ -2,6 +2,7 @@ import React from 'react';
 import Icon from 'react-fa';
 import {Link} from 'react-router';
 import {Typeahead} from 'react-typeahead';
+import Markdown from 'common/src/markdown.jsx';
 import ApprovalCard from './approval-card.jsx';
 import 'common/asset/less/application/approval-form.less';
 
@@ -183,14 +184,11 @@ class ApprovalForm extends React.Component {
                                 <div className='form-group'>
                                     <label htmlFor='approval_notes'>Notes</label>
                                     <small>You can use <a href='http://www.unexpected-vortices.com/sw/rippledoc/quick-markdown-example.html'>Markdown</a>.</small>
-                                    <textarea
-                                        id='approval_notes'
-                                        name='yourturn_approval_notes'
+                                    <Markdown
+                                        editable={true}
                                         placeholder={`I swear by the life of my firstborn that ${application.name} ${versionId} is properly tested.`}
-                                        cols='30'
-                                        onChange={this.updateNotes.bind(this)}
-                                        value={this.state.notes}
-                                        rows='5'></textarea>
+                                        src={this.state.notes}
+                                        onChange={this.updateNotes.bind(this)} />
                                 </div>
                                 <div className='form-group'>
                                     <label htmlFor='approval_type'>Approval Type</label>

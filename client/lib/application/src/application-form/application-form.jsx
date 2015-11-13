@@ -1,5 +1,6 @@
 import React from 'react';
 import Icon from 'react-fa';
+import Markdown from 'common/src/markdown.jsx';
 import {Link} from 'react-router';
 import SERVICE_URL_TLD from 'SERVICE_URL_TLD';
 import {constructLocalUrl} from 'common/src/data/services';
@@ -283,13 +284,10 @@ class ApplicationForm extends React.Component {
                         <div className='form-group'>
                             <label htmlFor='description'>Description</label>
                             <small>A more elaborate description than subtitle. You can use <a href='http://www.unexpected-vortices.com/sw/rippledoc/quick-markdown-example.html'>Markdown</a>.</small>
-                            <textarea
-                                id='description'
-                                name='yourturn_app_description'
-                                onChange={this.update.bind(this, 'description', 'value')}
-                                cols='30'
-                                defaultValue={app.description}
-                                rows='10' />
+                            <Markdown
+                                editable={true}
+                                src={app.description}
+                                onChange={this.update.bind(this, 'description', 'value')} />
                         </div>
                         <div className='btn-group'>
                             <button

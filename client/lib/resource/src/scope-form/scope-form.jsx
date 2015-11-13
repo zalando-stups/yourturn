@@ -1,6 +1,7 @@
 import React from 'react';
 import Icon from 'react-fa';
 import {Link} from 'react-router';
+import Markdown from 'common/src/markdown.jsx';
 import 'common/asset/less/resource/scope-form.less';
 
 class ScopeForm extends React.Component {
@@ -165,7 +166,7 @@ class ScopeForm extends React.Component {
                                 value={scope.user_information}
                                 type='text' />
                         </div>
-                        <div className='form-group'>
+                        <div className='form-group with-long-text'>
                             <label>Scope Type</label>
                             <small>Which of these scope types applies?</small>
                             <div className='grid'>
@@ -236,13 +237,10 @@ class ScopeForm extends React.Component {
                         <div className='form-group'>
                             <label htmlFor='scope_description'>Scope Description</label>
                             <small>An elaborate description. You can use <a href='http://www.unexpected-vortices.com/sw/rippledoc/quick-markdown-example.html'>Markdown</a>.</small>
-                            <textarea
-                                id='scope_description'
-                                name='yourturn_scope_description'
-                                value={scope.description}
-                                onChange={this.update.bind(this, 'description', 'value')}
-                                cols='30'
-                                rows='10'></textarea>
+                            <Markdown
+                                editable={true}
+                                src={scope.description}
+                                onChange={this.update.bind(this, 'description', 'value')} />
                         </div>
                         <div className='btn-group'>
                             <button

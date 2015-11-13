@@ -3,6 +3,7 @@ import Icon from 'react-fa';
 import {Link} from 'react-router';
 import {constructLocalUrl} from 'common/src/data/services';
 import DOCKER_REGISTRY from 'DOCKER_REGISTRY';
+import Markdown from 'common/src/markdown.jsx';
 import 'common/asset/less/application/version-form.less';
 
 class VersionForm extends React.Component {
@@ -187,14 +188,11 @@ class VersionForm extends React.Component {
                         <div className='form-group'>
                             <label htmlFor='description'>Notes</label>
                             <small>A more elaborate description of what the version contains. You can use <a href='http://www.unexpected-vortices.com/sw/rippledoc/quick-markdown-example.html'>Markdown</a>.</small>
-                            <textarea
-                                id='version_notes'
+                            <Markdown
+                                editable={true}
+                                src={notes}
                                 placeholder='Fixes serious CSS race condition.'
-                                name='yourturn_version_notes'
-                                value={notes}
-                                onChange={this.update.bind(this, 'notes', 'value')}
-                                cols='30'
-                                rows='10'></textarea>
+                                onChange={this.update.bind(this, 'notes', 'value')} />
                         </div>
                         { edit && approvals.length ?
                             <div
