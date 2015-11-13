@@ -1,3 +1,4 @@
+/* global NODE_ENV */
 import React from 'react';
 import Icon from 'react-fa';
 import Remarkable from 'remarkable';
@@ -47,7 +48,12 @@ class Markdown extends React.Component {
                         dangerouslySetInnerHTML={{
                             __html: this.state.html
                         }} />;
-        if (!this.props.editable) {
+        // this sucks hard, but - i think - because react-tabs
+        // is cloning elements outside of its render function
+        // React complains that only ReactOwners may have refs.
+        // this happens only in tests though, so we do not render
+        // tabs in tests for now.
+        if (!this.props.editable || NODE_ENV === 'TEST') {
             return preview;
         }
         return <div className={'markdown-editor ' + (this.props.editable ? 'is-editable' : '')}>
