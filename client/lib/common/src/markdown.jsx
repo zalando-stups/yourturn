@@ -1,4 +1,4 @@
-/* global NODE_ENV */
+/* global ENV_TEST */
 import React from 'react';
 import Icon from 'react-fa';
 import Remarkable from 'remarkable';
@@ -53,7 +53,8 @@ class Markdown extends React.Component {
         // React complains that only ReactOwners may have refs.
         // this happens only in tests though, so we do not render
         // tabs in tests for now.
-        if (!this.props.editable || NODE_ENV === 'TEST') {
+        // https://github.com/rackt/react-tabs/issues/52
+        if (!this.props.editable || ENV_TEST) {
             return preview;
         }
         return <div className={'markdown-editor ' + (this.props.editable ? 'is-editable' : '')}>
