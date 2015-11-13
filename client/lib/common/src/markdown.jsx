@@ -79,6 +79,7 @@ Markdown.propTypes = {
     className: React.PropTypes.string,
     block: React.PropTypes.string,
     editable: React.PropTypes.bool,
+    placeholder: React.PropTypes.string,
     onChange: React.PropTypes.func
 };
 
