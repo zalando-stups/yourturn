@@ -20,7 +20,7 @@ class VersionForm extends React.Component {
             versionIdTaken: false,
             autocompleteArtifact: true,
             id: edit ? version.id : '',
-            artifact: edit ? version.artifact : '',
+            artifact: edit ? version.artifact : `${DOCKER_REGISTRY}/{team}/${props.applicationId}`,
             notes: edit ? version.notes : ''
         };
     }
@@ -70,7 +70,9 @@ class VersionForm extends React.Component {
             version = {
                 id: this.state.id,
                 notes: this.state.notes,
-                artifact: this.state.artifact
+                artifact: /^docker:\/\//.test(this.state.artifact) ?
+                            this.state.artifact :
+                            'docker://' + this.state.artifact
             };
         var verb = this.props.edit ? 'update' : 'create';
 
@@ -178,6 +180,7 @@ class VersionForm extends React.Component {
                                 </div>
                                 <input
                                     value={artifact}
+                                    data-block='artifact-input'
                                     onKeyDown={this.disableAutocomplete.bind(this)}
                                     onChange={this.update.bind(this, 'artifact', 'value')}
                                     name='yourturn_version_artifactName'
