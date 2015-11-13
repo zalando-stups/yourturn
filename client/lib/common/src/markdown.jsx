@@ -1,4 +1,5 @@
 import React from 'react';
+import Icon from 'react-fa';
 import Remarkable from 'remarkable';
 import {Tabs, TabList, TabPanel, Tab} from 'react-tabs';
 import 'common/asset/less/common/markdown.less';
@@ -35,13 +36,13 @@ class Markdown extends React.Component {
             content: evt.target.value
         });
         if (this.props.editable && this.props.onChange) {
-            this.props.onChange(evt.target.value);
+            this.props.onChange(evt);
         }
     }
 
     render() {
         let preview = <div
-                        className={'u-markdown ' + this.props.className}
+                        className={'markdown ' + (this.props.className || '')}
                         data-block={this.props.block || null}
                         dangerouslySetInnerHTML={{
                             __html: this.state.html
@@ -49,16 +50,17 @@ class Markdown extends React.Component {
         if (!this.props.editable) {
             return preview;
         }
-        return <div className='markdown-editor'>
+        return <div className={'markdown-editor ' + (this.props.editable ? 'is-editable' : '')}>
             <Tabs
                 selectedIndex={this.state.activeTab}
                 onSelect={this._renderMd.bind(this)}>
                 <TabList>
-                    <Tab>Edit</Tab>
-                    <Tab>Preview</Tab>
+                    <Tab><Icon fixedWidth name='pencil' /> Edit</Tab>
+                    <Tab><Icon fixedWidth name='eye' /> Preview</Tab>
                 </TabList>
                 <TabPanel>
                     <textarea
+                        placeholder={this.props.placeholder}
                         onChange={this._updateContent.bind(this)}
                         value={this.state.content}
                         cols='30'

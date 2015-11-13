@@ -1,6 +1,7 @@
 import React from 'react';
 import Icon from 'react-fa';
 import {Link} from 'react-router';
+import Markdown from 'common/src/markdown.jsx';
 import {constructLocalUrl} from 'common/src/data/services';
 import 'common/asset/less/resource/resource-form.less';
 
@@ -184,13 +185,10 @@ class ResourceForm extends React.Component {
                         <div className='form-group'>
                             <label htmlFor='resource_description'>Resource Type Description</label>
                             <small>An elaborate description with examples of what kind of data this resource type includes. You can use <a href='http://www.unexpected-vortices.com/sw/rippledoc/quick-markdown-example.html'>Markdown</a>.</small>
-                            <textarea
-                                id='resource_description'
-                                name='yourturn_resource_description'
-                                value={resource.description}
-                                onChange={this.update.bind(this, 'description', 'value')}
-                                cols='30'
-                                rows='10'></textarea>
+                            <Markdown
+                                editable={true}
+                                src={resource.description}
+                                onChange={this.update.bind(this, 'description', 'value')} />
                         </div>
                         <div className='btn-group'>
                             <button

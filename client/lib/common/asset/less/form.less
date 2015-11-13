@@ -87,14 +87,16 @@ input[type="search"] {
             display: block;
         }
 
-        p {
-            margin: 0;
-            max-width: 400px;
-            + p {
-                margin-top: @padding-tiny;
+        &.with-long-text {
+            p {
+                margin: 0;
+                max-width: 400px;
+                + p {
+                    margin-top: @padding-tiny;
+                }
             }
-        }
 
+        }
 
         + .btn-group,
         + .form-group {

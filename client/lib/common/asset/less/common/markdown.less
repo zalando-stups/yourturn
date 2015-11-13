@@ -4,4 +4,17 @@
     textarea {
         width: 100%;
     }
+
+    [role="tab"] {
+        .fa {
+            color: @gray;
+        }
+    }
+
+    &.is-editable {
+        .markdown {
+            // roughly the height of 10 columns textarea
+            min-height: 360px;
+        }
+    }
 }
