@@ -380,6 +380,7 @@ CreateVersionFormHandler.propTypes = {
 CreateVersionFormHandler.fetchData = function(state) {
     let {applicationId} = state.params;
     return Promise.all([
+        requireAccounts(FLUX),
         !!KIO_STORE.getApplication(applicationId) ?
             Promise.resolve() :
             KIO_ACTIONS.fetchApplication(applicationId),
@@ -442,6 +443,7 @@ EditVersionFormHandler.fetchData = function(state) {
     let {applicationId, versionId} = state.params;
     KIO_ACTIONS.fetchApprovals(applicationId, versionId);
     return Promise.all([
+        requireAccounts(FLUX),
         KIO_ACTIONS.fetchApplicationVersion(applicationId, versionId),
         KIO_STORE.getApplication(applicationId) ?
             Promise.resolve() :
