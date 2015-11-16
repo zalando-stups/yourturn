@@ -3,6 +3,7 @@ import Icon from 'react-fa';
 import {Link} from 'react-router';
 import {Typeahead} from 'react-typeahead';
 import Markdown from 'common/src/markdown.jsx';
+import Collapsible from 'common/src/collapsible.jsx';
 import ApprovalCard from './approval-card.jsx';
 import 'common/asset/less/application/approval-form.less';
 
@@ -182,15 +183,6 @@ class ApprovalForm extends React.Component {
                                 onSubmit={this.save.bind(this)}
                                 className='form'>
                                 <div className='form-group'>
-                                    <label htmlFor='approval_notes'>Notes</label>
-                                    <small>You can use <a href='http://www.unexpected-vortices.com/sw/rippledoc/quick-markdown-example.html'>Markdown</a>.</small>
-                                    <Markdown
-                                        editable={true}
-                                        placeholder={`I swear by the life of my firstborn that ${application.name} ${versionId} is properly tested.`}
-                                        src={this.state.notes}
-                                        onChange={this.updateNotes.bind(this)} />
-                                </div>
-                                <div className='form-group'>
                                     <label htmlFor='approval_type'>Approval Type</label>
                                     <small>What specifically do you approve?</small>
                                     <div className='btn-group'>
@@ -252,6 +244,19 @@ class ApprovalForm extends React.Component {
                                         null
                                     }
                                 </div>
+                                <Collapsible
+                                    header='Notes'
+                                    initialCollapsed={true}>
+                                    <div className='form-group'>
+                                        <label htmlFor='approval_notes'>Notes</label>
+                                        <small>You can use <a href='http://www.unexpected-vortices.com/sw/rippledoc/quick-markdown-example.html'>Markdown</a>.</small>
+                                        <Markdown
+                                            editable={true}
+                                            placeholder={`I swear by the life of my firstborn that ${application.name} ${versionId} is properly tested.`}
+                                            src={this.state.notes}
+                                            onChange={this.updateNotes.bind(this)} />
+                                    </div>
+                                </Collapsible>
                                 <div className='btn-group'>
                                     <button
                                         type='submit'
@@ -261,7 +266,7 @@ class ApprovalForm extends React.Component {
                                         <Icon
                                             fixedWidth
                                             spin={this.state.loading}
-                                            name={this.state.loading ? 'circle-o-notch' : 'save'} /> Save
+                                            name={this.state.loading ? 'circle-o-notch' : 'save'} /> Approve
                                     </button>
                                 </div>
                             </form>
