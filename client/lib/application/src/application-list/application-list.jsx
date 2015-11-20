@@ -11,11 +11,13 @@ class ApplicationList extends React.Component {
             kio: props.kioStore,
             user: props.userStore
         };
+        this.actions = props.kioActions;
         this.state = {
             term: '',
             showCount: 20,
             showAll: false,
-            showInactive: false
+            showInactive: false,
+            inactiveVersionsFetched: false
         };
     }
 
@@ -33,6 +35,20 @@ class ApplicationList extends React.Component {
     }
 
     updateShowInactive() {
+        // fetch versions for inactive apps
+        if (!this.state.showInactive && !this.state.inactiveVersionsFetched) {
+            // false means that we will set it to true now
+            let userAccounts = _.pluck(this.stores.user.getUserCloudAccounts(), 'name');
+            // fetch versions for our inactive apps
+            this.stores.kio
+                .getApplications(this.state.term)
+                .filter(app => !app.active)
+                .filter(app => userAccounts.indexOf(app.team_id) >= 0)
+                .forEach(app => this.actions.fetchApplicationVersions(app.id));
+            this.setState({
+                inactiveVersionsFetched: true
+            });
+        }
         this.setState({
             showInactive: !this.state.showInactive
         });

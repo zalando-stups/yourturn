@@ -38,7 +38,8 @@ describe('The application list view', () => {
 
         props = {
             userStore: flux.getStore('user'),
-            kioStore: flux.getStore('kio')
+            kioStore: flux.getStore('kio'),
+            kioActions: flux.getActions('kio')
         };
 
         list = render(List, props);

@@ -39,6 +39,7 @@ class AppListHandler extends React.Component {
 
                     <ApplicationList
                         userStore={USER_STORE}
+                        kioActions={KIO_ACTIONS}
                         kioStore={KIO_STORE} />
                 </FluxComponent>;
     }
@@ -55,6 +56,7 @@ AppListHandler.fetchData = function() {
         .then(accs => {
             let ids = accs.map(acc => acc.name);
             apps
+            .filter(app => app.active)
             .filter(app => ids.indexOf(app.team_id) >= 0)
             .forEach(app => KIO_ACTIONS.fetchApplicationVersions(app.id));
         }));
