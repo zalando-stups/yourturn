@@ -87,5 +87,10 @@ class Counter extends React.Component {
         return <span className='counter'>{format(Math.round(this.state.value))}</span>;
     }
 }
-
+Counter.displayName = 'Counter';
+Counter.propTypes = {
+    begin: React.PropTypes.number,
+    end: React.PropTypes.number,
+    time: React.PropTypes.number
+};
 export default Counter;

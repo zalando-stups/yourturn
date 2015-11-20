@@ -47,7 +47,7 @@ userActions
             .then(accounts => {
                 let lastLogin = fullstopStore.getLastVisited();
                 fullstopActions.fetchOwnTotal(lastLogin, accounts.map(a => a.id));
-            })
+            });
         userActions
             .fetchUserInfo(info.uid);
     });

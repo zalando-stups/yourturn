@@ -11,5 +11,9 @@ class Badge extends React.Component {
                 </span>;
     }
 }
+Badge.displayName = 'Badger'; // mushroom mushroom
+Badge.propTypes = {
+    isDanger: React.PropTypes.bool
+};
 
 export default Badge;
