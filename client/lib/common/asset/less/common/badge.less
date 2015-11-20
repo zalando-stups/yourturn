@@ -1,0 +1,19 @@
+@import "../variables";
+
+.badge {
+    .transition(color, background, border);
+    border: 2px solid currentColor;
+    border-radius: @border-radius;
+    font-size: 0.66em;
+    line-height: 1;
+    display: inline-block;
+    vertical-align: middle;
+    white-space: nowrap;
+    text-align: center;
+    padding: 5px 8px;
+
+    &.is-danger {
+        background: @red;
+        color: white;
+    }
+}

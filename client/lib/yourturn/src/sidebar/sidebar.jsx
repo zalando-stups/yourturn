@@ -3,6 +3,7 @@ import Icon from 'react-fa';
 import Gravatar from 'react-gravatar';
 import {Link} from 'react-router';
 import Timestamp from 'react-time';
+import Badge from 'common/src/badge.jsx';
 import 'common/asset/less/yourturn/sidebar.less';
 
 class Sidebar extends React.Component {
@@ -140,7 +141,7 @@ class Sidebar extends React.Component {
                             onClick={this.transition.bind(this, 'violation')}>
                             <Link
                                 to='violation'>
-                                Violations <Icon name='warning' />
+                                Violations <Badge number={234} /> <Icon name='warning' />
                             </Link>
                         </div>
                     </div>

@@ -9,6 +9,7 @@ import {parseArtifact} from 'application/src/util';
 import FetchResult from 'common/src/fetch-result';
 import Placeholder from './placeholder.jsx';
 import DefaultError from 'common/src/error.jsx';
+import Badge from 'common/src/badge.jsx';
 import 'common/asset/less/application/version-detail.less';
 
 class ScmCommitInfo extends React.Component {
@@ -137,7 +138,7 @@ class VersionDetail extends React.Component {
                             to='application-verApproval'
                             className='btn btn-primary'
                             params={LINK_PARAMS}>
-                            <Icon name='edit' /> Approvals <span className='badge'>{approvals.length}</span>
+                            <Icon name='edit' /> Approvals <Badge number={approvals.length} />
                         </Link>
                     </div>
 
