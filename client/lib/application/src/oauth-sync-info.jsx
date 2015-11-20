@@ -28,7 +28,7 @@ class OAuthSyncInfo extends React.Component {
         .props
         .onRenewCredentials()
         .then(() => this.setState({ status: [STATUS.ISSUED, '']}))
-        .catch (e => this.setState({ status: [STATUS.FAILED, e]}));
+        .catch(e => this.setState({ status: [STATUS.FAILED, e]}));
     }
 
     render() {

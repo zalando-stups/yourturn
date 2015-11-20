@@ -51,7 +51,7 @@ class ScopeForm extends React.Component {
                 // redirect back to the resource detail view
                 this.context.router.transitionTo(`/resource/detail/${resourceId}`);
             })
-            .catch (() => {
+            .catch(() => {
                 let verb = this.props.edit ? 'update' : 'create';
                 this.props.notificationActions
                 .addNotification(

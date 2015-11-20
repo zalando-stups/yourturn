@@ -7,7 +7,7 @@ function requireAccounts(flux) {
             return ACTIONS
                     .fetchTokenInfo()
                     .then(token => ACTIONS.fetchAccounts(token.uid))
-                    .catch (() => ACTIONS.fetchAccessToken());
+                    .catch(() => ACTIONS.fetchAccessToken());
         }
         return ACTIONS.fetchAccounts(tokeninfo.uid);
     }

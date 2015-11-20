@@ -64,7 +64,7 @@ class LoginHandler extends React.Component {
 
                     this.context.router.transitionTo(response.metadata.route || '/');
                 })
-                .catch (e => {
+                .catch(e => {
                     // delete tokens
                     YT_FLUX.getActions('user').deleteTokenInfo();
                     return YT_FLUX

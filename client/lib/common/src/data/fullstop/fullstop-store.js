@@ -13,7 +13,7 @@ function FullstopStore(state, action) {
     if (!action || action.type === '@@INIT') {
         return Immutable.fromJS({
             ownAccountsTotal: 0,
-            lastVisited: Date.now(),
+            lastVisited: 0,
             violations: {},
             violationCount: [],
             violationCountIn: [],

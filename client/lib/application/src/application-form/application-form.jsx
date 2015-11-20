@@ -61,7 +61,7 @@ class ApplicationForm extends React.Component {
         .then(() => {
             this.context.router.transitionTo(constructLocalUrl('application', [this.state.app.id]));
         })
-        .catch (e => {
+        .catch(e => {
             let verb = this.props.edit ? 'update' : 'create';
             this.props.notificationActions
             .addNotification(

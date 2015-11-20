@@ -10,7 +10,7 @@ function fetchOAuthConfig(applicationId) {
             .oauth(Provider, RequestConfig)
             .exec(saveRoute)
             .then(res => [applicationId, res.body])
-            .catch (err => {
+            .catch(err => {
                 if (err.status === 404) {
                     let body = {
                         scopes: [],
@@ -39,7 +39,7 @@ function saveOAuthConfig(applicationId, config) {
             .send(configToSend)
             .oauth(Provider, RequestConfig)
             .exec(saveRoute)
-            .catch (e => {
+            .catch(e => {
                 e.id = applicationId;
                 throw e;
             });
@@ -50,7 +50,7 @@ function renewCredentials(applicationId) {
             .post(`${Services.mint.url}${Services.mint.root}/${applicationId}/renewal`)
             .oauth(Provider, RequestConfig)
             .exec(saveRoute)
-            .catch (err => {
+            .catch(err => {
                 err.id = applicationId;
                 throw err;
             });

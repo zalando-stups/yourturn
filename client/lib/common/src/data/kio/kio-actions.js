@@ -20,7 +20,7 @@ function fetchApplication(id) {
             .oauth(Provider, RequestConfig)
             .exec(saveRoute)
             .then(res => res.body)
-            .catch (err => {
+            .catch(err => {
                 err.id = id;
                 throw err;
             });
@@ -43,7 +43,7 @@ function saveApplication(id, app) {
             .oauth(Provider, RequestConfig)
             .exec(saveRoute)
             .then(res => res.body)
-            .catch (err => {
+            .catch(err => {
                 err.id = id;
                 throw err;
             });
@@ -60,7 +60,7 @@ function saveApplicationCriticality(id, criticality) {
             .oauth(Provider, RequestConfig)
             .exec(saveRoute)
             .then(res => res.body)
-            .catch (err => {
+            .catch(err => {
                 err.id = id;
                 throw err;
             });
@@ -73,7 +73,7 @@ function fetchApplicationVersions(id) {
             .oauth(Provider, RequestConfig)
             .exec(saveRoute)
             .then(res => res.body)
-            .catch (err => {
+            .catch(err => {
                 err.id = id;
                 throw err;
             });
@@ -86,7 +86,7 @@ function fetchApplicationVersion(id, ver) {
             .oauth(Provider, RequestConfig)
             .exec(saveRoute)
             .then(res => res.body)
-            .catch (err => {
+            .catch(err => {
                 err.id = id;
                 err.ver = ver;
                 throw err;
@@ -104,7 +104,7 @@ function saveApplicationVersion(applicationId, versionId, version) {
             .oauth(Provider, RequestConfig)
             .exec(saveRoute)
             .then(res => res.body)
-            .catch (err => {
+            .catch(err => {
                 err.applicationId = applicationId;
                 err.versionId = versionId;
                 throw err;
@@ -124,7 +124,7 @@ function fetchApprovalTypes(applicationId) {
                     .filter((i, idx, arr) => arr.lastIndexOf(i) === idx)
                     .sort()
             ])
-            .catch (err => {
+            .catch(err => {
                 err.applicationId = applicationId;
                 throw err;
             });
@@ -137,7 +137,7 @@ function fetchApprovals(applicationId, versionId) {
             .oauth(Provider, RequestConfig)
             .exec(saveRoute)
             .then(res => [applicationId, versionId, res.body])
-            .catch (err => {
+            .catch(err => {
                 err.applicationId = applicationId;
                 err.versionId = versionId;
                 throw err;
@@ -153,7 +153,7 @@ function saveApproval(applicationId, versionId, approval) {
             .oauth(Provider, RequestConfig)
             .exec(saveRoute)
             .then(res => res.body)
-            .catch (err => {
+            .catch(err => {
                 err.applicationId = applicationId;
                 err.versionId = versionId;
                 throw err;

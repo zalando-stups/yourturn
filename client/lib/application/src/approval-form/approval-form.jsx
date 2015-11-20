@@ -118,7 +118,7 @@ class ApprovalForm extends React.Component {
                 loading: false
             });
         })
-        .catch (err => {
+        .catch(err => {
             this.setState({
                 loading: false
             });
