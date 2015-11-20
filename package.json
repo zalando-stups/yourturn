@@ -63,7 +63,6 @@
     "eslint": "0.23.0",
     "eslint-loader": "0.14.0",
     "eslint-plugin-react": "2.5.2",
-    "esprima-fb": "^15001.1.0-dev-harmony-fb",
     "express": "4.12.4",
     "extract-text-webpack-plugin": "0.8.2",
     "file-loader": "0.8.4",
