@@ -122,7 +122,7 @@ class VersionDetail extends React.Component {
 
                     <div className='btn-group'>
                         <Link
-                            to='application-appDetail'
+                            to='application-verList'
                             className='btn btn-default'
                             params={LINK_PARAMS}>
                             <Icon name='chevron-left' /> {application.name || applicationId} versions
