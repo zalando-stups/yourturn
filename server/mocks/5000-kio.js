@@ -37,25 +37,14 @@ var applications = {
         criticality_level: 2,
         publicly_accessible: true
     },
-    tzjztjtzj: {
-        id: 'tzjztjtzj',
-        name: 'testy 2',
-        team_id: 'stups',
-        description: 'Test application 2',
-        url: 'https://test2.example.org',
-        scm_url: 'git://github.com/zalando-stups/test2',
-        required_approvers: 2,
-        criticality_level: 2,
-        publicly_accessible: true
-    },
     blork: {
-        documentation_url: 'https://github.com/zalando-stups/kio',
-        specification_url: 'https://github.com/zalando-stups/kio/issues',
-        scm_url: 'https://github.com/zalando-stups/kio.git',
+        documentation_url: 'https://github.com/zalando-stups/blork',
+        specification_url: 'https://github.com/zalando-stups/blork/issues',
+        scm_url: 'https://github.com/zalando-stups/blork.git',
         service_url: 'http://localhost:5000/',
         description: '**An application registry to manage application base information.**',
         subtitle: 'STUPS application registry',
-        name: 'Kio',
+        name: 'Blork',
         active: true,
         team_id: 'blork-team',
         id: 'blork',
@@ -64,13 +53,13 @@ var applications = {
         publicly_accessible: true
     },
     foobar: {
-        documentation_url: 'https://github.com/zalando-stups/pierone',
-        specification_url: 'https://github.com/zalando-stups/pierone/issues',
-        scm_url: 'https://github.com/zalando-stups/pierone.git',
-        service_url: 'https://pierone.example.org/',
+        documentation_url: 'https://github.com/zalando-stups/foobar',
+        specification_url: 'https://github.com/zalando-stups/foobar/issues',
+        scm_url: 'https://github.com/zalando-stups/foobar.git',
+        service_url: 'https://foobar.example.org/',
         description: 'A Docker registry compliant repository for Docker images.',
         subtitle: 'STUPS Docker registry',
-        name: 'Pier One',
+        name: 'foobar',
         active: false,
         team_id: 'foobar-team',
         id: 'foobar',
@@ -106,6 +95,14 @@ var versions = {
             "last_modified": "2015-05-11T16:30:00Z",
             "artifact": "docker//stups/kio:0.9-alpha"
         }
+    },
+    pierone: {
+        "3": {
+            "id": "3",
+            "application_id": "pierone",
+            "last_modified": "2015-05-28T16:30:00Z",
+            "artifact": "docker://stups/pierone:3"
+        },
     }
 };
 
