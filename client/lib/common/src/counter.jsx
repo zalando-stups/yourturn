@@ -28,7 +28,7 @@ class Counter extends React.Component {
             begin: props.begin,
             end: props.end,
             mounted: false
-        }
+        };
     }
 
     componentWillReceiveProps(nextProps) {
