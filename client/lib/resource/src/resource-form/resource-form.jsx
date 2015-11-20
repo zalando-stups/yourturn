@@ -49,7 +49,7 @@ class ResourceForm extends React.Component {
             // redirect to detail view of the resource
             this.context.router.transitionTo(constructLocalUrl('resource-type', [resource.id]));
         })
-        .catch(err => {
+        .catch (err => {
             this.props.notificationActions
             .addNotification(
                 `Could not save resource ${resource.name}. ${err.message}`,

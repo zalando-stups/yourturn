@@ -9,7 +9,7 @@ class Storage {
         let item = localStorage.getItem(`${this.prefix}-${key}`);
         try {
             item = JSON.parse(item);
-        } catch(err) {
+        } catch (err) {
             return item;
         }
         return item;

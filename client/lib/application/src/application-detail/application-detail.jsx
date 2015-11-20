@@ -48,7 +48,7 @@ class ApplicationDetail extends React.Component {
                 criticalityUpdatePending: false
             });
         })
-        .catch(err => {
+        .catch (err => {
             this.props.notificationActions
             .addNotification(
                 `Could not update criticality of ${app.name}. ${err}`,

@@ -65,7 +65,7 @@ class OAuthForm extends React.Component {
         this.props.mintActions
         .saveOAuthConfig(applicationId, oauthConfig)
         .then(() => this.context.router.transitionTo(constructLocalUrl('application', [applicationId])))
-        .catch(e => {
+        .catch (e => {
             this.props.notificationActions
             .addNotification(
                 'Could not save OAuth client configuration for ' + applicationId + '. ' + e.message,

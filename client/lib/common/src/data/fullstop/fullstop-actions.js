@@ -50,7 +50,7 @@ function fetchViolation(violationId) {
             .oauth(Provider, RequestConfig)
             .exec(saveRoute)
             .then(res => res.body)
-            .catch(e => {
+            .catch (e => {
                 e.violationId = violationId;
                 throw e;
             });

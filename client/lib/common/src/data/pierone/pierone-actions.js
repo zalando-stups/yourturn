@@ -10,7 +10,7 @@ function fetchScmSource(team, artifact, tag) {
             .oauth(Provider, RequestConfig)
             .exec(saveRoute)
             .then(res => [team, artifact, tag, res.body])
-            .catch(err => {
+            .catch (err => {
                 err.team = team;
                 err.artifact = artifact;
                 err.tag = tag;
@@ -25,7 +25,7 @@ function fetchTags(team, artifact) {
             .oauth(Provider, RequestConfig)
             .exec(saveRoute)
             .then(res => [team, artifact, res.body])
-            .catch(err => {
+            .catch (err => {
                 err.team = team;
                 err.artifact = artifact;
                 throw err;

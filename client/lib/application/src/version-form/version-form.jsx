@@ -80,7 +80,7 @@ class VersionForm extends React.Component {
         .actions
         .saveApplicationVersion(applicationId, version.id, version)
         .then(() => this.context.router.transitionTo(constructLocalUrl('application-version', [applicationId, version.id])))
-        .catch(err => {
+        .catch (err => {
             this.props.notificationActions
             .addNotification(
                 `Could not ${verb} version ${version.id} of ${application.name}. ${err.message}`,

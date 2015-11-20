@@ -31,7 +31,7 @@ function saveResource(resourceId, resource) {
             .oauth(Provider, RequestConfig)
             .send(copy)
             .exec(saveRoute)
-            .catch(err => {
+            .catch (err => {
                 err.id = resourceId;
                 throw err;
             });
@@ -47,7 +47,7 @@ function saveScope(resourceId, scopeId, scope) {
             .oauth(Provider, RequestConfig)
             .send(copy)
             .exec(saveRoute)
-            .catch(err => {
+            .catch (err => {
                 err.id = scopeId;
                 throw err;
             });
@@ -60,7 +60,7 @@ function fetchResource(resourceId) {
             .oauth(Provider, RequestConfig)
             .exec(saveRoute)
             .then(res => res.body)
-            .catch(err => {
+            .catch (err => {
                 err.id = resourceId;
                 throw err;
             });
@@ -82,7 +82,7 @@ function fetchScope(resourceId, scopeId) {
             .oauth(Provider, RequestConfig)
             .exec(saveRoute)
             .then(res => [resourceId, res.body])
-            .catch(err => {
+            .catch (err => {
                 err.id = resourceId;
                 throw err;
             });
@@ -99,7 +99,7 @@ function fetchScopeApplications(resourceId, scopeId) {
             .oauth(Provider, RequestConfig)
             .exec(saveRoute)
             .then(res => [resourceId, scopeId, res.body])
-            .catch(err => {
+            .catch (err => {
                 err.id = resourceId;
                 throw err;
             });

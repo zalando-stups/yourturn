@@ -10,7 +10,7 @@ function fetchApi(id) {
         .oauth(Provider, RequestConfig)
         .exec(saveRoute)
         .then(res => res.body)
-        .catch(err => {
+        .catch (err => {
             err.id = id;
             throw err;
         });

@@ -38,7 +38,7 @@ describe('The oauth token validation', () => {
 
         validateResponse(flux)
         .then(() => done())
-        .catch(done);
+        .catch (done);
     });
 
     it('should deny if there is no uid in token', done => {
@@ -48,7 +48,7 @@ describe('The oauth token validation', () => {
 
         validateResponse(flux)
         .then(() => done(1))
-        .catch(() => done());
+        .catch (() => done());
     });
 
     it('should deny if there is no realm in token', done => {
@@ -58,7 +58,7 @@ describe('The oauth token validation', () => {
 
         validateResponse(flux)
         .then(() => done(1))
-        .catch(() => done());
+        .catch (() => done());
     });
 
     it('should deny if the realm is something else than employees', done => {
@@ -68,7 +68,7 @@ describe('The oauth token validation', () => {
 
         validateResponse(flux)
         .then(() => done(1))
-        .catch(() => done());
+        .catch (() => done());
     });
 
     it('should allow if the realm is /employees', done => {
@@ -78,6 +78,6 @@ describe('The oauth token validation', () => {
 
         validateResponse(flux)
         .then(() => done())
-        .catch(done);
+        .catch (done);
     });
 });

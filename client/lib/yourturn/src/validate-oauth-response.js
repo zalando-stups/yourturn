@@ -21,7 +21,7 @@ function validateResponse(flux) {
 
                 resolve();
             })
-            .catch(e => reject(e));
+            .catch (e => reject(e));
     });
 }
 
