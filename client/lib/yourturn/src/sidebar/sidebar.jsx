@@ -3,6 +3,8 @@ import Icon from 'react-fa';
 import Gravatar from 'react-gravatar';
 import {Link} from 'react-router';
 import Timestamp from 'react-time';
+import Badge from 'common/src/badge.jsx';
+import Counter from 'common/src/counter.jsx';
 import 'common/asset/less/yourturn/sidebar.less';
 
 class Sidebar extends React.Component {
@@ -10,7 +12,8 @@ class Sidebar extends React.Component {
         super();
         this.actions = props.userActions;
         this.stores = {
-            user: props.userStore
+            user: props.userStore,
+            fullstop: props.fullstopStore
         };
         this.interval = false;
         this.state = {
@@ -55,7 +58,9 @@ class Sidebar extends React.Component {
     render() {
         let tokeninfo = this.stores.user.getTokenInfo(),
             userinfo = this.stores.user.getUserInfo(),
+            violationCount = this.stores.fullstop.getOwnTotal(),
             {router} = this.context;
+
         return <aside className='sidebar'>
                     <div className='sidebar-content'>
                         <div className='header'>
@@ -140,7 +145,16 @@ class Sidebar extends React.Component {
                             onClick={this.transition.bind(this, 'violation')}>
                             <Link
                                 to='violation'>
-                                Violations <Icon name='warning' />
+                                Violations <Badge
+                                                isDanger={true}>
+                                                {violationCount ?
+                                                <Counter
+                                                    begin={0}
+                                                    time={1000}
+                                                    end={violationCount}/>
+                                                :
+                                                0}
+                                            </Badge> <Icon name='warning' />
                             </Link>
                         </div>
                     </div>

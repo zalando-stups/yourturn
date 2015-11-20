@@ -78,6 +78,8 @@ class ViolationHandler extends React.Component {
 }
 ViolationHandler.displayName = 'ViolationHandler';
 ViolationHandler.willTransitionTo = function(transition, params, query) {
+    // save last visited date
+    FULLSTOP_ACTIONS.saveLastVisited(Date.now());
     if (_.isEmpty(query)) {
         let searchParams = FULLSTOP_STORE.getSearchParams(),
             selectedAccounts = USER_STORE.getUserCloudAccounts(), // these the user has access to

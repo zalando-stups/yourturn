@@ -49,10 +49,19 @@ class LoginHandler extends React.Component {
 
                     YT_FLUX
                         .getActions('user')
-                        .fetchAccounts(info.uid);
+                        .fetchAccounts(info.uid)
+                        .then(accounts => {
+                            YT_FLUX.getActions('fullstop').loadLastVisited();
+                            YT_FLUX
+                                .getActions('fullstop')
+                                .fetchOwnTotal(
+                                    YT_FLUX.getStore('fullstop').getLastVisited(),
+                                    accounts.map(a => a.id));
+                        });
                     YT_FLUX
                         .getActions('user')
                         .fetchUserInfo(info.uid);
+
                     this.context.router.transitionTo(response.metadata.route || '/');
                 })
                 .catch(e => {

@@ -17,13 +17,16 @@
     .header {
         background: @gray-light;
         color: @white;
-        padding-bottom: @padding-small;
+        padding-bottom: @padding-tiny;
+
         .userInfo {
             text-align: center;
+            letter-spacing: 0.025em;
             .userImage {
                 background-color: white;
                 background-size: cover;
                 margin: @padding-tiny auto;
+                border: 2px solid @gray-lighter;
                 background-image: url(../../img/stups-icon.png);
                 width: 75px;
                 height: 75px;
@@ -54,6 +57,10 @@
         padding: @padding-small;
         border-bottom: 1px solid @gray;
 
+        .badge.is-danger {
+            margin-left: @padding-tiny;
+        }
+
         &[data-active="true"] {
             background: @white;
         }
@@ -72,6 +79,9 @@
         &:hover {
             .fa {
                 color: darken(@gray-light, 20%);
+            }
+            .badge.is-danger {
+                background: @red-dark;
             }
         }
     }

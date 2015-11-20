@@ -42,6 +42,14 @@ function getViolationCountIn(state, account) {
     return [];
 }
 
+function getOwnTotal(state) {
+    return state.get('ownAccountsTotal');
+}
+
+function getLastVisited(state) {
+    return state.get('lastVisited');
+}
+
 export {
     getViolations,
     getViolation,
@@ -50,5 +58,7 @@ export {
     getViolationType,
     getViolationTypes,
     getViolationCount,
-    getViolationCountIn
+    getViolationCountIn,
+    getLastVisited,
+    getOwnTotal
 };
