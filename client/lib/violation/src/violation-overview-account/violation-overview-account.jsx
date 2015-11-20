@@ -55,21 +55,25 @@ class ViolationOverviewAccount extends React.Component {
         return <div className='violation-account-overview'>
                     <span>Account {this.props.accounts[this.props.account].name} / {subject}</span>
                     <AutoWidth className='violation-account-overview-chart'>
-                        <Charts.BarChart
-                            data={{
-                                label: 'Violation Count',
-                                values: _.sortByOrder(chartData, ['quantity'], ['desc'])
-                                        .map(c => ({
-                                            x: groupByApplication ? c.type : c.application || '',
-                                            y: c.quantity
-                                        }))
-                            }}
-                            tooltipHtml={(x, y0, y) => y.toString()}
-                            tooltipMode='element'
-                            height={300}
-                            margin={{top: 50, left: 50, right: 25, bottom: 25}}
-                            yScale={yScale}
-                            yAxis={{label: '# Violations', innerTickSize: -10000}} />
+                        {chartData.length ?
+                            <Charts.BarChart
+                                data={{
+                                    label: 'Violation Count',
+                                    values: _.sortByOrder(chartData, ['quantity'], ['desc'])
+                                            .map(c => ({
+                                                x: (groupByApplication ? c.type : c.application) || '',
+                                                y: c.quantity
+                                            }))
+                                }}
+                                tooltipHtml={(x, y0, y) => y.toString()}
+                                tooltipMode='element'
+                                height={300}
+                                margin={{top: 50, left: 50, right: 25, bottom: 25}}
+                                yScale={yScale}
+                                yAxis={{label: '# Violations', innerTickSize: -10000}} />
+                            :
+                            null
+                        }
                     </AutoWidth>
                     <AutoWidth className='violation-account-overview-table'>
                         <SorTable
