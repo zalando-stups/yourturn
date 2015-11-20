@@ -12,6 +12,8 @@ const DEFAULT_PAGING = {
 function FullstopStore(state, action) {
     if (!action || action.type === '@@INIT') {
         return Immutable.fromJS({
+            ownAccountsTotal: 0,
+            lastVisited: Date.now(),
             violations: {},
             violationCount: [],
             violationCountIn: [],
@@ -52,7 +54,8 @@ function FullstopStore(state, action) {
         if (metadata) {
             state = state.set('pagingInfo', Immutable.Map({
                 last: metadata.last,
-                page: metadata.number
+                page: metadata.number,
+                total: metadata.total_elements
             }));
         }
         return state.set('violations', all);
@@ -77,6 +80,10 @@ function FullstopStore(state, action) {
         return state.set('violationCount', Immutable.fromJS(payload));
     } else if (type === Types.RECEIVE_VIOLATION_COUNT_IN) {
         return state.set('violationCountIn', Immutable.fromJS(payload));
+    } else if (type === Types.RECEIVE_OWN_TOTAL) {
+        return state.set('ownAccountsTotal', payload);
+    } else if (type === Types.RECEIVE_LAST_VISITED) {
+        return state.set('lastVisited', payload);
     }
     return state;
 }
@@ -97,6 +104,16 @@ export default class FullstopStoreWrapper extends Store {
         this.register(
             fullstopActions.deleteViolations,
             this.deleteViolations);
+
+        this.register(
+            fullstopActions.loadLastVisited,
+            this.receiveLastVisited);
+
+        this.registerAsync(
+            fullstopActions.fetchOwnTotal,
+            null,
+            this.receiveOwnTotal,
+            null);
 
         this.registerAsync(
             fullstopActions.fetchViolations,
@@ -236,6 +253,24 @@ export default class FullstopStoreWrapper extends Store {
         });
     }
 
+    receiveOwnTotal(total) {
+        this.setState({
+            redux: FullstopStore(this.state.redux, {
+                type: Types.RECEIVE_OWN_TOTAL,
+                payload: total
+            })
+        });
+    }
+
+    receiveLastVisited(date) {
+        this.setState({
+            redux: FullstopStore(this.state.redux, {
+                type: Types.RECEIVE_LAST_VISITED,
+                payload: date
+            })
+        });
+    }
+
     getPagingInfo() {
         return Getters.getPagingInfo(this.state.redux);
     }
@@ -266,5 +301,13 @@ export default class FullstopStoreWrapper extends Store {
 
     getViolationCountIn(account) {
         return Getters.getViolationCountIn(this.state.redux, account);
+    }
+
+    getOwnTotal() {
+        return Getters.getOwnTotal(this.state.redux);
+    }
+
+    getLastVisited() {
+        return Getters.getLastVisited(this.state.redux);
     }
 }

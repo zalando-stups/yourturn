@@ -33,14 +33,21 @@ function fetchData(routes, state) {
     return Promise.all(promises);
 }
 
-let userActions = YT_FLUX.getActions('user');
+let userActions = YT_FLUX.getActions('user'),
+    fullstopActions = YT_FLUX.getActions('fullstop'),
+    fullstopStore = YT_FLUX.getStore('fullstop');
 
 // render the rest
 userActions
     .fetchTokenInfo()
     .then(info => {
+        fullstopActions.loadLastVisited();
         userActions
-            .fetchAccounts(info.uid);
+            .fetchAccounts(info.uid)
+            .then(accounts => {
+                let lastLogin = fullstopStore.getLastVisited();
+                fullstopActions.fetchOwnTotal(lastLogin, accounts.map(a => a.id));
+            })
         userActions
             .fetchUserInfo(info.uid);
     });

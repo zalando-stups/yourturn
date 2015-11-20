@@ -4,6 +4,21 @@ import FULLSTOP_BASE_URL from 'FULLSTOP_BASE_URL';
 import request from 'common/src/superagent';
 import {Provider, RequestConfig, saveRoute} from 'common/src/oauth-provider';
 import {Actions} from 'flummox';
+import Storage from 'common/src/storage';
+
+function fetchOwnTotal(from, accounts) {
+    return request
+            .get(`${FULLSTOP_BASE_URL}/violations`)
+            .accept('json')
+            .query({
+                accounts: accounts,
+                from: from,
+                checked: false
+            })
+            .oauth(Provider, RequestConfig)
+            .exec(saveRoute)
+            .then(res => res.body.total_elements);
+}
 
 function fetchViolations(params) {
     return request
@@ -106,6 +121,15 @@ function updateSearchParams(params) {
     return params;
 }
 
+function saveLastVisited(date) {
+    Storage.set('fullstop_lastVisited', date);
+    return date;
+}
+
+function loadLastVisited() {
+    return Storage.get('fullstop_lastVisited');
+}
+
 // for now wrap in flummox actions
 export default class FullstopActions extends Actions {
     resolveViolation() {
@@ -132,12 +156,24 @@ export default class FullstopActions extends Actions {
         return fetchViolationCountIn(account, params);
     }
 
+    fetchOwnTotal(from, accounts) {
+        return fetchOwnTotal(from, accounts);
+    }
+
     deleteViolations() {
         return deleteViolations();
     }
 
     updateSearchParams(params) {
         return updateSearchParams(params);
+    }
+
+    loadLastVisited() {
+        return loadLastVisited();
+    }
+
+    saveLastVisited(date) {
+        return saveLastVisited(date);
     }
 }
 
@@ -149,6 +185,7 @@ export default class FullstopActions extends Actions {
 //     deleteViolations = createAction(Types.DELETE_VIOLATIONS);
 
 export {
+    fetchOwnTotal,
     fetchViolations,
     fetchViolation,
     fetchViolationTypes,
@@ -156,5 +193,8 @@ export {
     fetchViolationCountIn,
     resolveViolation,
     deleteViolations,
-    updateSearchParams
+    updateSearchParams,
+    fetchOwnTotal,
+    saveLastVisited,
+    loadLastVisited
 };

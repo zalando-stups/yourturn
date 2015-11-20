@@ -25,6 +25,7 @@ class YourTurn extends React.Component {
                                 flux={FLUX}
                                 connectToStores={['user']}>
                                 <Sidebar
+                                    fullstopStore={FLUX.getStore('fullstop')}
                                     userActions={FLUX.getActions('user')}
                                     userStore={FLUX.getStore('user')} />
                             </FlummoxComponent>
