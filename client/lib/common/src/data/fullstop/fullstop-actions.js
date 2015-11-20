@@ -12,7 +12,7 @@ function fetchOwnTotal(from, accounts) {
             .accept('json')
             .query({
                 accounts: accounts,
-                from: from,
+                from: new Date(from).toISOString(),
                 checked: false
             })
             .oauth(Provider, RequestConfig)
@@ -127,7 +127,7 @@ function saveLastVisited(date) {
 }
 
 function loadLastVisited() {
-    return Storage.get('fullstop_lastVisited');
+    return Storage.get('fullstop_lastVisited') || 0;
 }
 
 // for now wrap in flummox actions
