@@ -27,8 +27,10 @@
         "no-underscore-dangle": 0,
         // e.g. search endpoints offer `matched_rank`
         "camelcase": 0,
-        // allow `!!something` 
+        // allow `!!something`
         "no-extra-boolean-cast": 0,
+        // allow line breaks between function calls
+        "no-spaced-func": 0,
         // react rules
         "react/display-name": 1,
         "react/jsx-boolean-value": 1,
