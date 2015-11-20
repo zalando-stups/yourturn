@@ -138,7 +138,7 @@ class VersionDetail extends React.Component {
                             to='application-verApproval'
                             className='btn btn-primary'
                             params={LINK_PARAMS}>
-                            <Icon name='edit' /> Approvals <Badge number={approvals.length} />
+                            <Icon name='edit' /> Approvals <Badge>{approvals.length}</Badge>
                         </Link>
                     </div>
 
