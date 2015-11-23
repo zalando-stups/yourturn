@@ -145,6 +145,14 @@ server.get('/apps', function(req,res) {
                 .keys( applications )
                 .map( function( k ) {
                     return applications[k];
+                })
+                .map(function( a ) {
+                    if (req.query.search) {
+                        a.matched_rank = Math.random() * 3;
+                        a.matched_description = '<b>' + req.query.search + '</b> change could not be applied."]},"detail":{"type":"string","description":"Contains more descriptive text or error';
+                        return a;
+                    }
+                    return a;
                 });
 
     setTimeout( function() {
