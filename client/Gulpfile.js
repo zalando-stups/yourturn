@@ -5,7 +5,6 @@ var fs = require('fs'),
     eslint = require('gulp-eslint'),
     jscs = require('gulp-jscs'),
     args = require('minimist')(process.argv.slice(2)),
-    scm = require('@zalando/node-scm-source'),
     del = require( 'del' ),
     shell = require('gulp-shell'),
     replace = require('gulp-replace'),
@@ -82,10 +81,6 @@ gulp.task('format', function() {
             }));
 });
 
-gulp.task('scm-source', function(done) {
-    fs.writeFile('../scm-source.json', JSON.stringify(scm(), null, 4), done);
-});
-
 // lints the source code using .eslintrc
 gulp.task('lint', function() {
     return gulp
@@ -147,7 +142,7 @@ gulp.task('cachebust', ['clean'], function() {
                 .pipe(gulp.dest('dist'));
 });
 
-gulp.task('build', ['pack', 'inline-atf-css', 'copy', 'scm-source']);
+gulp.task('build', ['pack', 'inline-atf-css', 'copy']);
 
 gulp.task('watch', ['watch:js']);
 gulp.task('default', ['watch']);
