@@ -15,7 +15,7 @@ class SearchResult extends React.Component {
             return <li className='search-result'>
                         <header>{this.props.name}</header>
                         {body}
-                    </li>
+                    </li>;
         }
         return <li className='search-result'>
                     <header>
@@ -72,7 +72,7 @@ class Search extends React.Component {
     render() {
         let {term} = this.state,
             results = this.stores.search.getSearchResults(term),
-            header =  <div>
+            header = <div>
                         <h2>Search</h2>
 
                         <div className='form'>
@@ -99,9 +99,9 @@ class Search extends React.Component {
 
                     <h4>Applications</h4>
 
-                    {results['kio'] && results['kio'].length ?
+                    {results.kio && results.kio.length ?
                         <ol>
-                            {results['kio'].map(
+                            {results.kio.map(
                                 app => <SearchResult name={app.name}
                                                description={app.matched_description}
                                                link={app._url} />)}
@@ -111,9 +111,9 @@ class Search extends React.Component {
 
                     <h4>APIs</h4>
 
-                    {results['twintip'] && results['twintip'].length ?
+                    {results.twintip && results.twintip.length ?
                         <ol>
-                            {results['twintip'].map(
+                            {results.twintip.map(
                                 app => <SearchResult name={app.name}
                                                description={app.matched_description}
                                                link={app._url} />)}
@@ -123,9 +123,9 @@ class Search extends React.Component {
 
                     <h4>Docker images</h4>
 
-                    {results['pierone'] && results['pierone'].length ?
+                    {results.pierone && results.pierone.length ?
                         <ol>
-                            {results['pierone'].map(
+                            {results.pierone.map(
                                 app => <SearchResult name={app.name}
                                                description={app.matched_description}
                                                link={app._url} />)}
