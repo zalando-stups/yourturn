@@ -4,6 +4,34 @@ import _ from 'lodash';
 import {Services} from 'common/src/data/services';
 import 'common/asset/less/yourturn/search.less';
 
+class SearchResult extends React.Component {
+    constructor() {
+        super();
+    }
+
+    render() {
+        let body = <quote dangerouslySetInnerHTML={{__html: this.props.description}} />;
+        if (!this.props.link) {
+            return <li className='search-result'>
+                        <header>{this.props.name}</header>
+                        {body}
+                    </li>;
+        }
+        return <li className='search-result'>
+                    <header>
+                        <a href={this.props.link}>{this.props.name}</a>
+                    </header>
+                    {body}
+                </li>;
+    }
+}
+SearchResult.displayName = 'SearchResult';
+SearchResult.propTypes = {
+    name: React.PropTypes.string,
+    description: React.PropTypes.string,
+    link: React.PropTypes.string
+};
+
 class Search extends React.Component {
     constructor(props) {
         super();
@@ -43,45 +71,68 @@ class Search extends React.Component {
 
     render() {
         let {term} = this.state,
-            results = this.stores.search.getSearchResults(term);
+            results = this.stores.search.getSearchResults(term),
+            header = <div>
+                        <h2>Search</h2>
 
-        return <div className='search'>
-                    <h2>Search</h2>
-
-                    <div className='form'>
-                        <div className='input-group'>
-                            <div className='input-addon'>
-                                <Icon name='search' />
+                        <div className='form'>
+                            <div className='input-group'>
+                                <div className='input-addon'>
+                                    <Icon fixedWidth name='search' />
+                                </div>
+                                <input
+                                    autoFocus='autofocus'
+                                    value={term}
+                                    onChange={this.updateTerm.bind(this)}
+                                    onKeyUp={this._debouncedSearch.bind(this)}
+                                    type='search'
+                                    aria-label='Enter your search'
+                                    placeholder='yourturn' />
                             </div>
-                            <input
-                                autoFocus='autofocus'
-                                value={term}
-                                onChange={this.updateTerm.bind(this)}
-                                onKeyUp={this._debouncedSearch.bind(this)}
-                                type='search'
-                                aria-label='Enter your search'
-                                placeholder='yourturn' />
                         </div>
-                    </div>
+                        </div>;
+        if (!this.state.term) {
+            return <div className='search'>{header}</div>;
+        }
+        return <div className='search'>
+                    {header}
 
-                    {term.length ?
-                        (results.length ?
-                            <div>
-                                <h4 className='searchResult-headline'>Results for “{term}”</h4>
-                                <ol>
-                                    {results.map(
-                                        (result, i) => <li key={i}>
-                                                        {result._url ?
-                                                            <a href={result._url}>{result.name}</a>
-                                                            :
-                                                            result.name} <small>({result._source})</small>
-                                                        </li>)}
-                                </ol>
-                            </div>
-                            :
-                            <h4 className='searchResult-headline'>No results for “{term}”</h4>)
+                    <h4>Applications</h4>
+
+                    {results.kio && results.kio.length ?
+                        <ol>
+                            {results.kio.map(
+                                app => <SearchResult name={app.name}
+                                               description={app.matched_description}
+                                               link={app._url} />)}
+                        </ol>
                         :
-                        null}
+                        <span>No applications found for {term}</span>}
+
+                    <h4>APIs</h4>
+
+                    {results.twintip && results.twintip.length ?
+                        <ol>
+                            {results.twintip.map(
+                                app => <SearchResult name={app.name}
+                                               description={app.matched_description}
+                                               link={app._url} />)}
+                        </ol>
+                        :
+                        <span>No APIs found for {term}</span>}
+
+                    <h4>Docker images</h4>
+
+                    {results.pierone && results.pierone.length ?
+                        <ol>
+                            {results.pierone.map(
+                                app => <SearchResult name={app.name}
+                                               description={app.matched_description}
+                                               link={app._url} />)}
+                        </ol>
+                        :
+                        <span>No Docker images found for {term}</span>}
+
                 </div>;
     }
 }

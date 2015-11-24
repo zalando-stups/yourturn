@@ -1,5 +1,5 @@
 /**
- * Returns the available search results for `term`.
+ * Returns the available search results for `term` grouped by source.
  *
  * @param  {object} state Current state of the store
  * @param  {String} term
@@ -7,7 +7,7 @@
  */
 function getSearchResults(state, term) {
     let results = state.get(term);
-    return results ? results.toJS() : [];
+    return results ? results.groupBy(r => r.get('_source', false)).toJS() : [];
 }
 
 /**

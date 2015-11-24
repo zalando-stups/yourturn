@@ -49,10 +49,12 @@ describe('The search store', () => {
         results._source = 'twintip';
         store.receiveSearchResultsFrom(results);
         let receivedResults = store.getSearchResults('test');
-
-        expect(receivedResults.length).to.equal(2);
-        expect(receivedResults[0].matched_rank).to.equal(2);
-        expect(receivedResults[1].matched_rank).to.equal(1);
+        // should be grouped
+        expect(Object.keys(receivedResults).length).to.equal(1);
+        // inside groups it should be ranked
+        expect(receivedResults.twintip.length).to.equal(2);
+        expect(receivedResults.twintip[0].matched_rank).to.equal(2);
+        expect(receivedResults.twintip[1].matched_rank).to.equal(1);
     });
 });
 
