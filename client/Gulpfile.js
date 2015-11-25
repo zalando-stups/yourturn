@@ -7,12 +7,10 @@ var fs = require('fs'),
     less = require('gulp-less'),
     eslint = require('gulp-eslint'),
     jscs = require('gulp-jscs'),
-    args = require('minimist')(process.argv.slice(2)),
     del = require( 'del' ),
     shell = require('gulp-shell'),
     replace = require('gulp-replace'),
     rename = require('gulp-rename'),
-    critical = require('critical'),
     webpack = require('webpack');
 
 var LODASH_FUNCS = [
