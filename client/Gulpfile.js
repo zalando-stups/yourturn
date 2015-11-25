@@ -2,14 +2,15 @@ var fs = require('fs'),
     path = require('path'),
     gulp = require('gulp'),
     gutil= require('gulp-util'),
+    autoprefix = require('gulp-autoprefixer'),
+    minifyCSS = require('gulp-minify-css'),
+    less = require('gulp-less'),
     eslint = require('gulp-eslint'),
     jscs = require('gulp-jscs'),
-    args = require('minimist')(process.argv.slice(2)),
     del = require( 'del' ),
     shell = require('gulp-shell'),
     replace = require('gulp-replace'),
     rename = require('gulp-rename'),
-    critical = require('critical'),
     webpack = require('webpack');
 
 var LODASH_FUNCS = [
@@ -47,6 +48,10 @@ function remove(globs) {
     return function(done) {
         del(globs, done);
     };
+}
+
+function readFile(file) {
+    return String(fs.readFileSync(path.join(__dirname + file)));
 }
 
 // removes the output folder
@@ -96,38 +101,19 @@ gulp.task('copy', function() {
             .pipe(gulp.dest('dist'));
 });
 
-gulp.task('extract-atf-css', ['cachebust', 'pack'], function(done) {
-    var html = String(fs.readFileSync(path.join(__dirname + '/dist/index-prod.html')));
-    // remove some stuff that critical doesn't like
-    html = html
-            .replace(/\?v=\d+/gi, '')
-            .replace(/\/dist\//gi, '');
-
-    critical.generate({
-        base: './dist',
-        html: html,
-        dest: 'site.css',
-        dimensions: [{
-            // generic 13" laptop
-            width: 1280,
-            height: 800
-        }, {
-            // iphone 4s
-            width: 640,
-            height: 960
-        }],
-        minify: true
-    }, function(err, css) {
-        if (err) {
-            console.log(err);
-            return;
-        }
-        done();
-    });
+gulp.task('extract-inline-css', function(done) {
+    return gulp
+            .src('lib/common/asset/less/*.less')
+            .pipe(less( {
+                paths: [path.join(__dirname, 'lib/common/asset/less/')]
+            }))
+            .pipe(autoprefix())
+            .pipe(minifyCSS())
+            .pipe(gulp.dest('dist/css'));
 });
 
-gulp.task('inline-atf-css', ['extract-atf-css'], function(done) {
-    var inline = String(fs.readFileSync(path.join(__dirname + '/dist/site.css')));
+gulp.task('inline-css', ['cachebust', 'extract-inline-css'], function(done) {
+    var inline = readFile('/dist/css/grid.css');
     return gulp
             .src('dist/index-prod.html')
             .pipe(replace('${inline}', inline))
@@ -142,7 +128,7 @@ gulp.task('cachebust', ['clean'], function() {
                 .pipe(gulp.dest('dist'));
 });
 
-gulp.task('build', ['pack', 'inline-atf-css', 'copy']);
+gulp.task('build', ['pack', 'inline-css', 'copy']);
 
 gulp.task('watch', ['watch:js']);
 gulp.task('default', ['watch']);

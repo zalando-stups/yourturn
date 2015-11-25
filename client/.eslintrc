@@ -32,9 +32,9 @@
         // allow line breaks between function calls
         "no-spaced-func": 0,
         // react rules
+        "jsx-quotes": [1, "prefer-single"],
         "react/display-name": 1,
-        "react/jsx-boolean-value": 1,
-        "react/jsx-quotes": 1,
+        "react/jsx-boolean-value": 0,
         "react/jsx-no-undef": 1,
         "react/jsx-uses-react": 1,
         "react/jsx-uses-vars": 1,

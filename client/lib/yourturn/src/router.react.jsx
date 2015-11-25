@@ -9,7 +9,7 @@ import YourTurn from './app.jsx';
 import Search from 'yourturn/src/search/search.jsx';
 
 import {Provider} from 'common/src/oauth-provider';
-import {Error} from 'oauth2-client-js';
+import {Error} from '@zalando/oauth2-client-js';
 import validate from './validate-oauth-response';
 
 class LoginHandler extends React.Component {
