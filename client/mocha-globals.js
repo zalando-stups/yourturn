@@ -5,7 +5,7 @@ var chai = require('chai'),
     assign = require('object-assign'),
     HTML = '<!doctype html><html><body></body></html>',
     Mitm = require('mitm'),
-    OAuth = require('oauth2-client-js'),
+    OAuth = require('@zalando/oauth2-client-js'),
     localStorage = new OAuth.MemoryStorage(),
     React,
     TestUtils;
