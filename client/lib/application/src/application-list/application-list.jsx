@@ -63,7 +63,10 @@ class ApplicationList extends React.Component {
             teamApps = apps.filter(app => userAccIds.indexOf(app.team_id) >= 0),
             shortApps = !showAll && otherApps.length > showCount ? _.slice(otherApps, 0, showCount) : otherApps,
             remainingAppsCount = otherApps.length - showCount,
-            latestVersions = teamApps.map(app => this.stores.kio.getLatestApplicationVersion(app.id));
+            latestVersions = teamApps.reduce((prev, app) => {
+                prev[app.id] = this.stores.kio.getLatestApplicationVersion(app.id);
+                return prev;
+            }, {});
 
         return <div className='applicationList'>
                     <h2 className='applicationList-headline'>Applications</h2>
@@ -133,15 +136,15 @@ class ApplicationList extends React.Component {
                                         </td>
                                         <td>{ta.team_id}</td>
                                         <td>
-                                        {latestVersions[i] ?
+                                        {latestVersions[ta.id] ?
                                             <div>
                                                 {ta.active ?
                                                     <Link
                                                         className='btn btn-default btn-small applicationList-approvalButton'
-                                                        title={'Approve version ' + latestVersions[i].id + ' of ' + ta.name}
+                                                        title={'Approve version ' + latestVersions[ta.id].id + ' of ' + ta.name}
                                                         to='application-verApproval'
                                                         params={{
-                                                            versionId: latestVersions[i].id,
+                                                            versionId: latestVersions[ta.id].id,
                                                             applicationId: ta.id
                                                         }}> <Icon name='check' />
                                                     </Link>
@@ -150,10 +153,10 @@ class ApplicationList extends React.Component {
                                                  <Link
                                                     to='application-verDetail'
                                                     params={{
-                                                        versionId: latestVersions[i].id,
+                                                        versionId: latestVersions[ta.id].id,
                                                         applicationId: ta.id
                                                     }}>
-                                                    {latestVersions[i].id}
+                                                    {latestVersions[ta.id].id}
                                                 </Link>
                                             </div>
                                             :
