@@ -1,11 +1,8 @@
 /* global require, process */
 var fs = require('fs'),
     winston = require('winston'),
-    camel = require('camel-case'),
     yml2js = require('js-yaml'),
-    xml2js = require('xml2js').parseString,
-    NEW_RELIC_CONFIG = '/agents/newrelic/newrelic.yml',
-    APPDYNAMICS_CONFIG = '/agents/appdynamics-jvm/conf/controller-info.xml';
+    NEW_RELIC_CONFIG = '/agents/newrelic/newrelic.yml';
 
 winston.remove(winston.transports.Console);
 winston.add(winston.transports.Console, {
@@ -17,51 +14,19 @@ winston.add(winston.transports.Console, {
 // check if there is a new relic config file
 if (fs.existsSync(NEW_RELIC_CONFIG)) {
     try {
-        var config = yml2js.safeLoad(fs.readFileSync(NEW_RELIC_CONFIG), 'utf8');
-        winston.debug('Writing newrelic.js', config);
-        fs.writeFileSync('newrelic.js', 'exports.config = ' + JSON.stringify(config.common) + ';');
+        var yaml = yml2js.safeLoad(fs.readFileSync(NEW_RELIC_CONFIG), 'utf8').common,
+            config = {
+                app_name: [ yaml.app_name ],
+                license_key: yaml.license_key,
+                logging: {
+                    level: yaml.log_level
+                }
+            };
+        fs.writeFileSync('newrelic.js', 'exports.config = ' + JSON.stringify(config) + ';');
         require('newrelic');
     } catch (e) {
         winston.error('Could not load New Relic config', e);
         return;
-    }
-} else if (fs.existsSync(APPDYNAMICS_CONFIG)) {
-    // OR, YOU KNOW, APP DYNAMICS
-    try {
-        var xmlFile = String(fs.readFileSync(APPDYNAMICS_CONFIG));
-        xml2js(xmlFile, function(err, result) {
-            if (err) {
-                winston.error('Could not parse appdynamics config XML. Error: %s. Content: %s.', err.message, xmlFile);
-                return;
-            }
-            result = result['controller-info'];
-            var config = Object
-                            .keys(result)
-                            .map(function(key) {
-                                return [camel(key), result[key][0]];
-                            })
-                            .reduce(function(prev, cur) {
-                                var key = cur[0] === 'controllerHost' ? 'controllerHostName' : cur[0],
-                                    val = cur[1];
-                                // convert string values
-                                if (val === 'true') {
-                                    prev[key] = true;
-                                } else if (val === 'false') {
-                                    prev[key] = false;
-                                } else if (/^[0-9]+$/.test(val)) {
-                                    prev[key] = parseInt(val, 10);
-                                } else {
-                                    prev[key] = val;
-                                }
-                                return prev;
-                            }, {});
-            config.noNodeNameSuffix = true;
-            winston.info('Using appdynamics config: %s:', JSON.stringify(config, null, 4));
-            require('appdynamics').profile(config);
-            winston.info('Successfully started appdynamics.');
-        });
-    } catch(err) {
-        winston.error('Could not read appdynamics config XML.', err.message);
     }
 }
 

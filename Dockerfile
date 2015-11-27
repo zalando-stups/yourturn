@@ -1,10 +1,7 @@
-FROM node:0.10.38
+FROM node:5.1.0
 
 MAINTAINER Zalando SE
 
-RUN npm install appdynamics@4.0.7
-RUN npm install xml2js@0.4.9
-RUN npm install camel-case@1.1.2
 RUN npm install newrelic@1.24.0
 RUN npm install winston@2.1.1
 RUN npm install superagent@1.4.0
@@ -30,6 +27,8 @@ RUN touch /www/dist/env.js && chmod 0666 /www/dist/env.js
 
 # create new relic log directory
 RUN touch /www/newrelic_agent.log && chmod 0666 /www/newrelic_agent.log
+# new relic npm config
+RUN touch /www/newrelic.js && chmod 0666 /www/newrelic.js
 
 # expose and start
 WORKDIR /www/
