@@ -2,9 +2,11 @@ import React from 'react';
 import {Route, DefaultRoute} from 'react-router';
 import FluxComponent from 'flummox/component';
 import FLUX from 'yourturn/src/flux';
+import REDUX from 'yourturn/src/redux';
 import {parseArtifact} from 'application/src/util';
-import {requireAccounts} from 'common/src/util';
+import {requireAccounts, bindActionsToStore} from 'common/src/util';
 
+import * as NotificationActions from 'common/src/data/notification/notification-actions';
 import ApplicationList from './application-list/application-list.jsx';
 import ApplicationForm from './application-form/application-form.jsx';
 import ApplicationDetail from './application-detail/application-detail.jsx';
@@ -24,7 +26,7 @@ const MINT_ACTIONS = FLUX.getActions('mint'),
       KIO_ACTIONS = FLUX.getActions('kio'),
       KIO_STORE = FLUX.getStore('kio'),
       ESSENTIALS_STORE = FLUX.getStore('essentials'),
-      NOTIFICATION_ACTIONS = FLUX.getActions('notification'),
+      NOTIFICATION_ACTIONS = bindActionsToStore(REDUX, NotificationActions),
       TWINTIP_STORE = FLUX.getStore('twintip');
 
 class AppListHandler extends React.Component {

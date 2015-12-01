@@ -1,5 +1,7 @@
 import React from 'react';
 import {RouteHandler} from 'react-router';
+import REDUX from 'yourturn/src/redux';
+import {Provider} from 'react-redux';
 import FLUX from 'yourturn/src/flux';
 import FlummoxComponent from 'flummox/component';
 import Sidebar from './sidebar/sidebar.jsx';
@@ -12,13 +14,9 @@ class YourTurn extends React.Component {
 
     render() {
         return <div className='yourturn'>
-                    <FlummoxComponent
-                        flux={FLUX}
-                        connectToStores={['notification']}>
-                        <NotificationBar
-                            notificationActions={FLUX.getActions('notification')}
-                            notificationStore={FLUX.getStore('notification')}/>
-                    </FlummoxComponent>
+                    <Provider store={REDUX}>
+                        {() => <NotificationBar /> }
+                    </Provider>
                     <div className='grid with-gutter'>
                         <div className='grid-col col-1-4'>
                             <FlummoxComponent
@@ -40,4 +38,5 @@ class YourTurn extends React.Component {
     }
 }
 YourTurn.displayName = 'YourTurn';
+
 export default YourTurn;

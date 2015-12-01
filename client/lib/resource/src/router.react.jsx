@@ -8,12 +8,15 @@ import ResourceList from './resource-list/resource-list.jsx';
 import ResourceDetail from './resource-detail/resource-detail.jsx';
 import ScopeDetail from './scope-detail/scope-detail.jsx';
 import ScopeForm from './scope-form/scope-form.jsx';
+import REDUX from 'yourturn/src/redux';
+import {bindActionsToStore} from 'common/src/util';
+import * as NotificationActions from 'common/src/data/notification/notification-actions';
 
 const USER_STORE = FLUX.getStore('user'),
       USER_ACTIONS = FLUX.getActions('user'),
       ESSENTIALS_ACTIONS = FLUX.getActions('essentials'),
       ESSENTIALS_STORE = FLUX.getStore('essentials'),
-      NOTIFICATION_ACTIONS = FLUX.getActions('notification');
+      NOTIFICATION_ACTIONS = bindActionsToStore(REDUX, NotificationActions);
 
 // QUICKFIX #133
 function isWhitelisted(token) {

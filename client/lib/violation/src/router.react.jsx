@@ -2,9 +2,11 @@ import React from 'react';
 import {Route, DefaultRoute} from 'react-router';
 import FlummoxComponent from 'flummox/component';
 import FLUX from 'yourturn/src/flux';
+import REDUX from 'yourturn/src/redux';
 import Violation from './violation/violation.jsx';
 import ViolationDetail from './violation-detail/violation-detail.jsx';
-import {requireAccounts} from 'common/src/util';
+import {requireAccounts, bindActionsToStore} from 'common/src/util';
+import * as NotificationActions from 'common/src/data/notification/notification-actions';
 import moment from 'moment';
 import Icon from 'react-fa';
 import lzw from 'lz-string';
@@ -13,7 +15,7 @@ import _ from 'lodash';
 const FULLSTOP_ACTIONS = FLUX.getActions('fullstop'),
       FULLSTOP_STORE = FLUX.getStore('fullstop'),
       USER_STORE = FLUX.getStore('user'),
-      NOTIFICATION_ACTIONS = FLUX.getActions('notification'),
+      NOTIFICATION_ACTIONS = bindActionsToStore(REDUX, NotificationActions),
       TEAM_ACTIONS = FLUX.getActions('team'),
       TEAM_STORE = FLUX.getStore('team');
 

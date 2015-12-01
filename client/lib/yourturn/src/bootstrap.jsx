@@ -71,12 +71,3 @@ router.run(
             }
         });
     });
-
-
-/**
- * Continually dismiss old notifications.
- */
-setInterval(() => {
-    YT_FLUX.getActions('notification')
-    .removeNotificationsOlderThan(5000);
-}, 5000);

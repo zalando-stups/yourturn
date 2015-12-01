@@ -7,10 +7,15 @@ import ResRoutes from 'resource/src/router.react.jsx';
 import VioRoutes from 'violation/src/router.react.jsx';
 import YourTurn from './app.jsx';
 import Search from 'yourturn/src/search/search.jsx';
+import REDUX from 'yourturn/src/redux';
+import {bindActionsToStore} from 'common/src/util';
+import * as NotificationActions from 'common/src/data/notification/notification-actions';
 
 import {Provider} from 'common/src/oauth-provider';
 import {Error} from '@zalando/oauth2-client-js';
 import validate from './validate-oauth-response';
+
+const NOTIFICATION_ACTIONS = bindActionsToStore(REDUX, NotificationActions);
 
 class LoginHandler extends React.Component {
     constructor() {
@@ -22,8 +27,7 @@ class LoginHandler extends React.Component {
         try {
             response = Provider.parse(window.location.hash);
         } catch (err) {
-            YT_FLUX
-            .getActions('notification')
+            NOTIFICATION_ACTIONS
             .addNotification(
                 'OAuth: Unexpected response. This should not happen.',
                 'error');
@@ -31,8 +35,7 @@ class LoginHandler extends React.Component {
         }
         if (response) {
             if (response instanceof Error) {
-                return YT_FLUX
-                            .getActions('notification')
+                return NOTIFICATION_ACTIONS
                             .addNotification(
                                 'OAuth: ' + response.error + ' ' + response.getMessage(),
                                 'error');

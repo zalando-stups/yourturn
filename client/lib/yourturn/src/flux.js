@@ -12,9 +12,6 @@ import KioStore from 'common/src/data/kio/kio-store';
 import MintActions from 'common/src/data/mint/mint-actions';
 import MintStore from 'common/src/data/mint/mint-store';
 
-import NotificationActions from 'common/src/data/notification/notification-actions';
-import NotificationStore from 'common/src/data/notification/notification-store';
-
 import PieroneActions from 'common/src/data/pierone/pierone-actions';
 import PieroneStore from 'common/src/data/pierone/pierone-store';
 
@@ -45,9 +42,6 @@ class YourturnFlux extends Flummox {
 
         this.createActions('mint', MintActions);
         this.createStore('mint', MintStore, this);
-
-        this.createActions('notification', NotificationActions);
-        this.createStore('notification', NotificationStore, this);
 
         this.createActions('pierone', PieroneActions);
         this.createStore('pierone', PieroneStore, this);

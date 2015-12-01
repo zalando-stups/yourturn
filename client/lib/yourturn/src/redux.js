@@ -1,12 +1,10 @@
-import {createRedux, createDispatcher, composeStores} from 'redux';
+import {createRedux, applyMiddleware, combineReducers, createStore} from 'redux';
 import promiseSupport from 'redux-promise';
-import NotificationStore from 'common/src/data/notification/store';
+import NotificationStore from 'common/src/data/notification/notification-store';
 
-const STORES = composeStores({
+const STORE = combineReducers({
         notifications: NotificationStore
     }),
-    DISPATCHER = createDispatcher(
-        STORES,
-        [promiseSupport]);
+    createWithMiddleware = applyMiddleware(promiseSupport)(createStore);
 
-export default createRedux(DISPATCHER);
+export default createWithMiddleware(STORE);

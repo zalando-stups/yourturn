@@ -22,6 +22,22 @@ function createActionTypes(types) {
     {});
 }
 
+function dispatchIn(store, action) {
+    return store.dispatch(action);
+}
+
+function bindActionsToStore(store, actions) {
+    return Object
+            .keys(actions)
+            .reduce((prev, key) => {
+                prev[key] = function() {
+                    return dispatchIn(store, actions[key].apply(null, arguments));
+                }
+                return prev;
+            },
+            {});
+}
+
 function merge(dest, src) {
     let result = dest || {};
     Object
@@ -36,5 +52,6 @@ function merge(dest, src) {
 export {
     requireAccounts,
     createActionTypes,
-    merge
+    merge,
+    bindActionsToStore
 };

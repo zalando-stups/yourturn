@@ -1,6 +1,5 @@
-// import {createAction} from 'redux-actions';
-// import * as Type from './notification-types';
-import {Actions} from 'flummox';
+import {createAction} from 'redux-actions';
+import * as Type from './notification-types';
 
 function addNotification(message, type) {
     return [message, type];
@@ -14,30 +13,12 @@ function removeNotificationsOlderThan(ms) {
     return ms;
 }
 
-
-class NotificationActions extends Actions {
-
-    addNotification(message, type) {
-        return addNotification(message, type || 'default');
-    }
-
-    removeNotification(id) {
-        return removeNotification(id);
-    }
-
-    removeNotificationsOlderThan(ms) {
-        return removeNotificationsOlderThan(ms);
-    }
-}
-
-export default NotificationActions;
-
-// let addNotification = createAction(Type.ADD),
-//     removeNotification = createAction(Type.REMOVE),
-//     removeNotificationsOlderThan = createAction(Type.REMOVE_OLD);
+let addAction = createAction(Type.ADD_NOTIFICATION, addNotification),
+    removeAction = createAction(Type.REMOVE_NOTIFICATION, removeNotification),
+    removeOldAction = createAction(Type.REMOVE_NOTIFICATIONS_OLDER_THAN, removeNotificationsOlderThan);
 
 export {
-    addNotification as addNotification,
-    removeNotification as removeNotification,
-    removeNotificationsOlderThan as removeNotificationsOlderThan
+    addAction as addNotification,
+    removeAction as removeNotification,
+    removeOldAction as removeNotificationsOlderThan
 };
