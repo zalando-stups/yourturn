@@ -4,8 +4,10 @@ import REDUX from 'yourturn/src/redux';
 import {Provider} from 'react-redux';
 import FLUX from 'yourturn/src/flux';
 import FlummoxComponent from 'flummox/component';
+import {Provider} from 'react-redux';
 import Sidebar from './sidebar/sidebar.jsx';
 import NotificationBar from './notification-bar/notification-bar.jsx';
+
 
 class YourTurn extends React.Component {
     constructor() {
