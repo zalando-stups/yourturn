@@ -6,9 +6,6 @@ import EssentialsStore from 'common/src/data/essentials/essentials-store';
 import FullstopActions from 'common/src/data/fullstop/fullstop-actions';
 import FullstopStore from 'common/src/data/fullstop/fullstop-store';
 
-import KioActions from 'common/src/data/kio/kio-actions';
-import KioStore from 'common/src/data/kio/kio-store';
-
 import MintActions from 'common/src/data/mint/mint-actions';
 import MintStore from 'common/src/data/mint/mint-store';
 
@@ -36,9 +33,6 @@ class YourturnFlux extends Flummox {
 
         this.createActions('fullstop', FullstopActions);
         this.createStore('fullstop', FullstopStore, this);
-
-        this.createActions('kio', KioActions);
-        this.createStore('kio', KioStore, this);
 
         this.createActions('mint', MintActions);
         this.createStore('mint', MintStore, this);

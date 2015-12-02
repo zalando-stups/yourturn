@@ -72,4 +72,4 @@ class NotificationBar extends React.Component {
 NotificationBar.displayName = 'NotificationBar';
 
 
-export default connect(state => state)(NotificationBar);
+export default connect(state => ({notifications: state.notifications}))(NotificationBar);

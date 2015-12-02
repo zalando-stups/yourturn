@@ -1,5 +1,8 @@
 import _ from 'lodash';
-import {Actions} from 'flummox';
+import {createAction} from 'redux-actions';
+import Type from './kio-types';
+
+import {flummoxCompatWrap} from 'common/src/util';
 import request from 'common/src/superagent';
 import {Services} from 'common/src/data/services';
 import {Provider, RequestConfig, saveRoute} from 'common/src/oauth-provider';
@@ -160,59 +163,26 @@ function saveApproval(applicationId, versionId, approval) {
             });
 }
 
+let fetchAppsAction = flummoxCompatWrap(createAction(Type.FETCH_APPLICATIONS, fetchApplications)),
+    fetchAppAction = flummoxCompatWrap(createAction(Type.FETCH_APPLICATION, fetchApplication)),
+    saveAppAction = createAction(Type.SAVE_APPLICATION, saveApplication),
+    saveAppCritAction = createAction(Type.SAVE_APPLICATION_CRITICALITY, saveApplicationCriticality),
+    fetchVersAction = createAction(Type.FETCH_APPLICATION_VERSIONS, fetchApplicationVersions),
+    fetchVerAction = createAction(Type.FETCH_APPLICATION_VERSION, fetchApplicationVersion),
+    saveVerAction = createAction(Type.SAVE_APPLICATION_VERSION, saveApplicationVersion),
+    fetchApprovalTypesAction = createAction(Type.FETCH_APPROVAL_TYPES, fetchApprovalTypes),
+    fetchApprovalsAction = createAction(Type.FETCH_APPROVALS, fetchApprovals),
+    saveApprovalAction = createAction(Type.SAVE_APPROVAL, saveApproval);
+
 export {
-    fetchApplications,
-    fetchApplication,
-    saveApplication,
-    saveApplicationCriticality,
-    fetchApplicationVersions,
-    fetchApplicationVersion,
-    saveApplicationVersion,
-    fetchApprovalTypes,
-    fetchApprovals,
-    saveApproval
+    fetchAppsAction as fetchApplications,
+    fetchAppAction as fetchApplication,
+    saveAppAction as saveApplication,
+    saveAppCritAction as saveApplicationCriticality,
+    fetchVersAction as fetchApplicationVersions,
+    fetchVerAction as fetchApplicationVersion,
+    saveVerAction as saveApplicationVersion,
+    fetchApprovalTypesAction as fetchApprovalTypes,
+    fetchApprovalsAction as fetchApprovals,
+    saveApprovalAction as saveApproval
 };
-
-class KioActions extends Actions {
-    fetchApplications() {
-        return fetchApplications();
-    }
-
-    fetchApplication(id) {
-        return fetchApplication(id);
-    }
-
-    saveApplication(id, app) {
-        return saveApplication(id, app);
-    }
-
-    saveApplicationCriticality(id, criticality) {
-        return saveApplicationCriticality(id, criticality);
-    }
-
-    fetchApplicationVersions(id) {
-        return fetchApplicationVersions(id);
-    }
-
-    fetchApplicationVersion(id, ver) {
-        return fetchApplicationVersion(id, ver);
-    }
-
-    saveApplicationVersion(applicationId, versionId, version) {
-        return saveApplicationVersion(applicationId, versionId, version);
-    };
-
-    fetchApprovalTypes(applicationId) {
-        return fetchApprovalTypes(applicationId);
-    }
-
-    fetchApprovals(applicationId, versionId) {
-        return fetchApprovals(applicationId, versionId);
-    }
-
-    saveApproval(applicationId, versionId, approval) {
-        return saveApproval(applicationId, versionId, approval);
-    }
-}
-
-export default KioActions;

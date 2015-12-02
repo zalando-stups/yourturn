@@ -1,6 +1,6 @@
 /** global Date */
 import uniq from 'uniqueid';
-import * as Types from './notification-types';
+import Types from './notification-types';
 
 function NotificationStore(notifications = [], action) {
     if (!action) {

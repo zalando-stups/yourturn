@@ -12,6 +12,10 @@ var KioStore = combineReducers({
     approvals
 });
 
+export {
+    KioStore
+};
+
 class KioStoreWrapper extends Store {
     constructor(flux) {
         super();

@@ -1,5 +1,5 @@
 import {createAction} from 'redux-actions';
-import * as Type from './notification-types';
+import Type from './notification-types';
 
 function addNotification(message, type) {
     return [message, type];

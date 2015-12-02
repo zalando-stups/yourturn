@@ -2,6 +2,8 @@ import React from 'react';
 import Router from 'react-router';
 import ROUTES from './router.react.jsx';
 import YT_FLUX from './flux';
+import REDUX from './redux';
+import {Provider} from 'react-redux';
 import DefaultError from 'common/src/error.jsx';
 
 import 'common/asset/less/base.less';
@@ -63,10 +65,14 @@ router.run(
             if (authError !== true) {
                 // if auth error true => everythings good
                 // I KNOW!
-                React.render(<DefaultError error={authError} />,
+                React.render(<Provider store={REDUX}>
+                                {() => <DefaultError error={authError} />}
+                             </Provider>,
                              document.body);
             } else {
-                React.render(<Handler flux={YT_FLUX}/>,
+                React.render(<Provider store={REDUX}>
+                               {() => <Handler flux={YT_FLUX}/>}
+                             </Provider>,
                              document.body);
             }
         });

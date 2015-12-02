@@ -1,10 +1,15 @@
 import {createRedux, applyMiddleware, combineReducers, createStore} from 'redux';
-import promiseSupport from 'redux-promise';
+import thunk from 'redux-thunk';
+import createLogger from 'redux-logger';
+import {reduxPromiseMiddleware, flummoxCompatMiddleware} from 'common/src/util';
 import NotificationStore from 'common/src/data/notification/notification-store';
+import {KioStore} from 'common/src/data/kio/kio-store';
 
-const STORE = combineReducers({
-        notifications: NotificationStore
+const logger = createLogger(),
+    STORE = combineReducers({
+        notifications: NotificationStore,
+        kio: KioStore
     }),
-    createWithMiddleware = applyMiddleware(promiseSupport)(createStore);
+    createWithMiddleware = applyMiddleware(thunk, flummoxCompatMiddleware, reduxPromiseMiddleware, logger)(createStore);
 
 export default createWithMiddleware(STORE);

@@ -8,7 +8,6 @@ class ApplicationList extends React.Component {
     constructor(props) {
         super();
         this.stores = {
-            kio: props.kioStore,
             user: props.userStore
         };
         this.actions = props.kioActions;
@@ -40,7 +39,7 @@ class ApplicationList extends React.Component {
             // false means that we will set it to true now
             let userAccounts = _.pluck(this.stores.user.getUserCloudAccounts(), 'name');
             // fetch versions for our inactive apps
-            this.stores.kio
+            this.props.kioStore
                 .getApplications(this.state.term)
                 .filter(app => !app.active)
                 .filter(app => userAccounts.indexOf(app.team_id) >= 0)
@@ -56,15 +55,15 @@ class ApplicationList extends React.Component {
 
     render() {
         let {term, showCount, showAll, showInactive} = this.state,
-            apps = this.stores.kio.getApplications(term),
-            fetchStatus = this.stores.kio.getApplicationsFetchStatus(),
+            apps = this.props.kioStore.getApplications(term),
+            fetchStatus = this.props.kioStore.getApplicationsFetchStatus(),
             userAccIds = _.pluck(this.stores.user.getUserCloudAccounts(), 'name'),
             otherApps = apps.filter(app => userAccIds.indexOf(app.team_id) < 0),
             teamApps = apps.filter(app => userAccIds.indexOf(app.team_id) >= 0),
             shortApps = !showAll && otherApps.length > showCount ? _.slice(otherApps, 0, showCount) : otherApps,
             remainingAppsCount = otherApps.length - showCount,
             latestVersions = teamApps.reduce((prev, app) => {
-                prev[app.id] = this.stores.kio.getLatestApplicationVersion(app.id);
+                prev[app.id] = this.props.kioStore.getLatestApplicationVersion(app.id);
                 return prev;
             }, {});
 

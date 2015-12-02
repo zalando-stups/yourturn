@@ -4,9 +4,12 @@ import FluxComponent from 'flummox/component';
 import FLUX from 'yourturn/src/flux';
 import REDUX from 'yourturn/src/redux';
 import {parseArtifact} from 'application/src/util';
-import {requireAccounts, bindActionsToStore} from 'common/src/util';
+import {requireAccounts, bindGettersToState, bindActionsToStore} from 'common/src/util';
+import {connect} from 'react-redux';
 
+import * as KioGetter from 'common/src/data/kio/kio-getter';
 import * as NotificationActions from 'common/src/data/notification/notification-actions';
+import * as KioActions from 'common/src/data/kio/kio-actions';
 import ApplicationList from './application-list/application-list.jsx';
 import ApplicationForm from './application-form/application-form.jsx';
 import ApplicationDetail from './application-detail/application-detail.jsx';
@@ -23,7 +26,7 @@ const MINT_ACTIONS = FLUX.getActions('mint'),
       PIERONE_STORE = FLUX.getStore('pierone'),
       USER_STORE = FLUX.getStore('user'),
       USER_ACTIONS = FLUX.getActions('user'),
-      KIO_ACTIONS = FLUX.getActions('kio'),
+      KIO_ACTIONS = bindActionsToStore(REDUX, KioActions),
       KIO_STORE = FLUX.getStore('kio'),
       ESSENTIALS_STORE = FLUX.getStore('essentials'),
       NOTIFICATION_ACTIONS = bindActionsToStore(REDUX, NotificationActions),
@@ -35,15 +38,10 @@ class AppListHandler extends React.Component {
     }
 
     render() {
-        return <FluxComponent
-                    flux={FLUX}
-                    connectToStores={['kio']}>
-
-                    <ApplicationList
-                        userStore={USER_STORE}
-                        kioActions={KIO_ACTIONS}
-                        kioStore={KIO_STORE} />
-                </FluxComponent>;
+        return <ApplicationList
+                    userStore={USER_STORE}
+                    kioActions={KIO_ACTIONS}
+                    kioStore={this.props.kioStore} />;
     }
 }
 AppListHandler.displayName = 'AppListHandler';
@@ -63,7 +61,8 @@ AppListHandler.fetchData = function() {
             .forEach(app => KIO_ACTIONS.fetchApplicationVersions(app.id));
         }));
 };
-
+var ConnectedAppListHandler =
+    connect(state => ({kioStore: bindGettersToState(state.kio.applications, KioGetter)}))(AppListHandler);
 
 class CreateAppFormHandler extends React.Component {
     constructor() {
@@ -71,17 +70,12 @@ class CreateAppFormHandler extends React.Component {
     }
 
     render() {
-        return <FluxComponent
-                    flux={FLUX}
-                    connectToStores={['kio']}>
-
-                    <ApplicationForm
-                        edit={false}
-                        notificationActions={NOTIFICATION_ACTIONS}
-                        kioActions={KIO_ACTIONS}
-                        userStore={USER_STORE}
-                        kioStore={KIO_STORE} />
-                </FluxComponent>;
+        return  <ApplicationForm
+                    edit={false}
+                    notificationActions={NOTIFICATION_ACTIONS}
+                    kioActions={KIO_ACTIONS}
+                    kioStore={this.props.kioStore}
+                    userStore={USER_STORE} />;
     }
 }
 CreateAppFormHandler.displayName = 'CreateAppFormHandler';
@@ -94,7 +88,8 @@ CreateAppFormHandler.fetchData = function() {
         KIO_ACTIONS.fetchApplications()
     ]);
 };
-
+var ConnectedCreateAppFormHandler =
+    connect(state => ({kioStore: bindGettersToState(state.kio.applications, KioGetter)}))(CreateAppFormHandler);
 
 class EditAppFormHandler extends React.Component {
     constructor() {
@@ -457,8 +452,8 @@ EditVersionFormHandler.fetchData = function(state) {
 
 const ROUTES =
         <Route name='application-appList' path='application'>
-            <DefaultRoute handler={AppListHandler} />
-            <Route name='application-appCreate' path='create' handler={CreateAppFormHandler} />
+            <DefaultRoute handler={ConnectedAppListHandler} />
+            <Route name='application-appCreate' path='create' handler={ConnectedCreateAppFormHandler} />
             <Route name='application-appEdit' path='edit/:applicationId' handler={EditAppFormHandler} />
             <Route name='application-appOAuth' path='oauth/:applicationId' handler={OAuthFormHandler} />
             <Route name='application-appAccess' path='access-control/:applicationId' handler={AccessFormHandler} />
