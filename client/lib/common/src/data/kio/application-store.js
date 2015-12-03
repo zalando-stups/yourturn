@@ -3,10 +3,12 @@ import Types from './kio-types';
 import {Pending, Failed} from 'common/src/fetch-result';
 
 const FETCH_STATE = 'fetchApplications',
+    PREF_ACCOUNT = 'preferredAccount',
     APPS = 'applications',
     DEFAULT_STATE = Immutable.fromJS({
         'fetchApplications': false,
-        'applications': {}
+        'applications': {},
+        'preferredAccount': false
     });
 
 function ApplicationStore(state = DEFAULT_STATE, action) {
@@ -29,6 +31,8 @@ function ApplicationStore(state = DEFAULT_STATE, action) {
     } else if (type === Types.RECEIVE_APPLICATIONS) {
         state = payload.reduce((map, app) => map.setIn([APPS, app.id], Immutable.Map(app)), state);
         return state.set(FETCH_STATE, false);
+    } else if (type === Types.RECEIVE_PREFERRED_ACCOUNT) {
+        return state.set(PREF_ACCOUNT, action.payload);
     }
     return state;
 }
@@ -36,5 +40,6 @@ function ApplicationStore(state = DEFAULT_STATE, action) {
 export default ApplicationStore;
 
 export {
-    FETCH_STATE as FETCH_STATE
+    FETCH_STATE,
+    PREF_ACCOUNT
 };

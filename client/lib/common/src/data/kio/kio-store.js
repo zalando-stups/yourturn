@@ -53,6 +53,14 @@ class KioStoreWrapper extends Store {
         this.register(
             kioActions.fetchApprovalTypes,
             this.receiveApprovalTypes);
+
+        this.register(
+            kioActions.loadPreferredAccount,
+            this.receivePreferredAccount);
+
+        this.register(
+            kioActions.savePreferredAccount,
+            this.receivePreferredAccount);
     }
 
     beginFetchApplications() {
@@ -197,8 +205,17 @@ class KioStoreWrapper extends Store {
         });
     }
 
-    getApplications(term) {
-        return Getter.getApplications(this.state.redux.applications, term);
+    receivePreferredAccount(acc) {
+        this.setState({
+            redux: KioStore(this.state.redux, {
+                type: Types.RECEIVE_PREFERRED_ACCOUNT,
+                payload: acc
+            })
+        });
+    }
+
+    getApplications(term, team) {
+        return Getter.getApplications(this.state.redux.applications, term, team);
     }
 
     getApplicationsFetchStatus() {
@@ -227,6 +244,14 @@ class KioStoreWrapper extends Store {
 
     getApprovals(applicationId, versionId) {
         return Getter.getApprovals(this.state.redux.approvals, applicationId, versionId);
+    }
+
+    getLatestApplicationVersions(team) {
+        return Getter.getLatestApplicationVersions(this.state.redux, team);
+    }
+
+    getPreferredAccount() {
+        return Getter.getPreferredAccount(this.state.redux.applications);
     }
 
     /**

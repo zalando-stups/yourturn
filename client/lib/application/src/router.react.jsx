@@ -49,17 +49,22 @@ AppListHandler.propTypes = {
     params: React.PropTypes.object.isRequired
 };
 AppListHandler.fetchData = function() {
-    KIO_ACTIONS
-    .fetchApplications()
-    .then(apps =>
-        requireAccounts(FLUX)
-        .then(accs => {
-            let ids = accs.map(acc => acc.name);
-            apps
-            .filter(app => app.active)
-            .filter(app => ids.indexOf(app.team_id) >= 0)
-            .forEach(app => KIO_ACTIONS.fetchApplicationVersions(app.id));
-        }));
+    return requireAccounts(FLUX)
+            .then(accs => {
+                let preferredAcc = KIO_STORE.getPreferredAccount();
+                if (!preferredAcc) {
+                    preferredAcc = KIO_ACTIONS.savePreferredAccount(accs[0].name);
+                }
+
+                KIO_ACTIONS
+                .fetchApplications()
+                .then(apps =>
+                    apps
+                    .filter(app => app.active)
+                    .filter(app => app.team_id === preferredAcc)
+                    .filter(app => !KIO_STORE.getApplicationVersions(app.id).length)
+                    .forEach(app => setTimeout(() => KIO_ACTIONS.fetchApplicationVersions(app.id), 50)));
+            });
 };
 
 

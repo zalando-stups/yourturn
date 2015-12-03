@@ -3,6 +3,7 @@ import {Actions} from 'flummox';
 import request from 'common/src/superagent';
 import {Services} from 'common/src/data/services';
 import {Provider, RequestConfig, saveRoute} from 'common/src/oauth-provider';
+import Storage from 'common/src/storage';
 
 function fetchApplications() {
     return request
@@ -160,6 +161,15 @@ function saveApproval(applicationId, versionId, approval) {
             });
 }
 
+function savePreferredAccount(acc) {
+    Storage.set('kio_preferredAccount', acc);
+    return acc;
+}
+
+function loadPreferredAccount() {
+    return Storage.get('kio_preferredAccount') || false;
+}
+
 export {
     fetchApplications,
     fetchApplication,
@@ -170,7 +180,9 @@ export {
     saveApplicationVersion,
     fetchApprovalTypes,
     fetchApprovals,
-    saveApproval
+    saveApproval,
+    savePreferredAccount,
+    loadPreferredAccount
 };
 
 class KioActions extends Actions {
@@ -212,6 +224,14 @@ class KioActions extends Actions {
 
     saveApproval(applicationId, versionId, approval) {
         return saveApproval(applicationId, versionId, approval);
+    }
+
+    savePreferredAccount(acc) {
+        return savePreferredAccount(acc);
+    }
+
+    loadPreferredAccount() {
+        return loadPreferredAccount();
     }
 }
 

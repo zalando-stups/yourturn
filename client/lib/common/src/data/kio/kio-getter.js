@@ -51,11 +51,12 @@ function getApplicationVersion(state, id, ver) {
  * @param  {string} term Filters list of applications by names that contain term
  * @return {Array} Available applications
  */
-function getApplications(state, term) {
+function getApplications(state, term, team) {
     let availableApps = state
                             .get('applications')
                             .valueSeq()
                             .filter(app => !app.getResult)
+                            .filter(app => team ? app.get('team_id') === team : true)
                             .filter(app => term ?
                                             fuzzysearch(term.toLowerCase(), `${app.get('id').toLowerCase()} ${app.get('name').toLowerCase()} ${app.get('team_id').toLowerCase()}`) :
                                             true)
@@ -126,6 +127,20 @@ function getLatestApplicationVersion(state, id) {
     return versions.length ? versions[0] : false;
 }
 
+function getLatestApplicationVersions(state, team) {
+    let apps = getApplications(state.applications, '', team);
+    return apps
+            .reduce((prev, a) => {
+                prev[a.id] = getLatestApplicationVersion(state.versions, a.id).id || false;
+                return prev;
+            },
+            {});
+}
+
+function getPreferredAccount(state) {
+    return state.get('preferredAccount');
+}
+
 export {
     getApprovals,
     getApprovalTypes,
@@ -135,5 +150,7 @@ export {
     getApplication,
     getApplicationVersions,
     getApplicationVersion,
-    getLatestApplicationVersion
+    getLatestApplicationVersion,
+    getLatestApplicationVersions,
+    getPreferredAccount
 };
