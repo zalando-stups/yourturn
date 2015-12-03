@@ -60,7 +60,7 @@ router.run(
                              document.body);
             } else {
                 React.render(<Handler flux={YT_FLUX}/>,
-                    document.getElementById("yourturn-container"));
+                    document.getElementById('yourturn-container'));
             }
         });
     });
