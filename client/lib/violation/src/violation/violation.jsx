@@ -263,6 +263,8 @@ class Violation extends React.Component {
                         </Tabs.TabList>
                         <Tabs.TabPanel>
                             <ViolationAnalysis
+                                tableSortBy={searchParams.cross_sortBy}
+                                tableSortOrder={searchParams.cross_sortOrder}
                                 groupByAccount={searchParams.cross_groupByAccount}
                                 account={searchParams.cross_inspectedAccount || activeAccountIds[0]}
                                 violationType={searchParams.cross_violationType || null}

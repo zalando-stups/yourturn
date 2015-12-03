@@ -27,6 +27,10 @@ class ViolationAnalysis extends React.Component {
         });
     }
 
+    sortChange(config) {
+        this.props.onConfigurationChange(config);
+    }
+
     selectQuantity(data) {
         this.props.onRequestViewChange(data);
     }
@@ -103,6 +107,9 @@ class ViolationAnalysis extends React.Component {
                     null}
                     <AutoWidth className='violation-analysis-table'>
                         <SortableTable
+                            sortBy={this.props.tableSortBy}
+                            sortOrder={this.props.tableSortOrder}
+                            onSortChange={this.sortChange.bind(this)}
                             helpText='You can search for accounts and violation types.'
                             filterExprFn={row => `${row.type} ${row.account} ${row.accountName}`.toLowerCase()}
                             height={Math.min((violationCount.length + 1) * 50 + 2, 1500)}
