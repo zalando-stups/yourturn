@@ -139,10 +139,21 @@ class Violation extends React.Component {
     }
 
     _updateSearch(tab, params) {
-        let newParams = Object.keys(params).reduce((prev, cur) => {
-            prev[tab + '_' + cur] = params[cur];
-            return prev;
-        }, {});
+        let newParams;
+        if (tab !== 'list') {
+            newParams = Object.keys(params).reduce((prev, cur) => {
+                prev[tab + '_' + cur] = params[cur];
+                return prev;
+            }, {});
+        } else {
+            // this is a direct link to third tab
+            // with filters already set
+            newParams = {
+                accounts: [params.account],
+                activeTab: 2,
+                list_violationType: params.type
+            };
+        }
         this.updateSearch(newParams);
     }
 
@@ -257,6 +268,7 @@ class Violation extends React.Component {
                                 violationType={searchParams.cross_violationType || null}
                                 accounts={allAccounts}
                                 onConfigurationChange={this._updateSearch.bind(this, 'cross')}
+                                onRequestViewChange={this._updateSearch.bind(this, 'list')}
                                 violationTypes={violationTypes}
                                 violationCount={this.stores.fullstop.getViolationCount()} />
                         </Tabs.TabPanel>

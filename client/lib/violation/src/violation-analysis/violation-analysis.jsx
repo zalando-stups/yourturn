@@ -27,6 +27,10 @@ class ViolationAnalysis extends React.Component {
         });
     }
 
+    selectQuantity(data) {
+        this.props.onRequestViewChange(data);
+    }
+
     accountCellRenderer(a, b, data) {
         return <span
                     title={data.accountName}
@@ -40,6 +44,12 @@ class ViolationAnalysis extends React.Component {
                      onClick={this.selectViolationType.bind(this, violationType)}>
                      {violationType}
                 </span>;
+    }
+
+    quantityCellRenderer(c, name, data) {
+        return <span title={c}
+                     onClick={this.selectQuantity.bind(this, data)}
+                     className='sortable-table-highlight sortable-table-align-right'>{c}</span>;
     }
 
     render() {
@@ -123,7 +133,7 @@ class ViolationAnalysis extends React.Component {
                                 label='Count'
                                 width={100}
                                 flexGrow={1}
-                                cellRenderer={c => <span title={c} className='sortable-table-align-right'>{c}</span>}
+                                cellRenderer={this.quantityCellRenderer.bind(this)}
                                 dataKey={'quantity'} />
                         </SortableTable>
                     </AutoWidth>
