@@ -27,6 +27,14 @@ class ViolationAnalysis extends React.Component {
         });
     }
 
+    sortChange(config) {
+        this.props.onConfigurationChange(config);
+    }
+
+    selectQuantity(data) {
+        this.props.onRequestViewChange(data);
+    }
+
     accountCellRenderer(a, b, data) {
         return <span
                     title={data.accountName}
@@ -40,6 +48,12 @@ class ViolationAnalysis extends React.Component {
                      onClick={this.selectViolationType.bind(this, violationType)}>
                      {violationType}
                 </span>;
+    }
+
+    quantityCellRenderer(c, name, data) {
+        return <span title={c}
+                     onClick={this.selectQuantity.bind(this, data)}
+                     className='sortable-table-highlight sortable-table-align-right'>{c}</span>;
     }
 
     render() {
@@ -93,6 +107,9 @@ class ViolationAnalysis extends React.Component {
                     null}
                     <AutoWidth className='violation-analysis-table'>
                         <SortableTable
+                            sortBy={this.props.tableSortBy}
+                            sortOrder={this.props.tableSortOrder}
+                            onSortChange={this.sortChange.bind(this)}
                             helpText='You can search for accounts and violation types.'
                             filterExprFn={row => `${row.type} ${row.account} ${row.accountName}`.toLowerCase()}
                             height={Math.min((violationCount.length + 1) * 50 + 2, 1500)}
@@ -123,7 +140,7 @@ class ViolationAnalysis extends React.Component {
                                 label='Count'
                                 width={100}
                                 flexGrow={1}
-                                cellRenderer={c => <span title={c} className='sortable-table-align-right'>{c}</span>}
+                                cellRenderer={this.quantityCellRenderer.bind(this)}
                                 dataKey={'quantity'} />
                         </SortableTable>
                     </AutoWidth>

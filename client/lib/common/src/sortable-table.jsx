@@ -13,60 +13,67 @@ class SortableTable extends React.Component {
         super();
         this.state = {
             rows: props.rows,
-            sortBy: [],
-            sortOrder: [],
-            filter: ''
+            sortBy: props.sortBy || '',
+            sortOrder: props.sortOrder || '',
+            filter: props.filter || ''
         };
     }
 
     componentWillReceiveProps(nextProps) {
-        let rows = nextProps.rows;
-        if (this.state.sortBy.length) {
-            rows = _.sortBy(rows, this.state.sortBy[0]);
+        let {rows, sortBy, sortOrder} = nextProps;
+        sortBy = sortBy || this.state.sortBy;
+        sortOrder = sortOrder || this.state.sortOrder;
+        if (sortBy.length) {
+            rows = _.sortBy(rows, sortBy);
         }
-        if (!this.state.sortBy[0] === ASC) {
+        if (sortOrder && sortOrder !== ASC) {
             rows = rows.reverse();
         }
         this.setState({
-            rows: rows
+            rows,
+            sortBy,
+            sortOrder
         });
     }
 
     _sortBy(key) {
-        if (!this.state.sortBy.length) {
+        let state;
+        if (!this.state.sortBy) {
             // sort by key desc by default
-            this.setState({
-                sortBy: [key],
-                sortOrder: [DESC]
-            });
+            state = {
+                sortBy: key,
+                sortOrder: DESC
+            };
         } else {
             // so this was sorted before
             // check if key is the same
-            if (this.state.sortBy[0] === key) {
+            if (this.state.sortBy === key) {
                 // it is, so just flip order
                 // HAHA!
-                let newOrder = [ this.state.sortOrder[0] === ASC ? DESC : ASC ].concat(this.state.sortOrder.splice(1));
-                this.setState({
+                let newOrder = this.state.sortOrder === ASC ? DESC : ASC;
+                state = {
                     sortOrder: newOrder
-                });
+                };
             } else {
-                let newBy = [key].concat(this.state.sortBy.length ? [this.state.sortBy[0]] : []),
-                    newOrder = [DESC].concat(this.state.sortOrder.length ? [this.state.sortOrder[0]] : []);
-                this.setState({
-                    sortOrder: newOrder,
-                    sortBy: newBy
-                });
+                state = {
+                    sortBy: key,
+                    sortOrder: DESC
+                };
             }
+        }
+        this.setState(state);
+        if (typeof this.props.onSortChange === 'function') {
+            this.props.onSortChange(state);
         }
     }
 
     _renderHeader(label, dataKey) {
-        let sortedByMe = this.state.sortBy.indexOf(dataKey);
+        let sortedByMe = this.state.sortBy === dataKey;
         return <div
-                    className={sortedByMe === 0 ? 'sortable-table-primary-sort-key' : null}
+                    className={sortedByMe ? 'sortable-table-primary-sort-key' : null}
                     onClick={this._sortBy.bind(this, dataKey)}>
                     {label} {sortedByMe >= 0 ?
-                                (this.state.sortOrder[sortedByMe] === ASC ? <Icon name='sort-asc' /> : <Icon name='sort-desc' />) :
+                                (this.state.sortOrder === ASC ? <Icon name='sort-asc' /> : <Icon name='sort-desc' />) :
                                 <Icon name='sort' />}
                 </div>;
     }
