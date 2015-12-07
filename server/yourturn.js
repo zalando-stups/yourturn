@@ -1,42 +1,23 @@
-/* global require, process */
-var fs = require('fs'),
-    winston = require('winston'),
-    yml2js = require('js-yaml'),
-    NEW_RELIC_CONFIG = '/agents/newrelic/newrelic.yml';
-
+// set up logging
 winston.remove(winston.transports.Console);
 winston.add(winston.transports.Console, {
     timestamp: true,
     showLevel: true
 });
 
-// NEW RELIC
-// check if there is a new relic config file
-if (fs.existsSync(NEW_RELIC_CONFIG)) {
-    try {
-        var yaml = yml2js.safeLoad(fs.readFileSync(NEW_RELIC_CONFIG), 'utf8').common,
-            config = {
-                app_name: [ yaml.app_name ],
-                license_key: yaml.license_key,
-                logging: {
-                    level: yaml.log_level
-                }
-            };
-        fs.writeFileSync('newrelic.js', 'exports.config = ' + JSON.stringify(config) + ';');
-        require('newrelic');
-    } catch (e) {
-        winston.error('Could not load New Relic config', e);
-        return;
-    }
-}
+// set up 3rd party monitoring
+// and set environment variables for browser
+require('./monitoring/monitoring');
+require('.env');
 
-// THE REAL SHIT
-
-var express = require('express'),
+// this is the actual server code
+var fs = require('fs'),
+    winston = require('winston'),
+    express = require('express'),
     compression = require('compression'),
     server = express(),
+    routes = require('./routes/index'),
     request = require('superagent'),
-    path = require('path'),
     index = fs.readFileSync('./index.html'),
     ONE_WEEK =  1000 *    // 1s
                   60 *    // 1m
@@ -55,153 +36,14 @@ server.use(function(req, res, next) {
     next();
 });
 
-/**
- * Returns a JSON object with all the environment variables in it.
- *
- * @return {Object}
- */
-function getEnvironment() {
-    var env = {};
-    for(key in process.env) {
-        if (process.env.hasOwnProperty(key)) {
-            if (key.indexOf( 'YTENV_' ) === 0 ) {
-                env[key] = process.env[key];
-            }
-        }
-    }
-    // read client id from mint
-    if (process.env.CREDENTIALS_DIR) {
-        var clientJsonPath = path.join(process.env.CREDENTIALS_DIR, 'client.json'),
-            clientJsonFile,
-            clientJson;
-
-        try {
-            // try to read it
-            clientJsonFile = fs.readFileSync(clientJsonPath);
-        } catch(err) {
-            winston.error('Could not read client.json: %s', err.message);
-            return env;
-        }
-
-        try {
-            // try to parse it as json
-            clientJson = JSON.parse(clientJsonFile);
-        } catch(err) {
-            winston.error('Could not parse client.json: %s. Content: %s', err.message, clientJsonFile);
-            return env;
-        }
-        // actually set it
-        env['YTENV_OAUTH_CLIENT_ID'] = clientJson.client_id;
-        winston.info('Successfully updated OAuth client credentials');
-    }
-    return env;
-}
-
-/**
- * Converts a JSON object into a JS script of global variables (trollface).
- *
- * @param  {Object} env The JSON object
- * @return {String} The script containing <KEY>="<VALUE>"; for every key in the object
- */
-function convertToScript(env) {
-    var script = '';
-    for (key in env) {
-        if (env.hasOwnProperty(key)) {
-            script += key + '="' + env[key] + '";\n';
-        }
-    }
-    return script;
-}
-
-/**
- * Gets the environment, converts it to a JS script and writes it to the disk.
- */
-function writeEnv() {
-    var env = getEnvironment();
-    fs.writeFileSync('dist/env.js', convertToScript(env));
-}
-
-writeEnv();
-setInterval(writeEnv, 1000 * 60 * 60); // write this every hour
-
-
 // EXPRESS ROUTES BELOW
-server.get('/accounts/?', function(req, res) {
-    request
-        .get(process.env.YTENV_TEAM_BASE_URL + '/accounts/aws')
-        .accept('json')
-        // take OAuth token from request
-        .set('Authorization', req.get('Authorization'))
-        .end(function(err, response) {
-            if (err) {
-                winston.error('Could not GET /accounts: %d %s', err.status || 0, err.message);
-                return res.status(err.status || 0).send(err);
-            }
-            return res
-                    .status(200)
-                    .type('json')
-                    .send(response.text);
-        });
-});
-
-server.get('/accounts/:userId', function(req, res) {
-    request
-        .get(process.env.YTENV_TEAM_BASE_URL + '/accounts/aws?member=' + req.params.userId)
-        .accept('json')
-        // take OAuth token from request
-        .set('Authorization', req.get('Authorization'))
-        .end(function(err, response) {
-            if (err) {
-                winston.error('Could not GET /accounts/%s: %d %s', req.params.userId, err.status || 0, err.message);
-                return res.status(err.status || 0).send(err);
-            }
-            return res
-                    .status(200)
-                    .type('json')
-                    .send(response.text);
-        });
-});
-
-server.get('/users/:userId', function(req, res) {
-    request
-        .get(process.env.YTENV_USER_BASE_URL + '/employees/' + req.params.userId)
-        .accept('json')
-        .set('Authorization', req.get('Authorization'))
-        .end(function(err, response) {
-            if (err) {
-                winston.error('Could not GET /employees/%s: %d %s', req.params.userId, err.status || 0, err.message);
-                return res.status(err.status || 0).send(err);
-            }
-            return res
-                    .status(200)
-                    .type('json')
-                    .send(response.text);
-        });
-});
-
-server.get('/tokeninfo', function(req, res) {
-    request
-        .get(process.env.YTENV_OAUTH_TOKENINFO_URL)
-        .accept('json')
-        .query({
-            access_token: req.query.access_token
-        })
-        .end(function(err, response) {
-            if (err) {
-                if (err.status !== 400) {
-                    // log error on tokeninfo only if it's not
-                    // because of an invalid token
-                    winston.error('Could not GET /tokeninfo: %d %s', err.status || 0, err.message);
-                }
-                return res.status(err.status || 0).send(err);
-            }
-            return res
-                    .status(200)
-                    .type('json')
-                    .send(response.text);
-        });
-});
-
+server.get('/accounts/?', routes.team.accounts);
+server.get('/latestVersions/:team', routes.kio.latestVersions);
+server.get('/accounts/:userId', routes.user.accounts);
+server.get('/users/:userId', routes.user.detail);
+server.get('/tokeninfo', routes.tokeninfo.info);
+server.get('')
+// default route just responds with index.html
 server.get('/*', function(req, res) {
     res
         .append('Content-Type', 'text/html')
@@ -209,4 +51,4 @@ server.get('/*', function(req, res) {
         .send(index);
 });
 
-server.listen(8080);
+server.listen(provess.env.HTTP_PORT || 8080);
