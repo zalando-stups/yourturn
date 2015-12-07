@@ -64,10 +64,10 @@ router.run(
                 // if auth error true => everythings good
                 // I KNOW!
                 React.render(<DefaultError error={authError} />,
-                             document.body);
+                             document.getElementById('yourturn-container'));
             } else {
                 React.render(<Handler flux={YT_FLUX}/>,
-                    document.getElementById('yourturn-container'));
+                             document.getElementById('yourturn-container'));
             }
         });
     });
