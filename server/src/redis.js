@@ -4,4 +4,5 @@ var redis = require('redis'),
 bluebird.promisifyAll(redis.RedisClient.prototype);
 bluebird.promisifyAll(redis.Multi.prototype);
 
-module.exports = redis;
+//FIXME pass redis environment variables here
+module.exports = redis.createClient();

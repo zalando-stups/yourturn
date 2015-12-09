@@ -11,12 +11,12 @@ function apps() {
 }
 
 function versions(app) {
+    console.log('versions', app);
     return request
             .get(`${process.env.YTENV_KIO_BASE_URL}/apps/${app}/versions`)
             .set('Authorization', `Bearer ${tokens.get('kio')}`)
             .accept('json');
 }
-
 
 module.exports = {
     apps,

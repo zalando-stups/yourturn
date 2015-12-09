@@ -8,7 +8,7 @@ winston.add(winston.transports.Console, {
 // set up 3rd party monitoring
 // and set environment variables for browser
 require('./monitoring/monitoring');
-require('.env');
+require('./env');
 
 // this is the actual server code
 var fs = require('fs'),

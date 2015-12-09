@@ -1,11 +1,9 @@
 var redis = require('../redis'),
-    client = redis.createClient(),
     ttl = 5 * 60; // default ttl 5 minutes
 
-function setLatestVersions(team, versions, ttl) {
+function setLatestVersions(team, versions) {
     var KEY = `latestVersions-${team}`;
-
-    return client
+    return redis
             .multi()
             .set(KEY, JSON.stringify(versions))
             .expire(KEY, ttl)
@@ -15,8 +13,7 @@ function setLatestVersions(team, versions, ttl) {
 
 function getLatestVersions(team) {
     var KEY = `latestVersions-${team}`;
-
-    return client
+    return redis
             .getAsync(KEY)
             .then(versions => versions ?
                                 JSON.parse(versions) :
