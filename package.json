@@ -3,6 +3,8 @@
   "version": "0.71.0",
   "description": "",
   "scripts": {
+    "mocks": "nodemon server/mocks/all.js",
+    "server": "cd server/src && YTENV_KIO_BASE_URL=localhost:5000 node yourturn.js",
     "build": "cd client && gulp build",
     "start": "cd client && node server.js",
     "lint": "cd client && gulp lint",
