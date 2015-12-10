@@ -22,6 +22,7 @@ COPY ./client/dist/index.html /www/
 
 # copy server
 COPY ./server/src/data/ /www/data/
+COPY ./server/src/middleware/ /www/middleware/
 COPY ./server/src/monitoring/ /www/monitoring/
 COPY ./server/src/routes/ /www/routes/
 COPY ./server/src/env.js /www/

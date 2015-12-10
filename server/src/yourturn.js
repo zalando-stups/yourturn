@@ -21,6 +21,7 @@ var fs = require('fs'),
     compression = require('compression'),
     server = express(),
     routes = require('./routes/index'),
+    oauth = require('./middleware/oauth'),
     request = require('superagent'),
     index = fs.readFileSync('./index.html'),
     ONE_WEEK =  1000 *    // 1s
@@ -42,7 +43,7 @@ server.use(function(req, res, next) {
 
 // EXPRESS ROUTES BELOW
 server.get('/accounts/?', routes.team.accounts);
-server.get('/latestVersions/:team', routes.kio.latestVersions);
+server.get('/latestVersions/:team', oauth, routes.kio.latestVersions);
 server.get('/accounts/:userId', routes.user.accounts);
 server.get('/users/:userId', routes.user.detail);
 server.get('/tokeninfo', routes.tokeninfo.info);
