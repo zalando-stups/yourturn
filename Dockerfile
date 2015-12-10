@@ -28,6 +28,7 @@ COPY ./server/src/env.js /www/
 COPY ./server/src/redis.js /www/
 COPY ./server/src/tokens.js /www/
 COPY ./server/src/yourturn.js /www/
+COPY ./server/src/redis-utils.js /www/
 
 # create env.js as user
 RUN touch /www/dist/env.js && chmod 0666 /www/dist/env.js
