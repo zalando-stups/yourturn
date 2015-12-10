@@ -1,5 +1,7 @@
 // mock away redis so it doesn't try to connect
-require('redis').createClient = () => {};
+require('redis').createClient = () => ({
+    on: () => {}
+});
 
 var sinon = require('sinon'),
     nmh = require('node-mocks-http'),

@@ -1,7 +1,11 @@
 var redis = require('../redis'),
+    utils = require('../redis-utils'),
     ttl = 5 * 60; // default ttl 5 minutes
 
 function setLatestVersions(team, versions) {
+    if (!utils.isAvailable(redis)) {
+        return Promise.reject(utils.unavailableError());
+    }
     var KEY = `latestVersions-${team}`;
     return redis
             .multi()
@@ -12,6 +16,9 @@ function setLatestVersions(team, versions) {
 }
 
 function getLatestVersions(team) {
+    if (!utils.isAvailable(redis)) {
+        return Promise.reject(utils.unavailableError());
+    }
     var KEY = `latestVersions-${team}`;
     return redis
             .getAsync(KEY)

@@ -2,6 +2,28 @@ var winston = require('winston'),
     kio = require('../data/kio'),
     redis = require('../data/redis');
 
+function _getLatestVersions(team) {
+    return kio
+            .apps()
+            // get versions for all apps of this team
+            // TODO use team filter in kio when it's available
+            .then(apps => Promise.all(
+                            apps
+                            .filter(a => a.team_id === team)
+                            .map(a => kio.versions(a.id))))
+            .then(all => all
+                        .filter(versions => versions.length > 0)
+                        .map(versions => versions
+                                            .map(v => {
+                                                var c = Object.assign({}, v);
+                                                c.timestamp = new Date(v.last_modified).getTime();
+                                                return c;
+                                            })
+                                            .reduce((l, v) => Math.max(l.timestamp, v.timestamp) === l.timestamp ?
+                                                                l :
+                                                                v)));
+}
+
 function latestVersions(req, res) {
     var TEAM = req.params.team;
 
@@ -19,26 +41,7 @@ function latestVersions(req, res) {
         }
         winston.debug('Cache miss for latestVersions:' + TEAM);
         // fetch from kio all the stuff
-        kio
-        .apps()
-        // get versions for all apps of this team
-        // TODO use team filter in kio when it's available
-        .then(apps => Promise.all(
-                        apps
-                        .filter(a => a.team_id === TEAM)
-                        .map(a => kio.versions(a.id))))
-        // map to most current version
-        .then(all => all
-                        .filter(versions => versions.length > 0)
-                        .map(versions => versions
-                                            .map(v => {
-                                                var c = Object.assign({}, v);
-                                                c.timestamp = new Date(v.last_modified).getTime();
-                                                return c;
-                                            })
-                                            .reduce((l, v) => Math.max(l.timestamp, v.timestamp) === l.timestamp ?
-                                                                l :
-                                                                v)))
+        _getLatestVersions(TEAM)
         // put it in redis
         .then(latestVersions => redis.setLatestVersions(TEAM, latestVersions))
         // return what we got
@@ -47,7 +50,19 @@ function latestVersions(req, res) {
                                 .type('json')
                                 .send(latestVersions))
         // catch-all
-        .catch(err => res.status(500).send(err));
+        .catch(err => res.status(503).send(err));
+    })
+    .catch(err => {
+        // when we get here, redis is unavailable
+        winston.error(err);
+        // fallback: do not use redis
+        _getLatestVersions(TEAM)
+        .then(latestVersions => res
+                                .status(200)
+                                .type('json')
+                                .send(latestVersions))
+        // and so is kio if we get here
+        .catch(err => res.status(503).send(err))
     });
 }
 
