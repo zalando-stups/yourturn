@@ -65,8 +65,8 @@ function convertToScript(env) {
  */
 function writeEnv() {
     var env = getEnvironment();
-    fs.writeFileSync('dist/env.js', convertToScript(env));
+    fs.writeFileSync('./dist/env.js', convertToScript(env));
+    setTimeout(writeEnv, 1000 * 60 * 60);
 }
 
 writeEnv();
-setInterval(writeEnv, 1000 * 60 * 60); // write this every hour

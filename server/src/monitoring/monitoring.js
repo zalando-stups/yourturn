@@ -1,5 +1,6 @@
 var yml2js = require('js-yaml'),
     winston = require('winston'),
+    fs = require('fs'),
     NEW_RELIC_CONFIG = '/agents/newrelic/newrelic.yml';
 
 // NEW RELIC

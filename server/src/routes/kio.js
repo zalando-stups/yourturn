@@ -26,7 +26,7 @@ function latestVersions(req, res) {
         .then(apps => Promise.all(
                         apps
                         .filter(a => a.team_id === TEAM)
-                        .map(a => kio.versions(a))))
+                        .map(a => kio.versions(a.id))))
         // map to most current version
         .then(all => all
                         .filter(versions => versions.length > 0)

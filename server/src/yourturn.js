@@ -1,8 +1,13 @@
 // set up logging
+var IN_PROD = process.env.NODE_ENV === 'production',
+    winston = require('winston');
+
 winston.remove(winston.transports.Console);
 winston.add(winston.transports.Console, {
     timestamp: true,
-    showLevel: true
+    showLevel: true,
+    colorize: IN_PROD ? true : false,
+    level:  IN_PROD ? 'info' : 'debug'
 });
 
 // set up 3rd party monitoring
@@ -12,7 +17,6 @@ require('./env');
 
 // this is the actual server code
 var fs = require('fs'),
-    winston = require('winston'),
     express = require('express'),
     compression = require('compression'),
     server = express(),
@@ -51,4 +55,4 @@ server.get('/*', function(req, res) {
         .send(index);
 });
 
-server.listen(provess.env.HTTP_PORT || 8080);
+server.listen(process.env.HTTP_PORT || 8080);
