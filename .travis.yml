@@ -7,6 +7,7 @@ before_script:
   - npm run format
 script:
   # test
+  - npm run test-server
   - npm test
 after_script:
   # cover
