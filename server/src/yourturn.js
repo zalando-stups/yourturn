@@ -46,7 +46,6 @@ server.get('/latestVersions/:team', routes.kio.latestVersions);
 server.get('/accounts/:userId', routes.user.accounts);
 server.get('/users/:userId', routes.user.detail);
 server.get('/tokeninfo', routes.tokeninfo.info);
-server.get('')
 // default route just responds with index.html
 server.get('/*', function(req, res) {
     res
