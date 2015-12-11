@@ -71,8 +71,7 @@ var ConnectedAppListHandler =
         connect(state => ({
             kioStore: bindGettersToState(state.kio, KioGetter),
             userStore: bindGettersToState(state.user, UserGetter)
-        }))
-        (AppListHandler);
+        }))(AppListHandler);
 
 class CreateAppFormHandler extends React.Component {
     constructor() {
@@ -85,21 +84,24 @@ class CreateAppFormHandler extends React.Component {
                     notificationActions={NOTIFICATION_ACTIONS}
                     kioActions={KIO_ACTIONS}
                     kioStore={this.props.kioStore}
-                    userStore={USER_STORE} />;
+                    userStore={this.props.userStore} />;
     }
 }
 CreateAppFormHandler.displayName = 'CreateAppFormHandler';
 CreateAppFormHandler.propTypes = {
     params: React.PropTypes.object.isRequired
 };
-CreateAppFormHandler.fetchData = function() {
+CreateAppFormHandler.fetchData = function(routerState, state) {
     return Promise.all([
-        requireAccounts(FLUX),
+        requireAccounts(state, USER_ACTIONS),
         KIO_ACTIONS.fetchApplications()
     ]);
 };
 var ConnectedCreateAppFormHandler =
-    connect(state => ({kioStore: bindGettersToState(state.kio, KioGetter)}))(CreateAppFormHandler);
+    connect(state => ({
+        kioStore: bindGettersToState(state.kio, KioGetter),
+        userStore: bindGettersToState(state.user, UserGetter)
+    }))(CreateAppFormHandler);
 
 class EditAppFormHandler extends React.Component {
     constructor() {
