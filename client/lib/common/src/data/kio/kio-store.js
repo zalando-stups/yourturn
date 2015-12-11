@@ -225,35 +225,35 @@ class KioStoreWrapper extends Store {
     }
 
     getApplications(term, team) {
-        return Getter.getApplications(this.state.redux.applications, term, team);
+        return Getter.getApplications(this.state.redux, term, team);
     }
 
     getApplicationsFetchStatus() {
-        return Getter.getApplicationsFetchStatus(this.state.redux.applications);
+        return Getter.getApplicationsFetchStatus(this.state.redux);
     }
 
     getApplication(id) {
-        return Getter.getApplication(this.state.redux.applications, id);
+        return Getter.getApplication(this.state.redux, id);
     }
 
     getApplicationVersions(id, filter) {
-        return Getter.getApplicationVersions(this.state.redux.versions, id, filter);
+        return Getter.getApplicationVersions(this.state.redux, id, filter);
     }
 
     getApplicationVersion(id, ver) {
-        return Getter.getApplicationVersion(this.state.redux.versions, id, ver);
+        return Getter.getApplicationVersion(this.state.redux, id, ver);
     }
 
     getLatestApplicationVersion(id) {
-        return Getter.getLatestApplicationVersion(this.state.redux.versions, id);
+        return Getter.getLatestApplicationVersion(this.state.redux, id);
     }
 
     getApprovalTypes(applicationId) {
-        return Getter.getApprovalTypes(this.state.redux.approvals, applicationId);
+        return Getter.getApprovalTypes(this.state.redux, applicationId);
     }
 
     getApprovals(applicationId, versionId) {
-        return Getter.getApprovals(this.state.redux.approvals, applicationId, versionId);
+        return Getter.getApprovals(this.state.redux, applicationId, versionId);
     }
 
     getLatestApplicationVersions(team) {
@@ -261,7 +261,7 @@ class KioStoreWrapper extends Store {
     }
 
     getPreferredAccount() {
-        return Getter.getPreferredAccount(this.state.redux.applications);
+        return Getter.getPreferredAccount(this.state.redux);
     }
 
     /**

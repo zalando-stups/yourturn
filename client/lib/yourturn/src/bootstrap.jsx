@@ -4,6 +4,8 @@ import ROUTES from './router.react.jsx';
 import YT_FLUX from './flux';
 import REDUX from './redux';
 import {Provider} from 'react-redux';
+import {bindActionsToStore} from 'common/src/util';
+import * as KioActions from 'common/src/data/kio/kio-actions';
 import DefaultError from 'common/src/error.jsx';
 
 import 'common/asset/less/base.less';
@@ -31,12 +33,12 @@ function isAllowed(state) {
 function fetchData(routes, state) {
     let promises = routes
                     .filter(route => route.handler.fetchData !== undefined)
-                    .map(route => route.handler.fetchData(state));
+                    .map(route => route.handler.fetchData(state, REDUX.getState()));
     return Promise.all(promises);
 }
 
 let userActions = YT_FLUX.getActions('user'),
-    kioActions = YT_FLUX.getActions('kio'),
+    kioActions = bindActionsToStore(REDUX, KioActions),
     fullstopActions = YT_FLUX.getActions('fullstop'),
     fullstopStore = YT_FLUX.getStore('fullstop');
 

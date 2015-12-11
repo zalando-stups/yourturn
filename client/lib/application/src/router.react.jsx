@@ -48,14 +48,14 @@ AppListHandler.displayName = 'AppListHandler';
 AppListHandler.propTypes = {
     params: React.PropTypes.object.isRequired
 };
-AppListHandler.fetchData = function() {
+AppListHandler.fetchData = function(routerState, state) {
     // get all applications no matter what
     KIO_ACTIONS.fetchApplications();
     // we need to know which accounts a user has access to
     return requireAccounts(FLUX)
             .then(accs => {
                 // so we can determine a preselected account in tabs
-                let preferredAcc = KIO_STORE.getPreferredAccount();
+                let preferredAcc = KioGetter.getPreferredAccount(state.kio);
                 if (!preferredAcc) {
                     preferredAcc = KIO_ACTIONS.savePreferredAccount(accs[0].name);
                 }
@@ -65,7 +65,7 @@ AppListHandler.fetchData = function() {
             });
 };
 var ConnectedAppListHandler =
-    connect(state => ({kioStore: bindGettersToState(state.kio.applications, KioGetter)}))(AppListHandler);
+    connect(state => ({kioStore: bindGettersToState(state.kio, KioGetter)}))(AppListHandler);
 
 class CreateAppFormHandler extends React.Component {
     constructor() {
@@ -92,7 +92,7 @@ CreateAppFormHandler.fetchData = function() {
     ]);
 };
 var ConnectedCreateAppFormHandler =
-    connect(state => ({kioStore: bindGettersToState(state.kio.applications, KioGetter)}))(CreateAppFormHandler);
+    connect(state => ({kioStore: bindGettersToState(state.kio, KioGetter)}))(CreateAppFormHandler);
 
 class EditAppFormHandler extends React.Component {
     constructor() {

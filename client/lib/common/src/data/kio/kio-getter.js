@@ -10,7 +10,7 @@ import {FETCH_STATE} from './application-store';
  * @return {Array}                Approvals sorted by date asc
  */
 function getApprovals(state, applicationId, versionId) {
-    let approvals = state.getIn(['approvals', applicationId, versionId]);
+    let approvals = state.approvals.getIn(['approvals', applicationId, versionId]);
     approvals = approvals ? approvals.valueSeq().toJS() : [];
     return approvals.sort((a, b) => a.timestamp < b.timestamp ?
                                         -1 :
@@ -27,7 +27,7 @@ function getApprovals(state, applicationId, versionId) {
  * @return {Array}                The used approval types
  */
 function getApprovalTypes(state, applicationId) {
-    return state.getIn(['approvalTypes', applicationId], []);
+    return state.approvals.getIn(['approvalTypes', applicationId], []);
 }
 
 /**
@@ -40,7 +40,7 @@ function getApprovalTypes(state, applicationId) {
  * @return {object} The application version with this id and ver
  */
 function getApplicationVersion(state, id, ver) {
-    let version = state.getIn([id, ver]);
+    let version = state.versions.getIn([id, ver]);
     return version ? version.toJS() : false;
 }
 
@@ -53,6 +53,7 @@ function getApplicationVersion(state, id, ver) {
  */
 function getApplications(state, term, team) {
     let availableApps = state
+                            .applications
                             .get('applications')
                             .valueSeq()
                             .filter(app => !app.getResult)
@@ -66,7 +67,7 @@ function getApplications(state, term, team) {
 }
 
 function getApplicationsFetchStatus(state) {
-    return state.get(FETCH_STATE);
+    return state.applications.get(FETCH_STATE);
 }
 
 /**
@@ -78,7 +79,7 @@ function getApplicationsFetchStatus(state) {
  * @return {object} The application with this id
  */
 function getApplication(state, id) {
-    let app = state.getIn(['applications', id]);
+    let app = state.applications.getIn(['applications', id]);
     return app ?
             app.toJS() :
             false;
@@ -92,6 +93,7 @@ function getApplication(state, id) {
  */
 function getApplicationVersions(state, id, filter) {
     let versions = state
+                    .versions
                     .get(id);
     if (versions) {
         return versions
@@ -118,7 +120,7 @@ function getApplicationVersions(state, id, filter) {
  * @return {object} The application version with this id and ver
  */
 function getApplicationVersion(state, id, ver) {
-    let version = state.getIn([id, ver]);
+    let version = state.versions.getIn([id, ver]);
     return version ? version.toJS() : false;
 }
 
@@ -128,17 +130,17 @@ function getLatestApplicationVersion(state, id) {
 }
 
 function getLatestApplicationVersions(state, team) {
-    let apps = getApplications(state.applications, '', team);
+    let apps = getApplications(state, '', team);
     return apps
             .reduce((prev, a) => {
-                prev[a.id] = getLatestApplicationVersion(state.versions, a.id).id || false;
+                prev[a.id] = getLatestApplicationVersion(state, a.id).id || false;
                 return prev;
             },
             {});
 }
 
 function getPreferredAccount(state) {
-    return state.get('preferredAccount');
+    return state.applications.get('preferredAccount');
 }
 
 export {
