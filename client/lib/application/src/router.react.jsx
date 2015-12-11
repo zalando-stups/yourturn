@@ -109,25 +109,23 @@ class EditAppFormHandler extends React.Component {
     }
 
     render() {
-        return <FluxComponent
-                    flux={FLUX}
-                    connectToStores={['kio']}>
-
-                    <ApplicationForm
+        return <ApplicationForm
                         edit={true}
                         applicationId={this.props.params.applicationId}
                         notificationActions={NOTIFICATION_ACTIONS}
-                        userStore={USER_STORE}
+                        userStore={this.props.userStore}
                         kioActions={KIO_ACTIONS}
-                        kioStore={KIO_STORE} />
-                </FluxComponent>;
+                        kioStore={this.props.kioStore} />
     }
 }
-EditAppFormHandler.isAllowed = function(state) {
-    let {applicationId} = state.params,
-        application = KIO_STORE.getApplication(applicationId),
-        userTeams = USER_STORE.getUserCloudAccounts(),
-        isOwnTeam = userTeams.map(t => t.name).indexOf(application.team_id) >= 0;
+EditAppFormHandler.isAllowed = function(routerState, state) {
+    console.log(routerState, state);
+    let {applicationId} = routerState.params,
+        application = KioGetter.getApplication(state.kio, applicationId),
+        userTeams = UserGetter.getUserCloudAccounts(state.user),
+        isOwnTeam = userTeams
+                        .map(t => t.name)
+                        .indexOf(application.team_id) >= 0;
     if (!isOwnTeam) {
         let error = new Error();
         error.name = 'Forbidden';
@@ -140,13 +138,17 @@ EditAppFormHandler.displayName = 'EditAppFormHandler';
 EditAppFormHandler.propTypes = {
     params: React.PropTypes.object.isRequired
 };
-EditAppFormHandler.fetchData = function(state) {
+EditAppFormHandler.fetchData = function(routerState, state) {
     return Promise.all([
-            KIO_ACTIONS.fetchApplication(state.params.applicationId),
-            requireAccounts(FLUX)
+            KIO_ACTIONS.fetchApplication(routerState.params.applicationId),
+            requireAccounts(state, USER_ACTIONS)
         ]);
 };
-
+var ConnectedEditAppFormHandler =
+    connect(state => ({
+        kioStore: bindGettersToState(state.kio, KioGetter),
+        userStore: bindGettersToState(state.user, UserGetter)
+    }))(EditAppFormHandler);
 
 class AppDetailHandler extends React.Component {
     constructor() {
@@ -466,7 +468,7 @@ const ROUTES =
         <Route name='application-appList' path='application'>
             <DefaultRoute handler={ConnectedAppListHandler} />
             <Route name='application-appCreate' path='create' handler={ConnectedCreateAppFormHandler} />
-            <Route name='application-appEdit' path='edit/:applicationId' handler={EditAppFormHandler} />
+            <Route name='application-appEdit' path='edit/:applicationId' handler={ConnectedEditAppFormHandler} />
             <Route name='application-appOAuth' path='oauth/:applicationId' handler={OAuthFormHandler} />
             <Route name='application-appAccess' path='access-control/:applicationId' handler={AccessFormHandler} />
             <Route name='application-appDetail' path='detail/:applicationId'>

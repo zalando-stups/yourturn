@@ -18,11 +18,11 @@ let router = Router.create({
     location: Router.HistoryLocation
 });
 
-function isAllowed(state) {
-    let errors = state
+function isAllowed(routerState, state) {
+    let errors = routerState
                     .routes
                     .map(route => route.handler.isAllowed ?
-                        route.handler.isAllowed(state) :
+                        route.handler.isAllowed(routerState, state) :
                         true)
                     .filter(allowed => allowed instanceof Error);
     if (errors.length) {
@@ -60,13 +60,13 @@ userActions
     });
 
 router.run(
-    (Handler, state) => {
-        fetchData(state.routes, state, YT_FLUX)
+    (Handler, routerState) => {
+        fetchData(routerState.routes, routerState, YT_FLUX)
         .then(() => {
             // before checking if user is allowed to see stuff,
             // we have to fetch the data
             // (i.e. to know the team of an application)
-            let allowed = isAllowed(state);
+            let allowed = isAllowed(routerState, REDUX.getState());
             if (allowed !== true) {
                 React.render(<Provider store={REDUX}>
                                 {() => <DefaultError error={allowed} />}
