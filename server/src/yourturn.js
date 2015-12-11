@@ -6,7 +6,7 @@ winston.remove(winston.transports.Console);
 winston.add(winston.transports.Console, {
     timestamp: true,
     showLevel: true,
-    colorize: IN_PROD ? true : false,
+    colorize: IN_PROD ? false : true,
     level:  IN_PROD ? 'info' : 'debug'
 });
 
