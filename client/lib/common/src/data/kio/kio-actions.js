@@ -187,7 +187,6 @@ function loadPreferredAccount() {
     return Storage.get('kio_preferredAccount') || false;
 }
 
-<<<<<<< HEAD
 let fetchAppsAction = flummoxCompatWrap(createAction(Type.FETCH_APPLICATIONS, fetchApplications)),
     fetchAppAction = flummoxCompatWrap(createAction(Type.FETCH_APPLICATION, fetchApplication)),
     saveAppAction = createAction(Type.SAVE_APPLICATION, saveApplication),
