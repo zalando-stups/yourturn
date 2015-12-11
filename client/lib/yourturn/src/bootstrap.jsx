@@ -6,6 +6,7 @@ import REDUX from './redux';
 import {Provider} from 'react-redux';
 import {bindActionsToStore} from 'common/src/util';
 import * as KioActions from 'common/src/data/kio/kio-actions';
+import * as UserActions from 'common/src/data/user/user-actions';
 import DefaultError from 'common/src/error.jsx';
 
 import 'common/asset/less/base.less';
@@ -30,14 +31,14 @@ function isAllowed(state) {
     return true;
 }
 
-function fetchData(routes, state) {
+function fetchData(routes, routerState) {
     let promises = routes
                     .filter(route => route.handler.fetchData !== undefined)
-                    .map(route => route.handler.fetchData(state, REDUX.getState()));
+                    .map(route => route.handler.fetchData(routerState, REDUX.getState()));
     return Promise.all(promises);
 }
 
-let userActions = YT_FLUX.getActions('user'),
+let userActions = bindActionsToStore(REDUX, UserActions),
     kioActions = bindActionsToStore(REDUX, KioActions),
     fullstopActions = YT_FLUX.getActions('fullstop'),
     fullstopStore = YT_FLUX.getStore('fullstop');
@@ -65,12 +66,10 @@ router.run(
             // before checking if user is allowed to see stuff,
             // we have to fetch the data
             // (i.e. to know the team of an application)
-            let authError = isAllowed(state);
-            if (authError !== true) {
-                // if auth error true => everythings good
-                // I KNOW!
+            let allowed = isAllowed(state);
+            if (allowed !== true) {
                 React.render(<Provider store={REDUX}>
-                                {() => <DefaultError error={authError} />}
+                                {() => <DefaultError error={allowed} />}
                              </Provider>,
                              document.getElementById('yourturn-container'));
             } else {

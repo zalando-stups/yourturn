@@ -10,11 +10,13 @@ import Search from 'yourturn/src/search/search.jsx';
 import REDUX from 'yourturn/src/redux';
 import {bindActionsToStore} from 'common/src/util';
 import * as NotificationActions from 'common/src/data/notification/notification-actions';
+import * as UserActions from 'common/src/data/user/user-actions';
 
 import {Provider} from 'common/src/oauth-provider';
 import {Error} from '@zalando/oauth2-client-js';
 import validate from './validate-oauth-response';
 
+const USER_ACTIONS = bindActionsToStore(REDUX, UserActions);
 const NOTIFICATION_ACTIONS = bindActionsToStore(REDUX, NotificationActions);
 
 class LoginHandler extends React.Component {
@@ -42,16 +44,11 @@ class LoginHandler extends React.Component {
             }
             // successful response with access_token
             // validate with business logic
-            validate(YT_FLUX)
-                .then(() => {
+            validate(USER_ACTIONS)
+                .then(info => {
                     // everything's good!
                     // run the same stuff from bootstrap now
-                    let info = YT_FLUX
-                                .getStore('user')
-                                .getTokenInfo();
-
-                    YT_FLUX
-                        .getActions('user')
+                    USER_ACTIONS
                         .fetchAccounts(info.uid)
                         .then(accounts => {
                             YT_FLUX.getActions('fullstop').loadLastVisited();
@@ -61,17 +58,15 @@ class LoginHandler extends React.Component {
                                     YT_FLUX.getStore('fullstop').getLastVisited(),
                                     accounts.map(a => a.id));
                         });
-                    YT_FLUX
-                        .getActions('user')
+                    USER_ACTIONS
                         .fetchUserInfo(info.uid);
 
                     this.context.router.transitionTo(response.metadata.route || '/');
                 })
                 .catch(e => {
                     // delete tokens
-                    YT_FLUX.getActions('user').deleteTokenInfo();
-                    return YT_FLUX
-                            .getActions('notification')
+                    USER_ACTIONS.deleteTokenInfo();
+                    return NOTIFICATION_ACTIONS
                             .addNotification(
                                 'Token validation failed: ' + e.message,
                                 'error');

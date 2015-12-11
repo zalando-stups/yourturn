@@ -21,9 +21,6 @@ import TeamStore from 'common/src/data/team/team-store';
 import TwintipActions from 'common/src/data/twintip/twintip-actions';
 import TwintipStore from 'common/src/data/twintip/twintip-store';
 
-import UserActions from 'common/src/data/user/user-actions';
-import UserStore from 'common/src/data/user/user-store';
-
 class YourturnFlux extends Flummox {
     constructor() {
         super();
@@ -48,9 +45,6 @@ class YourturnFlux extends Flummox {
 
         this.createActions('twintip', TwintipActions);
         this.createStore('twintip', TwintipStore, this);
-
-        this.createActions('user', UserActions);
-        this.createStore('user', UserStore, this);
     }
 }
 

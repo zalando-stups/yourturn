@@ -2,7 +2,6 @@
 import _ from 'lodash';
 import {createAction} from 'redux-actions';
 import Type from './kio-types';
-
 import {flummoxCompatWrap} from 'common/src/util';
 import request from 'common/src/superagent';
 import {Services} from 'common/src/data/services';

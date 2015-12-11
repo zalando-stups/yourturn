@@ -1,6 +1,8 @@
 /* globals Date, Promise, ENV_DEVELOPMENT */
-import {Actions} from 'flummox';
 import request from 'common/src/superagent';
+import {createAction} from 'redux-actions';
+import {flummoxCompatWrap} from 'common/src/util';
+import Type from './user-types';
 import {Provider, RequestConfig, saveRoute} from 'common/src/oauth-provider';
 
 function fetchTokenInfo() {
@@ -67,34 +69,15 @@ function fetchAccounts(userId) {
             });
 }
 
-class UserActions extends Actions {
-    fetchTokenInfo() {
-        return fetchTokenInfo();
-    }
-
-    fetchAccessToken() {
-        return fetchAccessToken();
-    }
-
-    deleteTokenInfo() {
-        return deleteTokenInfo();
-    }
-
-    fetchUserInfo(userId) {
-        return fetchUserInfo(userId);
-    }
-
-    fetchAccounts(userId) {
-        return fetchAccounts(userId);
-    }
-}
-
-export default UserActions;
+let fetchInfoAction = createAction(Type.FETCH_TOKENINFO, fetchTokenInfo),
+    deleteTokenAction = createAction(Type.DELETE_TOKENINFO, deleteTokenInfo),
+    fetchUserAction = createAction(Type.FETCH_USERINFO, fetchUserInfo),
+    fetchAccountsAction = createAction(Type.FETCH_ACCOUNTS, fetchAccounts);
 
 export {
-    fetchTokenInfo as fetchTokenInfo,
-    fetchAccessToken as fetchAccessToken,
-    deleteTokenInfo as deleteTokenInfo,
-    fetchUserInfo as fetchUserInfo,
-    fetchAccounts as fetchAccounts
+    fetchAccessToken,
+    fetchInfoAction as fetchTokenInfo,
+    deleteTokenAction as deleteTokenInfo,
+    fetchUserAction as fetchUserInfo,
+    fetchAccountsAction as fetchAccounts
 };

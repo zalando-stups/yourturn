@@ -10,9 +10,6 @@ import 'common/asset/less/application/application-list.less';
 class ApplicationList extends React.Component {
     constructor(props) {
         super();
-        this.stores = {
-            user: props.userStore
-        };
         this.actions = props.kioActions;
         let prefAccount = props.kioStore.getPreferredAccount(),
             userAccIds = _.pluck(props.userStore.getUserCloudAccounts(), 'name').sort();

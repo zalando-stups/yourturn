@@ -33,8 +33,8 @@ function isWhitelisted(state) {
 }
 
 export {
-    getTokenInfo as getTokenInfo,
-    isWhitelisted as isWhitelisted,
-    getUserCloudAccounts as getUserCloudAccounts,
-    getUserInfo as getUserInfo
+    getTokenInfo,
+    isWhitelisted,
+    getUserCloudAccounts,
+    getUserInfo
 };

@@ -8,8 +8,13 @@ import {requireAccounts, bindGettersToState, bindActionsToStore} from 'common/sr
 import {connect} from 'react-redux';
 
 import * as KioGetter from 'common/src/data/kio/kio-getter';
+import * as UserGetter from 'common/src/data/user/user-getter';
+
 import * as NotificationActions from 'common/src/data/notification/notification-actions';
+
 import * as KioActions from 'common/src/data/kio/kio-actions';
+import * as UserActions from 'common/src/data/user/user-actions';
+
 import ApplicationList from './application-list/application-list.jsx';
 import ApplicationForm from './application-form/application-form.jsx';
 import ApplicationDetail from './application-detail/application-detail.jsx';
@@ -24,10 +29,8 @@ const MINT_ACTIONS = FLUX.getActions('mint'),
       MINT_STORE = FLUX.getStore('mint'),
       PIERONE_ACTIONS = FLUX.getActions('pierone'),
       PIERONE_STORE = FLUX.getStore('pierone'),
-      USER_STORE = FLUX.getStore('user'),
-      USER_ACTIONS = FLUX.getActions('user'),
+      USER_ACTIONS = bindActionsToStore(REDUX, UserActions),
       KIO_ACTIONS = bindActionsToStore(REDUX, KioActions),
-      KIO_STORE = FLUX.getStore('kio'),
       ESSENTIALS_STORE = FLUX.getStore('essentials'),
       NOTIFICATION_ACTIONS = bindActionsToStore(REDUX, NotificationActions),
       TWINTIP_STORE = FLUX.getStore('twintip');
@@ -39,7 +42,7 @@ class AppListHandler extends React.Component {
 
     render() {
         return <ApplicationList
-                    userStore={USER_STORE}
+                    userStore={this.props.userStore}
                     kioActions={KIO_ACTIONS}
                     kioStore={this.props.kioStore} />;
     }
@@ -52,7 +55,7 @@ AppListHandler.fetchData = function(routerState, state) {
     // get all applications no matter what
     KIO_ACTIONS.fetchApplications();
     // we need to know which accounts a user has access to
-    return requireAccounts(FLUX)
+    return requireAccounts(state, USER_ACTIONS)
             .then(accs => {
                 // so we can determine a preselected account in tabs
                 let preferredAcc = KioGetter.getPreferredAccount(state.kio);
@@ -65,7 +68,11 @@ AppListHandler.fetchData = function(routerState, state) {
             });
 };
 var ConnectedAppListHandler =
-    connect(state => ({kioStore: bindGettersToState(state.kio, KioGetter)}))(AppListHandler);
+        connect(state => ({
+            kioStore: bindGettersToState(state.kio, KioGetter),
+            userStore: bindGettersToState(state.user, UserGetter)
+        }))
+        (AppListHandler);
 
 class CreateAppFormHandler extends React.Component {
     constructor() {

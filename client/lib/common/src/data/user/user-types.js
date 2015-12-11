@@ -2,9 +2,9 @@ import {createActionTypes} from 'common/src/util';
 
 const TYPES = [
     'DELETE_TOKENINFO',
-    'RECEIVE_TOKENINFO',
-    'RECEIVE_ACCOUNTS',
-    'RECEIVE_USERINFO'
+    'FETCH_TOKENINFO',
+    'FETCH_ACCOUNTS',
+    'FETCH_USERINFO'
 ];
 
 export default createActionTypes(TYPES);

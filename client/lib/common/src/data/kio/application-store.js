@@ -26,7 +26,7 @@ function ApplicationStore(state = DEFAULT_STATE, action) {
         return state.setIn([APPS, payload], new Pending());
     } else if (type === Types.FAIL_FETCH_APPLICATION) {
         return state.setIn([APPS, payload.id], new Failed(payload));
-    } else if (type === Types.FETCH_APPLICATION || type == Types.SAVE_APPLICATION) {
+    } else if (type === Types.FETCH_APPLICATION || type === Types.SAVE_APPLICATION) {
         return state.setIn([APPS, payload.id], Immutable.Map(payload));
     } else if (type === Types.FETCH_APPLICATIONS) {
         state = payload.reduce((map, app) => map.setIn([APPS, app.id], Immutable.Map(app)), state);

@@ -1,20 +1,18 @@
 import React from 'react';
+import {connect} from 'react-redux';
 import Icon from 'react-fa';
 import Gravatar from 'react-gravatar';
 import {Link} from 'react-router';
 import Timestamp from 'react-time';
 import Badge from 'common/src/badge.jsx';
 import Counter from 'common/src/counter.jsx';
+import * as UserGetter from 'common/src/data/user/user-getter';
+import * as UserActions from 'common/src/data/user/user-actions';
 import 'common/asset/less/yourturn/sidebar.less';
 
 class Sidebar extends React.Component {
     constructor(props) {
         super();
-        this.actions = props.userActions;
-        this.stores = {
-            user: props.userStore,
-            fullstop: props.fullstopStore
-        };
         this.interval = false;
         this.state = {
             isTokenValid: true
@@ -22,7 +20,7 @@ class Sidebar extends React.Component {
     }
 
     login() {
-        this.actions.fetchAccessToken();
+        this.props.dispatch(UserActions.fetchAccessToken());
     }
 
     refresh() {
@@ -31,15 +29,15 @@ class Sidebar extends React.Component {
     }
 
     logout() {
-        this.actions.deleteTokenInfo();
+        this.props.dispatch(UserActions.deleteTokenInfo());
     }
 
     updateExpiryDate() {
-        let tokeninfo = this.stores.user.getTokenInfo(),
+        let {tokenInfo} = this.props,
             NOW = Date.now();
         this.setState({
             currentDate: NOW, // to enforce state change
-            isTokenValid: NOW < tokeninfo.valid_until
+            isTokenValid: NOW < tokenInfo.valid_until
         });
     }
 
@@ -56,24 +54,22 @@ class Sidebar extends React.Component {
     }
 
     render() {
-        let tokeninfo = this.stores.user.getTokenInfo(),
-            userinfo = this.stores.user.getUserInfo(),
-            violationCount = this.stores.fullstop.getOwnTotal(),
+        let {tokenInfo, userInfo, violationCount} = this.props,
             {router} = this.context;
 
         return <aside className='sidebar'>
                     <div className='sidebar-content'>
                         <div className='header'>
-                        {tokeninfo.uid ?
+                        {tokenInfo.uid ?
                             <div>
-                                {userinfo ?
+                                {userInfo ?
                                     <div className='userInfo'>
                                             <Gravatar
                                                 size={150}
                                                 className='userImage'
-                                                email={userinfo.email || ''}
+                                                email={userInfo.email || ''}
                                                 https={true} />
-                                            <span>{userinfo.name || tokeninfo.uid}</span>
+                                            <span>{userInfo.name || tokenInfo.uid}</span>
                                     </div>
                                     :
                                     <div className='userInfo'>
@@ -82,7 +78,7 @@ class Sidebar extends React.Component {
                                 <div className='tokenInfo'>
                                     <div>
                                         <small>
-                                            OAuth Token {this.state.isTokenValid ? 'expires' : 'expired'} <Timestamp value={tokeninfo.valid_until} relative={true} />.
+                                            OAuth Token {this.state.isTokenValid ? 'expires' : 'expired'} <Timestamp value={tokenInfo.valid_until} relative={true} />.
                                         </small>
                                     </div>
                                     <div className='btn-group'>
@@ -166,4 +162,8 @@ Sidebar.contextTypes = {
     router: React.PropTypes.func.isRequired
 };
 
-export default Sidebar;
+export default connect(state => ({
+    userInfo: UserGetter.getUserInfo(state.user),
+    tokenInfo: UserGetter.getTokenInfo(state.user),
+    violationCount: 0 // TODO
+}))(Sidebar);

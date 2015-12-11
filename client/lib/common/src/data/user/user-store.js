@@ -21,12 +21,12 @@ function UserStore(state, action) {
 
     let {type, payload} = action;
 
-    if (type === Types.RECEIVE_USERINFO) {
+    if (type === Types.FETCH_USERINFO) {
         let [user, info] = payload;
         return state.setIn(['users', user], Immutable.fromJS(info));
-    } else if (type === Types.RECEIVE_TOKENINFO) {
+    } else if (type === Types.FETCH_TOKENINFO) {
         return state.set('tokeninfo', Immutable.fromJS(payload));
-    } else if (type === Types.RECEIVE_ACCOUNTS) {
+    } else if (type === Types.FETCH_ACCOUNTS) {
         return state.set('accounts', Immutable.fromJS(payload));
     } else if (type === Types.DELETE_TOKENINFO) {
         return state.set('tokeninfo', false);
@@ -38,7 +38,7 @@ function UserStore(state, action) {
 }
 
 export {
-    UserStore as UserStore
+    UserStore
 };
 
 class UserStoreWrapper extends Store {
@@ -75,7 +75,7 @@ class UserStoreWrapper extends Store {
     receiveUserInfo([user, info]) {
         this.setState({
             redux: UserStore(this.state.redux, {
-                type: Types.RECEIVE_USERINFO,
+                type: Types.FETCH_USERINFO,
                 payload: [user, info]
             })
         });
@@ -84,7 +84,7 @@ class UserStoreWrapper extends Store {
     receiveAccounts(accounts) {
         this.setState({
             redux: UserStore(this.state.redux, {
-                type: Types.RECEIVE_ACCOUNTS,
+                type: Types.FETCH_ACCOUNTS,
                 payload: accounts
             })
         });
@@ -93,7 +93,7 @@ class UserStoreWrapper extends Store {
     receiveTokenInfo(tokeninfo) {
         this.setState({
             redux: UserStore(this.state.redux, {
-                type: Types.RECEIVE_TOKENINFO,
+                type: Types.FETCH_TOKENINFO,
                 payload: tokeninfo
             })
         });

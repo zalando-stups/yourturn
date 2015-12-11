@@ -1,19 +1,18 @@
 import {createAction} from 'redux-actions';
+import * as UserGetter from 'common/src/data/user/user-getter';
 
-function requireAccounts(flux) {
-    const ACTIONS = flux.getActions('user'),
-          STORE = flux.getStore('user');
-    if (!STORE.getUserCloudAccounts().length) {
-        let tokeninfo = STORE.getTokenInfo();
+function requireAccounts(state, userActions) {
+    if (!UserGetter.getUserCloudAccounts(state.user).length) {
+        let tokeninfo = UserGetter.getTokenInfo(state.user);
         if (!tokeninfo.uid) {
-            return ACTIONS
+            return userActions
                     .fetchTokenInfo()
-                    .then(token => ACTIONS.fetchAccounts(token.uid))
-                    .catch(() => ACTIONS.fetchAccessToken());
+                    .then(token => userActions.fetchAccounts(token.uid))
+                    .catch(() => userActions.fetchAccessToken());
         }
-        return ACTIONS.fetchAccounts(tokeninfo.uid);
+        return userActions.fetchAccounts(tokeninfo.uid);
     }
-    return Promise.resolve(STORE.getUserCloudAccounts());
+    return Promise.resolve(UserGetter.getUserCloudAccounts(state.user));
 }
 
 function bindGettersToState(state, getters) {
