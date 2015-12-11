@@ -1,3 +1,4 @@
+/* global ENV_DEVELOPMENT */
 import _ from 'lodash';
 import {createAction} from 'redux-actions';
 import Type from './kio-types';
@@ -6,6 +7,7 @@ import {flummoxCompatWrap} from 'common/src/util';
 import request from 'common/src/superagent';
 import {Services} from 'common/src/data/services';
 import {Provider, RequestConfig, saveRoute} from 'common/src/oauth-provider';
+import Storage from 'common/src/storage';
 
 function fetchApplications() {
     return request
@@ -78,6 +80,19 @@ function fetchApplicationVersions(id) {
             .then(res => res.body)
             .catch(err => {
                 err.id = id;
+                throw err;
+            });
+}
+
+function fetchLatestApplicationVersions(team) {
+    return request
+            .get(ENV_DEVELOPMENT ? `http://localhost:8080/latestVersions/${team}` : `/latestVersions/${team}`)
+            .accept('json')
+            .oauth(Provider, RequestConfig)
+            .exec(saveRoute)
+            .then(res => res.body)
+            .catch(err => {
+                err.team = team;
                 throw err;
             });
 }
@@ -163,6 +178,16 @@ function saveApproval(applicationId, versionId, approval) {
             });
 }
 
+function savePreferredAccount(acc) {
+    Storage.set('kio_preferredAccount', acc);
+    return acc;
+}
+
+function loadPreferredAccount() {
+    return Storage.get('kio_preferredAccount') || false;
+}
+
+<<<<<<< HEAD
 let fetchAppsAction = flummoxCompatWrap(createAction(Type.FETCH_APPLICATIONS, fetchApplications)),
     fetchAppAction = flummoxCompatWrap(createAction(Type.FETCH_APPLICATION, fetchApplication)),
     saveAppAction = createAction(Type.SAVE_APPLICATION, saveApplication),
@@ -172,7 +197,9 @@ let fetchAppsAction = flummoxCompatWrap(createAction(Type.FETCH_APPLICATIONS, fe
     saveVerAction = createAction(Type.SAVE_APPLICATION_VERSION, saveApplicationVersion),
     fetchApprovalTypesAction = createAction(Type.FETCH_APPROVAL_TYPES, fetchApprovalTypes),
     fetchApprovalsAction = createAction(Type.FETCH_APPROVALS, fetchApprovals),
-    saveApprovalAction = createAction(Type.SAVE_APPROVAL, saveApproval);
+    saveApprovalAction = createAction(Type.SAVE_APPROVAL, saveApproval),
+    loadPreferredAccountAction = createAction(Type.LOAD_PREFERRED_ACCOUNT, loadPreferredAccount),
+    savePreferredAccountAction = createAction(Type.SAVE_PREFERRED_ACCOUNT, savePreferredAccount);
 
 export {
     fetchAppsAction as fetchApplications,
@@ -184,5 +211,7 @@ export {
     saveVerAction as saveApplicationVersion,
     fetchApprovalTypesAction as fetchApprovalTypes,
     fetchApprovalsAction as fetchApprovals,
-    saveApprovalAction as saveApproval
+    saveApprovalAction as saveApproval,
+    loadPreferredAccountAction as loadPreferredAccount,
+    savePreferredAccountAction as savePreferredAccount
 };

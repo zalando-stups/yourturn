@@ -1,5 +1,8 @@
+/* global ENV_TEST */
 import React from 'react';
 import Icon from 'react-fa';
+import AccountAppList from './account-app-list.jsx';
+import {Tabs, TabPanel, TabList, Tab} from 'react-tabs';
 import {Link} from 'react-router';
 import _ from 'lodash';
 import 'common/asset/less/application/application-list.less';
@@ -11,12 +14,16 @@ class ApplicationList extends React.Component {
             user: props.userStore
         };
         this.actions = props.kioActions;
+        let prefAccount = props.kioStore.getPreferredAccount(),
+            userAccIds = _.pluck(props.userStore.getUserCloudAccounts(), 'name').sort();
+
         this.state = {
             term: '',
             showCount: 20,
             showAll: false,
             showInactive: false,
-            inactiveVersionsFetched: false
+            userAccIds,
+            selectedTab: userAccIds.indexOf(props.kioStore.getPreferredAccount()) || 0
         };
     }
 
@@ -34,38 +41,27 @@ class ApplicationList extends React.Component {
     }
 
     updateShowInactive() {
-        // fetch versions for inactive apps
-        if (!this.state.showInactive && !this.state.inactiveVersionsFetched) {
-            // false means that we will set it to true now
-            let userAccounts = _.pluck(this.stores.user.getUserCloudAccounts(), 'name');
-            // fetch versions for our inactive apps
-            this.props.kioStore
-                .getApplications(this.state.term)
-                .filter(app => !app.active)
-                .filter(app => userAccounts.indexOf(app.team_id) >= 0)
-                .forEach(app => this.actions.fetchApplicationVersions(app.id));
-            this.setState({
-                inactiveVersionsFetched: true
-            });
-        }
         this.setState({
             showInactive: !this.state.showInactive
         });
     }
 
+    _selectTab(tab) {
+        let account = this.state.userAccIds[tab];
+        this.actions.savePreferredAccount(account);
+        this.actions.fetchLatestApplicationVersions(account);
+        this.setState({
+            selectedTab: tab
+        });
+    }
+
     render() {
-        let {term, showCount, showAll, showInactive} = this.state,
-            apps = this.props.kioStore.getApplications(term),
-            fetchStatus = this.props.kioStore.getApplicationsFetchStatus(),
-            userAccIds = _.pluck(this.stores.user.getUserCloudAccounts(), 'name'),
+        let {term, showCount, showAll, showInactive, userAccIds} = this.state,
+            apps = this.stores.kio.getApplications(),
+            fetchStatus = this.stores.kio.getApplicationsFetchStatus(),
             otherApps = apps.filter(app => userAccIds.indexOf(app.team_id) < 0),
-            teamApps = apps.filter(app => userAccIds.indexOf(app.team_id) >= 0),
             shortApps = !showAll && otherApps.length > showCount ? _.slice(otherApps, 0, showCount) : otherApps,
-            remainingAppsCount = otherApps.length - showCount,
-            latestVersions = teamApps.reduce((prev, app) => {
-                prev[app.id] = this.props.kioStore.getLatestApplicationVersion(app.id);
-                return prev;
-            }, {});
+            remainingAppsCount = otherApps.length - showCount;
 
         return <div className='applicationList'>
                     <h2 className='applicationList-headline'>Applications</h2>
@@ -102,84 +98,25 @@ class ApplicationList extends React.Component {
                     <h4>Your Applications {fetchStatus !== false && fetchStatus.isPending() ?
                                             <Icon name='circle-o-notch u-spinner' spin /> :
                                             null}</h4>
-                    {teamApps.length ?
-                        <table className='table'>
-                            <colgroup>
-                                <col width='50%' />
-                                <col width='0*' />
-                                <col width='50%' />
-                                <col width='0*' />
-                            </colgroup>
-                            <thead>
-                                <tr>
-                                    <th>Application</th>
-                                    <th>Team</th>
-                                    <th>Latest&nbsp;version</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody data-block='team-apps'>
-                            {teamApps.filter(
-                                (ta) => (!ta.active && showInactive) || ta.active ).map(
-                                (ta, i) =>
-                                    <tr key={ta.id}
-                                        className={'app ' + (ta.active ? '' : 'is-inactive')}>
-                                        <td>
-                                            <Link
-                                                to='application-appDetail'
-                                                params={{
-                                                    applicationId: ta.id
-                                                }}>
-                                                {ta.name}
-                                            </Link>
-                                        </td>
-                                        <td>{ta.team_id}</td>
-                                        <td>
-                                        {latestVersions[ta.id] ?
-                                            <div>
-                                                {ta.active ?
-                                                    <Link
-                                                        className='btn btn-default btn-small applicationList-approvalButton'
-                                                        title={'Approve version ' + latestVersions[ta.id].id + ' of ' + ta.name}
-                                                        to='application-verApproval'
-                                                        params={{
-                                                            versionId: latestVersions[ta.id].id,
-                                                            applicationId: ta.id
-                                                        }}> <Icon name='check' />
-                                                    </Link>
-                                                    :
-                                                    null}
-                                                 <Link
-                                                    to='application-verDetail'
-                                                    params={{
-                                                        versionId: latestVersions[ta.id].id,
-                                                        applicationId: ta.id
-                                                    }}>
-                                                    {latestVersions[ta.id].id}
-                                                </Link>
-                                            </div>
-                                            :
-                                            null}
-                                        </td>
-                                        <td>
-                                            {ta.active ?
-                                                <Link
-                                                    className='btn btn-default btn-small'
-                                                    to='application-verCreate'
-                                                    title={'Create new version for ' + ta.name}
-                                                    params={{applicationId: ta.id}}>
-                                                    <Icon name='plus' />
-                                                </Link>
-                                                :
-                                                null}
-                                        </td>
-                                    </tr>
-                            )}
-                            </tbody>
-                        </table>
+                    {!ENV_TEST ?
+                        <Tabs
+                            onSelect={this._selectTab.bind(this)}
+                            selectedIndex={this.state.selectedTab}>
+                            <TabList>
+                                {userAccIds.map(acc => <Tab>{acc}</Tab>)}
+                            </TabList>
+                            {userAccIds.map(acc => <TabPanel>
+                                                        <AccountAppList
+                                                            account={acc}
+                                                            search={term}
+                                                            showInactive={showInactive}
+                                                            kioStore={this.stores.kio} />
+                                                    </TabPanel>)}
+                        </Tabs>
                         :
-                        <span>No applications owned by your team.</span>
+                        null
                     }
+
                     <h4>Other Applications {fetchStatus !== false && fetchStatus.isPending() ?
                                                 <Icon name='circle-o-notch u-spinner' spin /> :
                                                 null}</h4>

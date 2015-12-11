@@ -5,8 +5,10 @@ node_modules
 client/dist
 client/coverage
 client/stats.json
+server/src/dist/env.js
 scm-source.json
 *.log
 
 stats.json
 .DS_Store
+.vagrant

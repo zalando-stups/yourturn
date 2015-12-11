@@ -11,67 +11,69 @@
         <link type="text/css" rel="stylesheet" href="/dist/style.css?v=${timestamp}" />
     </head>
     <body>
-        <div class="yourturn">
-            <div class="grid with-gutter">
-                <div class="grid-col col-1-4">
-                    <aside className="sidebar">
-                        <div className="sidebar-content">
-                            <div className="header">
-                                <div>
-                                    <div className="userInfo">
-                                        <img
-                                            className="userImage" />
-                                        <span>Anonymous Penguin</span>
-                                    </div>
-                                    <div className="tokenInfo">
-                                        <div>
-                                            <small>
-                                                OAuth token not checked
-                                            </small>
+        <div id="yourturn-container">
+            <div class="yourturn">
+                <div class="grid with-gutter">
+                    <div class="grid-col col-1-4">
+                        <aside className="sidebar">
+                            <div className="sidebar-content">
+                                <div className="header">
+                                    <div>
+                                        <div className="userInfo">
+                                            <img
+                                                className="userImage" />
+                                            <span>Anonymous Penguin</span>
                                         </div>
-                                        <div className="btn-group">
-                                            <button
-                                                className="btn btn-default">
-                                                <i class="fa fa-refresh"></i> Refresh
-                                            </button>
-                                            <button
-                                                className="btn btn-default">
-                                                <i class="fa fa-sign-out"></i> Logout
-                                            </button>
+                                        <div className="tokenInfo">
+                                            <div>
+                                                <small>
+                                                    OAuth token not checked
+                                                </small>
+                                            </div>
+                                            <div className="btn-group">
+                                                <button
+                                                    className="btn btn-default">
+                                                    <i class="fa fa-refresh"></i> Refresh
+                                                </button>
+                                                <button
+                                                    className="btn btn-default">
+                                                    <i class="fa fa-sign-out"></i> Logout
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
+                                <div
+                                    className="sidebar-item"
+                                    data-active="true">
+                                    <a href="/">
+                                        Search <i class="fa fa-search"></i>
+                                    </a>
+                                </div>
+                                <div
+                                    className="sidebar-item">
+                                    <a href="/application">
+                                        Applications <i class="fa fa-cubes"></i>
+                                    </a>
+                                </div>
+                                <div
+                                    className="sidebar-item">
+                                    <a href="/resource">
+                                        Resource <i class="fa fa-key"></i>
+                                    </a>
+                                </div>
+                                <div
+                                    className="sidebar-item">
+                                    <a href="/violation">
+                                        Violations <i class="fa fa-warning"></i>
+                                    </a>
+                                </div>
                             </div>
-                            <div
-                                className="sidebar-item"
-                                data-active="true">
-                                <a href="/">
-                                    Search <i class="fa fa-search"></i>
-                                </a>
-                            </div>
-                            <div
-                                className="sidebar-item">
-                                <a href="/application">
-                                    Applications <i class="fa fa-cubes"></i>
-                                </a>
-                            </div>
-                            <div
-                                className="sidebar-item">
-                                <a href="/resource">
-                                    Resource <i class="fa fa-key"></i>
-                                </a>
-                            </div>
-                            <div
-                                className="sidebar-item">
-                                <a href="/violation">
-                                    Violations <i class="fa fa-warning"></i>
-                                </a>
-                            </div>
+                        </aside>
+                    </div>
+                    <div class="grid-col">
+                        <div class="yourturn-view">
                         </div>
-                    </aside>
-                </div>
-                <div class="grid-col">
-                    <div class="yourturn-view">
                     </div>
                 </div>
             </div>

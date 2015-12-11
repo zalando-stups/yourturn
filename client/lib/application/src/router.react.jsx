@@ -49,17 +49,20 @@ AppListHandler.propTypes = {
     params: React.PropTypes.object.isRequired
 };
 AppListHandler.fetchData = function() {
-    KIO_ACTIONS
-    .fetchApplications()
-    .then(apps =>
-        requireAccounts(FLUX)
-        .then(accs => {
-            let ids = accs.map(acc => acc.name);
-            apps
-            .filter(app => app.active)
-            .filter(app => ids.indexOf(app.team_id) >= 0)
-            .forEach(app => KIO_ACTIONS.fetchApplicationVersions(app.id));
-        }));
+    // get all applications no matter what
+    KIO_ACTIONS.fetchApplications();
+    // we need to know which accounts a user has access to
+    return requireAccounts(FLUX)
+            .then(accs => {
+                // so we can determine a preselected account in tabs
+                let preferredAcc = KIO_STORE.getPreferredAccount();
+                if (!preferredAcc) {
+                    preferredAcc = KIO_ACTIONS.savePreferredAccount(accs[0].name);
+                }
+                // and fetch latest application versions for it
+                KIO_ACTIONS
+                .fetchLatestApplicationVersions(preferredAcc);
+            });
 };
 var ConnectedAppListHandler =
     connect(state => ({kioStore: bindGettersToState(state.kio.applications, KioGetter)}))(AppListHandler);

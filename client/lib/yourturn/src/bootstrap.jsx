@@ -36,6 +36,7 @@ function fetchData(routes, state) {
 }
 
 let userActions = YT_FLUX.getActions('user'),
+    kioActions = YT_FLUX.getActions('kio'),
     fullstopActions = YT_FLUX.getActions('fullstop'),
     fullstopStore = YT_FLUX.getStore('fullstop');
 
@@ -44,6 +45,7 @@ userActions
     .fetchTokenInfo()
     .then(info => {
         fullstopActions.loadLastVisited();
+        kioActions.loadPreferredAccount();
         userActions
             .fetchAccounts(info.uid)
             .then(accounts => {
@@ -68,12 +70,12 @@ router.run(
                 React.render(<Provider store={REDUX}>
                                 {() => <DefaultError error={authError} />}
                              </Provider>,
-                             document.body);
+                             document.getElementById('yourturn-container'));
             } else {
                 React.render(<Provider store={REDUX}>
                                {() => <Handler flux={YT_FLUX}/>}
                              </Provider>,
-                             document.body);
+                             document.getElementById('yourturn-container'));
             }
         });
     });

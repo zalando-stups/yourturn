@@ -108,18 +108,22 @@ ViolationHandler.willTransitionTo = function(transition, params, query) {
 };
 ViolationHandler.fetchData = function(router) {
     let promises = [];
-    // if there are query params we have to pre-set those as search parameters
-    FULLSTOP_ACTIONS.updateSearchParams(parseQueryParams(router.query));
-    let searchParams = FULLSTOP_STORE.getSearchParams();
+    let searchParams = parseQueryParams(router.query);
+    FULLSTOP_ACTIONS.updateSearchParams(searchParams);
     // tab-specific loadings
-    // tab 1
-    FULLSTOP_ACTIONS.fetchViolationCount(searchParams);
-    // tab 2
-    FULLSTOP_ACTIONS.fetchViolationCountIn(
-        searchParams.cross_inspectedAccount ? searchParams.cross_inspectedAccount : searchParams.accounts[0],
-        searchParams);
-    // tab 3
-    FULLSTOP_ACTIONS.fetchViolations(searchParams);
+    if (searchParams.activeTab === 0) {
+        // tab 1
+        FULLSTOP_ACTIONS.fetchViolationCount(searchParams);
+    } else if (searchParams.activeTab === 1) {
+        // tab 2
+        FULLSTOP_ACTIONS.fetchViolationCountIn(
+            searchParams.cross_inspectedAccount ? searchParams.cross_inspectedAccount : searchParams.accounts[0],
+            searchParams);
+    } else if (searchParams.activeTab === 2) {
+        // tab 3
+        FULLSTOP_ACTIONS.fetchViolations(searchParams);
+    }
+
     if (!Object.keys(FULLSTOP_STORE.getViolationTypes()).length) {
         promises.push(FULLSTOP_ACTIONS.fetchViolationTypes());
     }
