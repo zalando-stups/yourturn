@@ -1,3 +1,4 @@
+/* global ENV_DEVELOPMENT */
 import _ from 'lodash';
 import {Actions} from 'flummox';
 import request from 'common/src/superagent';
@@ -76,6 +77,19 @@ function fetchApplicationVersions(id) {
             .then(res => res.body)
             .catch(err => {
                 err.id = id;
+                throw err;
+            });
+}
+
+function fetchLatestApplicationVersions(team) {
+    return request
+            .get(ENV_DEVELOPMENT ? `http://localhost:8080/latestVersions/${team}` : `/latestVersions/${team}`)
+            .accept('json')
+            .oauth(Provider, RequestConfig)
+            .exec(saveRoute)
+            .then(res => res.body)
+            .catch(err => {
+                err.team = team;
                 throw err;
             });
 }
@@ -176,6 +190,7 @@ export {
     saveApplication,
     saveApplicationCriticality,
     fetchApplicationVersions,
+    fetchLatestApplicationVersions,
     fetchApplicationVersion,
     saveApplicationVersion,
     fetchApprovalTypes,
@@ -204,6 +219,10 @@ class KioActions extends Actions {
 
     fetchApplicationVersions(id) {
         return fetchApplicationVersions(id);
+    }
+
+    fetchLatestApplicationVersions(team) {
+        return fetchLatestApplicationVersions(team);
     }
 
     fetchApplicationVersion(id, ver) {

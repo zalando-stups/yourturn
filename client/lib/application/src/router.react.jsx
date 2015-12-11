@@ -49,21 +49,19 @@ AppListHandler.propTypes = {
     params: React.PropTypes.object.isRequired
 };
 AppListHandler.fetchData = function() {
+    // get all applications no matter what
+    KIO_ACTIONS.fetchApplications();
+    // we need to know which accounts a user has access to
     return requireAccounts(FLUX)
             .then(accs => {
+                // so we can determine a preselected account in tabs
                 let preferredAcc = KIO_STORE.getPreferredAccount();
                 if (!preferredAcc) {
                     preferredAcc = KIO_ACTIONS.savePreferredAccount(accs[0].name);
                 }
-
+                // and fetch latest application versions for it
                 KIO_ACTIONS
-                .fetchApplications()
-                .then(apps =>
-                    apps
-                    .filter(app => app.active)
-                    .filter(app => app.team_id === preferredAcc)
-                    .filter(app => !KIO_STORE.getApplicationVersions(app.id).length)
-                    .forEach(app => setTimeout(() => KIO_ACTIONS.fetchApplicationVersions(app.id), 50)));
+                .fetchLatestApplicationVersions(preferredAcc);
             });
 };
 

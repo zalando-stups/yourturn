@@ -39,6 +39,12 @@ class KioStoreWrapper extends Store {
             null);
 
         this.registerAsync(
+            kioActions.fetchLatestApplicationVersions,
+            null,
+            this.receiveApplicationVersions,
+            null);
+
+        this.registerAsync(
             kioActions.fetchApplicationVersion,
             this.beginFetchApplicationVersion,
             this.receiveApplicationVersion,
