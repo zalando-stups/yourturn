@@ -1,5 +1,7 @@
-import {Actions} from 'flummox';
+import {createAction} from 'redux-actions';
+import {flummoxCompatWrap} from 'common/src/util';
 import request from 'common/src/superagent';
+import Type from './twintip-types';
 import {Services} from 'common/src/data/services';
 import {Provider, RequestConfig, saveRoute} from 'common/src/oauth-provider';
 
@@ -16,14 +18,8 @@ function fetchApi(id) {
         });
 }
 
-class TwintipActions extends Actions {
-    fetchApi(id) {
-        return fetchApi(id);
-    }
-}
-
-export default TwintipActions;
+let fetchApiAction = flummoxCompatWrap(createAction(Type.FETCH_API, fetchApi));
 
 export {
-    fetchApi as fetchApi
+    fetchApiAction as fetchApi
 };

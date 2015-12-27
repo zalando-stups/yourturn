@@ -9,11 +9,14 @@ import {connect} from 'react-redux';
 
 import * as KioGetter from 'common/src/data/kio/kio-getter';
 import * as UserGetter from 'common/src/data/user/user-getter';
+import * as PieroneGetter from 'common/src/data/pierone/pierone-getter';
+import * as TwintipGetter from 'common/src/data/twintip/twintip-getter';
 
 import * as NotificationActions from 'common/src/data/notification/notification-actions';
 
 import * as KioActions from 'common/src/data/kio/kio-actions';
 import * as UserActions from 'common/src/data/user/user-actions';
+import * as TwintipActions from 'common/src/data/twintip/twintip-actions';
 
 import ApplicationList from './application-list/application-list.jsx';
 import ApplicationForm from './application-form/application-form.jsx';
@@ -33,6 +36,7 @@ const MINT_ACTIONS = FLUX.getActions('mint'),
       KIO_ACTIONS = bindActionsToStore(REDUX, KioActions),
       ESSENTIALS_STORE = FLUX.getStore('essentials'),
       NOTIFICATION_ACTIONS = bindActionsToStore(REDUX, NotificationActions),
+      TWINTIP_ACTIONS = bindActionsToStore(REDUX, TwintipActions),
       TWINTIP_STORE = FLUX.getStore('twintip');
 
 class AppListHandler extends React.Component {
@@ -156,31 +160,30 @@ class AppDetailHandler extends React.Component {
     }
 
     render() {
-        return <FluxComponent
-                    flux={FLUX}
-                    connectToStores={['kio', 'pierone', 'twintip']}>
-
-                    <ApplicationDetail
-                        applicationId={this.props.params.applicationId}
-                        kioStore={KIO_STORE}
-                        kioActions={KIO_ACTIONS}
-                        pieroneStore={PIERONE_STORE}
-                        twintipStore={TWINTIP_STORE}
-                        notificationActions={NOTIFICATION_ACTIONS}
-                        userStore={USER_STORE} />
-                </FluxComponent>;
+        return <ApplicationDetail
+                    applicationId={this.props.params.applicationId}
+                    kioActions={KIO_ACTIONS}
+                    notificationActions={NOTIFICATION_ACTIONS}
+                    kioStore={this.props.kioStore}
+                    twintipStore={this.props.twintipStore}
+                    userStore={this.props.userStore} />;
     }
 }
 AppDetailHandler.displayName = 'AppDetailHandler';
 AppDetailHandler.propTypes = {
     params: React.PropTypes.object.isRequired
 };
-AppDetailHandler.fetchData = function(state) {
-    KIO_ACTIONS.fetchApplication(state.params.applicationId);
-    KIO_ACTIONS.fetchApplicationVersions(state.params.applicationId);
-    FLUX.getActions('twintip').fetchApi(state.params.applicationId);
+AppDetailHandler.fetchData = function(routerState) {
+    KIO_ACTIONS.fetchApplication(routerState.params.applicationId);
+    KIO_ACTIONS.fetchApplicationVersions(routerState.params.applicationId);
+    TWINTIP_ACTIONS.fetchApi(routerState.params.applicationId);
 };
-
+var ConnectedAppDetailHandler =
+    connect(state => ({
+        kioStore: bindGettersToState(state.kio, KioGetter),
+        userStore: bindGettersToState(state.user, UserGetter),
+        twintipStore: bindGettersToState(state.twintip, TwintipGetter)
+    }))(AppDetailHandler);
 
 class OAuthFormHandler extends React.Component {
     constructor() {
@@ -472,7 +475,7 @@ const ROUTES =
             <Route name='application-appOAuth' path='oauth/:applicationId' handler={OAuthFormHandler} />
             <Route name='application-appAccess' path='access-control/:applicationId' handler={AccessFormHandler} />
             <Route name='application-appDetail' path='detail/:applicationId'>
-                <DefaultRoute handler={AppDetailHandler} />
+                <DefaultRoute handler={ConnectedAppDetailHandler} />
                 <Route name='application-verList' path='version'>
                     <DefaultRoute handler={VersionListHandler} />
                     <Route name='application-verCreate' path='create' handler={CreateVersionFormHandler} />

@@ -7,13 +7,13 @@ import FetchResult from 'common/src/fetch-result';
 import Placeholder from './placeholder.jsx';
 import DefaultError from 'common/src/error.jsx';
 import 'common/asset/less/application/application-detail.less';
-import {APPLICATION_WHITELIST} from 'common/src/config';
+import Config from 'common/src/config';
 
 function isWhitelisted(uid) {
-    if (APPLICATION_WHITELIST.length === 0) {
+    if (Config.APPLICATION_WHITELIST.length === 0) {
         return true;
     }
-    return uid && APPLICATION_WHITELIST.indexOf(uid) >= 0;
+    return uid && Config.APPLICATION_WHITELIST.indexOf(uid) >= 0;
 }
 
 function determineOwnApplication(app, accounts) {
@@ -23,11 +23,6 @@ function determineOwnApplication(app, accounts) {
 class ApplicationDetail extends React.Component {
     constructor(props) {
         super();
-        this.stores = {
-            user: props.userStore,
-            kio: props.kioStore,
-            twintip: props.twintipStore
-        };
         this.state = {
             criticalityUpdatePending: false
         };
@@ -62,13 +57,15 @@ class ApplicationDetail extends React.Component {
 
     render() {
         let {applicationId} = this.props,
-            {kio, twintip, user} = this.stores,
-            {uid} = user.getTokenInfo(),
-            versions = _.take(kio.getApplicationVersions(applicationId), 3),
-            app = kio.getApplication(applicationId),
+            {uid} = this.props.userStore.getTokenInfo(),
+            versions = _.take(this.props.kioStore.getApplicationVersions(applicationId), 3),
+            app = this.props.kioStore.getApplication(applicationId),
             {criticality_level} = app,
-            isOwnApplication = determineOwnApplication(app, user.getUserCloudAccounts()),
-            api = twintip.getApi(applicationId);
+            isOwnApplication = determineOwnApplication(app, this.props.userStore.getUserCloudAccounts()),
+            api = this.props.twintipStore.getApi(applicationId);
+
+        // TODO no markdown
+        // because component does not get nerw props
 
         const LINK_PARAMS = {
             applicationId: applicationId
