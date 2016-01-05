@@ -49,9 +49,8 @@ class AppListHandler extends React.Component {
 
     render() {
         return <ApplicationList
-                    userStore={this.props.userStore}
                     kioActions={KIO_ACTIONS}
-                    kioStore={this.props.kioStore} />;
+                    {...this.props} />;
     }
 }
 AppListHandler.displayName = 'AppListHandler';
@@ -90,8 +89,7 @@ class CreateAppFormHandler extends React.Component {
                     edit={false}
                     notificationActions={NOTIFICATION_ACTIONS}
                     kioActions={KIO_ACTIONS}
-                    kioStore={this.props.kioStore}
-                    userStore={this.props.userStore} />;
+                    {...this.props} />;
     }
 }
 CreateAppFormHandler.displayName = 'CreateAppFormHandler';
@@ -120,9 +118,8 @@ class EditAppFormHandler extends React.Component {
                         edit={true}
                         applicationId={this.props.params.applicationId}
                         notificationActions={NOTIFICATION_ACTIONS}
-                        userStore={this.props.userStore}
                         kioActions={KIO_ACTIONS}
-                        kioStore={this.props.kioStore} />
+                        {...this.props} />
     }
 }
 EditAppFormHandler.isAllowed = function(routerState, state) {
@@ -167,9 +164,7 @@ class AppDetailHandler extends React.Component {
                     applicationId={this.props.params.applicationId}
                     kioActions={KIO_ACTIONS}
                     notificationActions={NOTIFICATION_ACTIONS}
-                    kioStore={this.props.kioStore}
-                    twintipStore={this.props.twintipStore}
-                    userStore={this.props.userStore} />;
+                    {...this.props} />;
     }
 }
 AppDetailHandler.displayName = 'AppDetailHandler';
@@ -198,10 +193,7 @@ class OAuthFormHandler extends React.Component {
                     applicationId={this.props.params.applicationId}
                     mintActions={MINT_ACTIONS}
                     notificationActions={NOTIFICATION_ACTIONS}
-                    mintStore={this.props.mintStore}
-                    userStore={this.props.userStore}
-                    essentialsStore={this.props.essentialsStore}
-                    kioStore={this.props.kioStore} />;
+                    {...this.props} />;
     }
 }
 OAuthFormHandler.displayName = 'OAuthFormHandler';
@@ -230,34 +222,32 @@ class AccessFormHandler extends React.Component {
     }
 
     render() {
-        return <FluxComponent
-                    flux={FLUX}
-                    connectToStores={['mint', 'essentials', 'kio']}>
-
-                    <AccessForm
+        return <AccessForm
                         applicationId={this.props.params.applicationId}
                         mintActions={MINT_ACTIONS}
                         notificationActions={NOTIFICATION_ACTIONS}
-                        mintStore={MINT_STORE}
-                        userStore={USER_STORE}
-                        essentialsStore={ESSENTIALS_STORE}
-                        kioStore={KIO_STORE} />
-                </FluxComponent>;
+                        {...this.props} />;
     }
 }
 AccessFormHandler.displayName = 'AccessFormHandler';
 AccessFormHandler.propTypes = {
     params: React.PropTypes.object.isRequired
 };
-AccessFormHandler.fetchData = function(state) {
-    let id = state.params.applicationId;
-    FLUX.getActions('essentials').fetchAllScopes();
-    if (!KIO_STORE.getApplication(id)) {
-        KIO_ACTIONS.fetchApplication(id);
-    }
-    return MINT_ACTIONS.fetchOAuthConfig(id);
+AccessFormHandler.fetchData = function(routerState, state) {
+    let id = routerState.params.applicationId;
+    ESSENTIALS_ACTIONS.fetchAllScopes();
+    KIO_ACTIONS.fetchApplication(id);
+    return Promise.all([
+        MINT_ACTIONS.fetchOAuthConfig(id),
+        requireAccounts(state, USER_ACTIONS)
+    ]);
 };
-
+let ConnectedAccessFormHandler = connect(state => ({
+    mintStore: bindGettersToState(state.mint, MintGetter),
+    kioStore: bindGettersToState(state.kio, KioGetter),
+    userStore: bindGettersToState(state.user, UserGetter),
+    essentialsStore: bindGettersToState(state.essentials, EssentialsGetter)
+}))(AccessFormHandler);
 
 class VersionListHandler extends React.Component {
     constructor() {
@@ -477,7 +467,7 @@ const ROUTES =
             <Route name='application-appCreate' path='create' handler={ConnectedCreateAppFormHandler} />
             <Route name='application-appEdit' path='edit/:applicationId' handler={ConnectedEditAppFormHandler} />
             <Route name='application-appOAuth' path='oauth/:applicationId' handler={ConnectedOAuthFormHandler} />
-            <Route name='application-appAccess' path='access-control/:applicationId' handler={AccessFormHandler} />
+            <Route name='application-appAccess' path='access-control/:applicationId' handler={ConnectedAccessFormHandler} />
             <Route name='application-appDetail' path='detail/:applicationId'>
                 <DefaultRoute handler={ConnectedAppDetailHandler} />
                 <Route name='application-verList' path='version'>
