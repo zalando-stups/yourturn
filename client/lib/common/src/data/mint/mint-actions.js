@@ -1,6 +1,9 @@
 import {Actions} from 'flummox';
 import request from 'common/src/superagent';
 import {Services} from 'common/src/data/services';
+import {createAction} from 'redux-actions';
+import Type from './mint-types';
+import {flummoxCompatWrap} from 'common/src/util';
 import {Provider, RequestConfig, saveRoute} from 'common/src/oauth-provider';
 
 function fetchOAuthConfig(applicationId) {
@@ -72,8 +75,12 @@ class MintActions extends Actions {
 
 export default MintActions;
 
+let fetchAction = flummoxCompatWrap(createAction(Type.FETCH_OAUTH_CONFIG, fetchOAuthConfig)),
+    saveAction = flummoxCompatWrap(createAction(Type.SAVE_OAUTH_CONFIG, saveOAuthConfig)),
+    renewAction = flummoxCompatWrap(createAction(Type.RENEW_CREDENTIALS, renewCredentials));
+
 export {
-    renewCredentials,
-    saveOAuthConfig,
-    fetchOAuthConfig
+    renewAction as renewCredentials,
+    saveAction as saveOAuthConfig,
+    fetchAction as fetchOAuthConfig
 };

@@ -11,12 +11,15 @@ import * as KioGetter from 'common/src/data/kio/kio-getter';
 import * as UserGetter from 'common/src/data/user/user-getter';
 import * as PieroneGetter from 'common/src/data/pierone/pierone-getter';
 import * as TwintipGetter from 'common/src/data/twintip/twintip-getter';
+import * as MintGetter from 'common/src/data/mint/mint-getter';
+import * as EssentialsGetter from 'common/src/data/essentials/essentials-getter';
 
 import * as NotificationActions from 'common/src/data/notification/notification-actions';
-
 import * as KioActions from 'common/src/data/kio/kio-actions';
 import * as UserActions from 'common/src/data/user/user-actions';
 import * as TwintipActions from 'common/src/data/twintip/twintip-actions';
+import * as MintActions from 'common/src/data/mint/mint-actions';
+import * as EssentialsActions from 'common/src/data/essentials/essentials-actions';
 
 import ApplicationList from './application-list/application-list.jsx';
 import ApplicationForm from './application-form/application-form.jsx';
@@ -28,13 +31,13 @@ import VersionForm from './version-form/version-form.jsx';
 import VersionDetail from './version-detail/version-detail.jsx';
 import ApprovalForm from './approval-form/approval-form.jsx';
 
-const MINT_ACTIONS = FLUX.getActions('mint'),
-      MINT_STORE = FLUX.getStore('mint'),
+const MINT_ACTIONS = bindActionsToStore(REDUX, MintActions),
       PIERONE_ACTIONS = FLUX.getActions('pierone'),
       PIERONE_STORE = FLUX.getStore('pierone'),
       USER_ACTIONS = bindActionsToStore(REDUX, UserActions),
       KIO_ACTIONS = bindActionsToStore(REDUX, KioActions),
-      ESSENTIALS_STORE = FLUX.getStore('essentials'),
+      ESSENTIALS_STORE = undefined,
+      ESSENTIALS_ACTIONS = bindActionsToStore(REDUX, EssentialsActions),
       NOTIFICATION_ACTIONS = bindActionsToStore(REDUX, NotificationActions),
       TWINTIP_ACTIONS = bindActionsToStore(REDUX, TwintipActions),
       TWINTIP_STORE = FLUX.getStore('twintip');
@@ -191,34 +194,35 @@ class OAuthFormHandler extends React.Component {
     }
 
     render() {
-        return <FluxComponent
-                    flux={FLUX}
-                    connectToStores={['mint', 'essentials', 'kio']}>
-
-                    <OAuthForm
-                        applicationId={this.props.params.applicationId}
-                        mintActions={MINT_ACTIONS}
-                        notificationActions={NOTIFICATION_ACTIONS}
-                        mintStore={MINT_STORE}
-                        userStore={USER_STORE}
-                        essentialsStore={ESSENTIALS_STORE}
-                        kioStore={KIO_STORE} />
-                </FluxComponent>;
+        return <OAuthForm
+                    applicationId={this.props.params.applicationId}
+                    mintActions={MINT_ACTIONS}
+                    notificationActions={NOTIFICATION_ACTIONS}
+                    mintStore={this.props.mintStore}
+                    userStore={this.props.userStore}
+                    essentialsStore={this.props.essentialsStore}
+                    kioStore={this.props.kioStore} />;
     }
 }
 OAuthFormHandler.displayName = 'OAuthFormHandler';
 OAuthFormHandler.propTypes = {
     params: React.PropTypes.object.isRequired
 };
-OAuthFormHandler.fetchData = function(state) {
-    let id = state.params.applicationId;
-    FLUX.getActions('essentials').fetchAllScopes();
-    if (!KIO_STORE.getApplication(id)) {
-        KIO_ACTIONS.fetchApplication(id);
-    }
-    return MINT_ACTIONS.fetchOAuthConfig(id);
+OAuthFormHandler.fetchData = function(routerState, state) {
+    let id = routerState.params.applicationId;
+    ESSENTIALS_ACTIONS.fetchAllScopes();
+    KIO_ACTIONS.fetchApplication(id);
+    return Promise.all([
+        requireAccounts(state, USER_ACTIONS),
+        MINT_ACTIONS.fetchOAuthConfig(id)
+    ]);
 };
-
+let ConnectedOAuthFormHandler = connect(state => ({
+    mintStore: bindGettersToState(state.mint, MintGetter),
+    kioStore: bindGettersToState(state.kio, KioGetter),
+    userStore: bindGettersToState(state.user, UserGetter),
+    essentialsStore: bindGettersToState(state.essentials, EssentialsGetter)
+}))(OAuthFormHandler);
 
 class AccessFormHandler extends React.Component {
     constructor() {
@@ -472,7 +476,7 @@ const ROUTES =
             <DefaultRoute handler={ConnectedAppListHandler} />
             <Route name='application-appCreate' path='create' handler={ConnectedCreateAppFormHandler} />
             <Route name='application-appEdit' path='edit/:applicationId' handler={ConnectedEditAppFormHandler} />
-            <Route name='application-appOAuth' path='oauth/:applicationId' handler={OAuthFormHandler} />
+            <Route name='application-appOAuth' path='oauth/:applicationId' handler={ConnectedOAuthFormHandler} />
             <Route name='application-appAccess' path='access-control/:applicationId' handler={AccessFormHandler} />
             <Route name='application-appDetail' path='detail/:applicationId'>
                 <DefaultRoute handler={ConnectedAppDetailHandler} />

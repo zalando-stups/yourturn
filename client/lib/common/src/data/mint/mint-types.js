@@ -1,9 +1,9 @@
 import {createActionTypes} from 'common/src/util';
 
 const TYPES = [
-    'BEGIN_FETCH_OAUTH_CONFIG',
-    'FAIL_FETCH_OAUTH_CONFIG',
-    'RECEIVE_OAUTH_CONFIG'
+    'FETCH_OAUTH_CONFIG',
+    'SAVE_OAUTH_CONFIG',
+    'RENEW_CREDENTIALS'
 ];
 
 export default createActionTypes(TYPES);

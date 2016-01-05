@@ -9,7 +9,7 @@ import fuzzy from 'fuzzysearch';
  * @return {obj|false} false if it doesn’t exist.
  */
 function getResource(state, resourceId) {
-    let resource = state.get(resourceId);
+    let resource = state.resources.get(resourceId);
     return resource ? resource.toJS() : false;
 }
 
@@ -23,6 +23,7 @@ function getResources(state, term) {
     let lcTerm = term ? term.toLowerCase() : '';
 
     return state
+            .resources
             .valueSeq()
             .filter(r => !r.getResult)
             .filter(r => term ? fuzzy(lcTerm, r.get('name').toLowerCase()) : true)
@@ -41,7 +42,7 @@ function getResources(state, term) {
  * @return {obj|false} False if not found.
  */
 function getScope(state, resourceId, scopeId) {
-    let scopes = state.get(resourceId);
+    let scopes = state.scopes.get(resourceId);
     if (scopes) {
         let scope = scopes.get(scopeId);
         return scope ? scope.toJS() : false;
@@ -58,6 +59,7 @@ function getScope(state, resourceId, scopeId) {
  */
 function getScopes(state, resourceId) {
     return state
+            .scopes
             .get(resourceId, Immutable.Map())
             .valueSeq()
             .filter(s => !s.getResult)
@@ -73,6 +75,7 @@ function getScopes(state, resourceId) {
  */
 function getAllScopes(state) {
     return state
+            .scopes
             .valueSeq()
             .map(s => s.valueSeq())
             .flatten(true) // only one level
@@ -90,7 +93,7 @@ function getAllScopes(state) {
  * @return {array} Empty array if there are no applications with this scope.
  */
 function getScopeApplications(state, resourceId, scopeId) {
-    let apps = state.get(`${resourceId}.${scopeId}`, Immutable.List());
+    let apps = state.scopeApps.get(`${resourceId}.${scopeId}`, Immutable.List());
     return apps
             .sortBy(a => a.get('id').toLowerCase())
             .toJS();

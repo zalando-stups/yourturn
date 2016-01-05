@@ -9,19 +9,32 @@ import 'common/asset/less/application/oauth-form.less';
 class OAuthForm extends React.Component {
     constructor(props) {
         super();
-        this.stores = {
-            kio: props.kioStore,
-            mint: props.mintStore,
-            user: props.userStore,
-            essentials: props.essentialsStore
-        };
 
-        let oauthConfig = this.stores.mint.getOAuthConfig(props.applicationId);
+        let oauthConfig = props.mintStore.getOAuthConfig(props.applicationId);
         this.state = {
             scopes: oauthConfig.scopes,
             redirectUrl: oauthConfig.redirect_url,
             isClientConfidential: oauthConfig.is_client_confidential
         };
+    }
+
+    componentWillReceiveProps(newProps) {
+        let oauthConfig = newProps.mintStore.getOAuthConfig(this.props.applicationId);
+        if (oauthConfig && (!this.state.scopes || oauthConfig.scopes.length !== this.state.scopes.length)) {
+            this.setState({
+                scopes: oauthConfig.scopes
+            });
+        }
+        if (oauthConfig && oauthConfig.redirect_url !== this.state.redirectUrl) {
+            this.setState({
+                redirectUrl: oauthConfig.redirect_url
+            });
+        }
+        if (oauthConfig && oauthConfig.is_client_confidential !== this.state.isClientConfidential) {
+            this.setState({
+                isClientConfidential: oauthConfig.is_client_confidential
+            });
+        }
     }
 
     updateScopes(selectedScopes) {
@@ -32,7 +45,7 @@ class OAuthForm extends React.Component {
 
     updateConfidentiality(evt) {
         this.setState({
-            isClientConfidential: !evt.target.checked
+            isClientConfidential: !this.state.isClientConfidential
         });
     }
 
@@ -49,9 +62,9 @@ class OAuthForm extends React.Component {
         evt.preventDefault();
 
         let {applicationId} = this.props,
-            scopes = this.stores.essentials.getAllScopes(),
+            scopes = this.props.essentialsStore.getAllScopes(),
             ownerscopes = this.state.scopes,
-            oauthConfig = this.stores.mint.getOAuthConfig(applicationId),
+            oauthConfig = this.props.mintStore.getOAuthConfig(applicationId),
             appscopes = oauthConfig
                             .scopes
                             .filter(s => scopes.some(scp => scp.id === s.id &&
@@ -79,12 +92,11 @@ class OAuthForm extends React.Component {
     }
 
     render() {
-        let {kio, mint, user, essentials} = this.stores,    // eslint-disable-line
-            {applicationId} = this.props,
-            application = kio.getApplication(applicationId),
-            isOwnApplication = user.getUserCloudAccounts().some(t => t.name === application.team_id),
-            allRoScopes = essentials.getAllScopes().filter(s => s.is_resource_owner_scope),
-            oauth = mint.getOAuthConfig(applicationId);
+        let {applicationId, kioStore, mintStore, userStore, essentialsStore} = this.props,
+            application = kioStore.getApplication(applicationId),
+            isOwnApplication = userStore.getUserCloudAccounts().some(t => t.name === application.team_id),
+            allRoScopes = essentialsStore.getAllScopes().filter(s => s.is_resource_owner_scope),
+            oauth = mintStore.getOAuthConfig(applicationId);
 
         const LINK_PARAMS = {
             applicationId: applicationId
@@ -121,7 +133,7 @@ class OAuthForm extends React.Component {
                         <div className='form-group'>
                             <label>
                                 <input
-                                    defaultChecked={this.state.isClientConfidential ? null : 'checked'}
+                                    checked={!this.state.isClientConfidential}
                                     onChange={this.updateConfidentiality.bind(this)}
                                     data-block='confidentiality-checkbox'
                                     id='oauth_is_client_non_confidential'
