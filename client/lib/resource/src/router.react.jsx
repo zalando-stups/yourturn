@@ -155,25 +155,23 @@ class ResourceDetailHandler extends React.Component {
         super();
     }
     render() {
-        return <FlummoxComponent
-                    flux={FLUX}
-                    connectToStores={['essentials']}>
-                    <ResourceDetail
-                        resourceId={this.props.params.resourceId}
-                        userStore={USER_STORE}
-                        essentialsStore={ESSENTIALS_STORE} />
-                </FlummoxComponent>;
+        return <ResourceDetail
+                    resourceId={this.props.params.resourceId}
+                    {...this.props} />;
     }
 }
 ResourceDetailHandler.displayName = 'ResourceDetailHandler';
 ResourceDetailHandler.propTypes = {
     params: React.PropTypes.object
 };
-ResourceDetailHandler.fetchData = function(state) {
-    ESSENTIALS_ACTIONS.fetchResource(state.params.resourceId);
-    ESSENTIALS_ACTIONS.fetchScopes(state.params.resourceId);
+ResourceDetailHandler.fetchData = function(routerState) {
+    ESSENTIALS_ACTIONS.fetchResource(routerState.params.resourceId);
+    ESSENTIALS_ACTIONS.fetchScopes(routerState.params.resourceId);
 };
-
+let ConnectedResourceDetailHandler = connect(state => ({
+    essentialsStore: bindGettersToState(state.essentials, EssentialsGetter),
+    userStore: bindGettersToState(state.user, UserGetter)
+}))(ResourceDetailHandler);
 
 class ScopeDetailHandler extends React.Component {
     constructor() {
@@ -280,7 +278,7 @@ const ROUTES =
         <Route name='resource-resCreate' path='create' handler={CreateResourceFormHandler} />
         <Route name='resource-resEdit' path='edit/:resourceId' handler={EditResourceFormHandler} />
         <Route name='resource-resDetail' path='detail/:resourceId'>
-            <DefaultRoute handler={ResourceDetailHandler} />
+            <DefaultRoute handler={ConnectedResourceDetailHandler} />
             <Route path='scope'>
                 <Route name='resource-scpCreate' path='create' handler={CreateScopeFormHandler} />
                 <Route name='resource-scpDetail' path='detail/:scopeId' handler={ScopeDetailHandler} />
