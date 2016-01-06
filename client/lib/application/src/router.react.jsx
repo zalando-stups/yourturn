@@ -1,7 +1,5 @@
 import React from 'react';
 import {Route, DefaultRoute} from 'react-router';
-import FluxComponent from 'flummox/component';
-import FLUX from 'yourturn/src/flux';
 import REDUX from 'yourturn/src/redux';
 import {parseArtifact} from 'application/src/util';
 import {requireAccounts, bindGettersToState, bindActionsToStore} from 'common/src/util';
@@ -34,14 +32,11 @@ import ApprovalForm from './approval-form/approval-form.jsx';
 
 const MINT_ACTIONS = bindActionsToStore(REDUX, MintActions),
       PIERONE_ACTIONS = bindActionsToStore(REDUX, PieroneActions),
-      PIERONE_STORE = undefined,
       USER_ACTIONS = bindActionsToStore(REDUX, UserActions),
       KIO_ACTIONS = bindActionsToStore(REDUX, KioActions),
-      ESSENTIALS_STORE = undefined,
       ESSENTIALS_ACTIONS = bindActionsToStore(REDUX, EssentialsActions),
       NOTIFICATION_ACTIONS = bindActionsToStore(REDUX, NotificationActions),
-      TWINTIP_ACTIONS = bindActionsToStore(REDUX, TwintipActions),
-      TWINTIP_STORE = FLUX.getStore('twintip');
+      TWINTIP_ACTIONS = bindActionsToStore(REDUX, TwintipActions);
 
 class AppListHandler extends React.Component {
     constructor() {
@@ -205,8 +200,8 @@ OAuthFormHandler.propTypes = {
 OAuthFormHandler.fetchData = function(routerState, state) {
     let id = routerState.params.applicationId;
     ESSENTIALS_ACTIONS.fetchAllScopes();
-    if (!KioGetter.getApplication(state.kio, applicationId)) {
-        KIO_ACTIONS.fetchApplication(applicationId);
+    if (!KioGetter.getApplication(state.kio, id)) {
+        KIO_ACTIONS.fetchApplication(id);
     }
     return Promise.all([
         requireAccounts(state, USER_ACTIONS),
@@ -240,8 +235,8 @@ AccessFormHandler.propTypes = {
 AccessFormHandler.fetchData = function(routerState, state) {
     let id = routerState.params.applicationId;
     ESSENTIALS_ACTIONS.fetchAllScopes();
-    if (!KioGetter.getApplication(state.kio, applicationId)) {
-        KIO_ACTIONS.fetchApplication(applicationId);
+    if (!KioGetter.getApplication(state.kio, id)) {
+        KIO_ACTIONS.fetchApplication(id);
     }
     return Promise.all([
         MINT_ACTIONS.fetchOAuthConfig(id),
@@ -278,7 +273,8 @@ VersionListHandler.fetchData = function(routerState, state) {
     }
 };
 let ConnectedVersionListHandler = connect(state => ({
-    kioStore: bindGettersToState(state.kio, KioGetter)
+    kioStore: bindGettersToState(state.kio, KioGetter),
+    userStore: bindGettersToState(state.user, UserGetter)
 }))(VersionListHandler);
 
 class VersionDetailHandler extends React.Component {
@@ -322,47 +318,6 @@ let ConnectedVersionDetailHandler = connect(state => ({
     userStore: bindGettersToState(state.user, UserGetter),
     pieroneStore: bindGettersToState(state.pierone, PieroneGetter)
 }))(VersionDetailHandler);
-
-class ApprovalFormHandler extends React.Component {
-    constructor() {
-        super();
-    }
-
-    render() {
-        return <FluxComponent
-                    flux={FLUX}
-                    connectToStores={['kio', 'pierone', 'user']}>
-
-                    <ApprovalForm
-                        applicationId={this.props.params.applicationId}
-                        versionId={this.props.params.versionId}
-                        kioActions={KIO_ACTIONS}
-                        kioStore={KIO_STORE}
-                        pieroneStore={PIERONE_STORE}
-                        userStore={USER_STORE} />
-                </FluxComponent>;
-    }
-}
-ApprovalFormHandler.displayName = 'ApprovalFormHandler';
-ApprovalFormHandler.propTypes = {
-    params: React.PropTypes.object.isRequired
-};
-ApprovalFormHandler.fetchData = function(state) {
-    let {applicationId, versionId} = state.params;
-    if (!KIO_STORE.getApplication(applicationId)) {
-        KIO_ACTIONS.fetchApplication(applicationId);
-    }
-    if (!KIO_STORE.getApplicationVersion(applicationId, versionId)) {
-        KIO_ACTIONS.fetchApplicationVersion(applicationId, versionId);
-    }
-    KIO_ACTIONS
-        .fetchApprovals(applicationId, versionId)
-        .then((args) => args[2]
-                        .map(a => a.user_id)
-                                .forEach(u => USER_ACTIONS.fetchUserInfo(u)));
-    return KIO_ACTIONS.fetchApprovalTypes(applicationId);
-};
-
 
 class CreateVersionFormHandler extends React.Component {
     constructor() {
@@ -416,24 +371,20 @@ class EditVersionFormHandler extends React.Component {
     }
 
     render() {
-        return <FluxComponent
-                    flux={FLUX}
-                    connectToStores={['kio']}>
-
-                    <VersionForm
-                        edit={true}
-                        applicationId={this.props.params.applicationId}
-                        versionId={this.props.params.versionId}
-                        notificationActions={NOTIFICATION_ACTIONS}
-                        kioActions={KIO_ACTIONS}
-                        kioStore={KIO_STORE} />
-                </FluxComponent>;
+        return <VersionForm
+                edit={true}
+                applicationId={this.props.params.applicationId}
+                versionId={this.props.params.versionId}
+                notificationActions={NOTIFICATION_ACTIONS}
+                kioActions={KIO_ACTIONS}
+                {...this.props} />;
     }
 }
-EditVersionFormHandler.isAllowed = function(state) {
-    let {applicationId} = state.params,
-        application = KIO_STORE.getApplication(applicationId),
-        userTeams = USER_STORE.getUserCloudAccounts(),
+
+EditVersionFormHandler.isAllowed = function(routerState, state) {
+    let {applicationId} = routerState.params,
+        application = KioGetter.getApplication(state.kio, applicationId),
+        userTeams = UserGetter.getUserCloudAccounts(state.user),
         isOwnTeam = userTeams.map(t => t.name).indexOf(application.team_id) >= 0;
     if (!isOwnTeam) {
         let error = new Error();
@@ -447,17 +398,58 @@ EditVersionFormHandler.displayName = 'EditVersionFormHandler';
 EditVersionFormHandler.propTypes = {
     params: React.PropTypes.object.isRequired
 };
-EditVersionFormHandler.fetchData = function(state) {
-    let {applicationId, versionId} = state.params;
+EditVersionFormHandler.fetchData = function(routerState, state) {
+    let {applicationId, versionId} = routerState.params;
     KIO_ACTIONS.fetchApprovals(applicationId, versionId);
     return Promise.all([
-        requireAccounts(FLUX),
+        requireAccounts(state, USER_ACTIONS),
         KIO_ACTIONS.fetchApplicationVersion(applicationId, versionId),
-        KIO_STORE.getApplication(applicationId) ?
+        KioGetter.getApplication(state.kio, applicationId) ?
             Promise.resolve() :
             KIO_ACTIONS.fetchApplication(applicationId)
     ]);
 };
+let ConnectedEditVersionFormHandler = connect(state => ({
+    kioStore: bindGettersToState(state.kio, KioGetter)
+}))(EditVersionFormHandler);
+
+class ApprovalFormHandler extends React.Component {
+    constructor() {
+        super();
+    }
+
+    render() {
+        return <ApprovalForm
+                    applicationId={this.props.params.applicationId}
+                    versionId={this.props.params.versionId}
+                    kioActions={KIO_ACTIONS}
+                    {...this.props} />;
+    }
+}
+ApprovalFormHandler.displayName = 'ApprovalFormHandler';
+ApprovalFormHandler.propTypes = {
+    params: React.PropTypes.object.isRequired
+};
+ApprovalFormHandler.fetchData = function(routerState, state) {
+    let {applicationId, versionId} = routerState.params;
+    if (!KioGetter.getApplication(state.kio, applicationId)) {
+        KIO_ACTIONS.fetchApplication(applicationId);
+    }
+    if (!KioGetter.getApplicationVersion(state.kio, applicationId, versionId)) {
+        KIO_ACTIONS.fetchApplicationVersion(applicationId, versionId);
+    }
+    KIO_ACTIONS
+        .fetchApprovals(applicationId, versionId)
+        .then((args) => args[2]
+                        .map(a => a.user_id)
+                        .forEach(u => USER_ACTIONS.fetchUserInfo(u)));
+    return KIO_ACTIONS.fetchApprovalTypes(applicationId);
+};
+let ConnectedApprovalFormHandler = connect(state => ({
+    kioStore: bindGettersToState(state.kio, KioGetter),
+    pieroneStore: bindGettersToState(state.pierone, PieroneGetter),
+    userStore: bindGettersToState(state.user, UserGetter)
+}))(ApprovalFormHandler);
 
 const ROUTES =
         <Route name='application-appList' path='application'>
@@ -471,9 +463,9 @@ const ROUTES =
                 <Route name='application-verList' path='version'>
                     <DefaultRoute handler={ConnectedVersionListHandler} />
                     <Route name='application-verCreate' path='create' handler={ConnectedCreateVersionFormHandler} />
-                    <Route name='application-verApproval' path='approve/:versionId' handler={ApprovalFormHandler} />
+                    <Route name='application-verApproval' path='approve/:versionId' handler={ConnectedApprovalFormHandler} />
                     <Route name='application-verDetail' path='detail/:versionId' handler={ConnectedVersionDetailHandler} />
-                    <Route name='application-verEdit' path='edit/:versionId' handler={EditVersionFormHandler} />
+                    <Route name='application-verEdit' path='edit/:versionId' handler={ConnectedEditVersionFormHandler} />
                 </Route>
             </Route>
         </Route>;

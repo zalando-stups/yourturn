@@ -15,7 +15,7 @@ function ApprovalStore(state = Immutable.fromJS({
 
     let {type, payload} = action;
 
-    if (type === Types.RECEIVE_APPROVALS) {
+    if (type === Types.FETCH_APPROVALS) {
         let [applicationId, versionId, approvals] = payload,
             aprState = approvals.reduce(
                         (map, approval) => {
@@ -25,7 +25,7 @@ function ApprovalStore(state = Immutable.fromJS({
                         },
                         Immutable.Map());
         return state.setIn(['approvals', applicationId, versionId], aprState);
-    } else if (type === Types.RECEIVE_APPROVAL_TYPES) {
+    } else if (type === Types.FETCH_APPROVAL_TYPES) {
         let [applicationId, approvalTypes] = payload;
         return state.setIn(['approvalTypes', applicationId], Immutable.fromJS(approvalTypes));
     }
