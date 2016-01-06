@@ -91,14 +91,13 @@ class VersionDetail extends React.Component {
     }
 
     render() {
-        let {applicationId, versionId} = this.props,
-            {kio, user, pierone} = this.stores,
-            application = kio.getApplication(applicationId),
-            version = kio.getApplicationVersion(applicationId, versionId),
+        let {applicationId, versionId, kioStore, pieroneStore, userStore} = this.props,
+            application = kioStore.getApplication(applicationId),
+            version = kioStore.getApplicationVersion(applicationId, versionId),
             {team, artifact, tag} = parseArtifact(version.artifact),
-            scmSource = pierone.getScmSource(team, artifact, tag),
-            approvals = kio.getApprovals(applicationId, versionId),
-            isOwnApplication = user.getUserCloudAccounts().some(t => t.name === application.team_id);
+            scmSource = pieroneStore.getScmSource(team, artifact, tag),
+            approvals = kioStore.getApprovals(applicationId, versionId),
+            isOwnApplication = userStore.getUserCloudAccounts().some(t => t.name === application.team_id);
 
         const LINK_PARAMS = {
             applicationId: applicationId,
@@ -184,7 +183,6 @@ class VersionDetail extends React.Component {
 }
 VersionDetail.displayName = 'VersionDetail';
 VersionDetail.propTypes = {
-    flux: React.PropTypes.object.isRequired,
     applicationId: React.PropTypes.string.isRequired,
     versionId: React.PropTypes.string.isRequired
 };

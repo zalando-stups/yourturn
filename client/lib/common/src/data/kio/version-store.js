@@ -15,7 +15,7 @@ function VersionStore(state = Immutable.Map(), action) {
     } else if (type === Types.FAIL_FETCH_APPLICATION_VERSION) {
         let {id, ver} = payload;
         return state.setIn([id, ver], new Failed(payload));
-    } else if (type === Types.RECEIVE_APPLICATION_VERSION) {
+    } else if (type === Types.FETCH_APPLICATION_VERSION) {
         return VersionStore(state, {
             type: Types.FETCH_APPLICATION_VERSIONS,
             payload: [payload]

@@ -20,6 +20,7 @@ import * as UserActions from 'common/src/data/user/user-actions';
 import * as TwintipActions from 'common/src/data/twintip/twintip-actions';
 import * as MintActions from 'common/src/data/mint/mint-actions';
 import * as EssentialsActions from 'common/src/data/essentials/essentials-actions';
+import * as PieroneActions from 'common/src/data/pierone/pierone-actions';
 
 import ApplicationList from './application-list/application-list.jsx';
 import ApplicationForm from './application-form/application-form.jsx';
@@ -32,8 +33,8 @@ import VersionDetail from './version-detail/version-detail.jsx';
 import ApprovalForm from './approval-form/approval-form.jsx';
 
 const MINT_ACTIONS = bindActionsToStore(REDUX, MintActions),
-      PIERONE_ACTIONS = FLUX.getActions('pierone'),
-      PIERONE_STORE = FLUX.getStore('pierone'),
+      PIERONE_ACTIONS = bindActionsToStore(REDUX, PieroneActions),
+      PIERONE_STORE = undefined,
       USER_ACTIONS = bindActionsToStore(REDUX, UserActions),
       KIO_ACTIONS = bindActionsToStore(REDUX, KioActions),
       ESSENTIALS_STORE = undefined,
@@ -69,8 +70,7 @@ AppListHandler.fetchData = function(routerState, state) {
                     preferredAcc = KIO_ACTIONS.savePreferredAccount(accs[0].name);
                 }
                 // and fetch latest application versions for it
-                KIO_ACTIONS
-                .fetchLatestApplicationVersions(preferredAcc);
+                KIO_ACTIONS.fetchLatestApplicationVersions(preferredAcc);
             });
 };
 var ConnectedAppListHandler =
@@ -123,7 +123,6 @@ class EditAppFormHandler extends React.Component {
     }
 }
 EditAppFormHandler.isAllowed = function(routerState, state) {
-    console.log(routerState, state);
     let {applicationId} = routerState.params,
         application = KioGetter.getApplication(state.kio, applicationId),
         userTeams = UserGetter.getUserCloudAccounts(state.user),
@@ -171,10 +170,13 @@ AppDetailHandler.displayName = 'AppDetailHandler';
 AppDetailHandler.propTypes = {
     params: React.PropTypes.object.isRequired
 };
-AppDetailHandler.fetchData = function(routerState) {
-    KIO_ACTIONS.fetchApplication(routerState.params.applicationId);
-    KIO_ACTIONS.fetchApplicationVersions(routerState.params.applicationId);
-    TWINTIP_ACTIONS.fetchApi(routerState.params.applicationId);
+AppDetailHandler.fetchData = function(routerState, state) {
+    let {applicationId} = routerState.params;
+    if (!KioGetter.getApplication(state.kio, applicationId)) {
+        KIO_ACTIONS.fetchApplication(applicationId);
+    }
+    KIO_ACTIONS.fetchApplicationVersions(applicationId);
+    TWINTIP_ACTIONS.fetchApi(applicationId);
 };
 var ConnectedAppDetailHandler =
     connect(state => ({
@@ -203,7 +205,9 @@ OAuthFormHandler.propTypes = {
 OAuthFormHandler.fetchData = function(routerState, state) {
     let id = routerState.params.applicationId;
     ESSENTIALS_ACTIONS.fetchAllScopes();
-    KIO_ACTIONS.fetchApplication(id);
+    if (!KioGetter.getApplication(state.kio, applicationId)) {
+        KIO_ACTIONS.fetchApplication(applicationId);
+    }
     return Promise.all([
         requireAccounts(state, USER_ACTIONS),
         MINT_ACTIONS.fetchOAuthConfig(id)
@@ -236,7 +240,9 @@ AccessFormHandler.propTypes = {
 AccessFormHandler.fetchData = function(routerState, state) {
     let id = routerState.params.applicationId;
     ESSENTIALS_ACTIONS.fetchAllScopes();
-    KIO_ACTIONS.fetchApplication(id);
+    if (!KioGetter.getApplication(state.kio, applicationId)) {
+        KIO_ACTIONS.fetchApplication(applicationId);
+    }
     return Promise.all([
         MINT_ACTIONS.fetchOAuthConfig(id),
         requireAccounts(state, USER_ACTIONS)
@@ -264,10 +270,12 @@ VersionListHandler.displayName = 'VersionListHandler';
 VersionListHandler.propTypes = {
     params: React.PropTypes.object.isRequired
 };
-VersionListHandler.fetchData = function(state) {
-    let id = state.params.applicationId;
+VersionListHandler.fetchData = function(routerState, state) {
+    let id = routerState.params.applicationId;
     KIO_ACTIONS.fetchApplicationVersions(id);
-    KIO_ACTIONS.fetchApplication(id);
+    if (!KioGetter.getApplication(state.kio, id)) {
+        KIO_ACTIONS.fetchApplication(id);
+    }
 };
 let ConnectedVersionListHandler = connect(state => ({
     kioStore: bindGettersToState(state.kio, KioGetter)
@@ -279,44 +287,41 @@ class VersionDetailHandler extends React.Component {
     }
 
     render() {
-        return <FluxComponent
-                    flux={FLUX}
-                    connectToStores={['kio', 'pierone']}>
-
-                    <VersionDetail
-                        applicationId={this.props.params.applicationId}
-                        versionId={this.props.params.versionId}
-                        kioStore={KIO_STORE}
-                        userStore={USER_STORE}
-                        pieroneStore={PIERONE_STORE} />
-                </FluxComponent>;
+        return <VersionDetail
+                    applicationId={this.props.params.applicationId}
+                    versionId={this.props.params.versionId}
+                    {...this.props} />;
     }
 }
 VersionDetailHandler.displayName = 'VersionDetailHandler';
 VersionDetailHandler.propTypes = {
     params: React.PropTypes.object.isRequired
 };
-VersionDetailHandler.fetchData = function(state) {
-    let {applicationId, versionId} = state.params;
+VersionDetailHandler.fetchData = function(routerState, state) {
+    let {applicationId, versionId} = routerState.params;
     // fetch approvals for version
     KIO_ACTIONS.fetchApprovals(applicationId, versionId);
 
-    // fetch version itself
-    KIO_ACTIONS
-    .fetchApplicationVersion(applicationId, versionId)
-    .then(version => {
-        // once it's there parse the artifact and fetch scm-source.json
-        let {tag, team, artifact} = parseArtifact(version.artifact);
-        PIERONE_ACTIONS.fetchScmSource(team, artifact, tag);
-        PIERONE_ACTIONS.fetchTags(team, artifact);
-    });
-
     // fetch the application if it's not there aleady
-    if (!KIO_STORE.getApplication(applicationId)) {
+    if (!KioGetter.getApplication(state.kio, applicationId)) {
         KIO_ACTIONS.fetchApplication(applicationId);
     }
-};
 
+    // fetch version itself
+    KIO_ACTIONS
+        .fetchApplicationVersion(applicationId, versionId)
+        .then(version => {
+            // once it's there parse the artifact and fetch scm-source.json
+            let {tag, team, artifact} = parseArtifact(version.artifact);
+            PIERONE_ACTIONS.fetchScmSource(team, artifact, tag);
+            PIERONE_ACTIONS.fetchTags(team, artifact);
+        });
+};
+let ConnectedVersionDetailHandler = connect(state => ({
+    kioStore: bindGettersToState(state.kio, KioGetter),
+    userStore: bindGettersToState(state.user, UserGetter),
+    pieroneStore: bindGettersToState(state.pierone, PieroneGetter)
+}))(VersionDetailHandler);
 
 class ApprovalFormHandler extends React.Component {
     constructor() {
@@ -365,38 +370,33 @@ class CreateVersionFormHandler extends React.Component {
     }
 
     render() {
-        return <FluxComponent
-                    flux={FLUX}
-                    connectToStores={['kio']}>
-
-                    <VersionForm
-                        edit={false}
-                        applicationId={this.props.params.applicationId}
-                        versionId={this.props.params.versionId}
-                        kioActions={KIO_ACTIONS}
-                        notificationActions={NOTIFICATION_ACTIONS}
-                        kioStore={KIO_STORE} />
-                </FluxComponent>;
+        return <VersionForm
+                    edit={false}
+                    applicationId={this.props.params.applicationId}
+                    versionId={this.props.params.versionId}
+                    kioActions={KIO_ACTIONS}
+                    notificationActions={NOTIFICATION_ACTIONS}
+                    {...this.props} />;
     }
 }
 CreateVersionFormHandler.displayName = 'CreateVersionFormHandler';
 CreateVersionFormHandler.propTypes = {
     params: React.PropTypes.object.isRequired
 };
-CreateVersionFormHandler.fetchData = function(state) {
-    let {applicationId} = state.params;
+CreateVersionFormHandler.fetchData = function(routerState, state) {
+    let {applicationId} = routerState.params;
     return Promise.all([
-        requireAccounts(FLUX),
-        !!KIO_STORE.getApplication(applicationId) ?
+        requireAccounts(state, USER_ACTIONS),
+        !!KioGetter.getApplication(state.kio, applicationId) ?
             Promise.resolve() :
             KIO_ACTIONS.fetchApplication(applicationId),
         KIO_ACTIONS.fetchApplicationVersions(applicationId)
     ]);
 };
-CreateVersionFormHandler.isAllowed = function(state) {
-    let {applicationId} = state.params,
-        application = KIO_STORE.getApplication(applicationId),
-        userTeams = USER_STORE.getUserCloudAccounts(),
+CreateVersionFormHandler.isAllowed = function(routerState, state) {
+    let {applicationId} = routerState.params,
+        application = KioGetter.getApplication(state.kio, applicationId),
+        userTeams = UserGetter.getUserCloudAccounts(state.user),
         isOwnTeam = userTeams.map(t => t.name).indexOf(application.team_id) >= 0;
     if (!isOwnTeam) {
         let error = new Error();
@@ -406,7 +406,9 @@ CreateVersionFormHandler.isAllowed = function(state) {
         return error;
     }
 };
-
+let ConnectedCreateVersionFormHandler = connect(state => ({
+    kioStore: bindGettersToState(state.kio, KioGetter)
+}))(CreateVersionFormHandler);
 
 class EditVersionFormHandler extends React.Component {
     constructor() {
@@ -468,9 +470,9 @@ const ROUTES =
                 <DefaultRoute handler={ConnectedAppDetailHandler} />
                 <Route name='application-verList' path='version'>
                     <DefaultRoute handler={ConnectedVersionListHandler} />
-                    <Route name='application-verCreate' path='create' handler={CreateVersionFormHandler} />
+                    <Route name='application-verCreate' path='create' handler={ConnectedCreateVersionFormHandler} />
                     <Route name='application-verApproval' path='approve/:versionId' handler={ApprovalFormHandler} />
-                    <Route name='application-verDetail' path='detail/:versionId' handler={VersionDetailHandler} />
+                    <Route name='application-verDetail' path='detail/:versionId' handler={ConnectedVersionDetailHandler} />
                     <Route name='application-verEdit' path='edit/:versionId' handler={EditVersionFormHandler} />
                 </Route>
             </Route>

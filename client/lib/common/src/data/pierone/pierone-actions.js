@@ -1,7 +1,9 @@
-import {Actions} from 'flummox';
 import request from 'common/src/superagent';
 import {Services} from 'common/src/data/services';
 import {Provider, RequestConfig, saveRoute} from 'common/src/oauth-provider';
+import {createAction} from 'redux-actions';
+import Type from './pierone-types';
+import {flummoxCompatWrap} from 'common/src/util';
 
 function fetchScmSource(team, artifact, tag) {
     return request
@@ -32,20 +34,10 @@ function fetchTags(team, artifact) {
             });
 }
 
-class PieroneActions extends Actions {
-
-    fetchScmSource(team, artifact, tag) {
-        return fetchScmSource(team, artifact, tag);
-    }
-
-    fetchTags(team, artifact) {
-        return fetchTags(team, artifact);
-    }
-}
-
-export default PieroneActions;
+let fetchScmAction = flummoxCompatWrap(createAction(Type.FETCH_SCM_SOURCE, fetchScmSource)),
+    fetchTagsAction = createAction(Type.FETCH_TAGS, fetchTags);
 
 export {
-    fetchScmSource as fetchScmSource,
-    fetchTags as fetchTags
+    fetchScmAction as fetchScmSource,
+    fetchTagsAction as fetchTags
 };

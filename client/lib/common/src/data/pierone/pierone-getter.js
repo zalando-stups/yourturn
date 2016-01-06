@@ -10,6 +10,6 @@ function getScmSource(state, team, artifact, tag) {
 }
 
 export {
-    getTags as getTags,
-    getScmSource as getScmSource
+    getTags,
+    getScmSource
 };

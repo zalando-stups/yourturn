@@ -78,5 +78,8 @@ router.run(
                              </Provider>,
                              document.getElementById('yourturn-container'));
             }
+        })
+        .catch(err => {
+            React.render(<DefaultError error={err} />, document.getElementById('yourturn-container'));
         });
     });
