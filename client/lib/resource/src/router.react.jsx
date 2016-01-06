@@ -44,18 +44,16 @@ function isWhitelisted(token) {
     return token && Config.RESOURCE_WHITELIST.indexOf(token.uid) >= 0;
 }
 
-function requireToken() {
-    const ACTIONS = USER_ACTIONS,
-          STORE = USER_STORE;
-    let tokeninfo = STORE.getTokenInfo();
+function requireToken(state, UserActions) {
+    let tokeninfo = UserGetter.getTokenInfo(state.user);
     if (!tokeninfo.uid) {
-        return ACTIONS.fetchTokenInfo();
+        return UserActions.fetchTokenInfo();
     }
     return Promise.resolve(tokeninfo);
 }
 
-function requireWhitelisted() {
-    let token = USER_STORE.getTokenInfo();
+function requireWhitelisted(state) {
+    let token = UserGetter.getTokenInfo(state.user);
     if (!isWhitelisted(token)) {
         let error = new Error();
         error.name = 'Not whitelisted';
@@ -72,30 +70,29 @@ class CreateResourceFormHandler extends React.Component {
     }
 
     render() {
-        return <FlummoxComponent
-                    flux={FLUX}
-                    connectToStores={['essentials']}>
-                    <ResourceForm
-                        essentialsStore={ESSENTIALS_STORE}
-                        essentialsActions={ESSENTIALS_ACTIONS}
-                        notificationActions={ESSENTIALS_ACTIONS}
-                        edit={false} />
-                </FlummoxComponent>;
+        return <ResourceForm
+                    edit={false}
+                    essentialsActions={ESSENTIALS_ACTIONS}
+                    notificationActions={ESSENTIALS_ACTIONS}
+                    {...this.props} />;
     }
 }
-CreateResourceFormHandler.isAllowed = function() {
-    return requireWhitelisted(FLUX);
+CreateResourceFormHandler.isAllowed = function(routerState, state) {
+    return requireWhitelisted(state);
 };
 CreateResourceFormHandler.displayName = 'CreateResourceFormHandler';
 CreateResourceFormHandler.propTypes = {
     params: React.PropTypes.object
 };
-CreateResourceFormHandler.fetchData = function() {
+CreateResourceFormHandler.fetchData = function(routerState, state) {
     return Promise.all([
         ESSENTIALS_ACTIONS.fetchResources(),
-        requireToken()
+        requireToken(state, USER_ACTIONS)
     ]);
 };
+let ConnectedCreateResourceFormHandler = connect(state => ({
+    essentialsStore: bindGettersToState(state.essentials, EssentialsGetter)
+}))(CreateResourceFormHandler);
 
 
 class EditResourceFormHandler extends React.Component {
@@ -104,31 +101,31 @@ class EditResourceFormHandler extends React.Component {
     }
 
     render() {
-        return <FlummoxComponent
-                    flux={FLUX}
-                    connectToStores={['essentials']}>
-                    <ResourceForm
-                        resourceId={this.props.params.resourceId}
-                        edit={true}
-                        notificationActions={NOTIFICATION_ACTIONS}
-                        essentialsActions={ESSENTIALS_ACTIONS}
-                        essentialsStore={ESSENTIALS_STORE} />
-                </FlummoxComponent>;
+        return <ResourceForm
+                    resourceId={this.props.params.resourceId}
+                    edit={true}
+                    notificationActions={NOTIFICATION_ACTIONS}
+                    essentialsActions={ESSENTIALS_ACTIONS}
+                    {...this.props} />;
     }
 }
-EditResourceFormHandler.isAllowed = function() {
-    return requireWhitelisted(FLUX);
+EditResourceFormHandler.isAllowed = function(routerState, state) {
+    return requireWhitelisted(state);
 };
 EditResourceFormHandler.displayName = 'EditResourceFormHandler';
 EditResourceFormHandler.propTypes = {
     params: React.PropTypes.object
 };
-EditResourceFormHandler.fetchData = function(state) {
+EditResourceFormHandler.fetchData = function(routerState, state) {
     return Promise.all([
-        ESSENTIALS_ACTIONS.fetchResource(state.params.resourceId),
-        requireToken()
+        ESSENTIALS_ACTIONS.fetchResource(routerState.params.resourceId),
+        requireToken(state, USER_ACTIONS)
     ]);
 };
+let ConnectedEditResourceFormHandler = connect(state => ({
+    essentialsStore: bindGettersToState(state.essentials, EssentialsGetter)
+}))(EditResourceFormHandler);
+
 
 class ResourceListHandler extends React.Component {
     constructor() {
@@ -275,8 +272,8 @@ CreateScopeFormHandler.fetchData = function(state) {
 const ROUTES =
     <Route name='resource-resList' path='resource'>
         <DefaultRoute handler={ConnectedResourceListHandler} />
-        <Route name='resource-resCreate' path='create' handler={CreateResourceFormHandler} />
-        <Route name='resource-resEdit' path='edit/:resourceId' handler={EditResourceFormHandler} />
+        <Route name='resource-resCreate' path='create' handler={ConnectedCreateResourceFormHandler} />
+        <Route name='resource-resEdit' path='edit/:resourceId' handler={ConnectedEditResourceFormHandler} />
         <Route name='resource-resDetail' path='detail/:resourceId'>
             <DefaultRoute handler={ConnectedResourceDetailHandler} />
             <Route path='scope'>

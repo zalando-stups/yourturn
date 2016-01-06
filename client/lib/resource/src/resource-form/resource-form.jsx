@@ -9,12 +9,8 @@ class ResourceForm extends React.Component {
     constructor(props) {
         super();
         let {edit, resourceId} = props;
-        this.stores = {
-            essentials: props.essentialsStore
-        };
-        this.actions = props.essentialsActions;
         this.state = {
-            resource: edit ? this.stores.essentials.getResource(resourceId) : {resource_owners: []}
+            resource: edit ? props.essentialsStore.getResource(resourceId) : {resource_owners: []}
         };
     }
 
@@ -42,8 +38,7 @@ class ResourceForm extends React.Component {
 
         let {resource} = this.state;
         // save the resource
-        this
-        .actions
+        this.props.essentialsActions
         .saveResource(resource.id, resource)
         .then(() => {
             // redirect to detail view of the resource
@@ -62,7 +57,7 @@ class ResourceForm extends React.Component {
         this.state.resource[field] = evt.target[prop];
         this.setState({
             resource: this.state.resource,
-            resourceIdTaken: this.stores.essentials.getResource(this.state.resource.id) !== false
+            resourceIdTaken: this.props.essentialsStore.getResource(this.state.resource.id) !== false
         });
     }
 
