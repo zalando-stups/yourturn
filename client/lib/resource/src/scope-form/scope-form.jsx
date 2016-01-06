@@ -8,12 +8,8 @@ class ScopeForm extends React.Component {
     constructor(props) {
         super();
         let {resourceId, scopeId, edit} = props;
-        this.stores = {
-            essentials: props.essentialsStore
-        };
-        this.actions = props.essentialsActions;
         this.state = {
-            scope: edit ? this.stores.essentials.getScope(resourceId, scopeId) : { is_resource_owner_scope: false },
+            scope: edit ? props.essentialsStore.getScope(resourceId, scopeId) : { is_resource_owner_scope: false },
             scopeIdTaken: false
         };
     }
@@ -25,7 +21,7 @@ class ScopeForm extends React.Component {
         }
         this.setState({
             scope: this.state.scope,
-            scopeIdTaken: this.stores.essentials.getScope(this.props.resourceId, this.state.scope.id) !== false
+            scopeIdTaken: this.props.essentialsStore.getScope(this.props.resourceId, this.state.scope.id) !== false
         });
     }
 
@@ -39,13 +35,12 @@ class ScopeForm extends React.Component {
     save(evt) {
         evt.preventDefault();
 
-        let {resourceId} = this.props,
-            resource = this.stores.essentials.getResource(resourceId),
+        let {resourceId, essentialsStore} = this.props,
+            resource = essentialsStore.getResource(resourceId),
             {scope} = this.state;
 
         // send it off to the store
-        this
-        .actions
+        this.props.essentialsActions
         .saveScope(resourceId, scope.id, scope)
             .then(() => {
                 // redirect back to the resource detail view
@@ -64,7 +59,7 @@ class ScopeForm extends React.Component {
     render() {
         let {edit, scopeId, resourceId} = this.props,
             {scope, scopeIdTaken} = this.state,
-            resource = this.stores.essentials.getResource(resourceId);
+            resource = this.props.essentialsStore.getResource(resourceId);
         const LINK_PARAMS = {
             resourceId: resourceId,
             scopeId: scopeId
