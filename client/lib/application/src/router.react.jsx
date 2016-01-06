@@ -255,14 +255,9 @@ class VersionListHandler extends React.Component {
     }
 
     render() {
-        return <FluxComponent
-                    flux={FLUX}
-                    connectToStores={['kio']}>
-
-                    <VersionList
-                        applicationId={this.props.params.applicationId}
-                        kioStore={KIO_STORE} />
-                </FluxComponent>;
+        return <VersionList
+                    applicationId={this.props.params.applicationId}
+                    {...this.props} />;
     }
 }
 VersionListHandler.displayName = 'VersionListHandler';
@@ -272,10 +267,11 @@ VersionListHandler.propTypes = {
 VersionListHandler.fetchData = function(state) {
     let id = state.params.applicationId;
     KIO_ACTIONS.fetchApplicationVersions(id);
-    if (!KIO_STORE.getApplication(id)) {
-        KIO_ACTIONS.fetchApplication(id);
-    }
+    KIO_ACTIONS.fetchApplication(id);
 };
+let ConnectedVersionListHandler = connect(state => ({
+    kioStore: bindGettersToState(state.kio, KioGetter)
+}))(VersionListHandler);
 
 class VersionDetailHandler extends React.Component {
     constructor() {
@@ -471,7 +467,7 @@ const ROUTES =
             <Route name='application-appDetail' path='detail/:applicationId'>
                 <DefaultRoute handler={ConnectedAppDetailHandler} />
                 <Route name='application-verList' path='version'>
-                    <DefaultRoute handler={VersionListHandler} />
+                    <DefaultRoute handler={ConnectedVersionListHandler} />
                     <Route name='application-verCreate' path='create' handler={CreateVersionFormHandler} />
                     <Route name='application-verApproval' path='approve/:versionId' handler={ApprovalFormHandler} />
                     <Route name='application-verDetail' path='detail/:versionId' handler={VersionDetailHandler} />

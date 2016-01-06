@@ -17,10 +17,10 @@ function VersionStore(state = Immutable.Map(), action) {
         return state.setIn([id, ver], new Failed(payload));
     } else if (type === Types.RECEIVE_APPLICATION_VERSION) {
         return VersionStore(state, {
-            type: Types.RECEIVE_APPLICATION_VERSIONS,
+            type: Types.FETCH_APPLICATION_VERSIONS,
             payload: [payload]
         });
-    } else if (type === Types.RECEIVE_APPLICATION_VERSIONS) {
+    } else if (type === Types.FETCH_APPLICATION_VERSIONS) {
         return payload.reduce(
                         (map, ver) => {
                             ver.last_modified = Date.parse(ver.last_modified);
