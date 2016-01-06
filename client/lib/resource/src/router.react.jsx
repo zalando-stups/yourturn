@@ -202,35 +202,33 @@ class EditScopeFormHandler extends React.Component {
     }
 
     render() {
-        return <FlummoxComponent
-                    flux={FLUX}
-                    connectToStores={['essentials']}>
-                    <ScopeForm
-                        resourceId={this.props.params.resourceId}
-                        scopeId={this.props.params.scopeId}
-                        edit={true}
-                        notificationActions={NOTIFICATION_ACTIONS}
-                        essentialsActions={ESSENTIALS_ACTIONS}
-                        essentialsStore={ESSENTIALS_STORE} />
-                </FlummoxComponent>;
+        return <ScopeForm
+                    resourceId={this.props.params.resourceId}
+                    scopeId={this.props.params.scopeId}
+                    edit={true}
+                    notificationActions={NOTIFICATION_ACTIONS}
+                    essentialsActions={ESSENTIALS_ACTIONS}
+                    {...this.props} />;
     }
 }
-EditScopeFormHandler.isAllowed = function() {
-    return requireWhitelisted(FLUX);
+EditScopeFormHandler.isAllowed = function(routerState, state) {
+    return requireWhitelisted(state);
 };
 EditScopeFormHandler.displayName = 'EditScopeFormHandler';
 EditScopeFormHandler.propTypes = {
     params: React.PropTypes.object
 };
-EditScopeFormHandler.fetchData = function(state) {
-    let {resourceId, scopeId} = state.params;
+EditScopeFormHandler.fetchData = function(routerState, state) {
+    let {resourceId, scopeId} = routerState.params;
     ESSENTIALS_ACTIONS.fetchResource(resourceId);
     return Promise.all([
         ESSENTIALS_ACTIONS.fetchScope(resourceId, scopeId),
-        requireToken()
+        requireToken(state, USER_ACTIONS)
     ]);
 };
-
+let ConnectedEditScopeFormHandler = connect(state => ({
+    essentialsStore: bindGettersToState(state.essentials, EssentialsGetter)
+}))(EditScopeFormHandler);
 
 class CreateScopeFormHandler extends React.Component {
     constructor() {
@@ -276,7 +274,7 @@ const ROUTES =
             <Route path='scope'>
                 <Route name='resource-scpCreate' path='create' handler={ConnectedCreateScopeFormHandler} />
                 <Route name='resource-scpDetail' path='detail/:scopeId' handler={ConnectedScopeDetailHandler} />
-                <Route name='resource-scpEdit' path='edit/:scopeId' handler={EditScopeFormHandler} />
+                <Route name='resource-scpEdit' path='edit/:scopeId' handler={ConnectedEditScopeFormHandler} />
             </Route>
         </Route>
     </Route>;
