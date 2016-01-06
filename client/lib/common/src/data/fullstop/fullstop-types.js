@@ -14,10 +14,8 @@ const TYPES = [
     'DELETE_VIOLATIONS',
     'UPDATE_SEARCH_PARAMS',
     'FETCH_OWN_TOTAL',
-    'FETCH_OWN_TOTAL',
     'SAVE_LAST_VISITED',
-    'LOAD_LAST_VISITED',
-    'FETCH_LAST_VISITED'
+    'LOAD_LAST_VISITED'
 ];
 
 export default createActionTypes(TYPES);

@@ -1,7 +1,8 @@
 /* global ENV_DEVELOPMENT */
-import {Actions} from 'flummox';
 import request from 'common/src/superagent';
 import {Provider, RequestConfig, saveRoute} from 'common/src/oauth-provider';
+import {createAction} from 'redux-actions';
+import Type from './team-types';
 
 function fetchAccounts() {
     return request
@@ -12,14 +13,8 @@ function fetchAccounts() {
         .then(res => res.body);
 }
 
-class FullstopActions extends Actions {
-    fetchAccounts() {
-        return fetchAccounts();
-    }
-}
-
-export default FullstopActions;
+let fetchAction = createAction(Type.FETCH_ACCOUNTS, fetchAccounts);
 
 export {
-    fetchAccounts as fetchAccounts
+    fetchAction as fetchAccounts
 };

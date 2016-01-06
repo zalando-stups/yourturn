@@ -161,27 +161,27 @@ class ViolationDetailHandler extends React.Component {
     }
 
     render() {
-        return <FlummoxComponent
-                    flux={FLUX}
-                    connectToStores={['fullstop']}>
-                    <ViolationDetail
-                        violationId={this.props.params.violationId}
-                        userStore={USER_STORE}
-                        fullstopActions={FULLSTOP_ACTIONS}
-                        fullstopStore={FULLSTOP_STORE} />
-                </FlummoxComponent>;
+        return <ViolationDetail
+                    violationId={this.props.params.violationId}
+                    fullstopActions={FULLSTOP_ACTIONS}
+                    {...this.props} />;
     }
 
 }
-ViolationDetailHandler.fetchData = function (state) {
-    FULLSTOP_ACTIONS.fetchViolation(state.params.violationId);
+ViolationDetailHandler.fetchData = function (routerState, state) {
+    FULLSTOP_ACTIONS.fetchViolation(routerState.params.violationId);
     TEAM_ACTIONS.fetchAccounts();
-    return requireAccounts(FLUX);
+    return requireAccounts(state, USER_ACTIONS);
 };
 ViolationDetailHandler.displayName = 'ViolationDetailHandler';
 ViolationDetailHandler.propTypes = {
     params: React.PropTypes.object.isRequired
 };
+let ConnectedViolationDetailHandler = connect(state => ({
+    userStore: bindGettersToState(state.user, UserGetter),
+    fullstopStore: bindGettersToState(state.fullstop, FullstopGetter)
+}))(ViolationDetailHandler);
+
 
 class ViolationShortUrlHandler extends React.Component {
     constructor(props, context) {
@@ -205,7 +205,7 @@ const ROUTES =
     <Route name='violation' path='violation'>
         <DefaultRoute handler={ConnectedViolationHandler} />
         <Route name='violation-short' path='v/:shortened' handler={ViolationShortUrlHandler} />
-        <Route name='violation-vioDetail' path=':violationId' handler={ViolationDetailHandler} />
+        <Route name='violation-vioDetail' path=':violationId' handler={ConnectedViolationDetailHandler} />
     </Route>;
 
 export default ROUTES;

@@ -1,12 +1,13 @@
 import React from 'react';
 import Router from 'react-router';
 import ROUTES from './router.react.jsx';
-import YT_FLUX from './flux';
 import REDUX from './redux';
 import {Provider} from 'react-redux';
 import {bindActionsToStore} from 'common/src/util';
 import * as KioActions from 'common/src/data/kio/kio-actions';
 import * as UserActions from 'common/src/data/user/user-actions';
+import * as FullstopActions from 'common/src/data/fullstop/fullstop-actions';
+import * as FullstopGetter from 'common/src/data/fullstop/fullstop-getter';
 import DefaultError from 'common/src/error.jsx';
 
 import 'common/asset/less/base.less';
@@ -40,8 +41,7 @@ function fetchData(routes, routerState) {
 
 let userActions = bindActionsToStore(REDUX, UserActions),
     kioActions = bindActionsToStore(REDUX, KioActions),
-    fullstopActions = YT_FLUX.getActions('fullstop'),
-    fullstopStore = YT_FLUX.getStore('fullstop');
+    fullstopActions = bindActionsToStore(REDUX, FullstopActions);
 
 // render the rest
 userActions
@@ -52,7 +52,7 @@ userActions
         userActions
             .fetchAccounts(info.uid)
             .then(accounts => {
-                let lastLogin = fullstopStore.getLastVisited();
+                let lastLogin = FullstopGetter.getLastVisited(REDUX.getState().fullstop);
                 fullstopActions.fetchOwnTotal(lastLogin, accounts.map(a => a.id));
             });
         userActions
@@ -61,7 +61,7 @@ userActions
 
 router.run(
     (Handler, routerState) => {
-        fetchData(routerState.routes, routerState, YT_FLUX)
+        fetchData(routerState.routes, routerState)
         .then(() => {
             // before checking if user is allowed to see stuff,
             // we have to fetch the data
@@ -74,7 +74,7 @@ router.run(
                              document.getElementById('yourturn-container'));
             } else {
                 React.render(<Provider store={REDUX}>
-                               {() => <Handler flux={YT_FLUX}/>}
+                               {() => <Handler />}
                              </Provider>,
                              document.getElementById('yourturn-container'));
             }

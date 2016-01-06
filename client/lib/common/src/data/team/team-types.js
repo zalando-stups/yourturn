@@ -1,3 +1,5 @@
-export default {
-    'RECEIVE_ACCOUNTS': 'RECEIVE_ACCOUNTS'
-};
+import {createActionTypes} from 'common/src/util';
+
+export default createActionTypes([
+    'FETCH_ACCOUNTS'
+]);

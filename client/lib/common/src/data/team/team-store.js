@@ -10,7 +10,7 @@ function TeamStore(state = Immutable.List(), action) {
 
     let {type, payload} = action;
 
-    if (type === Types.RECEIVE_ACCOUNTS) {
+    if (type === Types.FETCH_ACCOUNTS) {
         return Immutable.fromJS(payload);
     }
 

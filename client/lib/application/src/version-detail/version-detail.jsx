@@ -2,7 +2,7 @@ import React from 'react';
 import Icon from 'react-fa';
 import {Link} from 'react-router';
 import Timestamp from 'react-time';
-import {DATE_FORMAT} from 'common/src/config';
+import Config from 'common/src/config';
 import ScmSourceWarning from './scm-source-warning.jsx';
 import Markdown from 'common/src/markdown.jsx';
 import {parseArtifact} from 'application/src/util';
@@ -149,7 +149,7 @@ class VersionDetail extends React.Component {
                             </tr>
                             <tr>
                                 <th>Last modified</th>
-                                <td><Timestamp format={DATE_FORMAT} value={version.last_modified} /></td>
+                                <td><Timestamp format={Config.DATE_FORMAT} value={version.last_modified} /></td>
                             </tr>
                             <tr>
                                 <th>Artifact</th>
