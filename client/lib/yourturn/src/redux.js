@@ -13,6 +13,8 @@ import {PieroneStore} from 'common/src/data/pierone/pierone-store';
 import {UserStore} from 'common/src/data/user/user-store';
 import {MintStore} from 'common/src/data/mint/mint-store';
 import {EssentialsStore} from 'common/src/data/essentials/essentials-store';
+import {FullstopStore} from 'common/src/data/fullstop/fullstop-store';
+import {TeamStore} from 'common/src/data/team/team-store';
 
 const logger = createLogger(),
     STORE = combineReducers({
@@ -22,7 +24,9 @@ const logger = createLogger(),
         pierone: PieroneStore,
         twintip: TwintipStore,
         mint: MintStore,
-        essentials: EssentialsStore
+        essentials: EssentialsStore,
+        fullstop: FullstopStore,
+        team: TeamStore
     }),
     createWithMiddleware = applyMiddleware(thunk,
                             combinedActionSupportMiddleware,

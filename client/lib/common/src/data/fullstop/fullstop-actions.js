@@ -1,9 +1,9 @@
 import FULLSTOP_BASE_URL from 'FULLSTOP_BASE_URL';
-// import {createAction} from 'redux-actions';
-// import Types from './fullstop-types';
+import {createAction} from 'redux-actions';
+import Type from './fullstop-types';
 import request from 'common/src/superagent';
+import {flummoxCompatWrap} from 'common/src/util';
 import {Provider, RequestConfig, saveRoute} from 'common/src/oauth-provider';
-import {Actions} from 'flummox';
 import Storage from 'common/src/storage';
 
 function fetchOwnTotal(from, accounts) {
@@ -130,70 +130,28 @@ function loadLastVisited() {
     return Storage.get('fullstop_lastVisited') || 0;
 }
 
-// for now wrap in flummox actions
-export default class FullstopActions extends Actions {
-    resolveViolation() {
-        return resolveViolation.apply(this, arguments);
-    }
-
-    fetchViolation() {
-        return fetchViolation.apply(this, arguments);
-    }
-
-    fetchViolations() {
-        return fetchViolations.apply(this, arguments);
-    }
-
-    fetchViolationTypes() {
-        return fetchViolationTypes();
-    }
-
-    fetchViolationCount() {
-        return fetchViolationCount.apply(this, arguments);
-    }
-
-    fetchViolationCountIn(account, params) {
-        return fetchViolationCountIn(account, params);
-    }
-
-    fetchOwnTotal(from, accounts) {
-        return fetchOwnTotal(from, accounts);
-    }
-
-    deleteViolations() {
-        return deleteViolations();
-    }
-
-    updateSearchParams(params) {
-        return updateSearchParams(params);
-    }
-
-    loadLastVisited() {
-        return loadLastVisited();
-    }
-
-    saveLastVisited(date) {
-        return saveLastVisited(date);
-    }
-}
-
-/* this is for later, when all is redux */
-
-// let fetchViolation = createAction(Types.FETCH_VIOLATION, _fetchViolation),
-//     fetchViolations = createAction(Types.FETCH_VIOLATIONS, _fetchViolations),
-//     resolveViolation = createAction(Types.RESOLVE_VIOLATION, _resolveViolation),
-//     deleteViolations = createAction(Types.DELETE_VIOLATIONS);
+let fetchViolationAction = flummoxCompatWrap(createAction(Type.FETCH_VIOLATION, fetchViolation)),
+    fetchViolationsAction = flummoxCompatWrap(createAction(Type.FETCH_VIOLATIONS, fetchViolations)),
+    resolveViolationAction = createAction(Type.RESOLVE_VIOLATION, resolveViolation),
+    deleteViolationsAction = createAction(Type.DELETE_VIOLATIONS),
+    fetchViolationTypesAction = createAction(Type.FETCH_VIOLATION_TYPES, fetchViolationTypes),
+    fetchViolationCountAction = createAction(Type.FETCH_VIOLATION_COUNT, fetchViolationCount),
+    fetchViolationCountInAction = createAction(Type.FETCH_VIOLATION_COUNT_IN, fetchViolationCountIn),
+    updateSearchParamsAction = createAction(Type.UPDATE_SEARCH_PARAMS, updateSearchParams),
+    saveLastVisitedAction = createAction(Type.SAVE_LAST_VISITED, saveLastVisited),
+    loadLastVisitedAction = createAction(Type.LOAD_LAST_VISITED, loadLastVisited),
+    fetchOwnTotalAction = createAction(Type.FETCH_OWN_TOTAL, fetchOwnTotal);
 
 export {
-    fetchOwnTotal,
-    fetchViolations,
-    fetchViolation,
-    fetchViolationTypes,
-    fetchViolationCount,
-    fetchViolationCountIn,
-    resolveViolation,
-    deleteViolations,
-    updateSearchParams,
-    saveLastVisited,
-    loadLastVisited
+    fetchOwnTotalAction as fetchOwnTotal,
+    fetchViolationsAction as fetchViolations,
+    fetchViolationAction as fetchViolation,
+    fetchViolationTypesAction as fetchViolationTypes,
+    fetchViolationCountAction as fetchViolationCount,
+    fetchViolationCountInAction as fetchViolationCountIn,
+    resolveViolationAction as resolveViolation,
+    deleteViolationsAction as deleteViolations,
+    updateSearchParamsAction as updateSearchParams,
+    saveLastVisitedAction as saveLastVisited,
+    loadLastVisitedAction as loadLastVisited
 };

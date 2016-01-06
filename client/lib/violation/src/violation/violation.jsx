@@ -31,17 +31,11 @@ function sortDesc(a, b) {
 class Violation extends React.Component {
     constructor(props, context) {
         super();
-        this.stores = {
-            fullstop: props.fullstopStore,
-            team: props.teamStore,
-            user: props.userStore
-        };
-        this.actions = props.fullstopActions;
         // make initial list of accounts
-        let searchParams = this.stores.fullstop.getSearchParams(),
-            selectableAccounts = this.stores.team.getAccounts(), // these we can in theory select
+        let searchParams = props.fullstopStore.getSearchParams(),
+            selectableAccounts = props.teamStore.getAccounts(), // these we can in theory select
             activeAccountIds = searchParams.accounts, // these are actively searched for
-            selectedAccounts = this.stores.user.getUserCloudAccounts(); // these the user has access to
+            selectedAccounts = props.userStore.getUserCloudAccounts(); // these the user has access to
 
         // situation:
         // we want to preselect accounts that the user has access to
@@ -72,7 +66,7 @@ class Violation extends React.Component {
 
     toggleAccount(activeAccountIds) {
         // check if inspected account is still active
-        let searchParams = this.stores.fullstop.getSearchParams();
+        let searchParams = this.props.fullstopStore.getSearchParams();
         if (searchParams.cross && activeAccountIds.indexOf(searchParams.cross.inspectedAccount) >= 0) {
             this.updateSearch({
                 accounts: activeAccountIds,
@@ -107,10 +101,10 @@ class Violation extends React.Component {
      * @param  {Number} page The page to fetch
      */
     loadMore(page) {
-        this.actions.updateSearchParams({
+        this.props.fullstopActions.updateSearchParams({
             page: page
         });
-        this.actions.fetchViolations(this.stores.fullstop.getSearchParams());
+        this.props.fullstopActions.fetchViolations(this.props.fullstopStore.getSearchParams());
     }
 
     _handleCopy() {
@@ -131,7 +125,7 @@ class Violation extends React.Component {
     }
 
     _toggleShowResolved(type) {
-        let searchParams = this.stores.fullstop.getSearchParams(),
+        let searchParams = this.props.fullstopStore.getSearchParams(),
             newParams = {};
         newParams['show' + type] = !searchParams['show' + type];
         newParams.page = 0;
@@ -164,7 +158,7 @@ class Violation extends React.Component {
         });
     }
 
-    updateSearch(params, context = this.context, actions = this.actions) {
+    updateSearch(params, context = this.context, actions = this.props.fullstopActions) {
         actions.deleteViolations();
         actions.updateSearchParams(params);
         Object.keys(params).forEach(k => {
@@ -177,9 +171,9 @@ class Violation extends React.Component {
     }
 
     render() {
-        let searchParams = this.stores.fullstop.getSearchParams(),
+        let searchParams = this.props.fullstopStore.getSearchParams(),
             {selectedAccounts} = this.state,
-            selectableAccounts = this.stores.team.getAccounts(),
+            selectableAccounts = this.props.teamStore.getAccounts(),
             allAccounts = selectableAccounts.reduce((prev, cur) => {
                 prev[cur.id] = cur;
                 return prev;
@@ -188,14 +182,14 @@ class Violation extends React.Component {
             showingSince = searchParams.from.toDate(),
             showingUntil = searchParams.to.toDate(),
             // violations are sorted by id, kind of, if at all, by default
-            violations = this.stores.fullstop.getViolations()
+            violations = this.props.fullstopStore.getViolations()
                             .filter(v => !!v.id)    // remove fetch results
                             .sort(searchParams.sortAsc ? sortAsc : sortDesc)
                             .map(v => v.id),
-            pagingInfo = this.stores.fullstop.getPagingInfo(),
+            pagingInfo = this.props.fullstopStore.getPagingInfo(),
             shortURL = window.location.origin + '/violation/v/' + lzw.compressToEncodedURIComponent(JSON.stringify(searchParams)),
             shareURL = shortURL.length < window.location.href.length ? shortURL : window.location.href,
-            violationTypes = this.stores.fullstop.getViolationTypes(),
+            violationTypes = this.props.fullstopStore.getViolationTypes(),
             violationCards = violations.map(v => <ViolationDetail
                                                     key={v}
                                                     fullstopStore={this.props.fullstopStore}
@@ -272,7 +266,7 @@ class Violation extends React.Component {
                                 onConfigurationChange={this._updateSearch.bind(this, 'cross')}
                                 onRequestViewChange={this._updateSearch.bind(this, 'list')}
                                 violationTypes={violationTypes}
-                                violationCount={this.stores.fullstop.getViolationCount()} />
+                                violationCount={this.props.fullstopStore.getViolationCount()} />
                         </Tabs.TabPanel>
                         <Tabs.TabPanel>
                             <AccountOverview
@@ -283,7 +277,7 @@ class Violation extends React.Component {
                                 application={searchParams.single_application || ''}
                                 violationType={searchParams.single_violationType || ''}
                                 violationTypes={violationTypes}
-                                violationCount={this.stores.fullstop.getViolationCountIn(searchParams.cross_inspectedAccount || activeAccountIds[0])} />
+                                violationCount={this.props.fullstopStore.getViolationCountIn(searchParams.cross_inspectedAccount || activeAccountIds[0])} />
                         </Tabs.TabPanel>
                         <Tabs.TabPanel>
                             <small>Change sort order of violations:</small>
