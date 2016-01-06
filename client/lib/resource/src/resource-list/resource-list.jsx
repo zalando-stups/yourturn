@@ -6,10 +6,6 @@ import 'common/asset/less/resource/resource-list.less';
 class ResourceList extends React.Component {
     constructor(props) {
         super();
-        this.stores = {
-            essentials: props.essentialsStore,
-            user: props.userStore
-        };
         this.state = {
             term: ''
         };
@@ -22,10 +18,10 @@ class ResourceList extends React.Component {
     }
 
     render() {
-        let {essentials, user} = this.stores,
+        let {essentialsStore, userStore} = this.props,
             {term} = this.state,
-            whitelisted = user.isWhitelisted(),
-            resources = essentials.getResources(term);
+            whitelisted = userStore.isWhitelisted(),
+            resources = essentialsStore.getResources(term);
         return <div className='resourceList'>
                     <h2>Resource Types</h2>
                     <div className='u-info'>

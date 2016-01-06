@@ -3,19 +3,36 @@ import FlummoxComponent from 'flummox/component';
 import {Route, DefaultRoute} from 'react-router';
 import Config from 'common/src/config';
 import FLUX from 'yourturn/src/flux';
+
+import REDUX from 'yourturn/src/redux';
+import {requireAccounts, bindGettersToState, bindActionsToStore} from 'common/src/util';
+import {connect} from 'react-redux';
+
+import * as KioGetter from 'common/src/data/kio/kio-getter';
+import * as UserGetter from 'common/src/data/user/user-getter';
+import * as PieroneGetter from 'common/src/data/pierone/pierone-getter';
+import * as TwintipGetter from 'common/src/data/twintip/twintip-getter';
+import * as MintGetter from 'common/src/data/mint/mint-getter';
+import * as EssentialsGetter from 'common/src/data/essentials/essentials-getter';
+
+import * as NotificationActions from 'common/src/data/notification/notification-actions';
+import * as KioActions from 'common/src/data/kio/kio-actions';
+import * as UserActions from 'common/src/data/user/user-actions';
+import * as TwintipActions from 'common/src/data/twintip/twintip-actions';
+import * as MintActions from 'common/src/data/mint/mint-actions';
+import * as EssentialsActions from 'common/src/data/essentials/essentials-actions';
+import * as PieroneActions from 'common/src/data/pierone/pierone-actions';
+
 import ResourceForm from './resource-form/resource-form.jsx';
 import ResourceList from './resource-list/resource-list.jsx';
 import ResourceDetail from './resource-detail/resource-detail.jsx';
 import ScopeDetail from './scope-detail/scope-detail.jsx';
 import ScopeForm from './scope-form/scope-form.jsx';
-import REDUX from 'yourturn/src/redux';
-import {bindActionsToStore} from 'common/src/util';
-import * as NotificationActions from 'common/src/data/notification/notification-actions';
 
-const USER_STORE = FLUX.getStore('user'),
-      USER_ACTIONS = FLUX.getActions('user'),
-      ESSENTIALS_ACTIONS = FLUX.getActions('essentials'),
-      ESSENTIALS_STORE = FLUX.getStore('essentials'),
+const USER_STORE = undefined,
+      ESSENTIALS_STORE = undefined,
+      USER_ACTIONS = bindActionsToStore(REDUX, UserActions),
+      ESSENTIALS_ACTIONS = bindActionsToStore(REDUX, EssentialsActions),
       NOTIFICATION_ACTIONS = bindActionsToStore(REDUX, NotificationActions);
 
 // QUICKFIX #133
@@ -118,13 +135,7 @@ class ResourceListHandler extends React.Component {
         super();
     }
     render() {
-        return <FlummoxComponent
-                    flux={FLUX}
-                    connectToStores={['essentials']}>
-                    <ResourceList
-                        userStore={USER_STORE}
-                        essentialsStore={ESSENTIALS_STORE} />
-                </FlummoxComponent>;
+        return <ResourceList {...this.props} />;
     }
 }
 ResourceListHandler.displayName = 'ResourceListHandler';
@@ -134,7 +145,10 @@ ResourceListHandler.propTypes = {
 ResourceListHandler.fetchData = function() {
     ESSENTIALS_ACTIONS.fetchResources();
 };
-
+let ConnectedResourceListHandler = connect(state => ({
+    essentialsStore: bindGettersToState(state.essentials, EssentialsGetter),
+    userStore: bindGettersToState(state.user, UserGetter)
+}))(ResourceListHandler);
 
 class ResourceDetailHandler extends React.Component {
     constructor() {
@@ -262,7 +276,7 @@ CreateScopeFormHandler.fetchData = function(state) {
 
 const ROUTES =
     <Route name='resource-resList' path='resource'>
-        <DefaultRoute handler={ResourceListHandler} />
+        <DefaultRoute handler={ConnectedResourceListHandler} />
         <Route name='resource-resCreate' path='create' handler={CreateResourceFormHandler} />
         <Route name='resource-resEdit' path='edit/:resourceId' handler={EditResourceFormHandler} />
         <Route name='resource-resDetail' path='detail/:resourceId'>

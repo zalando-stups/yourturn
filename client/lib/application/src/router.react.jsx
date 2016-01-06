@@ -1,7 +1,7 @@
 import React from 'react';
 import {Route, DefaultRoute} from 'react-router';
-import REDUX from 'yourturn/src/redux';
 import {parseArtifact} from 'application/src/util';
+import REDUX from 'yourturn/src/redux';
 import {requireAccounts, bindGettersToState, bindActionsToStore} from 'common/src/util';
 import {connect} from 'react-redux';
 
