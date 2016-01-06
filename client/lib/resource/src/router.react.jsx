@@ -175,28 +175,26 @@ class ScopeDetailHandler extends React.Component {
         super();
     }
     render() {
-        return <FlummoxComponent
-                    flux={FLUX}
-                    connectToStores={['essentials']}>
-                    <ScopeDetail
-                        resourceId={this.props.params.resourceId}
-                        scopeId={this.props.params.scopeId}
-                        userStore={USER_STORE}
-                        essentialsStore={ESSENTIALS_STORE} />
-                </FlummoxComponent>;
+        return <ScopeDetail
+                    resourceId={this.props.params.resourceId}
+                    scopeId={this.props.params.scopeId}
+                    {...this.props} />
     }
 }
 ScopeDetailHandler.displayName = 'ScopeDetailHandler';
 ScopeDetailHandler.propTypes = {
     params: React.PropTypes.object
 };
-ScopeDetailHandler.fetchData = function(state) {
-    let {resourceId, scopeId} = state.params;
+ScopeDetailHandler.fetchData = function(routerState) {
+    let {resourceId, scopeId} = routerState.params;
     ESSENTIALS_ACTIONS.fetchResource(resourceId);
     ESSENTIALS_ACTIONS.fetchScope(resourceId, scopeId);
     ESSENTIALS_ACTIONS.fetchScopeApplications(resourceId, scopeId);
 };
-
+let ConnectedScopeDetailHandler = connect(state => ({
+    essentialsStore: bindGettersToState(state.essentials, EssentialsGetter),
+    userStore: bindGettersToState(state.user, UserGetter)
+}))(ScopeDetailHandler);
 
 class EditScopeFormHandler extends React.Component {
     constructor() {
@@ -278,7 +276,7 @@ const ROUTES =
             <DefaultRoute handler={ConnectedResourceDetailHandler} />
             <Route path='scope'>
                 <Route name='resource-scpCreate' path='create' handler={CreateScopeFormHandler} />
-                <Route name='resource-scpDetail' path='detail/:scopeId' handler={ScopeDetailHandler} />
+                <Route name='resource-scpDetail' path='detail/:scopeId' handler={ConnectedScopeDetailHandler} />
                 <Route name='resource-scpEdit' path='edit/:scopeId' handler={EditScopeFormHandler} />
             </Route>
         </Route>
