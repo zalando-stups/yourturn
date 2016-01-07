@@ -15,6 +15,7 @@ import {MintStore} from 'common/src/data/mint/mint-store';
 import {EssentialsStore} from 'common/src/data/essentials/essentials-store';
 import {FullstopStore} from 'common/src/data/fullstop/fullstop-store';
 import {TeamStore} from 'common/src/data/team/team-store';
+import {SearchStore} from 'common/src/data/search/search-store';
 
 const logger = createLogger(),
     STORE = combineReducers({
@@ -26,11 +27,15 @@ const logger = createLogger(),
         mint: MintStore,
         essentials: EssentialsStore,
         fullstop: FullstopStore,
-        team: TeamStore
+        team: TeamStore,
+        search: SearchStore
     }),
     createWithMiddleware = applyMiddleware(thunk,
+                            // allows to dispatch actions based on the result of another actoin
                             combinedActionSupportMiddleware,
+                            // dispatches a BEGIN_ action on start of async operation
                             flummoxCompatMiddleware,
+                            // dispatches a FAIL_ action on failure of async operation
                             reduxPromiseMiddleware,
                             logger)(createStore);
 

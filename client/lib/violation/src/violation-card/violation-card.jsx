@@ -143,8 +143,7 @@ ViolationCard.propTypes = {
     autoFocus: React.PropTypes.bool,
     onResolve: React.PropTypes.func,
     violation: React.PropTypes.object.isRequired,
-    editable: React.PropTypes.bool,
-    flux: React.PropTypes.object.isRequired
+    editable: React.PropTypes.bool
 };
 
 export default ViolationCard;

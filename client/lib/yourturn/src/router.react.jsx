@@ -1,23 +1,32 @@
 import React from 'react';
 import {Route, DefaultRoute} from 'react-router';
-import FlummoxComponent from 'flummox/component';
-import YT_FLUX from './flux';
+
 import AppRoutes from 'application/src/router.react.jsx';
 import ResRoutes from 'resource/src/router.react.jsx';
 import VioRoutes from 'violation/src/router.react.jsx';
 import YourTurn from './app.jsx';
 import Search from 'yourturn/src/search/search.jsx';
+
 import REDUX from 'yourturn/src/redux';
-import {bindActionsToStore} from 'common/src/util';
+import {connect} from 'react-redux';
+import {bindActionsToStore, bindGettersToState} from 'common/src/util';
+
+import * as FullstopGetter from 'common/src/data/fullstop/fullstop-getter';
+import * as SearchGetter from 'common/src/data/search/search-getter';
+
 import * as NotificationActions from 'common/src/data/notification/notification-actions';
 import * as UserActions from 'common/src/data/user/user-actions';
+import * as SearchActions from 'common/src/data/search/search-actions';
+import * as FullstopActions from 'common/src/data/fullstop/fullstop-actions';
 
 import {Provider} from 'common/src/oauth-provider';
 import {Error} from '@zalando/oauth2-client-js';
 import validate from './validate-oauth-response';
 
-const USER_ACTIONS = bindActionsToStore(REDUX, UserActions);
-const NOTIFICATION_ACTIONS = bindActionsToStore(REDUX, NotificationActions);
+const USER_ACTIONS = bindActionsToStore(REDUX, UserActions),
+      FULLSTOP_ACTIONS = bindActionsToStore(REDUX, FullstopActions),
+      NOTIFICATION_ACTIONS = bindActionsToStore(REDUX, NotificationActions),
+      SEARCH_ACTIONS = bindActionsToStore(REDUX, SearchActions);
 
 class LoginHandler extends React.Component {
     constructor() {
@@ -51,15 +60,13 @@ class LoginHandler extends React.Component {
                     USER_ACTIONS
                         .fetchAccounts(info.uid)
                         .then(accounts => {
-                            YT_FLUX.getActions('fullstop').loadLastVisited();
-                            YT_FLUX
-                                .getActions('fullstop')
+                            FULLSTOP_ACTIONS.loadLastVisited();
+                            FULLSTOP_ACTIONS
                                 .fetchOwnTotal(
-                                    YT_FLUX.getStore('fullstop').getLastVisited(),
+                                    FullstopGetter.getLastVisited(REDUX.getState().fullstop),
                                     accounts.map(a => a.id));
                         });
-                    USER_ACTIONS
-                        .fetchUserInfo(info.uid);
+                    USER_ACTIONS.fetchUserInfo(info.uid);
 
                     this.context.router.transitionTo(response.metadata.route || '/');
                 })
@@ -90,23 +97,22 @@ class SearchHandler extends React.Component {
     }
 
     render() {
-        return <FlummoxComponent
-                    connectToStores={['search']}
-                    flux={YT_FLUX}>
-                    <Search
-                        searchActions={YT_FLUX.getActions('search')}
-                        searchStore={YT_FLUX.getStore('search')}/>
-                </FlummoxComponent>;
+        return <Search
+                    searchActions={SEARCH_ACTIONS}
+                    {...this.props}/>;
     }
 }
 SearchHandler.displayName = 'SearchHandler';
+let ConnectedSearchHandler = connect(state => ({
+    searchStore: bindGettersToState(state.search, SearchGetter)
+}))(SearchHandler);
 
 const ROUTES =
     <Route handler={YourTurn} path='/'>
         {AppRoutes}
         {ResRoutes}
         {VioRoutes}
-        <DefaultRoute name='search' path='search' handler={SearchHandler} />
+        <DefaultRoute name='search' path='search' handler={ConnectedSearchHandler} />
         <Route path='oauth' handler={LoginHandler} />
     </Route>;
 

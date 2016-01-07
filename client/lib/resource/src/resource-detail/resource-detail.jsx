@@ -123,7 +123,6 @@ class ResourceDetail extends React.Component {
 }
 ResourceDetail.displayName = 'ResourceDetail';
 ResourceDetail.propTypes = {
-    flux: React.PropTypes.object.isRequired,
     resourceId: React.PropTypes.string.isRequired
 };
 ResourceDetail.contextTypes = {

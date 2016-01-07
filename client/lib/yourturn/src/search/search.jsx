@@ -35,10 +35,6 @@ SearchResult.propTypes = {
 class Search extends React.Component {
     constructor(props) {
         super();
-        this.stores = {
-            search: props.searchStore
-        };
-        this.actions = props.searchActions;
         this.state = {
             term: ''
         };
@@ -53,15 +49,15 @@ class Search extends React.Component {
     search() {
         let {term} = this.state;
         if (!term.length) {
-            this.actions.clearSearchResults(term);
+            this.props.searchActions.clearSearchResults(term);
         } else {
-            if (this.stores.search.hasResults(term)) {
-                this.actions.clearSearchResults(term);
+            if (this.props.searchStore.hasResults(term)) {
+                this.props.searchActions.clearSearchResults(term);
             }
             Object
                 .keys(Services)
                 .filter(key => !!Services[key].searchQuery)
-                .forEach(key => this.actions.fetchSearchResultsFrom(key, term));
+                .forEach(key => this.props.searchActions.fetchSearchResultsFrom(key, term));
         }
     }
 
@@ -71,7 +67,7 @@ class Search extends React.Component {
 
     render() {
         let {term} = this.state,
-            results = this.stores.search.getSearchResults(term),
+            results = this.props.searchStore.getSearchResults(term),
             header = <div>
                         <h2>Search</h2>
 
@@ -90,7 +86,7 @@ class Search extends React.Component {
                                     placeholder='yourturn' />
                             </div>
                         </div>
-                        </div>;
+                    </div>;
         if (!this.state.term) {
             return <div className='search'>{header}</div>;
         }

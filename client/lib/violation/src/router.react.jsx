@@ -8,9 +8,6 @@ import _ from 'lodash';
 import Violation from './violation/violation.jsx';
 import ViolationDetail from './violation-detail/violation-detail.jsx';
 
-
-import FlummoxComponent from 'flummox/component';
-import FLUX from 'yourturn/src/flux';
 import REDUX from 'yourturn/src/redux';
 import {requireAccounts, bindGettersToState, bindActionsToStore} from 'common/src/util';
 import {connect} from 'react-redux';
@@ -25,12 +22,9 @@ import * as TeamActions from 'common/src/data/team/team-actions';
 import * as FullstopActions from 'common/src/data/fullstop/fullstop-actions';
 
 const FULLSTOP_ACTIONS = bindActionsToStore(REDUX, FullstopActions),
-      FULLSTOP_STORE = undefined,
-      USER_STORE = undefined,
       USER_ACTIONS = bindActionsToStore(REDUX, UserActions),
       NOTIFICATION_ACTIONS = bindActionsToStore(REDUX, NotificationActions),
-      TEAM_ACTIONS = bindActionsToStore(REDUX, TeamActions),
-      TEAM_STORE = FLUX.getStore('team');
+      TEAM_ACTIONS = bindActionsToStore(REDUX, TeamActions);
 
 function parseQueryParams(params) {
     let result = {};

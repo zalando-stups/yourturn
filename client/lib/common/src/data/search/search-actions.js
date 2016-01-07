@@ -1,7 +1,9 @@
 import {Actions} from 'flummox';
 import request from 'common/src/superagent';
+import {createAction} from 'redux-actions';
 import {Services} from 'common/src/data/services';
 import {Provider, RequestConfig, saveRoute} from 'common/src/oauth-provider';
+import Type from './search-types';
 
 /**
  * Fetches a search query from the specified service.
@@ -25,24 +27,10 @@ function fetchSearchResultsFrom(service, term) {
             });
 }
 
-function clearSearchResults(term) {
-    return term;
-}
-
-class SearchActions extends Actions {
-    fetchSearchResultsFrom(service, term) {
-        return fetchSearchResultsFrom(service, term);
-    }
-
-    clearSearchResults(term) {
-        return clearSearchResults(term);
-    }
-
-}
-
-export default SearchActions;
+let fetchAction = createAction(Type.FETCH_SEARCH_RESULTS, fetchSearchResultsFrom),
+    clearAction = createAction(Type.CLEAR_SEARCH_RESULTS);
 
 export {
-    fetchSearchResultsFrom,
-    clearSearchResults
+    fetchAction as fetchSearchResultsFrom,
+    clearAction as clearSearchResults
 };

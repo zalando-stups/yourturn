@@ -1,4 +1,3 @@
-import {Store} from 'flummox';
 import {Services, getLocalUrlForService} from 'common/src/data/services';
 import Immutable from 'immutable';
 import Types from './search-types';
@@ -17,7 +16,7 @@ function SearchStore(state = Immutable.Map(), action) {
 
     let {type, payload} = action;
 
-    if (type === Types.RECEIVE_SEARCH_RESULTS) {
+    if (type === Types.FETCH_SEARCH_RESULTS) {
         let {_term, _source} = payload,
             newState = Immutable
                         .fromJS(payload)
@@ -36,82 +35,3 @@ function SearchStore(state = Immutable.Map(), action) {
 export {
     SearchStore
 };
-
-class SearchStoreWrapper extends Store {
-    constructor(flux) {
-        super();
-
-        const searchActions = flux.getActions('search');
-
-        this.state = {
-            redux: SearchStore()
-        };
-
-        this.register(searchActions.clearSearchResults, this.clearSearchResults);
-
-        this.registerAsync(
-            searchActions.fetchSearchResultsFrom,
-            null,
-            this.receiveSearchResultsFrom,
-            this.failFetchSearchResultsFrom);
-    }
-
-    /**
-     * Removes search results for `term`.
-     *
-     * @param  {String} term
-     */
-    clearSearchResults(term) {
-        this.setState({
-            redux: SearchStore(this.state.redux, {
-                type: Types.CLEAR_SEARCH_RESULTS,
-                payload: term
-            })
-        });
-    }
-
-    failFetchSearchResultsFrom() {
-        // emit change event even though nothing actually changed
-        // so views can render "no results found"
-        this.forceUpdate();
-    }
-
-    /**
-     * Adds the results to the existing search results for the
-     * respective search term. Creates a new entry if none is
-     * available.
-     *
-     * @param  {Array} resultSet
-     */
-    receiveSearchResultsFrom(resultSet) {
-        this.setState({
-            redux: SearchStore(this.state.redux, {
-                type: Types.RECEIVE_SEARCH_RESULTS,
-                payload: resultSet
-            })
-        });
-    }
-
-    /**
-     * Returns the available search results for `term`.
-     *
-     * @param  {String} term
-     * @return {Array} Is empty if no results are available.
-     */
-    getSearchResults(term) {
-        return Getter.getSearchResults(this.state.redux, term);
-    }
-
-    /**
-     * Returns true if there is an entry for `term`. Might
-     * be empty though.
-     *
-     * @param  {String}  term
-     * @return {Boolean} True if `term` is associated with the underlying hashmap.
-     */
-    hasResults(term) {
-        return Getter.hasResults(this.state.redux, term);
-    }
-}
-
-export default SearchStoreWrapper;
