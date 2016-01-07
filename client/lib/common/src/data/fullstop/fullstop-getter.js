@@ -1,4 +1,4 @@
-import {FullstopStore} from './fullstop-store';
+import FullstopStore from './fullstop-store';
 
 function getPagingInfo(state) {
     return state.get('pagingInfo').toJS();

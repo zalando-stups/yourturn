@@ -7,15 +7,15 @@ import {
     combinedActionSupportMiddleware
 } from 'common/src/util';
 import NotificationStore from 'common/src/data/notification/notification-store';
-import {KioStore} from 'common/src/data/kio/kio-store';
-import {TwintipStore} from 'common/src/data/twintip/twintip-store';
-import {PieroneStore} from 'common/src/data/pierone/pierone-store';
-import {UserStore} from 'common/src/data/user/user-store';
-import {MintStore} from 'common/src/data/mint/mint-store';
-import {EssentialsStore} from 'common/src/data/essentials/essentials-store';
-import {FullstopStore} from 'common/src/data/fullstop/fullstop-store';
-import {TeamStore} from 'common/src/data/team/team-store';
-import {SearchStore} from 'common/src/data/search/search-store';
+import KioStore from 'common/src/data/kio/kio-store';
+import TwintipStore from 'common/src/data/twintip/twintip-store';
+import PieroneStore from 'common/src/data/pierone/pierone-store';
+import UserStore from 'common/src/data/user/user-store';
+import MintStore from 'common/src/data/mint/mint-store';
+import EssentialsStore from 'common/src/data/essentials/essentials-store';
+import FullstopStore from 'common/src/data/fullstop/fullstop-store';
+import TeamStore from 'common/src/data/team/team-store';
+import SearchStore from 'common/src/data/search/search-store';
 
 const logger = createLogger(),
     STORE = combineReducers({

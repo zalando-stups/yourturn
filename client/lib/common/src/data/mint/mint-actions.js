@@ -58,22 +58,6 @@ function renewCredentials(applicationId) {
             });
 }
 
-class MintActions extends Actions {
-    renewCredentials(applicationId) {
-        return renewCredentials(applicationId);
-    }
-
-    saveOAuthConfig(applicationId, config) {
-        return saveOAuthConfig(applicationId, config);
-    }
-
-    fetchOAuthConfig(applicationId) {
-        return fetchOAuthConfig(applicationId);
-    }
-}
-
-export default MintActions;
-
 let fetchAction = flummoxCompatWrap(createAction(Type.FETCH_OAUTH_CONFIG, fetchOAuthConfig)),
     saveAction = flummoxCompatWrap(createAction(Type.SAVE_OAUTH_CONFIG, saveOAuthConfig)),
     renewAction = flummoxCompatWrap(createAction(Type.RENEW_CREDENTIALS, renewCredentials));
