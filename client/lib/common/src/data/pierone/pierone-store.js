@@ -1,4 +1,3 @@
-import {Store} from 'flummox';
 import Immutable from 'immutable';
 import {Pending, Failed} from 'common/src/fetch-result';
 import Types from './pierone-types';

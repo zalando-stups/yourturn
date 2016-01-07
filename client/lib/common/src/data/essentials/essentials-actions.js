@@ -1,5 +1,4 @@
 import _ from 'lodash';
-import {Actions} from 'flummox';
 import request from 'common/src/superagent';
 import {Services} from 'common/src/data/services';
 import {combineActions, flummoxCompatWrap} from 'common/src/util';

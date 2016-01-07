@@ -1,4 +1,3 @@
-import {Store} from 'flummox';
 import Immutable from 'immutable';
 import * as Types from './twintip-types';
 import * as Getter from './twintip-getter';

@@ -3,7 +3,6 @@ import moment from 'moment';
 import {Pending, Failed} from 'common/src/fetch-result';
 import Types from './fullstop-types';
 import * as Getters from './fullstop-getter';
-import {Store} from 'flummox';
 
 const DEFAULT_PAGING = {
         last: true

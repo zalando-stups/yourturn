@@ -1,4 +1,3 @@
-import {Actions} from 'flummox';
 import request from 'common/src/superagent';
 import {createAction} from 'redux-actions';
 import {Services} from 'common/src/data/services';

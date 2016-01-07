@@ -1,4 +1,3 @@
-import {Store} from 'flummox';
 import Immutable from 'immutable';
 import Types from './user-types';
 import * as Getter from './user-getter';

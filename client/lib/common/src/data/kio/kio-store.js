@@ -1,4 +1,3 @@
-import {Store} from 'flummox';
 import * as Getter from './kio-getter';
 import Types from './kio-types';
 import {combineReducers} from 'redux';
