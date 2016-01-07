@@ -16,6 +16,4 @@ function TeamStore(state = Immutable.List(), action) {
     return state;
 }
 
-export {
-    TeamStore as TeamStore
-};
+export default TeamStore;

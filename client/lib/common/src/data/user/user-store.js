@@ -29,13 +29,11 @@ function UserStore(state, action) {
         return state.set('accounts', Immutable.fromJS(payload));
     } else if (type === Types.DELETE_TOKENINFO) {
         return state.set('tokeninfo', false);
-    } else if (type === '@@INIT') {
+    } else {
         return DEFAULT_STATE;
     }
 
     return state;
 }
 
-export {
-    UserStore
-};
+export default UserStore;

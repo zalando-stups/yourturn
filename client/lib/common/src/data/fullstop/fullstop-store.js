@@ -89,6 +89,4 @@ function FullstopStore(state, action) {
     return state;
 }
 
-export {
-    FullstopStore as FullstopStore
-};
+export default FullstopStore;

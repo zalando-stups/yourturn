@@ -33,6 +33,5 @@ function PieroneStore(state = Immutable.fromJS({
     return state;
 }
 
-export {
-    PieroneStore
-};
+export default PieroneStore;
+

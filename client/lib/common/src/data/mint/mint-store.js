@@ -22,6 +22,4 @@ function MintStore(state = Immutable.Map(), action) {
     return state;
 }
 
-export {
-    MintStore
-};
+export default MintStore;

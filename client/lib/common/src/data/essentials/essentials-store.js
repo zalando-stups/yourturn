@@ -9,6 +9,4 @@ var EssentialsStore = combineReducers({
     scopeApps
 });
 
-export {
-    EssentialsStore
-};
+export default EssentialsStore;

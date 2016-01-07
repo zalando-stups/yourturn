@@ -32,6 +32,4 @@ function SearchStore(state = Immutable.Map(), action) {
     return state;
 }
 
-export {
-    SearchStore
-};
+export default SearchStore;
