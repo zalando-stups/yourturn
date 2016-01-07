@@ -80,29 +80,51 @@ ViolationHandler.displayName = 'ViolationHandler';
 ViolationHandler.willTransitionTo = function(transition, params, query) {
     // save last visited date
     FULLSTOP_ACTIONS.saveLastVisited(Date.now());
-    if (_.isEmpty(query)) {
-        let searchParams = FULLSTOP_STORE.getSearchParams(),
-            selectedAccounts = USER_STORE.getUserCloudAccounts(), // these the user has access to
-            {accounts} = searchParams; // these accounts are selected and active
-        // if there are no active account ids, use those of selected accounts
-        // otherwise select accounts with active account ids
-        //
-        // GOD is this confusing
-        if (accounts.length) {
-            // everything is fine
-            transition.redirect('violation', {}, {
-                activeTab: 0
-            });
-        } else {
-            // this might or might not have an effect since transition hook is fired before fetchData
-            Array.prototype.push.apply(accounts, selectedAccounts.map(a => a.id));
-            // and thus accounts could still be empty now
-            transition.redirect('violation', {}, {
-                accounts: accounts,
-                activeTab: 0
-            });
-        }
+    let defaultParams = FULLSTOP_STORE.getDefaultSearchParams(),
+        queryParams = parseQueryParams(query),
+        searchParams = FULLSTOP_STORE.getSearchParams(),
+        selectedAccounts = USER_STORE.getUserCloudAccounts(), // these the user has access to
+        {accounts} = searchParams; // these accounts are selected and active
+
+    // break infinite transition loop
+    if (query.activeTab &&
+        query.showUnresolved &&
+        query.showResolved &&
+        query.sortAsc &&
+        query.from &&
+        query.to) {
+        return;
     }
+
+    // ensure default params are in url
+    if (!queryParams.activeTab) {
+        queryParams.activeTab = defaultParams.activeTab;
+    }
+    if (!queryParams.accounts) {
+        // this might or might not have an effect since transition hook is fired before fetchData
+        Array.prototype.push.apply(accounts, selectedAccounts.map(a => a.id));
+    }
+    if (!queryParams.showUnresolved && !queryParams.showResolved) {
+        // query might not be empty (this is only the case when accessing via menubar)
+        // but still have parameters missing
+        // so we add the default ones
+        queryParams.showUnresolved = defaultParams.showUnresolved;
+        queryParams.showResolved = defaultParams.showResolved;
+    }
+    if (!queryParams.sortAsc) {
+        queryParams.sortAsc = defaultParams.sortAsc;
+    }
+    if (!queryParams.from) {
+        queryParams.from = defaultParams.from.toISOString();
+    } else {
+        queryParams.from = queryParams.from.toISOString();
+    }
+    if (!queryParams.to) {
+        queryParams.to = defaultParams.to.toISOString();
+    } else {
+        queryParams.to = queryParams.to.toISOString();
+    }
+    transition.redirect('violation', {}, queryParams);
 };
 ViolationHandler.fetchData = function(router) {
     let promises = [];
