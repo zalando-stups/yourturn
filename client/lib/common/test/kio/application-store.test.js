@@ -1,5 +1,5 @@
 /* global expect */
-import ApplicationStore from 'common/src/data/kio/application-store';
+import ApplicationStore from 'common/src/data/kio/kio-store';
 import Types from 'common/src/data/kio/kio-types';
 import * as Getter from 'common/src/data/kio/kio-getter';
 import {Pending, Failed} from 'common/src/fetch-result';
@@ -35,7 +35,7 @@ describe('The redux application store', () => {
                 name: 'twintip'
             }],
             state = ApplicationStore(ApplicationStore(), {
-                type: Types.RECEIVE_APPLICATIONS,
+                type: Types.FETCH_APPLICATIONS,
                 payload: results
             });
         expect(Getter.getApplications(state).length).to.equal(2);
@@ -47,7 +47,7 @@ describe('The redux application store', () => {
                 name: 'kio'
             },
             state = ApplicationStore(ApplicationStore(), {
-                type: Types.RECEIVE_APPLICATION,
+                type: Types.FETCH_APPLICATION,
                 payload: result
             });
         expect(Getter.getApplications(state).length).to.equal(1);
@@ -56,7 +56,7 @@ describe('The redux application store', () => {
     it('should insert a pending fetch result placeholder', () => {
         let state = ApplicationStore(ApplicationStore(), {
                 type: Types.BEGIN_FETCH_APPLICATION,
-                payload: 'kio'
+                payload: ['kio']
             }),
             kio = Getter.getApplication(state, 'kio');
         expect(kio instanceof Pending).to.be.true;

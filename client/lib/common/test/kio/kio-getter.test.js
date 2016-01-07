@@ -19,7 +19,9 @@ describe('The kio getter functions', () => {
                 }
             }
         });
-
+        state = {
+            applications: state
+        };
         expect(Getter.getApplications(state, 'kio').length).to.equal(1);
         expect(Getter.getApplications(state, 'Kio').length).to.equal(1);
         expect(Getter.getApplications(state, 'other').length).to.equal(0);
@@ -40,7 +42,9 @@ describe('The kio getter functions', () => {
                 }
             }
         });
-
+        state = {
+            applications: state
+        };
         expect(Getter.getApplications(state, 'stups').length).to.equal(1);
         expect(Getter.getApplications(state, 'greendale').length).to.equal(1);
     });
@@ -58,7 +62,9 @@ describe('The kio getter functions', () => {
                     }
                 }
             }),
-            apps = Getter.getApplications(state);
+            apps = Getter.getApplications({
+                applications: state
+            });
         expect(apps[0].name).to.equal('aaa');
         expect(apps[1].name).to.equal('BBB');
     });
@@ -73,7 +79,9 @@ describe('The kio getter functions', () => {
                 }
             }
         });
-
+        state = {
+            applications: state
+        };
         expect(Getter.getApplications(state).length).to.equal(1);
     });
 });

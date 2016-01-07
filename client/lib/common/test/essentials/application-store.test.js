@@ -2,12 +2,12 @@
 
 import Types from 'common/src/data/essentials/essentials-types';
 import * as Getter from 'common/src/data/essentials/essentials-getter';
-import ScopeAppStore from 'common/src/data/essentials/application-store';
+import Store from 'common/src/data/essentials/essentials-store';
 
 describe('The redux scope application store', () => {
     it('should receive applications', () => {
-        let state = ScopeAppStore(ScopeAppStore(), {
-                type: Types.RECEIVE_SCOPE_APPLICATIONS,
+        let state = Store(Store(), {
+                type: Types.FETCH_SCOPE_APPLICATIONS,
                 payload: ['customer', 'read', [{
                     id: 'kio'
                 }, {

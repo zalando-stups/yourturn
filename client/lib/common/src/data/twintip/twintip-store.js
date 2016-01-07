@@ -1,5 +1,5 @@
 import Immutable from 'immutable';
-import * as Types from './twintip-types';
+import Types from './twintip-types';
 import * as Getter from './twintip-getter';
 import {Pending, Failed} from 'common/src/fetch-result';
 
@@ -8,10 +8,10 @@ function TwintipStore(state = Immutable.Map(), action) {
         return state;
     }
     let {type, payload} = action;
-    if (type === Types.RECEIVE_API) {
+    if (type === Types.FETCH_API) {
         return state.set(payload.application_id, Immutable.fromJS(payload));
     } else if (type === Types.BEGIN_FETCH_API) {
-        return state.set(payload, new Pending());
+        return state.set(payload[0], new Pending());
     } else if (type === Types.FAIL_FETCH_API) {
         return state.set(payload.id, new Failed(payload));
     }

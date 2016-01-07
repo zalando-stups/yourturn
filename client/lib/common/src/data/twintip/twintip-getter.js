@@ -11,6 +11,11 @@ function getApi(state, id) {
     return api ? api.toJS() : false;
 }
 
+function getApis(state) {
+    return state.valueSeq().toJS();
+}
+
 export {
-    getApi as getApi
+    getApi,
+    getApis
 };
