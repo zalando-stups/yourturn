@@ -1,12 +1,20 @@
 /* globals expect, $, TestUtils, reset, render, React */
-import {Flummox} from 'flummox';
 import KioStore from 'common/src/data/kio/kio-store';
-import KioActions from 'common/src/data/kio/kio-actions';
+import KioTypes from 'common/src/data/kio/kio-types';
+import * as KioGetter from 'common/src/data/kio/kio-getter';
+import * as KioActions from 'common/src/data/kio/kio-actions';
+
 import PieroneStore from 'common/src/data/pierone/pierone-store';
-import PieroneActions from 'common/src/data/pierone/pierone-actions';
+import PieroneTypes from 'common/src/data/pierone/pierone-types';
+import * as PieroneGetter from 'common/src/data/pierone/pierone-getter';
+import * as PieroneActions from 'common/src/data/pierone/pierone-actions';
+
 import UserStore from 'common/src/data/user/user-store';
-import UserActions from 'common/src/data/user/user-actions';
+import UserTypes from 'common/src/data/user/user-types';
+import * as UserGetter from 'common/src/data/user/user-getter';
+
 import Detail from 'application/src/version-detail/version-detail.jsx';
+import {bindGettersToState} from 'common/src/util';
 
 const TEAM = 'stups',
     VER = '0.1',
@@ -22,36 +30,32 @@ const TEAM = 'stups',
         status: 'M index.html'
     };
 
-class MockFlux extends Flummox {
-    constructor() {
-        super();
-
-        this.createActions('kio', KioActions);
-        this.createStore('kio', KioStore, this);
-
-        this.createActions('pierone', PieroneActions);
-        this.createStore('pierone', PieroneStore, this);
-
-        this.createActions('user', UserActions);
-        this.createStore('user', UserStore, this);
-    }
-}
-
 describe('The version detail view', () => {
-    var flux,
-        props,
+    var props,
+        pieroneState,
         detail;
 
     beforeEach(() => {
         reset();
-        flux = new MockFlux();
-        flux.getStore('kio').receiveApplicationVersion(TEST_VERSION);
+        let kioState = KioStore(KioStore(), {
+                type: KioTypes.FETCH_APPLICATION_VERSION,
+                payload: TEST_VERSION
+            }),
+            userState = UserStore();
+
+        pieroneState = PieroneStore(PieroneStore(), {
+            type: PieroneTypes.FETCH_TAGS,
+            payload: [TEAM, APP, [{
+                name: VER
+            }]]
+        });
+
         props = {
             applicationId: APP,
             versionId: VER,
-            kioStore: flux.getStore('kio'),
-            userStore: flux.getStore('user'),
-            pieroneStore: flux.getStore('pierone')
+            kioStore: bindGettersToState(kioState, KioGetter),
+            userStore: bindGettersToState(userState, UserGetter),
+            pieroneStore: bindGettersToState(pieroneState, PieroneGetter)
         };
         detail = render(Detail, props);
     });
@@ -62,7 +66,12 @@ describe('The version detail view', () => {
     });
 
     it('should display a warning about modified scm-source', () => {
-        flux.getStore('pierone').receiveScmSource([TEAM, APP, VER, TEST_SOURCE]);
+        let newPieroneState = PieroneStore(pieroneState, {
+            type: PieroneTypes.FETCH_SCM_SOURCE,
+            payload: [TEAM, APP, VER, TEST_SOURCE]
+        });
+        props.pieroneStore = bindGettersToState(newPieroneState, PieroneGetter);
+
         detail = render(Detail, props);
         // will throw if not there
         TestUtils.findRenderedDOMComponentWithAttributeValue(detail, 'data-block', 'locally-modified-warning');
@@ -74,10 +83,12 @@ describe('The version detail view', () => {
         error.artifact = APP;
         error.tag = VER;
         error.status = 404;
-        flux.getStore('pierone').failFetchScmSource(error);
-        flux.getStore('pierone').receiveTags([TEAM, APP, [{
-            name: VER
-        }]]);
+        let newPieroneState = PieroneStore(pieroneState, {
+            type: PieroneTypes.FAIL_FETCH_SCM_SOURCE,
+            payload: error
+        });
+        props.pieroneStore = bindGettersToState(newPieroneState, PieroneGetter);
+
         detail = render(Detail, props);
         TestUtils.findRenderedDOMComponentWithAttributeValue(detail, 'data-block', 'missing-scmsource-warning');
     });

@@ -44,7 +44,7 @@ describe('The user redux store', () => {
     it('should receive cloud accounts of a user', () => {
         let state = Store();
         state = Store(state, {
-            type: Types.FETCH_ACCOUNTS,
+            type: Types.FETCH_USERACCOUNTS,
             payload: TEST_ACCOUNTS
         });
         expect(state.get('accounts').count()).to.equal(2);

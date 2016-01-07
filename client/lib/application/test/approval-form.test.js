@@ -1,10 +1,15 @@
 /* globals expect, $, TestUtils, reset, render, React */
-import {Flummox} from 'flummox';
 import KioStore from 'common/src/data/kio/kio-store';
-import KioActions from 'common/src/data/kio/kio-actions';
+import KioTypes from 'common/src/data/kio/kio-types';
+import * as KioGetter from 'common/src/data/kio/kio-getter';
+import * as KioActions from 'common/src/data/kio/kio-actions';
+
 import UserStore from 'common/src/data/user/user-store';
-import UserActions from 'common/src/data/user/user-actions';
+import UserTypes from 'common/src/data/user/user-types';
+import * as UserGetter from 'common/src/data/user/user-getter';
+
 import ApprovalForm from 'application/src/approval-form/approval-form.jsx';
+import {bindGettersToState} from 'common/src/util';
 
 const APP_ID = 'kio',
     VER_ID = '0.1',
@@ -31,52 +36,48 @@ const APP_ID = 'kio',
         approved_at: '2015-04-25T16:40:00'
     }];
 
-class MockFlux extends Flummox {
-    constructor() {
-        super();
-
-        this.createActions('kio', KioActions);
-        this.createStore('kio', KioStore, this);
-
-        this.createActions('user', UserActions);
-        this.createStore('user', UserStore, this);
-    }
-}
-
 describe('The approval form view', () => {
-    var flux,
-        props,
+    var props,
         form;
 
     beforeEach(() => {
         reset();
-        flux = new MockFlux();
+        let kioActions = [{
+                    type: KioTypes.FETCH_APPROVALS,
+                    payload: [APP_ID, VER_ID, TEST_APPROVALS]
+                }, {
+                    type: KioTypes.FETCH_APPROVAL_TYPES,
+                    payload: [APP_ID, TEST_APPROVAL_TYPES]
+                }, {
+                    type: KioTypes.FETCH_APPLICATION,
+                    payload: TEST_APP
+                }
+            ],
+            kioState = kioActions.reduce((state, action) => KioStore(state, action), KioStore()),
+            userState = UserStore(UserStore(), {
+                type: UserTypes.FETCH_USERACCOUNTS,
+                payload: [TEST_ACCOUNT]
+            });
+
         props = {
             applicationId: APP_ID,
             versionId: VER_ID,
-            kioStore: flux.getStore('kio'),
-            userStore: flux.getStore('user')
+            kioStore: bindGettersToState(kioState, KioGetter),
+            userStore: bindGettersToState(userState, UserGetter)
         };
         form = render(ApprovalForm, props);
     });
 
     it('should show approvals', () => {
-        flux.getStore('kio').receiveApprovals([APP_ID, VER_ID, TEST_APPROVALS]);
-        form = render(ApprovalForm, props);
         let approvals = TestUtils.findRenderedDOMComponentWithAttributeValue(form, 'data-block', 'approval-list');
         expect($(React.findDOMNode(approvals)).children().length).to.equal(2);
     });
 
     it('should display an explanation of default approval types', () => {
-        flux.getStore('kio').receiveApprovalTypes([APP_ID, TEST_APPROVAL_TYPES]);
-        form = render(ApprovalForm, props);
         TestUtils.findRenderedDOMComponentWithAttributeValue(form, 'data-block', 'approvalType-explanation');
     });
 
     it('should hide the explanation when a non-default approval type is selected', () => {
-        flux.getStore('kio').receiveApprovalTypes([APP_ID, TEST_APPROVAL_TYPES]);
-        form = render(ApprovalForm, props);
-
         let btn = TestUtils.findRenderedDOMComponentWithAttributeValue(form, 'data-block', 'custom-button');
         TestUtils.Simulate.click(btn);
 
@@ -86,11 +87,6 @@ describe('The approval form view', () => {
     });
 
     it('should disable the submit button in foreign applications', () => {
-        flux.getStore('user').receiveAccounts([TEST_ACCOUNT]);
-        flux.getStore('kio').receiveApplication(TEST_APP);
-
-        form = render(ApprovalForm, props);
-
         let btn = TestUtils.findRenderedDOMComponentWithAttributeValue(form, 'data-block', 'submit-button');
         expect(btn.props.disabled).to.be.true;
     });

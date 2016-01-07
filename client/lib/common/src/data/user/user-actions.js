@@ -72,7 +72,7 @@ function fetchAccounts(userId) {
 let fetchInfoAction = createAction(Type.FETCH_TOKENINFO, fetchTokenInfo),
     deleteTokenAction = createAction(Type.DELETE_TOKENINFO, deleteTokenInfo),
     fetchUserAction = createAction(Type.FETCH_USERINFO, fetchUserInfo),
-    fetchAccountsAction = createAction(Type.FETCH_ACCOUNTS, fetchAccounts);
+    fetchAccountsAction = createAction(Type.FETCH_USERACCOUNTS, fetchAccounts);
 
 export {
     fetchAccessToken,

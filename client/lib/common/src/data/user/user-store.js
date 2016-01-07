@@ -25,12 +25,10 @@ function UserStore(state, action) {
         return state.setIn(['users', user], Immutable.fromJS(info));
     } else if (type === Types.FETCH_TOKENINFO) {
         return state.set('tokeninfo', Immutable.fromJS(payload));
-    } else if (type === Types.FETCH_ACCOUNTS) {
+    } else if (type === Types.FETCH_USERACCOUNTS) {
         return state.set('accounts', Immutable.fromJS(payload));
     } else if (type === Types.DELETE_TOKENINFO) {
         return state.set('tokeninfo', false);
-    } else {
-        return DEFAULT_STATE;
     }
 
     return state;

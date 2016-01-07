@@ -26,7 +26,6 @@ class ApplicationDetail extends React.Component {
         this.state = {
             criticalityUpdatePending: false
         };
-        this.actions = props.kioActions;
     }
 
     onUpdateCriticality(app, amount) {
@@ -34,11 +33,10 @@ class ApplicationDetail extends React.Component {
             criticalityUpdatePending: true
         });
 
-        this
-        .actions
+        this.props.kioActions
         .saveApplicationCriticality(app.id, app.criticality_level + amount)
         .then(() => {
-            this.actions.fetchApplication(app.id);
+            this.props.kioActions.fetchApplication(app.id);
             this.setState({
                 criticalityUpdatePending: false
             });
@@ -63,9 +61,6 @@ class ApplicationDetail extends React.Component {
             {criticality_level} = app,
             isOwnApplication = determineOwnApplication(app, this.props.userStore.getUserCloudAccounts()),
             api = this.props.twintipStore.getApi(applicationId);
-
-        // TODO no markdown
-        // because component does not get nerw props
 
         const LINK_PARAMS = {
             applicationId: applicationId

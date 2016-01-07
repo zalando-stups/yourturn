@@ -1,13 +1,17 @@
 /* globals expect, $, TestUtils, reset, render, React, sinon, Promise */
-import {Flummox} from 'flummox';
 import KioStore from 'common/src/data/kio/kio-store';
-import KioActions from 'common/src/data/kio/kio-actions';
-import UserStore from 'common/src/data/user/user-store';
-import UserActions from 'common/src/data/user/user-actions';
-import AppForm from 'application/src/application-form/application-form.jsx';
+import KioTypes from 'common/src/data/kio/kio-types';
+import * as KioGetter from 'common/src/data/kio/kio-getter';
+import * as KioActions from 'common/src/data/kio/kio-actions';
 
-const FLUX = 'kio',
-    APP_ID = 'kio',
+import UserStore from 'common/src/data/user/user-store';
+import UserTypes from 'common/src/data/user/user-types';
+import * as UserGetter from 'common/src/data/user/user-getter';
+
+import AppForm from 'application/src/application-form/application-form.jsx';
+import {bindGettersToState} from 'common/src/util';
+
+const APP_ID = 'kio',
     TEST_APP = {
         documentation_url: 'https://github.com/zalando-stups/kio',
         scm_url: 'https://github.com/zalando-stups/kio.git',
@@ -20,45 +24,36 @@ const FLUX = 'kio',
         id: 'kio'
     };
 
-class AppFlux extends Flummox {
-    constructor() {
-        super();
-
-        this.createActions(FLUX, KioActions);
-        this.createStore(FLUX, KioStore, this);
-
-        this.createActions('user', UserActions);
-        this.createStore('user', UserStore, this);
-    }
-}
-
 describe('The application form view', () => {
-    var flux,
-        actionSpy,
+    var actionSpy,
         props,
         form;
-
-    beforeEach(() => {
-        flux = new AppFlux();
-        actionSpy = sinon.stub(flux.getActions(FLUX), 'saveApplication', function () {
-            return Promise.resolve();
-        });
-    });
 
     describe('in create mode', () => {
         beforeEach(() => {
             reset();
+            let kioActions = Object.assign({}, KioActions),
+                kioState = KioStore(),
+                userState = UserStore(UserStore(), {
+                    type: UserTypes.FETCH_USERACCOUNTS,
+                    payload: [{
+                        id: '123',
+                        name: 'stups'
+                    }]
+                });
+
+            actionSpy = sinon.stub(kioActions, 'saveApplication', function () {
+                return Promise.resolve();
+            });
+
             props = {
                 applicationId: APP_ID,
                 edit: false,
-                kioStore: flux.getStore('kio'),
-                userStore: flux.getStore('user'),
-                kioActions: flux.getActions('kio')
+                kioStore: bindGettersToState(kioState, KioGetter),
+                userStore: bindGettersToState(userState, UserGetter),
+                kioActions
             };
-            flux.getStore('user').receiveAccounts([{
-                id: '123',
-                name: 'stups'
-            }]);
+
             form = render(AppForm, props);
         });
 
@@ -73,7 +68,7 @@ describe('The application form view', () => {
         });
 
         it('should disable save button without accounts', () => {
-            flux.getStore('user').receiveAccounts([]);
+            props.userStore = bindGettersToState(UserStore(), UserGetter);
             form = render(AppForm, props);
             let btn = TestUtils.findRenderedDOMComponentWithAttributeValue(form, 'data-block', 'save-button');
             expect($(React.findDOMNode(btn)).is('[disabled="true"]')).to.be.false;
@@ -83,18 +78,31 @@ describe('The application form view', () => {
     describe('in edit mode', () => {
         beforeEach(() => {
             reset();
+            let kioActions = Object.assign({}, KioActions),
+                kioState = KioStore(KioStore(), {
+                    type: KioTypes.FETCH_APPLICATION,
+                    payload: TEST_APP
+                }),
+                userState = UserStore(UserStore(), {
+                    type: UserTypes.FETCH_USERACCOUNTS,
+                    payload: [{
+                        id: '123',
+                        name: 'stups'
+                    }]
+                });
+
+            actionSpy = sinon.stub(kioActions, 'saveApplication', function () {
+                return Promise.resolve();
+            });
+
             props = {
                 applicationId: APP_ID,
                 edit: true,
-                kioStore: flux.getStore('kio'),
-                userStore: flux.getStore('user'),
-                kioActions: flux.getActions('kio')
+                kioStore: bindGettersToState(kioState, KioGetter),
+                userStore: bindGettersToState(userState, UserGetter),
+                kioActions
             };
-            flux.getStore('user').receiveAccounts([{
-                id: '123',
-                name: 'stups'
-            }]);
-            flux.getStore(FLUX).receiveApplication(TEST_APP);
+
             form = render(AppForm, props);
         });
 

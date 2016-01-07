@@ -170,6 +170,7 @@ AppDetailHandler.fetchData = function(routerState, state) {
     if (!KioGetter.getApplication(state.kio, applicationId)) {
         KIO_ACTIONS.fetchApplication(applicationId);
     }
+
     KIO_ACTIONS.fetchApplicationVersions(applicationId);
     TWINTIP_ACTIONS.fetchApi(applicationId);
 };

@@ -1,14 +1,22 @@
 /* globals expect, reset, render, sinon, Promise, TestUtils */
-import {Flummox} from 'flummox';
 import KioStore from 'common/src/data/kio/kio-store';
-import KioActions from 'common/src/data/kio/kio-actions';
+import KioTypes from 'common/src/data/kio/kio-types';
+import * as KioGetter from 'common/src/data/kio/kio-getter';
+
 import MintStore from 'common/src/data/mint/mint-store';
-import MintActions from 'common/src/data/mint/mint-actions';
+import * as MintActions from 'common/src/data/mint/mint-actions';
+import * as MintGetter from 'common/src/data/mint/mint-getter';
+import MintTypes from 'common/src/data/mint/mint-types';
+
 import EssentialsStore from 'common/src/data/essentials/essentials-store';
-import EssentialsActions from 'common/src/data/essentials/essentials-actions';
+import * as EssentialsGetter from 'common/src/data/essentials/essentials-getter';
+
 import UserStore from 'common/src/data/user/user-store';
-import UserActions from 'common/src/data/user/user-actions';
+import * as UserGetter from 'common/src/data/user/user-getter';
+import UserTypes from 'common/src/data/user/user-types';
+
 import AccessForm from 'application/src/access-form/access-form.jsx';
+import {bindGettersToState} from 'common/src/util';
 
 const OAUTH_KIO = {
     id: 'kio',
@@ -19,8 +27,7 @@ const OAUTH_KIO = {
     last_synced: '2015-01-01T12:42:41Z',
     has_problems: false,
     redirect_url: 'http://example.com/oauth',
-    s3_buckets: [
-    ],
+    s3_buckets: [],
     scopes: [{
         resource_type_id: 'customer',
         scope_id: 'read_all'
@@ -36,50 +43,40 @@ ACCOUNTS = [{
     name: 'stups'
 }];
 
-class MockFlux extends Flummox {
-    constructor() {
-        super();
-
-        this.createActions('kio', KioActions);
-        this.createStore('kio', KioStore, this);
-
-        this.createActions('mint', MintActions);
-        this.createStore('mint', MintStore, this);
-
-        this.createActions('essentials', EssentialsActions);
-        this.createStore('essentials', EssentialsStore, this);
-
-        this.createActions('user', UserActions);
-        this.createStore('user', UserStore, this);
-    }
-}
-
 describe('The access control form view', () => {
-    var flux,
-        actionSpy,
+    var actionSpy,
         props,
         form;
 
     beforeEach(() => {
         reset();
-        flux = new MockFlux();
-        flux.getStore('essentials').receiveScopes(['customer', [{
-            id: 'read_all'
-        }]]);
-        flux.getStore('mint').receiveOAuthConfig(['kio', OAUTH_KIO]);
-        flux.getStore('kio').receiveApplication(APP_KIO);
-        flux.getStore('user').receiveAccounts(ACCOUNTS);
-        actionSpy = sinon.stub(flux.getActions('mint'), 'saveOAuthConfig', () => {
+
+        let kioState = KioStore(KioStore(), {
+                type: KioTypes.FETCH_APPLICATION,
+                payload: APP_KIO
+            }),
+            essentialsState = EssentialsStore(),
+            userState = UserStore(UserStore(), {
+                type: UserTypes.FETCH_USERACCOUNTS,
+                payload: ACCOUNTS
+            }),
+            mintState = MintStore(MintStore(), {
+                type: MintTypes.FETCH_OAUTH_CONFIG,
+                payload: ['kio', OAUTH_KIO]
+            }),
+            mintActions = Object.assign({}, MintActions);
+
+        actionSpy = sinon.stub(mintActions, 'saveOAuthConfig', () => {
             return Promise.resolve();
         });
 
         props = {
             applicationId: 'kio',
-            kioStore: flux.getStore('kio'),
-            essentialsStore: flux.getStore('essentials'),
-            userStore: flux.getStore('user'),
-            mintStore: flux.getStore('mint'),
-            mintActions: flux.getActions('mint')
+            kioStore: bindGettersToState(kioState, KioGetter),
+            essentialsStore: bindGettersToState(essentialsState, EssentialsGetter),
+            userStore: bindGettersToState(userState, UserGetter),
+            mintStore: bindGettersToState(mintState, MintGetter),
+            mintActions
         };
         form = render(AccessForm, props);
     });

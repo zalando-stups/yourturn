@@ -1,14 +1,23 @@
 /* globals expect, $, TestUtils, reset, render, React, Promise, sinon */
-import {Flummox} from 'flummox';
 import KioStore from 'common/src/data/kio/kio-store';
-import KioActions from 'common/src/data/kio/kio-actions';
+import KioTypes from 'common/src/data/kio/kio-types';
+import * as KioGetter from 'common/src/data/kio/kio-getter';
+import * as KioActions from 'common/src/data/kio/kio-actions';
+
 import MintStore from 'common/src/data/mint/mint-store';
-import MintActions from 'common/src/data/mint/mint-actions';
+import * as MintActions from 'common/src/data/mint/mint-actions';
+import * as MintGetter from 'common/src/data/mint/mint-getter';
+import MintTypes from 'common/src/data/mint/mint-types';
+
 import EssentialsStore from 'common/src/data/essentials/essentials-store';
-import EssentialsActions from 'common/src/data/essentials/essentials-actions';
+import * as EssentialsGetter from 'common/src/data/essentials/essentials-getter';
+
 import UserStore from 'common/src/data/user/user-store';
-import UserActions from 'common/src/data/user/user-actions';
+import UserTypes from 'common/src/data/user/user-types';
+import * as UserGetter from 'common/src/data/user/user-getter';
+
 import OAuthForm from 'application/src/oauth-form/oauth-form.jsx';
+import {bindGettersToState} from 'common/src/util';
 
 const MOCK_KIO = {
     id: 'kio',
@@ -28,45 +37,35 @@ const MOCK_KIO = {
     }]
 };
 
-class MockFlux extends Flummox {
-    constructor() {
-        super();
-
-        this.createActions('kio', KioActions);
-        this.createStore('kio', KioStore, this);
-
-        this.createActions('mint', MintActions);
-        this.createStore('mint', MintStore, this);
-
-        this.createActions('essentials', EssentialsActions);
-        this.createStore('essentials', EssentialsStore, this);
-
-        this.createActions('user', UserActions);
-        this.createStore('user', UserStore, this);
-    }
-}
-
 describe('The oauth form view', () => {
-    var flux,
-        actionSpy,
+    var actionSpy,
         props,
         form;
 
     beforeEach(() => {
         reset();
-        flux = new MockFlux();
-        actionSpy = sinon.stub(flux.getActions('mint'), 'saveOAuthConfig', () => {
+
+        let mintActions = Object.assign({}, MintActions),
+            kioState = KioStore(),
+            essentialsState = EssentialsStore(),
+            mintState = MintStore(MintStore(), {
+                type: MintTypes.FETCH_OAUTH_CONFIG,
+                payload: ['kio', MOCK_KIO]
+            }),
+            userState = UserStore();
+
+        actionSpy = sinon.stub(mintActions, 'saveOAuthConfig', () => {
             return Promise.resolve();
         });
         props = {
             applicationId: 'kio',
-            mintActions: flux.getActions('mint'),
-            kioStore: flux.getStore('kio'),
-            userStore: flux.getStore('user'),
-            mintStore: flux.getStore('mint'),
-            essentialsStore: flux.getStore('essentials')
+            mintActions,
+            kioStore: bindGettersToState(kioState, KioGetter),
+            userStore: bindGettersToState(userState, UserGetter),
+            mintStore: bindGettersToState(mintState, MintGetter),
+            essentialsStore: bindGettersToState(essentialsState, EssentialsGetter),
         };
-        flux.getStore('mint').receiveOAuthConfig(['kio', MOCK_KIO]);
+
         form = render(OAuthForm, props);
     });
 

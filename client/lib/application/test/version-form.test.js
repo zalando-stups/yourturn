@@ -1,11 +1,16 @@
 /* globals expect, TestUtils, reset, render, sinon, Promise, $, React */
-import {Flummox} from 'flummox';
 import KioStore from 'common/src/data/kio/kio-store';
-import KioActions from 'common/src/data/kio/kio-actions';
-import VersionForm from 'application/src/version-form/version-form.jsx';
+import KioTypes from 'common/src/data/kio/kio-types';
+import * as KioGetter from 'common/src/data/kio/kio-getter';
+import * as KioActions from 'common/src/data/kio/kio-actions';
 
-const FLUX = 'kio',
-    APP_ID = 'kio',
+import UserStore from 'common/src/data/user/user-store';
+import * as UserGetter from 'common/src/data/user/user-getter';
+
+import VersionForm from 'application/src/version-form/version-form.jsx';
+import {bindGettersToState} from 'common/src/util';
+
+const APP_ID = 'kio',
     VER_ID = '0.1',
     TEST_APP = {
         documentation_url: 'https://github.com/zalando-stups/kio',
@@ -38,57 +43,78 @@ const FLUX = 'kio',
         approved_at: '2015-04-25T16:40:00'
     }];
 
-class MockFlux extends Flummox {
-    constructor() {
-        super();
-
-        this.createActions(FLUX, KioActions);
-        this.createStore(FLUX, KioStore, this);
-    }
-}
-
 describe('The version form view', () => {
-    var flux,
-        actionSpy,
+    var actionSpy,
         props,
         form;
-
-    beforeEach(() => {
-        flux = new MockFlux();
-        actionSpy = sinon.stub(flux.getActions(FLUX), 'saveApplicationVersion', function () {
-            return Promise.resolve();
-        });
-    });
 
     describe('in create mode', () => {
         beforeEach(() => {
             reset();
-            flux.getStore(FLUX).receiveApplication(TEST_APP);
-            flux.getStore(FLUX).receiveApplicationVersion(TEST_VERSION);
+
+            let kioActions = Object.assign({}, KioActions),
+                kioSetup = [{
+                    type: KioTypes.FETCH_APPLICATION,
+                    payload: TEST_APP
+                }, {
+                    type: KioTypes.FETCH_APPLICATION_VERSION,
+                    payload: TEST_VERSION
+                }, {
+                    type: KioTypes.FETCH_APPROVALS,
+                    payload: [APP_ID, VER_ID, TEST_APPROVALS]
+                }],
+                kioState = kioSetup.reduce((state, action) => KioStore(state, action), KioStore());
+
+            actionSpy = sinon.stub(kioActions, 'saveApplicationVersion', function () {
+                return Promise.resolve();
+            });
+
             props = {
                 applicationId: APP_ID,
                 versionId: VER_ID,
                 edit: false,
-                kioStore: flux.getStore('kio'),
-                kioActions: flux.getActions('kio'),
-                userStore: flux.getStore('user')
+                kioStore: bindGettersToState(kioState, KioGetter),
+                kioActions,
+                userStore: bindGettersToState(UserStore(), UserGetter)
             };
             form = render(VersionForm, props);
+        });
+
+        it('should call the correct action', () => {
+            let f = TestUtils.findRenderedDOMComponentWithAttributeValue(form, 'data-block', 'form');
+            TestUtils.Simulate.submit(f);
+            expect(actionSpy.calledOnce).to.be.true;
         });
     });
 
     describe('in edit mode', () => {
         beforeEach(() => {
             reset();
-            flux.getStore(FLUX).receiveApplication(TEST_APP);
-            flux.getStore(FLUX).receiveApplicationVersion(TEST_VERSION);
+
+            let kioActions = Object.assign({}, KioActions),
+                kioSetup = [{
+                    type: KioTypes.FETCH_APPLICATION,
+                    payload: TEST_APP
+                }, {
+                    type: KioTypes.FETCH_APPLICATION_VERSION,
+                    payload: TEST_VERSION
+                }, {
+                    type: KioTypes.FETCH_APPROVALS,
+                    payload: [APP_ID, VER_ID, TEST_APPROVALS]
+                }],
+                kioState = kioSetup.reduce((state, action) => KioStore(state, action), KioStore());
+
+            actionSpy = sinon.stub(kioActions, 'saveApplicationVersion', function () {
+                return Promise.resolve();
+            });
+
             props = {
                 applicationId: APP_ID,
                 versionId: VER_ID,
                 edit: true,
-                kioStore: flux.getStore('kio'),
-                kioActions: flux.getActions('kio'),
-                userStore: flux.getStore('user')
+                kioStore: bindGettersToState(kioState, KioGetter),
+                kioActions,
+                userStore: UserStore()
             };
             form = render(VersionForm, props);
         });
@@ -114,8 +140,6 @@ describe('The version form view', () => {
         });
 
         it('should display a warning when there are approvals', () => {
-            flux.getStore(FLUX).receiveApprovals([APP_ID, VER_ID, TEST_APPROVALS]);
-            form = render(VersionForm, props);
             TestUtils.findRenderedDOMComponentWithAttributeValue(form, 'data-block', 'warning');
         });
     });
