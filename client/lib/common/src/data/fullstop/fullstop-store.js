@@ -23,12 +23,12 @@ const DEFAULT_PAGING = {
             to: moment(),
             showUnresolved: true,
             showResolved: false,
-            sortAsc: true
+            sortAsc: true,
+            activeTab: 0
         }
     });
 
 function FullstopStore(state, action) {
-    // TODO not cool
     if (!state || !action) {
         return DEFAULT_STATE;
     }
