@@ -90,10 +90,10 @@ ViolationHandler.willTransitionTo = function(transition, params, query) {
     // save last visited date
     FULLSTOP_ACTIONS.saveLastVisited(Date.now());
     let state = REDUX.getState(),
-        defaultParams = FullstopGetter.getDefaultSearchParams(state),
+        defaultParams = FullstopGetter.getDefaultSearchParams(),
         queryParams = parseQueryParams(query),
-        searchParams = FullstopGetter.getSearchParams(state),
-        selectedAccounts = USER_STORE.getUserCloudAccounts(), // these the user has access to
+        searchParams = FullstopGetter.getSearchParams(state.fullstop),
+        selectedAccounts = UserGetter.getUserCloudAccounts(state.user), // these the user has access to
         {accounts} = searchParams; // these accounts are selected and active
 
     // break infinite transition loop

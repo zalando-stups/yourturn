@@ -1,3 +1,5 @@
+import {FullstopStore} from './fullstop-store';
+
 function getPagingInfo(state) {
     return state.get('pagingInfo').toJS();
 }
@@ -50,6 +52,10 @@ function getLastVisited(state) {
     return state.get('lastVisited');
 }
 
+function getDefaultSearchParams() {
+    return (FullstopStore()).get('searchParams').toJS();
+}
+
 export {
     getViolations,
     getViolation,
@@ -60,5 +66,6 @@ export {
     getViolationCount,
     getViolationCountIn,
     getLastVisited,
-    getOwnTotal
+    getOwnTotal,
+    getDefaultSearchParams
 };
