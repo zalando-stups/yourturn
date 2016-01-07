@@ -24,6 +24,7 @@ function FullstopStore(state, action) {
                 accounts: [],
                 from: moment().subtract(1, 'week').startOf('day'),
                 to: moment(),
+                activeTab: 0,
                 showUnresolved: true,
                 showResolved: false,
                 sortAsc: true
@@ -309,5 +310,9 @@ export default class FullstopStoreWrapper extends Store {
 
     getLastVisited() {
         return Getters.getLastVisited(this.state.redux);
+    }
+
+    getDefaultSearchParams() {
+        return FullstopStore().toJS().searchParams;
     }
 }
