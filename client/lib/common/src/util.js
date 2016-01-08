@@ -31,6 +31,10 @@ function bindGettersToState(state, getters) {
 function createActionTypes(types) {
     return types.reduce((obj, t) => {
         obj[t] = t;
+        if (t.startsWith('FETCH_')) {
+            obj['BEGIN_' + t] = 'BEGIN_' + t;
+            obj['FAIL_' + t] = 'FAIL_' + t;
+        }
         return obj;
     },
     {});
