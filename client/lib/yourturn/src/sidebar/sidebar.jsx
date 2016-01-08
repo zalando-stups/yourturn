@@ -8,6 +8,7 @@ import Badge from 'common/src/badge.jsx';
 import Counter from 'common/src/counter.jsx';
 import * as UserGetter from 'common/src/data/user/user-getter';
 import * as UserActions from 'common/src/data/user/user-actions';
+import * as FullstopGetter from 'common/src/data/fullstop/fullstop-getter';
 import 'common/asset/less/yourturn/sidebar.less';
 
 class Sidebar extends React.Component {
@@ -85,12 +86,12 @@ class Sidebar extends React.Component {
                                         <button
                                             onClick={this.refresh.bind(this)}
                                             className='btn btn-default'>
-                                            <Icon name='refresh' /> Refresh
+                                            <Icon fixedWidth name='refresh' /> Refresh
                                         </button>
                                         <button
                                             onClick={this.logout.bind(this)}
                                             className='btn btn-default'>
-                                            <Icon name='sign-out' /> Logout
+                                            <Icon fixedWidth name='sign-out' /> Logout
                                         </button>
                                     </div>
                                 </div>
@@ -114,7 +115,7 @@ class Sidebar extends React.Component {
                             onClick={this.transition.bind(this, 'search')}>
                             <Link
                                 to='search'>
-                                Search <Icon name='search' />
+                                Search <Icon fixedWidth name='search' />
                             </Link>
                         </div>
                         <div
@@ -123,7 +124,7 @@ class Sidebar extends React.Component {
                             onClick={this.transition.bind(this, 'application-appList')}>
                             <Link
                                 to='application-appList'>
-                                Applications <Icon name='cubes' />
+                                Applications <Icon fixedWidth name='cubes' />
                             </Link>
                         </div>
                         <div
@@ -132,7 +133,7 @@ class Sidebar extends React.Component {
                             onClick={this.transition.bind(this, 'resource-resList')}>
                             <Link
                                 to='resource-resList'>
-                                Resource Types <Icon name='key' />
+                                Resource Types <Icon fixedWidth name='key' />
                             </Link>
                         </div>
                         <div
@@ -150,7 +151,7 @@ class Sidebar extends React.Component {
                                                     end={violationCount}/>
                                                 :
                                                 0}
-                                            </Badge> <Icon name='warning' />
+                                            </Badge> <Icon fixedWidth name='warning' />
                             </Link>
                         </div>
                     </div>
@@ -165,5 +166,5 @@ Sidebar.contextTypes = {
 export default connect(state => ({
     userInfo: UserGetter.getUserInfo(state.user),
     tokenInfo: UserGetter.getTokenInfo(state.user),
-    violationCount: 0 // TODO
+    violationCount: FullstopGetter.getOwnTotal(state.fullstop)
 }))(Sidebar);
