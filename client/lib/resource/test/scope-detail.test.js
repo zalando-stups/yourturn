@@ -1,10 +1,15 @@
 /* globals expect, $, TestUtils, reset, render, React */
-import {Flummox} from 'flummox';
 import EssentialsStore from 'common/src/data/essentials/essentials-store';
-import EssentialsActions from 'common/src/data/essentials/essentials-actions';
+import EssentialsTypes from 'common/src/data/essentials/essentials-types';
+import * as EssentialsGetter from 'common/src/data/essentials/essentials-getter';
+import * as EssentialsActions from 'common/src/data/essentials/essentials-actions';
+
 import UserStore from 'common/src/data/user/user-store';
-import UserActions from 'common/src/data/user/user-actions';
+import UserTypes from 'common/src/data/user/user-types';
+import * as UserGetter from 'common/src/data/user/user-getter';
+
 import Detail from 'resource/src/scope-detail/scope-detail.jsx';
+import {bindGettersToState} from 'common/src/util';
 
 const RES_ID = 'sales_order',
         SCP_ID = 'read',
@@ -17,34 +22,28 @@ const RES_ID = 'sales_order',
             'id': 'kio'
         };
 
-class MockFlux extends Flummox {
-    constructor() {
-        super();
-
-        this.createActions('essentials', EssentialsActions);
-        this.createStore('essentials', EssentialsStore, this);
-
-        this.createActions('user', UserActions);
-        this.createStore('user', UserStore, this);
-    }
-}
-
 describe('The scope detail view', () => {
-    var flux,
-        props,
+    var props,
         detail;
 
     beforeEach(() => {
         reset();
-        flux = new MockFlux();
+
+        let setup = [{
+                type: EssentialsTypes.FETCH_SCOPE,
+                payload: [RES_ID, TEST_SCP]
+            }, {
+                type: EssentialsTypes.FETCH_SCOPE_APPLICATIONS,
+                payload: [RES_ID, SCP_ID, [TEST_APP]]
+            }],
+            essentialsState = setup.reduce((state, action) => EssentialsStore(state, action), EssentialsStore());
+
         props = {
             resourceId: RES_ID,
             scopeId: SCP_ID,
-            essentialsStore: flux.getStore('essentials'),
-            userStore: flux.getStore('user')
+            essentialsStore: bindGettersToState(essentialsState, EssentialsGetter),
+            userStore: bindGettersToState(UserStore(), UserGetter)
         };
-        flux.getStore('essentials').receiveScope([RES_ID, TEST_SCP]);
-        flux.getStore('essentials').receiveScopeApplications([RES_ID, SCP_ID, [TEST_APP]]);
         detail = render(Detail, props);
     });
 

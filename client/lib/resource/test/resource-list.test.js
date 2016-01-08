@@ -1,57 +1,53 @@
 /* globals expect, $, TestUtils, reset, render, React */
-import {Flummox} from 'flummox';
 import EssentialsStore from 'common/src/data/essentials/essentials-store';
-import EssentialsActions from 'common/src/data/essentials/essentials-actions';
+import EssentialsTypes from 'common/src/data/essentials/essentials-types';
+import * as EssentialsGetter from 'common/src/data/essentials/essentials-getter';
+import * as EssentialsActions from 'common/src/data/essentials/essentials-actions';
+
 import UserStore from 'common/src/data/user/user-store';
-import UserActions from 'common/src/data/user/user-actions';
+import UserTypes from 'common/src/data/user/user-types';
+import * as UserGetter from 'common/src/data/user/user-getter';
+
 import List from 'resource/src/resource-list/resource-list.jsx';
+import {bindGettersToState} from 'common/src/util';
 
-class MockFlux extends Flummox {
-    constructor() {
-        super();
-
-        this.createActions('essentials', EssentialsActions);
-        this.createStore('essentials', EssentialsStore, this);
-
-        this.createActions('user', UserActions);
-        this.createStore('user', UserStore, this);
-    }
-}
+const TEST_RESOURCES = [{
+    id: 'sales_order',
+    name: 'Sales Order'
+}, {
+    id: 'customer',
+    name: 'Customer'
+}];
 
 describe('The resource list view', () => {
-    var flux,
-        props,
+    var props,
         list;
 
     beforeEach(() => {
         reset();
-        flux = new MockFlux();
+
+        let essentialsState = EssentialsStore(EssentialsStore(), {
+            type: EssentialsTypes.FETCH_RESOURCES,
+            payload: TEST_RESOURCES
+        });
+
         props = {
-            essentialsStore: flux.getStore('essentials'),
-            userStore: flux.getStore('user')
+            essentialsStore: bindGettersToState(essentialsState, EssentialsGetter),
+            userStore: bindGettersToState(UserStore(), UserGetter)
         };
         list = render(List, props);
     });
 
     it('should not display a list without resources', () => {
+        props.essentialsStore = bindGettersToState(EssentialsStore(), EssentialsGetter);
+        list = render(List, props);
         expect(() => {
             TestUtils.findRenderedDOMComponentWithAttributeValue(list, 'data-block', 'resources');
         }).to.throw;
     });
 
     it('should display a list of resources', () => {
-        flux
-        .getStore('essentials')
-        .receiveResources([{
-            id: 'sales_order',
-            name: 'Sales Order'
-        }, {
-            id: 'customer',
-            name: 'Customer'
-        }]);
-        list = render(List, props);
         let resources = TestUtils.findRenderedDOMComponentWithAttributeValue(list, 'data-block', 'resources');
         expect($(React.findDOMNode(resources)).children().length).to.equal(2);
     });
-
 });
