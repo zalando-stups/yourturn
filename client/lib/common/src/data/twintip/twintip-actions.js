@@ -1,5 +1,5 @@
 import {createAction} from 'redux-actions';
-import {flummoxCompatWrap} from 'common/src/util';
+import {flummoxCompatWrap} from 'common/src/redux-middlewares';
 import request from 'common/src/superagent';
 import Type from './twintip-types';
 import {Services} from 'common/src/data/services';

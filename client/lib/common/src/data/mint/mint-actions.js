@@ -2,7 +2,7 @@ import request from 'common/src/superagent';
 import {Services} from 'common/src/data/services';
 import {createAction} from 'redux-actions';
 import Type from './mint-types';
-import {flummoxCompatWrap} from 'common/src/util';
+import {flummoxCompatWrap} from 'common/src/redux-middlewares';
 import {Provider, RequestConfig, saveRoute} from 'common/src/oauth-provider';
 
 function fetchOAuthConfig(applicationId) {

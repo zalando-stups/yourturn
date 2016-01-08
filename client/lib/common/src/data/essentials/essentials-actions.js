@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import request from 'common/src/superagent';
 import {Services} from 'common/src/data/services';
-import {combineActions, flummoxCompatWrap} from 'common/src/util';
+import {combineActions, flummoxCompatWrap} from 'common/src/redux-middlewares';
 import {createAction} from 'redux-actions';
 import Type from './essentials-types';
 import {Provider, RequestConfig, saveRoute} from 'common/src/oauth-provider';

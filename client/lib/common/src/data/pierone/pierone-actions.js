@@ -3,7 +3,7 @@ import {Services} from 'common/src/data/services';
 import {Provider, RequestConfig, saveRoute} from 'common/src/oauth-provider';
 import {createAction} from 'redux-actions';
 import Type from './pierone-types';
-import {flummoxCompatWrap} from 'common/src/util';
+import {flummoxCompatWrap} from 'common/src/redux-middlewares';
 
 function fetchScmSource(team, artifact, tag) {
     return request

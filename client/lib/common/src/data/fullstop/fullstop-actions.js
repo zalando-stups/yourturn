@@ -2,7 +2,7 @@ import FULLSTOP_BASE_URL from 'FULLSTOP_BASE_URL';
 import {createAction} from 'redux-actions';
 import Type from './fullstop-types';
 import request from 'common/src/superagent';
-import {flummoxCompatWrap} from 'common/src/util';
+import {flummoxCompatWrap} from 'common/src/redux-middlewares';
 import {Provider, RequestConfig, saveRoute} from 'common/src/oauth-provider';
 import Storage from 'common/src/storage';
 

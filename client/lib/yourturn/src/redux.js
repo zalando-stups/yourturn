@@ -1,11 +1,13 @@
+/* global ENV_DEVELOPMENT */
 import {createRedux, applyMiddleware, combineReducers, createStore} from 'redux';
 import thunk from 'redux-thunk';
 import createLogger from 'redux-logger';
 import {
     reduxPromiseMiddleware,
     flummoxCompatMiddleware,
-    combinedActionSupportMiddleware
-} from 'common/src/util';
+    combinedActionSupportMiddleware,
+    reduxIdentityMiddleware
+} from 'common/src/redux-middlewares';
 import NotificationStore from 'common/src/data/notification/notification-store';
 import KioStore from 'common/src/data/kio/kio-store';
 import TwintipStore from 'common/src/data/twintip/twintip-store';
@@ -30,13 +32,17 @@ const logger = createLogger(),
         team: TeamStore,
         search: SearchStore
     }),
-    createWithMiddleware = applyMiddleware(thunk,
+    createWithMiddleware = applyMiddleware(
+                            // thunk
+                            thunk,
                             // allows to dispatch actions based on the result of another actoin
                             combinedActionSupportMiddleware,
                             // dispatches a BEGIN_ action on start of async operation
                             flummoxCompatMiddleware,
                             // dispatches a FAIL_ action on failure of async operation
                             reduxPromiseMiddleware,
-                            logger)(createStore);
+                            // logging, but only in dev
+                            ENV_DEVELOPMENT ? logger : reduxIdentityMiddleware
+                        )(createStore);
 
 export default createWithMiddleware(STORE);
