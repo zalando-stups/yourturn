@@ -9,12 +9,8 @@ import 'common/asset/less/application/version-form.less';
 class VersionForm extends React.Component {
     constructor(props) {
         super();
-        this.stores = {
-            kio: props.kioStore
-        };
-        this.actions = props.kioActions;
 
-        let version = this.stores.kio.getApplicationVersion(props.applicationId, props.versionId),
+        let version = props.kioStore.getApplicationVersion(props.applicationId, props.versionId),
             {edit} = props;
         this.state = {
             versionIdTaken: false,
@@ -39,10 +35,9 @@ class VersionForm extends React.Component {
     }
 
     update(field, prop, evt) {
-        let {kio} = this.stores,    // eslint-disable-line
-            {applicationId} = this.props,
-            versions = kio.getApplicationVersions(applicationId),
-            application = kio.getApplication(applicationId);
+        let {applicationId, kioStore} = this.props,
+            versions = kioStore.getApplicationVersions(applicationId),
+            application = kioStore.getApplication(applicationId);
 
         this.state[field] = evt.target[prop];
         if (this.state.autocompleteArtifact) {
@@ -64,9 +59,8 @@ class VersionForm extends React.Component {
     save(evt) {
         evt.preventDefault();
 
-        let {applicationId} = this.props,
-            {kio} = this.stores,
-            application = kio.getApplication(applicationId),
+        let {applicationId, kioStore} = this.props,
+            application = kioStore.getApplication(applicationId),
             version = {
                 id: this.state.id,
                 notes: this.state.notes,
@@ -76,8 +70,7 @@ class VersionForm extends React.Component {
             };
         var verb = this.props.edit ? 'update' : 'create';
 
-        this
-        .actions
+        this.props.kioActions
         .saveApplicationVersion(applicationId, version.id, version)
         .then(() => this.context.router.transitionTo(constructLocalUrl('application-version', [applicationId, version.id])))
         .catch(err => {
@@ -89,12 +82,11 @@ class VersionForm extends React.Component {
     }
 
     render() {
-        let {applicationId, versionId, edit} = this.props,
-            {kio} = this.stores,
+        let {applicationId, versionId, edit, kioStore} = this.props,
             {versionIdTaken, id, notes, artifact} = this.state,
-            application = kio.getApplication(applicationId),
-            version = edit ? kio.getApplicationVersion(applicationId, versionId) : false,
-            approvals = edit ? kio.getApprovals(applicationId, versionId) : false;
+            application = kioStore.getApplication(applicationId),
+            version = edit ? kioStore.getApplicationVersion(applicationId, versionId) : false,
+            approvals = edit ? kioStore.getApprovals(applicationId, versionId) : false;
 
         const LINK_PARAMS = {
             applicationId: applicationId,

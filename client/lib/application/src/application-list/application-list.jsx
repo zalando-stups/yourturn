@@ -10,7 +10,6 @@ import 'common/asset/less/application/application-list.less';
 class ApplicationList extends React.Component {
     constructor(props) {
         super();
-        this.actions = props.kioActions;
         let prefAccount = props.kioStore.getPreferredAccount(),
             userAccIds = _.pluck(props.userStore.getUserCloudAccounts(), 'name').sort();
 
@@ -45,8 +44,8 @@ class ApplicationList extends React.Component {
 
     _selectTab(tab) {
         let account = this.state.userAccIds[tab];
-        this.actions.savePreferredAccount(account);
-        this.actions.fetchLatestApplicationVersions(account);
+        this.props.kioActions.savePreferredAccount(account);
+        this.props.kioActions.fetchLatestApplicationVersions(account);
         this.setState({
             selectedTab: tab
         });

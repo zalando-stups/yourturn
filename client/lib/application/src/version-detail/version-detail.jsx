@@ -83,11 +83,6 @@ ScmAuthorInfo.propTypes = {
 class VersionDetail extends React.Component {
     constructor(props) {
         super();
-        this.stores = {
-            kio: props.kioStore,
-            pierone: props.pieroneStore,
-            user: props.userStore
-        };
     }
 
     render() {
@@ -165,7 +160,7 @@ class VersionDetail extends React.Component {
                     </table>
 
                     <ScmSourceWarning
-                        pieroneStore={this.stores.pierone}
+                        pieroneStore={this.props.pieroneStore}
                         scmSource={scmSource}
                         application={application}
                         version={version} />
