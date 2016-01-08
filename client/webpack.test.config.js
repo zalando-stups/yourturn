@@ -11,9 +11,9 @@ module.exports = {
         // entrypoint to resolve dependencies
         './lib/common/test/bootstrap',
         './lib/application/test/bootstrap',
-        './lib/resource/test/bootstrap'
-        // './lib/yourturn/test/bootstrap',
-        // './lib/violation/test/bootstrap'
+        './lib/resource/test/bootstrap',
+        './lib/yourturn/test/bootstrap',
+        './lib/violation/test/bootstrap'
     ],
     target: 'node',
     node: {
