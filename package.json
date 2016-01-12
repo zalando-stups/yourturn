@@ -27,7 +27,7 @@
   "dependencies": {
     "@zalando/oauth2-client-js": "0.0.17",
     "@zalando/react-automatic-width": "0.0.3",
-    "@zalando/superagent-oauth2-client": "0.0.17",
+    "@zalando/superagent-oauth2-client": "0.0.19",
     "d3": "3.5.9",
     "ease-component": "1.0.0",
     "fixed-data-table": "0.4.7",

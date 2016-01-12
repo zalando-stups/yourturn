@@ -9,7 +9,6 @@ import 'common/asset/less/application/oauth-form.less';
 class OAuthForm extends React.Component {
     constructor(props) {
         super();
-
         let oauthConfig = props.mintStore.getOAuthConfig(props.applicationId);
         this.state = {
             scopes: oauthConfig.scopes,
@@ -20,19 +19,14 @@ class OAuthForm extends React.Component {
 
     componentWillReceiveProps(newProps) {
         let oauthConfig = newProps.mintStore.getOAuthConfig(this.props.applicationId);
-        if (oauthConfig && (!this.state.scopes || oauthConfig.scopes.length !== this.state.scopes.length)) {
+        if (oauthConfig && !this.state.scopes && !this.state.scopes.length) {
             this.setState({
                 scopes: oauthConfig.scopes
             });
         }
-        if (oauthConfig && oauthConfig.redirect_url !== this.state.redirectUrl) {
+        if (oauthConfig && !this.state.redirectUrl && oauthConfig.redirect_url !== this.state.redirectUrl) {
             this.setState({
                 redirectUrl: oauthConfig.redirect_url
-            });
-        }
-        if (oauthConfig && oauthConfig.is_client_confidential !== this.state.isClientConfidential) {
-            this.setState({
-                isClientConfidential: oauthConfig.is_client_confidential
             });
         }
     }
