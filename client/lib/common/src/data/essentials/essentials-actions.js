@@ -1,7 +1,9 @@
 import _ from 'lodash';
-import {Actions} from 'flummox';
 import request from 'common/src/superagent';
 import {Services} from 'common/src/data/services';
+import {combineActions, flummoxCompatWrap} from 'common/src/redux-middlewares';
+import {createAction} from 'redux-actions';
+import Type from './essentials-types';
 import {Provider, RequestConfig, saveRoute} from 'common/src/oauth-provider';
 
 function fetchScopes(resourceId) {
@@ -11,14 +13,6 @@ function fetchScopes(resourceId) {
             .oauth(Provider, RequestConfig)
             .exec(saveRoute)
             .then(res => [resourceId, res.body]);
-}
-
-function fetchAllScopes() {
-    return request
-            .get(`${Services.essentials.url}${Services.essentials.root}`)
-            .accept('json')
-            .oauth(Provider, RequestConfig)
-            .exec(saveRoute);
 }
 
 function saveResource(resourceId, resource) {
@@ -105,52 +99,25 @@ function fetchScopeApplications(resourceId, scopeId) {
             });
 }
 
-class EssentialsActions extends Actions {
-
-    fetchAllScopes() {
-        return fetchAllScopes()
-                .then(response => Promise.all(response.body.map(res => this.fetchScopes(res.id))));
-    }
-
-    fetchScopes(resourceId) {
-        return fetchScopes(resourceId);
-    }
-
-    saveResource(resourceId, resource) {
-        return saveResource(resourceId, resource);
-    }
-
-    saveScope(resourceId, scopeId, scope) {
-        return saveScope(resourceId, scopeId, scope);
-    }
-
-    fetchResource(resourceId) {
-        return fetchResource(resourceId);
-    }
-
-    fetchResources() {
-        return fetchResources();
-    }
-
-    fetchScope(resourceId, scopeId) {
-        return fetchScope(resourceId, scopeId);
-    }
-
-    fetchScopeApplications(resourceId, scopeId) {
-        return fetchScopeApplications(resourceId, scopeId);
-    }
-
-}
-
-export default EssentialsActions;
+let fetchScopesAction = flummoxCompatWrap(createAction(Type.FETCH_SCOPES, fetchScopes)),
+    fetchAllScopesAction = combineActions(
+                            createAction(Type.FETCH_RESOURCES, fetchResources),
+                            createAction(Type.FETCH_SCOPES, fetchScopes),
+                            (resources, fetchScopesAction) => resources.map(resource => fetchScopesAction(resource.id))),
+    saveResourceAction = createAction(Type.SAVE_RESOURCE, saveResource),
+    saveScopeAction = createAction(Type.SAVE_SCOPE, saveScope),
+    fetchResourceAction = flummoxCompatWrap(createAction(Type.FETCH_RESOURCE, fetchResource)),
+    fetchResourcesAction = flummoxCompatWrap(createAction(Type.FETCH_RESOURCES, fetchResources)),
+    fetchScopeAction = flummoxCompatWrap(createAction(Type.FETCH_SCOPE, fetchScope)),
+    fetchScopeApplicationsAction = flummoxCompatWrap(createAction(Type.FETCH_SCOPE_APPLICATIONS, fetchScopeApplications));
 
 export {
-    fetchAllScopes,
-    fetchScopes,
-    saveResource,
-    saveScope,
-    fetchResource,
-    fetchResources,
-    fetchScope,
-    fetchScopeApplications
+    fetchAllScopesAction as fetchAllScopes,
+    fetchScopesAction as fetchScopes,
+    saveResourceAction as saveResource,
+    saveScopeAction as saveScope,
+    fetchResourceAction as fetchResource,
+    fetchResourcesAction as fetchResources,
+    fetchScopeAction as fetchScope,
+    fetchScopeApplicationsAction as fetchScopeApplications
 };

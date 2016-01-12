@@ -6,16 +6,12 @@ import DefaultError from 'common/src/error.jsx';
 class ScmSourceWarning extends React.Component {
     constructor(props) {
         super();
-        this.stores = {
-            pierone: props.pieroneStore
-        };
     }
 
     render() {
-        let {scmSource, version} = this.props,
-            {pierone} = this.stores,
+        let {scmSource, version, pieroneStore} = this.props,
             {team, artifact, tag} = parseArtifact(version.artifact),
-            tags = pierone.getTags(team, artifact),
+            tags = pieroneStore.getTags(team, artifact),
             locallyModified = <noscript />,
             missingScmSource = <noscript />;
 

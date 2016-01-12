@@ -2,7 +2,7 @@ import React from 'react';
 import Gravatar from 'react-gravatar';
 import Icon from 'react-fa';
 import Timestamp from 'react-time';
-import {DATE_FORMAT} from 'common/src/config';
+import Config from 'common/src/config';
 import Markdown from 'common/src/markdown.jsx';
 import 'common/asset/less/application/approval-card.less';
 
@@ -42,7 +42,7 @@ class ApprovalCard extends React.Component {
                                     <Icon
                                         fixedWidth
                                         name='calendar-o'/> <Timestamp
-                                            format={DATE_FORMAT}
+                                            format={Config.DATE_FORMAT}
                                             value={approval.timestamp} />
                                 </small>
                                 {approval.notes ?

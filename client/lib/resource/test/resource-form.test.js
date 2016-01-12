@@ -1,8 +1,11 @@
 /* globals expect, sinon, Promise, $, TestUtils, reset, render, React */
-import {Flummox} from 'flummox';
 import EssentialsStore from 'common/src/data/essentials/essentials-store';
-import EssentialsActions from 'common/src/data/essentials/essentials-actions';
+import EssentialsTypes from 'common/src/data/essentials/essentials-types';
+import * as EssentialsGetter from 'common/src/data/essentials/essentials-getter';
+import * as EssentialsActions from 'common/src/data/essentials/essentials-actions';
+
 import Form from 'resource/src/resource-form/resource-form.jsx';
+import {bindGettersToState} from 'common/src/util';
 
 const RES_ID = 'sales_order',
     TEST_RES = {
@@ -12,47 +15,30 @@ const RES_ID = 'sales_order',
         resource_owners: ['employees']
     };
 
-class MockFlux extends Flummox {
-    constructor() {
-        super();
-
-        this.createActions('essentials', EssentialsActions);
-        this.createStore('essentials', EssentialsStore, this);
-    }
-}
-
 describe('The resource form view', () => {
-    var flux,
-        props,
+    var props,
         actionSpy,
         form;
-
-    beforeEach(() => {
-        flux = new MockFlux();
-        actionSpy = sinon.stub(flux.getActions('essentials'), 'saveResource', function () {
-            return Promise.resolve();
-        });
-    });
-
-
-    describe('in create mode', () => {
-        beforeEach(() => {
-            form = new Form({
-                essentialsStore: flux.getStore('essentials'),
-                essentialsActions: flux.getActions('essentials')
-            });
-        });
-    });
 
     describe('in edit mode', () => {
         beforeEach(() => {
             reset();
-            flux.getStore('essentials').receiveResource(TEST_RES);
+
+            let essentialsActions = Object.assign({}, EssentialsActions),
+                essentialsState = EssentialsStore(EssentialsStore(), {
+                    type: EssentialsTypes.FETCH_RESOURCE,
+                    payload: TEST_RES
+                });
+
+            actionSpy = sinon.stub(essentialsActions, 'saveResource', function () {
+                return Promise.resolve();
+            });
+
             props = {
                 resourceId: RES_ID,
                 edit: true,
-                essentialsStore: flux.getStore('essentials'),
-                essentialsActions: flux.getActions('essentials')
+                essentialsStore: bindGettersToState(essentialsState, EssentialsGetter),
+                essentialsActions
             };
             form = render(Form, props);
         });

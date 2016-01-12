@@ -23,15 +23,22 @@ function ApplicationStore(state = DEFAULT_STATE, action) {
     } else if (type === Types.FAIL_FETCH_APPLICATIONS) {
         return state.set(FETCH_STATE, new Failed());
     } else if (type === Types.BEGIN_FETCH_APPLICATION) {
-        return state.setIn([APPS, payload], new Pending());
+        // explanation for payload[0]:
+        // the BEGIN action is dispatched by the flummox compat middleware
+        // which passes all arguments it was originally called with as an array
+        // so we have to take the first one here
+
+        // this is a quite an abstraction leak actually
+        return state.setIn([APPS, payload[0]], new Pending());
     } else if (type === Types.FAIL_FETCH_APPLICATION) {
         return state.setIn([APPS, payload.id], new Failed(payload));
-    } else if (type === Types.RECEIVE_APPLICATION) {
+    } else if (type === Types.FETCH_APPLICATION || type === Types.SAVE_APPLICATION) {
         return state.setIn([APPS, payload.id], Immutable.Map(payload));
-    } else if (type === Types.RECEIVE_APPLICATIONS) {
+    } else if (type === Types.FETCH_APPLICATIONS) {
         state = payload.reduce((map, app) => map.setIn([APPS, app.id], Immutable.Map(app)), state);
         return state.set(FETCH_STATE, false);
-    } else if (type === Types.RECEIVE_PREFERRED_ACCOUNT) {
+    } else if (type === Types.LOAD_PREFERRED_ACCOUNT ||
+               type === Types.SAVE_PREFERRED_ACCOUNT) {
         return state.set(PREF_ACCOUNT, action.payload);
     }
     return state;

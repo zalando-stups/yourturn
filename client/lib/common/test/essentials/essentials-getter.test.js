@@ -18,7 +18,9 @@ describe('The essentials getter function', () => {
                     }
                 }
             }),
-            scopes = Getter.getAllScopes(state);
+            scopes = Getter.getAllScopes({
+                scopes: state
+            });
         expect(scopes.length).to.equal(2);
     });
 
@@ -30,7 +32,9 @@ describe('The essentials getter function', () => {
                 },
                 sales_order: new Pending()
             }),
-            resources = Getter.getResources(state);
+            resources = Getter.getResources({
+                resources: state
+            });
         expect(resources.length).to.equal(1);
         expect(resources[0].id).to.equal('customer');
     });
@@ -43,6 +47,9 @@ describe('The essentials getter function', () => {
             },
             sales_order: new Pending()
         });
+        state = {
+            resources: state
+        };
         expect(Getter.getResources(state, 'customer').length).to.equal(1);
         expect(Getter.getResources(state, 'Customer').length).to.equal(1);
         expect(Getter.getResources(state, 'other').length).to.equal(0);
@@ -59,7 +66,9 @@ describe('The essentials getter function', () => {
                     read: new Pending()
                 }
             }),
-            scopes = Getter.getScopes(state, 'customer');
+            scopes = Getter.getScopes({
+                scopes: state
+            }, 'customer');
         expect(scopes.length).to.equal(1);
         expect(scopes[0].id).to.equal('read_all');
     });

@@ -9,17 +9,12 @@ import 'common/asset/less/application/application-form.less';
 class ApplicationForm extends React.Component {
     constructor(props) {
         super();
-        this.stores = {
-            user: props.userStore,
-            kio: props.kioStore
-        };
-        let {kio, user} = this.stores,
-            cloudAccounts = user.getUserCloudAccounts();
+        let cloudAccounts = props.userStore.getUserCloudAccounts();
         this.state = {
             autocompleteServiceUrl: true
         };
         if (props.edit) {
-            let app = kio.getApplication(props.applicationId);
+            let app = props.kioStore.getApplication(props.applicationId);
             app.service_url = app.service_url && app.service_url.indexOf('https://') === 0 ?
                                 app.service_url.substring('https://'.length) :
                                 app.service_url;
@@ -40,10 +35,9 @@ class ApplicationForm extends React.Component {
     }
 
     setCustomValidity(evt) {
-        React.findDOMNode(evt.target).setCustomValidity(
-            this.state.appIdTaken ?
-                'Application ID is already taken' :
-                '');
+        React
+        .findDOMNode(evt.target)
+        .setCustomValidity(this.state.appIdTaken ? 'Application ID is already taken' : '');
     }
 
     /**
@@ -78,15 +72,15 @@ class ApplicationForm extends React.Component {
         }
         this.setState({
             app: this.state.app,
-            appIdTaken: this.stores.kio.getApplication(this.state.app.id) !== false
+            appIdTaken: this.props.kioStore.getApplication(this.state.app.id) !== false
         });
     }
 
     render() {
         let {edit, applicationId} = this.props,
-            storeApp = this.stores.kio.getApplication(applicationId),
+            storeApp = this.props.kioStore.getApplication(applicationId),
             {app} = this.state,
-            accounts = this.stores.user.getUserCloudAccounts();
+            accounts = this.props.userStore.getUserCloudAccounts();
 
         return <div className='applicationForm'>
                     {edit ?

@@ -14,11 +14,21 @@ const MD = new Remarkable({
 class Markdown extends React.Component {
     constructor(props) {
         super();
+
         this.state = {
             content: props.src,
             activeTab: 0,
             html: MD.render(props.src)
         };
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.src !== this.props.src) {
+            this.setState({
+                content: nextProps.src,
+                html: MD.render(nextProps.src)
+            });
+        }
     }
 
     _renderMd(tab) {

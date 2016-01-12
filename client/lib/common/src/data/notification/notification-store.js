@@ -1,7 +1,6 @@
 /** global Date */
 import uniq from 'uniqueid';
-import * as Types from './notification-types';
-import {Store} from 'flummox';
+import Types from './notification-types';
 
 function NotificationStore(notifications = [], action) {
     if (!action) {
@@ -30,73 +29,4 @@ function NotificationStore(notifications = [], action) {
     return notifications;
 }
 
-export {
-    NotificationStore as NotificationStore
-};
-
-export default class NotificationStoreWrapper extends Store {
-    constructor(flux) {
-        super();
-
-        const notificationActions = flux.getActions('notification');
-
-        this._empty();
-
-        this.register(notificationActions.addNotification, this.receiveNotification);
-        this.register(notificationActions.removeNotification, this.deleteNotification);
-        this.register(notificationActions.removeNotificationsOlderThan, this.deleteOldNotifications);
-    }
-
-    /**
-     * Saves notification.
-     */
-    receiveNotification([message, type]) {
-        this.setState({
-            redux: NotificationStore(this.state.redux, {
-                type: Types.ADD_NOTIFICATION,
-                payload: [message, type]
-            })
-        });
-    }
-
-    /**
-     * Removes notification with `id`.
-     *
-     * @param  {number} id The ID of the notification
-     */
-    deleteNotification(id) {
-        this.setState({
-            redux: NotificationStore(this.state.redux, {
-                type: Types.REMOVE_NOTIFICATION,
-                payload: id
-            })
-        });
-    }
-
-    /**
-     * Removes notifications older than `ms` ms.
-     *
-     * @param  {number} ms The age of the notification in ms.
-     */
-    deleteOldNotifications(ms) {
-        this.setState({
-            redux: NotificationStore(this.state.redux, {
-                type: Types.REMOVE_NOTIFICATIONS_OLDER_THAN,
-                payload: ms
-            })
-        });
-    }
-
-    /**
-     * Returns all notifications.
-     */
-    getNotifications() {
-        return this.state.redux;
-    }
-
-    _empty() {
-        this.setState({
-            redux: NotificationStore()
-        });
-    }
-}
+export default NotificationStore;

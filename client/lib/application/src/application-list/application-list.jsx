@@ -10,11 +10,6 @@ import 'common/asset/less/application/application-list.less';
 class ApplicationList extends React.Component {
     constructor(props) {
         super();
-        this.stores = {
-            kio: props.kioStore,
-            user: props.userStore
-        };
-        this.actions = props.kioActions;
         let prefAccount = props.kioStore.getPreferredAccount(),
             userAccIds = _.pluck(props.userStore.getUserCloudAccounts(), 'name').sort();
 
@@ -49,8 +44,8 @@ class ApplicationList extends React.Component {
 
     _selectTab(tab) {
         let account = this.state.userAccIds[tab];
-        this.actions.savePreferredAccount(account);
-        this.actions.fetchLatestApplicationVersions(account);
+        this.props.kioActions.savePreferredAccount(account);
+        this.props.kioActions.fetchLatestApplicationVersions(account);
         this.setState({
             selectedTab: tab
         });
@@ -58,8 +53,8 @@ class ApplicationList extends React.Component {
 
     render() {
         let {term, showCount, showAll, showInactive, userAccIds} = this.state,
-            apps = this.stores.kio.getApplications(),
-            fetchStatus = this.stores.kio.getApplicationsFetchStatus(),
+            apps = this.props.kioStore.getApplications(),
+            fetchStatus = this.props.kioStore.getApplicationsFetchStatus(),
             otherApps = apps.filter(app => userAccIds.indexOf(app.team_id) < 0),
             shortApps = !showAll && otherApps.length > showCount ? _.slice(otherApps, 0, showCount) : otherApps,
             remainingAppsCount = otherApps.length - showCount;
@@ -111,7 +106,7 @@ class ApplicationList extends React.Component {
                                                             account={acc}
                                                             search={term}
                                                             showInactive={showInactive}
-                                                            kioStore={this.stores.kio} />
+                                                            kioStore={this.props.kioStore} />
                                                     </TabPanel>)}
                         </Tabs>
                         :

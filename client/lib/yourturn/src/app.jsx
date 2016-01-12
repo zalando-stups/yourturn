@@ -1,7 +1,5 @@
 import React from 'react';
 import {RouteHandler} from 'react-router';
-import FLUX from 'yourturn/src/flux';
-import FlummoxComponent from 'flummox/component';
 import Sidebar from './sidebar/sidebar.jsx';
 import NotificationBar from './notification-bar/notification-bar.jsx';
 
@@ -12,23 +10,10 @@ class YourTurn extends React.Component {
 
     render() {
         return <div className='yourturn'>
-                    <FlummoxComponent
-                        flux={FLUX}
-                        connectToStores={['notification']}>
-                        <NotificationBar
-                            notificationActions={FLUX.getActions('notification')}
-                            notificationStore={FLUX.getStore('notification')}/>
-                    </FlummoxComponent>
+                    <NotificationBar />
                     <div className='grid with-gutter'>
                         <div className='grid-col col-1-4'>
-                            <FlummoxComponent
-                                flux={FLUX}
-                                connectToStores={['user']}>
-                                <Sidebar
-                                    fullstopStore={FLUX.getStore('fullstop')}
-                                    userActions={FLUX.getActions('user')}
-                                    userStore={FLUX.getStore('user')} />
-                            </FlummoxComponent>
+                            <Sidebar />
                         </div>
                         <div className='grid-col'>
                             <div className='yourturn-view'>
@@ -40,4 +25,5 @@ class YourTurn extends React.Component {
     }
 }
 YourTurn.displayName = 'YourTurn';
+
 export default YourTurn;

@@ -10,19 +10,13 @@ import 'common/asset/less/resource/resource-detail.less';
 class ResourceDetail extends React.Component {
     constructor(props) {
         super();
-        this.stores = {
-            essentials: props.essentialsStore,
-            user: props.userStore
-        };
     }
 
     render() {
-        let {essentials, user} = this.stores,   // eslint-disable-line
-            // TODO eslint somehow reports this?
-            {resourceId} = this.props,
-            whitelisted = user.isWhitelisted(),
-            resource = essentials.getResource(resourceId),
-            scopes = essentials.getScopes(resourceId),
+        let {resourceId, essentialsStore, userStore} = this.props,
+            whitelisted = userStore.isWhitelisted(),
+            resource = essentialsStore.getResource(resourceId),
+            scopes = essentialsStore.getScopes(resourceId),
             appScopes = scopes.filter(s => !s.is_resource_owner_scope),
             ownerScopes = scopes.filter(s => s.is_resource_owner_scope);
         const LINK_PARAMS = {
@@ -129,7 +123,6 @@ class ResourceDetail extends React.Component {
 }
 ResourceDetail.displayName = 'ResourceDetail';
 ResourceDetail.propTypes = {
-    flux: React.PropTypes.object.isRequired,
     resourceId: React.PropTypes.string.isRequired
 };
 ResourceDetail.contextTypes = {

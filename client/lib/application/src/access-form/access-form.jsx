@@ -17,13 +17,7 @@ function getDefaultBucket(account) {
 class AccessForm extends React.Component {
     constructor(props) {
         super();
-        this.stores = {
-            kio: props.kioStore,
-            mint: props.mintStore,
-            essentials: props.essentialsStore,
-            user: props.userStore
-        };
-        let oauth = this.stores.mint.getOAuthConfig(props.applicationId);
+        let oauth = props.mintStore.getOAuthConfig(props.applicationId);
         this.state = {
             s3_buckets: oauth.s3_buckets,
             scopes: oauth.scopes
@@ -57,9 +51,9 @@ class AccessForm extends React.Component {
         evt.preventDefault();
 
         let {applicationId} = this.props,
-            scopes = this.stores.essentials.getAllScopes(),
+            scopes = this.props.essentialsStore.getAllScopes(),
             appscopes = this.state.scopes,
-            oauthConfig = this.stores.mint.getOAuthConfig(applicationId),
+            oauthConfig = this.props.mintStore.getOAuthConfig(applicationId),
             ownerscopes = oauthConfig
                             .scopes
                             .filter(s => scopes.some(scp => scp.id === s.id &&
@@ -81,13 +75,12 @@ class AccessForm extends React.Component {
     }
 
     render() {
-        let {applicationId} = this.props,
-            {kio, user, mint, essentials} = this.stores,
-            allAppScopes = essentials.getAllScopes().filter(s => !s.is_resource_owner_scope),
-            application = kio.getApplication(applicationId),
-            defaultAccount = user.getUserCloudAccounts().filter(a => a.name === application.team_id)[0],
-            isOwnApplication = user.getUserCloudAccounts().some(t => t.name === application.team_id),
-            oauth = mint.getOAuthConfig(applicationId);
+        let {applicationId, kioStore, userStore, mintStore, essentialsStore} = this.props,
+            allAppScopes = essentialsStore.getAllScopes().filter(s => !s.is_resource_owner_scope),
+            application = kioStore.getApplication(applicationId),
+            defaultAccount = userStore.getUserCloudAccounts().filter(a => a.name === application.team_id)[0],
+            isOwnApplication = userStore.getUserCloudAccounts().some(t => t.name === application.team_id),
+            oauth = mintStore.getOAuthConfig(applicationId);
 
         const LINK_PARAMS = {
             applicationId: applicationId

@@ -1,45 +1,40 @@
 /* globals expect, $, TestUtils, reset, render, React */
 import _ from 'lodash';
-import {Flummox} from 'flummox';
+
 import KioStore from 'common/src/data/kio/kio-store';
-import KioActions from 'common/src/data/kio/kio-actions';
+import KioTypes from 'common/src/data/kio/kio-types';
+import * as KioGetter from 'common/src/data/kio/kio-getter';
+import * as KioActions from 'common/src/data/kio/kio-actions';
+
 import UserStore from 'common/src/data/user/user-store';
-import UserActions from 'common/src/data/user/user-actions';
+import UserTypes from 'common/src/data/user/user-types';
+import * as UserGetter from 'common/src/data/user/user-getter';
+
 import List from 'application/src/application-list/application-list.jsx';
-
-class AppFlux extends Flummox {
-    constructor() {
-        super();
-
-        this.createActions('kio', KioActions);
-        this.createStore('kio', KioStore, this);
-
-        this.createActions('user', UserActions);
-        this.createStore('user', UserStore, this);
-    }
-}
+import {bindGettersToState} from 'common/src/util';
 
 describe('The application list view', () => {
-    var flux,
-        props,
+    var props,
         list;
 
 
     beforeEach(() => {
         reset();
-        flux = new AppFlux();
-
-        flux
-        .getStore('user')
-        .receiveAccounts([{
-            id: '123',
-            name: 'stups'
-        }]);
+        
+        let kioState = KioStore(),
+            userState = UserStore(UserStore(), {
+                type: UserTypes.FETCH_USERACCOUNTS,
+                payload: [{
+                    id: '123',
+                    name: 'stups'
+                }]
+            }),
+            kioActions = Object.assign({}, KioActions);
 
         props = {
-            userStore: flux.getStore('user'),
-            kioStore: flux.getStore('kio'),
-            kioActions: flux.getActions('kio')
+            userStore: bindGettersToState(userState, UserGetter),
+            kioStore: bindGettersToState(kioState, KioGetter),
+            kioActions
         };
 
         list = render(List, props);
@@ -80,14 +75,16 @@ describe('The application list view', () => {
     // });
 
     it('should display a list of applications not owned by the user and no list of owned by user', () => {
-        flux
-        .getStore('kio')
-        .receiveApplications([{
-            id: 'openam',
-            name: 'OpenAM',
-            team_id: 'iam',
-            active: true
-        }]);
+        let kioState = KioStore(KioStore(), {
+            type: KioTypes.FETCH_APPLICATIONS,
+            payload: [{
+                id: 'openam',
+                name: 'OpenAM',
+                team_id: 'iam',
+                active: true
+            }]
+        });
+        props.kioStore = bindGettersToState(kioState, KioGetter);
 
         list = render(List, props);
         let otherApps = TestUtils.findRenderedDOMComponentWithAttributeValue(list, 'data-block', 'other-apps');
@@ -105,9 +102,11 @@ describe('The application list view', () => {
             },
             apps = _.times(25, n => _.extend({id: n}, app), []);
 
-        flux
-        .getStore('kio')
-        .receiveApplications(apps);
+        let kioState = KioStore(KioStore(), {
+            type: KioTypes.FETCH_APPLICATIONS,
+            payload: apps
+        });
+        props.kioStore = bindGettersToState(kioState, KioGetter);
 
         list = render(List, props);
         let checkbox = TestUtils.findRenderedDOMComponentWithAttributeValue(list, 'data-block', 'show-inactive-checkbox'),
@@ -156,6 +155,3 @@ describe('The application list view', () => {
 
     // });
 });
-
-
-

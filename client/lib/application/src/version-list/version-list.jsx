@@ -6,9 +6,6 @@ import 'common/asset/less/application/version-list.less';
 class VersionList extends React.Component {
     constructor(props) {
         super();
-        this.stores = {
-            kio: props.kioStore
-        };
         this.state = {
             term: ''
         };
@@ -21,11 +18,11 @@ class VersionList extends React.Component {
     }
 
     render() {
-        let {applicationId} = this.props,
-            {kio} = this.stores,
-            application = kio.getApplication(applicationId),
+        let {applicationId, kioStore, userStore} = this.props,
+            application = kioStore.getApplication(applicationId),
             {term} = this.state,
-            versions = kio.getApplicationVersions(applicationId, term);
+            isOwnApplication = userStore.getUserCloudAccounts().some(t => t.name === application.team_id),
+            versions = kioStore.getApplicationVersions(applicationId, term);
         const LINK_PARAMS = {
             applicationId: applicationId
         };
@@ -47,6 +44,7 @@ class VersionList extends React.Component {
                         <Link
                             to='application-verCreate'
                             params={LINK_PARAMS}
+                            disabled={!isOwnApplication}
                             className='btn btn-primary'>
                             <Icon name='plus' /> Create new version
                         </Link>

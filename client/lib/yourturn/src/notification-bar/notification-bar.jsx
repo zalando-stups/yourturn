@@ -1,4 +1,6 @@
 import React from 'react';
+import {connect} from 'react-redux';
+import * as Actions from 'common/src/data/notification/notification-actions';
 import 'common/asset/less/yourturn/notification-bar.less';
 
 class Notification extends React.Component {
@@ -19,20 +21,38 @@ Notification.propTypes = {
 };
 Notification.displayName = 'Notification';
 
+// ========
 
 class NotificationBar extends React.Component {
-    constructor(props) {
+    constructor() {
         super();
-        this.store = props.notificationStore;
-        this.actions = props.notificationActions;
+        this.state = {
+            interval: false
+        };
     }
 
     dismiss(id) {
-        this.actions.removeNotification(id);
+        this.props.dispatch(Actions.removeNotification(id));
+    }
+
+    componentDidMount() {
+        /**
+         * Continually dismiss old notifications.
+         */
+        let interval = setInterval(() => {
+            this.props.dispatch(Actions.removeNotificationsOlderThan(5000));
+        }, 5000);
+        this.setState({
+            interval
+        });
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.state.interval);
     }
 
     render() {
-        let notifications = this.store.getNotifications();
+        let {notifications} = this.props;
         if (notifications.length) {
             return <div className='notificationBar'>
                         <ul>
@@ -51,4 +71,7 @@ class NotificationBar extends React.Component {
 }
 NotificationBar.displayName = 'NotificationBar';
 
-export default NotificationBar;
+
+export default connect(state => ({
+    notifications: state.notifications
+}))(NotificationBar);

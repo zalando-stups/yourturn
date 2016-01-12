@@ -3,7 +3,7 @@ import Daypicker from 'react-day-picker';
 import Icon from 'react-fa';
 import moment from 'moment';
 import Timestamp from 'react-time';
-import {DATE_FORMAT} from 'common/src/config';
+import Config from 'common/src/config';
 import 'common/asset/less/common/datepicker.less';
 
 class Datepicker extends React.Component {
@@ -39,7 +39,7 @@ class Datepicker extends React.Component {
                     <div
                         onClick={this.toggle.bind(this)}
                         className='btn btn-default'>
-                        <Icon name='calendar-o' /> <Timestamp value={selectedDay} format={DATE_FORMAT} />
+                        <Icon name='calendar-o' /> <Timestamp value={selectedDay} format={Config.DATE_FORMAT} />
                     </div>
                     {toggled ?
                         <Daypicker

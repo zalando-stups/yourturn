@@ -1,6 +1,8 @@
 /* global ENV_DEVELOPMENT */
 import _ from 'lodash';
-import {Actions} from 'flummox';
+import {createAction} from 'redux-actions';
+import Type from './kio-types';
+import {flummoxCompatWrap} from 'common/src/redux-middlewares';
 import request from 'common/src/superagent';
 import {Services} from 'common/src/data/services';
 import {Provider, RequestConfig, saveRoute} from 'common/src/oauth-provider';
@@ -184,74 +186,32 @@ function loadPreferredAccount() {
     return Storage.get('kio_preferredAccount') || false;
 }
 
+let fetchAppsAction = flummoxCompatWrap(createAction(Type.FETCH_APPLICATIONS, fetchApplications)),
+    fetchAppAction = flummoxCompatWrap(createAction(Type.FETCH_APPLICATION, fetchApplication)),
+    saveAppAction = createAction(Type.SAVE_APPLICATION, saveApplication),
+    saveAppCritAction = createAction(Type.SAVE_APPLICATION_CRITICALITY, saveApplicationCriticality),
+    fetchLatestVersAction = createAction(Type.FETCH_APPLICATION_VERSIONS, fetchLatestApplicationVersions),
+    fetchVersAction = createAction(Type.FETCH_APPLICATION_VERSIONS, fetchApplicationVersions),
+    fetchVerAction = flummoxCompatWrap(createAction(Type.FETCH_APPLICATION_VERSION, fetchApplicationVersion)),
+    saveVerAction = createAction(Type.SAVE_APPLICATION_VERSION, saveApplicationVersion),
+    fetchApprovalTypesAction = createAction(Type.FETCH_APPROVAL_TYPES, fetchApprovalTypes),
+    fetchApprovalsAction = createAction(Type.FETCH_APPROVALS, fetchApprovals),
+    saveApprovalAction = createAction(Type.SAVE_APPROVAL, saveApproval),
+    loadPreferredAccountAction = createAction(Type.LOAD_PREFERRED_ACCOUNT, loadPreferredAccount),
+    savePreferredAccountAction = createAction(Type.SAVE_PREFERRED_ACCOUNT, savePreferredAccount);
+
 export {
-    fetchApplications,
-    fetchApplication,
-    saveApplication,
-    saveApplicationCriticality,
-    fetchApplicationVersions,
-    fetchLatestApplicationVersions,
-    fetchApplicationVersion,
-    saveApplicationVersion,
-    fetchApprovalTypes,
-    fetchApprovals,
-    saveApproval,
-    savePreferredAccount,
-    loadPreferredAccount
+    fetchAppsAction as fetchApplications,
+    fetchAppAction as fetchApplication,
+    saveAppAction as saveApplication,
+    saveAppCritAction as saveApplicationCriticality,
+    fetchLatestVersAction as fetchLatestApplicationVersions,
+    fetchVersAction as fetchApplicationVersions,
+    fetchVerAction as fetchApplicationVersion,
+    saveVerAction as saveApplicationVersion,
+    fetchApprovalTypesAction as fetchApprovalTypes,
+    fetchApprovalsAction as fetchApprovals,
+    saveApprovalAction as saveApproval,
+    loadPreferredAccountAction as loadPreferredAccount,
+    savePreferredAccountAction as savePreferredAccount
 };
-
-class KioActions extends Actions {
-    fetchApplications() {
-        return fetchApplications();
-    }
-
-    fetchApplication(id) {
-        return fetchApplication(id);
-    }
-
-    saveApplication(id, app) {
-        return saveApplication(id, app);
-    }
-
-    saveApplicationCriticality(id, criticality) {
-        return saveApplicationCriticality(id, criticality);
-    }
-
-    fetchApplicationVersions(id) {
-        return fetchApplicationVersions(id);
-    }
-
-    fetchLatestApplicationVersions(team) {
-        return fetchLatestApplicationVersions(team);
-    }
-
-    fetchApplicationVersion(id, ver) {
-        return fetchApplicationVersion(id, ver);
-    }
-
-    saveApplicationVersion(applicationId, versionId, version) {
-        return saveApplicationVersion(applicationId, versionId, version);
-    };
-
-    fetchApprovalTypes(applicationId) {
-        return fetchApprovalTypes(applicationId);
-    }
-
-    fetchApprovals(applicationId, versionId) {
-        return fetchApprovals(applicationId, versionId);
-    }
-
-    saveApproval(applicationId, versionId, approval) {
-        return saveApproval(applicationId, versionId, approval);
-    }
-
-    savePreferredAccount(acc) {
-        return savePreferredAccount(acc);
-    }
-
-    loadPreferredAccount() {
-        return loadPreferredAccount();
-    }
-}
-
-export default KioActions;

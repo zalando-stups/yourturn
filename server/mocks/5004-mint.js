@@ -55,6 +55,7 @@ server.put('/apps/:id', function(req, res) {
     setTimeout( function() {
         var id = req.params.id;
         apps[id] = req.body;
+        apps[id].id = id;
         apps[id].scopes = req.body.scopes ? req.body.scopes : [];
         apps[id].s3_buckets = req.body.s3_buckets ? req.body.s3_buckets : [];
         res.status(200).send();

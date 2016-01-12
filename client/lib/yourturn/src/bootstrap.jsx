@@ -1,7 +1,13 @@
 import React from 'react';
 import Router from 'react-router';
 import ROUTES from './router.react.jsx';
-import YT_FLUX from './flux';
+import REDUX from './redux';
+import {Provider} from 'react-redux';
+import {bindActionsToStore} from 'common/src/util';
+import * as KioActions from 'common/src/data/kio/kio-actions';
+import * as UserActions from 'common/src/data/user/user-actions';
+import * as FullstopActions from 'common/src/data/fullstop/fullstop-actions';
+import * as FullstopGetter from 'common/src/data/fullstop/fullstop-getter';
 import DefaultError from 'common/src/error.jsx';
 
 import 'common/asset/less/base.less';
@@ -13,11 +19,11 @@ let router = Router.create({
     location: Router.HistoryLocation
 });
 
-function isAllowed(state) {
-    let errors = state
+function isAllowed(routerState, state) {
+    let errors = routerState
                     .routes
                     .map(route => route.handler.isAllowed ?
-                        route.handler.isAllowed(state) :
+                        route.handler.isAllowed(routerState, state) :
                         true)
                     .filter(allowed => allowed instanceof Error);
     if (errors.length) {
@@ -26,17 +32,16 @@ function isAllowed(state) {
     return true;
 }
 
-function fetchData(routes, state) {
+function fetchData(routes, routerState) {
     let promises = routes
                     .filter(route => route.handler.fetchData !== undefined)
-                    .map(route => route.handler.fetchData(state));
+                    .map(route => route.handler.fetchData(routerState, REDUX.getState()));
     return Promise.all(promises);
 }
 
-let userActions = YT_FLUX.getActions('user'),
-    kioActions = YT_FLUX.getActions('kio'),
-    fullstopActions = YT_FLUX.getActions('fullstop'),
-    fullstopStore = YT_FLUX.getStore('fullstop');
+let userActions = bindActionsToStore(REDUX, UserActions),
+    kioActions = bindActionsToStore(REDUX, KioActions),
+    fullstopActions = bindActionsToStore(REDUX, FullstopActions);
 
 // render the rest
 userActions
@@ -47,7 +52,7 @@ userActions
         userActions
             .fetchAccounts(info.uid)
             .then(accounts => {
-                let lastLogin = fullstopStore.getLastVisited();
+                let lastLogin = FullstopGetter.getLastVisited(REDUX.getState().fullstop);
                 fullstopActions.fetchOwnTotal(lastLogin, accounts.map(a => a.id));
             });
         userActions
@@ -55,30 +60,26 @@ userActions
     });
 
 router.run(
-    (Handler, state) => {
-        fetchData(state.routes, state, YT_FLUX)
+    (Handler, routerState) => {
+        fetchData(routerState.routes, routerState)
         .then(() => {
             // before checking if user is allowed to see stuff,
             // we have to fetch the data
             // (i.e. to know the team of an application)
-            let authError = isAllowed(state);
-            if (authError !== true) {
-                // if auth error true => everythings good
-                // I KNOW!
-                React.render(<DefaultError error={authError} />,
+            let allowed = isAllowed(routerState, REDUX.getState());
+            if (allowed !== true) {
+                React.render(<Provider store={REDUX}>
+                                {() => <DefaultError error={allowed} />}
+                             </Provider>,
                              document.getElementById('yourturn-container'));
             } else {
-                React.render(<Handler flux={YT_FLUX}/>,
+                React.render(<Provider store={REDUX}>
+                               {() => <Handler />}
+                             </Provider>,
                              document.getElementById('yourturn-container'));
             }
+        })
+        .catch(err => {
+            React.render(<DefaultError error={err} />, document.getElementById('yourturn-container'));
         });
     });
-
-
-/**
- * Continually dismiss old notifications.
- */
-setInterval(() => {
-    YT_FLUX.getActions('notification')
-    .removeNotificationsOlderThan(5000);
-}, 5000);

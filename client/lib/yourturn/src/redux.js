@@ -1,12 +1,48 @@
-import {createRedux, createDispatcher, composeStores} from 'redux';
-import promiseSupport from 'redux-promise';
-import NotificationStore from 'common/src/data/notification/store';
+/* global ENV_DEVELOPMENT */
+import {createRedux, applyMiddleware, combineReducers, createStore} from 'redux';
+import thunk from 'redux-thunk';
+import createLogger from 'redux-logger';
+import {
+    reduxPromiseMiddleware,
+    flummoxCompatMiddleware,
+    combinedActionSupportMiddleware,
+    reduxIdentityMiddleware
+} from 'common/src/redux-middlewares';
+import NotificationStore from 'common/src/data/notification/notification-store';
+import KioStore from 'common/src/data/kio/kio-store';
+import TwintipStore from 'common/src/data/twintip/twintip-store';
+import PieroneStore from 'common/src/data/pierone/pierone-store';
+import UserStore from 'common/src/data/user/user-store';
+import MintStore from 'common/src/data/mint/mint-store';
+import EssentialsStore from 'common/src/data/essentials/essentials-store';
+import FullstopStore from 'common/src/data/fullstop/fullstop-store';
+import TeamStore from 'common/src/data/team/team-store';
+import SearchStore from 'common/src/data/search/search-store';
 
-const STORES = composeStores({
-        notifications: NotificationStore
+const logger = createLogger(),
+    STORE = combineReducers({
+        notifications: NotificationStore,
+        user: UserStore,
+        kio: KioStore,
+        pierone: PieroneStore,
+        twintip: TwintipStore,
+        mint: MintStore,
+        essentials: EssentialsStore,
+        fullstop: FullstopStore,
+        team: TeamStore,
+        search: SearchStore
     }),
-    DISPATCHER = createDispatcher(
-        STORES,
-        [promiseSupport]);
+    createWithMiddleware = applyMiddleware(
+                            // thunk
+                            thunk,
+                            // allows to dispatch actions based on the result of another actoin
+                            combinedActionSupportMiddleware,
+                            // dispatches a BEGIN_ action on start of async operation
+                            flummoxCompatMiddleware,
+                            // dispatches a FAIL_ action on failure of async operation
+                            reduxPromiseMiddleware,
+                            // logging, but only in dev
+                            ENV_DEVELOPMENT ? logger : reduxIdentityMiddleware
+                        )(createStore);
 
-export default createRedux(DISPATCHER);
+export default createWithMiddleware(STORE);

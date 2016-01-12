@@ -1,13 +1,10 @@
 /* globals Promise */
-function validateResponse(flux) {
-    var ACTIONS = flux.getActions('user'),
-        STORE = flux.getStore('user');
+function validateResponse(userActions) {
     return new Promise((resolve, reject) => {
         // 1) go to tokeninfo endpoint, get uid
-        ACTIONS
+        userActions
             .fetchTokenInfo()
-            .then(() => {
-                let tokeninfo = STORE.getTokenInfo();
+            .then(tokeninfo => {
                 // 2) validate that uid is present and realm is employees
                 if (!tokeninfo.uid) {
                     return reject(new Error('No uid present on access token.'));
@@ -19,7 +16,7 @@ function validateResponse(flux) {
                     return reject(new Error('Access token does not originate from "employees" realm.'));
                 }
 
-                resolve();
+                resolve(tokeninfo);
             })
             .catch(e => reject(e));
     });

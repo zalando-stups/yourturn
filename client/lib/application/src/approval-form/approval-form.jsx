@@ -41,11 +41,6 @@ const EXPLANATIONS = {
 class ApprovalForm extends React.Component {
     constructor(props) {
         super();
-        this.stores = {
-            kio: props.kioStore,
-            user: props.userStore
-        };
-        this.actions = props.kioActions;
         this.state = {
             useCustomType: false,
             customType: '',
@@ -70,10 +65,9 @@ class ApprovalForm extends React.Component {
 
     save(evt) {
         evt.preventDefault();
-        let {applicationId, versionId} = this.props,
-            {kio} = this.stores,
+        let {applicationId, versionId, kioStore} = this.props,
             {notes, useCustomType, customType, selectedType} = this.state,
-            application = kio.getApplication(applicationId),
+            application = kioStore.getApplication(applicationId),
             approval;
 
         if (!useCustomType) {
@@ -102,14 +96,13 @@ class ApprovalForm extends React.Component {
             loading: true
         });
 
-        this
-        .actions
+        this.props.kioActions
         .saveApproval(applicationId, versionId, approval)
         .then(() => {
             // re-fetch approvals
-            this.actions.fetchApprovals(applicationId, versionId);
+            this.props.kioActions.fetchApprovals(applicationId, versionId);
             if (useCustomType) {
-                this.actions.fetchApprovalTypes(applicationId);
+                this.props.kioActions.fetchApprovalTypes(applicationId);
             }
             // reset state
             this.setState({
@@ -137,12 +130,11 @@ class ApprovalForm extends React.Component {
     }
 
     render() {
-        let {applicationId, versionId} = this.props,
-            {kio, user} = this.stores,
-            application = kio.getApplication(applicationId),
-            approvalTypes = kio.getApprovalTypes(applicationId),
-            approvals = kio.getApprovals(applicationId, versionId),
-            isOwnApplication = user.getUserCloudAccounts().map(a => a.name).indexOf(application.team_id) >= 0;
+        let {applicationId, versionId, kioStore, userStore} = this.props,
+            application = kioStore.getApplication(applicationId),
+            approvalTypes = kioStore.getApprovalTypes(applicationId),
+            approvals = kioStore.getApprovals(applicationId, versionId),
+            isOwnApplication = userStore.getUserCloudAccounts().map(a => a.name).indexOf(application.team_id) >= 0;
         const LINK_PARAMS = {
             applicationId: applicationId,
             versionId: versionId
@@ -173,7 +165,7 @@ class ApprovalForm extends React.Component {
                                 {approvals.map(
                                     (a, i) => <ApprovalCard
                                                 key={i}
-                                                userinfo={this.stores.user.getUserInfo(a.user_id)}
+                                                userinfo={userStore.getUserInfo(a.user_id)}
                                                 approval={a} />)}
                             </div>
                         </div>

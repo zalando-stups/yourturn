@@ -1,18 +1,7 @@
 /* globals sinon */
-import {Flummox} from 'flummox';
 import _ from 'lodash';
-import UserStore from 'common/src/data/user/user-store';
-import UserActions from 'common/src/data/user/user-actions';
+import * as UserActions from 'common/src/data/user/user-actions';
 import validateResponse from 'yourturn/src/validate-oauth-response';
-
-class MockFlux extends Flummox {
-    constructor() {
-        super();
-
-        this.createActions('user', UserActions);
-        this.createStore('user', UserStore, this);
-    }
-}
 
 const TOKEN = {
         uid: 'npiccolotto',
@@ -20,63 +9,57 @@ const TOKEN = {
     };
 
 describe('The oauth token validation', () => {
-    var flux,
-        TEST_TOKEN;
+    var TEST_TOKEN,
+        userActions;
 
     function mock() {
-        sinon.stub(flux.getActions('user'), 'fetchTokenInfo', () => Promise.resolve(TEST_TOKEN));
-        sinon.stub(flux.getStore('user'), 'getTokenInfo', () => TEST_TOKEN);
+        userActions = Object.assign({}, UserActions);
+        sinon.stub(userActions, 'fetchTokenInfo', () => Promise.resolve(TEST_TOKEN));
     }
 
     beforeEach(() => {
-        flux = new MockFlux();
-        TEST_TOKEN = TOKEN;
+        TEST_TOKEN = Object.assign({}, TOKEN);
+        mock();
     });
 
     it('should work in happy case', done => {
-        mock();
-
-        validateResponse(flux)
+        validateResponse(userActions)
         .then(() => done())
         .catch(done);
     });
 
     it('should deny if there is no uid in token', done => {
-        TEST_TOKEN = _.extend({}, TOKEN);
         delete TEST_TOKEN.uid;
         mock();
 
-        validateResponse(flux)
+        validateResponse(userActions)
         .then(() => done(1))
         .catch(() => done());
     });
 
     it('should deny if there is no realm in token', done => {
-        TEST_TOKEN = _.extend({}, TOKEN);
         delete TEST_TOKEN.realm;
         mock();
 
-        validateResponse(flux)
+        validateResponse(userActions)
         .then(() => done(1))
         .catch(() => done());
     });
 
     it('should deny if the realm is something else than employees', done => {
-        TEST_TOKEN = _.extend({}, TOKEN);
         TEST_TOKEN.realm = 'services';
         mock();
 
-        validateResponse(flux)
+        validateResponse(userActions)
         .then(() => done(1))
         .catch(() => done());
     });
 
     it('should allow if the realm is /employees', done => {
-        TEST_TOKEN = _.extend({}, TOKEN);
         TEST_TOKEN.realm = '/employees';
         mock();
 
-        validateResponse(flux)
+        validateResponse(userActions)
         .then(() => done())
         .catch(done);
     });

@@ -8,20 +8,15 @@ import DefaultError from 'common/src/error.jsx';
 import 'common/asset/less/resource/scope-detail.less';
 
 class ScopeDetail extends React.Component {
-    constructor(props) {
+    constructor() {
         super();
-        this.stores = {
-            essentials: props.essentialsStore,
-            user: props.userStore
-        };
     }
 
     render() {
-        let {resourceId, scopeId} = this.props,
-            {user, essentials} = this.stores,
-            scope = essentials.getScope(resourceId, scopeId),
-            applications = essentials.getScopeApplications(resourceId, scopeId),
-            whitelisted = user.isWhitelisted();
+        let {resourceId, scopeId, userStore, essentialsStore} = this.props,
+            scope = essentialsStore.getScope(resourceId, scopeId),
+            applications = essentialsStore.getScopeApplications(resourceId, scopeId),
+            whitelisted = userStore.isWhitelisted();
         const LINK_PARAMS = {
             resourceId: resourceId,
             scopeId: scopeId

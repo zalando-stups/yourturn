@@ -2,7 +2,7 @@ import React from 'react';
 import {Link} from 'react-router';
 import Icon from 'react-fa';
 import Timestamp from 'react-time';
-import {DATE_FORMAT} from 'common/src/config';
+import Config from 'common/src/config';
 import 'common/asset/less/violation/violation-card.less';
 
 class ViolationCard extends React.Component {
@@ -52,7 +52,7 @@ class ViolationCard extends React.Component {
                             <Icon
                                 fixedWidth
                                 name='calendar-o'
-                                title='Time when this violation was discovered' /> <Timestamp value={violation.timestamp} format={DATE_FORMAT} />
+                                title='Time when this violation was discovered' /> <Timestamp value={violation.timestamp} format={Config.DATE_FORMAT} />
                         </div>
                         <div>
                             <Icon
@@ -143,8 +143,7 @@ ViolationCard.propTypes = {
     autoFocus: React.PropTypes.bool,
     onResolve: React.PropTypes.func,
     violation: React.PropTypes.object.isRequired,
-    editable: React.PropTypes.bool,
-    flux: React.PropTypes.object.isRequired
+    editable: React.PropTypes.bool
 };
 
 export default ViolationCard;

@@ -10,12 +10,12 @@ function ResourceStore(state = Immutable.Map(), action) {
     let {type, payload} = action;
 
     if (type === Types.BEGIN_FETCH_RESOURCE) {
-        return state.set(payload, new Pending());
+        return state.set(payload[0], new Pending());
     } else if (type === Types.FAIL_FETCH_RESOURCE) {
         return state.set(payload.id, new Failed(payload));
-    } else if (type === Types.RECEIVE_RESOURCE) {
+    } else if (type === Types.FETCH_RESOURCE) {
         return state.set(payload.id, Immutable.fromJS(payload));
-    } else if (type === Types.RECEIVE_RESOURCES) {
+    } else if (type === Types.FETCH_RESOURCES) {
         return payload.reduce((map, res) => map.set(res.id, Immutable.fromJS(res)), state);
     }
 

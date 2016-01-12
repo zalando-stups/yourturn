@@ -8,23 +8,17 @@ import 'common/asset/less/violation/violation-detail.less';
 class ViolationDetail extends React.Component {
     constructor(props) {
         super();
-        this.stores = {
-            fullstop: props.fullstopStore,
-            user: props.userStore
-        };
-        this.actions = props.fullstopActions;
     }
 
     resolveViolation(violation, message) {
-        return this
-                .actions
+        return this.props.fullstopActions
                 .resolveViolation(violation.id, message);
     }
 
     render() {
         let {violationId} = this.props,
-            accounts = this.stores.user.getUserCloudAccounts().map(a => a.id),
-            violation = this.stores.fullstop.getViolation(violationId);
+            accounts = this.props.userStore.getUserCloudAccounts().map(a => a.id),
+            violation = this.props.fullstopStore.getViolation(violationId);
         if (violation instanceof FetchResult) {
             return violation.isPending() ?
                     <Icon name='circle-o-notch u-spinner' spin /> :
@@ -32,7 +26,6 @@ class ViolationDetail extends React.Component {
         }
         return <div className='violationDetail'>
                     <Violation
-                        flux={this.props.flux}
                         editable={accounts.indexOf(violation.account_id) >= 0}
                         onResolve={this.resolveViolation.bind(this)}
                         violation={violation} />
@@ -41,7 +34,6 @@ class ViolationDetail extends React.Component {
 }
 ViolationDetail.displayName = 'ViolationDetail';
 ViolationDetail.propTypes = {
-    violationId: React.PropTypes.string.isRequired,
-    flux: React.PropTypes.object.isRequired
+    violationId: React.PropTypes.string.isRequired
 };
 export default ViolationDetail;

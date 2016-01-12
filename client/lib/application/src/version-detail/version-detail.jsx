@@ -2,7 +2,7 @@ import React from 'react';
 import Icon from 'react-fa';
 import {Link} from 'react-router';
 import Timestamp from 'react-time';
-import {DATE_FORMAT} from 'common/src/config';
+import Config from 'common/src/config';
 import ScmSourceWarning from './scm-source-warning.jsx';
 import Markdown from 'common/src/markdown.jsx';
 import {parseArtifact} from 'application/src/util';
@@ -83,22 +83,16 @@ ScmAuthorInfo.propTypes = {
 class VersionDetail extends React.Component {
     constructor(props) {
         super();
-        this.stores = {
-            kio: props.kioStore,
-            pierone: props.pieroneStore,
-            user: props.userStore
-        };
     }
 
     render() {
-        let {applicationId, versionId} = this.props,
-            {kio, user, pierone} = this.stores,
-            application = kio.getApplication(applicationId),
-            version = kio.getApplicationVersion(applicationId, versionId),
+        let {applicationId, versionId, kioStore, pieroneStore, userStore} = this.props,
+            application = kioStore.getApplication(applicationId),
+            version = kioStore.getApplicationVersion(applicationId, versionId),
             {team, artifact, tag} = parseArtifact(version.artifact),
-            scmSource = pierone.getScmSource(team, artifact, tag),
-            approvals = kio.getApprovals(applicationId, versionId),
-            isOwnApplication = user.getUserCloudAccounts().some(t => t.name === application.team_id);
+            scmSource = pieroneStore.getScmSource(team, artifact, tag),
+            approvals = kioStore.getApprovals(applicationId, versionId),
+            isOwnApplication = userStore.getUserCloudAccounts().some(t => t.name === application.team_id);
 
         const LINK_PARAMS = {
             applicationId: applicationId,
@@ -150,7 +144,7 @@ class VersionDetail extends React.Component {
                             </tr>
                             <tr>
                                 <th>Last modified</th>
-                                <td><Timestamp format={DATE_FORMAT} value={version.last_modified} /></td>
+                                <td><Timestamp format={Config.DATE_FORMAT} value={version.last_modified} /></td>
                             </tr>
                             <tr>
                                 <th>Artifact</th>
@@ -166,7 +160,7 @@ class VersionDetail extends React.Component {
                     </table>
 
                     <ScmSourceWarning
-                        pieroneStore={this.stores.pierone}
+                        pieroneStore={this.props.pieroneStore}
                         scmSource={scmSource}
                         application={application}
                         version={version} />
@@ -184,7 +178,6 @@ class VersionDetail extends React.Component {
 }
 VersionDetail.displayName = 'VersionDetail';
 VersionDetail.propTypes = {
-    flux: React.PropTypes.object.isRequired,
     applicationId: React.PropTypes.string.isRequired,
     versionId: React.PropTypes.string.isRequired
 };

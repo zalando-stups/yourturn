@@ -1,21 +1,30 @@
 import React from 'react';
 import {Route, DefaultRoute} from 'react-router';
-import FlummoxComponent from 'flummox/component';
-import FLUX from 'yourturn/src/flux';
-import Violation from './violation/violation.jsx';
-import ViolationDetail from './violation-detail/violation-detail.jsx';
-import {requireAccounts} from 'common/src/util';
 import moment from 'moment';
 import Icon from 'react-fa';
 import lzw from 'lz-string';
 import _ from 'lodash';
 
-const FULLSTOP_ACTIONS = FLUX.getActions('fullstop'),
-      FULLSTOP_STORE = FLUX.getStore('fullstop'),
-      USER_STORE = FLUX.getStore('user'),
-      NOTIFICATION_ACTIONS = FLUX.getActions('notification'),
-      TEAM_ACTIONS = FLUX.getActions('team'),
-      TEAM_STORE = FLUX.getStore('team');
+import Violation from './violation/violation.jsx';
+import ViolationDetail from './violation-detail/violation-detail.jsx';
+
+import REDUX from 'yourturn/src/redux';
+import {requireAccounts, bindGettersToState, bindActionsToStore} from 'common/src/util';
+import {connect} from 'react-redux';
+
+import * as UserGetter from 'common/src/data/user/user-getter';
+import * as TeamGetter from 'common/src/data/team/team-getter';
+import * as FullstopGetter from 'common/src/data/fullstop/fullstop-getter';
+
+import * as NotificationActions from 'common/src/data/notification/notification-actions';
+import * as UserActions from 'common/src/data/user/user-actions';
+import * as TeamActions from 'common/src/data/team/team-actions';
+import * as FullstopActions from 'common/src/data/fullstop/fullstop-actions';
+
+const FULLSTOP_ACTIONS = bindActionsToStore(REDUX, FullstopActions),
+      USER_ACTIONS = bindActionsToStore(REDUX, UserActions),
+      NOTIFICATION_ACTIONS = bindActionsToStore(REDUX, NotificationActions),
+      TEAM_ACTIONS = bindActionsToStore(REDUX, TeamActions);
 
 function parseQueryParams(params) {
     let result = {};
@@ -64,26 +73,21 @@ class ViolationHandler extends React.Component {
         super();
     }
     render() {
-        return <FlummoxComponent
-                    flux={FLUX}
-                    connectToStores={['fullstop', 'team']}>
-                    <Violation
-                        notificationActions={NOTIFICATION_ACTIONS}
-                        userStore={USER_STORE}
-                        fullstopActions={FULLSTOP_ACTIONS}
-                        fullstopStore={FULLSTOP_STORE}
-                        teamStore={TEAM_STORE} />
-                </FlummoxComponent>;
+        return <Violation
+                    notificationActions={NOTIFICATION_ACTIONS}
+                    fullstopActions={FULLSTOP_ACTIONS}
+                    {...this.props} />;
     }
 }
 ViolationHandler.displayName = 'ViolationHandler';
 ViolationHandler.willTransitionTo = function(transition, params, query) {
     // save last visited date
     FULLSTOP_ACTIONS.saveLastVisited(Date.now());
-    let defaultParams = FULLSTOP_STORE.getDefaultSearchParams(),
+    let state = REDUX.getState(),
+        defaultParams = FullstopGetter.getDefaultSearchParams(),
         queryParams = parseQueryParams(query),
-        searchParams = FULLSTOP_STORE.getSearchParams(),
-        selectedAccounts = USER_STORE.getUserCloudAccounts(), // these the user has access to
+        searchParams = FullstopGetter.getSearchParams(state.fullstop),
+        selectedAccounts = UserGetter.getUserCloudAccounts(state.user), // these the user has access to
         {accounts} = searchParams; // these accounts are selected and active
 
     // break infinite transition loop
@@ -126,9 +130,9 @@ ViolationHandler.willTransitionTo = function(transition, params, query) {
     }
     transition.redirect('violation', {}, queryParams);
 };
-ViolationHandler.fetchData = function(router) {
+ViolationHandler.fetchData = function(routerState, state) {
     let promises = [];
-    let searchParams = parseQueryParams(router.query);
+    let searchParams = parseQueryParams(routerState.query);
     FULLSTOP_ACTIONS.updateSearchParams(searchParams);
     // tab-specific loadings
     if (searchParams.activeTab === 0) {
@@ -144,15 +148,15 @@ ViolationHandler.fetchData = function(router) {
         FULLSTOP_ACTIONS.fetchViolations(searchParams);
     }
 
-    if (!Object.keys(FULLSTOP_STORE.getViolationTypes()).length) {
+    if (!Object.keys(FullstopGetter.getViolationTypes(state.fullstop)).length) {
         promises.push(FULLSTOP_ACTIONS.fetchViolationTypes());
     }
 
     // if there aren't any teams from team service yet, fetch them NAO
-    if (!TEAM_STORE.getAccounts().length) {
+    if (!TeamGetter.getAccounts(state.team).length) {
         TEAM_ACTIONS.fetchAccounts();
     }
-    promises.push(requireAccounts(FLUX));
+    promises.push(requireAccounts(state, USER_ACTIONS));
     return Promise.all(promises);
 };
 ViolationHandler.propTypes = {
@@ -161,7 +165,11 @@ ViolationHandler.propTypes = {
 ViolationHandler.contextTypes = {
     router: React.PropTypes.func.isRequired
 };
-
+let ConnectedViolationHandler = connect(state => ({
+    userStore: bindGettersToState(state.user, UserGetter),
+    fullstopStore: bindGettersToState(state.fullstop, FullstopGetter),
+    teamStore: bindGettersToState(state.team, TeamGetter)
+}))(ViolationHandler);
 
 class ViolationDetailHandler extends React.Component {
     constructor() {
@@ -169,27 +177,27 @@ class ViolationDetailHandler extends React.Component {
     }
 
     render() {
-        return <FlummoxComponent
-                    flux={FLUX}
-                    connectToStores={['fullstop']}>
-                    <ViolationDetail
-                        violationId={this.props.params.violationId}
-                        userStore={USER_STORE}
-                        fullstopActions={FULLSTOP_ACTIONS}
-                        fullstopStore={FULLSTOP_STORE} />
-                </FlummoxComponent>;
+        return <ViolationDetail
+                    violationId={this.props.params.violationId}
+                    fullstopActions={FULLSTOP_ACTIONS}
+                    {...this.props} />;
     }
 
 }
-ViolationDetailHandler.fetchData = function (state) {
-    FULLSTOP_ACTIONS.fetchViolation(state.params.violationId);
+ViolationDetailHandler.fetchData = function (routerState, state) {
+    FULLSTOP_ACTIONS.fetchViolation(routerState.params.violationId);
     TEAM_ACTIONS.fetchAccounts();
-    return requireAccounts(FLUX);
+    return requireAccounts(state, USER_ACTIONS);
 };
 ViolationDetailHandler.displayName = 'ViolationDetailHandler';
 ViolationDetailHandler.propTypes = {
     params: React.PropTypes.object.isRequired
 };
+let ConnectedViolationDetailHandler = connect(state => ({
+    userStore: bindGettersToState(state.user, UserGetter),
+    fullstopStore: bindGettersToState(state.fullstop, FullstopGetter)
+}))(ViolationDetailHandler);
+
 
 class ViolationShortUrlHandler extends React.Component {
     constructor(props, context) {
@@ -211,9 +219,9 @@ ViolationShortUrlHandler.contextTypes = {
 
 const ROUTES =
     <Route name='violation' path='violation'>
-        <DefaultRoute handler={ViolationHandler} />
+        <DefaultRoute handler={ConnectedViolationHandler} />
         <Route name='violation-short' path='v/:shortened' handler={ViolationShortUrlHandler} />
-        <Route name='violation-vioDetail' path=':violationId' handler={ViolationDetailHandler} />
+        <Route name='violation-vioDetail' path=':violationId' handler={ConnectedViolationDetailHandler} />
     </Route>;
 
 export default ROUTES;
