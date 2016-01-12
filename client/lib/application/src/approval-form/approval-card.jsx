@@ -32,6 +32,7 @@ class ApprovalCard extends React.Component {
                             <div className='grid-col col-1-3 approvalCard-approver'>
                                 <Gravatar
                                     size={75}
+                                    https={true}
                                     email={userinfo.email} />
                                 <div title={approval.user_id}>
                                     {userinfo ? userinfo.name.split(' ')[0] : approval.user_id}
