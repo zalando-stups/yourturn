@@ -39,7 +39,7 @@ function FullstopStore(state, action) {
         return state.setIn(['violations', String(payload[0])], new Pending());
     } else if (type === Types.FAIL_FETCH_VIOLATION) {
         return state.setIn(['violations', String(payload.violationId)], new Failed(payload));
-    } else if (type === Types.FETCH_VIOLATION) {
+    } else if (type === Types.FETCH_VIOLATION || type === Types.RESOLVE_VIOLATION) {
         return FullstopStore(state, {
             type: Types.FETCH_VIOLATIONS,
             payload: [undefined, [payload]]
