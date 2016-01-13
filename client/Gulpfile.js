@@ -13,6 +13,8 @@ var fs = require('fs'),
     rename = require('gulp-rename'),
     webpack = require('webpack');
 
+process.on('uncaughtException', console.log.bind(console));
+
 var LODASH_FUNCS = [
         // own
         'chain',
@@ -46,7 +48,7 @@ var LODASH_FUNCS = [
  */
 function remove(globs) {
     return function(done) {
-        del(globs, done);
+        return del(globs, done);
     };
 }
 
@@ -55,7 +57,7 @@ function readFile(file) {
 }
 
 // removes the output folder
-gulp.task( 'clean', remove(['dist/**/*']));
+gulp.task('clean', remove(['dist/**/*']));
 
 // custom lodash build
 gulp.task('lodash', shell.task([
@@ -118,7 +120,7 @@ gulp.task('inline-css', ['cachebust', 'extract-inline-css'], function(done) {
                  readFile('/dist/css/button.css') +
                  readFile('/dist/css/yourturn/sidebar.css');
     return gulp
-            .src('dist/index-prod.html')
+            .src('index-prod.html')
             .pipe(replace('${inline}', inline))
             .pipe(rename('index.html'))
             .pipe(gulp.dest('dist'));
@@ -132,6 +134,3 @@ gulp.task('cachebust', ['clean'], function() {
 });
 
 gulp.task('build', ['pack', 'inline-css', 'copy']);
-
-gulp.task('watch', ['watch:js']);
-gulp.task('default', ['watch']);
