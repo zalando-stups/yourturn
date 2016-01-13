@@ -33,6 +33,7 @@ class ViolationCard extends React.Component {
 
     render() {
         let {violation} = this.props,
+            account = this.props.accounts.filter(a => a.id === violation.account_id)[0],
             {violation_type} = violation;
         return <div
                     data-block='violation-card'
@@ -58,7 +59,7 @@ class ViolationCard extends React.Component {
                             <Icon
                                 fixedWidth
                                 name='cloud'
-                                title='The cloud account number' /> {violation.account_id}
+                                title='The cloud account number' /> {account.name} ({violation.account_id})
                         </div>
                         <div>
                             <Icon
