@@ -13,8 +13,10 @@ import AccountOverview from 'violation/src/violation-overview-account/violation-
 import AccountSelector from 'violation/src/account-selector.jsx';
 import ViolationAnalysis from 'violation/src/violation-analysis/violation-analysis.jsx';
 import ViolationDetail from 'violation/src/violation-detail/violation-detail.jsx';
+
 import 'common/asset/less/violation/violation.less';
 import 'common/asset/css/react-select.css';
+import 'common/asset/less/common/tabs.less';
 
 function sortAsc(a, b) {
     return a.timestamp < b.timestamp ?

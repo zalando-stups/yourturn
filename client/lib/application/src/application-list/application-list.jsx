@@ -6,6 +6,7 @@ import {Tabs, TabPanel, TabList, Tab} from 'react-tabs';
 import {Link} from 'react-router';
 import _ from 'lodash';
 import 'common/asset/less/application/application-list.less';
+import 'common/asset/less/common/tabs.less';
 
 class ApplicationList extends React.Component {
     constructor(props) {
