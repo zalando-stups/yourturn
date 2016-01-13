@@ -197,6 +197,7 @@ class Violation extends React.Component {
                                                     fullstopStore={this.props.fullstopStore}
                                                     fullstopActions={this.props.fullstopActions}
                                                     userStore={this.props.userStore}
+                                                    teamStore={this.props.teamStore}
                                                     violationId={v} />);
         return <div className='violation'>
                     <h2 className='violation-headline'>Violations</h2>
