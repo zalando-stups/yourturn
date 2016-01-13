@@ -2,15 +2,18 @@ var express = require('express'),
     server = express();
 
 var teams = {
-        npiccolotto: [{
+        stups: {
             id: 'stups',
             id_name: 'STUPS',
-            name: 'stups'
-        }, {
+            name: 'stups',
+            alias: ['stups-test']
+        },
+        greendale: {
             id: 'greendale',
             id_name: 'Greendale',
-            name: 'greendale'
-        }]
+            name: 'greendale',
+            alias: []
+        }
     },
     accounts = [{
             id: '1029384756',
@@ -66,6 +69,28 @@ server.get('/accounts/:id', function(req,res){
         }
         res.status(200).send(userAccounts[id]);
     }, Math.random() * 2000 );
+});
+
+server.get('/teams/:id', function(req, res) {
+    setTimeout(function() {
+        var id = req.params.id;
+        // check if real team
+        if (teams[id]) {
+            return res.status(200).send(teams[id]);
+        }
+        // check if alias
+        var isAlias = false;
+        Object.keys(teams).forEach(team => {
+            if (!isAlias && teams[team].alias.indexOf(id) >= 0) {
+                isAlias = team;
+                return false;
+            }
+        });
+        if (isAlias) {
+            return res.status(200).send(teams[isAlias]);
+        }
+        res.status(404).send();
+    });
 });
 
 module.exports = server;

@@ -43,6 +43,8 @@ server.use(function(req, res, next) {
 
 // EXPRESS ROUTES BELOW
 server.get('/accounts/?', routes.team.accounts);
+server.get('/teams/?', routes.team.teams);
+server.get('/teams/:teamId', routes.team.team);
 server.get('/latestVersions/:team', oauth, routes.kio.latestVersions);
 server.get('/accounts/:userId', routes.user.accounts);
 server.get('/users/:userId', routes.user.detail);

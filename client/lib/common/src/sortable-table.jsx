@@ -52,7 +52,8 @@ class SortableTable extends React.Component {
                 // HAHA!
                 let newOrder = this.state.sortOrder === ASC ? DESC : ASC;
                 state = {
-                    sortOrder: newOrder
+                    sortOrder: newOrder,
+                    sortBy: key
                 };
             } else {
                 state = {
@@ -72,7 +73,7 @@ class SortableTable extends React.Component {
         return <div
                     className={sortedByMe ? 'sortable-table-primary-sort-key' : null}
                     onClick={this._sortBy.bind(this, dataKey)}>
-                    {label} {sortedByMe >= 0 ?
+                    {label} {sortedByMe ?
                                 (this.state.sortOrder === ASC ? <Icon name='sort-asc' /> : <Icon name='sort-desc' />) :
                                 <Icon name='sort' />}
                 </div>;
