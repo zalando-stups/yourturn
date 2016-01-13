@@ -3,7 +3,7 @@ var fs = require('fs'),
     gulp = require('gulp'),
     gutil= require('gulp-util'),
     autoprefix = require('gulp-autoprefixer'),
-    minifyCSS = require('gulp-minify-css'),
+    minifyCSS = require('gulp-cssnano'),
     less = require('gulp-less'),
     eslint = require('gulp-eslint'),
     jscs = require('gulp-jscs'),
@@ -103,8 +103,8 @@ gulp.task('copy', function() {
 
 gulp.task('extract-inline-css', function(done) {
     return gulp
-            .src('lib/common/asset/less/*.less')
-            .pipe(less( {
+            .src('lib/common/asset/less/**/*.less')
+            .pipe(less({
                 paths: [path.join(__dirname, 'lib/common/asset/less/')]
             }))
             .pipe(autoprefix())
@@ -113,7 +113,10 @@ gulp.task('extract-inline-css', function(done) {
 });
 
 gulp.task('inline-css', ['cachebust', 'extract-inline-css'], function(done) {
-    var inline = readFile('/dist/css/grid.css');
+    var inline = readFile('/dist/css/grid.css') +
+                 readFile('/dist/css/base.css') +
+                 readFile('/dist/css/button.css') +
+                 readFile('/dist/css/yourturn/sidebar.css');
     return gulp
             .src('dist/index-prod.html')
             .pipe(replace('${inline}', inline))

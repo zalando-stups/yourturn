@@ -4,6 +4,7 @@ import Icon from 'react-fa';
 import Remarkable from 'remarkable';
 import {Tabs, TabList, TabPanel, Tab} from 'react-tabs';
 import 'common/asset/less/common/markdown.less';
+import 'common/asset/less/common/tabs.less';
 
 const MD = new Remarkable({
     linkify: true,

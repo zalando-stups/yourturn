@@ -5,38 +5,36 @@
         <meta name="viewport" content="width=device-width, initial-scale=1" />
 
         <title>Your Turn</title>
-        <style>${inline}</style>
         <link rel="icon" type="image/png" href="/dist/stups_favicon.png" />
-        <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700,300" rel="stylesheet" type="text/css" />
-        <link type="text/css" rel="stylesheet" href="/dist/style.css?v=${timestamp}" />
+        <style>${inline}</style>
     </head>
     <body>
         <div id="yourturn-container">
             <div class="yourturn">
                 <div class="grid with-gutter">
                     <div class="grid-col col-1-4">
-                        <aside className="sidebar">
-                            <div className="sidebar-content">
-                                <div className="header">
+                        <aside class="sidebar">
+                            <div class="sidebar-content">
+                                <div class="header">
                                     <div>
-                                        <div className="userInfo">
+                                        <div class="userInfo">
                                             <img
-                                                className="userImage" />
+                                                class="userImage" />
                                             <span>Anonymous Penguin</span>
                                         </div>
-                                        <div className="tokenInfo">
+                                        <div class="tokenInfo">
                                             <div>
                                                 <small>
                                                     OAuth token not checked
                                                 </small>
                                             </div>
-                                            <div className="btn-group">
+                                            <div class="btn-group">
                                                 <button
-                                                    className="btn btn-default">
+                                                    class="btn btn-default">
                                                     <i class="fa fa-refresh"></i> Refresh
                                                 </button>
                                                 <button
-                                                    className="btn btn-default">
+                                                    class="btn btn-default">
                                                     <i class="fa fa-sign-out"></i> Logout
                                                 </button>
                                             </div>
@@ -44,26 +42,26 @@
                                     </div>
                                 </div>
                                 <div
-                                    className="sidebar-item"
+                                    class="sidebar-item"
                                     data-active="true">
                                     <a href="/">
                                         Search <i class="fa fa-search"></i>
                                     </a>
                                 </div>
                                 <div
-                                    className="sidebar-item">
+                                    class="sidebar-item">
                                     <a href="/application">
                                         Applications <i class="fa fa-cubes"></i>
                                     </a>
                                 </div>
                                 <div
-                                    className="sidebar-item">
+                                    class="sidebar-item">
                                     <a href="/resource">
                                         Resource <i class="fa fa-key"></i>
                                     </a>
                                 </div>
                                 <div
-                                    className="sidebar-item">
+                                    class="sidebar-item">
                                     <a href="/violation">
                                         Violations <i class="fa fa-warning"></i>
                                     </a>
@@ -73,6 +71,7 @@
                     </div>
                     <div class="grid-col">
                         <div class="yourturn-view">
+                            Loading…
                         </div>
                     </div>
                 </div>
@@ -87,6 +86,31 @@
                     js = document.createElement('script');
                 js.src = '/dist/newrelic-browser.js?v=${timestamp}';
                 head.appendChild(js);
+            }
+        </script>
+        <script>
+            var cb = function() {
+                var f = document.createElement('link');
+                f.rel = 'stylesheet';
+                f.href = 'https://fonts.googleapis.com/css?family=Open+Sans:400,700,300';
+
+                var l = document.createElement('link');
+                l.rel = 'stylesheet';
+                l.href = '/dist/style.css?v=${timestamp}';
+
+                var h = document.getElementsByTagName('head')[0];
+                h.appendChild(f);
+                h.appendChild(l);
+            };
+            var raf = requestAnimationFrame ||
+                      mozRequestAnimationFrame ||
+                      webkitRequestAnimationFrame ||
+                      msRequestAnimationFrame;
+            if (raf) {
+                raf(cb);
+            }
+            else {
+                window.addEventListener('load', cb);
             }
         </script>
     </body>
