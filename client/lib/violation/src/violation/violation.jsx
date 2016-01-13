@@ -178,6 +178,7 @@ class Violation extends React.Component {
                 prev[cur.id] = cur;
                 return prev;
             }, {}),
+            teamAliase = this.props.teamStore.getAliase(),
             activeAccountIds = searchParams.accounts,
             showingSince = searchParams.from.toDate(),
             showingUntil = searchParams.to.toDate(),
@@ -263,6 +264,7 @@ class Violation extends React.Component {
                                 account={searchParams.cross_inspectedAccount || activeAccountIds[0]}
                                 violationType={searchParams.cross_violationType || null}
                                 accounts={allAccounts}
+                                teamAliase={teamAliase}
                                 onConfigurationChange={this._updateSearch.bind(this, 'cross')}
                                 onRequestViewChange={this._updateSearch.bind(this, 'list')}
                                 violationTypes={violationTypes}

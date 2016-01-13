@@ -63,14 +63,18 @@ class ViolationAnalysis extends React.Component {
         if (!violationCount.length) {
             return <div><Icon name='smile-o' /> <span>No violations!</span></div>;
         }
-        violationCount = violationCount.map(c => ({
+        violationCount = violationCount.map(c => {
+                            let accountName = this.props.accounts[c.account] ? this.props.accounts[c.account].name : '?';
+                            return {
                                 type: c.type,
                                 typeHelp: violationTypes[c.type].help_text,
                                 typeSeverity: violationTypes[c.type].violation_severity,
                                 account: c.account,
-                                accountName: this.props.accounts[c.account] ? this.props.accounts[c.account].name : '?',
+                                accountName,
+                                team: this.props.teamAliase[accountName],
                                 quantity: c.quantity
-                            }));
+                            }
+                        });
         chartData = groupByAccount ?
                         violationCount.filter(c => c.account === this.props.account) :
                         violationCount.filter(c => c.type === this.props.violationType);
@@ -121,9 +125,15 @@ class ViolationAnalysis extends React.Component {
                                 dataKey={'account'} />
                             <Table.Column
                                 label='Account'
-                                width={200}
+                                width={150}
+                                flexGrow={1}
                                 cellRenderer={this.accountCellRenderer.bind(this)}
                                 dataKey={'accountName'} />
+                            <Table.Column
+                                label='Team'
+                                width={150}
+                                flexGrow={1}
+                                dataKey={'team'} />
                             <Table.Column
                                 label='Violation Type'
                                 width={200}

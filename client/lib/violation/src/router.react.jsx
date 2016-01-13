@@ -131,13 +131,30 @@ ViolationHandler.willTransitionTo = function(transition, params, query) {
     transition.redirect('violation', {}, queryParams);
 };
 ViolationHandler.fetchData = function(routerState, state) {
-    let promises = [];
-    let searchParams = parseQueryParams(routerState.query);
+    let promises = [],
+        accounts = TeamGetter.getAccounts(state.team).length === 0 ?
+                    TEAM_ACTIONS.fetchAccounts() :
+                    Promise.resolve(TeamGetter.getAccounts(state.team)),
+        searchParams = parseQueryParams(routerState.query);
     FULLSTOP_ACTIONS.updateSearchParams(searchParams);
     // tab-specific loadings
     if (searchParams.activeTab === 0) {
         // tab 1
         FULLSTOP_ACTIONS.fetchViolationCount(searchParams);
+        if (searchParams.accounts.length) {
+            accounts.then(accs => {
+                searchParams.accounts.forEach(acc => {
+                    // for every account
+                    // get its name
+                    let account = accs.filter(account => account.id === acc)[0];
+                    let alias = TeamGetter.getAlias(state.team, account.name);
+                    // and ask the team service about it
+                    if (!alias) {
+                        TEAM_ACTIONS.fetchTeam(account.name);
+                    }
+                });
+            });
+        }
     } else if (searchParams.activeTab === 1) {
         // tab 2
         FULLSTOP_ACTIONS.fetchViolationCountIn(
@@ -152,10 +169,6 @@ ViolationHandler.fetchData = function(routerState, state) {
         promises.push(FULLSTOP_ACTIONS.fetchViolationTypes());
     }
 
-    // if there aren't any teams from team service yet, fetch them NAO
-    if (!TeamGetter.getAccounts(state.team).length) {
-        TEAM_ACTIONS.fetchAccounts();
-    }
     promises.push(requireAccounts(state, USER_ACTIONS));
     return Promise.all(promises);
 };
