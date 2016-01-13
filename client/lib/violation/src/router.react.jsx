@@ -141,7 +141,7 @@ ViolationHandler.fetchData = function(routerState, state) {
     if (searchParams.activeTab === 0) {
         // tab 1
         FULLSTOP_ACTIONS.fetchViolationCount(searchParams);
-        if (searchParams.accounts.length) {
+        if (searchParams.accounts && searchParams.accounts.length) {
             accounts.then(accs => {
                 searchParams.accounts.forEach(acc => {
                     // for every account
