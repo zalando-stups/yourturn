@@ -11,7 +11,7 @@ function fetchOwnTotal(from, accounts) {
             .get(`${FULLSTOP_BASE_URL}/violations`)
             .accept('json')
             .query({
-                accounts: accounts,
+                accounts: accounts && accounts.join(','),
                 from: new Date(from).toISOString(),
                 checked: false
             })
@@ -25,7 +25,7 @@ function fetchViolations(params) {
             .get(`${FULLSTOP_BASE_URL}/violations`)
             .accept('json')
             .query({
-                accounts: params.accounts,
+                accounts: params.accounts && params.accounts.join(','),
                 size: params.size || 10,
                 from: params.from ? params.from.toISOString() : '',
                 to: (params.to || new Date()).toISOString(),
@@ -80,7 +80,7 @@ function fetchViolationCount(params) {
     return request
             .get(`${FULLSTOP_BASE_URL}/violation-count`)
             .query({
-                accounts: params.accounts,
+                accounts: params.accounts && params.accounts.join(','),
                 to: params.to ? params.to.toISOString() : (new Date()).toISOString(),
                 from: params.from ? params.from.toISOString() : '',
                 resolved: params.showResolved && !params.showUnresolved ?

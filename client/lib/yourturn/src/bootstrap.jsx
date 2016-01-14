@@ -53,6 +53,7 @@ userActions
             .fetchAccounts(info.uid)
             .then(accounts => {
                 let lastLogin = FullstopGetter.getLastVisited(REDUX.getState().fullstop);
+                console.log(REDUX.getState().fullstop.toJS(), lastLogin, new Date(lastLogin));
                 fullstopActions.fetchOwnTotal(lastLogin, accounts.map(a => a.id));
             });
         userActions

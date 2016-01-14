@@ -83,7 +83,7 @@ function FullstopStore(state, action) {
         return state.set('violationCountIn', Immutable.fromJS(payload));
     } else if (type === Types.FETCH_OWN_TOTAL) {
         return state.set('ownAccountsTotal', payload);
-    } else if (type === Types.FETCH_LAST_VISITED) {
+    } else if (type === Types.LOAD_LAST_VISITED) {
         return state.set('lastVisited', payload);
     }
     return state;
