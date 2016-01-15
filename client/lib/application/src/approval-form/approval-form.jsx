@@ -1,6 +1,7 @@
 import React from 'react';
 import Icon from 'react-fa';
 import {Link} from 'react-router';
+import * as Routes from 'application/src/routes';
 import {Typeahead} from 'react-typeahead';
 import Markdown from 'common/src/markdown.jsx';
 import Collapsible from 'common/src/collapsible.jsx';
@@ -142,16 +143,13 @@ class ApprovalForm extends React.Component {
         return <div className='approvalForm'>
                     <h2>
                         <Link
-                            to='application-appDetail'
-                            params={LINK_PARAMS}>{application.name || applicationId}</Link> <Link
-                            to='application-verDetail'
-                            className='approvalForm-versionId'
-                            params={LINK_PARAMS}>{versionId}</Link> Approvals
+                            to={Routes.appDetail(LINK_PARAMS)}>{application.name || applicationId}</Link> <Link
+                            to={Routes.verDetail(LINK_PARAMS)}
+                            className='approvalForm-versionId'>{versionId}</Link> Approvals
                     </h2>
                     <div className='btn-group'>
                         <Link
-                            to='application-verDetail'
-                            params={LINK_PARAMS}
+                            to={Routes.verDetail(LINK_PARAMS)}
                             className='btn btn-default'>
                             <Icon name='chevron-left' /> {application.name} {versionId}
                         </Link>
@@ -275,8 +273,5 @@ ApprovalForm.propTypes = {
     kioActions: React.PropTypes.object.isRequired,
     kioStore: React.PropTypes.object.isRequired,
     userStore: React.PropTypes.object.isRequired
-};
-ApprovalForm.contextTypes = {
-    router: React.PropTypes.func.isRequired
 };
 export default ApprovalForm;

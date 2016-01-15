@@ -1,6 +1,7 @@
 import React from 'react';
 import Icon from 'react-fa';
 import {Link} from 'react-router';
+import * as Routes from 'application/src/routes';
 import _ from 'lodash';
 import Markdown from 'common/src/markdown.jsx';
 import FetchResult from 'common/src/fetch-result';
@@ -67,41 +68,38 @@ class ApplicationDetail extends React.Component {
         };
 
         if (app instanceof FetchResult) {
-            return app.isPending() ?
-                    <Placeholder
-                        applicationId={applicationId} /> :
+            // not working anymore ??????
+            let child = app.isPending() ?
+                    <Placeholder applicationId={applicationId} /> :
                     <DefaultError error={app.getResult()} />;
+            return <div>{child}</div>;
         }
         return <div className='applicationDetail'>
                     <h1>{app.name}</h1>
                     <div className='btn-group'>
                         <Link
-                            to='application-appList'
+                            to={Routes.appList(LINK_PARAMS)}
                             className='btn btn-default'>
                             <Icon name='chevron-left' /> Applications
                         </Link>
                         <Link
-                            to='application-appEdit'
-                            className={`btn btn-default ${isOwnApplication ? '' : 'btn-disabled'}`}
-                            params={LINK_PARAMS}>
+                            to={Routes.appEdit(LINK_PARAMS)}
+                            className={`btn btn-default ${isOwnApplication ? '' : 'btn-disabled'}`}>
                             <Icon name='pencil' /> Edit {app.name}
                         </Link>
                         <Link
-                            to='application-appOAuth'
-                            className='btn btn-default'
-                            params={LINK_PARAMS}>
+                            to={Routes.appOAuth(LINK_PARAMS)}
+                            className='btn btn-default'>
                             <Icon name='plug' /> OAuth Client
                         </Link>
                         <Link
-                            to='application-appAccess'
-                            className='btn btn-default'
-                            params={LINK_PARAMS}>
+                            to={Routes.appAccess(LINK_PARAMS)}
+                            className='btn btn-default'>
                             <Icon name='key' /> Access Control
                         </Link>
                         <Link
-                            to='application-verList'
-                            className='btn btn-primary'
-                            params={LINK_PARAMS}>
+                            to={Routes.verList(LINK_PARAMS)}
+                            className='btn btn-primary'>
                             <Icon name='list' /> Versions
                         </Link>
                     </div>
@@ -225,19 +223,17 @@ class ApplicationDetail extends React.Component {
                                         versions.map(
                                             v => <div key={v.id}>
                                                     <Link
-                                                        to='application-verApproval'
-                                                        className='btn btn-default btn-small'
-                                                        params={{
+                                                        to={Routes.verApproval({
                                                             applicationId: applicationId,
                                                             versionId: v.id
-                                                        }}>
+                                                        })}
+                                                        className='btn btn-default btn-small'>
                                                         <Icon name='check' />
                                                     </Link> <Link
-                                                        to='application-verDetail'
-                                                        params={{
+                                                        to={Routes.verDetail({
                                                             applicationId: applicationId,
                                                             versionId: v.id
-                                                        }}>
+                                                        })}>
                                                         {v.id}
                                                     </Link>
                                                  </div>)
@@ -245,8 +241,7 @@ class ApplicationDetail extends React.Component {
                                         <div>No versions yet.</div>
                                     }
                                     <Link
-                                        to='application-verCreate'
-                                        params={LINK_PARAMS}
+                                        to={Routes.verCreate(LINK_PARAMS)}
                                         className={`btn btn-default applicationDetail-newVersion ${isOwnApplication ? '' : 'btn-disabled'}`}>
                                         <Icon name='plus' /> New version
                                     </Link>
@@ -270,8 +265,5 @@ ApplicationDetail.propTypes = {
     userStore: React.PropTypes.object.isRequired,
     kioStore: React.PropTypes.object.isRequired,
     twintipStore: React.PropTypes.object.isRequired
-};
-ApplicationDetail.contextTypes = {
-    router: React.PropTypes.func.isRequired
 };
 export default ApplicationDetail;

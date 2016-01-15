@@ -1,7 +1,7 @@
 import React from 'react';
 import Icon from 'react-fa';
 import {Link} from 'react-router';
-import {constructLocalUrl} from 'common/src/data/services';
+import * as Routes from 'application/src/routes';
 import DOCKER_REGISTRY from 'DOCKER_REGISTRY';
 import Markdown from 'common/src/markdown.jsx';
 import 'common/asset/less/application/version-form.less';
@@ -16,7 +16,11 @@ class VersionForm extends React.Component {
             versionIdTaken: false,
             autocompleteArtifact: true,
             id: edit ? version.id : '',
-            artifact: edit ? version.artifact : `${DOCKER_REGISTRY}/{team}/${props.applicationId}`,
+            artifact: edit ?
+                        (version.artifact.startsWith('docker://') ?
+                                version.artifact.substring('docker://'.length) :
+                                version.artifact) :
+                        `${DOCKER_REGISTRY}/{team}/${props.applicationId}`,
             notes: edit ? version.notes : ''
         };
     }
@@ -60,9 +64,10 @@ class VersionForm extends React.Component {
         evt.preventDefault();
 
         let {applicationId, kioStore} = this.props,
+            versionId = this.state.id,
             application = kioStore.getApplication(applicationId),
             version = {
-                id: this.state.id,
+                id: versionId,
                 notes: this.state.notes,
                 artifact: /^docker:\/\//.test(this.state.artifact) ?
                             this.state.artifact :
@@ -72,7 +77,7 @@ class VersionForm extends React.Component {
 
         this.props.kioActions
         .saveApplicationVersion(applicationId, version.id, version)
-        .then(() => this.context.router.transitionTo(constructLocalUrl('application-version', [applicationId, version.id])))
+        .then(() => this.context.router.push(Routes.verDetail({applicationId, versionId})))
         .catch(err => {
             this.props.notificationActions
             .addNotification(
@@ -96,22 +101,20 @@ class VersionForm extends React.Component {
         return <div className='versionForm'>
                     <h2>
                         {edit ?
-                            <span>Edit <Link to='application-appDetail' params={LINK_PARAMS}>{application.name || applicationId}</Link> <Link to='application-verDetail' params={LINK_PARAMS}>{versionId}</Link></span>
+                            <span>Edit <Link to={Routes.appDetail(LINK_PARAMS)}>{application.name || applicationId}</Link> <Link to={Routes.verDetail(LINK_PARAMS)}>{versionId}</Link></span>
                             :
-                            <span>Create new version for <Link to='application-appDetail' params={LINK_PARAMS}>{application.name || applicationId}</Link></span>}
+                            <span>Create new version for <Link to={Routes.appDetail(LINK_PARAMS)}>{application.name || applicationId}</Link></span>}
                     </h2>
                     <div className='btn-group'>
                         {edit ?
                             <Link
-                                to='application-verDetail'
-                                params={LINK_PARAMS}
+                                to={Routes.verDetail(LINK_PARAMS)}
                                 className='btn btn-default'>
                                 <Icon name='chevron-left' /> {application.name} {version.id}
                             </Link>
                             :
                             <Link
-                                to='application-verList'
-                                params={LINK_PARAMS}
+                                to={Routes.verList(LINK_PARAMS)}
                                 className='btn btn-default'>
                                 <Icon name='chevron-left' /> {application.name}
                             </Link>}
@@ -218,7 +221,7 @@ VersionForm.propTypes = {
     kioStore: React.PropTypes.object.isRequired
 };
 VersionForm.contextTypes = {
-    router: React.PropTypes.func.isRequired
+    router: React.PropTypes.object
 };
 
 export default VersionForm;

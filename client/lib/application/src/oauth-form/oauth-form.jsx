@@ -1,9 +1,9 @@
 import React from 'react';
 import Icon from 'react-fa';
 import {Link} from 'react-router';
+import * as Routes from 'application/src/routes';
 import OAuthSyncInfo from 'application/src/oauth-sync-info.jsx';
 import ScopeList from 'application/src/scope-list.jsx';
-import {constructLocalUrl} from 'common/src/data/services';
 import 'common/asset/less/application/oauth-form.less';
 
 class OAuthForm extends React.Component {
@@ -71,7 +71,7 @@ class OAuthForm extends React.Component {
 
         this.props.mintActions
         .saveOAuthConfig(applicationId, oauthConfig)
-        .then(() => this.context.router.transitionTo(constructLocalUrl('application', [applicationId])))
+        .then(() => this.context.router.push(Routes.appDetail({applicationId})))
         .catch(e => {
             this.props.notificationActions
             .addNotification(
@@ -99,13 +99,11 @@ class OAuthForm extends React.Component {
         return <div className='oAuthForm'>
                     <h2>
                         <Link
-                            to='application-appDetail'
-                            params={LINK_PARAMS}>{application.name}</Link> OAuth Client
+                            to={Routes.appDetail(LINK_PARAMS)}>{application.name}</Link> OAuth Client
                     </h2>
                     <div className='btn-group'>
                         <Link
-                            to='application-appDetail'
-                            params={LINK_PARAMS}
+                            to={Routes.appDetail(LINK_PARAMS)}
                             className='btn btn-default'>
                             <Icon name='chevron-left' /> {application.name}
                         </Link>
@@ -170,7 +168,7 @@ OAuthForm.propTypes = {
     essentialsStore: React.PropTypes.object.isRequired
 };
 OAuthForm.contextTypes = {
-    router: React.PropTypes.func.isRequired
+    router: React.PropTypes.object
 };
 
 export default OAuthForm;

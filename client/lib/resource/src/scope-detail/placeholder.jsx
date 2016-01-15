@@ -1,6 +1,7 @@
 import React from 'react';
 import Icon from 'react-fa';
 import {Link} from 'react-router';
+import * as Routes from 'resource/src/routes';
 
 class ScopeDetailPlaceholder extends React.Component {
     constructor() {
@@ -16,21 +17,18 @@ class ScopeDetailPlaceholder extends React.Component {
         return <div className='scopeDetail u-placeholder'>
                     <h2>
                         <Link
-                            to='resource-resDetail'
-                            params={LINK_PARAMS}>
+                            to={Routes.resDetail(LINK_PARAMS)}>
                             {resourceId}
                         </Link>.{scopeId}
                     </h2>
                     <div className='btn-group'>
                         <Link
-                            to='resource-resDetail'
-                            params={LINK_PARAMS}
+                            to={Routes.resDetail(LINK_PARAMS)}
                             className='btn btn-default'>
                             <Icon name='chevron-left' /> {resourceId}
                         </Link>
                         <Link
-                            to='resource-scpEdit'
-                            params={LINK_PARAMS}
+                            to={Routes.scpEdit(LINK_PARAMS)}
                             className='btn btn-primary btn-disabled'>
                             <Icon name='edit' /> Edit {scopeId}
                         </Link>

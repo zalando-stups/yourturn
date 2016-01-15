@@ -1,6 +1,7 @@
 import React from 'react';
 import Icon from 'react-fa';
 import {Link} from 'react-router';
+import * as Routes from 'resource/src/routes';
 import Markdown from 'common/src/markdown.jsx';
 import 'common/asset/less/resource/scope-form.less';
 
@@ -42,18 +43,16 @@ class ScopeForm extends React.Component {
         // send it off to the store
         this.props.essentialsActions
         .saveScope(resourceId, scope.id, scope)
-            .then(() => {
-                // redirect back to the resource detail view
-                this.context.router.transitionTo(`/resource/detail/${resourceId}`);
-            })
-            .catch(() => {
-                let verb = this.props.edit ? 'update' : 'create';
-                this.props.notificationActions
-                .addNotification(
-                    `Could not ${verb} scope ${scope.id} for resource ${resource.name}.`,
-                    'error'
-                );
-            });
+        // redirect back to the resource detail view
+        .then(() => this.context.router.push(Routes.resDetail({ resourceId})))
+        .catch(() => {
+            let verb = this.props.edit ? 'update' : 'create';
+            this.props.notificationActions
+            .addNotification(
+                `Could not ${verb} scope ${scope.id} for resource ${resource.name}.`,
+                'error'
+            );
+        });
     }
 
     render() {
@@ -68,19 +67,16 @@ class ScopeForm extends React.Component {
                     <h2>
                         {edit ?
                             <span>Edit <Link
-                                            to='resource-resDetail'
-                                            params={LINK_PARAMS}>
+                                            to={Routes.resDetail(LINK_PARAMS)}>
                                             {resource.id || resourceId}
                                         </Link>.<Link
-                                            to='resource-scpDetail'
-                                            params={LINK_PARAMS}>
+                                            to={Routes.scpDetail(LINK_PARAMS)}>
                                             {scope.id || scopeId}
                                         </Link>
                             </span>
                             :
                             <span>Create new scope for <Link
-                                                            to='resource-resDetail'
-                                                            params={LINK_PARAMS}>
+                                                            to={Routes.resDetail(LINK_PARAMS)}>
                                                             {resource.id || resourceId}
                                                         </Link>
                             </span>}
@@ -88,16 +84,14 @@ class ScopeForm extends React.Component {
                     <div className='btn-group'>
                         {edit ?
                             <Link
-                                to='resource-scpDetail'
-                                className='btn btn-default'
-                                params={LINK_PARAMS}>
+                                to={Routes.scpDetail(LINK_PARAMS)}
+                                className='btn btn-default'>
                                 <Icon name='chevron-left' /> {resource.id}.{scope.id}
                             </Link>
                             :
                             <Link
-                                to='resource-resDetail'
-                                className='btn btn-default'
-                                params={LINK_PARAMS}>
+                                to={Routes.resDetail(LINK_PARAMS)}
+                                className='btn btn-default'>
                                 <Icon name='chevron-left' /> {resource.name}
                             </Link>}
                     </div>
@@ -250,15 +244,15 @@ class ScopeForm extends React.Component {
 }
 ScopeForm.displayName = 'ScopeForm';
 ScopeForm.propTypes = {
-    scopeId: React.PropTypes.string.isRequired,
+    scopeId: React.PropTypes.string,
     resourceId: React.PropTypes.string.isRequired,
-    edit: React.PropTypes.bool,
+    edit: React.PropTypes.bool.isRequired,
     essentialsActions: React.PropTypes.object.isRequired,
     notificationActions: React.PropTypes.object.isRequired,
     essentialsStore: React.PropTypes.object.isRequired
 };
 ScopeForm.contextTypes = {
-    router: React.PropTypes.func.isRequired
+    router: React.PropTypes.object
 };
 
 export default ScopeForm;

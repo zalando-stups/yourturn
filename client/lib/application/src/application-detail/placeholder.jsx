@@ -1,6 +1,7 @@
 import React from 'react';
 import Icon from 'react-fa';
 import {Link} from 'react-router';
+import * as Routes from 'application/src/routes';
 
 class ApplicationDetailPlaceholder extends React.Component {
     constructor() {
@@ -13,36 +14,32 @@ class ApplicationDetailPlaceholder extends React.Component {
             applicationId: applicationId
         };
         return <div className='applicationDetail u-placeholder'>
-                    <h1>{{applicationId}}</h1>
+                    <h1>{applicationId}</h1>
 
                     <div className='btn-group'>
                         <Link
-                            to='application-appList'
+                            to={Routes.appList(LINK_PARAMS)}
                             className='btn btn-default'>
                             <Icon name='chevron-left' /> Applications
                         </Link>
                         <Link
-                            to='application-appEdit'
-                            className='btn btn-default btn-disabled'
-                            params={LINK_PARAMS}>
+                            to={Routes.appEdit(LINK_PARAMS)}
+                            className='btn btn-default btn-disabled'>
                             <Icon name='pencil' /> Edit {applicationId}
                         </Link>
                         <Link
-                            to='application-appOAuth'
-                            className='btn btn-default'
-                            params={LINK_PARAMS}>
+                            to={Routes.appOAuth(LINK_PARAMS)}
+                            className='btn btn-default'>
                             <Icon name='plug' /> OAuth Client
                         </Link>
                         <Link
-                            to='application-appAccess'
-                            className='btn btn-default'
-                            params={LINK_PARAMS}>
+                            to={Routes.appAccess(LINK_PARAMS)}
+                            className='btn btn-default'>
                             <Icon name='key' /> Access Control
                         </Link>
                         <Link
-                            to='application-verList'
-                            className='btn btn-primary'
-                            params={LINK_PARAMS}>
+                            to={Routes.verList(LINK_PARAMS)}
+                            className='btn btn-primary'>
                             <Icon name='list' /> Versions
                         </Link>
                     </div>
@@ -115,8 +112,7 @@ class ApplicationDetailPlaceholder extends React.Component {
                                     </div>
 
                                     <Link
-                                        to='application-verCreate'
-                                        params={LINK_PARAMS}
+                                        to={Routes.verCreate(LINK_PARAMS)}
                                         className='btn btn-default applicationDetail-newVersion btn-disabled'>
                                         <Icon name='plus' /> New version
                                     </Link>
@@ -134,8 +130,5 @@ class ApplicationDetailPlaceholder extends React.Component {
 ApplicationDetailPlaceholder.displayName = 'ApplicationDetailPlaceholder';
 ApplicationDetailPlaceholder.propTypes = {
     applicationId: React.PropTypes.string.isRequired
-};
-ApplicationDetailPlaceholder.contextTypes = {
-    router: React.PropTypes.func.isRequired
 };
 export default ApplicationDetailPlaceholder;

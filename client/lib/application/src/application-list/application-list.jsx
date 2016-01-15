@@ -4,6 +4,7 @@ import Icon from 'react-fa';
 import AccountAppList from './account-app-list.jsx';
 import {Tabs, TabPanel, TabList, Tab} from 'react-tabs';
 import {Link} from 'react-router';
+import * as Routes from 'application/src/routes';
 import _ from 'lodash';
 import 'common/asset/less/application/application-list.less';
 import 'common/asset/less/common/tabs.less';
@@ -64,7 +65,7 @@ class ApplicationList extends React.Component {
                     <h2 className='applicationList-headline'>Applications</h2>
                     <div className='btn-group'>
                         <Link
-                            to='application-appCreate'
+                            to={Routes.appCreate()}
                             className='btn btn-primary'>
                             <Icon name='plus' /> Create Application
                         </Link>
@@ -100,9 +101,9 @@ class ApplicationList extends React.Component {
                             onSelect={this._selectTab.bind(this)}
                             selectedIndex={this.state.selectedTab}>
                             <TabList>
-                                {userAccIds.map(acc => <Tab>{acc}</Tab>)}
+                                {userAccIds.map(acc => <Tab key={acc}>{acc}</Tab>)}
                             </TabList>
-                            {userAccIds.map(acc => <TabPanel>
+                            {userAccIds.map(acc => <TabPanel key={acc}>
                                                         <AccountAppList
                                                             account={acc}
                                                             search={term}
@@ -137,10 +138,9 @@ class ApplicationList extends React.Component {
                                             className={'app ' + (other.active ? '' : 'is-inactive')}>
                                             <td>
                                                 <Link
-                                                    to='application-appDetail'
-                                                    params={{
+                                                    to={Routes.appDetail({
                                                         applicationId: other.id
-                                                    }}>
+                                                    })}>
                                                     {other.name}
                                                 </Link>
                                             </td>

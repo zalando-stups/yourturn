@@ -2,10 +2,10 @@ import React from 'react';
 import Icon from 'react-fa';
 import _ from 'lodash';
 import {Link} from 'react-router';
+import * as Routes from 'application/src/routes';
 import OAuthSyncInfo from 'application/src/oauth-sync-info.jsx';
 import ScopeList from 'application/src/scope-list.jsx';
 import EditableList from 'application/src/editable-list.jsx';
-import {constructLocalUrl} from 'common/src/data/services';
 import 'common/asset/less/application/access-form.less';
 import MINT_BUCKET_TEMPLATE from 'MINT_BUCKET_TEMPLATE';
 
@@ -65,7 +65,7 @@ class AccessForm extends React.Component {
 
         this.props.mintActions
         .saveOAuthConfig(applicationId, oauthConfig)
-        .then(() => this.context.router.transitionTo(constructLocalUrl('application', [applicationId])))
+        .then(() => this.context.router.push(Routes.appDetail({ applicationId })))
         .catch(e => {
             this.props.notificationActions
             .addNotification(
@@ -88,17 +88,14 @@ class AccessForm extends React.Component {
 
         return <div className='accessForm'>
                     <h2>
-                        <Link
-                            to='application-appDetail'
-                            params={LINK_PARAMS}>
+                        <Link to={Routes.appDetail(LINK_PARAMS)}>
                             {application.name}
                         </Link> Access Control
                     </h2>
                     <div className='btn-group'>
                         <Link
-                            to='application-appDetail'
-                            className='btn btn-default'
-                            params={LINK_PARAMS}>
+                            to={Routes.appDetail(LINK_PARAMS)}
+                            className='btn btn-default'>
                             <Icon name='chevron-left' /> {application.name}
                         </Link>
                     </div>
@@ -175,7 +172,7 @@ AccessForm.propTypes = {
     essentialsStore: React.PropTypes.object.isRequired
 };
 AccessForm.contextTypes = {
-    router: React.PropTypes.func.isRequired
+    router: React.PropTypes.object
 };
 
 export default AccessForm;

@@ -1,6 +1,7 @@
 import React from 'react';
 import Icon from 'react-fa';
 import {Link} from 'react-router';
+import * as Routes from 'application/src/routes';
 import 'common/asset/less/application/version-detail.less';
 
 class VersionFormPlaceholder extends React.Component {
@@ -17,29 +18,25 @@ class VersionFormPlaceholder extends React.Component {
         return <div className='versionDetail u-placeholder'>
                     <h2>
                         <Link
-                            to='application-appDetail'
-                            params={LINK_PARAMS}>
+                            to={Routes.appDetail(LINK_PARAMS)}>
                             {applicationId}
                         </Link> <span className='versionDetail-versionId'>{versionId}</span>
                     </h2>
 
                     <div className='btn-group'>
                         <Link
-                            to='application-appDetail'
-                            className='btn btn-default'
-                            params={LINK_PARAMS}>
+                            to={Routes.appDetail(LINK_PARAMS)}
+                            className='btn btn-default'>
                             <Icon name='chevron-left' /> {applicationId} versions
                         </Link>
                         <Link
-                            to='application-verEdit'
-                            className='btn btn-default'
-                            params={LINK_PARAMS}>
+                            to={Routes.verEdit(LINK_PARAMS)}
+                            className='btn btn-default'>
                             <Icon name='edit' /> Edit {versionId}
                         </Link>
                         <Link
-                            to='application-verApproval'
-                            className='btn btn-primary'
-                            params={LINK_PARAMS}>
+                            to={Routes.verApproval(LINK_PARAMS)}
+                            className='btn btn-primary'>
                             <Icon name='check' /> Approvals <span className='badge'>0</span>
                         </Link>
                     </div>
@@ -71,9 +68,6 @@ VersionFormPlaceholder.displayName = 'VersionFormPlaceholder';
 VersionFormPlaceholder.propTypes = {
     applicationId: React.PropTypes.string.isRequired,
     versionId: React.PropTypes.string
-};
-VersionFormPlaceholder.contextTypes = {
-    router: React.PropTypes.func.isRequired
 };
 
 export default VersionFormPlaceholder;

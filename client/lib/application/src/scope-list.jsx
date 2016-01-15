@@ -76,7 +76,7 @@ class OwnerScopeList extends React.Component {
                                         .filter(s => s.resource_type_id === rt)
                                         .map(
                                             scope =>
-                                                <div data-block='scope-list-item'>
+                                                <div key={scope.scope_id} data-block='scope-list-item'>
                                                     <label>
                                                         <input
                                                             checked={

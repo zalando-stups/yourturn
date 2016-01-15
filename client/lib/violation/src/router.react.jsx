@@ -1,5 +1,5 @@
 import React from 'react';
-import {Route, DefaultRoute} from 'react-router';
+import {Route, IndexRoute} from 'react-router';
 import moment from 'moment';
 import Icon from 'react-fa';
 import lzw from 'lz-string';
@@ -232,9 +232,9 @@ ViolationShortUrlHandler.contextTypes = {
 
 const ROUTES =
     <Route name='violation' path='violation'>
-        <DefaultRoute handler={ConnectedViolationHandler} />
-        <Route name='violation-short' path='v/:shortened' handler={ViolationShortUrlHandler} />
-        <Route name='violation-vioDetail' path=':violationId' handler={ConnectedViolationDetailHandler} />
+        <IndexRoute component={ConnectedViolationHandler} />
+        <Route name='violation-short' path='v/:shortened' component={ViolationShortUrlHandler} />
+        <Route name='violation-vioDetail' path=':violationId' component={ConnectedViolationDetailHandler} />
     </Route>;
 
 export default ROUTES;

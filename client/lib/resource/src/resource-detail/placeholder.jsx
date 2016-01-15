@@ -1,6 +1,7 @@
 import React from 'react';
 import Icon from 'react-fa';
 import {Link} from 'react-router';
+import * as Routes from 'resource/src/routes';
 import 'common/asset/less/resource/resource-detail.less';
 
 class ResourceDetailPlaceholder extends React.Component {
@@ -17,19 +18,17 @@ class ResourceDetailPlaceholder extends React.Component {
                     <h2>{resourceId}</h2>
                     <div className='btn-group'>
                         <Link
-                            to='resource-resList'
+                            to={Routes.resList(LINK_PARAMS)}
                             className='btn btn-default'>
                             <Icon name='chevron-left' /> Resource Types
                         </Link>
                         <Link
-                            to='resource-resEdit'
-                            params={LINK_PARAMS}
+                            to={Routes.resEdit(LINK_PARAMS)}
                             className='btn btn-default btn-disabled'>
                             <Icon name='edit' /> Edit {resourceId}
                         </Link>
                         <Link
-                            to='resource-scpCreate'
-                            params={LINK_PARAMS}
+                            to={Routes.scpCreate(LINK_PARAMS)}
                             className='btn btn-default btn-disabled'>
                             <Icon name='plus' /> Create Scope
                         </Link>
@@ -80,9 +79,6 @@ class ResourceDetailPlaceholder extends React.Component {
 ResourceDetailPlaceholder.displayName = 'ResourceDetailPlaceholder';
 ResourceDetailPlaceholder.propTypes = {
     resourceId: React.PropTypes.string.isRequired
-};
-ResourceDetailPlaceholder.contextTypes = {
-    router: React.PropTypes.func.isRequired
 };
 
 export default ResourceDetailPlaceholder;

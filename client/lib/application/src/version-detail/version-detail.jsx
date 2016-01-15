@@ -1,6 +1,7 @@
 import React from 'react';
 import Icon from 'react-fa';
 import {Link} from 'react-router';
+import * as Routes from 'application/src/routes';
 import Timestamp from 'react-time';
 import Config from 'common/src/config';
 import ScmSourceWarning from './scm-source-warning.jsx';
@@ -109,29 +110,25 @@ class VersionDetail extends React.Component {
         return <div className='versionDetail'>
                     <h2>
                         <Link
-                            to='application-appDetail'
-                            params={LINK_PARAMS}>
+                            to={Routes.appDetail(LINK_PARAMS)}>
                             {application.name || applicationId}
                         </Link> <span className='versionDetail-versionId'>{version.id}</span>
                     </h2>
 
                     <div className='btn-group'>
                         <Link
-                            to='application-verList'
-                            className='btn btn-default'
-                            params={LINK_PARAMS}>
+                            to={Routes.verList(LINK_PARAMS)}
+                            className='btn btn-default'>
                             <Icon name='chevron-left' /> {application.name || applicationId} versions
                         </Link>
                         <Link
-                            to='application-verEdit'
-                            className={`btn btn-default ${isOwnApplication ? '' : 'btn-disabled'}`}
-                            params={LINK_PARAMS}>
+                            to={Routes.verEdit(LINK_PARAMS)}
+                            className={`btn btn-default ${isOwnApplication ? '' : 'btn-disabled'}`}>
                             <Icon name='edit' /> Edit {versionId}
                         </Link>
                         <Link
-                            to='application-verApproval'
-                            className='btn btn-primary'
-                            params={LINK_PARAMS}>
+                            to={Routes.verApproval(LINK_PARAMS)}
+                            className='btn btn-primary'>
                             <Icon name='edit' /> Approvals <Badge>{approvals.length}</Badge>
                         </Link>
                     </div>
@@ -180,9 +177,6 @@ VersionDetail.displayName = 'VersionDetail';
 VersionDetail.propTypes = {
     applicationId: React.PropTypes.string.isRequired,
     versionId: React.PropTypes.string.isRequired
-};
-VersionDetail.contextTypes = {
-    router: React.PropTypes.func.isRequired
 };
 
 export default VersionDetail;

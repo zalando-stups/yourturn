@@ -169,7 +169,7 @@ class Violation extends React.Component {
                 params[k] = params[k].toISOString();
             }
         });
-        context.router.transitionTo('violation', {}, merge(context.router.getCurrentQuery(), params));
+        context.router.transitionTo('/violation', {}, merge(context.router.getCurrentQuery(), params));
     }
 
     render() {

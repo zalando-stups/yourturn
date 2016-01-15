@@ -1,6 +1,7 @@
 import React from 'react';
 import Icon from 'react-fa';
 import {Link} from 'react-router';
+import * as Routes from 'application/src/routes';
 import 'common/asset/less/application/version-list.less';
 
 class VersionList extends React.Component {
@@ -29,21 +30,18 @@ class VersionList extends React.Component {
         return <div className='versionList'>
                     <h2>
                         <Link
-                            to='application-appDetail'
-                            params={LINK_PARAMS}>
+                            to={Routes.appDetail(LINK_PARAMS)}>
                             {application.name || applicationId}
                         </Link> versions
                     </h2>
                     <div className='btn-group'>
                         <Link
-                            to='application-appDetail'
-                            params={LINK_PARAMS}
+                            to={Routes.appDetail(LINK_PARAMS)}
                             className='btn btn-default'>
                             <Icon name='chevron-left' /> {application.name || applicationId}
                         </Link>
                         <Link
-                            to='application-verCreate'
-                            params={LINK_PARAMS}
+                            to={Routes.verCreate(LINK_PARAMS)}
                             disabled={!isOwnApplication}
                             className='btn btn-primary'>
                             <Icon name='plus' /> Create new version
@@ -74,19 +72,17 @@ class VersionList extends React.Component {
                                     v =>
                                         <div key={v.id}>
                                             <Link
-                                                to='application-verApproval'
-                                                className='btn btn-default btn-small'
-                                                params={{
+                                                to={Routes.verApproval({
                                                     applicationId: applicationId,
                                                     versionId: v.id
-                                                }}>
+                                                })}
+                                                className='btn btn-default btn-small'>
                                                 <Icon name='check' />
                                             </Link> <Link
-                                                to='application-verDetail'
-                                                params={{
+                                                to={Routes.verDetail({
                                                     applicationId: applicationId,
                                                     versionId: v.id
-                                                }}>
+                                                })}>
                                                 {v.id}
                                             </Link>
                                         </div>)}

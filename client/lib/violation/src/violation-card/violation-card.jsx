@@ -43,10 +43,7 @@ class ViolationCard extends React.Component {
                     <header>
                         <div className='violationCard-id'>
                             <Link
-                                to='violation-vioDetail'
-                                params={{
-                                    violationId: violation.id
-                                }}>{violation.id}
+                                to={`/violation/${violation.id}`}>{violation.id}
                             </Link>
                         </div>
                         <div>

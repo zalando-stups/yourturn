@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import * as UserGetter from 'common/src/data/user/user-getter';
+import REDUX from 'yourturn/src/redux';
 
 function requireAccounts(state, userActions) {
     if (!UserGetter.getUserCloudAccounts(state.user).length) {
@@ -54,6 +55,29 @@ function bindActionsToStore(store, actions) {
             {});
 }
 
+function noop() {};
+
+function wrapEnter(fetchFn, authFn = noop) {
+    return function(routerState, replaceStateFn, callback) {
+        var state = REDUX.getState(),
+            fetch = fetchFn(routerState, state);
+        Promise
+        .resolve(fetch)
+        .then(() => {
+            let auth = authFn(routerState, state);
+            Promise
+            .resolve(auth)
+            .then(() => callback())
+            .catch(e => {
+                throw e;
+            });
+        })
+        .catch(e => {
+            throw e
+        });
+    }
+}
+
 function merge(dest, src) {
     let result = dest || {};
     Object
@@ -69,6 +93,7 @@ export {
     requireAccounts,
     createActionTypes,
     merge,
+    wrapEnter,
     bindActionsToStore,
     bindGettersToState
 };

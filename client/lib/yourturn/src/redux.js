@@ -2,6 +2,8 @@
 import {createRedux, applyMiddleware, combineReducers, createStore} from 'redux';
 import thunk from 'redux-thunk';
 import createLogger from 'redux-logger';
+import {createHistory} from 'history';
+import {syncHistory, routeReducer} from 'redux-simple-router';
 import {
     reduxPromiseMiddleware,
     flummoxCompatMiddleware,
@@ -30,9 +32,12 @@ const logger = createLogger(),
         essentials: EssentialsStore,
         fullstop: FullstopStore,
         team: TeamStore,
-        search: SearchStore
+        search: SearchStore,
+        routing: routeReducer
     }),
+    history = createHistory(),
     createWithMiddleware = applyMiddleware(
+                            syncHistory(history),
                             // thunk
                             thunk,
                             // allows to dispatch actions based on the result of another actoin

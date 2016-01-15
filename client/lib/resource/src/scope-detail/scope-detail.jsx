@@ -1,6 +1,8 @@
 import React from 'react';
 import Icon from 'react-fa';
 import {Link} from 'react-router';
+import * as Routes from 'resource/src/routes';
+import * as AppRoutes from 'application/src/routes';
 import Markdown from 'common/src/markdown.jsx';
 import Placeholder from './placeholder.jsx';
 import FetchResult from 'common/src/fetch-result';
@@ -31,21 +33,18 @@ class ScopeDetail extends React.Component {
         return <div className='scopeDetail'>
                     <h2>
                         <Link
-                            to='resource-resDetail'
-                            params={LINK_PARAMS}>
+                            to={Routes.resDetail(LINK_PARAMS)}>
                             {resourceId}
                         </Link>.{scope.id || scopeId}
                     </h2>
                     <div className='btn-group'>
                         <Link
-                            to='resource-resDetail'
-                            params={LINK_PARAMS}
+                            to={Routes.resDetail(LINK_PARAMS)}
                             className='btn btn-default'>
                             <Icon name='chevron-left' /> {resourceId}
                         </Link>
                         <Link
-                            to='resource-scpEdit'
-                            params={LINK_PARAMS}
+                            to={Routes.scpEdit(LINK_PARAMS)}
                             className={`btn btn-primary ${whitelisted ? '' : 'btn-disabled'}`}>
                             <Icon name='edit' /> Edit {scope.id || scopeId}
                         </Link>
@@ -81,10 +80,9 @@ class ScopeDetail extends React.Component {
                                             {applications.map(
                                                 app => <li key={app.id}>
                                                             <Link
-                                                                to='application-appDetail'
-                                                                params={{
+                                                                to={AppRoutes.appDetail({
                                                                     applicationId: app.id
-                                                                }}>
+                                                                })}>
                                                                 {app.id}
                                                             </Link>
                                                         </li>)}

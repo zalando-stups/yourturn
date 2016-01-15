@@ -1,8 +1,12 @@
 import React from 'react';
-import {Route, DefaultRoute} from 'react-router';
+import {Route, IndexRoute} from 'react-router';
 import {parseArtifact} from 'application/src/util';
 import REDUX from 'yourturn/src/redux';
-import {requireAccounts, bindGettersToState, bindActionsToStore} from 'common/src/util';
+import {
+    wrapEnter,
+    requireAccounts,
+    bindGettersToState,
+    bindActionsToStore} from 'common/src/util';
 import {connect} from 'react-redux';
 
 import * as KioGetter from 'common/src/data/kio/kio-getter';
@@ -421,6 +425,7 @@ class ApprovalFormHandler extends React.Component {
                     applicationId={this.props.params.applicationId}
                     versionId={this.props.params.versionId}
                     kioActions={KIO_ACTIONS}
+                    notificationActions={NOTIFICATION_ACTIONS}
                     {...this.props} />;
     }
 }
@@ -450,20 +455,51 @@ let ConnectedApprovalFormHandler = connect(state => ({
 }))(ApprovalFormHandler);
 
 const ROUTES =
-        <Route name='application-appList' path='application'>
-            <DefaultRoute handler={ConnectedAppListHandler} />
-            <Route name='application-appCreate' path='create' handler={ConnectedCreateAppFormHandler} />
-            <Route name='application-appEdit' path='edit/:applicationId' handler={ConnectedEditAppFormHandler} />
-            <Route name='application-appOAuth' path='oauth/:applicationId' handler={ConnectedOAuthFormHandler} />
-            <Route name='application-appAccess' path='access-control/:applicationId' handler={ConnectedAccessFormHandler} />
-            <Route name='application-appDetail' path='detail/:applicationId'>
-                <DefaultRoute handler={ConnectedAppDetailHandler} />
-                <Route name='application-verList' path='version'>
-                    <DefaultRoute handler={ConnectedVersionListHandler} />
-                    <Route name='application-verCreate' path='create' handler={ConnectedCreateVersionFormHandler} />
-                    <Route name='application-verApproval' path='approve/:versionId' handler={ConnectedApprovalFormHandler} />
-                    <Route name='application-verDetail' path='detail/:versionId' handler={ConnectedVersionDetailHandler} />
-                    <Route name='application-verEdit' path='edit/:versionId' handler={ConnectedEditVersionFormHandler} />
+        <Route path='application'>
+            <IndexRoute
+                onEnter={wrapEnter(AppListHandler.fetchData)}
+                component={ConnectedAppListHandler} />
+            <Route
+                path='create'
+                onEnter={wrapEnter(CreateAppFormHandler.fetchData)}
+                component={ConnectedCreateAppFormHandler} />
+            <Route
+                path='edit/:applicationId'
+                onEnter={wrapEnter(EditAppFormHandler.fetchData, EditAppFormHandler.isAllowed)}
+                component={ConnectedEditAppFormHandler} />
+            <Route
+                path='oauth/:applicationId'
+                onEnter={wrapEnter(OAuthFormHandler.fetchData, OAuthFormHandler.isAllowed)}
+                component={ConnectedOAuthFormHandler} />
+            <Route
+                path='access-control/:applicationId'
+                onEnter={wrapEnter(AccessFormHandler.fetchData, AccessFormHandler.isAllowed)}
+                component={ConnectedAccessFormHandler} />
+            <Route
+                path='detail/:applicationId'>
+                <IndexRoute
+                    onEnter={wrapEnter(AppDetailHandler.fetchData)}
+                    component={ConnectedAppDetailHandler} />
+                <Route path='version'>
+                    <IndexRoute
+                        onEnter={wrapEnter(VersionListHandler.fetchData)}
+                        component={ConnectedVersionListHandler} />
+                    <Route
+                        path='create'
+                        onEnter={wrapEnter(CreateVersionFormHandler.fetchData, CreateVersionFormHandler.isAllowed)}
+                        component={ConnectedCreateVersionFormHandler} />
+                    <Route
+                        path='approve/:versionId'
+                        onEnter={wrapEnter(ApprovalFormHandler.fetchData, ApprovalFormHandler.isAllowed)}
+                        component={ConnectedApprovalFormHandler} />
+                    <Route
+                        path='detail/:versionId'
+                        onEnter={wrapEnter(VersionDetailHandler.fetchData)}
+                        component={ConnectedVersionDetailHandler} />
+                    <Route
+                        path='edit/:versionId'
+                        onEnter={wrapEnter(EditVersionFormHandler.fetchData, EditVersionFormHandler.isAllowed)}
+                        component={ConnectedEditVersionFormHandler} />
                 </Route>
             </Route>
         </Route>;

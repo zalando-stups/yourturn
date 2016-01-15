@@ -1,8 +1,8 @@
 import React from 'react';
 import Icon from 'react-fa';
 import {Link} from 'react-router';
+import * as Routes from 'resource/src/routes';
 import Markdown from 'common/src/markdown.jsx';
-import {constructLocalUrl} from 'common/src/data/services';
 import 'common/asset/less/resource/resource-form.less';
 
 class ResourceForm extends React.Component {
@@ -40,10 +40,8 @@ class ResourceForm extends React.Component {
         // save the resource
         this.props.essentialsActions
         .saveResource(resource.id, resource)
-        .then(() => {
-            // redirect to detail view of the resource
-            this.context.router.transitionTo(constructLocalUrl('resource-type', [resource.id]));
-        })
+        // redirect to detail view of the resource
+        .then(() => this.context.router.push(Routes.resDetail({resourceId: resource.id})))
         .catch(err => {
             this.props.notificationActions
             .addNotification(
@@ -70,21 +68,20 @@ class ResourceForm extends React.Component {
         return <div className='resourceForm'>
                     <h2>
                         {edit ?
-                            <span>Edit <Link to='resource-resDetail' params={LINK_PARAMS}>{resource.name}</Link></span>
+                            <span>Edit <Link to={Routes.resDetail(LINK_PARAMS)}>{resource.name}</Link></span>
                             :
-                            <span>Create a new <Link to='resource-resList'>Resource Type</Link></span>}
+                            <span>Create a new <Link to={Routes.resList(LINK_PARAMS)}>Resource Type</Link></span>}
                     </h2>
                     <div className='btn-group'>
                         {edit ?
                             <Link
-                                to='resource-resDetail'
-                                params={LINK_PARAMS}
+                                to={Routes.resDetail(LINK_PARAMS)}
                                 className='btn btn-default'>
                                 <Icon name='chevron-left' /> {resource.name}
                             </Link>
                             :
                             <Link
-                                to='resource-resList'
+                                to={Routes.resList(LINK_PARAMS)}
                                 className='btn btn-default'>
                                 <Icon name='chevron-left' /> Resource Types
                             </Link>}
@@ -199,14 +196,14 @@ class ResourceForm extends React.Component {
 }
 ResourceForm.displayName = 'ResourceForm';
 ResourceForm.propTypes = {
-    edit: React.PropTypes.bool,
-    resourceId: React.PropTypes.string.isRequired,
+    edit: React.PropTypes.bool.isRequired,
+    resourceId: React.PropTypes.string,
     essentialsStore: React.PropTypes.object.isRequired,
     essentialsActions: React.PropTypes.object.isRequired,
     notificationActions: React.PropTypes.object.isRequired
 };
 ResourceForm.contextTypes = {
-    router: React.PropTypes.func.isRequired
+    router: React.PropTypes.object
 };
 
 export default ResourceForm;
