@@ -60,11 +60,11 @@ function noop() {};
 function wrapEnter(fetchFn, authFn = noop) {
     return function(routerState, replaceStateFn, callback) {
         var state = REDUX.getState(),
-            fetch = fetchFn(routerState, state);
+            fetch = fetchFn(routerState, state, replaceStateFn);
         Promise
         .resolve(fetch)
         .then(() => {
-            let auth = authFn(routerState, state);
+            let auth = authFn(routerState, state, replaceStateFn);
             Promise
             .resolve(auth)
             .then(() => callback())

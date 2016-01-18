@@ -9,7 +9,12 @@ import Violation from './violation/violation.jsx';
 import ViolationDetail from './violation-detail/violation-detail.jsx';
 
 import REDUX from 'yourturn/src/redux';
-import {requireAccounts, bindGettersToState, bindActionsToStore} from 'common/src/util';
+import {
+    requireAccounts,
+    bindGettersToState,
+    wrapEnter,
+    bindActionsToStore
+} from 'common/src/util';
 import {connect} from 'react-redux';
 
 import * as UserGetter from 'common/src/data/user/user-getter';
@@ -80,69 +85,74 @@ class ViolationHandler extends React.Component {
     }
 }
 ViolationHandler.displayName = 'ViolationHandler';
-ViolationHandler.willTransitionTo = function(transition, params, query) {
+
+
+/**
+ * TODO redirect loop here because query params do not get updated
+ * possibly due to wrapEnter and promises?
+ */
+ViolationHandler.fetchData = function(routerState, state, replaceStateFn) {
+    // check all query params are in place
     // save last visited date
     FULLSTOP_ACTIONS.saveLastVisited(Date.now());
-    let state = REDUX.getState(),
-        defaultParams = FullstopGetter.getDefaultSearchParams(),
-        queryParams = parseQueryParams(query),
+    let defaultParams = FullstopGetter.getDefaultSearchParams(),
+        queryParams = parseQueryParams(routerState.location.query),
         searchParams = FullstopGetter.getSearchParams(state.fullstop),
         selectedAccounts = UserGetter.getUserCloudAccounts(state.user), // these the user has access to
         {accounts} = searchParams; // these accounts are selected and active
 
-    // break infinite transition loop
-    if (query.activeTab &&
-        query.showUnresolved &&
-        query.showResolved &&
-        query.sortAsc &&
-        query.from &&
-        query.to) {
-        return;
+    if (!routerState.location.query.activeTab &&
+        !routerState.location.query.showUnresolved &&
+        !routerState.location.query.showResolved &&
+        !routerState.location.query.sortAsc &&
+        !routerState.location.query.from &&
+        !routerState.location.query.to) {
+
+        // ensure default params are in url
+        if (!queryParams.activeTab) {
+            queryParams.activeTab = defaultParams.activeTab;
+        }
+        if (!queryParams.accounts) {
+            // this might or might not have an effect since transition hook is fired before fetchData
+            Array.prototype.push.apply(accounts, selectedAccounts.map(a => a.id));
+        }
+        if (!queryParams.showUnresolved && !queryParams.showResolved) {
+            // query might not be empty (this is only the case when accessing via menubar)
+            // but still have parameters missing
+            // so we add the default ones
+            queryParams.showUnresolved = defaultParams.showUnresolved;
+            queryParams.showResolved = defaultParams.showResolved;
+        }
+        if (!queryParams.sortAsc) {
+            queryParams.sortAsc = defaultParams.sortAsc;
+        }
+        if (!queryParams.from) {
+            queryParams.from = defaultParams.from.toISOString();
+        } else {
+            queryParams.from = queryParams.from.toISOString();
+        }
+        if (!queryParams.to) {
+            queryParams.to = defaultParams.to.toISOString();
+        } else {
+            queryParams.to = queryParams.to.toISOString();
+        }
+        replaceStateFn({
+            query: queryParams
+        });
+        return Promise.resolve();
     }
 
-    // ensure default params are in url
-    if (!queryParams.activeTab) {
-        queryParams.activeTab = defaultParams.activeTab;
-    }
-    if (!queryParams.accounts) {
-        // this might or might not have an effect since transition hook is fired before fetchData
-        Array.prototype.push.apply(accounts, selectedAccounts.map(a => a.id));
-    }
-    if (!queryParams.showUnresolved && !queryParams.showResolved) {
-        // query might not be empty (this is only the case when accessing via menubar)
-        // but still have parameters missing
-        // so we add the default ones
-        queryParams.showUnresolved = defaultParams.showUnresolved;
-        queryParams.showResolved = defaultParams.showResolved;
-    }
-    if (!queryParams.sortAsc) {
-        queryParams.sortAsc = defaultParams.sortAsc;
-    }
-    if (!queryParams.from) {
-        queryParams.from = defaultParams.from.toISOString();
-    } else {
-        queryParams.from = queryParams.from.toISOString();
-    }
-    if (!queryParams.to) {
-        queryParams.to = defaultParams.to.toISOString();
-    } else {
-        queryParams.to = queryParams.to.toISOString();
-    }
-    transition.redirect('violation', {}, queryParams);
-};
-ViolationHandler.fetchData = function(routerState, state) {
     let promises = [],
-        accounts = TeamGetter.getAccounts(state.team).length === 0 ?
-                    TEAM_ACTIONS.fetchAccounts() :
-                    Promise.resolve(TeamGetter.getAccounts(state.team)),
-        searchParams = parseQueryParams(routerState.query);
+        accountsPromise = TeamGetter.getAccounts(state.team).length === 0 ?
+                            TEAM_ACTIONS.fetchAccounts() :
+                            Promise.resolve(TeamGetter.getAccounts(state.team));
     FULLSTOP_ACTIONS.updateSearchParams(searchParams);
     // tab-specific loadings
     if (searchParams.activeTab === 0) {
         // tab 1
         FULLSTOP_ACTIONS.fetchViolationCount(searchParams);
         if (searchParams.accounts && searchParams.accounts.length) {
-            accounts.then(accs => {
+            accountsPromise.then(accs => {
                 searchParams.accounts.forEach(acc => {
                     // for every account
                     // get its name
@@ -231,10 +241,17 @@ ViolationShortUrlHandler.contextTypes = {
 };
 
 const ROUTES =
-    <Route name='violation' path='violation'>
-        <IndexRoute component={ConnectedViolationHandler} />
-        <Route name='violation-short' path='v/:shortened' component={ViolationShortUrlHandler} />
-        <Route name='violation-vioDetail' path=':violationId' component={ConnectedViolationDetailHandler} />
+    <Route path='violation'>
+        <IndexRoute
+            onEnter={wrapEnter(ViolationHandler.fetchData)}
+            component={ConnectedViolationHandler} />
+        <Route
+            path='v/:shortened'
+            component={ViolationShortUrlHandler} />
+        <Route
+            path=':violationId'
+            onEnter={wrapEnter(ViolationDetailHandler.fetchData)}
+            component={ConnectedViolationDetailHandler} />
     </Route>;
 
 export default ROUTES;

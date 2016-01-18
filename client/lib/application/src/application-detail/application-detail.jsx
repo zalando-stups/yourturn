@@ -68,7 +68,6 @@ class ApplicationDetail extends React.Component {
         };
 
         if (app instanceof FetchResult) {
-            // not working anymore ??????
             let child = app.isPending() ?
                     <Placeholder applicationId={applicationId} /> :
                     <DefaultError error={app.getResult()} />;

@@ -6,7 +6,8 @@ import {
     wrapEnter,
     requireAccounts,
     bindGettersToState,
-    bindActionsToStore} from 'common/src/util';
+    bindActionsToStore
+} from 'common/src/util';
 import {connect} from 'react-redux';
 
 import * as KioGetter from 'common/src/data/kio/kio-getter';
