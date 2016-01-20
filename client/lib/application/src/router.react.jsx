@@ -63,6 +63,8 @@ AppListHandler.fetchData = function(routerState, state) {
                 let preferredAcc = KioGetter.getPreferredAccount(state.kio);
                 if (!preferredAcc && accs[0]) {
                     preferredAcc = KIO_ACTIONS.savePreferredAccount(accs[0].name);
+                }
+                if (preferredAcc) {
                     // and fetch latest application versions for it
                     KIO_ACTIONS.fetchLatestApplicationVersions(preferredAcc);
                 }
