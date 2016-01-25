@@ -17,7 +17,7 @@ const requestConfig = {
 };
 
 function saveRoute(req) {
-    req.metadata.route = window.location.pathname;
+    req.metadata.route = window.location.pathname + window.location.search;
 }
 
 export {
