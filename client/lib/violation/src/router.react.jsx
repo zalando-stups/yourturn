@@ -77,6 +77,59 @@ class ViolationHandler extends React.Component {
     constructor() {
         super();
     }
+
+    componentWillReceiveProps(nextProps) {
+        let {location, fullstopStore, userStore} = nextProps,
+            searchParams = fullstopStore.getSearchParams(),
+            defaultParams = fullstopStore.getDefaultSearchParams(),
+            defaultAccounts = userStore.getUserCloudAccounts(),
+            queryParams = parseQueryParams(location.query),
+            {accounts} = searchParams;
+
+        if (!location.query.activeTab ||
+            !location.query.accounts ||
+            !location.query.showUnresolved ||
+            !location.query.showResolved ||
+            !location.query.sortAsc ||
+            !location.query.from ||
+            !location.query.to) {
+
+            // ensure default params are in url
+            if (!queryParams.activeTab) {
+                queryParams.activeTab = defaultParams.activeTab;
+            }
+            if (!queryParams.accounts) {
+                queryParams.accounts = [];
+                // this might or might not have an effect since transition hook is fired before fetchData
+                Array.prototype.push.apply(queryParams.accounts, defaultAccounts.map(a => a.id));
+            }
+            if (!queryParams.showUnresolved && !queryParams.showResolved) {
+                // query might not be empty (this is only the case when accessing via menubar)
+                // but still have parameters missing
+                // so we add the default ones
+                queryParams.showUnresolved = defaultParams.showUnresolved;
+                queryParams.showResolved = defaultParams.showResolved;
+            }
+            if (!queryParams.sortAsc) {
+                queryParams.sortAsc = defaultParams.sortAsc;
+            }
+            if (!queryParams.from) {
+                queryParams.from = defaultParams.from.toISOString();
+            } else {
+                queryParams.from = queryParams.from.toISOString();
+            }
+            if (!queryParams.to) {
+                queryParams.to = defaultParams.to.toISOString();
+            } else {
+                queryParams.to = queryParams.to.toISOString();
+            }
+            this.context.router.push({
+                pathname: '/violation',
+                query: queryParams
+            });
+        }
+    }
+
     render() {
         return <Violation
                     notificationActions={NOTIFICATION_ACTIONS}
@@ -95,52 +148,7 @@ ViolationHandler.fetchData = function(routerState, state, replaceStateFn) {
     // check all query params are in place
     // save last visited date
     FULLSTOP_ACTIONS.saveLastVisited(Date.now());
-    let defaultParams = FullstopGetter.getDefaultSearchParams(),
-        queryParams = parseQueryParams(routerState.location.query),
-        searchParams = FullstopGetter.getSearchParams(state.fullstop),
-        selectedAccounts = UserGetter.getUserCloudAccounts(state.user), // these the user has access to
-        {accounts} = searchParams; // these accounts are selected and active
-
-    if (!routerState.location.query.activeTab &&
-        !routerState.location.query.showUnresolved &&
-        !routerState.location.query.showResolved &&
-        !routerState.location.query.sortAsc &&
-        !routerState.location.query.from &&
-        !routerState.location.query.to) {
-
-        // ensure default params are in url
-        if (!queryParams.activeTab) {
-            queryParams.activeTab = defaultParams.activeTab;
-        }
-        if (!queryParams.accounts) {
-            // this might or might not have an effect since transition hook is fired before fetchData
-            Array.prototype.push.apply(accounts, selectedAccounts.map(a => a.id));
-        }
-        if (!queryParams.showUnresolved && !queryParams.showResolved) {
-            // query might not be empty (this is only the case when accessing via menubar)
-            // but still have parameters missing
-            // so we add the default ones
-            queryParams.showUnresolved = defaultParams.showUnresolved;
-            queryParams.showResolved = defaultParams.showResolved;
-        }
-        if (!queryParams.sortAsc) {
-            queryParams.sortAsc = defaultParams.sortAsc;
-        }
-        if (!queryParams.from) {
-            queryParams.from = defaultParams.from.toISOString();
-        } else {
-            queryParams.from = queryParams.from.toISOString();
-        }
-        if (!queryParams.to) {
-            queryParams.to = defaultParams.to.toISOString();
-        } else {
-            queryParams.to = queryParams.to.toISOString();
-        }
-        replaceStateFn({
-            query: queryParams
-        });
-        return Promise.resolve();
-    }
+    let searchParams = FullstopGetter.getSearchParams(state.fullstop);
 
     let promises = [],
         accountsPromise = TeamGetter.getAccounts(state.team).length === 0 ?
@@ -182,11 +190,8 @@ ViolationHandler.fetchData = function(routerState, state, replaceStateFn) {
     promises.push(requireAccounts(state, USER_ACTIONS));
     return Promise.all(promises);
 };
-ViolationHandler.propTypes = {
-    query: React.PropTypes.object.isRequired
-};
 ViolationHandler.contextTypes = {
-    router: React.PropTypes.func.isRequired
+    router: React.PropTypes.object
 };
 let ConnectedViolationHandler = connect(state => ({
     userStore: bindGettersToState(state.user, UserGetter),

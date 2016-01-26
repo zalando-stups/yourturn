@@ -10,7 +10,7 @@ class Infinity extends React.Component {
     }
 
     _scrollHandler() {
-        let rect = this.refs.container.getDOMNode().getBoundingClientRect(),
+        let rect = this.refs.container.getBoundingClientRect(),
             {innerHeight} = window;
 
         if (rect.bottom - (this.props.scrollOffset || 0) < innerHeight && this.props.hasMore) {
@@ -39,11 +39,10 @@ class Infinity extends React.Component {
     }
 }
 var {PropTypes} = React,
-    {func, number, array, object, bool} = PropTypes;
+    {func, number, object, bool} = PropTypes;
 Infinity.displayName = 'Infinity';
 Infinity.propTypes = {
     debounceMs: number,
-    children: PropTypes.oneOf([array, object]),
     scrollOffset: number,
     hasMore: bool,
     lastPage: number,

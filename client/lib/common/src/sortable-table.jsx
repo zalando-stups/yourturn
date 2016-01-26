@@ -1,4 +1,5 @@
 import React from 'react';
+import cloneWithProps from 'react-addons-clone-with-props';
 import Icon from 'react-fa';
 import Table from 'fixed-data-table';
 import _ from 'lodash';
@@ -107,10 +108,7 @@ class SortableTable extends React.Component {
                         rowsCount={displayedRows.length}
                         width={this.props.width || 500}
                         {...this.props}>
-                        {this.props.children.map(c => {
-                            c.props.headerRenderer = this._renderHeader.bind(this);
-                            return c;
-                        })}
+                        {React.Children.map(this.props.children, c => React.cloneElement(c, { headerRenderer: this._renderHeader.bind(this)}))}
                     </Table.Table>
                 </div>;
     }
@@ -119,7 +117,6 @@ SortableTable.displayName = 'SortableTable';
 SortableTable.propTypes = {
     width: React.PropTypes.number,
     filterExprFn: React.PropTypes.func,
-    helpText: React.PropTypes.string,
-    children: React.PropTypes.oneOf([React.PropTypes.array, React.PropTypes.object])
+    helpText: React.PropTypes.string
 };
 export default SortableTable;

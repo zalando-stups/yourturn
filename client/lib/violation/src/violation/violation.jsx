@@ -33,36 +33,9 @@ function sortDesc(a, b) {
 class Violation extends React.Component {
     constructor(props, context) {
         super();
-        // make initial list of accounts
-        let searchParams = props.fullstopStore.getSearchParams(),
-            selectableAccounts = props.teamStore.getAccounts(), // these we can in theory select
-            activeAccountIds = searchParams.accounts, // these are actively searched for
-            selectedAccounts = props.userStore.getUserCloudAccounts(); // these the user has access to
 
-        // situation:
-        // we want to preselect accounts that the user has access to
-        // BUT the accounts are not necessarily available when the transition hook from router is fired
-        // so we do another redirect here if necessary
-        if (!activeAccountIds.length) {
-            Array.prototype.push.apply(selectedAccounts, selectableAccounts.filter(a => activeAccountIds.indexOf(a.id) >= 0));
-            // deduplicate
-            selectedAccounts = selectedAccounts
-                                .reduce((accs, cur) => {
-                                    if (accs.map(a => a.id).indexOf(cur.id) < 0) {
-                                        accs.push(cur);
-                                    }
-                                    return accs;
-                                },
-                                []);
-            activeAccountIds = selectedAccounts.map(a => a.id);
-            context.router.transitionTo('violation', {}, merge(context.router.getCurrentQuery(), {
-                accounts: activeAccountIds
-            }));
-        } else {
-            selectedAccounts = selectableAccounts.filter(acc => activeAccountIds.indexOf(acc.id) >= 0);
-        }
         this.state = {
-            selectedAccounts
+            selectedAccounts: props.userStore.getUserCloudAccounts()
         };
     }
 
@@ -169,7 +142,7 @@ class Violation extends React.Component {
                 params[k] = params[k].toISOString();
             }
         });
-        context.router.transitionTo('/violation', {}, merge(context.router.getCurrentQuery(), params));
+        context.router.push('/violation', {}, merge(this.props.location.query, params));
     }
 
     render() {
@@ -182,8 +155,8 @@ class Violation extends React.Component {
             }, {}),
             teamAliase = this.props.teamStore.getAliase(),
             activeAccountIds = searchParams.accounts,
-            showingSince = searchParams.from.toDate(),
-            showingUntil = searchParams.to.toDate(),
+            showingSince = searchParams.from,
+            showingUntil = searchParams.to,
             // violations are sorted by id, kind of, if at all, by default
             violations = this.props.fullstopStore.getViolations()
                             .filter(v => !!v.id)    // remove fetch results
@@ -335,7 +308,7 @@ Violation.propTypes = {
     notificationActions: React.PropTypes.object.isRequired
 };
 Violation.contextTypes = {
-    router: React.PropTypes.func.isRequired
+    router: React.PropTypes.object
 };
 
 export default Violation;

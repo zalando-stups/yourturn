@@ -57,7 +57,7 @@ function bindActionsToStore(store, actions) {
 
 function noop() {};
 
-function wrapEnter(fetchFn, authFn = noop) {
+function wrapEnter(fetchFn = noop, authFn = noop) {
     return function(routerState, replaceStateFn, callback) {
         var state = REDUX.getState(),
             fetch = fetchFn(routerState, state, replaceStateFn);

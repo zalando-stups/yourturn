@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import Icon from 'react-fa';
 import {Link} from 'react-router';
 import * as Routes from 'resource/src/routes';
@@ -27,7 +28,7 @@ class ScopeForm extends React.Component {
     }
 
     setCustomValidity(evt) {
-        React.findDOMNode(evt.target).setCustomValidity(
+        ReactDOM.findDOMNode(evt.target).setCustomValidity(
             this.state.scopeIdTaken ?
                 'Scope ID is already taken' :
                 '');

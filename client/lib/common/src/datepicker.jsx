@@ -53,7 +53,7 @@ class Datepicker extends React.Component {
 }
 Datepicker.displayName = 'Datepicker';
 Datepicker.propTypes = {
-    selectedDay: React.PropTypes.date,
+    selectedDay: React.PropTypes.object,
     onChange: React.PropTypes.func.isRequired
 };
 export default Datepicker;

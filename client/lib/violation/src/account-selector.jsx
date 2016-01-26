@@ -146,7 +146,7 @@ class AccountSelector extends React.Component {
                         </label>)}
                     {inactiveAccounts.length ?
                         <Collapsible
-                            header={'Untoggled accounts'}>
+                            header='Untoggled accounts'>
                         {_.sortBy(inactiveAccounts, 'name')
                             .map(a =>
                             <label

@@ -26,7 +26,7 @@
   "homepage": "https://github.com/zalando-stups/yourturn",
   "dependencies": {
     "@zalando/oauth2-client-js": "0.0.17",
-    "@zalando/react-automatic-width": "0.0.3",
+    "@zalando/react-automatic-width": "0.0.4",
     "@zalando/superagent-oauth2-client": "0.0.19",
     "d3": "^3.5.12",
     "ease-component": "1.0.0",
@@ -48,7 +48,7 @@
     "react-infinite-scroll": "0.1.5",
     "react-redux": "4.0.6",
     "react-router": "2.0.0-rc5",
-    "react-select": "0.6.12",
+    "react-select": "0.9.1",
     "react-tabs": "0.5.1",
     "react-time": "4.0.0",
     "react-typeahead": "1.1.5",

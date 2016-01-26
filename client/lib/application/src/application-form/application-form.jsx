@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import Icon from 'react-fa';
 import Markdown from 'common/src/markdown.jsx';
 import {Link} from 'react-router';
@@ -35,7 +36,7 @@ class ApplicationForm extends React.Component {
     }
 
     setCustomValidity(evt) {
-        React
+        ReactDOM
         .findDOMNode(evt.target)
         .setCustomValidity(this.state.appIdTaken ? 'Application ID is already taken' : '');
     }
