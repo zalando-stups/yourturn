@@ -97,13 +97,13 @@ gulp.task('lint', function() {
             .pipe(eslint.failAfterError());
 });
 
-gulp.task('copy', function() {
+gulp.task('copy', ['clean'], function() {
     return gulp
             .src('stups_favicon.png')
             .pipe(gulp.dest('dist'));
 });
 
-gulp.task('extract-inline-css', function(done) {
+gulp.task('extract-inline-css', ['clean'], function() {
     return gulp
             .src('lib/common/asset/less/**/*.less')
             .pipe(less({
@@ -114,7 +114,7 @@ gulp.task('extract-inline-css', function(done) {
             .pipe(gulp.dest('dist/css'));
 });
 
-gulp.task('inline-css', ['cachebust', 'extract-inline-css'], function(done) {
+gulp.task('inline-css', ['extract-inline-css'], function(done) {
     var inline = readFile('/dist/css/grid.css') +
                  readFile('/dist/css/base.css') +
                  readFile('/dist/css/button.css') +
@@ -122,15 +122,9 @@ gulp.task('inline-css', ['cachebust', 'extract-inline-css'], function(done) {
     return gulp
             .src('index-prod.html')
             .pipe(replace('${inline}', inline))
+            .pipe(replace('${timestamp}', Date.now()))
             .pipe(rename('index.html'))
             .pipe(gulp.dest('dist'));
-});
-
-gulp.task('cachebust', ['clean'], function() {
-    return gulp
-                .src('index-prod.html')
-                .pipe(replace('${timestamp}', Date.now()))
-                .pipe(gulp.dest('dist'));
 });
 
 gulp.task('build', ['pack', 'inline-css', 'copy']);

@@ -66,11 +66,13 @@ AppListHandler.fetchData = function(routerState, state) {
             .then(accs => {
                 // so we can determine a preselected account in tabs
                 let preferredAcc = KioGetter.getPreferredAccount(state.kio);
-                if (!preferredAcc) {
+                if (!preferredAcc && accs[0]) {
                     preferredAcc = KIO_ACTIONS.savePreferredAccount(accs[0].name);
                 }
-                // and fetch latest application versions for it
-                KIO_ACTIONS.fetchLatestApplicationVersions(preferredAcc);
+                if (preferredAcc) {
+                    // and fetch latest application versions for it
+                    KIO_ACTIONS.fetchLatestApplicationVersions(preferredAcc);
+                }
             });
 };
 var ConnectedAppListHandler =
