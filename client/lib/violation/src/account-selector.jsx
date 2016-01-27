@@ -5,6 +5,7 @@ import {Typeahead} from 'react-typeahead';
 import fuzzysearch from 'fuzzysearch';
 import Collapsible from 'common/src/collapsible.jsx';
 import 'common/asset/less/common/account-selector.less';
+import 'common/asset/less/common/typeahead.less';
 
 function filterOptionFn(input, option) {
     return input

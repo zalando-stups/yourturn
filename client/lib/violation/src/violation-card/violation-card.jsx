@@ -135,7 +135,7 @@ class ViolationCard extends React.Component {
 }
 ViolationCard.displayName = 'ViolationCard';
 ViolationCard.contextTypes = {
-    router: React.PropTypes.func.isRequired
+    router: React.PropTypes.object
 };
 ViolationCard.propTypes = {
     autoFocus: React.PropTypes.bool,

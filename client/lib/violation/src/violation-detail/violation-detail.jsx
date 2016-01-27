@@ -36,6 +36,6 @@ class ViolationDetail extends React.Component {
 }
 ViolationDetail.displayName = 'ViolationDetail';
 ViolationDetail.propTypes = {
-    violationId: React.PropTypes.string.isRequired
+    violationId: React.PropTypes.number.isRequired
 };
 export default ViolationDetail;

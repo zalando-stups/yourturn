@@ -78,21 +78,9 @@ function wrapEnter(fetchFn = noop, authFn = noop) {
     }
 }
 
-function merge(dest, src) {
-    let result = dest || {};
-    Object
-    .keys(src)
-    .forEach(k => {
-        result[k] = src[k];
-    });
-
-    return result;
-}
-
 export {
     requireAccounts,
     createActionTypes,
-    merge,
     wrapEnter,
     bindActionsToStore,
     bindGettersToState

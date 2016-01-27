@@ -5,7 +5,7 @@ import Select from 'react-select';
 import Infinityyy from 'common/src/infinity.jsx';
 import moment from 'moment';
 import lzw from 'lz-string';
-import {merge} from 'common/src/util';
+import {parseSearchParams, stringifySearchParams} from 'violation/src/util';
 import Datepicker from 'common/src/datepicker.jsx';
 import Collapsible from 'common/src/collapsible.jsx';
 import Clipboard from 'react-copy-to-clipboard';
@@ -41,7 +41,7 @@ class Violation extends React.Component {
 
     toggleAccount(activeAccountIds) {
         // check if inspected account is still active
-        let searchParams = this.props.fullstopStore.getSearchParams();
+        let searchParams = parseSearchParams(this.props.routing.location.search);
         if (searchParams.cross && activeAccountIds.indexOf(searchParams.cross.inspectedAccount) >= 0) {
             this.updateSearch({
                 accounts: activeAccountIds,
@@ -76,10 +76,11 @@ class Violation extends React.Component {
      * @param  {Number} page The page to fetch
      */
     loadMore(page) {
+        // TODO FIX ME
         this.props.fullstopActions.updateSearchParams({
             page: page
         });
-        this.props.fullstopActions.fetchViolations(this.props.fullstopStore.getSearchParams());
+        this.props.fullstopActions.fetchViolations(parseSearchParams(this.props.routing.location.search));
     }
 
     _handleCopy() {
@@ -100,7 +101,7 @@ class Violation extends React.Component {
     }
 
     _toggleShowResolved(type) {
-        let searchParams = this.props.fullstopStore.getSearchParams(),
+        let searchParams = parseSearchParams(this.props.routing.location.search),
             newParams = {};
         newParams['show' + type] = !searchParams['show' + type];
         newParams.page = 0;
@@ -133,20 +134,20 @@ class Violation extends React.Component {
         });
     }
 
-    updateSearch(params, context = this.context, actions = this.props.fullstopActions) {
-        actions.deleteViolations();
-        actions.updateSearchParams(params);
-        Object.keys(params).forEach(k => {
-            if (moment.isMoment(params[k])) {
-                // dates have to parsed to timestamp again
-                params[k] = params[k].toISOString();
-            }
+    updateSearch(params) {
+        this.props.fullstopActions.deleteViolations();
+
+        this.context.router.push({
+            pathname: '/violation',
+            query: Object.assign({}, this.props.location.query, stringifySearchParams(params))
         });
-        context.router.push('/violation', {}, merge(this.props.location.query, params));
     }
 
     render() {
-        let searchParams = this.props.fullstopStore.getSearchParams(),
+        if (this.props.routing.location.search === '') {
+            return null;
+        }
+        let searchParams = parseSearchParams(this.props.routing.location.search),
             {selectedAccounts} = this.state,
             selectableAccounts = this.props.teamStore.getAccounts(),
             allAccounts = selectableAccounts.reduce((prev, cur) => {
@@ -154,7 +155,7 @@ class Violation extends React.Component {
                 return prev;
             }, {}),
             teamAliase = this.props.teamStore.getAliase(),
-            activeAccountIds = searchParams.accounts,
+            activeAccountIds = searchParams.accounts || [],
             showingSince = searchParams.from,
             showingUntil = searchParams.to,
             // violations are sorted by id, kind of, if at all, by default
