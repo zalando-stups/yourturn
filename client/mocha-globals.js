@@ -25,9 +25,9 @@ function reset() {
     // so override that
     //
     // http://stackoverflow.com/a/26872245
-    React = require('react/addons');
+    React = require('react');
     TestUtils = require('react-testutils-additions');
-    require('react/lib/ExecutionEnvironment').canUseDOM = true;
+    // require('react/lib/ExecutionEnvironment').canUseDOM = true;
 }
 
 reset();

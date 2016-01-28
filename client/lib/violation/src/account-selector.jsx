@@ -134,6 +134,10 @@ class AccountSelector extends React.Component {
                         </div>
                     </div>
                     <div className='account-selector-list'>
+                    { displayedAccounts.length === 0 ?
+                        <span>Please add some accounts.</span> :
+                        null
+                    }
                     {_.sortBy(activeAccounts, 'name')
                         .map(a =>
                         <label

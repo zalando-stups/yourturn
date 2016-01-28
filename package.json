@@ -107,7 +107,7 @@
     "lodash": "3.10.1",
     "lodash-cli": "3.10.1",
     "mitm": "1.2.0",
-    "mocha": "2.3.4",
+    "mocha": "2.4.4",
     "moment": "2.11.1",
     "node-mocks-http": "1.5.1",
     "node-tokens": "0.0.7",

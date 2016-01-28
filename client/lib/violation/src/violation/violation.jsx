@@ -76,11 +76,8 @@ class Violation extends React.Component {
      * @param  {Number} page The page to fetch
      */
     loadMore(page) {
-        // TODO FIX ME
-        this.props.fullstopActions.updateSearchParams({
-            page: page
-        });
-        this.props.fullstopActions.fetchViolations(parseSearchParams(this.props.routing.location.search));
+        this.props.fullstopActions.fetchViolations(
+            Object.assign({}, parseSearchParams(this.props.routing.location.search), { page }));
     }
 
     _handleCopy() {

@@ -15,15 +15,6 @@
             border-color: @green;
         }
 
-
-        table.table {
-            th,
-            td {
-                width: auto;
-            }
-            margin: @padding 0;
-        }
-
         strong,
         header {
             color: @gray;
@@ -33,6 +24,19 @@
             &:before {
                 content: '#';
             }
+        }
+
+        .violationCard-metadata > * {
+            padding: @padding-tiny;
+            border-bottom: 1px solid @gray-lighter;
+            &:first-child {
+                border-top: 1px solid @gray-lighter;
+            }
+        }
+
+        .violationCard-metadata-key {
+            font-weight: 700;
+            color: @gray-dark;
         }
 
         .violationCard-resolutionMessage {

@@ -2,7 +2,6 @@ import React from 'react';
 import {connect} from 'react-redux';
 import Icon from 'react-fa';
 import Gravatar from 'react-gravatar';
-import {Link} from 'react-router';
 import * as AppRoutes from 'application/src/routes';
 import * as ResRoutes from 'resource/src/routes';
 import Timestamp from 'react-time';
@@ -53,7 +52,9 @@ class Sidebar extends React.Component {
     }
 
     transition(route) {
-        this.context.router.push(route);
+        if (!this.props.activeRoute.startsWith(route) || route === '/') {
+            this.context.router.push(route);
+        }
     }
 
     render() {
@@ -113,46 +114,42 @@ class Sidebar extends React.Component {
                             className='sidebar-item'
                             data-active={this.props.activeRoute === '/'}
                             onClick={this.transition.bind(this, '/')}>
-                            <Link
-                                to='/'>
+                            <span className='sidebar-item-link'>
                                 Search <Icon fixedWidth name='search' />
-                            </Link>
+                            </span>
                         </div>
                         <div
                             className='sidebar-item'
-                            data-active={this.props.activeRoute.startsWith('/application')}
-                            onClick={this.transition.bind(this, '/application')}>
-                            <Link
-                                to={AppRoutes.appList()}>
+                            data-active={this.props.activeRoute.startsWith(AppRoutes.appList())}
+                            onClick={this.transition.bind(this, AppRoutes.appList())}>
+                            <span className='sidebar-item-link'>
                                 Applications <Icon fixedWidth name='cubes' />
-                            </Link>
+                            </span>
                         </div>
                         <div
                             className='sidebar-item'
-                            data-active={this.props.activeRoute.startsWith('/resource')}
-                            onClick={this.transition.bind(this, '/resource')}>
-                            <Link
-                                to={ResRoutes.resList()}>
+                            data-active={this.props.activeRoute.startsWith(ResRoutes.resList())}
+                            onClick={this.transition.bind(this, ResRoutes.resList())}>
+                            <span className='sidebar-item-link'>
                                 Resource Types <Icon fixedWidth name='key' />
-                            </Link>
+                            </span>
                         </div>
                         <div
                             className='sidebar-item'
                             data-active={this.props.activeRoute.startsWith('/violation')}
                             onClick={this.transition.bind(this, '/violation')}>
-                            <Link
-                                to='/violation'>
+                            <span className='sidebar-item-link'>
                                 Violations <Badge
                                                 isDanger={true}>
                                                 {violationCount ?
-                                                <Counter
-                                                    begin={0}
-                                                    time={1000}
-                                                    end={violationCount}/>
-                                                :
-                                                0}
+                                                    <Counter
+                                                        begin={0}
+                                                        time={1000}
+                                                        end={violationCount}/>
+                                                    :
+                                                    0}
                                             </Badge> <Icon fixedWidth name='warning' />
-                            </Link>
+                            </span>
                         </div>
                     </div>
                 </aside>;

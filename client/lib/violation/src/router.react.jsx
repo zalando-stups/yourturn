@@ -32,14 +32,14 @@ const FULLSTOP_ACTIONS = bindActionsToStore(REDUX, FullstopActions),
       NOTIFICATION_ACTIONS = bindActionsToStore(REDUX, NotificationActions),
       TEAM_ACTIONS = bindActionsToStore(REDUX, TeamActions);
 
-function ensureDefaultSearchParams(router, props) {
+function ensureDefaultSearchParams(router, props, forceAddAccounts=false) {
     let {location, fullstopStore, userStore} = props,
         defaultParams = fullstopStore.getDefaultSearchParams(),
         defaultAccounts = userStore.getUserCloudAccounts(),
         queryParams = Object.assign({}, location.query);
 
     if (!queryParams.activeTab ||
-        !queryParams.accounts ||
+        (!queryParams.accounts && forceAddAccounts) ||
         !queryParams.showUnresolved ||
         !queryParams.showResolved ||
         !queryParams.sortAsc ||
@@ -78,7 +78,6 @@ function ensureDefaultSearchParams(router, props) {
     }
 }
 function ensureDataAvailability(searchParams, getAccounts, getAlias) {
-    console.log(searchParams.activeTab);
     if (searchParams.activeTab === 0) {
         // tab 1
         FULLSTOP_ACTIONS.fetchViolationCount(searchParams);
@@ -99,9 +98,11 @@ function ensureDataAvailability(searchParams, getAccounts, getAlias) {
         }
     } else if (searchParams.activeTab === 1) {
         // tab 2
-        FULLSTOP_ACTIONS.fetchViolationCountIn(
-            searchParams.cross_inspectedAccount ? searchParams.cross_inspectedAccount : searchParams.accounts[0],
-            searchParams);
+        if (searchParams.accounts[0]) {
+            FULLSTOP_ACTIONS.fetchViolationCountIn(
+                searchParams.cross_inspectedAccount ? searchParams.cross_inspectedAccount : searchParams.accounts[0],
+                searchParams);
+        }
     } else if (searchParams.activeTab === 2) {
         // tab 3
         FULLSTOP_ACTIONS.fetchViolations(searchParams);
@@ -113,11 +114,11 @@ class ViolationHandler extends React.Component {
     }
 
     componentWillMount() {
-        ensureDefaultSearchParams(this.context.router, this.props);
+        ensureDefaultSearchParams(this.context.router, this.props, true);
         ensureDataAvailability(
             parseSearchParams(this.props.location.search),
-            this.props.teamStore.getAccounts.bind(null),
-            this.props.teamStore.getAlias.bind(null));
+            this.props.teamStore.getAccounts,
+            this.props.teamStore.getAlias);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -125,8 +126,8 @@ class ViolationHandler extends React.Component {
         if (nextProps.location.search !== this.props.location.search) {
             ensureDataAvailability(
                 parseSearchParams(nextProps.location.search),
-                this.props.teamStore.getAccounts.bind(null),
-                this.props.teamStore.getAlias.bind(null));
+                this.props.teamStore.getAccounts,
+                this.props.teamStore.getAlias);
         }
     }
 

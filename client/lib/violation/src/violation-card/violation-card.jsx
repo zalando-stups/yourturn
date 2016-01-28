@@ -74,7 +74,15 @@ class ViolationCard extends React.Component {
                             :
                             null}
                     </header>
-                    <table className='table'>
+                    <div>
+                        <h5>{violation_type.id}</h5>
+                        <p>{violation_type.help_text}</p>
+                        <code className='violationCard-metadata'>
+                            {Object.keys(violation.meta_info)
+                                .map(key => <div><span className='violationCard-metadata-key'>{key}</span>: {violation.meta_info[key]}</div>)}
+                        </code>
+                    </div>
+                    {/*<table className='table'>
                         <colgroup>
                             <col width='0*' />
                             <col width='0.5*' />
@@ -86,21 +94,23 @@ class ViolationCard extends React.Component {
                             </tr>
                             <tr>
                                 <th>Info</th>
-                                <td>{violation_type.help_text}</td>
+                                <td>
+                                    <p>{violation_type.help_text}</p>
+                                </td>
                             </tr>
                             {violation.meta_info ?
                                 <tr>
                                     <th>Metadata</th>
                                     <td>
                                         <code>
-                                            {violation.meta_info}
+                                            {JSON.stringify()}
                                         </code>
                                     </td>
                                 </tr>
                                 :
                                 null}
                         </tbody>
-                    </table>
+                    </table>*/}
                     <blockquote className='violationCard-violationMessage'>
                         {violation.message}
                     </blockquote>
