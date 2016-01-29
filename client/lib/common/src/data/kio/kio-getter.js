@@ -31,20 +31,6 @@ function getApprovalTypes(state, applicationId) {
 }
 
 /**
- * Returns the application version with `id`. Does not care about its state, e.g. whether or not
- * it's Pending or Failed. Returns null if there is no version with this id.
- *
- * @param  {object} state Current state of the store
- * @param  {String} id
- * @param  {String} ver
- * @return {object} The application version with this id and ver
- */
-function getApplicationVersion(state, id, ver) {
-    let version = state.versions.getIn([id, ver]);
-    return version ? version.toJS() : false;
-}
-
-/**
  * Returns all applications that are available (as in not Pending or Failed) RIGHT NAO!
  *
  * @param  {object} state Current state of the store

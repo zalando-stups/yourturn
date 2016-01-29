@@ -4,7 +4,7 @@ import {Link} from 'react-router';
 import * as Routes from 'application/src/routes';
 
 class AccountAppList extends React.Component {
-    constructor(props) {
+    constructor() {
         super();
     }
 
@@ -33,7 +33,7 @@ class AccountAppList extends React.Component {
                                 apps
                                 .filter(ta => (!ta.active && showInactive) || ta.active)
                                 .map(
-                                (ta, i) =>
+                                    ta =>
                                     <tr key={ta.id}
                                         className={'app ' + (ta.active ? '' : 'is-inactive')}>
                                         <td>

@@ -1,6 +1,5 @@
 /* global ENV_DEVELOPMENT */
 import {
-    createRedux,
     applyMiddleware,
     combineReducers,
     createStore
@@ -8,7 +7,6 @@ import {
 import {browserHistory} from 'react-router';
 import thunk from 'redux-thunk';
 import createLogger from 'redux-logger';
-import {createHistory} from 'history';
 import {syncHistory, routeReducer} from 'redux-simple-router';
 import {
     reduxPromiseMiddleware,

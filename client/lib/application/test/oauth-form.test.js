@@ -63,7 +63,7 @@ describe('The oauth form view', () => {
             kioStore: bindGettersToState(kioState, KioGetter),
             userStore: bindGettersToState(userState, UserGetter),
             mintStore: bindGettersToState(mintState, MintGetter),
-            essentialsStore: bindGettersToState(essentialsState, EssentialsGetter),
+            essentialsStore: bindGettersToState(essentialsState, EssentialsGetter)
         };
 
         form = render(OAuthForm, props);

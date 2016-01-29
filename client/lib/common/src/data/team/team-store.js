@@ -1,6 +1,5 @@
 import Immutable from 'immutable';
 import Types from './team-types';
-import * as Getter from './team-getter';
 
 const DEFAULT_STATE = Immutable.fromJS({
     accounts: [],

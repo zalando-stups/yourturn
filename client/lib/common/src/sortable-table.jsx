@@ -14,7 +14,7 @@ class SortableTable extends React.Component {
         super();
         this.state = {
             rows: props.rows,
-            sortBy: props.sortBy || '',
+            sortBy: props.sortBy || '',
             sortOrder: props.sortOrder || '',
             filter: props.filter || ''
         };
@@ -22,7 +22,7 @@ class SortableTable extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         let {rows, sortBy, sortOrder} = nextProps;
-        sortBy = sortBy || this.state.sortBy;
+        sortBy = sortBy || this.state.sortBy;
         sortOrder = sortOrder || this.state.sortOrder;
         if (sortBy.length) {
             rows = _.sortBy(rows, sortBy);

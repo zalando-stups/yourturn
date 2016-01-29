@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import * as UserGetter from 'common/src/data/user/user-getter';
 import REDUX from 'yourturn/src/redux';
 
@@ -55,7 +54,9 @@ function bindActionsToStore(store, actions) {
             {});
 }
 
-function noop() {};
+function noop() {
+    // does nothing
+}
 
 function wrapEnter(fetchFn = noop, authFn = noop) {
     return function(routerState, replaceStateFn, callback) {
