@@ -13,7 +13,7 @@ import * as FullstopGetter from 'common/src/data/fullstop/fullstop-getter';
 import 'common/asset/less/yourturn/sidebar.less';
 
 class Sidebar extends React.Component {
-    constructor(props) {
+    constructor() {
         super();
         this.interval = false;
         this.state = {
@@ -52,7 +52,7 @@ class Sidebar extends React.Component {
     }
 
     transition(route) {
-        if (!this.props.activeRoute.startsWith(route) || route === '/') {
+        if (!this.props.activeRoute.startsWith(route) || route === '/') {
             this.context.router.push(route);
         }
     }

@@ -6,7 +6,7 @@ import Violation from 'violation/src/violation-card/violation-card.jsx';
 import 'common/asset/less/violation/violation-detail.less';
 
 class ViolationDetail extends React.Component {
-    constructor(props) {
+    constructor() {
         super();
     }
 

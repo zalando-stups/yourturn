@@ -37,7 +37,7 @@ class OAuthForm extends React.Component {
         });
     }
 
-    updateConfidentiality(evt) {
+    updateConfidentiality() {
         this.setState({
             isClientConfidential: !this.state.isClientConfidential
         });

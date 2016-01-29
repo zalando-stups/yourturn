@@ -5,7 +5,7 @@ import * as Routes from 'application/src/routes';
 import 'common/asset/less/application/version-list.less';
 
 class VersionList extends React.Component {
-    constructor(props) {
+    constructor() {
         super();
         this.state = {
             term: ''

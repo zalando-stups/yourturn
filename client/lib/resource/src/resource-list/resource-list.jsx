@@ -5,7 +5,7 @@ import * as Routes from 'resource/src/routes';
 import 'common/asset/less/resource/resource-list.less';
 
 class ResourceList extends React.Component {
-    constructor(props) {
+    constructor() {
         super();
         this.state = {
             term: ''

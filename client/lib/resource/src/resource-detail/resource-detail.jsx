@@ -9,7 +9,7 @@ import DefaultError from 'common/src/error.jsx';
 import 'common/asset/less/resource/resource-detail.less';
 
 class ResourceDetail extends React.Component {
-    constructor(props) {
+    constructor() {
         super();
     }
 

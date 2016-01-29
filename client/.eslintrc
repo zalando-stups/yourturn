@@ -1,5 +1,6 @@
 {
     "parser": "babel-eslint",
+    "extends": "eslint:recommended",
     "ecmaFeatures": {
         "arrowFunctions": true,
         "blockBindings": true,
@@ -15,6 +16,7 @@
         "mocha": true
     },
     "rules": {
+        "no-unused-vars": 2,
         "quotes": [2, "single"],
         // never did i understand why there should be a newline
         "eol-last": 0,

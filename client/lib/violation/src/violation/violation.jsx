@@ -31,7 +31,7 @@ function sortDesc(a, b) {
 }
 
 class Violation extends React.Component {
-    constructor(props, context) {
+    constructor(props) {
         super();
 
         this.state = {
@@ -152,7 +152,7 @@ class Violation extends React.Component {
                 return prev;
             }, {}),
             teamAliase = this.props.teamStore.getAliase(),
-            activeAccountIds = searchParams.accounts || [],
+            activeAccountIds = searchParams.accounts || [],
             showingSince = searchParams.from,
             showingUntil = searchParams.to,
             // violations are sorted by id, kind of, if at all, by default
