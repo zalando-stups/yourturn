@@ -2,6 +2,7 @@
 var chai = require('chai'),
     sinon = require('sinon'),
     domino = require('domino'),
+    history = require('history'),
     assign = require('object-assign'),
     HTML = '<!doctype html><html><body></body></html>',
     Mitm = require('mitm'),
@@ -31,31 +32,11 @@ function reset() {
 }
 
 reset();
-
-/**
- * STUB ROUTER
- */
-var RouterStub = function () {};
-assign(RouterStub, {
-    makePath: sinon.spy(),
-    makeHref: sinon.spy(),
-    transitionTo: sinon.spy(),
-    replaceWith: sinon.spy(),
-    goBack: sinon.spy(),
-    getCurrentPath: sinon.spy(),
-    getCurrentRoutes: sinon.spy(),
-    getCurrentPathname: sinon.spy(),
-    getCurrentParams: sinon.spy(),
-    getCurrentQuery: sinon.spy(),
-    isActive: sinon.spy(),
-    getRouteAtDept: sinon.spy(),
-    setRouteComponentAtDepth: sinon.spy()
-});
-
+var RouterStub = assign({}, history.createMemoryHistory());
 var Wrapper = function (Component, props) {
     return React.createClass({
         childContextTypes: {
-            router: React.PropTypes.func
+            router: React.PropTypes.object
         },
         getChildContext: function () {
             return {
