@@ -12,5 +12,5 @@ function vioDetail({violationId}) {
 export {
     violation,
     short,
-    vioDetail,
+    vioDetail
 };

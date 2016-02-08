@@ -27,7 +27,7 @@ function handleError(error) {
 }
 
 function wrapEnter(fetchFn = noop, authFn = noop) {
-    return function(routerState, replaceFn, callback) {
+    return function(routerState, replaceFn, callback) {
         var state = REDUX.getState(),
             fetch = fetchFn(routerState, state, replaceFn);
         Promise

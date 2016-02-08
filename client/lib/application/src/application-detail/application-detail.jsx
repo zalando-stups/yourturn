@@ -68,10 +68,9 @@ class ApplicationDetail extends React.Component {
         };
 
         if (app instanceof FetchResult) {
-            let child = app.isPending() ?
+            return app.isPending() ?
                     <Placeholder applicationId={applicationId} /> :
                     <DefaultError error={app.getResult()} />;
-            return <div>{child}</div>;
         }
         return <div className='applicationDetail'>
                     <h1>{app.name}</h1>

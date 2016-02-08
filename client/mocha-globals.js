@@ -20,15 +20,8 @@ function reset() {
     global.window.localStorage = localStorage;
     global.navigator = global.window.navigator;
 
-    // necessary because when React is loaded it looks for a window
-    // if it's not available, this result is stored
-    // however we create a virtual window further down
-    // so override that
-    //
-    // http://stackoverflow.com/a/26872245
     React = require('react');
     TestUtils = require('react-testutils-additions');
-    // require('react/lib/ExecutionEnvironment').canUseDOM = true;
 }
 
 reset();
