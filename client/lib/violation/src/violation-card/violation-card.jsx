@@ -83,7 +83,7 @@ class ViolationCard extends React.Component {
                                 {typeof violation.meta_info === 'string' ?
                                     violation.meta_info :
                                     Object.keys(violation.meta_info)
-                                    .map(key => <div><span className='violationCard-metadata-key'>{key}</span>: {violation.meta_info[key]}</div>)}
+                                    .map(key => <div><span className='violationCard-metadata-key'>{key}</span>: {JSON.stringify(violation.meta_info[key])}</div>)}
                             </code>
                             :
                             null}
