@@ -1,5 +1,4 @@
 import React from 'react';
-import cloneWithProps from 'react-addons-clone-with-props';
 import Icon from 'react-fa';
 import Table from 'fixed-data-table';
 import _ from 'lodash';

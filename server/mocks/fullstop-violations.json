@@ -235,7 +235,7 @@
       "event_id": "51a6e8b1-1234-1234-1234-032e12df9985",
       "account_id": "0987654321",
       "region": "eu-central-1",
-      "meta_info": "[\"testdolphin\"]",
+      "meta_info": {"test": "foo"},
       "comment": null,
       "instance_id": "i-asdfasdf",
       "plugin_fully_qualified_class_name": "org.zalando.stups.fullstop.plugin.keypair.KeyPairPlugin",
