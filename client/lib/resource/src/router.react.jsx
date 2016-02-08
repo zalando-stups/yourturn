@@ -5,11 +5,10 @@ import Config from 'common/src/config';
 import REDUX from 'yourturn/src/redux';
 import {connect} from 'react-redux';
 import {
-    requireAccounts,
-    wrapEnter,
     bindGettersToState,
     bindActionsToStore
 } from 'common/src/util';
+import {wrapEnter, requireAccounts} from 'common/src/router-utils';
 
 import * as UserGetter from 'common/src/data/user/user-getter';
 import * as EssentialsGetter from 'common/src/data/essentials/essentials-getter';

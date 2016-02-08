@@ -11,11 +11,10 @@ import {parseSearchParams} from 'violation/src/util';
 
 import REDUX from 'yourturn/src/redux';
 import {
-    requireAccounts,
     bindGettersToState,
-    wrapEnter,
     bindActionsToStore
 } from 'common/src/util';
+import {wrapEnter, requireAccounts} from 'common/src/router-utils';
 import {connect} from 'react-redux';
 
 import * as UserGetter from 'common/src/data/user/user-getter';

@@ -3,11 +3,10 @@ import {Route, IndexRoute} from 'react-router';
 import {parseArtifact} from 'application/src/util';
 import REDUX from 'yourturn/src/redux';
 import {
-    wrapEnter,
-    requireAccounts,
     bindGettersToState,
     bindActionsToStore
 } from 'common/src/util';
+import {wrapEnter, requireAccounts} from 'common/src/router-utils';
 import {connect} from 'react-redux';
 
 import * as KioGetter from 'common/src/data/kio/kio-getter';
