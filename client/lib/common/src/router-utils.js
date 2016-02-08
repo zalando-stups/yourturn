@@ -37,7 +37,7 @@ function wrapEnter(fetchFn = noop, authFn = noop) {
             Promise
             .resolve(auth)
             .then(err => {
-                if (err) {
+                if (err instanceof Error) {
                     return callback(err);
                 }
                 return callback();
