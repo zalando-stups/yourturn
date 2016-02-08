@@ -34,11 +34,15 @@ const SERVICES = {
     }
 };
 
-function constructUrl(serviceId, entityId) {
-    return `${SERVICES[serviceId].url}${SERVICES[serviceId].root}/${entityId}`;
+function getLocalUrlForService(serviceId, entityId) {
+    if (serviceId === 'kio') {
+        return `/application/detail/${entityId}`;
+    } else if (serviceId === 'essentials') {
+        return `/resource/detail/${entityId}`;
+    }
 }
 
 export {
-    constructUrl as constructUrl,
+    getLocalUrlForService,
     SERVICES as Services
 };

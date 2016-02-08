@@ -1,4 +1,4 @@
-import {Services, constructUrl} from 'common/src/data/services';
+import {Services, getLocalUrlForService} from 'common/src/data/services';
 import Immutable from 'immutable';
 import Types from './search-types';
 
@@ -20,7 +20,7 @@ function SearchStore(state = Immutable.Map(), action) {
             newState = Immutable
                         .fromJS(payload)
                         .map(res => res.set('_source', _source))
-                        .map(res => res.set('_url', constructUrl(_source, res.get(Services[_source].id))))
+                        .map(res => res.set('_url', getLocalUrlForService(_source, res.get(Services[_source].id))))
                         .concat(state.get(_term, Immutable.List()))
                         .sortBy(res => res.get('matched_rank'), sortDesc);
         return state.set(_term, newState);
