@@ -52,7 +52,7 @@ class Sidebar extends React.Component {
     }
 
     transition(route) {
-        if (!this.props.activeRoute.startsWith(route) || route === '/') {
+        if (!this.props.activeRoute !== route) {
             this.context.router.push(route);
         }
     }
