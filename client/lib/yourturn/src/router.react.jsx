@@ -6,6 +6,7 @@ import ResRoutes from 'resource/src/router.react.jsx';
 import VioRoutes from 'violation/src/router.react.jsx';
 import YourTurn from './app.jsx';
 import Search from 'yourturn/src/search/search.jsx';
+import DefaultError from 'common/src/error.jsx';
 
 import REDUX from 'yourturn/src/redux';
 import {connect} from 'react-redux';
@@ -110,6 +111,16 @@ let ConnectedSearchHandler = connect(state => ({
     searchStore: bindGettersToState(state.search, SearchGetter)
 }))(SearchHandler);
 
+class ErrorHandler extends React.Component {
+    constructor() {
+        super();
+    }
+
+    render() {
+        return <DefaultError error={this.props.location.state} />
+    }
+}
+
 const ROUTES =
     <Route component={YourTurn} path='/'>
         {AppRoutes}
@@ -117,6 +128,7 @@ const ROUTES =
         {VioRoutes}
         <IndexRoute component={ConnectedSearchHandler} />
         <Route path='oauth' component={LoginHandler} />
+        <Route path='error' component={ErrorHandler} />
     </Route>;
 
 export default ROUTES;

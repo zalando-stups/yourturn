@@ -19,17 +19,29 @@ function noop() {
     // does nothing
 }
 
+function handleError(error) {
+    this.router.push({
+        pathname: '/error',
+        state: error
+    });
+}
+
 function wrapEnter(fetchFn = noop, authFn = noop) {
-    return function(routerState, replaceStateFn, callback) {
+    return function(routerState, replaceFn, callback) {
         var state = REDUX.getState(),
-            fetch = fetchFn(routerState, state, replaceStateFn);
+            fetch = fetchFn(routerState, state, replaceFn);
         Promise
         .resolve(fetch)
         .then(() => {
-            let auth = authFn(routerState, state, replaceStateFn);
+            let auth = authFn(routerState, state, replaceFn);
             Promise
             .resolve(auth)
-            .then(() => callback())
+            .then(err => {
+                if (err) {
+                    return callback(err);
+                }
+                return callback();
+            })
             .catch(e => {
                 throw e;
             });
@@ -43,5 +55,6 @@ function wrapEnter(fetchFn = noop, authFn = noop) {
 
 export {
     requireAccounts,
-    wrapEnter
+    wrapEnter,
+    handleError
 };

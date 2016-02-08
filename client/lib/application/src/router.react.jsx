@@ -6,7 +6,10 @@ import {
     bindGettersToState,
     bindActionsToStore
 } from 'common/src/util';
-import {wrapEnter, requireAccounts} from 'common/src/router-utils';
+import {
+    wrapEnter,
+    requireAccounts
+} from 'common/src/router-utils';
 import {connect} from 'react-redux';
 
 import * as KioGetter from 'common/src/data/kio/kio-getter';

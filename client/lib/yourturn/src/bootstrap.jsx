@@ -9,7 +9,8 @@ import * as KioActions from 'common/src/data/kio/kio-actions';
 import * as UserActions from 'common/src/data/user/user-actions';
 import * as FullstopActions from 'common/src/data/fullstop/fullstop-actions';
 import * as FullstopGetter from 'common/src/data/fullstop/fullstop-getter';
-import DefaultError from 'common/src/error.jsx';
+import {handleError} from 'common/src/router-utils';
+
 
 import 'common/asset/less/base.less';
 import 'common/asset/less/grid.less';
@@ -50,6 +51,6 @@ userActions
     });
 
 ReactDOM.render(<Provider store={REDUX}>
-                   <Router history={browserHistory}>{ROUTES}</Router>
+                   <Router onError={handleError} history={browserHistory}>{ROUTES}</Router>
                  </Provider>,
                  document.getElementById('yourturn-container'));
