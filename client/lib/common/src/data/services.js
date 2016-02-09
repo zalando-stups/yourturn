@@ -34,10 +34,6 @@ const SERVICES = {
     }
 };
 
-function constructUrl(serviceId, entityId) {
-    return `${SERVICES[serviceId].url}${SERVICES[serviceId].root}/${entityId}`;
-}
-
 function getLocalUrlForService(serviceId, entityId) {
     if (serviceId === 'kio') {
         return `/application/detail/${entityId}`;
@@ -46,20 +42,7 @@ function getLocalUrlForService(serviceId, entityId) {
     }
 }
 
-function constructLocalUrl(module, [entityId, subEntityId]) {
-    if (module === 'application') {
-        return `/application/detail/${entityId}`;
-    } else if (module === 'application-version') {
-        return `/application/detail/${entityId}/version/detail/${subEntityId}`;
-    } else if (module === 'resource-type') {
-        return `/resource/detail/${entityId}`;
-    }
-    return false;
-}
-
 export {
-    constructUrl as constructUrl,
-    constructLocalUrl as constructLocalUrl,
-    getLocalUrlForService as getLocalUrlForService,
+    getLocalUrlForService,
     SERVICES as Services
 };

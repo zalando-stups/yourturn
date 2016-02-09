@@ -13,7 +13,7 @@ class SortableTable extends React.Component {
         super();
         this.state = {
             rows: props.rows,
-            sortBy: props.sortBy || '',
+            sortBy: props.sortBy || '',
             sortOrder: props.sortOrder || '',
             filter: props.filter || ''
         };
@@ -21,7 +21,7 @@ class SortableTable extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         let {rows, sortBy, sortOrder} = nextProps;
-        sortBy = sortBy || this.state.sortBy;
+        sortBy = sortBy || this.state.sortBy;
         sortOrder = sortOrder || this.state.sortOrder;
         if (sortBy.length) {
             rows = _.sortBy(rows, sortBy);
@@ -107,10 +107,7 @@ class SortableTable extends React.Component {
                         rowsCount={displayedRows.length}
                         width={this.props.width || 500}
                         {...this.props}>
-                        {this.props.children.map(c => {
-                            c.props.headerRenderer = this._renderHeader.bind(this);
-                            return c;
-                        })}
+                        {React.Children.map(this.props.children, c => React.cloneElement(c, { headerRenderer: this._renderHeader.bind(this)}))}
                     </Table.Table>
                 </div>;
     }
@@ -119,7 +116,6 @@ SortableTable.displayName = 'SortableTable';
 SortableTable.propTypes = {
     width: React.PropTypes.number,
     filterExprFn: React.PropTypes.func,
-    helpText: React.PropTypes.string,
-    children: React.PropTypes.oneOf([React.PropTypes.array, React.PropTypes.object])
+    helpText: React.PropTypes.string
 };
 export default SortableTable;

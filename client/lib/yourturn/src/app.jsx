@@ -1,5 +1,4 @@
 import React from 'react';
-import {RouteHandler} from 'react-router';
 import Sidebar from './sidebar/sidebar.jsx';
 import NotificationBar from './notification-bar/notification-bar.jsx';
 
@@ -13,11 +12,12 @@ class YourTurn extends React.Component {
                     <NotificationBar />
                     <div className='grid with-gutter'>
                         <div className='grid-col col-1-4'>
-                            <Sidebar />
+                            <Sidebar
+                                activeRoute={this.props.location.pathname} />
                         </div>
                         <div className='grid-col'>
                             <div className='yourturn-view'>
-                                <RouteHandler />
+                                {this.props.children}
                             </div>
                         </div>
                     </div>

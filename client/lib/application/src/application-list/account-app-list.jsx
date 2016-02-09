@@ -1,9 +1,10 @@
 import React from 'react';
 import Icon from 'react-fa';
 import {Link} from 'react-router';
+import * as Routes from 'application/src/routes';
 
 class AccountAppList extends React.Component {
-    constructor(props) {
+    constructor() {
         super();
     }
 
@@ -32,15 +33,14 @@ class AccountAppList extends React.Component {
                                 apps
                                 .filter(ta => (!ta.active && showInactive) || ta.active)
                                 .map(
-                                (ta, i) =>
+                                    ta =>
                                     <tr key={ta.id}
                                         className={'app ' + (ta.active ? '' : 'is-inactive')}>
                                         <td>
                                             <Link
-                                                to='application-appDetail'
-                                                params={{
+                                                to={Routes.appDetail({
                                                     applicationId: ta.id
-                                                }}>
+                                                })}>
                                                 {ta.name}
                                             </Link>
                                         </td>
@@ -51,20 +51,18 @@ class AccountAppList extends React.Component {
                                                     <Link
                                                         className='btn btn-default btn-small applicationList-approvalButton'
                                                         title={'Approve version ' + latestVersions[ta.id] + ' of ' + ta.name}
-                                                        to='application-verApproval'
-                                                        params={{
+                                                        to={Routes.verApproval({
                                                             versionId: latestVersions[ta.id],
                                                             applicationId: ta.id
-                                                        }}> <Icon name='check' />
+                                                        })}> <Icon name='check' />
                                                     </Link>
                                                     :
                                                     null}
                                                  <Link
-                                                    to='application-verDetail'
-                                                    params={{
+                                                    to={Routes.verDetail({
                                                         versionId: latestVersions[ta.id],
                                                         applicationId: ta.id
-                                                    }}>
+                                                    })}>
                                                     {latestVersions[ta.id]}
                                                 </Link>
                                             </div>
@@ -75,9 +73,10 @@ class AccountAppList extends React.Component {
                                             {ta.active ?
                                                 <Link
                                                     className='btn btn-default btn-small'
-                                                    to='application-verCreate'
-                                                    title={'Create new version for ' + ta.name}
-                                                    params={{applicationId: ta.id}}>
+                                                    to={Routes.verCreate({
+                                                        applicationId: ta.id
+                                                    })}
+                                                    title={'Create new version for ' + ta.name}>
                                                     <Icon name='plus' />
                                                 </Link>
                                                 :

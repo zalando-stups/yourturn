@@ -119,10 +119,10 @@ ViolationOverviewAccount.propTypes = {
     groupByApplication: React.PropTypes.bool,
     violationType: React.PropTypes.string,
     account: React.PropTypes.string,
-    accounts: React.PropTypes.array,
+    accounts: React.PropTypes.object,
     application: React.PropTypes.string,
     violationCount: React.PropTypes.array,
-    violationTypes: React.PropTypes.array,
+    violationTypes: React.PropTypes.object,
     onConfigurationChange: React.PropTypes.func
 };
 

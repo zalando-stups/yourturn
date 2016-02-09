@@ -2,7 +2,8 @@ import React from 'react';
 import {connect} from 'react-redux';
 import Icon from 'react-fa';
 import Gravatar from 'react-gravatar';
-import {Link} from 'react-router';
+import * as AppRoutes from 'application/src/routes';
+import * as ResRoutes from 'resource/src/routes';
 import Timestamp from 'react-time';
 import Badge from 'common/src/badge.jsx';
 import Counter from 'common/src/counter.jsx';
@@ -12,7 +13,7 @@ import * as FullstopGetter from 'common/src/data/fullstop/fullstop-getter';
 import 'common/asset/less/yourturn/sidebar.less';
 
 class Sidebar extends React.Component {
-    constructor(props) {
+    constructor() {
         super();
         this.interval = false;
         this.state = {
@@ -51,13 +52,13 @@ class Sidebar extends React.Component {
     }
 
     transition(route) {
-        this.context.router.transitionTo(route);
+        if (!this.props.activeRoute !== route) {
+            this.context.router.push(route);
+        }
     }
 
     render() {
-        let {tokenInfo, userInfo, violationCount} = this.props,
-            {router} = this.context;
-
+        let {tokenInfo, userInfo, violationCount} = this.props;
         return <aside className='sidebar'>
                     <div className='sidebar-content'>
                         <div className='header'>
@@ -111,48 +112,44 @@ class Sidebar extends React.Component {
                         </div>
                         <div
                             className='sidebar-item'
-                            data-active={router.isActive('search')}
-                            onClick={this.transition.bind(this, 'search')}>
-                            <Link
-                                to='search'>
+                            data-active={this.props.activeRoute === '/'}
+                            onClick={this.transition.bind(this, '/')}>
+                            <span className='sidebar-item-link'>
                                 Search <Icon fixedWidth name='search' />
-                            </Link>
+                            </span>
                         </div>
                         <div
                             className='sidebar-item'
-                            data-active={router.isActive('application-appList')}
-                            onClick={this.transition.bind(this, 'application-appList')}>
-                            <Link
-                                to='application-appList'>
+                            data-active={this.props.activeRoute.startsWith(AppRoutes.appList())}
+                            onClick={this.transition.bind(this, AppRoutes.appList())}>
+                            <span className='sidebar-item-link'>
                                 Applications <Icon fixedWidth name='cubes' />
-                            </Link>
+                            </span>
                         </div>
                         <div
                             className='sidebar-item'
-                            data-active={router.isActive('resource-resList')}
-                            onClick={this.transition.bind(this, 'resource-resList')}>
-                            <Link
-                                to='resource-resList'>
+                            data-active={this.props.activeRoute.startsWith(ResRoutes.resList())}
+                            onClick={this.transition.bind(this, ResRoutes.resList())}>
+                            <span className='sidebar-item-link'>
                                 Resource Types <Icon fixedWidth name='key' />
-                            </Link>
+                            </span>
                         </div>
                         <div
                             className='sidebar-item'
-                            data-active={router.isActive('violation')}
-                            onClick={this.transition.bind(this, 'violation')}>
-                            <Link
-                                to='violation'>
+                            data-active={this.props.activeRoute.startsWith('/violation')}
+                            onClick={this.transition.bind(this, '/violation')}>
+                            <span className='sidebar-item-link'>
                                 Violations <Badge
                                                 isDanger={true}>
                                                 {violationCount ?
-                                                <Counter
-                                                    begin={0}
-                                                    time={1000}
-                                                    end={violationCount}/>
-                                                :
-                                                0}
+                                                    <Counter
+                                                        begin={0}
+                                                        time={1000}
+                                                        end={violationCount}/>
+                                                    :
+                                                    0}
                                             </Badge> <Icon fixedWidth name='warning' />
-                            </Link>
+                            </span>
                         </div>
                     </div>
                 </aside>;
@@ -160,9 +157,8 @@ class Sidebar extends React.Component {
 }
 Sidebar.displayName = 'Sidebar';
 Sidebar.contextTypes = {
-    router: React.PropTypes.func.isRequired
+    router: React.PropTypes.object
 };
-
 export default connect(state => ({
     userInfo: UserGetter.getUserInfo(state.user),
     tokenInfo: UserGetter.getTokenInfo(state.user),

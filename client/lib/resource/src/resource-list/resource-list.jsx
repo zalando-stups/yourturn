@@ -1,10 +1,11 @@
 import React from 'react';
 import Icon from 'react-fa';
 import {Link} from 'react-router';
+import * as Routes from 'resource/src/routes';
 import 'common/asset/less/resource/resource-list.less';
 
 class ResourceList extends React.Component {
-    constructor(props) {
+    constructor() {
         super();
         this.state = {
             term: ''
@@ -31,7 +32,7 @@ class ResourceList extends React.Component {
                     </div>
                     <div className='btn-group'>
                         <Link
-                            to='resource-resCreate'
+                            to={Routes.resCreate()}
                             className={`btn btn-primary ${whitelisted ? '' : 'btn-disabled'}`}>
                             <Icon name='plus' /> Create Resource Type
                         </Link>
@@ -60,10 +61,9 @@ class ResourceList extends React.Component {
                                 res =>
                                     <li key={res.id}>
                                         <Link
-                                            to='resource-resDetail'
-                                            params={{
+                                            to={Routes.resDetail({
                                                 resourceId: res.id
-                                            }}>
+                                            })}>
                                             {res.name}
                                         </Link>
                                     </li>)}

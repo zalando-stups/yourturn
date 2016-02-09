@@ -2,6 +2,7 @@
 var chai = require('chai'),
     sinon = require('sinon'),
     domino = require('domino'),
+    history = require('history'),
     assign = require('object-assign'),
     HTML = '<!doctype html><html><body></body></html>',
     Mitm = require('mitm'),
@@ -19,43 +20,16 @@ function reset() {
     global.window.localStorage = localStorage;
     global.navigator = global.window.navigator;
 
-    // necessary because when React is loaded it looks for a window
-    // if it's not available, this result is stored
-    // however we create a virtual window further down
-    // so override that
-    //
-    // http://stackoverflow.com/a/26872245
-    React = require('react/addons');
+    React = require('react');
     TestUtils = require('react-testutils-additions');
-    require('react/lib/ExecutionEnvironment').canUseDOM = true;
 }
 
 reset();
-
-/**
- * STUB ROUTER
- */
-var RouterStub = function () {};
-assign(RouterStub, {
-    makePath: sinon.spy(),
-    makeHref: sinon.spy(),
-    transitionTo: sinon.spy(),
-    replaceWith: sinon.spy(),
-    goBack: sinon.spy(),
-    getCurrentPath: sinon.spy(),
-    getCurrentRoutes: sinon.spy(),
-    getCurrentPathname: sinon.spy(),
-    getCurrentParams: sinon.spy(),
-    getCurrentQuery: sinon.spy(),
-    isActive: sinon.spy(),
-    getRouteAtDept: sinon.spy(),
-    setRouteComponentAtDepth: sinon.spy()
-});
-
+var RouterStub = assign({}, history.createMemoryHistory());
 var Wrapper = function (Component, props) {
     return React.createClass({
         childContextTypes: {
-            router: React.PropTypes.func
+            router: React.PropTypes.object
         },
         getChildContext: function () {
             return {

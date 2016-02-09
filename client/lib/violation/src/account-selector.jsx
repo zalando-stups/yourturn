@@ -5,6 +5,7 @@ import {Typeahead} from 'react-typeahead';
 import fuzzysearch from 'fuzzysearch';
 import Collapsible from 'common/src/collapsible.jsx';
 import 'common/asset/less/common/account-selector.less';
+import 'common/asset/less/common/typeahead.less';
 
 function filterOptionFn(input, option) {
     return input
@@ -133,6 +134,10 @@ class AccountSelector extends React.Component {
                         </div>
                     </div>
                     <div className='account-selector-list'>
+                    { displayedAccounts.length === 0 ?
+                        <span>Please add some accounts.</span> :
+                        null
+                    }
                     {_.sortBy(activeAccounts, 'name')
                         .map(a =>
                         <label
@@ -146,7 +151,7 @@ class AccountSelector extends React.Component {
                         </label>)}
                     {inactiveAccounts.length ?
                         <Collapsible
-                            header={'Untoggled accounts'}>
+                            header='Untoggled accounts'>
                         {_.sortBy(inactiveAccounts, 'name')
                             .map(a =>
                             <label

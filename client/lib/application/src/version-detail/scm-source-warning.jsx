@@ -4,7 +4,7 @@ import FetchResult from 'common/src/fetch-result';
 import DefaultError from 'common/src/error.jsx';
 
 class ScmSourceWarning extends React.Component {
-    constructor(props) {
+    constructor() {
         super();
     }
 

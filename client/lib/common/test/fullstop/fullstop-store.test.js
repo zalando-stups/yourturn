@@ -105,42 +105,4 @@ describe('The redux fullstop store', () => {
         expect(params.showUnresolved).to.be.defined;
         expect(params.accounts).to.be.defined;
     });
-
-    it('should not implicitly overwrite defaults', () => {
-        let oldState = FullstopStore(),
-            state = FullstopStore(oldState, {
-                type: Type.UPDATE_SEARCH_PARAMS,
-                payload: {
-                    accounts: ['test']
-                }
-            }),
-            oldParams = Getter.getSearchParams(oldState),
-            params = Getter.getSearchParams(state);
-
-        expect(params.from).to.equal(oldParams.from);
-        expect(params.to).to.equal(oldParams.to);
-        expect(params.accounts.length).to.equal(1);
-        expect(oldParams.accounts.length).to.equal(0);
-        expect(params.accounts[0]).to.equal('test');
-    });
-
-    it('should explicitly overwrite stuff', () => {
-        let initial = FullstopStore(),
-            oneState = FullstopStore(initial, {
-                type: Type.UPDATE_SEARCH_PARAMS,
-                payload: {
-                    accounts: ['bar', 'baz']
-                }
-            }),
-            twoState = FullstopStore(oneState, {
-                type: Type.UPDATE_SEARCH_PARAMS,
-                payload: {
-                    accounts: ['foo']
-                }
-            }),
-            params = Getter.getSearchParams(twoState);
-
-        expect(params.accounts.length).to.equal(1);
-        expect(params.accounts[0]).to.equal('foo');
-    });
 });

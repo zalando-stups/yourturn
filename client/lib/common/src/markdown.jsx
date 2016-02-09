@@ -93,7 +93,7 @@ class Markdown extends React.Component {
 }
 Markdown.displayName = 'Markdown';
 Markdown.propTypes = {
-    src: React.PropTypes.string.isRequired,
+    src: React.PropTypes.string,
     className: React.PropTypes.string,
     block: React.PropTypes.string,
     editable: React.PropTypes.bool,

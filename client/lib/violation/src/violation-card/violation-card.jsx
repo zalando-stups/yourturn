@@ -35,6 +35,7 @@ class ViolationCard extends React.Component {
         let {violation} = this.props,
             account = this.props.accounts.filter(a => a.id === violation.account_id)[0],
             {violation_type} = violation;
+
         return <div
                     data-block='violation-card'
                     data-severity={violation_type.violation_severity}
@@ -43,10 +44,7 @@ class ViolationCard extends React.Component {
                     <header>
                         <div className='violationCard-id'>
                             <Link
-                                to='violation-vioDetail'
-                                params={{
-                                    violationId: violation.id
-                                }}>{violation.id}
+                                to={`/violation/${violation.id}`}>{violation.id}
                             </Link>
                         </div>
                         <div>
@@ -77,33 +75,19 @@ class ViolationCard extends React.Component {
                             :
                             null}
                     </header>
-                    <table className='table'>
-                        <colgroup>
-                            <col width='0*' />
-                            <col width='0.5*' />
-                        </colgroup>
-                        <tbody>
-                            <tr>
-                                <th>Type</th>
-                                <td>{violation_type.id}</td>
-                            </tr>
-                            <tr>
-                                <th>Info</th>
-                                <td>{violation_type.help_text}</td>
-                            </tr>
-                            {violation.meta_info ?
-                                <tr>
-                                    <th>Metadata</th>
-                                    <td>
-                                        <code>
-                                            {violation.meta_info}
-                                        </code>
-                                    </td>
-                                </tr>
-                                :
-                                null}
-                        </tbody>
-                    </table>
+                    <div>
+                        <h5>{violation_type.id}</h5>
+                        <p>{violation_type.help_text}</p>
+                        {!!violation.meta_info ?
+                            <code className='violationCard-metadata'>
+                                {typeof violation.meta_info === 'string' ?
+                                    violation.meta_info :
+                                    Object.keys(violation.meta_info)
+                                    .map(key => <div><span className='violationCard-metadata-key'>{key}</span>: {JSON.stringify(violation.meta_info[key])}</div>)}
+                            </code>
+                            :
+                            null}
+                    </div>
                     <blockquote className='violationCard-violationMessage'>
                         {violation.message}
                     </blockquote>
@@ -138,7 +122,7 @@ class ViolationCard extends React.Component {
 }
 ViolationCard.displayName = 'ViolationCard';
 ViolationCard.contextTypes = {
-    router: React.PropTypes.func.isRequired
+    router: React.PropTypes.object
 };
 ViolationCard.propTypes = {
     autoFocus: React.PropTypes.bool,

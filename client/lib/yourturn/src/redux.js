@@ -1,7 +1,13 @@
 /* global ENV_DEVELOPMENT */
-import {createRedux, applyMiddleware, combineReducers, createStore} from 'redux';
+import {
+    applyMiddleware,
+    combineReducers,
+    createStore
+} from 'redux';
+import {browserHistory} from 'react-router';
 import thunk from 'redux-thunk';
 import createLogger from 'redux-logger';
+import {syncHistory, routeReducer} from 'redux-simple-router';
 import {
     reduxPromiseMiddleware,
     flummoxCompatMiddleware,
@@ -30,9 +36,11 @@ const logger = createLogger(),
         essentials: EssentialsStore,
         fullstop: FullstopStore,
         team: TeamStore,
-        search: SearchStore
+        search: SearchStore,
+        routing: routeReducer
     }),
     createWithMiddleware = applyMiddleware(
+                            syncHistory(browserHistory),
                             // thunk
                             thunk,
                             // allows to dispatch actions based on the result of another actoin
@@ -42,6 +50,7 @@ const logger = createLogger(),
                             // dispatches a FAIL_ action on failure of async operation
                             reduxPromiseMiddleware,
                             // logging, but only in dev
+                            // reduxIdentityMiddleware
                             ENV_DEVELOPMENT ? logger : reduxIdentityMiddleware
                         )(createStore);
 

@@ -1,6 +1,7 @@
 import React from 'react';
 import Icon from 'react-fa';
 import {Link} from 'react-router';
+import * as Routes from 'resource/src/routes';
 import Markdown from 'common/src/markdown.jsx';
 import Placeholder from './placeholder.jsx';
 import FetchResult from 'common/src/fetch-result';
@@ -8,7 +9,7 @@ import DefaultError from 'common/src/error.jsx';
 import 'common/asset/less/resource/resource-detail.less';
 
 class ResourceDetail extends React.Component {
-    constructor(props) {
+    constructor() {
         super();
     }
 
@@ -33,19 +34,17 @@ class ResourceDetail extends React.Component {
                     <h2>{resource.name || resourceId}</h2>
                     <div className='btn-group'>
                         <Link
-                            to='resource-resList'
+                            to={Routes.resList(LINK_PARAMS)}
                             className='btn btn-default'>
                             <Icon name='chevron-left' /> Resource Types
                         </Link>
                         <Link
-                            to='resource-resEdit'
-                            params={LINK_PARAMS}
+                            to={Routes.resEdit(LINK_PARAMS)}
                             className={`btn btn-default ${ whitelisted ? '' : 'btn-disabled'}`}>
                             <Icon name='edit' /> Edit {resource.name}
                         </Link>
                         <Link
-                            to='resource-scpCreate'
-                            params={LINK_PARAMS}
+                            to={Routes.scpCreate(LINK_PARAMS)}
                             className={`btn btn-primary ${ whitelisted ? '' : 'btn-disabled'}`}>
                             <Icon name='plus' /> Create Scope
                         </Link>
@@ -81,11 +80,10 @@ class ResourceDetail extends React.Component {
                                     {appScopes.map(
                                         scope => <li key={scope.id}>
                                                     <Link
-                                                        to='resource-scpDetail'
-                                                        params={{
+                                                        to={Routes.scpDetail({
                                                             resourceId: resourceId,
                                                             scopeId: scope.id
-                                                        }}>
+                                                        })}>
                                                         {scope.id}
                                                     </Link>
                                                 </li>)}
@@ -100,11 +98,10 @@ class ResourceDetail extends React.Component {
                                     {ownerScopes.map(
                                         scope => <li key={scope.id}>
                                                     <Link
-                                                        to='resource-scpDetail'
-                                                        params={{
+                                                        to={Routes.scpDetail({
                                                             resourceId: resourceId,
                                                             scopeId: scope.id
-                                                        }}>
+                                                        })}>
                                                         {scope.id}
                                                     </Link>
                                                 </li>)}
@@ -124,8 +121,5 @@ class ResourceDetail extends React.Component {
 ResourceDetail.displayName = 'ResourceDetail';
 ResourceDetail.propTypes = {
     resourceId: React.PropTypes.string.isRequired
-};
-ResourceDetail.contextTypes = {
-    router: React.PropTypes.func.isRequired
 };
 export default ResourceDetail;

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Route, DefaultRoute} from 'react-router';
+import {Route, IndexRoute} from 'react-router';
 import moment from 'moment';
 import Icon from 'react-fa';
 import lzw from 'lz-string';
@@ -7,9 +7,14 @@ import _ from 'lodash';
 
 import Violation from './violation/violation.jsx';
 import ViolationDetail from './violation-detail/violation-detail.jsx';
+import {parseSearchParams} from 'violation/src/util';
 
 import REDUX from 'yourturn/src/redux';
-import {requireAccounts, bindGettersToState, bindActionsToStore} from 'common/src/util';
+import {
+    bindGettersToState,
+    bindActionsToStore
+} from 'common/src/util';
+import {wrapEnter, requireAccounts} from 'common/src/router-utils';
 import {connect} from 'react-redux';
 
 import * as UserGetter from 'common/src/data/user/user-getter';
@@ -26,52 +31,105 @@ const FULLSTOP_ACTIONS = bindActionsToStore(REDUX, FullstopActions),
       NOTIFICATION_ACTIONS = bindActionsToStore(REDUX, NotificationActions),
       TEAM_ACTIONS = bindActionsToStore(REDUX, TeamActions);
 
-function parseQueryParams(params) {
-    let result = {};
-    // global parameters
-    if (params.accounts) {
-        result.accounts = params.accounts;
-    }
-    if (params.from) {
-        result.from = moment(params.from);
-    }
-    if (params.to) {
-        result.to = moment(params.to);
-    }
-    if (params.activeTab) {
-        result.activeTab = parseInt(params.activeTab, 10);
-    }
-    if (params.showUnresolved) {
-        result.showUnresolved = params.showUnresolved === 'true';
-    }
-    if (params.showResolved) {
-        result.showResolved = params.showResolved === 'true';
-    }
-    if (params.sortAsc) {
-        result.sortAsc = params.sortAsc === 'true';
-    }
+function ensureDefaultSearchParams(router, props, forceAddAccounts=false) {
+    let {location, fullstopStore, userStore} = props,
+        defaultParams = fullstopStore.getDefaultSearchParams(),
+        defaultAccounts = userStore.getUserCloudAccounts(),
+        queryParams = Object.assign({}, location.query);
 
-    // tab-specific parameters
-    Object
-    .keys(params)
-    .forEach(param => {
-        // they look like tab_variableCamelCase
-        let [tab, variable] = param.split('_'); // eslint-disable-line
-        if (variable) {
-            if (['true', 'false'].indexOf(params[param]) >= 0) {
-                result[param] = params[param] === 'true';
-            } else {
-                result[param] = params[param];
-            }
+    if (!queryParams.activeTab ||
+        (!queryParams.accounts && forceAddAccounts) ||
+        !queryParams.showUnresolved ||
+        !queryParams.showResolved ||
+        !queryParams.sortAsc ||
+        !queryParams.from ||
+        !queryParams.to) {
+
+        // ensure default params are in url
+        if (!queryParams.activeTab) {
+            queryParams.activeTab = defaultParams.activeTab;
         }
-    });
-    return result;
+        if (!queryParams.accounts) {
+            queryParams.accounts = [];
+            // this might or might not have an effect since transition hook is fired before fetchData
+            Array.prototype.push.apply(queryParams.accounts, defaultAccounts.map(a => a.id));
+        }
+        if (!queryParams.showUnresolved && !queryParams.showResolved) {
+            // query might not be empty (this is only the case when accessing via menubar)
+            // but still have parameters missing
+            // so we add the default ones
+            queryParams.showUnresolved = defaultParams.showUnresolved;
+            queryParams.showResolved = defaultParams.showResolved;
+        }
+        if (!queryParams.sortAsc) {
+            queryParams.sortAsc = defaultParams.sortAsc;
+        }
+        if (!queryParams.from) {
+            queryParams.from = defaultParams.from.toISOString();
+        }
+        if (!queryParams.to) {
+            queryParams.to = defaultParams.to.toISOString();
+        }
+        router.replace({
+            pathname: '/violation',
+            query: queryParams
+        });
+    }
 }
-
+function ensureDataAvailability(searchParams, getAccounts, getAlias) {
+    if (searchParams.activeTab === 0) {
+        // tab 1
+        FULLSTOP_ACTIONS.fetchViolationCount(searchParams);
+        if (searchParams.accounts && searchParams.accounts.length) {
+            let accs = getAccounts();
+            searchParams.accounts.forEach(acc => {
+                // for every account
+                // get its name
+                let account = accs.filter(account => account.id === acc)[0];
+                if (account) {
+                    let alias = getAlias(account.name);
+                    // and ask the team service about it
+                    if (!alias) {
+                        TEAM_ACTIONS.fetchTeam(account.name);
+                    }
+                }
+            });
+        }
+    } else if (searchParams.activeTab === 1) {
+        // tab 2
+        if (searchParams.accounts[0]) {
+            FULLSTOP_ACTIONS.fetchViolationCountIn(
+                searchParams.cross_inspectedAccount ? searchParams.cross_inspectedAccount : searchParams.accounts[0],
+                searchParams);
+        }
+    } else if (searchParams.activeTab === 2) {
+        // tab 3
+        FULLSTOP_ACTIONS.fetchViolations(searchParams);
+    }
+}
 class ViolationHandler extends React.Component {
     constructor() {
         super();
     }
+
+    componentWillMount() {
+        ensureDefaultSearchParams(this.context.router, this.props, true);
+        ensureDataAvailability(
+            parseSearchParams(this.props.location.search),
+            this.props.teamStore.getAccounts,
+            this.props.teamStore.getAlias);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        ensureDefaultSearchParams(this.context.router, nextProps);
+        if (nextProps.location.search !== this.props.location.search) {
+            ensureDataAvailability(
+                parseSearchParams(nextProps.location.search),
+                this.props.teamStore.getAccounts,
+                this.props.teamStore.getAlias);
+        }
+    }
+
     render() {
         return <Violation
                     notificationActions={NOTIFICATION_ACTIONS}
@@ -79,92 +137,18 @@ class ViolationHandler extends React.Component {
                     {...this.props} />;
     }
 }
-ViolationHandler.displayName = 'ViolationHandler';
-ViolationHandler.willTransitionTo = function(transition, params, query) {
+ViolationHandler.fetchData = function(routerState, state) {
+    // check all query params are in place
     // save last visited date
     FULLSTOP_ACTIONS.saveLastVisited(Date.now());
-    let state = REDUX.getState(),
-        defaultParams = FullstopGetter.getDefaultSearchParams(),
-        queryParams = parseQueryParams(query),
-        searchParams = FullstopGetter.getSearchParams(state.fullstop),
-        selectedAccounts = UserGetter.getUserCloudAccounts(state.user), // these the user has access to
-        {accounts} = searchParams; // these accounts are selected and active
+    let searchParams = parseSearchParams(routerState.location.search);
 
-    // break infinite transition loop
-    if (query.activeTab &&
-        query.showUnresolved &&
-        query.showResolved &&
-        query.sortAsc &&
-        query.from &&
-        query.to) {
-        return;
-    }
-
-    // ensure default params are in url
-    if (!queryParams.activeTab) {
-        queryParams.activeTab = defaultParams.activeTab;
-    }
-    if (!queryParams.accounts) {
-        // this might or might not have an effect since transition hook is fired before fetchData
-        Array.prototype.push.apply(accounts, selectedAccounts.map(a => a.id));
-    }
-    if (!queryParams.showUnresolved && !queryParams.showResolved) {
-        // query might not be empty (this is only the case when accessing via menubar)
-        // but still have parameters missing
-        // so we add the default ones
-        queryParams.showUnresolved = defaultParams.showUnresolved;
-        queryParams.showResolved = defaultParams.showResolved;
-    }
-    if (!queryParams.sortAsc) {
-        queryParams.sortAsc = defaultParams.sortAsc;
-    }
-    if (!queryParams.from) {
-        queryParams.from = defaultParams.from.toISOString();
-    } else {
-        queryParams.from = queryParams.from.toISOString();
-    }
-    if (!queryParams.to) {
-        queryParams.to = defaultParams.to.toISOString();
-    } else {
-        queryParams.to = queryParams.to.toISOString();
-    }
-    transition.redirect('violation', {}, queryParams);
-};
-ViolationHandler.fetchData = function(routerState, state) {
     let promises = [],
-        accounts = TeamGetter.getAccounts(state.team).length === 0 ?
-                    TEAM_ACTIONS.fetchAccounts() :
-                    Promise.resolve(TeamGetter.getAccounts(state.team)),
-        searchParams = parseQueryParams(routerState.query);
-    FULLSTOP_ACTIONS.updateSearchParams(searchParams);
-    // tab-specific loadings
-    if (searchParams.activeTab === 0) {
-        // tab 1
-        FULLSTOP_ACTIONS.fetchViolationCount(searchParams);
-        if (searchParams.accounts && searchParams.accounts.length) {
-            accounts.then(accs => {
-                searchParams.accounts.forEach(acc => {
-                    // for every account
-                    // get its name
-                    let account = accs.filter(account => account.id === acc)[0];
-                    let alias = TeamGetter.getAlias(state.team, account.name);
-                    // and ask the team service about it
-                    if (!alias) {
-                        TEAM_ACTIONS.fetchTeam(account.name);
-                    }
-                });
-            });
-        }
-    } else if (searchParams.activeTab === 1) {
-        // tab 2
-        FULLSTOP_ACTIONS.fetchViolationCountIn(
-            searchParams.cross_inspectedAccount ? searchParams.cross_inspectedAccount : searchParams.accounts[0],
-            searchParams);
-    } else if (searchParams.activeTab === 2) {
-        // tab 3
-        FULLSTOP_ACTIONS.fetchViolations(searchParams);
-    }
+        accountsPromise = TeamGetter.getAccounts(state.team).length === 0 ?
+                            TEAM_ACTIONS.fetchAccounts() :
+                            Promise.resolve(TeamGetter.getAccounts(state.team));
 
+    promises.push(accountsPromise);
     if (!Object.keys(FullstopGetter.getViolationTypes(state.fullstop)).length) {
         promises.push(FULLSTOP_ACTIONS.fetchViolationTypes());
     }
@@ -172,13 +156,12 @@ ViolationHandler.fetchData = function(routerState, state) {
     promises.push(requireAccounts(state, USER_ACTIONS));
     return Promise.all(promises);
 };
-ViolationHandler.propTypes = {
-    query: React.PropTypes.object.isRequired
-};
+ViolationHandler.displayName = 'ViolationHandler';
 ViolationHandler.contextTypes = {
-    router: React.PropTypes.func.isRequired
+    router: React.PropTypes.object
 };
 let ConnectedViolationHandler = connect(state => ({
+    routing: state.routing,
     userStore: bindGettersToState(state.user, UserGetter),
     fullstopStore: bindGettersToState(state.fullstop, FullstopGetter),
     teamStore: bindGettersToState(state.team, TeamGetter)
@@ -231,10 +214,17 @@ ViolationShortUrlHandler.contextTypes = {
 };
 
 const ROUTES =
-    <Route name='violation' path='violation'>
-        <DefaultRoute handler={ConnectedViolationHandler} />
-        <Route name='violation-short' path='v/:shortened' handler={ViolationShortUrlHandler} />
-        <Route name='violation-vioDetail' path=':violationId' handler={ConnectedViolationDetailHandler} />
+    <Route path='violation'>
+        <IndexRoute
+            onEnter={wrapEnter(ViolationHandler.fetchData)}
+            component={ConnectedViolationHandler} />
+        <Route
+            path='v/:shortened'
+            component={ViolationShortUrlHandler} />
+        <Route
+            path=':violationId'
+            onEnter={wrapEnter(ViolationDetailHandler.fetchData)}
+            component={ConnectedViolationDetailHandler} />
     </Route>;
 
 export default ROUTES;

@@ -1,10 +1,14 @@
 import React from 'react';
-import {Route, DefaultRoute} from 'react-router';
+import {Route, IndexRoute} from 'react-router';
 import Config from 'common/src/config';
 
 import REDUX from 'yourturn/src/redux';
-import {requireAccounts, bindGettersToState, bindActionsToStore} from 'common/src/util';
 import {connect} from 'react-redux';
+import {
+    bindGettersToState,
+    bindActionsToStore
+} from 'common/src/util';
+import {wrapEnter, requireAccounts} from 'common/src/router-utils';
 
 import * as UserGetter from 'common/src/data/user/user-getter';
 import * as EssentialsGetter from 'common/src/data/essentials/essentials-getter';
@@ -255,16 +259,36 @@ let ConnectedCreateScopeFormHandler = connect(state => ({
 }))(CreateScopeFormHandler);
 
 const ROUTES =
-    <Route name='resource-resList' path='resource'>
-        <DefaultRoute handler={ConnectedResourceListHandler} />
-        <Route name='resource-resCreate' path='create' handler={ConnectedCreateResourceFormHandler} />
-        <Route name='resource-resEdit' path='edit/:resourceId' handler={ConnectedEditResourceFormHandler} />
-        <Route name='resource-resDetail' path='detail/:resourceId'>
-            <DefaultRoute handler={ConnectedResourceDetailHandler} />
+    <Route path='resource'>
+        <IndexRoute
+            onEnter={wrapEnter(ResourceListHandler.fetchData)}
+            component={ConnectedResourceListHandler} />
+        <Route
+            path='create'
+            onEnter={wrapEnter(CreateResourceFormHandler.fetchData, CreateResourceFormHandler.isAllowed)}
+            component={ConnectedCreateResourceFormHandler} />
+        <Route
+            path='edit/:resourceId'
+            onEnter={wrapEnter(EditResourceFormHandler.fetchData, EditResourceFormHandler.isAllowed)}
+            component={ConnectedEditResourceFormHandler} />
+        <Route
+            path='detail/:resourceId'>
+            <IndexRoute
+                onEnter={wrapEnter(ResourceDetailHandler.fetchData)}
+                component={ConnectedResourceDetailHandler} />
             <Route path='scope'>
-                <Route name='resource-scpCreate' path='create' handler={ConnectedCreateScopeFormHandler} />
-                <Route name='resource-scpDetail' path='detail/:scopeId' handler={ConnectedScopeDetailHandler} />
-                <Route name='resource-scpEdit' path='edit/:scopeId' handler={ConnectedEditScopeFormHandler} />
+                <Route
+                    path='create'
+                    onEnter={wrapEnter(CreateScopeFormHandler.fetchData, CreateScopeFormHandler.isAllowed)}
+                    component={ConnectedCreateScopeFormHandler} />
+                <Route
+                    path='detail/:scopeId'
+                    onEnter={wrapEnter(ScopeDetailHandler.fetchData)}
+                    component={ConnectedScopeDetailHandler} />
+                <Route
+                    path='edit/:scopeId'
+                    onEnter={wrapEnter(EditScopeFormHandler.fetchData, EditScopeFormHandler.isAllowed)}
+                    component={ConnectedEditScopeFormHandler} />
             </Route>
         </Route>
     </Route>;

@@ -62,14 +62,6 @@ function FullstopStore(state, action) {
         return state.set('violations', all);
     } else if (type === Types.DELETE_VIOLATIONS) {
         return state.set('violations', Immutable.Map());
-    } else if (type === Types.UPDATE_SEARCH_PARAMS) {
-        let currentParams = state.get('searchParams');
-        Object
-        .keys(payload)
-        .forEach(param => {
-            currentParams = currentParams.set(param, payload[param]);
-        });
-        return state.set('searchParams', currentParams);
     } else if (type === Types.FETCH_VIOLATION_TYPES) {
         let types = payload.reduce((all, t) => {
             all[t.id] = t;

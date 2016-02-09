@@ -183,7 +183,7 @@ function savePreferredAccount(acc) {
 }
 
 function loadPreferredAccount() {
-    return Storage.get('kio_preferredAccount') || false;
+    return Storage.get('kio_preferredAccount') || false;
 }
 
 let fetchAppsAction = flummoxCompatWrap(createAction(Type.FETCH_APPLICATIONS, fetchApplications)),

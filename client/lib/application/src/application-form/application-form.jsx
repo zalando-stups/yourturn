@@ -1,9 +1,10 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import Icon from 'react-fa';
 import Markdown from 'common/src/markdown.jsx';
 import {Link} from 'react-router';
+import * as Routes from 'application/src/routes';
 import SERVICE_URL_TLD from 'SERVICE_URL_TLD';
-import {constructLocalUrl} from 'common/src/data/services';
 import 'common/asset/less/application/application-form.less';
 
 class ApplicationForm extends React.Component {
@@ -35,7 +36,7 @@ class ApplicationForm extends React.Component {
     }
 
     setCustomValidity(evt) {
-        React
+        ReactDOM
         .findDOMNode(evt.target)
         .setCustomValidity(this.state.appIdTaken ? 'Application ID is already taken' : '');
     }
@@ -52,9 +53,7 @@ class ApplicationForm extends React.Component {
 
         this.props.kioActions
         .saveApplication(this.state.app.id, this.state.app)
-        .then(() => {
-            this.context.router.transitionTo(constructLocalUrl('application', [this.state.app.id]));
-        })
+        .then(() => this.context.router.push(Routes.appDetail({applicationId: this.state.app.id})))
         .catch(e => {
             let verb = this.props.edit ? 'update' : 'create';
             this.props.notificationActions
@@ -81,33 +80,27 @@ class ApplicationForm extends React.Component {
             storeApp = this.props.kioStore.getApplication(applicationId),
             {app} = this.state,
             accounts = this.props.userStore.getUserCloudAccounts();
-
+        const LINK_PARAMS = {applicationId};
         return <div className='applicationForm'>
                     {edit ?
                         <div>
                             <h2>Edit <Link
-                                        to='application-appDetail'
-                                        params={{
-                                            applicationId: applicationId
-                                        }}>{storeApp.name}</Link>
+                                        to={Routes.appDetail(LINK_PARAMS)}>{storeApp.name}</Link>
                             </h2>
                             <div className='btn-group'>
                                 <Link
-                                    to='application-appDetail'
-                                    className='btn btn-default'
-                                    params={{
-                                        applicationId: applicationId
-                                    }}>
+                                    to={Routes.appDetail(LINK_PARAMS)}
+                                    className='btn btn-default'>
                                     <Icon name='chevron-left' /> {storeApp.name}
                                 </Link>
                             </div>
                         </div>
                         :
                         <div>
-                            <h2>Create a new <Link to='application-appList'>Application</Link></h2>
+                            <h2>Create a new <Link to={Routes.appList()}>Application</Link></h2>
                             <div className='btn-group'>
                                 <Link
-                                    to='application-appList'
+                                    to={Routes.appList()}
                                     className='btn btn-default'>
                                     <Icon name='chevron-left' /> Applications
                                 </Link>
@@ -312,7 +305,7 @@ ApplicationForm.propTypes = {
     kioStore: React.PropTypes.object.isRequired
 };
 ApplicationForm.contextTypes = {
-    router: React.PropTypes.func.isRequired
+    router: React.PropTypes.object
 };
 
 export default ApplicationForm;

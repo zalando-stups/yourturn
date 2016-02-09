@@ -117,10 +117,6 @@ function deleteViolations() {
     return true;
 }
 
-function updateSearchParams(params) {
-    return params;
-}
-
 function saveLastVisited(date) {
     Storage.set('fullstop_lastVisited', date);
     return date;
@@ -137,7 +133,6 @@ let fetchViolationAction = flummoxCompatWrap(createAction(Type.FETCH_VIOLATION, 
     fetchViolationTypesAction = createAction(Type.FETCH_VIOLATION_TYPES, fetchViolationTypes),
     fetchViolationCountAction = createAction(Type.FETCH_VIOLATION_COUNT, fetchViolationCount),
     fetchViolationCountInAction = createAction(Type.FETCH_VIOLATION_COUNT_IN, fetchViolationCountIn),
-    updateSearchParamsAction = createAction(Type.UPDATE_SEARCH_PARAMS, updateSearchParams),
     saveLastVisitedAction = createAction(Type.SAVE_LAST_VISITED, saveLastVisited),
     loadLastVisitedAction = createAction(Type.LOAD_LAST_VISITED, loadLastVisited),
     fetchOwnTotalAction = createAction(Type.FETCH_OWN_TOTAL, fetchOwnTotal);
@@ -151,7 +146,6 @@ export {
     fetchViolationCountInAction as fetchViolationCountIn,
     resolveViolationAction as resolveViolation,
     deleteViolationsAction as deleteViolations,
-    updateSearchParamsAction as updateSearchParams,
     saveLastVisitedAction as saveLastVisited,
     loadLastVisitedAction as loadLastVisited
 };

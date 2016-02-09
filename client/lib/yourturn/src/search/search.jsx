@@ -33,7 +33,7 @@ SearchResult.propTypes = {
 };
 
 class Search extends React.Component {
-    constructor(props) {
+    constructor() {
         super();
         this.state = {
             term: ''

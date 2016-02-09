@@ -1,15 +1,19 @@
 import React from 'react';
-import {Route, DefaultRoute} from 'react-router';
+import {Route, IndexRoute} from 'react-router';
 
 import AppRoutes from 'application/src/router.react.jsx';
 import ResRoutes from 'resource/src/router.react.jsx';
 import VioRoutes from 'violation/src/router.react.jsx';
 import YourTurn from './app.jsx';
 import Search from 'yourturn/src/search/search.jsx';
+import DefaultError from 'common/src/error.jsx';
 
 import REDUX from 'yourturn/src/redux';
 import {connect} from 'react-redux';
-import {bindActionsToStore, bindGettersToState} from 'common/src/util';
+import {
+    bindActionsToStore,
+    bindGettersToState
+} from 'common/src/util';
 
 import * as FullstopGetter from 'common/src/data/fullstop/fullstop-getter';
 import * as SearchGetter from 'common/src/data/search/search-getter';
@@ -42,7 +46,7 @@ class LoginHandler extends React.Component {
             .addNotification(
                 'OAuth: Unexpected response. This should not happen.',
                 'error');
-            return this.context.router.transitionTo('/');
+            return this.context.router.push('/');
         }
         if (response) {
             if (response instanceof Error) {
@@ -68,7 +72,7 @@ class LoginHandler extends React.Component {
                         });
                     USER_ACTIONS.fetchUserInfo(info.uid);
 
-                    this.context.router.transitionTo(response.metadata.route || '/');
+                    this.context.router.push(response.metadata.route || '/');
                 })
                 .catch(e => {
                     // delete tokens
@@ -107,13 +111,24 @@ let ConnectedSearchHandler = connect(state => ({
     searchStore: bindGettersToState(state.search, SearchGetter)
 }))(SearchHandler);
 
+class ErrorHandler extends React.Component {
+    constructor() {
+        super();
+    }
+
+    render() {
+        return <DefaultError error={this.props.location.state} />
+    }
+}
+
 const ROUTES =
-    <Route handler={YourTurn} path='/'>
+    <Route component={YourTurn} path='/'>
         {AppRoutes}
         {ResRoutes}
         {VioRoutes}
-        <DefaultRoute name='search' path='search' handler={ConnectedSearchHandler} />
-        <Route path='oauth' handler={LoginHandler} />
+        <IndexRoute component={ConnectedSearchHandler} />
+        <Route path='oauth' component={LoginHandler} />
+        <Route path='error' component={ErrorHandler} />
     </Route>;
 
 export default ROUTES;

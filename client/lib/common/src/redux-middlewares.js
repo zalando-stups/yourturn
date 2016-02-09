@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import {createAction} from 'redux-actions';
 
 function isPromise(maybePromise) {
@@ -110,7 +111,7 @@ function reduxPromiseMiddleware({dispatch}) {
 }
 
 /* Does nothing, just invokes the next middleware. */
-function reduxIdentityMiddleware({dispatch}) {
+function reduxIdentityMiddleware() {
     return next => action => next(action);
 }
 

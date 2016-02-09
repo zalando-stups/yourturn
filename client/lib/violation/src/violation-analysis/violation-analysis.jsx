@@ -162,9 +162,9 @@ ViolationAnalysis.propTypes = {
     groupByAccount: React.PropTypes.bool,
     violationType: React.PropTypes.string,
     violationCount: React.PropTypes.array,
-    violationTypes: React.PropTypes.array,
+    violationTypes: React.PropTypes.object,
     onConfigurationChange: React.PropTypes.func,
-    accounts: React.PropTypes.array,
+    accounts: React.PropTypes.object,
     account: React.PropTypes.string
 };
 

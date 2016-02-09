@@ -1,7 +1,6 @@
 import {Services, getLocalUrlForService} from 'common/src/data/services';
 import Immutable from 'immutable';
 import Types from './search-types';
-import * as Getter from './search-getter';
 
 function sortDesc(a, b) {
     return a < b ? 1 :
