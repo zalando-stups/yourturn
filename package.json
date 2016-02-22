@@ -32,6 +32,7 @@
     "ease-component": "1.0.0",
     "fixed-data-table": "0.4.7",
     "fuzzysearch": "1.0.3",
+    "griddle-react": "^0.3.1",
     "history": "2.0.0-rc2",
     "immutable": "3.7.6",
     "lz-string": "1.4.4",

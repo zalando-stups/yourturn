@@ -49,6 +49,16 @@ function FullstopStore(state, action) {
             all = violations.reduce(
                 (coll, v) => {
                     v.timestamp = Date.parse(v.created) || 0;
+                    v.is_resolved = !!v.comment;
+                    v.violation_severity = v.violation_type.violation_severity;
+                    v.violation_type_id = v.violation_type.id;
+                    v.violation_name = v.violation_type.violation_name;
+                    try {
+                        v.application_id = v.meta_info.application_id;
+                        v.version_id = v.meta_info.version_id;
+                    } catch (e) {
+                        // do nothing
+                    }
                     return coll.set(String(v.id), Immutable.fromJS(v));
                 },
                 state.get('violations'));
@@ -56,7 +66,8 @@ function FullstopStore(state, action) {
             state = state.set('pagingInfo', Immutable.Map({
                 last: metadata.last,
                 page: metadata.number,
-                total: metadata.total_elements
+                total: metadata.total_elements,
+                total_pages: metadata.total_pages
             }));
         }
         return state.set('violations', all);

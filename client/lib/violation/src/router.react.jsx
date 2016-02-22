@@ -42,6 +42,7 @@ function ensureDefaultSearchParams(router, props, forceAddAccounts=false) {
         !queryParams.showUnresolved ||
         !queryParams.showResolved ||
         !queryParams.sortAsc ||
+        !queryParams.page ||
         !queryParams.from ||
         !queryParams.to) {
 
@@ -63,6 +64,9 @@ function ensureDefaultSearchParams(router, props, forceAddAccounts=false) {
         }
         if (!queryParams.sortAsc) {
             queryParams.sortAsc = defaultParams.sortAsc;
+        }
+        if (!queryParams.page) {
+            queryParams.page = defaultParams.page;
         }
         if (!queryParams.from) {
             queryParams.from = defaultParams.from.toISOString();
