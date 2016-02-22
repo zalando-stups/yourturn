@@ -26,7 +26,7 @@ function fetchViolations(params) {
             .accept('json')
             .query({
                 accounts: params.accounts && params.accounts.join(','),
-                size: params.size || 10,
+                size: params.size || 20,
                 from: params.from ? params.from.toISOString() : '',
                 to: (params.to || new Date()).toISOString(),
                 page: params.page || 0,

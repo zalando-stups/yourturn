@@ -5,17 +5,22 @@ import Types from './fullstop-types';
 import * as Getters from './fullstop-getter';
 
 const DEFAULT_PAGING = {
-        last: true
+        last: true,
+        page: 0,
+        total: 0,
+        total_pages: 0
     },
     DEFAULT_STATE = Immutable.fromJS({
         ownAccountsTotal: 0,
         lastVisited: 0,
+        loadingViolations: false,
         violations: {},
         violationCount: [],
         violationCountIn: [],
         violationTypes: {},
         pagingInfo: DEFAULT_PAGING,
         searchParams: {
+            size: 20,
             page: 0,
             accounts: [],
             from: moment().subtract(1, 'week').startOf('day'),
@@ -34,7 +39,7 @@ function FullstopStore(state, action) {
 
     let {type, payload} = action;
     if (type === Types.BEGIN_FETCH_VIOLATIONS) {
-        return state.set('pagingInfo', Immutable.Map(DEFAULT_PAGING));
+        return state.set('loadingViolations', true);
     } else if (type === Types.BEGIN_FETCH_VIOLATION) {
         return state.setIn(['violations', String(payload[0])], new Pending());
     } else if (type === Types.FAIL_FETCH_VIOLATION) {
@@ -70,7 +75,9 @@ function FullstopStore(state, action) {
                 total_pages: metadata.total_pages
             }));
         }
-        return state.set('violations', all);
+        return state
+                .set('loadingViolations', false)
+                .set('violations', all);
     } else if (type === Types.DELETE_VIOLATIONS) {
         return state.set('violations', Immutable.Map());
     } else if (type === Types.FETCH_VIOLATION_TYPES) {
