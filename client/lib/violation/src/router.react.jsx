@@ -110,7 +110,7 @@ class ViolationHandler extends React.Component {
                     loading={violationLoading}
                     accounts={accounts}
                     pagingInfo={pagingInfo}
-                    params={parseSearchParams(this.props.routing.location.search)}
+                    params={parseSearchParams(this.props.location.search)}
                     routing={this.props.routing} />;
     }
 }
