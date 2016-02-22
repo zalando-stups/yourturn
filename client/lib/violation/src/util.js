@@ -42,20 +42,6 @@ function parseSearchParams(searchParams) {
         result.sortAsc = params.sortAsc === 'true';
     }
 
-    // tab-specific parameters
-    Object
-    .keys(params)
-    .forEach(param => {
-        // they look like tab_variableCamelCase
-        let [tab, variable] = param.split('_'); // eslint-disable-line
-        if (variable) {
-            if (['true', 'false'].indexOf(params[param]) >= 0) {
-                result[param] = params[param] === 'true';
-            } else {
-                result[param] = params[param];
-            }
-        }
-    });
     return result;
 }
 

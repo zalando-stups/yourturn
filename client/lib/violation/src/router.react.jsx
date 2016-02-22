@@ -76,37 +76,7 @@ function ensureDefaultSearchParams(router, props, forceAddAccounts=false) {
         });
     }
 }
-function ensureDataAvailability(searchParams, getAccounts, getAlias) {
-    if (searchParams.activeTab === 0) {
-        // tab 1
-        FULLSTOP_ACTIONS.fetchViolationCount(searchParams);
-        if (searchParams.accounts && searchParams.accounts.length) {
-            let accs = getAccounts();
-            searchParams.accounts.forEach(acc => {
-                // for every account
-                // get its name
-                let account = accs.filter(account => account.id === acc)[0];
-                if (account) {
-                    let alias = getAlias(account.name);
-                    // and ask the team service about it
-                    if (!alias) {
-                        TEAM_ACTIONS.fetchTeam(account.name);
-                    }
-                }
-            });
-        }
-    } else if (searchParams.activeTab === 1) {
-        // tab 2
-        if (searchParams.accounts[0]) {
-            FULLSTOP_ACTIONS.fetchViolationCountIn(
-                searchParams.cross_inspectedAccount ? searchParams.cross_inspectedAccount : searchParams.accounts[0],
-                searchParams);
-        }
-    } else if (searchParams.activeTab === 2) {
-        // tab 3
-        FULLSTOP_ACTIONS.fetchViolations(searchParams);
-    }
-}
+
 class ViolationHandler extends React.Component {
     constructor() {
         super();
@@ -114,27 +84,26 @@ class ViolationHandler extends React.Component {
 
     componentWillMount() {
         ensureDefaultSearchParams(this.context.router, this.props, true);
-        ensureDataAvailability(
-            parseSearchParams(this.props.location.search),
-            this.props.teamStore.getAccounts,
-            this.props.teamStore.getAlias);
+        FULLSTOP_ACTIONS.fetchViolations(parseSearchParams(this.props.routing.location.search));
     }
 
     componentWillReceiveProps(nextProps) {
         ensureDefaultSearchParams(this.context.router, nextProps);
         if (nextProps.location.search !== this.props.location.search) {
-            ensureDataAvailability(
-                parseSearchParams(nextProps.location.search),
-                this.props.teamStore.getAccounts,
-                this.props.teamStore.getAlias);
+            FULLSTOP_ACTIONS.fetchViolations(parseSearchParams(this.props.routing.location.search));
         }
     }
 
     render() {
+        let violations = this.props.fullstopStore.getViolations(),
+            pagingInfo = this.props.fullstopStore.getPagingInfo();
         return <Violation
                     notificationActions={NOTIFICATION_ACTIONS}
                     fullstopActions={FULLSTOP_ACTIONS}
-                    {...this.props} />;
+                    violations={violations}
+                    pagingInfo={pagingInfo}
+                    params={parseSearchParams(this.props.routing.location.search)}
+                    routing={this.props.routing} />;
     }
 }
 ViolationHandler.fetchData = function(routerState, state) {
