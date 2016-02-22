@@ -1,6 +1,8 @@
 import React from 'react';
 import Icon from 'react-fa';
 import FilterDropdown from './filter-dropdown.jsx';
+import * as Routes from 'violation/src/routes';
+import {stringifySearchParams} from 'violation/src/util';
 
 function range(from, to) {
     var result = [];
@@ -11,13 +13,19 @@ function range(from, to) {
     return result;
 }
 
-var accounts = range(0, 120)
-                .map(s => parseInt(Math.random() * Math.pow(10, 12), 10))
-                .map(i => Number(i).toString());
+var accounts = ["0987654321", "123456789"]
 
 class ViolationFilters extends React.Component {
     constructor() {
         super();
+    }
+
+    onUpdate(what, data) {
+        let params = stringifySearchParams(this.props.params);
+        if (what === 'account') {
+            params.accounts = data;
+        }
+        this.context.router.push(Routes.violation(params));
     }
 
     render() {
@@ -26,7 +34,9 @@ class ViolationFilters extends React.Component {
                     <tr>
                         <td>
                             <FilterDropdown
+                                onUpdate={this.onUpdate.bind(this, 'account')}
                                 items={accounts}
+                                selection={["0987654321", "123456789"]}
                                 title="Account" />
                         </td>
                         <td>Created</td>

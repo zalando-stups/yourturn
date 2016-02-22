@@ -21,14 +21,16 @@ class ListItem extends React.Component {
 }
 
 class FilterDropdown extends React.Component {
-    constructor() {
+    constructor(props) {
         super();
         this.state = {
             outsideClickHandler: null,
             visible: false,
             filtered: false,
             filteredItems: [],
-            selectedItems: {}
+            selectedItems: props.selection ?
+                            props.selection.reduce((m, i) => {m[i] = true; return m;}, {}) :
+                            {}
         };
     }
 
@@ -81,17 +83,26 @@ class FilterDropdown extends React.Component {
         }
     }
 
+    publishSelectionUpdate(data) {
+        if (this.props.onUpdate) {
+            this.props.onUpdate(data);
+        }
+    }
+
     onSelectAll() {
         let selected = this.props.items.reduce((m, i) => {m[i] = true; return m; }, {});
         this.setState({
             selectedItems: selected
         });
+        let selectedList = this.props.items.filter(i => !!selected[i]);
+        this.publishSelectionUpdate(selectedList);
     }
 
     onSelectNone() {
         this.setState({
             selectedItems: {}
         });
+        this.publishSelectionUpdate([]);
     }
 
     onItemToggle(item) {
@@ -100,6 +111,8 @@ class FilterDropdown extends React.Component {
         } else {
             this.state.selectedItems[item] = true;
         }
+        let selected = this.props.items.filter(i => !!this.state.selectedItems[i]);
+        this.publishSelectionUpdate(selected);
         this.setState(this.state);
     }
 

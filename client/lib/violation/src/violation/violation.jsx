@@ -18,7 +18,8 @@ class Violation extends React.Component {
     render() {
         return  <div>
                     <h2>Violations</h2>
-                    <ViolationFilters />
+                    <ViolationFilters
+                        params={this.props.params} />
                     <ViolationTable
                         onSetPage={this.onSetPage.bind(this)}
                         {...this.props} />
