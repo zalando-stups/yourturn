@@ -64,6 +64,12 @@ class FilterDropdown extends React.Component {
         document.removeEventListener('click', this.state.outsideClickHandler);
     }
 
+    componentWillReceiveProps(nextProps) {
+        if (this.props.selection !== nextProps.selection) {
+            nextProps.selection.reduce((s, i) => {s[i] = true; return s;}, this.state.selectedItems);
+        }
+    }
+
     onHeaderClick() {
         this.state.visible = !this.state.visible;
         this.setState(this.state);

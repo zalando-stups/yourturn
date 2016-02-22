@@ -20,7 +20,7 @@ const DEFAULT_PAGING = {
         violationTypes: {},
         pagingInfo: DEFAULT_PAGING,
         searchParams: {
-            size: 20,
+            size: 15,
             page: 0,
             accounts: [],
             from: moment().subtract(1, 'week').startOf('day'),
@@ -66,7 +66,7 @@ function FullstopStore(state, action) {
                     }
                     return coll.set(String(v.id), Immutable.fromJS(v));
                 },
-                state.get('violations'));
+                Immutable.Map());
         if (metadata) {
             state = state.set('pagingInfo', Immutable.Map({
                 last: metadata.last,

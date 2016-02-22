@@ -94,17 +94,21 @@ class ViolationHandler extends React.Component {
     componentWillReceiveProps(nextProps) {
         ensureDefaultSearchParams(this.context.router, nextProps);
         if (nextProps.location.search !== this.props.location.search) {
-            FULLSTOP_ACTIONS.fetchViolations(parseSearchParams(this.props.routing.location.search));
+            FULLSTOP_ACTIONS.fetchViolations(parseSearchParams(nextProps.location.search));
         }
     }
 
     render() {
         let violations = this.props.fullstopStore.getViolations(),
+            accounts = this.props.teamStore.getAccounts(),
+            violationLoading = this.props.fullstopStore.getLoading(),
             pagingInfo = this.props.fullstopStore.getPagingInfo();
         return <Violation
                     notificationActions={NOTIFICATION_ACTIONS}
                     fullstopActions={FULLSTOP_ACTIONS}
                     violations={violations}
+                    loading={violationLoading}
+                    accounts={accounts}
                     pagingInfo={pagingInfo}
                     params={parseSearchParams(this.props.routing.location.search)}
                     routing={this.props.routing} />;
@@ -114,7 +118,6 @@ ViolationHandler.fetchData = function(routerState, state) {
     // check all query params are in place
     // save last visited date
     FULLSTOP_ACTIONS.saveLastVisited(Date.now());
-    let searchParams = parseSearchParams(routerState.location.search);
 
     let promises = [],
         accountsPromise = TeamGetter.getAccounts(state.team).length === 0 ?

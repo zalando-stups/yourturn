@@ -56,6 +56,10 @@ function getDefaultSearchParams() {
     return (FullstopStore()).get('searchParams').toJS();
 }
 
+function getLoading(state) {
+    return state.get('loadingViolations');
+}
+
 export {
     getViolations,
     getViolation,
@@ -67,5 +71,6 @@ export {
     getViolationCountIn,
     getLastVisited,
     getOwnTotal,
-    getDefaultSearchParams
+    getDefaultSearchParams,
+    getLoading
 };

@@ -1,4 +1,5 @@
 import React from 'react';
+import Icon from 'react-fa';
 import ViolationFilters from './violation-filters.jsx';
 import ViolationTable from './violation-table.jsx';
 import * as Routes from 'violation/src/routes';
@@ -17,8 +18,9 @@ class Violation extends React.Component {
 
     render() {
         return  <div>
-                    <h2>Violations</h2>
+                    <h2>Violations {this.props.loading ? <small><Icon name='circle-o-notch' spin /></small> : null}</h2>
                     <ViolationFilters
+                        accounts={this.props.accounts}
                         params={this.props.params} />
                     <ViolationTable
                         onSetPage={this.onSetPage.bind(this)}

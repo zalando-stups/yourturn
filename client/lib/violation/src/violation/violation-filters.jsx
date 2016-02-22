@@ -4,17 +4,6 @@ import FilterDropdown from './filter-dropdown.jsx';
 import * as Routes from 'violation/src/routes';
 import {stringifySearchParams} from 'violation/src/util';
 
-function range(from, to) {
-    var result = [];
-    while (from < to) {
-        result.push(from);
-        from++;
-    }
-    return result;
-}
-
-var accounts = ["0987654321", "123456789"]
-
 class ViolationFilters extends React.Component {
     constructor() {
         super();
@@ -29,15 +18,16 @@ class ViolationFilters extends React.Component {
     }
 
     render() {
+        let params = stringifySearchParams(this.props.params);
         return <table style={{tableLayout: 'fixed', width: '100%'}}>
                 <tbody>
                     <tr>
                         <td>
                             <FilterDropdown
                                 onUpdate={this.onUpdate.bind(this, 'account')}
-                                items={accounts}
-                                selection={["0987654321", "123456789"]}
-                                title="Account" />
+                                items={this.props.accounts.map(a => a.id)}
+                                selection={params.accounts}
+                                title="Filter column" />
                         </td>
                         <td>Created</td>
                         <td>Application</td>
