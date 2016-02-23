@@ -125,7 +125,9 @@ class ViolationTable extends React.Component {
     render() {
         return <Griddle
                     tableClassName='violationTable'
-                    noDataMessage='Fuck off, punk'
+                    noDataMessage='Waiting for data…'
+                    onRowClick={this.props.onRowClick}
+                    useGriddleStyles={false}
                     useCustomPagerComponent={true}
                     customPagerComponent={Pager}
                     useExternal={true}

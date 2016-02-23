@@ -4,16 +4,40 @@
     .violation-copy-url {
         margin-bottom: @padding-small;
     }
-    td {
-        overflow: hidden;
-    }
 }
 
 .violationTable {
     font-size: 16px;
+    width: 100%;
+    border: 1px solid @gray-lighter;
+    table-layout: fixed;
+
+    tbody {
+        tr.standard-row {
+            .transition(background);
+            &:hover {
+                background: @gray-lighter;
+                cursor: pointer;
+            }
+            td {
+                overflow: hidden;
+                border-bottom: 1px solid @gray-lighter;
+            }
+        }
+        }
 
     thead {
+        border-bottom: 1px solid black;
         th {
+            .transition(background);
+            text-align: left;
+            background: @gray-lighter;
+            color: @gray-dark;
+            padding: 2px 4px;
+            cursor: pointer;
+            &:hover {
+                background: @gray-light;
+            }
             &:not([data-title="created"]) {
                 pointer-events: none;
             }
@@ -24,7 +48,7 @@
         display: flex;
         > * {
             background: white;
-            color: @gray;
+            color: @gray-light;
             text-align: center;
             flex: 1 1 auto;
             &:first-child,

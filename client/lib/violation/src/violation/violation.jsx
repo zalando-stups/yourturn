@@ -2,6 +2,8 @@ import React from 'react';
 import Icon from 'react-fa';
 import ViolationFilters from './violation-filters.jsx';
 import ViolationTable from './violation-table.jsx';
+import ViolationCard from 'violation/src/violation-card/violation-card.jsx';
+import Modal from 'react-modal';
 import lzw from 'lz-string';
 import Clipboard from 'react-copy-to-clipboard';
 import * as Routes from 'violation/src/routes';
@@ -11,6 +13,9 @@ import 'common/asset/less/violation/violation.less';
 class Violation extends React.Component {
     constructor() {
         super();
+        this.state = {
+            selectedViolation: null
+        };
     }
 
     onChangeSort(sort, sortAsc) {
@@ -24,6 +29,18 @@ class Violation extends React.Component {
         let newParams = stringifySearchParams(this.props.params);
         newParams.page = page;
         this.context.router.push(Routes.violation(newParams));
+    }
+
+    onSelectViolation({props}) {
+        this.setState({
+            selectedViolation: props.data
+        });
+    }
+
+    closeModal() {
+        this.setState({
+            selectedViolation: null
+        });
     }
 
     handleCopy() {
@@ -42,14 +59,40 @@ class Violation extends React.Component {
                             <Icon name='bullhorn' /> Copy sharing URL
                         </div>
                     </Clipboard>
+                    <div className='container'>
                     <ViolationFilters
                         violationTypes={this.props.violationTypes}
                         accounts={this.props.accounts}
                         params={this.props.params} />
                     <ViolationTable
+                        onRowClick={this.onSelectViolation.bind(this)}
                         onChangeSort={this.onChangeSort.bind(this)}
                         onSetPage={this.onSetPage.bind(this)}
                         {...this.props} />
+                    </div>
+                    <Modal
+                        onRequestClose={this.closeModal}
+                        isOpen={!!this.state.selectedViolation}>
+                            <div>
+                                <header style={{paddingBottom: 40}}>
+                                    <div
+                                        style={{float: 'right'}}
+                                        onClick={this.closeModal.bind(this)}
+                                        className='btn btn-primary btn-small'>
+                                        <Icon name='times' /> Close
+                                    </div>
+                                </header>
+                                {!!this.state.selectedViolation ?
+                                    <ViolationCard
+                                        editable={true}
+                                        accounts={this.props.accounts}
+                                        onRequestClose={this.closeModal.bind(this)}
+                                        autoFocus={true}
+                                        violation={this.state.selectedViolation} />
+                                :
+                                null}
+                            </div>
+                    </Modal>
                 </div>;
     }
 }

@@ -14,7 +14,7 @@ const DEFAULT_PAGING = {
         ownAccountsTotal: 0,
         lastVisited: 0,
         loadingViolations: false,
-        violations: {},
+        violations: [],
         violationCount: [],
         violationCountIn: [],
         violationTypes: {},
@@ -42,9 +42,13 @@ function FullstopStore(state, action) {
     if (type === Types.BEGIN_FETCH_VIOLATIONS) {
         return state.set('loadingViolations', true);
     } else if (type === Types.BEGIN_FETCH_VIOLATION) {
-        return state.setIn(['violations', String(payload[0])], new Pending());
+        let pending = new Pending();
+        pending.id = payload[0];
+        return state.set('violations', state.get('violations').push(pending));
     } else if (type === Types.FAIL_FETCH_VIOLATION) {
-        return state.setIn(['violations', String(payload.violationId)], new Failed(payload));
+        let failed = new Failed();
+        failed.id = payload.violationId;
+        return state.set('violations', state.get('violations').push(failed));
     } else if (type === Types.FETCH_VIOLATION || type === Types.RESOLVE_VIOLATION) {
         return FullstopStore(state, {
             type: Types.FETCH_VIOLATIONS,
@@ -80,7 +84,7 @@ function FullstopStore(state, action) {
                 .set('loadingViolations', false)
                 .set('violations', all);
     } else if (type === Types.DELETE_VIOLATIONS) {
-        return state.set('violations', Immutable.Map());
+        return state.set('violations', Immutable.List());
     } else if (type === Types.FETCH_VIOLATION_TYPES) {
         let types = payload.reduce((all, t) => {
             all[t.id] = t;

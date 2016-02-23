@@ -151,8 +151,10 @@ class ViolationDetailHandler extends React.Component {
     }
 
     render() {
+        let accounts = this.props.teamStore.getAccounts();
         return <ViolationDetail
-                    violationId={this.props.params.violationId}
+                    violationId={parseInt(this.props.params.violationId, 10)}
+                    accounts={accounts}
                     fullstopActions={FULLSTOP_ACTIONS}
                     {...this.props} />;
     }
@@ -169,6 +171,7 @@ ViolationDetailHandler.propTypes = {
 };
 let ConnectedViolationDetailHandler = connect(state => ({
     userStore: bindGettersToState(state.user, UserGetter),
+    teamStore: bindGettersToState(state.team, TeamGetter),
     fullstopStore: bindGettersToState(state.fullstop, FullstopGetter)
 }))(ViolationDetailHandler);
 

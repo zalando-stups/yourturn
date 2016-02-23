@@ -35,7 +35,7 @@ class ViolationCard extends React.Component {
         let {violation} = this.props,
             account = this.props.accounts.filter(a => a.id === violation.account_id)[0],
             {violation_type} = violation;
-
+        console.debug(violation, account);
         return <div
                     data-block='violation-card'
                     data-severity={violation_type.violation_severity}
@@ -57,7 +57,7 @@ class ViolationCard extends React.Component {
                             <Icon
                                 fixedWidth
                                 name='cloud'
-                                title='The cloud account number' /> {account.name} ({violation.account_id})
+                                title='The cloud account number' /> {account && account.name} ({violation.account_id})
                         </div>
                         <div>
                             <Icon
@@ -83,7 +83,7 @@ class ViolationCard extends React.Component {
                                 {typeof violation.meta_info === 'string' ?
                                     violation.meta_info :
                                     Object.keys(violation.meta_info)
-                                    .map(key => <div><span className='violationCard-metadata-key'>{key}</span>: {JSON.stringify(violation.meta_info[key])}</div>)}
+                                    .map(key => <div key={key}><span className='violationCard-metadata-key'>{key}</span>: {JSON.stringify(violation.meta_info[key])}</div>)}
                             </code>
                             :
                             null}
