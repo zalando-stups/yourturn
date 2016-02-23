@@ -23,8 +23,11 @@ class ViolationFilters extends React.Component {
                 this.context.router.push(Routes.violation(params));
             }
         } else if (what === 'type') {
-            // ????
-            params.type = data[0].replace(/\W/gi, "_");
+            if (data.length === 0) {
+                delete params.type;
+            } else {
+                params.type = data[0].replace(/\W/gi, "_");
+            }
             this.context.router.push(Routes.violation(params));
         }
     }
@@ -54,8 +57,9 @@ class ViolationFilters extends React.Component {
                             <td>
                                 <FilterDropdown
                                     onUpdate={this.onUpdate.bind(this, 'type')}
+                                    singleMode={true}
                                     items={this.props.violationTypes.map(vt => vt.replace(/_/gi, " "))}
-                                    selection={[params.type.replace(/_/gi, " ")]}
+                                    selection={[params.type ? params.type.replace(/_/gi, " ") : '']}
                                     title="Filter column" />
                             </td>
                             <td>Resolved?</td>

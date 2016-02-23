@@ -1,17 +1,20 @@
 @import "../variables";
 
 .filter-dropdown {
+    input[type="search"] {
+        width: 100%;
+    }
     header {
         cursor: pointer;
         width: 100%;
         display: flex;
         outline: 1px solid @gray;
+
         span:not(.fa) {
             flex: 1 1 auto;
         }
         span.fa {
-            position: relative;
-            top: 8px;
+            margin-top: 8px;
             flex: 0 0 auto;
         }
     }

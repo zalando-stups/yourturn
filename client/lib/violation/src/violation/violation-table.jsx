@@ -44,6 +44,26 @@ class BooleanCell extends React.Component {
     }
 }
 
+class Pager extends React.Component {
+    constructor() {
+        super();
+    }
+
+    pageChange(page) {
+        console.debug('pageChange', page);
+        this.props.setPage(page);
+    }
+
+    render() {
+
+        return <div className='violationTable-pager'>
+                    <div onClick={() => this.props.previous()}>{this.props.previousText}</div>
+                    <div>{this.props.currentPage + 1}/{this.props.maxPage}</div>
+                    <div onClick={() => this.props.next()}>{this.props.nextText}</div>
+                </div>
+    }
+}
+
 var gridColumns = [
         'account_id',
         'created',
@@ -105,6 +125,8 @@ class ViolationTable extends React.Component {
     render() {
         return <Griddle
                     noDataMessage='Fuck off, punk'
+                    useCustomPagerComponent={true}
+                    customPagerComponent={Pager}
                     useExternal={true}
                     externalSetPage={this.setPage.bind(this)}
                     externalSetPageSize={this.setPageSize.bind(this)}

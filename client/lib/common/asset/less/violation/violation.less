@@ -9,6 +9,22 @@
     }
 }
 
+.violationTable-pager {
+    display: flex;
+    > * {
+        .transition(background, color);
+        background: white;
+        color: @gray;
+        flex: 1 1 auto;
+        text-align: center;
+        cursor: pointer;
+        &:hover {
+            background: @gray-lighter;
+            color: @gray-dark;
+        }
+    }
+}
+
 .violation-filters {
     table {
         table-layout: fixed;

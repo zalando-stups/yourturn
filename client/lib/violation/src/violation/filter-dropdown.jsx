@@ -76,11 +76,12 @@ class FilterDropdown extends React.Component {
     }
 
     onItemFilter(evt) {
-        let filter = evt.target.value;
+        let filter = evt.target.value.toLowerCase(),
+            lowerCaseItems = this.props.items.map(i => i.toLowerCase());
         if (filter) {
             this.setState({
                 filtered: true,
-                filteredItems: this.props.items.filter(i => i.indexOf(filter) >= 0)
+                filteredItems: this.props.items.filter((item, i) => lowerCaseItems[i].indexOf(filter) >= 0)
             })
         } else {
             this.setState({
@@ -115,6 +116,9 @@ class FilterDropdown extends React.Component {
         if (this.state.selectedItems[item]) {
             delete this.state.selectedItems[item];
         } else {
+            if (this.props.singleMode) {
+                this.state.selectedItems = {};
+            }
             this.state.selectedItems[item] = true;
         }
         let selected = this.props.items.filter(i => !!this.state.selectedItems[i]);
@@ -136,10 +140,13 @@ class FilterDropdown extends React.Component {
                 </header>
                 {this.state.visible ?
                     <div className='filterDropdown-dropdown'>
-                        <div className='filterDropdown-special-button'>
-                            <span onClick={this.onSelectAll.bind(this)}>All</span>
-                            <span onClick={this.onSelectNone.bind(this)}>None</span>
-                        </div>
+                        {!this.props.singleMode ?
+                            <div className='filterDropdown-special-button'>
+                                <span onClick={this.onSelectAll.bind(this)}>All</span>
+                                <span onClick={this.onSelectNone.bind(this)}>None</span>
+                            </div>
+                            :
+                            null}
                         <div>
                             <input
                                 onChange={this.onItemFilter.bind(this)}
