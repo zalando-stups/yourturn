@@ -66,7 +66,11 @@ class FilterDropdown extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         if (this.props.selection !== nextProps.selection) {
-            nextProps.selection.reduce((s, i) => {s[i] = true; return s;}, this.state.selectedItems);
+            if (nextProps.selection.length) {
+                nextProps.selection.reduce((s, i) => {s[i] = true; return s;}, this.state.selectedItems);
+            } else {
+                this.state.selectedItems = {};
+            }
         }
     }
 

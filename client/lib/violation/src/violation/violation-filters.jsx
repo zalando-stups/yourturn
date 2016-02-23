@@ -5,6 +5,9 @@ import FilterDropdown from './filter-dropdown.jsx';
 import * as Routes from 'violation/src/routes';
 import {stringifySearchParams} from 'violation/src/util';
 
+const SHOW_RESOLVED = 'Include resolved',
+      SHOW_UNRESOLVED = 'Include unresolved';
+
 class ViolationFilters extends React.Component {
     constructor() {
         super();
@@ -29,12 +32,37 @@ class ViolationFilters extends React.Component {
                 params.type = data[0].replace(/\W/gi, "_");
             }
             this.context.router.push(Routes.violation(params));
+        } else if (what === 'resolved') {
+            if (data.length === 0) {
+                params.showResolved = false;
+                params.showUnresolved = false;
+            } else if (data.length === 1) {
+                if (data[0] === SHOW_RESOLVED) {
+                    params.showResolved = true;
+                    params.showUnresolved = false;
+                } else {
+                    params.showResolved = false;
+                    params.showUnresolved = true;
+                }
+            } else {
+                // must be two
+                params.showUnresolved = true;
+                params.showResolved = true;
+            }
+            this.context.router.push(Routes.violation(params));
         }
     }
 
     render() {
         console.debug(this.props);
-        let params = stringifySearchParams(this.props.params);
+        let params = stringifySearchParams(this.props.params),
+            resolvedSelection = [];
+        if (params.showResolved) {
+            resolvedSelection.push(SHOW_RESOLVED);
+        }
+        if (params.showUnresolved) {
+            resolvedSelection.push(SHOW_UNRESOLVED);
+        }
         return <div className='violation-filters'>
                 <table>
                     <tbody>
@@ -44,13 +72,13 @@ class ViolationFilters extends React.Component {
                                     onUpdate={this.onUpdate.bind(this, 'account')}
                                     items={this.props.accounts.map(a => a.id)}
                                     selection={params.accounts}
-                                    title="Filter" />
+                                    title='Filter' />
                             </td>
                             <td>
                                 <DateDropdown
                                     onUpdate={this.onUpdate.bind(this, 'date')}
                                     range={[this.props.params.from, this.props.params.to]}
-                                    title="Filter" />
+                                    title='Filter' />
                             </td>
                             <td></td>
                             <td></td>
@@ -58,11 +86,17 @@ class ViolationFilters extends React.Component {
                                 <FilterDropdown
                                     onUpdate={this.onUpdate.bind(this, 'type')}
                                     singleMode={true}
-                                    items={this.props.violationTypes.map(vt => vt.replace(/_/gi, " "))}
-                                    selection={[params.type ? params.type.replace(/_/gi, " ") : '']}
-                                    title="Filter" />
+                                    items={this.props.violationTypes.map(vt => vt.replace(/_/gi, ' '))}
+                                    selection={[params.type ? params.type.replace(/_/gi, ' ') : '']}
+                                    title='Filter' />
                             </td>
-                            <td>Resolved?</td>
+                            <td>
+                                <FilterDropdown
+                                    onUpdate={this.onUpdate.bind(this, 'resolved')}
+                                    items={[SHOW_UNRESOLVED, SHOW_RESOLVED]}
+                                    selection={resolvedSelection}
+                                    title='Filter' />
+                            </td>
                         </tr>
                     </tbody>
                 </table>
