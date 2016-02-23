@@ -50,7 +50,6 @@ class Pager extends React.Component {
     }
 
     pageChange(page) {
-        console.debug('pageChange', page);
         this.props.setPage(page);
     }
 
@@ -111,7 +110,7 @@ class ViolationTable extends React.Component {
     }
 
     setFilter(filter) {
-        console.debug('setFilter', arguments);
+        // left empty
     }
 
     setPage(page) {
@@ -119,7 +118,7 @@ class ViolationTable extends React.Component {
     }
 
     setPageSize(size) {
-        console.debug('setPageSize', arguments);
+        // left empty
     }
 
     render() {

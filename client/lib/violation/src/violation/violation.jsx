@@ -33,7 +33,7 @@ class Violation extends React.Component {
 
     onSelectViolation({props}) {
         this.setState({
-            selectedViolation: props.data
+            selectedViolation: props.data.id
         });
     }
 
@@ -43,13 +43,20 @@ class Violation extends React.Component {
         });
     }
 
+    onResolveViolation(violation, message) {
+        this.props.fullstopActions.resolveViolation(violation.id, message);
+    }
+
     handleCopy() {
         this.props.notificationActions.addNotification('Copied URL to clipboard', 'info');
     }
 
     render() {
         let shortURL = window.location.origin + '/violation/v/' + lzw.compressToEncodedURIComponent(JSON.stringify(this.props.params)),
-            shareURL = shortURL.length < window.location.href.length ? shortURL : window.location.href;
+            shareURL = shortURL.length < window.location.href.length ? shortURL : window.location.href,
+            selectedViolation = this.state.selectedViolation ?
+                                    this.props.fullstopStore.getViolation(this.state.selectedViolation) :
+                                    null;
         return  <div className='violation'>
                     <h2>Violations {this.props.loading ? <small><Icon name='circle-o-notch' spin /></small> : null}</h2>
                     <Clipboard
@@ -88,7 +95,8 @@ class Violation extends React.Component {
                                         accounts={this.props.accounts}
                                         onRequestClose={this.closeModal.bind(this)}
                                         autoFocus={true}
-                                        violation={this.state.selectedViolation} />
+                                        onResolve={this.onResolveViolation.bind(this)}
+                                        violation={selectedViolation} />
                                 :
                                 null}
                             </div>

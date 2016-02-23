@@ -14,7 +14,6 @@ class ViolationFilters extends React.Component {
     }
 
     onUpdate(what, data) {
-        console.debug(what, data);
         let params = stringifySearchParams(this.props.params);
         if (what === 'account') {
             params.accounts = data;
@@ -54,7 +53,6 @@ class ViolationFilters extends React.Component {
     }
 
     render() {
-        console.debug(this.props);
         let params = stringifySearchParams(this.props.params),
             resolvedSelection = [];
         if (params.showResolved) {

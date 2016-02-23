@@ -49,7 +49,21 @@ function FullstopStore(state, action) {
         let failed = new Failed();
         failed.id = payload.violationId;
         return state.set('violations', state.get('violations').push(failed));
-    } else if (type === Types.FETCH_VIOLATION || type === Types.RESOLVE_VIOLATION) {
+    } else if (type === Types.RESOLVE_VIOLATION) {
+        // find violation and update
+        let index = state.get('violations').findIndex(v => v.get('id') === payload.id);
+
+        let violation = state
+                        .get('violations')
+                        .get(index)
+                        .set('comment', payload.comment)
+                        .set('is_resolved', true)
+                        .set('last_modified', payload.last_modified)
+                        .set('last_modified_by', payload.last_modified_by);
+        // replace
+        let violations = state.get('violations').update(index, false, v => violation);
+        return state.set('violations', violations);
+    } else if (type === Types.FETCH_VIOLATION) {
         return FullstopStore(state, {
             type: Types.FETCH_VIOLATIONS,
             payload: [undefined, [payload]]

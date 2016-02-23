@@ -9,7 +9,7 @@ function getViolation(state, violationId) {
     if (violations.size === 0) {
         return false;
     }
-    violations.filter(v => v.id === violationId || (v.get && v.get('id') === violationId));
+    violations = violations.filter(v => (v.get && v.get('id') === violationId));
     return violations.first().toJS();
 }
 

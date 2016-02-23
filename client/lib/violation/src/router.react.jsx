@@ -107,6 +107,7 @@ class ViolationHandler extends React.Component {
         return <Violation
                     notificationActions={NOTIFICATION_ACTIONS}
                     fullstopActions={FULLSTOP_ACTIONS}
+                    fullstopStore={this.props.fullstopStore}
                     violations={violations}
                     violationTypes={violationTypes}
                     loading={violationLoading}

@@ -35,7 +35,6 @@ class ViolationCard extends React.Component {
         let {violation} = this.props,
             account = this.props.accounts.filter(a => a.id === violation.account_id)[0],
             {violation_type} = violation;
-        console.debug(violation, account);
         return <div
                     data-block='violation-card'
                     data-severity={violation_type.violation_severity}
@@ -127,6 +126,7 @@ ViolationCard.contextTypes = {
 ViolationCard.propTypes = {
     autoFocus: React.PropTypes.bool,
     onResolve: React.PropTypes.func,
+    accounts: React.PropTypes.array,
     violation: React.PropTypes.object.isRequired,
     editable: React.PropTypes.bool
 };

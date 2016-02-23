@@ -40,7 +40,7 @@ class DateDropdown extends React.Component {
     }
 
     componentWillUnmount() {
-        document.removeEventListener('click', this.state.outsideClickHandler);
+        document.body.removeEventListener('click', this.state.outsideClickHandler);
     }
 
     onHeaderClick() {
