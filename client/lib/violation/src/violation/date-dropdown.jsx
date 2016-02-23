@@ -97,6 +97,7 @@ class DateDropdown extends React.Component {
                     <div className='dateDropdown-dropdown'>
                         <div className='dateDropdown-container'>
                             <Picker
+                                weekStartDay={1}
                                 onRangeChange={this.onUpdate.bind(this)}
                                 defaultRange={this.props.range} />
                         </div>

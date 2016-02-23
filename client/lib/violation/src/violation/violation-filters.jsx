@@ -44,13 +44,13 @@ class ViolationFilters extends React.Component {
                                     onUpdate={this.onUpdate.bind(this, 'account')}
                                     items={this.props.accounts.map(a => a.id)}
                                     selection={params.accounts}
-                                    title="Filter column" />
+                                    title="Filter" />
                             </td>
                             <td>
                                 <DateDropdown
                                     onUpdate={this.onUpdate.bind(this, 'date')}
                                     range={[this.props.params.from, this.props.params.to]}
-                                    title="Filter column" />
+                                    title="Filter" />
                             </td>
                             <td></td>
                             <td></td>
@@ -60,7 +60,7 @@ class ViolationFilters extends React.Component {
                                     singleMode={true}
                                     items={this.props.violationTypes.map(vt => vt.replace(/_/gi, " "))}
                                     selection={[params.type ? params.type.replace(/_/gi, " ") : '']}
-                                    title="Filter column" />
+                                    title="Filter" />
                             </td>
                             <td>Resolved?</td>
                         </tr>

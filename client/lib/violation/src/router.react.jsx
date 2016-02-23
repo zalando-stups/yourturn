@@ -176,7 +176,10 @@ let ConnectedViolationDetailHandler = connect(state => ({
 class ViolationShortUrlHandler extends React.Component {
     constructor(props, context) {
         super();
-        context.router.transitionTo('violation', null, JSON.parse(lzw.decompressFromEncodedURIComponent(props.params.shortened)));
+        context.router.replace({
+            pathname: 'violation',
+            query: JSON.parse(lzw.decompressFromEncodedURIComponent(props.params.shortened))
+        })
     }
 
     render() {
@@ -188,7 +191,7 @@ ViolationShortUrlHandler.propTypes = {
     params: React.PropTypes.object.isRequired
 };
 ViolationShortUrlHandler.contextTypes = {
-    router: React.PropTypes.func.isRequired
+    router: React.PropTypes.object.isRequired
 };
 
 const ROUTES =

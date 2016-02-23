@@ -58,7 +58,7 @@ class Pager extends React.Component {
 
         return <div className='violationTable-pager'>
                     <div onClick={() => this.props.previous()}>{this.props.previousText}</div>
-                    <div>{this.props.currentPage + 1}/{this.props.maxPage}</div>
+                    <div>Page {this.props.currentPage + 1}/{this.props.maxPage}</div>
                     <div onClick={() => this.props.next()}>{this.props.nextText}</div>
                 </div>
     }
@@ -124,6 +124,7 @@ class ViolationTable extends React.Component {
 
     render() {
         return <Griddle
+                    tableClassName='violationTable'
                     noDataMessage='Fuck off, punk'
                     useCustomPagerComponent={true}
                     customPagerComponent={Pager}
