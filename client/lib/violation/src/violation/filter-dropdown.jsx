@@ -135,7 +135,7 @@ class FilterDropdown extends React.Component {
                     <Icon name='caret-down' fixedWidth />
                 </header>
                 {this.state.visible ?
-                    <div className='filterDropdown-dropdown' style={{width: this.refs.header.clientWidth}}>
+                    <div className='filterDropdown-dropdown'>
                         <div className='filterDropdown-special-button'>
                             <span onClick={this.onSelectAll.bind(this)}>All</span>
                             <span onClick={this.onSelectNone.bind(this)}>None</span>

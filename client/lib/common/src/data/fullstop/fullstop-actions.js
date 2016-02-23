@@ -21,7 +21,6 @@ function fetchOwnTotal(from, accounts) {
 }
 
 function fetchViolations(params) {
-    console.debug(params);
     return request
             .get(`${FULLSTOP_BASE_URL}/violations`)
             .accept('json')
@@ -31,8 +30,8 @@ function fetchViolations(params) {
                 from: params.from ? params.from.toISOString() : '',
                 to: (params.to || new Date()).toISOString(),
                 page: params.page || 0,
-                type: params.list_violationType || undefined,
-                sort: 'created' + (params.sortAsc ? ',asc' : ',desc'),
+                type: params.type || undefined,
+                sort: (params.sortBy || 'created') + (params.sortAsc ? ',asc' : ',desc'),
                 checked: params.showResolved && !params.showUnresolved ?
                             true :
                             !params.showResolved && params.showUnresolved ?

@@ -5,14 +5,19 @@ function getPagingInfo(state) {
 }
 
 function getViolation(state, violationId) {
-    let violation = state.getIn(['violations', String(violationId)]);
-    return violation ? violation.toJS() : false;
+    let violations = state
+                        .get('violations')
+                        .filter(v => v.get('id') === violationId);
+    if (violations.size === 0) {
+        return false;
+    }
+    return violations.first().toJS();
 }
 
 function getViolations(state) {
-    let violations = state.get('violations').valueSeq();
+    let violations = state.get('violations');
 
-    if (violations.count() === 0) {
+    if (violations.size === 0) {
         return [];
     }
 

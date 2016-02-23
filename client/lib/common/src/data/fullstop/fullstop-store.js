@@ -25,10 +25,11 @@ const DEFAULT_PAGING = {
             accounts: [],
             from: moment().subtract(1, 'week').startOf('day'),
             to: moment(),
+            violationType: '',
             showUnresolved: true,
             showResolved: false,
             sortAsc: true,
-            activeTab: 0
+            sortBy: 'created'
         }
     });
 
@@ -64,9 +65,9 @@ function FullstopStore(state, action) {
                     } catch (e) {
                         // do nothing
                     }
-                    return coll.set(String(v.id), Immutable.fromJS(v));
+                    return coll.push(Immutable.fromJS(v));
                 },
-                Immutable.Map());
+                Immutable.List());
         if (metadata) {
             state = state.set('pagingInfo', Immutable.Map({
                 last: metadata.last,

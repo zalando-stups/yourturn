@@ -41,6 +41,12 @@ function parseSearchParams(searchParams) {
     if (params.sortAsc) {
         result.sortAsc = params.sortAsc === 'true';
     }
+    if (params.sortBy) {
+        result.sortBy = params.sortBy;
+    }
+    if (params.type) {
+        result.type = params.type;
+    }
     if (params.page) {
         result.page = parseInt(params.page, 10);
     }

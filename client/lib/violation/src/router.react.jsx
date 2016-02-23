@@ -37,19 +37,16 @@ function ensureDefaultSearchParams(router, props, forceAddAccounts=false) {
         defaultAccounts = userStore.getUserCloudAccounts(),
         queryParams = Object.assign({}, location.query);
 
-    if (!queryParams.activeTab ||
-        (!queryParams.accounts && forceAddAccounts) ||
+    if ((!queryParams.accounts && forceAddAccounts) ||
         !queryParams.showUnresolved ||
         !queryParams.showResolved ||
         !queryParams.sortAsc ||
+        !queryParams.sortBy ||
         !queryParams.page ||
         !queryParams.from ||
         !queryParams.to) {
 
         // ensure default params are in url
-        if (!queryParams.activeTab) {
-            queryParams.activeTab = defaultParams.activeTab;
-        }
         if (!queryParams.accounts) {
             queryParams.accounts = [];
             // this might or might not have an effect since transition hook is fired before fetchData
@@ -64,6 +61,9 @@ function ensureDefaultSearchParams(router, props, forceAddAccounts=false) {
         }
         if (!queryParams.sortAsc) {
             queryParams.sortAsc = defaultParams.sortAsc;
+        }
+        if (!queryParams.sortBy) {
+            queryParams.sortBy = defaultParams.sortBy;
         }
         if (!queryParams.page) {
             queryParams.page = defaultParams.page;
@@ -101,12 +101,14 @@ class ViolationHandler extends React.Component {
     render() {
         let violations = this.props.fullstopStore.getViolations(),
             accounts = this.props.teamStore.getAccounts(),
+            violationTypes = Object.keys(this.props.fullstopStore.getViolationTypes()),
             violationLoading = this.props.fullstopStore.getLoading(),
             pagingInfo = this.props.fullstopStore.getPagingInfo();
         return <Violation
                     notificationActions={NOTIFICATION_ACTIONS}
                     fullstopActions={FULLSTOP_ACTIONS}
                     violations={violations}
+                    violationTypes={violationTypes}
                     loading={violationLoading}
                     accounts={accounts}
                     pagingInfo={pagingInfo}

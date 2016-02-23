@@ -39,9 +39,7 @@ class BooleanCell extends React.Component {
     render() {
         if (this.props.data) {
             return <Icon name='check' />;
-            // return <span>Yes</span>;
         }
-        // return <span>No</span>;
         return <Icon name='times' />;
     }
 }
@@ -51,7 +49,6 @@ var gridColumns = [
         'created',
         'application_id',
         'version_id',
-        'username',
         'violation_type_id',
         'is_resolved'
     ],
@@ -71,10 +68,6 @@ var gridColumns = [
         columnName: 'version_id',
         customComponent: DefaultValueCell
     }, {
-        displayName: 'User',
-        columnName: 'username',
-        customComponent: DefaultValueCell
-    }, {
         displayName: 'Type',
         columnName: 'violation_type_id'
     }, {
@@ -89,15 +82,12 @@ class ViolationTable extends React.Component {
         this.state = {
             numPages: 100,
             currentPage: 0,
-            results: [],
-            pageSize: 10,
-            sortColumn: null,
-            sortAsc: true
+            results: []
         };
     }
 
     changeSort(sort, sortAsc) {
-        console.debug('changeSort', arguments);
+        this.props.onChangeSort(sort, sortAsc);
     }
 
     setFilter(filter) {
@@ -122,8 +112,8 @@ class ViolationTable extends React.Component {
                     externalChangeSort={this.changeSort.bind(this)}
                     externalMaxPage={this.props.pagingInfo.total_pages}
                     externalCurrentPage={this.props.params.page}
-                    externalSortColumn={this.state.sortColumn}
-                    externalSortAscending={this.state.sortAsc}
+                    externalSortColumn={this.props.params.sortBy}
+                    externalSortAscending={this.props.params.sortAsc}
                     showFilter={false}
                     columns={gridColumns}
                     columnMetadata={columnMetadata}
