@@ -29,13 +29,13 @@ function ApplicationStore(state = DEFAULT_STATE, action) {
         // so we have to take the first one here
 
         // this is a quite an abstraction leak actually
-        return state.setIn([APPS, payload[0]], new Pending());
+        return state.setIn([APP, payload[0]], new Pending());
     } else if (type === Types.FAIL_FETCH_APPLICATION) {
-        return state.setIn([APPS, payload.id], new Failed(payload));
+        return state.setIn([APP, payload.id], new Failed(payload));
     } else if (type === Types.FETCH_APPLICATION) {
-        return state.setIn([APPS, payload.id], Immutable.Map(payload));
+        return state.setIn([APP, payload.id], Immutable.Map(payload));
     } else if (type === Types.FETCH_APPLICATIONS) {
-        state = payload.reduce((map, app) => map.setIn([APPS, app.id], Immutable.Map(app)), state);
+        state = payload.reduce((map, app) => map.setIn([APP, app.id], Immutable.Map(app)), state);
         return state.set(FETCH_STATE, false);
     } else if (type === Types.LOAD_PREFERRED_ACCOUNT ||
                type === Types.SAVE_PREFERRED_ACCOUNT) {

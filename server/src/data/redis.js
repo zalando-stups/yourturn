@@ -27,7 +27,34 @@ function getLatestVersions(team) {
                                 null);
 }
 
+function setFaultyMintInfo(appId, info) {
+    if (!utils.isAvailable(redis)) {
+        return Promise.reject(utils.unavailableError());
+    }
+    var KEY = `faultyMintAppInfo-${appId}`;
+    return redis
+        .multi()
+        .set(KEY, JSON.stringify(info))
+        .expire(KEY, ttl)
+        .execAsync()
+        .then(() => info);
+}
+
+function getFaultyMintInfo(appId) {
+    if (!utils.isAvailable(redis)) {
+        return Promise.reject(utils.unavailableError());
+    }
+    var KEY = `faultyMintAppInfo-${appId}`;
+    return redis
+            .getAsync(KEY)
+            .then(info => info ?
+                JSON.parse(info) :
+                null);
+}
+
 module.exports = {
     setLatestVersions,
-    getLatestVersions
+    getLatestVersions,
+    setFaultyMintInfo,
+    getFaultyMintInfo
 };

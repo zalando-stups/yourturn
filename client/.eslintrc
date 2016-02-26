@@ -13,7 +13,8 @@
     },
     "env": {
         "browser": true,
-        "mocha": true
+        "mocha": true,
+        "node": true
     },
     "rules": {
         "no-unused-vars": 1,

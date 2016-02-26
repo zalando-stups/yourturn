@@ -49,7 +49,7 @@ describe('routes/kio', () => {
             redisSetStub = sinon.stub(redis, 'setLatestVersions')
             kioVerStub = sinon.stub(data, 'versions'),
             kioAppStub = sinon.stub(data, 'apps'),
-            APPS = [{
+            APP = [{
                 id: 'test-app',
                 team_id: 'test'
             }, {
@@ -77,7 +77,7 @@ describe('routes/kio', () => {
         // redis returns nothing, so we would have to go to kio
         redisGetStub.returns(Promise.resolve(null));
         redisSetStub.returns(Promise.resolve([T_VERS[0]])); // this does not matter
-        kioAppStub.returns(Promise.resolve(APPS));
+        kioAppStub.returns(Promise.resolve(APP));
         kioVerStub
             .onCall(0)  // test-app
             .returns(Promise.resolve(T_VERS));
@@ -94,7 +94,7 @@ describe('routes/kio', () => {
             // and also apps()
             expect(kioAppStub.calledOnce).to.be.true;
             // and versions as often as we have apps
-            expect(kioVerStub.callCount).to.equal(APPS.length);
+            expect(kioVerStub.callCount).to.equal(APP.length);
             // and we should have set the versions in redis too
             expect(redisSetStub.calledOnce).to.be.true;
             // check that we called it with correct objects
