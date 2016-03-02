@@ -7,7 +7,7 @@ RUN npm install winston@2.1.1
 RUN npm install express@4.13.3
 RUN npm install compression@1.6.0
 RUN npm install js-yaml@3.4.6
-RUN npm install node-tokens@0.0.7
+RUN npm install node-tokens@0.0.9
 RUN npm install bluebird@3.1.1
 RUN npm install redis@2.4.2
 RUN npm install superagent-bluebird-promise@3.0.0
