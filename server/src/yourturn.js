@@ -1,3 +1,6 @@
+/* global require, process */
+var fs = require('fs');
+
 // set up logging
 var IN_PROD = process.env.NODE_ENV === 'production',
     winston = require('winston');
@@ -16,13 +19,11 @@ require('./monitoring/monitoring');
 require('./env');
 
 // this is the actual server code
-var fs = require('fs'),
-    express = require('express'),
+var express = require('express'),
     compression = require('compression'),
     server = express(),
     routes = require('./routes/index'),
     oauth = require('./middleware/oauth'),
-    request = require('superagent'),
     index = fs.readFileSync('./index.html'),
     ONE_WEEK =  1000 *    // 1s
                   60 *    // 1m

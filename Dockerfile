@@ -2,6 +2,9 @@ FROM node:5.1.0
 
 MAINTAINER Zalando SE
 
+RUN npm install appdynamics@4.1.8
+RUN npm install xml2js@0.4.9
+RUN npm install camel-case@1.1.2
 RUN npm install newrelic@1.24.0
 RUN npm install winston@2.1.1
 RUN npm install express@4.13.3
@@ -18,6 +21,7 @@ ADD /scm-source.json /scm-source.json
 # copy static resources for client
 COPY ./client/dist/ /www/dist/
 COPY ./server/src/monitoring/newrelic-browser.js /www/dist/
+COPY ./server/src/monitoring/appdynamics.js /www/dist/
 COPY ./client/dist/index.html /www/
 
 # copy server
