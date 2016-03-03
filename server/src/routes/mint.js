@@ -46,39 +46,6 @@ function partition(array, partitionSize) {
     return array.reduce(reducerFn, []);
 }
 
-function _getLatestVersions(team) {
-    return kio
-        .apps()
-        // filter by team
-        // TODO use team filter in kio when it's available
-        .then(apps => apps.filter(a => a.team_id === team))
-        // get versions for all apps of this team
-        // but batch them and execute only [batch size] requests in parallel
-        // to not overwhelm kio with hundreds requests
-        .then(apps => apps.map(app => kio.versions.bind(kio, app.id)))
-        .then(requests => partition(requests, BATCH_SIZE))
-        // sequentially execute batched requests
-        // and make it so that one failing batch does not kill the whole process
-        .then(reqPartitions => reqPartitions.reduce(
-            (promise, reqs) => promise.then(versions => Promise
-                .all(versions.concat(exec(reqs)))
-                .finally(errOrValue => errOrValue instanceof Error ?
-                    reqs.map(req => []) :
-                    errOrValue)),
-            Promise.resolve([])))
-        .then(all => all
-            .filter(versions => versions.length > 0)
-            .map(versions => versions
-                .map(v => {
-                    var c = Object.assign({}, v);
-                    c.timestamp = new Date(v.last_modified).getTime();
-                    return c;
-                })
-                .reduce((l, v) => Math.max(l.timestamp, v.timestamp) === l.timestamp ?
-                    l :
-                    v)));
-}
-
 function getFaultyMintInfo(appId) {
     return mint
             .app(appId)
