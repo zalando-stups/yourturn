@@ -1,4 +1,4 @@
-FROM node:5.1.0
+FROM registry.opensource.zalan.do/stups/node:4.2-13
 
 MAINTAINER Zalando SE
 
