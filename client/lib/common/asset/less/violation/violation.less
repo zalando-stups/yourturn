@@ -4,6 +4,9 @@
     .violation-copy-url {
         margin-bottom: @padding-small;
     }
+    .violationTable {
+        margin-bottom: 12em;
+    }
 }
 
 .violationTable {
@@ -13,6 +16,7 @@
     table-layout: fixed;
 
     tbody {
+
         tr.standard-row {
             .transition(background);
             &:hover {
@@ -22,6 +26,9 @@
             td {
                 overflow: hidden;
                 border-bottom: 1px solid @gray-lighter;
+            }
+            &.selected {
+                background: @orange-light;
             }
         }
         }

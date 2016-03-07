@@ -1,10 +1,14 @@
 @import "../variables";
 
 .violationCard {
+        font-size: @small-font-size;
+        line-height: @small-line-height;
         padding: @padding-small;
         border: 1px solid @gray-light;
         border-radius: @border-radius;
         border-left: 10px solid @gray-light;
+        background: @white;
+        box-shadow: 0px 0px 20px @gray-light;
 
         &[data-severity="3"]:not(.is-resolved),
         &[data-severity="4"]:not(.is-resolved) {
@@ -13,6 +17,10 @@
 
         &.is-resolved {
             border-color: @green;
+        }
+
+        p {
+            max-width: 600px;
         }
 
         strong,

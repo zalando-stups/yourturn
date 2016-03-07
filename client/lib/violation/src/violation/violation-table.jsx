@@ -11,7 +11,7 @@ class TimestampCell extends React.Component {
     render() {
         if (!!this.props.data) {
             return <Timestamp
-                        format={'YYYY-MM-DD@HH:mm'}
+                        format={'YYYY-MM-DD HH:mm'}
                         value={this.props.data} />
         }
         return <div>-</div>;
@@ -57,7 +57,7 @@ class Pager extends React.Component {
 
         return <div className='violationTable-pager'>
                     <div onClick={() => this.props.previous()}>{this.props.previousText}</div>
-                    <div>Page {this.props.currentPage + 1}/{this.props.maxPage}</div>
+                    <div>Page {this.props.currentPage + 1} / {this.props.maxPage}</div>
                     <div onClick={() => this.props.next()}>{this.props.nextText}</div>
                 </div>
     }
@@ -122,6 +122,11 @@ class ViolationTable extends React.Component {
     }
 
     render() {
+        const rowMeta = {
+            bodyCssClassName: (row) => this.props.selectedViolation === row.id ?
+                                            'standard-row selected' :
+                                            'standard-row'
+        };
         return <Griddle
                     tableClassName='violationTable'
                     noDataMessage='Waiting for data…'
@@ -141,6 +146,7 @@ class ViolationTable extends React.Component {
                     showFilter={false}
                     columns={gridColumns}
                     columnMetadata={columnMetadata}
+                    rowMetadata={rowMeta}
                     results={this.props.violations} />;
     }
 }

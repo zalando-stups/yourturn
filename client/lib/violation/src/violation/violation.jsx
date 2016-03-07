@@ -3,7 +3,6 @@ import Icon from 'react-fa';
 import ViolationFilters from './violation-filters.jsx';
 import ViolationTable from './violation-table.jsx';
 import ViolationCard from 'violation/src/violation-card/violation-card.jsx';
-import Modal from 'react-modal';
 import lzw from 'lz-string';
 import Clipboard from 'react-copy-to-clipboard';
 import * as Routes from 'violation/src/routes';
@@ -31,9 +30,11 @@ class Violation extends React.Component {
         this.context.router.push(Routes.violation(newParams));
     }
 
-    onSelectViolation({props}) {
+    onSelectViolation({props, getDOMNode}) {
+        const bbox = getDOMNode().getBoundingClientRect();
         this.setState({
-            selectedViolation: props.data.id
+            selectedViolation: props.data.id === this.state.selectedViolation ? null : props.data.id,
+            selectedViolationTop: window.scrollY + bbox.top + bbox.height
         });
     }
 
@@ -67,40 +68,33 @@ class Violation extends React.Component {
                         </div>
                     </Clipboard>
                     <div className='container'>
-                    <ViolationFilters
-                        violationTypes={this.props.violationTypes}
-                        accounts={this.props.accounts}
-                        params={this.props.params} />
-                    <ViolationTable
-                        onRowClick={this.onSelectViolation.bind(this)}
-                        onChangeSort={this.onChangeSort.bind(this)}
-                        onSetPage={this.onSetPage.bind(this)}
-                        {...this.props} />
+                        <ViolationFilters
+                            violationTypes={this.props.violationTypes}
+                            accounts={this.props.accounts}
+                            params={this.props.params} />
+                        <ViolationTable
+                            onRowClick={this.onSelectViolation.bind(this)}
+                            onChangeSort={this.onChangeSort.bind(this)}
+                            onSetPage={this.onSetPage.bind(this)}
+                            selectedViolation={this.state.selectedViolation}
+                            {...this.props} />
                     </div>
-                    <Modal
-                        onRequestClose={this.closeModal}
-                        isOpen={!!this.state.selectedViolation}>
-                            <div>
-                                <header style={{paddingBottom: 40}}>
-                                    <div
-                                        style={{float: 'right'}}
-                                        onClick={this.closeModal.bind(this)}
-                                        className='btn btn-primary btn-small'>
-                                        <Icon name='times' /> Close
-                                    </div>
-                                </header>
-                                {!!this.state.selectedViolation ?
-                                    <ViolationCard
-                                        editable={true}
-                                        accounts={this.props.accounts}
-                                        onRequestClose={this.closeModal.bind(this)}
-                                        autoFocus={true}
-                                        onResolve={this.onResolveViolation.bind(this)}
-                                        violation={selectedViolation} />
-                                :
-                                null}
-                            </div>
-                    </Modal>
+                    <div style={{
+                        display: !!this.state.selectedViolation ? 'block' : 'none',
+                        position: 'absolute',
+                        top: !!this.state.selectedViolation ? this.state.selectedViolationTop : 0
+                    }}>
+                        {!!this.state.selectedViolation ?
+                            <ViolationCard
+                                editable={true}
+                                accounts={this.props.accounts}
+                                onRequestClose={this.closeModal.bind(this)}
+                                autoFocus={true}
+                                onResolve={this.onResolveViolation.bind(this)}
+                                violation={selectedViolation} />
+                        :
+                        null}
+                    </div>
                 </div>;
     }
 }
