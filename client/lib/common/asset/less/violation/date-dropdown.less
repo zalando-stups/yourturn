@@ -5,19 +5,15 @@
         .transition(background);
         cursor: pointer;
         width: 100%;
-        display: flex;
+        display: block;
         outline: 1px solid @gray;
 
         &:hover {
             background: @gray-lighter;
         }
-        span:not(.fa) {
-            flex: 1 1 auto;
-        }
-        span.fa {
-            position: relative;
-            top: 8px;
-            flex: 0 0 auto;
+        span.fa:last-child {
+            float: right;
+            margin-top: 8px;
         }
     }
 

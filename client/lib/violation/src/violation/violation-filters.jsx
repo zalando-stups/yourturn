@@ -5,8 +5,8 @@ import FilterDropdown from './filter-dropdown.jsx';
 import * as Routes from 'violation/src/routes';
 import {stringifySearchParams} from 'violation/src/util';
 
-const SHOW_RESOLVED = 'Include resolved',
-      SHOW_UNRESOLVED = 'Include unresolved';
+const SHOW_RESOLVED = 'Show resolved',
+      SHOW_UNRESOLVED = 'Show unresolved';
 
 class ViolationFilters extends React.Component {
     constructor() {
