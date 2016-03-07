@@ -42,9 +42,7 @@ function ensureDefaultSearchParams(router, props, forceAddAccounts=false) {
         !queryParams.showResolved ||
         !queryParams.sortAsc ||
         !queryParams.sortBy ||
-        !queryParams.page ||
-        !queryParams.from ||
-        !queryParams.to) {
+        !queryParams.page) {
 
         // ensure default params are in url
         if (!queryParams.accounts) {
@@ -67,12 +65,6 @@ function ensureDefaultSearchParams(router, props, forceAddAccounts=false) {
         }
         if (!queryParams.page) {
             queryParams.page = defaultParams.page;
-        }
-        if (!queryParams.from) {
-            queryParams.from = defaultParams.from.toISOString();
-        }
-        if (!queryParams.to) {
-            queryParams.to = defaultParams.to.toISOString();
         }
         router.replace({
             pathname: '/violation',
