@@ -4,43 +4,30 @@ import Timestamp from 'react-time';
 import Griddle from 'griddle-react';
 import Config from 'common/src/config';
 
-class TimestampCell extends React.Component {
-    constructor() {
-        super();
+function TimestampCell({data}) {
+    if (!!data) {
+        return <Timestamp
+                    format={'YYYY-MM-DD HH:mm'}
+                    value={data} />
     }
-    render() {
-        if (!!this.props.data) {
-            return <Timestamp
-                        format={'YYYY-MM-DD HH:mm'}
-                        value={this.props.data} />
-        }
-        return <div>-</div>;
-    }
+    return <div>-</div>;
 }
 
-class DefaultValueCell extends React.Component {
-    constructor() {
-        super();
-    }
-
-    render() {
-        if (!!this.props.data) {
-            return <div>{this.props.data}</div>
-        }
-        return <div>-</div>;
-    }
+function DefaultValueCell({data}) {
+    return <div>{!!data ? data : '-'}</div>
 }
 
-class BooleanCell extends React.Component {
-    constructor() {
-        super();
-    }
+function BooleanCell({data}) {
+    return <Icon name={data ? 'check' : 'times'} />
+}
 
-    render() {
-        if (this.props.data) {
-            return <Icon name='check' />;
+function AccountCell(accounts) {
+    return function(props) {
+        const acc = accounts[props.data];
+        if (acc) {
+            return <div><small>{acc.owner}</small> {acc.name}</div>;
         }
-        return <Icon name='times' />;
+        return <div>{props.data}</div>;
     }
 }
 
@@ -62,38 +49,6 @@ class Pager extends React.Component {
                 </div>
     }
 }
-
-var gridColumns = [
-        'account_id',
-        'created',
-        'application_id',
-        'version_id',
-        'violation_type_id',
-        'is_resolved'
-    ],
-    columnMetadata = [{
-        displayName: 'Account',
-        columnName: 'account_id'
-    }, {
-        displayName: 'Created',
-        columnName: 'created',
-        customComponent: TimestampCell
-    }, {
-        displayName: 'Application',
-        columnName: 'application_id',
-        customComponent: DefaultValueCell
-    }, {
-        displayName: 'Version',
-        columnName: 'version_id',
-        customComponent: DefaultValueCell
-    }, {
-        displayName: 'Type',
-        columnName: 'violation_type_id'
-    }, {
-        displayName: 'Resolved?',
-        columnName: 'is_resolved',
-        customComponent: BooleanCell
-    }];
 
 class ViolationTable extends React.Component {
     constructor() {
@@ -122,6 +77,38 @@ class ViolationTable extends React.Component {
     }
 
     render() {
+        var gridColumns = [
+                'account_id',
+                'created',
+                'application_id',
+                'version_id',
+                'violation_type_id',
+                'is_resolved'
+            ],
+            columnMetadata = [{
+                displayName: 'Team/Account',
+                columnName: 'account_id',
+                customComponent: AccountCell(this.props.accounts)
+            }, {
+                displayName: 'Created',
+                columnName: 'created',
+                customComponent: TimestampCell
+            }, {
+                displayName: 'Application',
+                columnName: 'application_id',
+                customComponent: DefaultValueCell
+            }, {
+                displayName: 'Version',
+                columnName: 'version_id',
+                customComponent: DefaultValueCell
+            }, {
+                displayName: 'Type',
+                columnName: 'violation_type_id'
+            }, {
+                displayName: 'Resolved?',
+                columnName: 'is_resolved',
+                customComponent: BooleanCell
+            }];
         const rowMeta = {
             bodyCssClassName: (row) => this.props.selectedViolation === row.id ?
                                             'standard-row selected' :

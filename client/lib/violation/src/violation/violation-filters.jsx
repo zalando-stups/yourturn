@@ -3,7 +3,7 @@ import Icon from 'react-fa';
 import DateDropdown from './date-dropdown.jsx';
 import FilterDropdown from './filter-dropdown.jsx';
 import * as Routes from 'violation/src/routes';
-import {stringifySearchParams} from 'violation/src/util';
+import {stringifySearchParams, values} from 'violation/src/util';
 
 const SHOW_RESOLVED = 'Show resolved',
       SHOW_UNRESOLVED = 'Show unresolved';
@@ -16,7 +16,13 @@ class ViolationFilters extends React.Component {
     onUpdate(what, data) {
         let params = stringifySearchParams(this.props.params);
         if (what === 'account') {
-            params.accounts = data;
+            // reverse lookup name => id
+            const {accounts} = this.props;
+            console.debug(accounts)
+            const accountIdsByName = Object.keys(accounts)
+                                        .map(id => [accounts[id].name, id])
+                                        .reduce((m, a) => {m[a[0]] = a[1]; return m;}, {});
+            params.accounts = data.map(name => accountIdsByName[name])
             this.context.router.push(Routes.violation(params));
         } else if (what === 'date') {
             if (data[1]) {
@@ -61,6 +67,7 @@ class ViolationFilters extends React.Component {
         if (params.showUnresolved) {
             resolvedSelection.push(SHOW_UNRESOLVED);
         }
+
         return <div className='violation-filters'>
                 <table>
                     <tbody>
@@ -68,8 +75,8 @@ class ViolationFilters extends React.Component {
                             <td>
                                 <FilterDropdown
                                     onUpdate={this.onUpdate.bind(this, 'account')}
-                                    items={this.props.accounts.map(a => a.id)}
-                                    selection={params.accounts}
+                                    items={values(this.props.accounts).map(a => a.name)}
+                                    selection={params.accounts ? params.accounts.map(a => this.props.accounts[a].name) : []}
                                     title='Filter' />
                             </td>
                             <td>

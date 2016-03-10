@@ -63,6 +63,15 @@ function ensureDefaultSearchParams(router, props, forceAddAccounts=false) {
         if (!queryParams.sortBy) {
             queryParams.sortBy = defaultParams.sortBy;
         }
+        if (!queryParams.sortBy) {
+            queryParams.sortBy = defaultParams.sortBy;
+        }
+        if (!queryParams.from) {
+            queryParams.from = defaultParams.from;
+        }
+        if (!queryParams.to) {
+            queryParams.to = defaultParams.to;
+        }
         if (!queryParams.page) {
             queryParams.page = defaultParams.page;
         }
@@ -92,7 +101,7 @@ class ViolationHandler extends React.Component {
 
     render() {
         let violations = this.props.fullstopStore.getViolations(),
-            accounts = this.props.teamStore.getAccounts(),
+            accounts = this.props.teamStore.getAccounts().reduce((m, a) => {m[a.id] = a; return m; }, {}),
             violationTypes = Object.keys(this.props.fullstopStore.getViolationTypes()),
             violationLoading = this.props.fullstopStore.getLoading(),
             pagingInfo = this.props.fullstopStore.getPagingInfo();
@@ -144,7 +153,7 @@ class ViolationDetailHandler extends React.Component {
     }
 
     render() {
-        let accounts = this.props.teamStore.getAccounts();
+        const accounts = this.props.teamStore.getAccounts().reduce((m, a) => {m[a.id] = a; return m; }, {});
         return <ViolationDetail
                     violationId={parseInt(this.props.params.violationId, 10)}
                     accounts={accounts}

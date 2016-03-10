@@ -1,4 +1,5 @@
 import Immutable from 'immutable';
+import moment from 'moment';
 import {Pending, Failed} from 'common/src/fetch-result';
 import Types from './fullstop-types';
 import * as Getters from './fullstop-getter';
@@ -22,8 +23,8 @@ const DEFAULT_PAGING = {
             size: 15,
             page: 0,
             accounts: [],
-            from: undefined,
-            to: undefined,
+            from: moment().subtract(1, 'year').startOf('day').toISOString(),
+            to: moment().toISOString(),
             violationType: '',
             showUnresolved: true,
             showResolved: false,

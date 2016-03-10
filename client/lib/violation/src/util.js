@@ -1,6 +1,10 @@
 import moment from 'moment';
 import {parse} from 'querystring';
 
+function values(object) {
+    return Object.keys(object).map(key => object[key]).reduce((a, v) => a.concat([v]), []);
+}
+
 function stringifySearchParams(searchParams) {
     let result = Object.assign({}, searchParams);
     Object.keys(result).forEach(k => {
@@ -55,6 +59,7 @@ function parseSearchParams(searchParams) {
 }
 
 export {
+    values,
     parseSearchParams,
     stringifySearchParams
 };

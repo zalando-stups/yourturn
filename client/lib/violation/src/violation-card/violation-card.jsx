@@ -33,7 +33,7 @@ class ViolationCard extends React.Component {
 
     render() {
         let {violation} = this.props,
-            account = this.props.accounts.filter(a => a.id === violation.account_id)[0],
+            account = this.props.accounts[violation.account_id],
             {violation_type} = violation;
         return <div
                     data-block='violation-card'
@@ -51,6 +51,12 @@ class ViolationCard extends React.Component {
                                 fixedWidth
                                 name='calendar-o'
                                 title='Time when this violation was discovered' /> <Timestamp value={violation.timestamp} format={Config.DATE_FORMAT} />
+                        </div>
+                        <div>
+                            <Icon
+                                fixedWidth
+                                name='users'
+                                title='The team the account belongs to' /> {account && account.owner}
                         </div>
                         <div>
                             <Icon

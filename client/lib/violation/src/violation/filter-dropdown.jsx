@@ -8,10 +8,9 @@ class ListItem extends React.Component {
     }
 
     render() {
-        return <li className={this.props.className + ' ' + (this.props.selected ? 'selected' : '')}>
+        return <li onClick={this.props.onChange} className={this.props.className + ' ' + (this.props.selected ? 'selected' : '')}>
                 <label>
                     <input
-                        onChange={this.props.onChange}
                         checked={this.props.selected}
                         type="checkbox" />
                     {this.props.content}
