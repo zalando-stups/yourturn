@@ -81,7 +81,7 @@ class Violation extends React.Component {
                         {!!this.state.selectedViolation ?
                             <ViolationCard
                                 editable={true}
-                                style={{maxWidth: 600}}
+                                style={{maxWidth: 600, fontSize: '.66em', lineHeight: '1.75em'}}
                                 accounts={this.props.accounts}
                                 autoFocus={true}
                                 onResolve={this.onResolveViolation.bind(this)}

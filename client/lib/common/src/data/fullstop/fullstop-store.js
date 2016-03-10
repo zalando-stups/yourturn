@@ -22,7 +22,7 @@ const DEFAULT_PAGING = {
             size: 15,
             page: 0,
             accounts: [],
-            from: moment().subtract(1, 'year').startOf('day').toISOString(),
+            from: moment().subtract(1, 'month').startOf('day').toISOString(),
             to: moment().toISOString(),
             violationType: '',
             showUnresolved: true,

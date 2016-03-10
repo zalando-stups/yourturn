@@ -99,7 +99,7 @@ class ViolationFilters extends React.Component {
                                     onUpdate={this.onUpdate.bind(this, 'severity')}
                                     singleMode={true}
                                     items={[0, 1, 2, 3, 4]}
-                                    selection={[params.severity ? parseInt(params.severity, 10) : -1]}
+                                    selection={[typeof params.severity !== 'undefined' ? parseInt(params.severity, 10) : -1]}
                                     title='Filter' />
                             </td>
                             <td>
