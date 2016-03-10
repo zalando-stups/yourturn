@@ -38,12 +38,6 @@ class Violation extends React.Component {
         });
     }
 
-    closeModal() {
-        this.setState({
-            selectedViolation: null
-        });
-    }
-
     onResolveViolation(violation, message) {
         this.props.fullstopActions.resolveViolation(violation.id, message);
     }
@@ -87,8 +81,8 @@ class Violation extends React.Component {
                         {!!this.state.selectedViolation ?
                             <ViolationCard
                                 editable={true}
+                                style={{maxWidth: 600}}
                                 accounts={this.props.accounts}
-                                onRequestClose={this.closeModal.bind(this)}
                                 autoFocus={true}
                                 onResolve={this.onResolveViolation.bind(this)}
                                 violation={selectedViolation} />

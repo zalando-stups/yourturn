@@ -1,5 +1,6 @@
 import React from 'react';
 import Icon from 'react-fa';
+import listenToOutsideClick from 'react-onclickoutside/decorator';
 import 'common/asset/less/violation/filter-dropdown.less';
 
 class ListItem extends React.Component {
@@ -23,7 +24,6 @@ class FilterDropdown extends React.Component {
     constructor(props) {
         super();
         this.state = {
-            outsideClickHandler: null,
             visible: false,
             filtered: false,
             filteredItems: [],
@@ -33,34 +33,10 @@ class FilterDropdown extends React.Component {
         };
     }
 
-    // https://github.com/Pomax/react-onclickoutside/blob/master/index.js
-    // maybe also use this library in the future as
-    // uses only one event listener for multiple components
-    componentDidMount() {
-        var that = this,
-            handler = function(evt) {
-                var src = evt.target,
-                    self = that.refs.dropdown,
-                    found = false;
-                while(src.parentNode) {
-                    found = src.parentNode === self;
-                    if (found) {
-                        return;
-                    }
-                    src = src.parentNode;
-                }
-                that.setState({
-                    visible: false
-                });
-            };
-        document.body.addEventListener('click', handler);
+    handleClickOutside() {
         this.setState({
-            outsideClickHandler: handler
+            visible: false
         });
-    }
-
-    componentWillUnmount() {
-        document.body.removeEventListener('click', this.state.outsideClickHandler);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -183,4 +159,4 @@ class FilterDropdown extends React.Component {
 }
 FilterDropdown.displayName = 'FilterDropdown';
 
-export default FilterDropdown;
+export default listenToOutsideClick(FilterDropdown);

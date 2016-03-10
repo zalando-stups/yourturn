@@ -36,6 +36,7 @@ class ViolationCard extends React.Component {
             account = this.props.accounts[violation.account_id],
             {violation_type} = violation;
         return <div
+                    style={this.props.style || {}}
                     data-block='violation-card'
                     data-severity={violation_type.violation_severity}
                     className={'violationCard ' +

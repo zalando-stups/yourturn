@@ -45,6 +45,7 @@
     "react-dom": "0.14.7",
     "react-fa": "4.0.0",
     "react-gravatar": "2.2.2",
+    "react-onclickoutside": "4.5.0",
     "react-redux": "4.0.6",
     "react-router": "2.0.0-rc6",
     "react-tabs": "0.5.1",
