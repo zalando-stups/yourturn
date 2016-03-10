@@ -1,8 +1,10 @@
 import React from 'react';
 import Icon from 'react-fa';
+import moment from 'moment';
 import Picker from 'react-date-picker';
 import 'react-date-picker/index.css';
 import 'common/asset/less/violation/date-dropdown.less';
+import listenToOutsideClick from 'react-onclickoutside/decorator';
 
 class DateDropdown extends React.Component {
     constructor(props) {
@@ -13,75 +15,25 @@ class DateDropdown extends React.Component {
         };
     }
 
-    // https://github.com/Pomax/react-onclickoutside/blob/master/index.js
-    // maybe also use this library in the future as
-    // uses only one event listener for multiple components
-    componentDidMount() {
-        var that = this,
-            handler = function(evt) {
-                var src = evt.target,
-                    self = that.refs.dropdown,
-                    found = false;
-                while(src.parentNode) {
-                    found = src.parentNode === self;
-                    if (found) {
-                        return;
-                    }
-                    src = src.parentNode;
-                }
-                that.setState({
-                    visible: false
-                });
-            };
-        document.body.addEventListener('click', handler);
-        this.setState({
-            outsideClickHandler: handler
-        });
-    }
-
-    componentWillUnmount() {
-        document.body.removeEventListener('click', this.state.outsideClickHandler);
-    }
-
     onHeaderClick() {
         this.state.visible = !this.state.visible;
         this.setState(this.state);
     }
 
-    // https://github.com/Pomax/react-onclickoutside/blob/master/index.js
-    // maybe also use this library in the future as
-    // uses only one event listener for multiple components
-    componentDidMount() {
-        var that = this,
-            handler = function(evt) {
-                var src = evt.target,
-                    self = that.refs.dropdown,
-                    found = false;
-                while(src.parentNode) {
-                    found = src.parentNode === self;
-                    if (found) {
-                        return;
-                    }
-                    src = src.parentNode;
-                }
-                that.setState({
-                    visible: false
-                });
-            };
-        document.body.addEventListener('click', handler);
+    handleClickOutside() {
         this.setState({
-            outsideClickHandler: handler
+            visible: false
         });
-    }
-
-    componentWillUnmount() {
-        document.removeEventListener('click', this.state.outsideClickHandler);
     }
 
     onUpdate(stringRange, momentRange) {
         if (this.props.onUpdate) {
             this.props.onUpdate(momentRange);
         }
+    }
+
+    updateWithMinus(howMany, what) {
+        this.props.onUpdate([moment().subtract(howMany, what).startOf('day'), moment()]);
     }
 
     render() {
@@ -95,11 +47,21 @@ class DateDropdown extends React.Component {
                 </header>
                 {this.state.visible ?
                     <div className='dateDropdown-dropdown'>
+                        <div className='dateDropdown-quickselect'>
+                            <small>Quickselect</small>
+                            <ul>
+                                <li onClick={() => this.updateWithMinus(1, 'day')}>Yesterday</li>
+                                <li onClick={() => this.updateWithMinus(1, 'week')}>Last week</li>
+                                <li onClick={() => this.updateWithMinus(1, 'month')}>Last month</li>
+                                <li onClick={() => this.updateWithMinus(6, 'months')}>Last 6 months</li>
+                                <li onClick={() => this.updateWithMinus(1, 'year')}>Last year</li>
+                            </ul>
+                        </div>
                         <div className='dateDropdown-container'>
                             <Picker
                                 weekStartDay={1}
                                 onRangeChange={this.onUpdate.bind(this)}
-                                defaultRange={this.props.range} />
+                                range={this.props.range} />
                         </div>
                     </div> :
                     null}
@@ -108,4 +70,4 @@ class DateDropdown extends React.Component {
 }
 DateDropdown.displayName = 'DateDropdown';
 
-export default DateDropdown;
+export default listenToOutsideClick(DateDropdown);
