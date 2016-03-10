@@ -30,6 +30,13 @@ class ViolationFilters extends React.Component {
                 params.to = data[1].toISOString();
                 this.context.router.push(Routes.violation(params));
             }
+        } else if (what === 'severity') {
+            if (data.length === 0) {
+                delete params.severity;
+            } else {
+                params.severity = parseInt(data[0], 10);
+            }
+            this.context.router.push(Routes.violation(params));
         } else if (what === 'type') {
             if (data.length === 0) {
                 delete params.type;
@@ -87,6 +94,14 @@ class ViolationFilters extends React.Component {
                             </td>
                             <td></td>
                             <td></td>
+                            <td>
+                                <FilterDropdown
+                                    onUpdate={this.onUpdate.bind(this, 'severity')}
+                                    singleMode={true}
+                                    items={[0, 1, 2, 3, 4]}
+                                    selection={[params.severity ? parseInt(params.severity, 10) : -1]}
+                                    title='Filter' />
+                            </td>
                             <td>
                                 <FilterDropdown
                                     onUpdate={this.onUpdate.bind(this, 'type')}

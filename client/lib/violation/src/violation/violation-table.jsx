@@ -82,6 +82,7 @@ class ViolationTable extends React.Component {
                 'created',
                 'application_id',
                 'version_id',
+                'violation_severity',
                 'violation_type_id',
                 'is_resolved'
             ],
@@ -102,6 +103,9 @@ class ViolationTable extends React.Component {
                 columnName: 'version_id',
                 customComponent: DefaultValueCell
             }, {
+                displayName: 'Criticality',
+                columnName: 'violation_severity'
+            },{
                 displayName: 'Type',
                 columnName: 'violation_type_id'
             }, {
