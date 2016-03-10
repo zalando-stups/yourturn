@@ -119,10 +119,6 @@ class ViolationHandler extends React.Component {
     }
 }
 ViolationHandler.fetchData = function(routerState, state) {
-    // check all query params are in place
-    // save last visited date
-    FULLSTOP_ACTIONS.saveLastVisited(Date.now());
-
     let promises = [],
         accountsPromise = TeamGetter.getAccounts(state.team).length === 0 ?
                             TEAM_ACTIONS.fetchAccounts() :
