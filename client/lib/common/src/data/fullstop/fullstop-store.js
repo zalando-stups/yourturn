@@ -12,7 +12,6 @@ const DEFAULT_PAGING = {
     },
     DEFAULT_STATE = Immutable.fromJS({
         ownAccountsTotal: 0,
-        lastVisited: 0,
         loadingViolations: false,
         violations: [],
         violationCount: [],

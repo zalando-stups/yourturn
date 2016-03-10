@@ -4,7 +4,6 @@ import Type from './fullstop-types';
 import request from 'common/src/superagent';
 import {flummoxCompatWrap} from 'common/src/redux-middlewares';
 import {Provider, RequestConfig, saveRoute} from 'common/src/oauth-provider';
-import Storage from 'common/src/storage';
 
 function fetchOwnTotal(accounts) {
     return request
@@ -31,7 +30,7 @@ function fetchViolations(params) {
                 to: (params.to || new Date()).toISOString(),
                 page: params.page || 0,
                 type: params.type || undefined,
-                severity: params.severity || undefined,
+                severity: params.severity || undefined,
                 sort: (params.sortBy || 'created') + (params.sortAsc ? ',asc' : ',desc'),
                 checked: params.showResolved && !params.showUnresolved ?
                             true :

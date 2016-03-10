@@ -93,8 +93,8 @@ describe('The redux fullstop store', () => {
             payload: Object.assign(VIOLATION_A, {comment: 'foo'})
         });
         expect(Getter.getViolations(state).length).to.equal(1);
-        expect(Getter.getViolation(state, 3)).to.be.defined;
-        let violation = Getter.getViolation(state, 3);
+        expect(Getter.getViolation(state, 1)).to.be.defined;
+        let violation = Getter.getViolation(state, 1);
         expect(violation.is_resolved).to.be.true;
         expect(violation.comment).to.equal('foo');
     });

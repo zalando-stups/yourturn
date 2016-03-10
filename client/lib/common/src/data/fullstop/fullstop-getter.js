@@ -52,10 +52,6 @@ function getOwnTotal(state) {
     return state.get('ownAccountsTotal');
 }
 
-function getLastVisited(state) {
-    return state.get('lastVisited');
-}
-
 function getDefaultSearchParams() {
     return (FullstopStore()).get('searchParams').toJS();
 }
@@ -73,7 +69,6 @@ export {
     getViolationTypes,
     getViolationCount,
     getViolationCountIn,
-    getLastVisited,
     getOwnTotal,
     getDefaultSearchParams,
     getLoading
