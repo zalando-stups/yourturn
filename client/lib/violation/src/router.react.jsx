@@ -110,6 +110,7 @@ class ViolationHandler extends React.Component {
             {}),
             violationTypes = Object.keys(this.props.fullstopStore.getViolationTypes()),
             violationLoading = this.props.fullstopStore.getLoading(),
+            violationError = this.props.fullstopStore.getError(),
             pagingInfo = this.props.fullstopStore.getPagingInfo();
         return <Violation
                     notificationActions={NOTIFICATION_ACTIONS}
@@ -118,6 +119,7 @@ class ViolationHandler extends React.Component {
                     violations={violations}
                     violationTypes={violationTypes}
                     loading={violationLoading}
+                    error={violationError}
                     accounts={accounts}
                     pagingInfo={pagingInfo}
                     params={parseSearchParams(this.props.location.search)}

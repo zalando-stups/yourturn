@@ -60,6 +60,10 @@ function getLoading(state) {
     return state.get('loadingViolations');
 }
 
+function getError(state) {
+    return state.get('loadingError');
+}
+
 export {
     getViolations,
     getViolation,
@@ -71,5 +75,6 @@ export {
     getViolationCountIn,
     getOwnTotal,
     getDefaultSearchParams,
-    getLoading
+    getLoading,
+    getError
 };

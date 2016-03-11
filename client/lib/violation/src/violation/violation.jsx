@@ -67,6 +67,9 @@ class Violation extends React.Component {
                             <Icon name='bullhorn' /> Copy sharing URL
                         </div>
                     </Clipboard>
+                    <div className='u-warning' style={{display: this.props.error ? 'block' : 'none'}}>
+                        {this.props.error && this.props.error.message || 'Error'}
+                    </div>
                     <div className='container'>
                         <ViolationFilters
                             violationTypes={this.props.violationTypes}

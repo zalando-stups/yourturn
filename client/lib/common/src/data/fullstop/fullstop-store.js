@@ -13,6 +13,7 @@ const DEFAULT_PAGING = {
     DEFAULT_STATE = Immutable.fromJS({
         ownAccountsTotal: 0,
         loadingViolations: false,
+        loadingError: null,
         violations: [],
         violationCount: [],
         violationCountIn: [],
@@ -39,7 +40,12 @@ function FullstopStore(state, action) {
 
     let {type, payload} = action;
     if (type === Types.BEGIN_FETCH_VIOLATIONS) {
-        return state.set('loadingViolations', true);
+        return state.set('loadingViolations', true)
+                    .set('loadingError', null);
+    } else if (type === Types.FAIL_FETCH_VIOLATIONS) {
+        return state
+                .set('loadingViolations', false)
+                .set('loadingError', payload);
     } else if (type === Types.BEGIN_FETCH_VIOLATION) {
         let pending = new Pending();
         pending.id = payload[0];
