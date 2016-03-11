@@ -101,7 +101,13 @@ class ViolationHandler extends React.Component {
 
     render() {
         let violations = this.props.fullstopStore.getViolations(),
-            accounts = this.props.teamStore.getAccounts().reduce((m, a) => {m[a.id] = a; return m; }, {}),
+            userAccs = this.props.userStore.getUserCloudAccounts(),
+            // index accounts by id and set access flag
+            accounts = this.props.teamStore.getAccounts().reduce((m, a) => {
+                a.userAccess = userAccs.filter(ua => ua.id === a.id).length > 0;
+                m[a.id] = a;
+                return m; },
+            {}),
             violationTypes = Object.keys(this.props.fullstopStore.getViolationTypes()),
             violationLoading = this.props.fullstopStore.getLoading(),
             pagingInfo = this.props.fullstopStore.getPagingInfo();

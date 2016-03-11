@@ -25,7 +25,17 @@ function AccountCell(accounts) {
     return function(props) {
         const acc = accounts[props.data];
         if (acc) {
-            return <div><small>{acc.owner}</small> {acc.name}</div>;
+            return <div>{acc.name}</div>;
+        }
+        return <div>{props.data}</div>;
+    }
+}
+
+function TeamCell(accounts) {
+    return function(props) {
+        const acc = accounts[props.data];
+        if (acc) {
+            return <div>{acc.owner}</div>;
         }
         return <div>{props.data}</div>;
     }
@@ -79,6 +89,7 @@ class ViolationTable extends React.Component {
     render() {
         var gridColumns = [
                 'account_id',
+                'owner',
                 'created',
                 'application_id',
                 'version_id',
@@ -87,10 +98,14 @@ class ViolationTable extends React.Component {
                 'is_resolved'
             ],
             columnMetadata = [{
-                displayName: 'Team/Account',
+                displayName: 'Team',
                 columnName: 'account_id',
-                customComponent: AccountCell(this.props.accounts)
+                customComponent: TeamCell(this.props.accounts)
             }, {
+                displayName: 'Account',
+                columnName: 'owner',
+                customComponent: AccountCell(this.props.accounts)
+            } ,{
                 displayName: 'Created',
                 columnName: 'created',
                 customComponent: TimestampCell

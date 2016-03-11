@@ -87,7 +87,7 @@ class Violation extends React.Component {
                     }}>
                         {!!this.state.selectedViolation ?
                             <ViolationCard
-                                editable={true}
+                                editable={this.props.accounts[selectedViolation.account_id].userAccess}
                                 style={{maxWidth: 600, fontSize: '.66em', lineHeight: '1.75em'}}
                                 accounts={this.props.accounts}
                                 autoFocus={true}

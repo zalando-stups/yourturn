@@ -93,6 +93,7 @@ class ViolationFilters extends React.Component {
                 <table>
                     <tbody>
                         <tr>
+                            <td></td>
                             <td>
                                 <FilterDropdown
                                     onUpdate={this.onUpdate.bind(this, 'account')}

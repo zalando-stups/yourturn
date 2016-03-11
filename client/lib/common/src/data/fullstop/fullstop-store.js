@@ -73,6 +73,7 @@ function FullstopStore(state, action) {
                 (coll, v) => {
                     v.timestamp = Date.parse(v.created) || 0;
                     v.is_resolved = !!v.comment;
+                    v.owner = v.account_id; // workaround for griddle
                     v.violation_severity = v.violation_type.violation_severity;
                     v.violation_type_id = v.violation_type.id;
                     v.violation_name = v.violation_type.violation_name;
