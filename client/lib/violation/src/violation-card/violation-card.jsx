@@ -1,6 +1,6 @@
 import React from 'react';
-import {Link} from 'react-router';
 import Icon from 'react-fa';
+import {Link} from 'react-router';
 import Timestamp from 'react-time';
 import Config from 'common/src/config';
 import 'common/asset/less/violation/violation-card.less';
@@ -32,11 +32,14 @@ class ViolationCard extends React.Component {
     }
 
     render() {
+        if (!this.props.violation) {
+            return null;
+        }
         let {violation} = this.props,
-            account = this.props.accounts.filter(a => a.id === violation.account_id)[0],
+            account = this.props.accounts[violation.account_id],
             {violation_type} = violation;
-
         return <div
+                    style={this.props.style || {}}
                     data-block='violation-card'
                     data-severity={violation_type.violation_severity}
                     className={'violationCard ' +
@@ -56,8 +59,14 @@ class ViolationCard extends React.Component {
                         <div>
                             <Icon
                                 fixedWidth
+                                name='users'
+                                title='The team the account belongs to' /> {account && account.owner}
+                        </div>
+                        <div>
+                            <Icon
+                                fixedWidth
                                 name='cloud'
-                                title='The cloud account number' /> {account.name} ({violation.account_id})
+                                title='The cloud account number' /> {account && account.name} ({violation.account_id})
                         </div>
                         <div>
                             <Icon
@@ -83,7 +92,7 @@ class ViolationCard extends React.Component {
                                 {typeof violation.meta_info === 'string' ?
                                     violation.meta_info :
                                     Object.keys(violation.meta_info)
-                                    .map(key => <div><span className='violationCard-metadata-key'>{key}</span>: {JSON.stringify(violation.meta_info[key])}</div>)}
+                                    .map(key => <div key={key}><span className='violationCard-metadata-key'>{key}</span>: {JSON.stringify(violation.meta_info[key])}</div>)}
                             </code>
                             :
                             null}
@@ -127,6 +136,7 @@ ViolationCard.contextTypes = {
 ViolationCard.propTypes = {
     autoFocus: React.PropTypes.bool,
     onResolve: React.PropTypes.func,
+    accounts: React.PropTypes.array,
     violation: React.PropTypes.object.isRequired,
     editable: React.PropTypes.bool
 };

@@ -4,15 +4,14 @@ import Type from './fullstop-types';
 import request from 'common/src/superagent';
 import {flummoxCompatWrap} from 'common/src/redux-middlewares';
 import {Provider, RequestConfig, saveRoute} from 'common/src/oauth-provider';
-import Storage from 'common/src/storage';
 
-function fetchOwnTotal(from, accounts) {
+function fetchOwnTotal(accounts) {
     return request
             .get(`${FULLSTOP_BASE_URL}/violations`)
             .accept('json')
             .query({
                 accounts: accounts && accounts.join(','),
-                from: new Date(from).toISOString(),
+                from: new Date(0).toISOString(),
                 checked: false
             })
             .oauth(Provider, RequestConfig)
@@ -26,12 +25,13 @@ function fetchViolations(params) {
             .accept('json')
             .query({
                 accounts: params.accounts && params.accounts.join(','),
-                size: params.size || 10,
+                size: params.size || 15,
                 from: params.from ? params.from.toISOString() : '',
                 to: (params.to || new Date()).toISOString(),
                 page: params.page || 0,
-                type: params.list_violationType || undefined,
-                sort: 'created' + (params.sortAsc ? ',asc' : ',desc'),
+                type: params.type || undefined,
+                severity: typeof params.severity !== 'undefined' ? params.severity : undefined,
+                sort: (params.sortBy || 'created') + (params.sortAsc ? ',asc' : ',desc'),
                 checked: params.showResolved && !params.showUnresolved ?
                             true :
                             !params.showResolved && params.showUnresolved ?
@@ -117,15 +117,6 @@ function deleteViolations() {
     return true;
 }
 
-function saveLastVisited(date) {
-    Storage.set('fullstop_lastVisited', date);
-    return date;
-}
-
-function loadLastVisited() {
-    return Storage.get('fullstop_lastVisited') || 0;
-}
-
 let fetchViolationAction = flummoxCompatWrap(createAction(Type.FETCH_VIOLATION, fetchViolation)),
     fetchViolationsAction = flummoxCompatWrap(createAction(Type.FETCH_VIOLATIONS, fetchViolations)),
     resolveViolationAction = createAction(Type.RESOLVE_VIOLATION, resolveViolation),
@@ -133,8 +124,6 @@ let fetchViolationAction = flummoxCompatWrap(createAction(Type.FETCH_VIOLATION, 
     fetchViolationTypesAction = createAction(Type.FETCH_VIOLATION_TYPES, fetchViolationTypes),
     fetchViolationCountAction = createAction(Type.FETCH_VIOLATION_COUNT, fetchViolationCount),
     fetchViolationCountInAction = createAction(Type.FETCH_VIOLATION_COUNT_IN, fetchViolationCountIn),
-    saveLastVisitedAction = createAction(Type.SAVE_LAST_VISITED, saveLastVisited),
-    loadLastVisitedAction = createAction(Type.LOAD_LAST_VISITED, loadLastVisited),
     fetchOwnTotalAction = createAction(Type.FETCH_OWN_TOTAL, fetchOwnTotal);
 
 export {
@@ -145,7 +134,5 @@ export {
     fetchViolationCountAction as fetchViolationCount,
     fetchViolationCountInAction as fetchViolationCountIn,
     resolveViolationAction as resolveViolation,
-    deleteViolationsAction as deleteViolations,
-    saveLastVisitedAction as saveLastVisited,
-    loadLastVisitedAction as loadLastVisited
+    deleteViolationsAction as deleteViolations
 };

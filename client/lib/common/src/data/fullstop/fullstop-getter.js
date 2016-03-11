@@ -5,14 +5,18 @@ function getPagingInfo(state) {
 }
 
 function getViolation(state, violationId) {
-    let violation = state.getIn(['violations', String(violationId)]);
-    return violation ? violation.toJS() : false;
+    let violations = state.get('violations');
+    if (violations.size === 0) {
+        return false;
+    }
+    violations = violations.filter(v => (v.get && v.get('id') === violationId));
+    return violations.first() ? violations.first().toJS() : null;
 }
 
 function getViolations(state) {
-    let violations = state.get('violations').valueSeq();
+    let violations = state.get('violations');
 
-    if (violations.count() === 0) {
+    if (violations.size === 0) {
         return [];
     }
 
@@ -48,12 +52,16 @@ function getOwnTotal(state) {
     return state.get('ownAccountsTotal');
 }
 
-function getLastVisited(state) {
-    return state.get('lastVisited');
-}
-
 function getDefaultSearchParams() {
     return (FullstopStore()).get('searchParams').toJS();
+}
+
+function getLoading(state) {
+    return state.get('loadingViolations');
+}
+
+function getError(state) {
+    return state.get('loadingError');
 }
 
 export {
@@ -65,7 +73,8 @@ export {
     getViolationTypes,
     getViolationCount,
     getViolationCountIn,
-    getLastVisited,
     getOwnTotal,
-    getDefaultSearchParams
+    getDefaultSearchParams,
+    getLoading,
+    getError
 };

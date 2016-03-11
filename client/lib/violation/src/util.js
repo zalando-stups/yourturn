@@ -1,6 +1,10 @@
 import moment from 'moment';
 import {parse} from 'querystring';
 
+function values(object) {
+    return Object.keys(object).map(key => object[key]).reduce((a, v) => a.concat([v]), []);
+}
+
 function stringifySearchParams(searchParams) {
     let result = Object.assign({}, searchParams);
     Object.keys(result).forEach(k => {
@@ -41,25 +45,24 @@ function parseSearchParams(searchParams) {
     if (params.sortAsc) {
         result.sortAsc = params.sortAsc === 'true';
     }
+    if (params.sortBy) {
+        result.sortBy = params.sortBy;
+    }
+    if (params.type) {
+        result.type = params.type;
+    }
+    if (params.severity) {
+        result.severity = parseInt(params.severity, 10);
+    }
+    if (params.page) {
+        result.page = parseInt(params.page, 10);
+    }
 
-    // tab-specific parameters
-    Object
-    .keys(params)
-    .forEach(param => {
-        // they look like tab_variableCamelCase
-        let [tab, variable] = param.split('_'); // eslint-disable-line
-        if (variable) {
-            if (['true', 'false'].indexOf(params[param]) >= 0) {
-                result[param] = params[param] === 'true';
-            } else {
-                result[param] = params[param];
-            }
-        }
-    });
     return result;
 }
 
 export {
+    values,
     parseSearchParams,
     stringifySearchParams
 };

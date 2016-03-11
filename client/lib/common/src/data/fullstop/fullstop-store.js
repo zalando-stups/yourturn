@@ -5,25 +5,31 @@ import Types from './fullstop-types';
 import * as Getters from './fullstop-getter';
 
 const DEFAULT_PAGING = {
-        last: true
+        last: true,
+        page: 0,
+        total: 0,
+        total_pages: 0
     },
     DEFAULT_STATE = Immutable.fromJS({
         ownAccountsTotal: 0,
-        lastVisited: 0,
-        violations: {},
+        loadingViolations: false,
+        loadingError: null,
+        violations: [],
         violationCount: [],
         violationCountIn: [],
         violationTypes: {},
         pagingInfo: DEFAULT_PAGING,
         searchParams: {
+            size: 15,
             page: 0,
             accounts: [],
-            from: moment().subtract(1, 'week').startOf('day'),
-            to: moment(),
+            from: moment().subtract(1, 'month').startOf('day').toISOString(),
+            to: moment().toISOString(),
+            violationType: '',
             showUnresolved: true,
             showResolved: false,
             sortAsc: true,
-            activeTab: 0
+            sortBy: 'created'
         }
     });
 
@@ -34,12 +40,35 @@ function FullstopStore(state, action) {
 
     let {type, payload} = action;
     if (type === Types.BEGIN_FETCH_VIOLATIONS) {
-        return state.set('pagingInfo', Immutable.Map(DEFAULT_PAGING));
+        return state.set('loadingViolations', true)
+                    .set('loadingError', null);
+    } else if (type === Types.FAIL_FETCH_VIOLATIONS) {
+        return state
+                .set('loadingViolations', false)
+                .set('loadingError', payload);
     } else if (type === Types.BEGIN_FETCH_VIOLATION) {
-        return state.setIn(['violations', String(payload[0])], new Pending());
+        let pending = new Pending();
+        pending.id = payload[0];
+        return state.set('violations', state.get('violations').push(pending));
     } else if (type === Types.FAIL_FETCH_VIOLATION) {
-        return state.setIn(['violations', String(payload.violationId)], new Failed(payload));
-    } else if (type === Types.FETCH_VIOLATION || type === Types.RESOLVE_VIOLATION) {
+        let failed = new Failed();
+        failed.id = payload.violationId;
+        return state.set('violations', state.get('violations').push(failed));
+    } else if (type === Types.RESOLVE_VIOLATION) {
+        // find violation and update
+        let index = state.get('violations').findIndex(v => v.get('id') === payload.id);
+
+        let violation = state
+                        .get('violations')
+                        .get(index)
+                        .set('comment', payload.comment)
+                        .set('is_resolved', true)
+                        .set('last_modified', payload.last_modified)
+                        .set('last_modified_by', payload.last_modified_by);
+        // replace
+        let violations = state.get('violations').update(index, false, v => violation);
+        return state.set('violations', violations);
+    } else if (type === Types.FETCH_VIOLATION) {
         return FullstopStore(state, {
             type: Types.FETCH_VIOLATIONS,
             payload: [undefined, [payload]]
@@ -49,19 +78,33 @@ function FullstopStore(state, action) {
             all = violations.reduce(
                 (coll, v) => {
                     v.timestamp = Date.parse(v.created) || 0;
-                    return coll.set(String(v.id), Immutable.fromJS(v));
+                    v.is_resolved = !!v.comment;
+                    v.owner = v.account_id; // workaround for griddle
+                    v.violation_severity = v.violation_type.violation_severity;
+                    v.violation_type_id = v.violation_type.id;
+                    v.violation_name = v.violation_type.violation_name;
+                    try {
+                        v.application_id = v.meta_info.application_id;
+                        v.version_id = v.meta_info.version_id;
+                    } catch (e) {
+                        // do nothing
+                    }
+                    return coll.push(Immutable.fromJS(v));
                 },
-                state.get('violations'));
+                Immutable.List());
         if (metadata) {
             state = state.set('pagingInfo', Immutable.Map({
                 last: metadata.last,
                 page: metadata.number,
-                total: metadata.total_elements
+                total: metadata.total_elements,
+                total_pages: metadata.total_pages
             }));
         }
-        return state.set('violations', all);
+        return state
+                .set('loadingViolations', false)
+                .set('violations', all);
     } else if (type === Types.DELETE_VIOLATIONS) {
-        return state.set('violations', Immutable.Map());
+        return state.set('violations', Immutable.List());
     } else if (type === Types.FETCH_VIOLATION_TYPES) {
         let types = payload.reduce((all, t) => {
             all[t.id] = t;

@@ -2,7 +2,7 @@ import RESOURCE_WHITELIST from 'RESOURCE_WHITELIST';
 import APPLICATION_WHITELIST from 'APPLICATION_WHITELIST';
 
 export default {
-    DATE_FORMAT: 'Do MMMM YYYY HH:mm',
+    DATE_FORMAT: 'YYYY-MM-DD HH:mm',
     //QUICKFIX #133
     RESOURCE_WHITELIST: RESOURCE_WHITELIST
                             .split(' ')

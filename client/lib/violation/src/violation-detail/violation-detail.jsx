@@ -17,7 +17,6 @@ class ViolationDetail extends React.Component {
 
     render() {
         let {violationId} = this.props,
-            allAccounts = this.props.teamStore.getAccounts(),
             accounts = this.props.userStore.getUserCloudAccounts().map(a => a.id),
             violation = this.props.fullstopStore.getViolation(violationId);
         if (violation instanceof FetchResult) {
@@ -29,7 +28,7 @@ class ViolationDetail extends React.Component {
                     <Violation
                         editable={accounts.indexOf(violation.account_id) >= 0}
                         onResolve={this.resolveViolation.bind(this)}
-                        accounts={allAccounts}
+                        accounts={this.props.accounts}
                         violation={violation} />
                 </div>;
     }

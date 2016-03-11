@@ -38,14 +38,10 @@ let userActions = bindActionsToStore(REDUX, UserActions),
 userActions
     .fetchTokenInfo()
     .then(info => {
-        fullstopActions.loadLastVisited();
         kioActions.loadPreferredAccount();
         userActions
             .fetchAccounts(info.uid)
-            .then(accounts => {
-                let lastLogin = FullstopGetter.getLastVisited(REDUX.getState().fullstop);
-                fullstopActions.fetchOwnTotal(lastLogin, accounts.map(a => a.id));
-            });
+            .then(accounts => fullstopActions.fetchOwnTotal(accounts.map(a => a.id)));
         userActions
             .fetchUserInfo(info.uid);
     });

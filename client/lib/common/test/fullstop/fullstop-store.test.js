@@ -83,6 +83,22 @@ describe('The redux fullstop store', () => {
         expect(Getter.getViolations(state).length).to.equal(VIOLATIONS.length);
     });
 
+    it('should resolve a violation', () => {
+        let state = FullstopStore(DEFAULT_STATE, {
+            type: Type.FETCH_VIOLATION,
+            payload: VIOLATION_A
+        });
+        state = FullstopStore(state, {
+            type: Type.RESOLVE_VIOLATION,
+            payload: Object.assign(VIOLATION_A, {comment: 'foo'})
+        });
+        expect(Getter.getViolations(state).length).to.equal(1);
+        expect(Getter.getViolation(state, 1)).to.be.defined;
+        let violation = Getter.getViolation(state, 1);
+        expect(violation.is_resolved).to.be.true;
+        expect(violation.comment).to.equal('foo');
+    });
+
     it('should exchange an existing violation', () => {
         let state = FullstopStore(DEFAULT_STATE, {
             type: Type.FETCH_VIOLATION,
@@ -90,9 +106,10 @@ describe('The redux fullstop store', () => {
         });
         state = FullstopStore(state, {
             type: Type.FETCH_VIOLATION,
-            payload: VIOLATION_A
+            payload: Object.assign(VIOLATION_A, {id: 3})
         });
         expect(Getter.getViolations(state).length).to.equal(1);
+        expect(Getter.getViolation(state, 3)).to.be.defined;
     });
 
     it('should have default search parameters', () => {
@@ -100,7 +117,6 @@ describe('The redux fullstop store', () => {
             params = Getter.getSearchParams(state);
         expect(params.from).to.be.defined;
         expect(params.to).to.be.defined;
-        expect(params.activeTab).to.be.defined;
         expect(params.showResolved).to.be.defined;
         expect(params.showUnresolved).to.be.defined;
         expect(params.accounts).to.be.defined;
