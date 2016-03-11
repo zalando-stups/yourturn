@@ -13,7 +13,7 @@ function TimestampCell({data}) {
     return <div>-</div>;
 }
 
-function DefaultValueCell({data}) {
+function DefaultValueCell({data}) {
     return <div>{!!data ? data : '-'}</div>
 }
 

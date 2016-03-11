@@ -68,7 +68,7 @@ class Violation extends React.Component {
                         </div>
                     </Clipboard>
                     <div className='u-warning' style={{display: this.props.error ? 'block' : 'none'}}>
-                        {this.props.error && this.props.error.message || 'Error'}
+                        {this.props.error && this.props.error.message || 'Error'}
                     </div>
                     <div className='container'>
                         <ViolationFilters

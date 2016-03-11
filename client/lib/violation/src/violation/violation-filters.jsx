@@ -49,7 +49,7 @@ class ViolationFilters extends React.Component {
             if (data.length === 0) {
                 delete params.type;
             } else {
-                params.type = data[0].replace(/\W/gi, "_");
+                params.type = data[0].replace(/\W/gi, '_');
             }
             this.context.router.push(Routes.violation(params));
             if (this.props.onUpdate) {
