@@ -46,6 +46,12 @@ class Violation extends React.Component {
         this.props.notificationActions.addNotification('Copied URL to clipboard', 'info');
     }
 
+    closeCard() {
+        this.setState({
+            selectedViolation: null
+        });
+    }
+
     render() {
         let shortURL = window.location.origin + '/violation/v/' + lzw.compressToEncodedURIComponent(JSON.stringify(this.props.params)),
             shareURL = shortURL.length < window.location.href.length ? shortURL : window.location.href,
@@ -65,6 +71,7 @@ class Violation extends React.Component {
                         <ViolationFilters
                             violationTypes={this.props.violationTypes}
                             accounts={this.props.accounts}
+                            onUpdate={this.closeCard.bind(this)}
                             params={this.props.params} />
                         <ViolationTable
                             onRowClick={this.onSelectViolation.bind(this)}

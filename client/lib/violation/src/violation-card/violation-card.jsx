@@ -1,6 +1,6 @@
 import React from 'react';
-import {Link} from 'react-router';
 import Icon from 'react-fa';
+import {Link} from 'react-router';
 import Timestamp from 'react-time';
 import Config from 'common/src/config';
 import 'common/asset/less/violation/violation-card.less';
@@ -32,6 +32,9 @@ class ViolationCard extends React.Component {
     }
 
     render() {
+        if (!this.props.violation) {
+            return null;
+        }
         let {violation} = this.props,
             account = this.props.accounts[violation.account_id],
             {violation_type} = violation;

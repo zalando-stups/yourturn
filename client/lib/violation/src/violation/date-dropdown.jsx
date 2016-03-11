@@ -51,8 +51,8 @@ class DateDropdown extends React.Component {
                             <small>Quickselect</small>
                             <ul>
                                 <li onClick={() => this.updateWithMinus(1, 'day')}>Yesterday</li>
-                                <li onClick={() => this.updateWithMinus(1, 'week')}>Last week</li>
-                                <li onClick={() => this.updateWithMinus(1, 'month')}>Last month</li>
+                                <li onClick={() => this.updateWithMinus(1, 'week')}>Last 7 days</li>
+                                <li onClick={() => this.updateWithMinus(1, 'month')}>Last 4 weeks</li>
                                 <li onClick={() => this.updateWithMinus(6, 'months')}>Last 6 months</li>
                                 <li onClick={() => this.updateWithMinus(1, 'year')}>Last year</li>
                             </ul>

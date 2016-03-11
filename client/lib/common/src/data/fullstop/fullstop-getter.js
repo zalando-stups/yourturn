@@ -10,7 +10,7 @@ function getViolation(state, violationId) {
         return false;
     }
     violations = violations.filter(v => (v.get && v.get('id') === violationId));
-    return violations.first().toJS();
+    return violations.first() ? violations.first().toJS() : null;
 }
 
 function getViolations(state) {

@@ -120,7 +120,7 @@ class ViolationTable extends React.Component {
         };
         return <Griddle
                     tableClassName='violationTable'
-                    noDataMessage='Waiting for data…'
+                    noDataMessage={this.props.loading ? 'Waiting for data…' : 'No violations matching your filters.'}
                     onRowClick={this.props.onRowClick}
                     useGriddleStyles={false}
                     useCustomPagerComponent={true}

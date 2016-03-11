@@ -18,17 +18,22 @@ class ViolationFilters extends React.Component {
         if (what === 'account') {
             // reverse lookup name => id
             const {accounts} = this.props;
-            console.debug(accounts)
             const accountIdsByName = Object.keys(accounts)
                                         .map(id => [accounts[id].name, id])
                                         .reduce((m, a) => {m[a[0]] = a[1]; return m;}, {});
             params.accounts = data.map(name => accountIdsByName[name])
             this.context.router.push(Routes.violation(params));
+            if (this.props.onUpdate) {
+                this.props.onUpdate();
+            }
         } else if (what === 'date') {
             if (data[1]) {
                 params.from = data[0].toISOString();
                 params.to = data[1].toISOString();
                 this.context.router.push(Routes.violation(params));
+                if (this.props.onUpdate) {
+                    this.props.onUpdate();
+                }
             }
         } else if (what === 'severity') {
             if (data.length === 0) {
@@ -37,6 +42,9 @@ class ViolationFilters extends React.Component {
                 params.severity = parseInt(data[0], 10);
             }
             this.context.router.push(Routes.violation(params));
+            if (this.props.onUpdate) {
+                this.props.onUpdate();
+            }
         } else if (what === 'type') {
             if (data.length === 0) {
                 delete params.type;
@@ -44,6 +52,9 @@ class ViolationFilters extends React.Component {
                 params.type = data[0].replace(/\W/gi, "_");
             }
             this.context.router.push(Routes.violation(params));
+            if (this.props.onUpdate) {
+                this.props.onUpdate();
+            }
         } else if (what === 'resolved') {
             if (data.length === 0) {
                 params.showResolved = false;
@@ -62,6 +73,9 @@ class ViolationFilters extends React.Component {
                 params.showResolved = true;
             }
             this.context.router.push(Routes.violation(params));
+            if (this.props.onUpdate) {
+                this.props.onUpdate();
+            }
         }
     }
 
