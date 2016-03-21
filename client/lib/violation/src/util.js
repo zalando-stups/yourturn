@@ -57,6 +57,9 @@ function parseSearchParams(searchParams) {
     if (params.page) {
         result.page = parseInt(params.page, 10);
     }
+    if (params.size) {
+        result.size = parseInt(params.size, 10);
+    }
 
     return result;
 }

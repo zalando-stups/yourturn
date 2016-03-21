@@ -24,6 +24,12 @@ class Violation extends React.Component {
         this.context.router.push(Routes.violation(newParams));
     }
 
+    onSetPageSize(size) {
+        let newParams = stringifySearchParams(this.props.params);
+        newParams.size = size;
+        this.context.router.push(Routes.violation(newParams));
+    }
+
     onSetPage(page) {
         let newParams = stringifySearchParams(this.props.params);
         newParams.page = page;
@@ -80,6 +86,7 @@ class Violation extends React.Component {
                             onRowClick={this.onSelectViolation.bind(this)}
                             onChangeSort={this.onChangeSort.bind(this)}
                             onSetPage={this.onSetPage.bind(this)}
+                            onSetPageSize={this.onSetPageSize.bind(this)}
                             selectedViolation={this.state.selectedViolation}
                             {...this.props} />
                     </div>

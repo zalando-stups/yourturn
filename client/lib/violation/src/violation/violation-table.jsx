@@ -72,7 +72,7 @@ class ViolationTable extends React.Component {
         super();
         this.state = {
             numPages: 100,
-            currentPage: 0,
+            page_size: 15,
             results: []
         };
     }
@@ -90,7 +90,7 @@ class ViolationTable extends React.Component {
     }
 
     setPageSize(size) {
-        // left empty
+        this.props.onSetPageSize(size);
     }
 
     render() {
@@ -156,7 +156,10 @@ class ViolationTable extends React.Component {
                     externalCurrentPage={this.props.params.page}
                     externalSortColumn={this.props.params.sortBy}
                     externalSortAscending={this.props.params.sortAsc}
+                    resultsPerPage={this.props.pagingInfo.size}
                     showFilter={false}
+                    showSetPageSize={true}
+                    showSettings={true}
                     columns={gridColumns}
                     columnMetadata={columnMetadata}
                     rowMetadata={rowMeta}
