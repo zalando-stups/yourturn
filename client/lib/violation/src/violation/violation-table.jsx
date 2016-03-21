@@ -3,7 +3,6 @@ import Icon from 'react-fa';
 import Timestamp from 'react-time';
 import Griddle from 'griddle-react';
 import Config from 'common/src/config';
-import ViolationViz from 'violation/src/violation-viz.jsx';
 
 function TimestampCell({data}) {
     if (!!data) {
@@ -40,10 +39,6 @@ function TeamCell(accounts) {
         }
         return <div>{props.data}</div>;
     }
-}
-
-function CriticalityCell({data}) {
-    return <ViolationViz severity={data} />;
 }
 
 class Pager extends React.Component {
@@ -124,9 +119,8 @@ class ViolationTable extends React.Component {
                 columnName: 'version_id',
                 customComponent: DefaultValueCell
             }, {
-                displayName: 'Criticality',
-                columnName: 'violation_severity',
-                customComponent: CriticalityCell
+                displayName: 'Severity',
+                columnName: 'violation_severity'
             },{
                 displayName: 'Type',
                 columnName: 'violation_type_id'
