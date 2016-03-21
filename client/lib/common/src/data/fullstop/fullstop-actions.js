@@ -32,6 +32,7 @@ function fetchViolations(params) {
                 type: params.type || undefined,
                 severity: typeof params.severity !== 'undefined' ? params.severity : undefined,
                 sort: (params.sortBy || 'created') + (params.sortAsc ? ',asc' : ',desc'),
+                whitelisted: params.showWhitelisted || false,
                 checked: params.showResolved && !params.showUnresolved ?
                             true :
                             !params.showResolved && params.showUnresolved ?

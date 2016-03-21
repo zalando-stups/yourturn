@@ -3,7 +3,9 @@ import Icon from 'react-fa';
 import {Link} from 'react-router';
 import Timestamp from 'react-time';
 import Config from 'common/src/config';
+import Badge from 'common/src/badge.jsx'
 import 'common/asset/less/violation/violation-card.less';
+import ViolationViz from 'violation/src/violation-viz.jsx';
 
 class ViolationCard extends React.Component {
     constructor() {
@@ -53,6 +55,12 @@ class ViolationCard extends React.Component {
                         <div>
                             <Icon
                                 fixedWidth
+                                name='flash'
+                                title='Criticality' /> {violation_type.violation_severity} / 4
+                        </div>
+                        <div>
+                            <Icon
+                                fixedWidth
                                 name='calendar-o'
                                 title='Time when this violation was discovered' /> <Timestamp value={violation.timestamp} format={Config.DATE_FORMAT} />
                         </div>
@@ -83,9 +91,23 @@ class ViolationCard extends React.Component {
                             </div>
                             :
                             null}
+                        {violation.username != null ?
+                            <div>
+                                <Icon fixedWidth
+                                      name='user'
+                                      title='Which user caused this violation' /> {violation.username}
+                            </div>
+                            :
+                            null}
+                        {violation.rule_id != null ?
+                            <div>
+                                <Badge>Whitelisted</Badge>
+                            </div>
+                            :
+                            null}
                     </header>
                     <div>
-                        <h5>{violation_type.id}</h5>
+                        <h5>{violation_type.name || violation_type.id}</h5>
                         <p>{violation_type.help_text}</p>
                         {!!violation.meta_info ?
                             <code className='violationCard-metadata'>
@@ -107,7 +129,7 @@ class ViolationCard extends React.Component {
                                 <blockquote className='violationCard-resolutionMessage'>{violation.comment}</blockquote>
                             </div>
                             :
-                            this.props.editable ?
+                            !violation.is_whitelisted && this.props.editable ?
                                 <form onSubmit={this.resolve.bind(this)} className='form'>
                                     <div className='input-group'>
                                         <input
@@ -136,7 +158,7 @@ ViolationCard.contextTypes = {
 ViolationCard.propTypes = {
     autoFocus: React.PropTypes.bool,
     onResolve: React.PropTypes.func,
-    accounts: React.PropTypes.array,
+    accounts: React.PropTypes.object,
     violation: React.PropTypes.object.isRequired,
     editable: React.PropTypes.bool
 };

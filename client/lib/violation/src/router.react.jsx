@@ -40,6 +40,7 @@ function ensureDefaultSearchParams(router, props, forceAddAccounts=false) {
     if ((!queryParams.accounts && forceAddAccounts) ||
         !queryParams.showUnresolved ||
         !queryParams.showResolved ||
+        !queryParams.showWhitelisted ||
         !queryParams.sortAsc ||
         !queryParams.sortBy ||
         !queryParams.page) {
@@ -56,6 +57,9 @@ function ensureDefaultSearchParams(router, props, forceAddAccounts=false) {
             // so we add the default ones
             queryParams.showUnresolved = defaultParams.showUnresolved;
             queryParams.showResolved = defaultParams.showResolved;
+        }
+        if (!queryParams.showWhitelisted) {
+            queryParams.showWhitelisted = defaultParams.showWhitelisted;
         }
         if (!queryParams.sortAsc) {
             queryParams.sortAsc = defaultParams.sortAsc;

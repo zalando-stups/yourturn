@@ -6,7 +6,8 @@ import * as Routes from 'violation/src/routes';
 import {stringifySearchParams, values} from 'violation/src/util';
 
 const SHOW_RESOLVED = 'Show resolved',
-      SHOW_UNRESOLVED = 'Show unresolved';
+      SHOW_UNRESOLVED = 'Show unresolved',
+      SHOW_WHITELISTED = 'Show whitelisted';
 
 class ViolationFilters extends React.Component {
     constructor() {
@@ -76,19 +77,28 @@ class ViolationFilters extends React.Component {
             if (this.props.onUpdate) {
                 this.props.onUpdate();
             }
+        } else if (what === 'whitelisted') {
+            params.showWhitelisted = data.length === 1;
+            this.context.router.push(Routes.violation(params));
+            if (this.props.onUpdate) {
+                this.props.onUpdate();
+            }
         }
     }
 
     render() {
         let params = stringifySearchParams(this.props.params),
-            resolvedSelection = [];
+            resolvedSelection = [],
+            whitelistedSelection = [];
         if (params.showResolved) {
             resolvedSelection.push(SHOW_RESOLVED);
         }
         if (params.showUnresolved) {
             resolvedSelection.push(SHOW_UNRESOLVED);
         }
-
+        if (params.showWhitelisted) {
+            whitelistedSelection.push(SHOW_WHITELISTED);
+        }
         return <div className='violation-filters'>
                 <table>
                     <tbody>
@@ -123,6 +133,14 @@ class ViolationFilters extends React.Component {
                                     singleMode={true}
                                     items={this.props.violationTypes.map(vt => vt.replace(/_/gi, ' '))}
                                     selection={[params.type ? params.type.replace(/_/gi, ' ') : '']}
+                                    title='Filter' />
+                            </td>
+                            <td>
+                                <FilterDropdown
+                                    onUpdate={this.onUpdate.bind(this, 'whitelisted')}
+                                    singleMode={true}
+                                    items={[SHOW_WHITELISTED]}
+                                    selection={whitelistedSelection}
                                     title='Filter' />
                             </td>
                             <td>
