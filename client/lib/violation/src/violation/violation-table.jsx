@@ -139,6 +139,7 @@ class ViolationTable extends React.Component {
                                             'standard-row selected' :
                                             'standard-row'
         };
+        // ui of setting page size broken because of this https://github.com/GriddleGriddle/Griddle/issues/283
         return <Griddle
                     tableClassName='violationTable'
                     noDataMessage={this.props.loading ? 'Waiting for data…' : 'No violations matching your filters.'}
@@ -155,7 +156,6 @@ class ViolationTable extends React.Component {
                     externalCurrentPage={this.props.params.page}
                     externalSortColumn={this.props.params.sortBy}
                     externalSortAscending={this.props.params.sortAsc}
-                    {/*https://github.com/GriddleGriddle/Griddle/issues/283*/}
                     resultsPerPage={this.props.pagingInfo.size}
                     showFilter={false}
                     showSetPageSize={true}
