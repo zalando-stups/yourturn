@@ -1,0 +1,27 @@
+{
+  "name": "yourturn-backend",
+  "version": "0.71.0",
+  "description": "",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zalando-stups/yourturn.git"
+  },
+  "author": "Nikolaus Piccolotto",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/zalando-stups/yourturn/issues"
+  },
+  "homepage": "https://github.com/zalando-stups/yourturn",
+  "dependencies": {
+    "newrelic": "1.24.0",
+    "winston": "2.1.1",
+    "express": "4.13.3",
+    "compression": "1.6.0",
+    "js-yaml": "3.4.6",
+    "node-tokens": "0.0.9",
+    "bluebird": "3.1.1",
+    "redis": "2.4.2",
+    "superagent-bluebird-promise": "3.0.0"
+  }
+}

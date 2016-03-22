@@ -2,15 +2,7 @@ FROM registry.opensource.zalan.do/stups/node:4.4-20
 
 MAINTAINER Zalando SE
 
-RUN npm install newrelic@1.24.0
-RUN npm install winston@2.1.1
-RUN npm install express@4.13.3
-RUN npm install compression@1.6.0
-RUN npm install js-yaml@3.4.6
-RUN npm install node-tokens@0.0.9
-RUN npm install bluebird@3.1.1
-RUN npm install redis@2.4.2
-RUN npm install superagent-bluebird-promise@3.0.0
+ADD ./server/package.json /www/package.json
 
 # add scm-source
 ADD /scm-source.json /scm-source.json
@@ -39,7 +31,8 @@ RUN touch /www/newrelic_agent.log && chmod 0666 /www/newrelic_agent.log
 # new relic npm config
 RUN touch /www/newrelic.js && chmod 0666 /www/newrelic.js
 
-# expose and start
+# install, expose and start
 WORKDIR /www/
+RUN npm install
 CMD node yourturn.js
 EXPOSE 8080
