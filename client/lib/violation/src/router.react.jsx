@@ -43,6 +43,7 @@ function ensureDefaultSearchParams(router, props, forceAddAccounts=false) {
         !queryParams.showWhitelisted ||
         !queryParams.sortAsc ||
         !queryParams.sortBy ||
+        !queryParams.size ||
         !queryParams.page) {
 
         // ensure default params are in url
@@ -78,6 +79,9 @@ function ensureDefaultSearchParams(router, props, forceAddAccounts=false) {
         }
         if (!queryParams.page) {
             queryParams.page = defaultParams.page;
+        }
+        if (!queryParams.size) {
+            queryParams.size = defaultParams.size;
         }
         router.replace({
             pathname: '/violation',

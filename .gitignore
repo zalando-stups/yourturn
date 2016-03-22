@@ -12,3 +12,4 @@ scm-source.json
 stats.json
 .DS_Store
 .vagrant
+.idea
