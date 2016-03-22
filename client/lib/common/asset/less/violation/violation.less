@@ -33,7 +33,18 @@
         table-layout: fixed;
 
         tbody {
-
+            .fa-times,
+            .fa-check {
+                text-align: center;
+                width: 100%;
+            }
+            .fa-check {
+                color: @green;
+            }
+            .fa-circle,
+            .fa-circle-thin {
+                margin-right: 1px;
+            }
             tr.standard-row {
                 .transition(background);
                 &:hover {
@@ -48,7 +59,7 @@
                     background: @orange-light;
                 }
             }
-            }
+        }
 
         thead {
             border-bottom: 1px solid black;
@@ -91,7 +102,6 @@
         }
     }
 }
-
 
 .violation-filters {
     table {
