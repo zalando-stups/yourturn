@@ -86,8 +86,10 @@
                 color: @gray-light;
                 text-align: center;
                 flex: 1 1 auto;
-                &:first-child,
-                &:last-child {
+                &.violationTable-pager-gotofirst,
+                &.violationTable-pager-gotoprev,
+                &.violationTable-pager-gotonext,
+                &.violationTable-pager-gotolast {
                     .transition(background, color);
                     cursor: pointer;
                     &:hover {

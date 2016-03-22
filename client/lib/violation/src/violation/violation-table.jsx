@@ -52,16 +52,36 @@ class Pager extends React.Component {
     render() {
         const pages = new Array(this.props.maxPage).fill(1).map((n, i) => i);
         return <div className='violationTable-pager'>
-                    <div disabled={this.props.currentPage === 0} onClick={() => this.pageChange(0)}><Icon name='fast-backward' /> First</div>
-                    <div onClick={() => this.props.previous()}><Icon name='step-backward' /> {this.props.previousText}</div>
+                    <div
+                        className='violationTable-pager-gotofirst'
+                        disabled={this.props.currentPage === 0}
+                        onClick={() => this.pageChange(0)}>
+                        <Icon name='fast-backward' /> First
+                    </div>
+                    <div
+                        className='violationTable-pager-gotoprev'
+                        disabled={this.props.currentPage === 0}
+                        onClick={() => this.props.previous()}>
+                        <Icon name='step-backward' /> {this.props.previousText}
+                    </div>
                     <div>Page <select
                                     value={this.props.currentPage}
                                     onChange={(evt) => this.pageChange(evt.target.value)}>
                                     {pages.map(p => <option value={p}>{p + 1}</option>)}
                             </select> / {this.props.maxPage}
                     </div>
-                    <div onClick={() => this.props.next()}>{this.props.nextText} <Icon name='step-forward' /></div>
-                    <div disabled={this.props.maxPage - 1 === this.props.currentPage} onClick={() => this.pageChange(this.props.maxPage - 1)}>Last <Icon name='fast-forward' /></div>
+                    <div
+                        className='violationTable-pager-gotonext'
+                        disabled={this.props.maxPage - 1 === this.props.currentPage}
+                        onClick={() => this.props.next()}>
+                        {this.props.nextText} <Icon name='step-forward' />
+                    </div>
+                    <div
+                        className='violationTable-pager-gotolast'
+                        disabled={this.props.maxPage - 1 === this.props.currentPage}
+                        onClick={() => this.pageChange(this.props.maxPage - 1)}>
+                        Last <Icon name='fast-forward' />
+                    </div>
                 </div>
     }
 }
