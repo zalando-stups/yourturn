@@ -2,7 +2,6 @@ import React from 'react';
 import Icon from 'react-fa';
 import Timestamp from 'react-time';
 import Griddle from 'griddle-react';
-import Config from 'common/src/config';
 
 function TimestampCell({data}) {
     if (!!data) {
@@ -51,11 +50,18 @@ class Pager extends React.Component {
     }
 
     render() {
-
+        const pages = new Array(this.props.maxPage).fill(1).map((n, i) => i);
         return <div className='violationTable-pager'>
-                    <div onClick={() => this.props.previous()}>{this.props.previousText}</div>
-                    <div>Page {this.props.currentPage + 1} / {this.props.maxPage}</div>
-                    <div onClick={() => this.props.next()}>{this.props.nextText}</div>
+                    <div disabled={this.props.currentPage === 0} onClick={() => this.pageChange(0)}><Icon name='fast-backward' /> First</div>
+                    <div onClick={() => this.props.previous()}><Icon name='step-backward' /> {this.props.previousText}</div>
+                    <div>Page <select
+                                    value={this.props.currentPage}
+                                    onChange={(evt) => this.pageChange(evt.target.value)}>
+                                    {pages.map(p => <option value={p}>{p + 1}</option>)}
+                            </select> / {this.props.maxPage}
+                    </div>
+                    <div onClick={() => this.props.next()}>{this.props.nextText} <Icon name='step-forward' /></div>
+                    <div disabled={this.props.maxPage - 1 === this.props.currentPage} onClick={() => this.pageChange(this.props.maxPage - 1)}>Last <Icon name='fast-forward' /></div>
                 </div>
     }
 }
@@ -65,7 +71,7 @@ class ViolationTable extends React.Component {
         super();
         this.state = {
             numPages: 100,
-            currentPage: 0,
+            page_size: 15,
             results: []
         };
     }
@@ -83,7 +89,7 @@ class ViolationTable extends React.Component {
     }
 
     setPageSize(size) {
-        // left empty
+        this.props.onSetPageSize(size);
     }
 
     render() {
@@ -133,6 +139,7 @@ class ViolationTable extends React.Component {
                                             'standard-row selected' :
                                             'standard-row'
         };
+        // ui of setting page size broken because of this https://github.com/GriddleGriddle/Griddle/issues/283
         return <Griddle
                     tableClassName='violationTable'
                     noDataMessage={this.props.loading ? 'Waiting for data…' : 'No violations matching your filters.'}
@@ -149,7 +156,10 @@ class ViolationTable extends React.Component {
                     externalCurrentPage={this.props.params.page}
                     externalSortColumn={this.props.params.sortBy}
                     externalSortAscending={this.props.params.sortAsc}
+                    resultsPerPage={this.props.pagingInfo.size}
                     showFilter={false}
+                    showSetPageSize={true}
+                    showSettings={true}
                     columns={gridColumns}
                     columnMetadata={columnMetadata}
                     rowMetadata={rowMeta}

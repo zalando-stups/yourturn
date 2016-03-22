@@ -8,7 +8,8 @@ const DEFAULT_PAGING = {
         last: true,
         page: 0,
         total: 0,
-        total_pages: 0
+        total_pages: 0,
+        size: 0
     },
     DEFAULT_STATE = Immutable.fromJS({
         ownAccountsTotal: 0,
@@ -20,7 +21,7 @@ const DEFAULT_PAGING = {
         violationTypes: {},
         pagingInfo: DEFAULT_PAGING,
         searchParams: {
-            size: 15,
+            size: 10,
             page: 0,
             accounts: [],
             from: moment().subtract(1, 'month').startOf('day').toISOString(),
@@ -97,7 +98,8 @@ function FullstopStore(state, action) {
                 last: metadata.last,
                 page: metadata.number,
                 total: metadata.total_elements,
-                total_pages: metadata.total_pages
+                total_pages: metadata.total_pages,
+                size: metadata.number_of_elements
             }));
         }
         return state
