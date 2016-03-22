@@ -2,7 +2,6 @@ import React from 'react';
 import Icon from 'react-fa';
 import Timestamp from 'react-time';
 import Griddle from 'griddle-react';
-import Config from 'common/src/config';
 
 function TimestampCell({data}) {
     if (!!data) {
@@ -156,6 +155,7 @@ class ViolationTable extends React.Component {
                     externalCurrentPage={this.props.params.page}
                     externalSortColumn={this.props.params.sortBy}
                     externalSortAscending={this.props.params.sortAsc}
+                    {/*https://github.com/GriddleGriddle/Griddle/issues/283*/}
                     resultsPerPage={this.props.pagingInfo.size}
                     showFilter={false}
                     showSetPageSize={true}
