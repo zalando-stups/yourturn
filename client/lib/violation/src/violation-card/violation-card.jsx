@@ -56,7 +56,7 @@ class ViolationCard extends React.Component {
                             <Icon
                                 fixedWidth
                                 name='flash'
-                                title='Criticality' /> {violation_type.violation_severity} / 4
+                                title='Criticality' /> <ViolationViz severity={violation_type.violation_severity} />
                         </div>
                         <div>
                             <Icon

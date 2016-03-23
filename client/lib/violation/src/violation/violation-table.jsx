@@ -2,6 +2,7 @@ import React from 'react';
 import Icon from 'react-fa';
 import Timestamp from 'react-time';
 import Griddle from 'griddle-react';
+import ViolationViz from 'violation/src/violation-viz.jsx';
 
 function TimestampCell({data}) {
     if (!!data) {
@@ -18,6 +19,10 @@ function DefaultValueCell({data}) {
 
 function BooleanCell({data}) {
     return <Icon name={data ? 'check' : 'times'} />
+}
+
+function SeverityCell({data}) {
+    return <ViolationViz severity={data} />;
 }
 
 function AccountCell(accounts) {
@@ -146,7 +151,8 @@ class ViolationTable extends React.Component {
                 customComponent: DefaultValueCell
             }, {
                 displayName: 'Severity',
-                columnName: 'violation_severity'
+                columnName: 'violation_severity',
+                customComponent: SeverityCell
             },{
                 displayName: 'Type',
                 columnName: 'violation_type_id'
