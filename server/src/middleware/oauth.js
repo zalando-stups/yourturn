@@ -27,8 +27,8 @@ module.exports = function(req, res, next) {
             access_token: token
         })
         .then(tokeninfo => {
-            if (tokeninfo.realm === '/employees' ||
-                tokeninfo.realm === '/services') {
+            if (tokeninfo.body.realm === '/employees' ||
+                tokeninfo.body.realm === '/services') {
                 return next();
             }
             return sendGenericError(res);
