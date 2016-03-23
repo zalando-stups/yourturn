@@ -2,6 +2,7 @@ import React from 'react';
 import Icon from 'react-fa';
 import Timestamp from 'react-time';
 import Griddle from 'griddle-react';
+import Tooltip from 'react-tooltip';
 
 function TimestampCell({data}) {
     if (!!data) {
@@ -38,6 +39,10 @@ function TeamCell(accounts) {
         }
         return <div>{props.data}</div>;
     }
+}
+
+function TooltipCell({data}) {
+    return <div><Tooltip /><span data-tip={data}>{data}</span></div>;
 }
 
 class Pager extends React.Component {
@@ -149,7 +154,8 @@ class ViolationTable extends React.Component {
                 columnName: 'violation_severity'
             },{
                 displayName: 'Type',
-                columnName: 'violation_type_id'
+                columnName: 'violation_type_id',
+                customComponent: TooltipCell
             }, {
                 displayName: 'Whitelisted?',
                 columnName: 'is_whitelisted',
