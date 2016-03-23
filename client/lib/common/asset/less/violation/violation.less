@@ -10,24 +10,35 @@
 }
 
 .violationViz {
-    &[data-priority="1"] {
-        .fa {
-            color: @gray-dark;
+    .fa {
+        color: @gray-lighter;
+        + .fa {
+            margin-left: 1px;
+        }
+    }
+    &[data-priority="3"] {
+        .fa:first-child {
+            color: @yellow;
         }
     }
     &[data-priority="2"] {
-        .fa {
-            color: @gray;
+        .fa:first-child {
+            color: @yellow;
+        }
+        .fa:nth-child(2) {
+            color: @orange;
         }
     }
-    &[data-priority="3"],
-    &[data-priority="4"]{
-        .fa {
-            color: @gray-light;
+    &[data-priority="1"] {
+        .fa:first-child {
+            color: @yellow;
         }
-    }
-    .fa + .fa {
-        margin-left: 1px;
+        .fa:nth-child(2) {
+            color: @orange;
+        }
+        .fa:nth-child(3) {
+            color: @red;
+        }
     }
 }
 
