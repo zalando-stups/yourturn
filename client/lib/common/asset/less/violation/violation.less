@@ -9,6 +9,28 @@
     }
 }
 
+.violationViz {
+    &[data-priority="1"] {
+        .fa {
+            color: @gray-dark;
+        }
+    }
+    &[data-priority="2"] {
+        .fa {
+            color: @gray;
+        }
+    }
+    &[data-priority="3"],
+    &[data-priority="4"]{
+        .fa {
+            color: @gray-light;
+        }
+    }
+    .fa + .fa {
+        margin-left: 1px;
+    }
+}
+
 .griddle {
     .griddle-settings-toggle {
         .settings {
@@ -40,10 +62,6 @@
             }
             .fa-check {
                 color: @green;
-            }
-            .fa-circle,
-            .fa-circle-thin {
-                margin-right: 1px;
             }
             tr.standard-row {
                 .transition(background);

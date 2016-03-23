@@ -82,7 +82,7 @@ function FullstopStore(state, action) {
                     v.timestamp = Date.parse(v.created) || 0;
                     v.is_resolved = !!v.comment;
                     v.owner = v.account_id; // workaround for griddle
-                    v.violation_severity = v.violation_type.violation_severity;
+                    v.priority = v.violation_type.priority;
                     v.violation_type_id = v.violation_type.id;
                     v.violation_name = v.violation_type.violation_name;
                     v.is_whitelisted = v.rule_id != null;

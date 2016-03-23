@@ -21,8 +21,8 @@ function BooleanCell({data}) {
     return <Icon name={data ? 'check' : 'times'} />
 }
 
-function SeverityCell({data}) {
-    return <ViolationViz severity={data} />;
+function PriorityCell({data}) {
+    return <ViolationViz priority={data} />;
 }
 
 function AccountCell(accounts) {
@@ -124,7 +124,7 @@ class ViolationTable extends React.Component {
                 'created',
                 'application_id',
                 'version_id',
-                'violation_severity',
+                'priority',
                 'violation_type_id',
                 'is_whitelisted',
                 'is_resolved'
@@ -150,9 +150,9 @@ class ViolationTable extends React.Component {
                 columnName: 'version_id',
                 customComponent: DefaultValueCell
             }, {
-                displayName: 'Severity',
-                columnName: 'violation_severity',
-                customComponent: SeverityCell
+                displayName: 'Priority',
+                columnName: 'priority',
+                customComponent: PriorityCell
             },{
                 displayName: 'Type',
                 columnName: 'violation_type_id'

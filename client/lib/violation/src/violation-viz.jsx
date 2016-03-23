@@ -1,10 +1,15 @@
 import React from 'react';
 import Icon from 'react-fa';
-const MAX_VALUE = 4;
 
-export default function ViolationViz({severity}) {
-    const all = new Array(severity).fill(1).concat(new Array(MAX_VALUE - severity).fill(0));
-    return <span title={`Criticality: ${severity}`}>
+export default function ViolationViz({priority}) {
+    let all = [];
+    switch (priority) {
+        case 1: all = [1, 1, 1]; break;
+        case 2: all = [1, 1, 0]; break;
+        case 3: all = [1, 0, 0]; break;
+        case 4: all = [0, 0, 0]; break;
+    }
+    return <span className='violationViz' data-priority={priority} title={`Priority: ${priority}`}>
             {all.map(c => c > 0 ?
                             <Icon name='circle' /> :
                             <Icon name='circle-thin' />)}

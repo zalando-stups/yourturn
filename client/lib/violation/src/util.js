@@ -54,8 +54,8 @@ function parseSearchParams(searchParams) {
     if (params.type) {
         result.type = params.type;
     }
-    if (params.severity) {
-        result.severity = parseInt(params.severity, 10);
+    if (params.priority) {
+        result.priority = parseInt(params.priority, 10);
     }
     if (params.page) {
         result.page = parseInt(params.page, 10);

@@ -30,7 +30,7 @@ function fetchViolations(params) {
                 to: (params.to || new Date()).toISOString(),
                 page: params.page || 0,
                 type: params.type || undefined,
-                severity: typeof params.severity !== 'undefined' ? params.severity : undefined,
+                priority: typeof params.priority !== 'undefined' ? params.priority : undefined,
                 sort: (params.sortBy || 'created') + (params.sortAsc ? ',asc' : ',desc'),
                 whitelisted: params.showWhitelisted || false,
                 checked: params.showResolved && !params.showUnresolved ?
