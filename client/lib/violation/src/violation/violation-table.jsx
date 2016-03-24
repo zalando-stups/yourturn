@@ -1,6 +1,7 @@
 import React from 'react';
 import Icon from 'react-fa';
 import Griddle from 'griddle-react';
+import Tooltip from 'react-tooltip';
 
 function padLeading(digit, number, totalLength) {
     let strNumber = number.toString();
@@ -72,6 +73,10 @@ function TeamCell(accounts) {
         }
         return <div>{props.data}</div>;
     }
+}
+
+function TooltipCell({data}) {
+    return <div><Tooltip /><span data-tip={data}>{data}</span></div>;
 }
 
 class Pager extends React.Component {
@@ -148,51 +153,53 @@ class ViolationTable extends React.Component {
 
     render() {
         var gridColumns = [
-        'account_id',
-        'owner',
-        'created',
-        'application_id',
-        'version_id',
-        'violation_severity',
-        'violation_type_id',
-        'is_whitelisted',
-        'is_resolved'
-        ],
-        columnMetadata = [{
-            displayName: 'Team',
-            columnName: 'account_id',
-            customComponent: TeamCell(this.props.accounts)
-        }, {
-            displayName: 'Account',
-            columnName: 'owner',
-            customComponent: AccountCell(this.props.accounts)
-        } ,{
-            displayName: 'Created',
-            columnName: 'created',
-            customComponent: TimestampCell
-        }, {
-            displayName: 'Application',
-            columnName: 'application_id',
-            customComponent: DefaultValueCell
-        }, {
-            displayName: 'Version',
-            columnName: 'version_id',
-            customComponent: DefaultValueCell
-        }, {
-            displayName: 'Severity',
-            columnName: 'violation_severity'
-        },{
-            displayName: 'Type',
-            columnName: 'violation_type_id'
-        }, {
-            displayName: 'Whitelisted?',
-            columnName: 'is_whitelisted',
-            customComponent: BooleanCell
-        }, {
-            displayName: 'Resolved?',
-            columnName: 'is_resolved',
-            customComponent: BooleanCell
-        }];
+                'account_id',
+                'owner',
+                'created',
+                'application_id',
+                'version_id',
+                'violation_severity',
+                'violation_type_id',
+                'is_whitelisted',
+                'is_resolved'
+            ],
+            columnMetadata = [{
+                displayName: 'Team',
+                columnName: 'account_id',
+                customComponent: TeamCell(this.props.accounts)
+            }, {
+                displayName: 'Account',
+                columnName: 'owner',
+                customComponent: AccountCell(this.props.accounts)
+            } ,{
+                displayName: 'Created',
+                columnName: 'created',
+                customComponent: TimestampCell
+            }, {
+                displayName: 'Application',
+                columnName: 'application_id',
+                customComponent: DefaultValueCell
+            }, {
+                displayName: 'Version',
+                columnName: 'version_id',
+                customComponent: DefaultValueCell
+            }, {
+                displayName: 'Severity',
+                columnName: 'violation_severity'
+            },{
+                displayName: 'Type',
+                columnName: 'violation_type_id',
+                customComponent: TooltipCell
+            }, {
+                displayName: 'Whitelisted?',
+                columnName: 'is_whitelisted',
+                customComponent: BooleanCell
+            }, {
+                displayName: 'Resolved?',
+                columnName: 'is_resolved',
+                customComponent: BooleanCell
+            }];
+
         const rowMeta = {
             bodyCssClassName: (row) => this.props.selectedViolation === row.id ?
             'standard-row selected' :
