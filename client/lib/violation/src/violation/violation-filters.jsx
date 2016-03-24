@@ -1,8 +1,9 @@
 import React from 'react';
 import Icon from 'react-fa';
 import DateDropdown from './date-dropdown.jsx';
-import FilterDropdown from './filter-dropdown.jsx';
 import * as Routes from 'violation/src/routes';
+import FilterDropdown from './filter-dropdown.jsx';
+import ViolationViz from 'violation/src/violation-viz.jsx';
 import {stringifySearchParams, values} from 'violation/src/util';
 
 const SHOW_RESOLVED = 'Show resolved',
@@ -112,6 +113,8 @@ class ViolationFilters extends React.Component {
                                 <FilterDropdown
                                     onUpdate={this.onUpdate.bind(this, 'priority')}
                                     singleMode={true}
+                                    disableSearch={true}
+                                    customComponentFn={item => <ViolationViz priority={item} />}
                                     items={[1, 2, 3, 4]}
                                     selection={[typeof params.priority !== 'undefined' ? parseInt(params.priority, 10) : -1]}
                                     title='Filter' />
