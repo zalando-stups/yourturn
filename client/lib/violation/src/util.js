@@ -42,9 +42,6 @@ function parseSearchParams(searchParams) {
     if (params.showResolved) {
         result.showResolved = params.showResolved === 'true';
     }
-    if (params.showWhitelisted) {
-        result.showWhitelisted = params.showWhitelisted === 'true';
-    }
     if (params.sortAsc) {
         result.sortAsc = params.sortAsc === 'true';
     }

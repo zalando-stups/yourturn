@@ -29,7 +29,6 @@ const DEFAULT_PAGING = {
             violationType: '',
             showUnresolved: true,
             showResolved: false,
-            showWhitelisted: false,
             sortAsc: true,
             sortBy: 'created'
         }

@@ -126,7 +126,6 @@ class ViolationTable extends React.Component {
                 'version_id',
                 'priority',
                 'violation_type_id',
-                'is_whitelisted',
                 'is_resolved'
             ],
             columnMetadata = [{
@@ -156,10 +155,6 @@ class ViolationTable extends React.Component {
             },{
                 displayName: 'Type',
                 columnName: 'violation_type_id'
-            }, {
-                displayName: 'Whitelisted?',
-                columnName: 'is_whitelisted',
-                customComponent: BooleanCell
             }, {
                 displayName: 'Resolved?',
                 columnName: 'is_resolved',
