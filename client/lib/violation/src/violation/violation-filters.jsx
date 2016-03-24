@@ -1,13 +1,13 @@
 import React from 'react';
 import Icon from 'react-fa';
 import DateDropdown from './date-dropdown.jsx';
-import FilterDropdown from './filter-dropdown.jsx';
 import * as Routes from 'violation/src/routes';
+import FilterDropdown from './filter-dropdown.jsx';
+import ViolationViz from 'violation/src/violation-viz.jsx';
 import {stringifySearchParams, values} from 'violation/src/util';
 
 const SHOW_RESOLVED = 'Show resolved',
-      SHOW_UNRESOLVED = 'Show unresolved',
-      SHOW_WHITELISTED = 'Show whitelisted';
+      SHOW_UNRESOLVED = 'Show unresolved';
 
 class ViolationFilters extends React.Component {
     constructor() {
@@ -36,11 +36,11 @@ class ViolationFilters extends React.Component {
                     this.props.onUpdate();
                 }
             }
-        } else if (what === 'severity') {
+        } else if (what === 'priority') {
             if (data.length === 0) {
-                delete params.severity;
+                delete params.priority;
             } else {
-                params.severity = parseInt(data[0], 10);
+                params.priority = parseInt(data[0], 10);
             }
             this.context.router.push(Routes.violation(params));
             if (this.props.onUpdate) {
@@ -77,27 +77,17 @@ class ViolationFilters extends React.Component {
             if (this.props.onUpdate) {
                 this.props.onUpdate();
             }
-        } else if (what === 'whitelisted') {
-            params.showWhitelisted = data.length === 1;
-            this.context.router.push(Routes.violation(params));
-            if (this.props.onUpdate) {
-                this.props.onUpdate();
-            }
         }
     }
 
     render() {
         let params = stringifySearchParams(this.props.params),
-            resolvedSelection = [],
-            whitelistedSelection = [];
+            resolvedSelection = [];
         if (params.showResolved) {
             resolvedSelection.push(SHOW_RESOLVED);
         }
         if (params.showUnresolved) {
             resolvedSelection.push(SHOW_UNRESOLVED);
-        }
-        if (params.showWhitelisted) {
-            whitelistedSelection.push(SHOW_WHITELISTED);
         }
         return <div className='violation-filters'>
                 <table>
@@ -121,10 +111,12 @@ class ViolationFilters extends React.Component {
                             <td></td>
                             <td>
                                 <FilterDropdown
-                                    onUpdate={this.onUpdate.bind(this, 'severity')}
+                                    onUpdate={this.onUpdate.bind(this, 'priority')}
                                     singleMode={true}
-                                    items={[0, 1, 2, 3, 4]}
-                                    selection={[typeof params.severity !== 'undefined' ? parseInt(params.severity, 10) : -1]}
+                                    disableSearch={true}
+                                    customComponentFn={item => <ViolationViz priority={item} />}
+                                    items={[1, 2, 3, 4]}
+                                    selection={[typeof params.priority !== 'undefined' ? parseInt(params.priority, 10) : -1]}
                                     title='Filter' />
                             </td>
                             <td>
@@ -133,14 +125,6 @@ class ViolationFilters extends React.Component {
                                     singleMode={true}
                                     items={this.props.violationTypes.map(vt => vt.replace(/_/gi, ' '))}
                                     selection={[params.type ? params.type.replace(/_/gi, ' ') : '']}
-                                    title='Filter' />
-                            </td>
-                            <td>
-                                <FilterDropdown
-                                    onUpdate={this.onUpdate.bind(this, 'whitelisted')}
-                                    singleMode={true}
-                                    items={[SHOW_WHITELISTED]}
-                                    selection={whitelistedSelection}
                                     title='Filter' />
                             </td>
                             <td>

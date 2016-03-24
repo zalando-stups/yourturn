@@ -9,6 +9,39 @@
     }
 }
 
+.violationViz {
+    .fa {
+        color: @gray-lighter;
+        + .fa {
+            margin-left: 1px;
+        }
+    }
+    &[data-priority="3"] {
+        .fa:first-child {
+            color: @yellow;
+        }
+    }
+    &[data-priority="2"] {
+        .fa:first-child {
+            color: @yellow;
+        }
+        .fa:nth-child(2) {
+            color: @orange;
+        }
+    }
+    &[data-priority="1"] {
+        .fa:first-child {
+            color: @yellow;
+        }
+        .fa:nth-child(2) {
+            color: @orange;
+        }
+        .fa:nth-child(3) {
+            color: @red;
+        }
+    }
+}
+
 .griddle {
     .griddle-settings-toggle {
         .settings {
@@ -40,10 +73,6 @@
             }
             .fa-check {
                 color: @green;
-            }
-            .fa-circle,
-            .fa-circle-thin {
-                margin-right: 1px;
             }
             tr.standard-row {
                 .transition(background);

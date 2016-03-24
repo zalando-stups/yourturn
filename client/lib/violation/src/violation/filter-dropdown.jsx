@@ -39,6 +39,10 @@ class FilterDropdown extends React.Component {
         });
     }
 
+    defaultComponentFn(item) {
+        return <span>{item}</span>;
+    }
+
     componentWillReceiveProps(nextProps) {
         if (this.props.selection !== nextProps.selection) {
             if (nextProps.selection && nextProps.selection.length) {
@@ -106,9 +110,10 @@ class FilterDropdown extends React.Component {
     }
 
     render() {
-        var items = this.props.items.sort(),
-            selected = items.filter(i => !!this.state.selectedItems[i]),
-            unselected = items.filter(i => !this.state.selectedItems[i]);
+        const items = this.props.items.sort(),
+              selected = items.filter(i => !!this.state.selectedItems[i]),
+              unselected = items.filter(i => !this.state.selectedItems[i]),
+              componentFn = this.props.customComponentFn || this.defaultComponentFn;
         return <div ref='dropdown' className='filter-dropdown'>
                 <header
                     ref='header'
@@ -126,12 +131,16 @@ class FilterDropdown extends React.Component {
                             </div>
                             :
                             null}
-                        <div>
-                            <input
-                                onChange={this.onItemFilter.bind(this)}
-                                placeholder="Search"
-                                type="search" />
-                        </div>
+                        {this.props.disableSearch ?
+                            null
+                            :
+                            <div>
+                                <input
+                                    onChange={this.onItemFilter.bind(this)}
+                                    placeholder="Search"
+                                    type="search" />
+                            </div>
+                        }
                         <div className='filterDropdown-list-container'>
                             <ul>
                             {(this.state.filtered ?
@@ -141,7 +150,7 @@ class FilterDropdown extends React.Component {
                                                             key={i}
                                                             selected={this.state.selectedItems[i]}
                                                             onChange={this.onItemToggle.bind(this, i)}
-                                                            content={i} />)}
+                                                            content={componentFn(i)} />)}
                             {(this.state.filtered ?
                                 this.state.filteredItems :
                                 unselected).map(i => <ListItem
@@ -149,7 +158,7 @@ class FilterDropdown extends React.Component {
                                                             key={i}
                                                             selected={this.state.selectedItems[i]}
                                                             onChange={this.onItemToggle.bind(this, i)}
-                                                            content={i} />)}
+                                                            content={componentFn(i)} />)}
                             </ul>
                         </div>
                     </div> :

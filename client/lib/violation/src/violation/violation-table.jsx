@@ -2,6 +2,7 @@ import React from 'react';
 import Icon from 'react-fa';
 import Griddle from 'griddle-react';
 import Tooltip from 'react-tooltip';
+import ViolationViz from 'violation/src/violation-viz.jsx';
 
 function padLeading(digit, number, totalLength) {
     let strNumber = number.toString();
@@ -53,6 +54,10 @@ function DefaultValueCell({data}) {
 
 function BooleanCell({data}) {
     return <Icon name={data ? 'check' : 'times'} />
+}
+
+function PriorityCell({data}) {
+    return <ViolationViz priority={data} />;
 }
 
 function AccountCell(accounts) {
@@ -158,9 +163,8 @@ class ViolationTable extends React.Component {
                 'created',
                 'application_id',
                 'version_id',
-                'violation_severity',
+                'priority',
                 'violation_type_id',
-                'is_whitelisted',
                 'is_resolved'
             ],
             columnMetadata = [{
@@ -184,16 +188,13 @@ class ViolationTable extends React.Component {
                 columnName: 'version_id',
                 customComponent: DefaultValueCell
             }, {
-                displayName: 'Severity',
-                columnName: 'violation_severity'
+                displayName: 'Priority',
+                columnName: 'priority',
+                customComponent: PriorityCell
             },{
                 displayName: 'Type',
                 columnName: 'violation_type_id',
                 customComponent: TooltipCell
-            }, {
-                displayName: 'Whitelisted?',
-                columnName: 'is_whitelisted',
-                customComponent: BooleanCell
             }, {
                 displayName: 'Resolved?',
                 columnName: 'is_resolved',

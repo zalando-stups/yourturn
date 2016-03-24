@@ -49,7 +49,7 @@ class ViolationCard extends React.Component {
         return <div
                     style={this.props.style || {}}
                     data-block='violation-card'
-                    data-severity={violation_type.violation_severity}
+                    data-priority={violation_type.priority}
                     className={'violationCard ' +
                                 (violation.comment != null ? 'is-resolved ' : '')}>
                     <header>
@@ -61,8 +61,8 @@ class ViolationCard extends React.Component {
                         <div>
                             <Icon
                                 fixedWidth
-                                name='flash'
-                                title='Criticality' /> {violation_type.violation_severity} / 4
+                                name='exclamation-triangle'
+                                title='Priority' /> <ViolationViz priority={violation_type.priority} />
                         </div>
                         <div>
                             <Icon
