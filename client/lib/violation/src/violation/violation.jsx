@@ -100,6 +100,7 @@ class Violation extends React.Component {
                                 editable={this.props.accounts[selectedViolation.account_id].userAccess}
                                 style={{maxWidth: 600, fontSize: '.66em', lineHeight: '1.75em'}}
                                 accounts={this.props.accounts}
+                                onClickOutside={this.closeCard.bind(this)}
                                 autoFocus={true}
                                 onResolve={this.onResolveViolation.bind(this)}
                                 violation={selectedViolation} />

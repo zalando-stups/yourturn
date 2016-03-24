@@ -5,7 +5,7 @@ import Timestamp from 'react-time';
 import Config from 'common/src/config';
 import Badge from 'common/src/badge.jsx'
 import 'common/asset/less/violation/violation-card.less';
-import ViolationViz from 'violation/src/violation-viz.jsx';
+import listenToOutsideClick from 'react-onclickoutside/decorator';
 
 class ViolationCard extends React.Component {
     constructor() {
@@ -13,6 +13,12 @@ class ViolationCard extends React.Component {
         this.state = {
             message: ''
         };
+    }
+
+    handleClickOutside() {
+        if (this.props.onClickOutside) {
+            this.props.onClickOutside();
+        }
     }
 
     updateMessage(evt) {
@@ -158,9 +164,10 @@ ViolationCard.contextTypes = {
 ViolationCard.propTypes = {
     autoFocus: React.PropTypes.bool,
     onResolve: React.PropTypes.func,
+    onClickOutside: React.PropTypes.func,
     accounts: React.PropTypes.object,
     violation: React.PropTypes.object.isRequired,
     editable: React.PropTypes.bool
 };
 
-export default ViolationCard;
+export default listenToOutsideClick(ViolationCard);

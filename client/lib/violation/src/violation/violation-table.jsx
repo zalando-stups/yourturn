@@ -1,16 +1,50 @@
 import React from 'react';
 import Icon from 'react-fa';
-import Timestamp from 'react-time';
 import Griddle from 'griddle-react';
 import Tooltip from 'react-tooltip';
 
-function TimestampCell({data}) {
-    if (!!data) {
-        return <Timestamp
-                    format={'YYYY-MM-DD HH:mm'}
-                    value={data} />
+function padLeading(digit, number, totalLength) {
+    let strNumber = number.toString();
+    if (strNumber.length >= totalLength) {
+        return strNumber;
     }
-    return <div>-</div>;
+    let padding = totalLength - strNumber.length;
+    while(padding) {
+        strNumber = digit + strNumber;
+        padding -= 1;
+    }
+    return strNumber;
+}
+
+
+function formatDate(ts) {
+    const date = new Date(ts);
+    let year = date.getUTCFullYear();
+    let month = date.getUTCMonth() + 1;
+    let day = date.getUTCDate();
+    let hour = date.getUTCHours();
+    let minute = date.getUTCMinutes();
+
+    month = padLeading(0, month, 2);
+    day = padLeading(0, day, 2);
+    hour = padLeading(0, hour, 2);
+    minute = padLeading(0, minute, 2);
+    return `${year}-${month}-${day} ${hour}:${minute}`;
+}
+
+const FORMATTED_DATES = {};
+function cacheFormat(ts) {
+    if (!FORMATTED_DATES[ts]) {
+        FORMATTED_DATES[ts] = formatDate(ts);
+    }
+    return FORMATTED_DATES[ts];
+}
+
+// Deliberately not using react-time here because
+// when we have a page size of 100, it gets really
+// slow to recreate all the timestamp fields
+function TimestampCell({data}) {
+    return <div>{cacheFormat(data)}</div>;
 }
 
 function DefaultValueCell({data}) {
@@ -57,37 +91,37 @@ class Pager extends React.Component {
     render() {
         const pages = new Array(this.props.maxPage).fill(1).map((n, i) => i);
         return <div className='violationTable-pager'>
-                    <div
-                        className='violationTable-pager-gotofirst'
-                        disabled={this.props.currentPage === 0}
-                        onClick={() => this.pageChange(0)}>
-                        <Icon name='fast-backward' /> First
-                    </div>
-                    <div
-                        className='violationTable-pager-gotoprev'
-                        disabled={this.props.currentPage === 0}
-                        onClick={() => this.props.previous()}>
-                        <Icon name='step-backward' /> {this.props.previousText}
-                    </div>
-                    <div>Page <select
-                                    value={this.props.currentPage}
-                                    onChange={(evt) => this.pageChange(evt.target.value)}>
-                                    {pages.map(p => <option value={p}>{p + 1}</option>)}
-                            </select> / {this.props.maxPage}
-                    </div>
-                    <div
-                        className='violationTable-pager-gotonext'
-                        disabled={this.props.maxPage - 1 === this.props.currentPage}
-                        onClick={() => this.props.next()}>
-                        {this.props.nextText} <Icon name='step-forward' />
-                    </div>
-                    <div
-                        className='violationTable-pager-gotolast'
-                        disabled={this.props.maxPage - 1 === this.props.currentPage}
-                        onClick={() => this.pageChange(this.props.maxPage - 1)}>
-                        Last <Icon name='fast-forward' />
-                    </div>
+                <div
+                    className='violationTable-pager-gotofirst'
+                    disabled={this.props.currentPage === 0}
+                    onClick={() => this.pageChange(0)}>
+                    <Icon name='fast-backward' /> First
                 </div>
+                <div
+                    className='violationTable-pager-gotoprev'
+                    disabled={this.props.currentPage === 0}
+                    onClick={() => this.props.previous()}>
+                    <Icon name='step-backward' /> {this.props.previousText}
+                </div>
+                <div>Page <select
+                            value={this.props.currentPage}
+                            onChange={(evt) => this.pageChange(evt.target.value)}>
+                            {pages.map(p => <option value={p}>{p + 1}</option>)}
+                        </select> / {this.props.maxPage}
+                </div>
+                <div
+                    className='violationTable-pager-gotonext'
+                    disabled={this.props.maxPage - 1 === this.props.currentPage}
+                    onClick={() => this.props.next()}>
+                    {this.props.nextText} <Icon name='step-forward' />
+                </div>
+                <div
+                    className='violationTable-pager-gotolast'
+                    disabled={this.props.maxPage - 1 === this.props.currentPage}
+                    onClick={() => this.pageChange(this.props.maxPage - 1)}>
+                    Last <Icon name='fast-forward' />
+                </div>
+        </div>
     }
 }
 
@@ -165,10 +199,11 @@ class ViolationTable extends React.Component {
                 columnName: 'is_resolved',
                 customComponent: BooleanCell
             }];
+
         const rowMeta = {
             bodyCssClassName: (row) => this.props.selectedViolation === row.id ?
-                                            'standard-row selected' :
-                                            'standard-row'
+            'standard-row selected' :
+            'standard-row'
         };
         // ui of setting page size broken because of this https://github.com/GriddleGriddle/Griddle/issues/283
         return <Griddle
