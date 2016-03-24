@@ -10,8 +10,8 @@ export default function ViolationViz({priority}) {
         case 4: all = [0, 0, 0]; break;
     }
     return <span className='violationViz' data-priority={priority} title={`Priority: ${priority}`}>
-            {all.map(c => c > 0 ?
-                            <Icon name='circle' /> :
-                            <Icon name='circle-thin' />)}
+            {all.map((c, i) => c > 0 ?
+                            <Icon key={i} name='circle' /> :
+                            <Icon key={i} name='circle-thin' />)}
             </span>;
 }

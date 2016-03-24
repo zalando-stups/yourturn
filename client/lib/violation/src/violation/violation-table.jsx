@@ -111,7 +111,7 @@ class Pager extends React.Component {
                 <div>Page <select
                             value={this.props.currentPage}
                             onChange={(evt) => this.pageChange(evt.target.value)}>
-                            {pages.map(p => <option value={p}>{p + 1}</option>)}
+                            {pages.map(p => <option key={p} value={p}>{p + 1}</option>)}
                         </select> / {this.props.maxPage}
                 </div>
                 <div

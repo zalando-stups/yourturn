@@ -5,6 +5,7 @@ import Timestamp from 'react-time';
 import Config from 'common/src/config';
 import Badge from 'common/src/badge.jsx'
 import 'common/asset/less/violation/violation-card.less';
+import ViolationViz from 'violation/src/violation-viz.jsx';
 import listenToOutsideClick from 'react-onclickoutside/decorator';
 
 class ViolationCard extends React.Component {
