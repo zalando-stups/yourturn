@@ -86,36 +86,36 @@ class Pager extends React.Component {
     render() {
         const pages = new Array(this.props.maxPage).fill(1).map((n, i) => i);
         return <div className='violationTable-pager'>
-        <div
-        className='violationTable-pager-gotofirst'
-        disabled={this.props.currentPage === 0}
-        onClick={() => this.pageChange(0)}>
-        <Icon name='fast-backward' /> First
-        </div>
-        <div
-        className='violationTable-pager-gotoprev'
-        disabled={this.props.currentPage === 0}
-        onClick={() => this.props.previous()}>
-        <Icon name='step-backward' /> {this.props.previousText}
-        </div>
-        <div>Page <select
-        value={this.props.currentPage}
-        onChange={(evt) => this.pageChange(evt.target.value)}>
-        {pages.map(p => <option value={p}>{p + 1}</option>)}
-        </select> / {this.props.maxPage}
-        </div>
-        <div
-        className='violationTable-pager-gotonext'
-        disabled={this.props.maxPage - 1 === this.props.currentPage}
-        onClick={() => this.props.next()}>
-        {this.props.nextText} <Icon name='step-forward' />
-        </div>
-        <div
-        className='violationTable-pager-gotolast'
-        disabled={this.props.maxPage - 1 === this.props.currentPage}
-        onClick={() => this.pageChange(this.props.maxPage - 1)}>
-        Last <Icon name='fast-forward' />
-        </div>
+                <div
+                    className='violationTable-pager-gotofirst'
+                    disabled={this.props.currentPage === 0}
+                    onClick={() => this.pageChange(0)}>
+                    <Icon name='fast-backward' /> First
+                </div>
+                <div
+                    className='violationTable-pager-gotoprev'
+                    disabled={this.props.currentPage === 0}
+                    onClick={() => this.props.previous()}>
+                    <Icon name='step-backward' /> {this.props.previousText}
+                </div>
+                <div>Page <select
+                            value={this.props.currentPage}
+                            onChange={(evt) => this.pageChange(evt.target.value)}>
+                            {pages.map(p => <option value={p}>{p + 1}</option>)}
+                        </select> / {this.props.maxPage}
+                </div>
+                <div
+                    className='violationTable-pager-gotonext'
+                    disabled={this.props.maxPage - 1 === this.props.currentPage}
+                    onClick={() => this.props.next()}>
+                    {this.props.nextText} <Icon name='step-forward' />
+                </div>
+                <div
+                    className='violationTable-pager-gotolast'
+                    disabled={this.props.maxPage - 1 === this.props.currentPage}
+                    onClick={() => this.pageChange(this.props.maxPage - 1)}>
+                    Last <Icon name='fast-forward' />
+                </div>
         </div>
     }
 }
@@ -200,29 +200,29 @@ class ViolationTable extends React.Component {
         };
         // ui of setting page size broken because of this https://github.com/GriddleGriddle/Griddle/issues/283
         return <Griddle
-        tableClassName='violationTable'
-        noDataMessage={this.props.loading ? 'Waiting for data…' : 'No violations matching your filters.'}
-        onRowClick={this.props.onRowClick}
-        useGriddleStyles={false}
-        useCustomPagerComponent={true}
-        customPagerComponent={Pager}
-        useExternal={true}
-        externalSetPage={this.setPage.bind(this)}
-        externalSetPageSize={this.setPageSize.bind(this)}
-        externalSetFilter={this.setFilter.bind(this)}
-        externalChangeSort={this.changeSort.bind(this)}
-        externalMaxPage={this.props.pagingInfo.total_pages}
-        externalCurrentPage={this.props.params.page}
-        externalSortColumn={this.props.params.sortBy}
-        externalSortAscending={this.props.params.sortAsc}
-        resultsPerPage={this.props.pagingInfo.size}
-        showFilter={false}
-        showSetPageSize={true}
-        showSettings={true}
-        columns={gridColumns}
-        columnMetadata={columnMetadata}
-        rowMetadata={rowMeta}
-        results={this.props.violations} />;
+                    tableClassName='violationTable'
+                    noDataMessage={this.props.loading ? 'Waiting for data…' : 'No violations matching your filters.'}
+                    onRowClick={this.props.onRowClick}
+                    useGriddleStyles={false}
+                    useCustomPagerComponent={true}
+                    customPagerComponent={Pager}
+                    useExternal={true}
+                    externalSetPage={this.setPage.bind(this)}
+                    externalSetPageSize={this.setPageSize.bind(this)}
+                    externalSetFilter={this.setFilter.bind(this)}
+                    externalChangeSort={this.changeSort.bind(this)}
+                    externalMaxPage={this.props.pagingInfo.total_pages}
+                    externalCurrentPage={this.props.params.page}
+                    externalSortColumn={this.props.params.sortBy}
+                    externalSortAscending={this.props.params.sortAsc}
+                    resultsPerPage={this.props.pagingInfo.size}
+                    showFilter={false}
+                    showSetPageSize={true}
+                    showSettings={true}
+                    columns={gridColumns}
+                    columnMetadata={columnMetadata}
+                    rowMetadata={rowMeta}
+                    results={this.props.violations} />;
     }
 }
 ViolationTable.displayName = 'ViolationTable';
