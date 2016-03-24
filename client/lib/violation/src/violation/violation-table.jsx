@@ -2,6 +2,7 @@ import React from 'react';
 import Icon from 'react-fa';
 import Timestamp from 'react-time';
 import Griddle from 'griddle-react';
+import Tooltip from 'react-tooltip';
 import ViolationViz from 'violation/src/violation-viz.jsx';
 
 function TimestampCell({data}) {
@@ -43,6 +44,10 @@ function TeamCell(accounts) {
         }
         return <div>{props.data}</div>;
     }
+}
+
+function TooltipCell({data}) {
+    return <div><Tooltip /><span data-tip={data}>{data}</span></div>;
 }
 
 class Pager extends React.Component {
@@ -154,7 +159,8 @@ class ViolationTable extends React.Component {
                 customComponent: PriorityCell
             },{
                 displayName: 'Type',
-                columnName: 'violation_type_id'
+                columnName: 'violation_type_id',
+                customComponent: TooltipCell
             }, {
                 displayName: 'Resolved?',
                 columnName: 'is_resolved',

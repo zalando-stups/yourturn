@@ -50,6 +50,7 @@
     "react-router": "2.0.0-rc6",
     "react-tabs": "0.5.1",
     "react-time": "4.0.0",
+    "react-tooltip": "1.1.4",
     "react-typeahead": "1.1.5",
     "redux": "3.0.4",
     "redux-actions": "0.8.0",
