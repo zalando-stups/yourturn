@@ -119,8 +119,8 @@ class ResourceForm extends React.Component {
                                         onChange={this.update.bind(this, 'id', 'value')}
                                         onKeyUp={this.setCustomValidity.bind(this)}
                                         disabled={edit}
-                                        pattern='[a-z][a-z0-9-_]*[a-z0-9]'
-                                        title='Only lowercase characters with underscores in between.'
+                                        pattern='[a-z][a-z0-9-_]*(?:\.[a-z0-9-_]*)?[a-z0-9]'
+                                        title='Only lowercase characters, at most one dot and any hyphens or underscores.'
                                         name='yourturn_resource_id'
                                         data-block='id-input'
                                         required={true}
