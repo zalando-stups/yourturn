@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React from 'react';
 import {Route, IndexRoute} from 'react-router';
 import {parseArtifact} from 'application/src/util';
@@ -39,6 +40,9 @@ import VersionForm from './version-form/version-form.jsx';
 import VersionDetail from './version-detail/version-detail.jsx';
 import ApprovalForm from './approval-form/approval-form.jsx';
 
+import {appList} from 'application/src/routes';
+import Storage from 'common/src/storage';
+
 const MINT_ACTIONS = bindActionsToStore(REDUX, MintActions),
       PIERONE_ACTIONS = bindActionsToStore(REDUX, PieroneActions),
       USER_ACTIONS = bindActionsToStore(REDUX, UserActions),
@@ -53,58 +57,83 @@ class AppListHandler extends React.Component {
         super();
     }
 
-    componentWillMount() {
+    checkForTeam(props) {
+        const {team} = props.location.query;
+        if (!team) {
+            //FIXME ugly because we should get it out of redux store - problem is we don't have
+            //application state here, need to force evaluate
+            //for now works
+            let preferredAccount = Storage.get('kio_preferredAccount');
+            if (!preferredAccount) {
+                preferredAccount = props.userStore.getUserCloudAccounts()[0].name;
+                Storage.set('kio_preferredAccount', preferredAccount);
+            }
+            this.context.router.replace({
+                pathname: appList(),
+                query: {
+                    team: preferredAccount
+                }
+            });
+            return;
+        }
+    }
 
+    componentWillMount() {
+        this.checkForTeam(this.props);
     }
 
     componentWillReceiveProps(nextProps) {
+        this.checkForTeam(nextProps);
+        // TODO causes infinite loop
+        // const {team} = nextProps.location.query;
+        // KIO_ACTIONS.fetchApplications(team);
+        // KIO_ACTIONS.fetchLatestApplicationVersions(team);
+    }
 
+    onChangeTab(team) {
+        this.context.router.push({
+            pathname: appList(),
+            query: {
+                team
+            }
+        });
     }
 
     render() {
-        console.debug('many props', this.props);
         const accounts = this.props.teamStore.getAccounts(),
+              selectedTab = this.props.location.query.team,
               applicationsFetching = this.props.kioStore.getApplicationsFetchStatus(),
-              tabAccounts = this.props.kioStore.getTabAccounts();
+              userAccounts = this.props.kioStore.getTabAccounts(),
+              tabAccounts = selectedTab ?
+                                _.unique(userAccounts.concat([selectedTab])) :
+                                userAccounts;
         return <ApplicationList
                     kioActions={KIO_ACTIONS}
                     tabAccounts={tabAccounts}
-                    selectedTab={this.props.location.query.team}
+                    selectedTab={selectedTab}
                     applicationsFetching={applicationsFetching}
                     accounts={accounts}
+                    onChangeTab={this.onChangeTab.bind(this)}
                     {...this.props} />;
     }
 }
 AppListHandler.displayName = 'AppListHandler';
-AppListHandler.propTypes = {
-    params: React.PropTypes.object.isRequired
+AppListHandler.contextTypes = {
+    router: React.PropTypes.object
 };
 AppListHandler.fetchData = function(routerState, state) {
     // team in query params => show that team
     // no team in query params => load preferred account
     // no preferred account => first of accounts
     const {team} = routerState.location.query;
-    if (!team) {
-        // TODO redirect based on user accounts or preferred account
-    }
+
     TEAM_ACTIONS.fetchAccounts();
     KIO_ACTIONS.loadTabAccounts();
     KIO_ACTIONS.fetchApplications(team);
+    KIO_ACTIONS.fetchLatestApplicationVersions(team);
 
     // we need to know which accounts a user has access to
-    return requireAccounts(state, USER_ACTIONS)
-            .then(accs => {
-                // so we can determine a preselected account in tabs
-                let preferredAcc = KioGetter.getPreferredAccount(state.kio);
-                if (!preferredAcc && accs[0]) {
-                    preferredAcc = KIO_ACTIONS.savePreferredAccount(accs[0].name);
-
-                }
-                if (preferredAcc && !team) {
-                    // and fetch latest application versions for it
-                    KIO_ACTIONS.fetchLatestApplicationVersions(preferredAcc);
-                }
-            });
+    return requireAccounts(state, USER_ACTIONS);
 };
 var ConnectedAppListHandler =
         connect(state => ({

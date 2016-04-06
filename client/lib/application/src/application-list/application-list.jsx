@@ -13,13 +13,19 @@ import 'common/asset/less/common/tabs.less';
 class ApplicationList extends React.Component {
     constructor(props) {
         super();
-        const prefAccount = props.kioStore.getPreferredAccount();
         this.state = {
             term: '',
             showInactive: false,
-            userAccIds: props.tabAccounts,
-            selectedTab: props.tabAccounts.indexOf(props.kioStore.getPreferredAccount()) || 0
+            tabAccounts: props.tabAccounts,
+            selectedTab: props.tabAccounts.indexOf(props.selectedTab) + 1 // first is management tab
         };
+    }
+
+    componentWillReceiveProps(nextProps) {
+        this.setState({
+            selectedTab: nextProps.tabAccounts.indexOf(nextProps.selectedTab) + 1,
+            tabAccounts: nextProps.tabAccounts
+        });
     }
 
     filter(evt) {
@@ -35,23 +41,23 @@ class ApplicationList extends React.Component {
     }
 
     selectTab(tab) {
-        let account = this.state.userAccIds[tab];
-        this.props.kioActions.savePreferredAccount(account);
-        this.props.kioActions.fetchLatestApplicationVersions(account);
-        this.setState({
-            selectedTab: tab
-        });
+        if (tab > 0) {
+            let account = this.state.tabAccounts[tab - 1];
+            this.props.kioActions.savePreferredAccount(account);
+            this.props.onChangeTab(account);
+            return;
+        }
+        this.setState({selectedTab: tab})
     }
 
-    updateAccounts(userAccIds) {
-        this.props.kioActions.saveTabAccounts(userAccIds);
-        this.setState({userAccIds});
+    updateAccounts(tabAccounts) {
+        this.props.kioActions.saveTabAccounts(tabAccounts);
+        this.setState({tabAccounts});
     }
 
     render() {
-        let {term, showInactive, userAccIds} = this.state,
+        let {term, showInactive, tabAccounts, selectedTab} = this.state,
             {applicationsFetching} = this.props;
-
         return <div className='applicationList'>
                     <h2 className='applicationList-headline'>Applications
                         {applicationsFetching !== false && applicationsFetching.isPending() ?
@@ -68,18 +74,18 @@ class ApplicationList extends React.Component {
                     {!ENV_TEST ?
                         <Tabs
                             onSelect={this.selectTab.bind(this)}
-                            selectedIndex={this.state.selectedTab}>
+                            selectedIndex={selectedTab}>
                             <TabList>
                                 <Tab key='manage_tabs'><Icon name='plus' /></Tab>
-                                {userAccIds.map(acc => <Tab key={acc}>{acc}</Tab>)}
+                                {tabAccounts.map(acc => <Tab key={acc}>{acc}</Tab>)}
                             </TabList>
                             <TabPanel>
                                 <AccountList
                                     onChange={this.updateAccounts.bind(this)}
-                                    selected={userAccIds}
+                                    selected={tabAccounts}
                                     accounts={this.props.accounts.map(a => a.name)} />
                             </TabPanel>
-                            {userAccIds.map(acc => <TabPanel key={acc}>
+                            {tabAccounts.map(acc => <TabPanel key={acc}>
                                                         <div className='form'>
                                                             <div className='input-group'>
                                                                 <div
