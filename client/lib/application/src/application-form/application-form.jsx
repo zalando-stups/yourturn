@@ -275,6 +275,17 @@ class ApplicationForm extends React.Component {
                                 type='url' />
                         </div>
                         <div className='form-group'>
+                            <label htmlFor='specification_type'>Specification Type</label>
+                            <small>What system you use for managing your specifications.</small>
+                            <input
+                                placeholder='JIRA'
+                                id='specification_type'
+                                value={app.specification_type}
+                                onChange={this.update.bind(this, 'specification_type', 'value')}
+                                name='yourturn_app_specification_type'
+                                type='text' />
+                        </div>
+                        <div className='form-group'>
                             <label htmlFor='description'>Description</label>
                             <small>A more elaborate description than subtitle. You can use <a href='http://www.unexpected-vortices.com/sw/rippledoc/quick-markdown-example.html'>Markdown</a>.</small>
                             <Markdown
