@@ -8,9 +8,9 @@ import {Services} from 'common/src/data/services';
 import {Provider, RequestConfig, saveRoute} from 'common/src/oauth-provider';
 import Storage from 'common/src/storage';
 
-function fetchApplications() {
+function fetchApplications(team) {
     return request
-            .get(`${Services.kio.url}${Services.kio.root}`)
+            .get(`${Services.kio.url}${Services.kio.root}` + (team ? `?team_id=${team}` : ''))
             .accept('json')
             .oauth(Provider, RequestConfig)
             .exec(saveRoute)
@@ -186,6 +186,15 @@ function loadPreferredAccount() {
     return Storage.get('kio_preferredAccount') || false;
 }
 
+function saveTabAccounts(accs) {
+    Storage.set('kio_tabAccounts', accs);
+    return accs;
+}
+
+function loadTabAccounts() {
+    return Storage.get('kio_tabAccounts') || [];
+}
+
 let fetchAppsAction = flummoxCompatWrap(createAction(Type.FETCH_APPLICATIONS, fetchApplications)),
     fetchAppAction = flummoxCompatWrap(createAction(Type.FETCH_APPLICATION, fetchApplication)),
     saveAppAction = createAction(Type.SAVE_APPLICATION, saveApplication),
@@ -198,7 +207,9 @@ let fetchAppsAction = flummoxCompatWrap(createAction(Type.FETCH_APPLICATIONS, fe
     fetchApprovalsAction = createAction(Type.FETCH_APPROVALS, fetchApprovals),
     saveApprovalAction = createAction(Type.SAVE_APPROVAL, saveApproval),
     loadPreferredAccountAction = createAction(Type.LOAD_PREFERRED_ACCOUNT, loadPreferredAccount),
-    savePreferredAccountAction = createAction(Type.SAVE_PREFERRED_ACCOUNT, savePreferredAccount);
+    savePreferredAccountAction = createAction(Type.SAVE_PREFERRED_ACCOUNT, savePreferredAccount),
+    loadTabAccountsAction = createAction(Type.LOAD_TAB_ACCOUNTS, loadTabAccounts),
+    saveTabAccountsAction = createAction(Type.SAVE_TAB_ACCOUNTS, saveTabAccounts);
 
 export {
     fetchAppsAction as fetchApplications,
@@ -213,5 +224,7 @@ export {
     fetchApprovalsAction as fetchApprovals,
     saveApprovalAction as saveApproval,
     loadPreferredAccountAction as loadPreferredAccount,
-    savePreferredAccountAction as savePreferredAccount
+    savePreferredAccountAction as savePreferredAccount,
+    loadTabAccountsAction as loadTabAccounts,
+    saveTabAccountsAction as saveTabAccounts
 };

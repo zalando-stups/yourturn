@@ -14,6 +14,7 @@ import {connect} from 'react-redux';
 
 import * as KioGetter from 'common/src/data/kio/kio-getter';
 import * as UserGetter from 'common/src/data/user/user-getter';
+import * as TeamGetter from 'common/src/data/team/team-getter';
 import * as PieroneGetter from 'common/src/data/pierone/pierone-getter';
 import * as TwintipGetter from 'common/src/data/twintip/twintip-getter';
 import * as MintGetter from 'common/src/data/mint/mint-getter';
@@ -22,6 +23,7 @@ import * as EssentialsGetter from 'common/src/data/essentials/essentials-getter'
 import * as NotificationActions from 'common/src/data/notification/notification-actions';
 import * as KioActions from 'common/src/data/kio/kio-actions';
 import * as UserActions from 'common/src/data/user/user-actions';
+import * as TeamActions from 'common/src/data/team/team-actions';
 import * as TwintipActions from 'common/src/data/twintip/twintip-actions';
 import * as MintActions from 'common/src/data/mint/mint-actions';
 import * as EssentialsActions from 'common/src/data/essentials/essentials-actions';
@@ -43,6 +45,7 @@ const MINT_ACTIONS = bindActionsToStore(REDUX, MintActions),
       KIO_ACTIONS = bindActionsToStore(REDUX, KioActions),
       ESSENTIALS_ACTIONS = bindActionsToStore(REDUX, EssentialsActions),
       NOTIFICATION_ACTIONS = bindActionsToStore(REDUX, NotificationActions),
+      TEAM_ACTIONS = bindActionsToStore(REDUX, TeamActions),
       TWINTIP_ACTIONS = bindActionsToStore(REDUX, TwintipActions);
 
 class AppListHandler extends React.Component {
@@ -50,9 +53,25 @@ class AppListHandler extends React.Component {
         super();
     }
 
+    componentWillMount() {
+
+    }
+
+    componentWillReceiveProps(nextProps) {
+
+    }
+
     render() {
+        console.debug('many props', this.props);
+        const accounts = this.props.teamStore.getAccounts(),
+              applicationsFetching = this.props.kioStore.getApplicationsFetchStatus(),
+              tabAccounts = this.props.kioStore.getTabAccounts();
         return <ApplicationList
                     kioActions={KIO_ACTIONS}
+                    tabAccounts={tabAccounts}
+                    selectedTab={this.props.location.query.team}
+                    applicationsFetching={applicationsFetching}
+                    accounts={accounts}
                     {...this.props} />;
     }
 }
@@ -61,8 +80,17 @@ AppListHandler.propTypes = {
     params: React.PropTypes.object.isRequired
 };
 AppListHandler.fetchData = function(routerState, state) {
-    // get all applications no matter what
-    KIO_ACTIONS.fetchApplications();
+    // team in query params => show that team
+    // no team in query params => load preferred account
+    // no preferred account => first of accounts
+    const {team} = routerState.location.query;
+    if (!team) {
+        // TODO redirect based on user accounts or preferred account
+    }
+    TEAM_ACTIONS.fetchAccounts();
+    KIO_ACTIONS.loadTabAccounts();
+    KIO_ACTIONS.fetchApplications(team);
+
     // we need to know which accounts a user has access to
     return requireAccounts(state, USER_ACTIONS)
             .then(accs => {
@@ -70,8 +98,9 @@ AppListHandler.fetchData = function(routerState, state) {
                 let preferredAcc = KioGetter.getPreferredAccount(state.kio);
                 if (!preferredAcc && accs[0]) {
                     preferredAcc = KIO_ACTIONS.savePreferredAccount(accs[0].name);
+
                 }
-                if (preferredAcc) {
+                if (preferredAcc && !team) {
                     // and fetch latest application versions for it
                     KIO_ACTIONS.fetchLatestApplicationVersions(preferredAcc);
                 }
@@ -80,6 +109,7 @@ AppListHandler.fetchData = function(routerState, state) {
 var ConnectedAppListHandler =
         connect(state => ({
             kioStore: bindGettersToState(state.kio, KioGetter),
+            teamStore: bindGettersToState(state.team, TeamGetter),
             userStore: bindGettersToState(state.user, UserGetter)
         }))(AppListHandler);
 

@@ -16,7 +16,7 @@ class ListItem extends React.Component {
                         type="checkbox" />
                     {this.props.content}
                 </label>
-               </li>
+               </li>;
     }
 }
 

@@ -19,18 +19,21 @@ var teams = {
             id: '1029384756',
             name: 'acid',
             type: 'aws',
+            owner: 'acid',
             description: 'ACID Account'
         },
         {
             id: '123456789',
             name: 'stups',
             type: 'aws',
+            owner: 'stups',
             description: 'STUPS account'
         },
         {
             id: '0987654321',
             name: 'stups-test',
             type: 'aws',
+            owner: 'stups',
             description: 'STUPS test account'
         }],
     userAccounts = {
