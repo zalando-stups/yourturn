@@ -71,15 +71,21 @@ class ApplicationDetailPlaceholder extends React.Component {
                                 </td>
                             </tr>
                             <tr>
+                                <th>Documentation</th>
+                                <td className='u-placeholder-text'>
+                                    verylongdocs
+                                </td>
+                            </tr>
+                            <tr>
                                 <th>Specification</th>
                                 <td className='u-placeholder-text'>
                                     verlongissues
                                 </td>
                             </tr>
                             <tr>
-                                <th>Documentation</th>
+                                <th>Specification Type</th>
                                 <td className='u-placeholder-text'>
-                                    verylongdocs
+                                    verlongissues
                                 </td>
                             </tr>
                             <tr>
