@@ -53,7 +53,7 @@ export default class AccountList extends React.Component {
                     {this.props.accounts
                         .filter(a => !!filter ? a.indexOf(filter) >= 0 : true)
                         .map(a =>
-                        <li>
+                        <li key={a}>
                             <label className={!!selection[a] ? 'selected' : ''}>
                                 <input
                                     onChange={this.toggle.bind(this, a)}

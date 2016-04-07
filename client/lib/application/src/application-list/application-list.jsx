@@ -22,10 +22,13 @@ class ApplicationList extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        this.setState({
-            selectedTab: nextProps.tabAccounts.indexOf(nextProps.selectedTab) + 1,
-            tabAccounts: nextProps.tabAccounts
-        });
+        if (nextProps.selectedTab !== this.props.selectedTab ||
+            nextProps.tabAccounts.length !== this.props.tabAccounts.length) {
+            this.setState({
+                selectedTab: nextProps.tabAccounts.indexOf(nextProps.selectedTab) + 1,
+                tabAccounts: nextProps.tabAccounts
+            });
+        }
     }
 
     filter(evt) {
@@ -47,7 +50,7 @@ class ApplicationList extends React.Component {
             this.props.onChangeTab(account);
             return;
         }
-        this.setState({selectedTab: tab})
+        this.props.onChangeTab();
     }
 
     updateAccounts(tabAccounts) {
@@ -59,10 +62,10 @@ class ApplicationList extends React.Component {
         let {term, showInactive, tabAccounts, selectedTab} = this.state,
             {applicationsFetching} = this.props;
         return <div className='applicationList'>
-                    <h2 className='applicationList-headline'>Applications
-                        {applicationsFetching !== false && applicationsFetching.isPending() ?
-                            <Icon name='circle-o-notch u-spinner' spin /> :
-                            null}
+                    <h2 className='applicationList-headline'>Applications&nbsp;
+                        <small>{applicationsFetching !== false && applicationsFetching.isPending() ?
+                            <Icon name='circle-o-notch' spin /> :
+                            null}</small>
                     </h2>
                     <div className='btn-group'>
                         <Link

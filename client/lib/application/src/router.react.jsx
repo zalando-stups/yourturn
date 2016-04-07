@@ -58,23 +58,32 @@ class AppListHandler extends React.Component {
     }
 
     checkForTeam(props) {
-        const {team} = props.location.query;
-        if (!team) {
-            //FIXME ugly because we should get it out of redux store - problem is we don't have
-            //application state here, need to force evaluate
-            //for now works
-            let preferredAccount = Storage.get('kio_preferredAccount');
-            if (!preferredAccount) {
-                preferredAccount = props.userStore.getUserCloudAccounts()[0].name;
-                Storage.set('kio_preferredAccount', preferredAccount);
-            }
+        const {team, manageTabs} = props.location.query,
+              tabAccounts = props.kioStore.getTabAccounts(),
+              cloudAccounts = props.userStore.getUserCloudAccounts().map(a => a.name),
+              preferredAccount = Storage.get('kio_preferredAccount');
+        let replaceRoute = false;
+        // check for accounts
+        if (!tabAccounts.length) {
+            KIO_ACTIONS.saveTabAccounts(cloudAccounts);
+            replaceRoute = true;
+            return;
+        }
+        if (team && tabAccounts.indexOf(team) === -1) {
+            KIO_ACTIONS.saveTabAccounts(_.unique(tabAccounts.concat([team])).sort());
+            return;
+        }
+        if (!team && preferredAccount && !manageTabs) {
+            replaceRoute = true;
+        }
+        if (replaceRoute) {
+            // make sure team is in tabs
             this.context.router.replace({
                 pathname: appList(),
                 query: {
-                    team: preferredAccount
+                    team: preferredAccount || team
                 }
             });
-            return;
         }
     }
 
@@ -84,18 +93,23 @@ class AppListHandler extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         this.checkForTeam(nextProps);
-        // TODO causes infinite loop
-        // const {team} = nextProps.location.query;
-        // KIO_ACTIONS.fetchApplications(team);
-        // KIO_ACTIONS.fetchLatestApplicationVersions(team);
+        const {team} = nextProps.location.query;
+        if (team !== this.props.location.query.team) {
+            KIO_ACTIONS.fetchApplications(team);
+            KIO_ACTIONS.fetchLatestApplicationVersions(team);
+        }
     }
 
     onChangeTab(team) {
+        const query = {};
+        if (team) {
+            query.team = team;
+        } else {
+            query.manageTabs = true;
+        }
         this.context.router.push({
             pathname: appList(),
-            query: {
-                team
-            }
+            query
         });
     }
 
@@ -103,10 +117,7 @@ class AppListHandler extends React.Component {
         const accounts = this.props.teamStore.getAccounts(),
               selectedTab = this.props.location.query.team,
               applicationsFetching = this.props.kioStore.getApplicationsFetchStatus(),
-              userAccounts = this.props.kioStore.getTabAccounts(),
-              tabAccounts = selectedTab ?
-                                _.unique(userAccounts.concat([selectedTab])) :
-                                userAccounts;
+              tabAccounts = this.props.kioStore.getTabAccounts();
         return <ApplicationList
                     kioActions={KIO_ACTIONS}
                     tabAccounts={tabAccounts}
