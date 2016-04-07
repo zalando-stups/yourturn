@@ -1,8 +1,8 @@
 import './access-form.test';
 import './account-list.test';
+import './account-app-list.test';
 import './application-detail.test';
 import './application-form.test';
-import './application-list.test';
 import './approval-form.test';
 import './oauth-form.test';
 import './version-detail.test';
