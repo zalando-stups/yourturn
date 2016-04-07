@@ -9,8 +9,7 @@ const FETCH_STATE = 'fetchApplications',
         'fetchApplications': false,
         'applications': {},
         'preferredAccount': false,
-        'tabAccounts': [],
-        'selectedTab': false
+        'tabAccounts': []
     });
 
 function ApplicationStore(state = DEFAULT_STATE, action) {
@@ -45,8 +44,6 @@ function ApplicationStore(state = DEFAULT_STATE, action) {
     } else if (type === Types.LOAD_TAB_ACCOUNTS ||
                type === Types.SAVE_TAB_ACCOUNTS) {
         return state.set('tabAccounts', action.payload);
-    } else if (type === Types.SET_SELECTED_TAB) {
-        return state.set('selectedTab', action.payload);
     }
     return state;
 }

@@ -133,10 +133,6 @@ function getTabAccounts(state) {
     return state.applications.get('tabAccounts');
 }
 
-function getSelectedTab(state) {
-    return state.applications.get('selectedTab');
-}
-
 export {
     getApprovals,
     getApprovalTypes,
@@ -149,6 +145,5 @@ export {
     getLatestApplicationVersion,
     getLatestApplicationVersions,
     getPreferredAccount,
-    getTabAccounts,
-    getSelectedTab
+    getTabAccounts
 };

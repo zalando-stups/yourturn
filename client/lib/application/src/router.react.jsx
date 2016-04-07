@@ -41,7 +41,6 @@ import VersionDetail from './version-detail/version-detail.jsx';
 import ApprovalForm from './approval-form/approval-form.jsx';
 
 import {appList} from 'application/src/routes';
-import Storage from 'common/src/storage';
 
 const MINT_ACTIONS = bindActionsToStore(REDUX, MintActions),
       PIERONE_ACTIONS = bindActionsToStore(REDUX, PieroneActions),
@@ -61,7 +60,7 @@ class AppListHandler extends React.Component {
         const {team, manageTabs} = props.location.query,
               tabAccounts = props.kioStore.getTabAccounts(),
               cloudAccounts = props.userStore.getUserCloudAccounts().map(a => a.name),
-              preferredAccount = Storage.get('kio_preferredAccount');
+              preferredAccount = props.kioStore.getPreferredAccount();
         let replaceRoute = false;
         // check for accounts
         if (!tabAccounts.length) {
