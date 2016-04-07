@@ -80,7 +80,7 @@ class AppListHandler extends React.Component {
             this.context.router.replace({
                 pathname: appList(),
                 query: {
-                    team: preferredAccount || team
+                    team: preferredAccount || team
                 }
             });
         }
