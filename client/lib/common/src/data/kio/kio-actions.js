@@ -192,7 +192,7 @@ function saveTabAccounts(accs) {
 }
 
 function loadTabAccounts() {
-    return Storage.get('kio_tabAccounts') || [];
+    return Storage.get('kio_tabAccounts') || [];
 }
 
 let fetchAppsAction = flummoxCompatWrap(createAction(Type.FETCH_APPLICATIONS, fetchApplications)),

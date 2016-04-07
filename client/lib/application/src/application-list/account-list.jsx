@@ -53,9 +53,10 @@ export default class AccountList extends React.Component {
                     {this.props.accounts
                         .filter(a => !!filter ? a.indexOf(filter) >= 0 : true)
                         .map(a =>
-                        <li key={a}>
+                        <li key={a} data-block='accountList-item'>
                             <label className={!!selection[a] ? 'selected' : ''}>
                                 <input
+                                    data-block='accountList-item-input'
                                     onChange={this.toggle.bind(this, a)}
                                     checked={!!selection[a]}
                                     type="checkbox" />&nbsp;{a}

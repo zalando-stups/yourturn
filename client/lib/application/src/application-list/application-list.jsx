@@ -47,10 +47,14 @@ class ApplicationList extends React.Component {
         if (tab > 0) {
             let account = this.state.tabAccounts[tab - 1];
             this.props.kioActions.savePreferredAccount(account);
-            this.props.onChangeTab(account);
+            if (this.props.onChangeTab) {
+                this.props.onChangeTab(account);
+            }
             return;
         }
-        this.props.onChangeTab();
+        if (this.props.onChangeTab) {
+            this.props.onChangeTab();
+        }
     }
 
     updateAccounts(tabAccounts) {
