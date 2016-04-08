@@ -92,10 +92,13 @@ class AppListHandler extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         this.checkForTeam(nextProps);
-        const {team} = nextProps.location.query;
-        if (team !== this.props.location.query.team) {
+        const {team, manageTabs} = nextProps.location.query;
+        if (team && team !== this.props.location.query.team) {
             KIO_ACTIONS.fetchApplications(team);
             KIO_ACTIONS.fetchLatestApplicationVersions(team);
+        }
+        if (manageTabs && manageTabs !== this.props.location.query.manageTabs) {
+            TEAM_ACTIONS.fetchAccounts();
         }
     }
 
@@ -135,13 +138,15 @@ AppListHandler.fetchData = function(routerState, state) {
     // team in query params => show that team
     // no team in query params => load preferred account
     // no preferred account => first of accounts
-    const {team} = routerState.location.query;
-
-    TEAM_ACTIONS.fetchAccounts();
     KIO_ACTIONS.loadTabAccounts();
-    KIO_ACTIONS.fetchApplications(team);
-    KIO_ACTIONS.fetchLatestApplicationVersions(team);
-
+    const {team, manageTabs} = routerState.location.query;
+    if (manageTabs) {
+        TEAM_ACTIONS.fetchAccounts();
+    }
+    if (team) {
+        KIO_ACTIONS.fetchApplications(team);
+        KIO_ACTIONS.fetchLatestApplicationVersions(team);
+    }
     // we need to know which accounts a user has access to
     return requireAccounts(state, USER_ACTIONS);
 };
