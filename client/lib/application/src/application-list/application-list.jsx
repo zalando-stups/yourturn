@@ -83,10 +83,14 @@ class ApplicationList extends React.Component {
                             onSelect={this.selectTab.bind(this)}
                             selectedIndex={selectedTab}>
                             <TabList>
-                                <Tab key='manage_tabs'><Icon name='plus' /></Tab>
+                                <Tab key='manage_tabs'><Icon name='gear' /></Tab>
                                 {tabAccounts.map(acc => <Tab key={acc}>{acc}</Tab>)}
                             </TabList>
                             <TabPanel>
+                                <p className='u-info'>
+                                    You can add or remove tabs by checking or unchecking them in this list. It will be
+                                    automatically saved.
+                                </p>
                                 <AccountList
                                     onChange={this.updateAccounts.bind(this)}
                                     selected={tabAccounts}
