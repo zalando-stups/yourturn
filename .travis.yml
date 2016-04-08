@@ -1,14 +1,12 @@
 language: node_js
 node_js:
-  - '4.1'
+  - '4.4'
 before_script:
   - npm run lint
   - npm run format
 script:
-  # test
+  # test server
   - npm run test-server
-  - npm test
-after_script:
   # cover
   - npm run test-coverage
 

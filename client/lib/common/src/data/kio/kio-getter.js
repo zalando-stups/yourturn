@@ -129,6 +129,10 @@ function getPreferredAccount(state) {
     return state.applications.get('preferredAccount');
 }
 
+function getTabAccounts(state) {
+    return state.applications.get('tabAccounts');
+}
+
 export {
     getApprovals,
     getApprovalTypes,
@@ -140,5 +144,6 @@ export {
     getApplicationVersion,
     getLatestApplicationVersion,
     getLatestApplicationVersions,
-    getPreferredAccount
+    getPreferredAccount,
+    getTabAccounts
 };

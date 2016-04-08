@@ -36,6 +36,7 @@ var LODASH_FUNCS = [
         'slice',
         'take',
         'times',
+        'unique',
         'value',
         'values'
     ],
