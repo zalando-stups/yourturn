@@ -61,21 +61,24 @@ class AppListHandler extends React.Component {
               tabAccounts = props.kioStore.getTabAccounts(),
               cloudAccounts = props.userStore.getUserCloudAccounts().map(a => a.name),
               preferredAccount = props.kioStore.getPreferredAccount();
-        let replaceRoute = false;
-        // check for accounts
+
+        if (manageTabs) {
+            // manage tabs => fetch all accounts
+            TEAM_ACTIONS.fetchAccounts();
+            return;
+        }
         if (!tabAccounts.length) {
+            // no tab accounts => use cloud accounts, do nothing
             KIO_ACTIONS.saveTabAccounts(cloudAccounts);
-            replaceRoute = true;
             return;
         }
         if (team && tabAccounts.indexOf(team) === -1) {
+            // there is a team, but not in tab accounts => add it
             KIO_ACTIONS.saveTabAccounts(_.unique(tabAccounts.concat([team])).sort());
             return;
         }
-        if (!team && preferredAccount && !manageTabs) {
-            replaceRoute = true;
-        }
-        if (replaceRoute) {
+        if (!(team || manageTabs) && preferredAccount) {
+            // no team, no manageTabs => redirect to preferred account
             // make sure team is in tabs
             this.context.router.replace({
                 pathname: appList(),
@@ -92,13 +95,10 @@ class AppListHandler extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         this.checkForTeam(nextProps);
-        const {team, manageTabs} = nextProps.location.query;
+        const {team} = nextProps.location.query;
         if (team && team !== this.props.location.query.team) {
             KIO_ACTIONS.fetchApplications(team);
             KIO_ACTIONS.fetchLatestApplicationVersions(team);
-        }
-        if (manageTabs && manageTabs !== this.props.location.query.manageTabs) {
-            TEAM_ACTIONS.fetchAccounts();
         }
     }
 
