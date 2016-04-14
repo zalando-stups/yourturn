@@ -62,11 +62,6 @@ class AppListHandler extends React.Component {
               cloudAccounts = props.userStore.getUserCloudAccounts().map(a => a.name),
               preferredAccount = props.kioStore.getPreferredAccount();
 
-        if (manageTabs) {
-            // manage tabs => fetch all accounts
-            TEAM_ACTIONS.fetchAccounts();
-            return;
-        }
         if (!tabAccounts.length) {
             // no tab accounts => use cloud accounts, do nothing
             KIO_ACTIONS.saveTabAccounts(cloudAccounts);
@@ -91,14 +86,31 @@ class AppListHandler extends React.Component {
 
     componentWillMount() {
         this.checkForTeam(this.props);
+        KIO_ACTIONS.loadTabAccounts();
+        const {team, manageTabs} = this.props.location.query;
+        if (manageTabs) {
+            TEAM_ACTIONS.fetchAccounts();
+        }
+        if (team) {
+            KIO_ACTIONS.fetchApplications(team);
+            KIO_ACTIONS.fetchLatestApplicationVersions(team);
+        }
+        if (!manageTabs && !team) {
+            TEAM_ACTIONS.fetchAccounts();
+        }
     }
 
     componentWillReceiveProps(nextProps) {
         this.checkForTeam(nextProps);
-        const {team} = nextProps.location.query;
+        const {team, manageTabs} = nextProps.location.query;
         if (team && team !== this.props.location.query.team) {
             KIO_ACTIONS.fetchApplications(team);
             KIO_ACTIONS.fetchLatestApplicationVersions(team);
+        }
+        if (manageTabs && manageTabs !== this.props.location.query.manageTabs) {
+            // manage tabs => fetch all accounts
+            TEAM_ACTIONS.fetchAccounts();
+            return;
         }
     }
 
@@ -135,18 +147,6 @@ AppListHandler.contextTypes = {
     router: React.PropTypes.object
 };
 AppListHandler.fetchData = function(routerState, state) {
-    // team in query params => show that team
-    // no team in query params => load preferred account
-    // no preferred account => first of accounts
-    KIO_ACTIONS.loadTabAccounts();
-    const {team, manageTabs} = routerState.location.query;
-    if (manageTabs) {
-        TEAM_ACTIONS.fetchAccounts();
-    }
-    if (team) {
-        KIO_ACTIONS.fetchApplications(team);
-        KIO_ACTIONS.fetchLatestApplicationVersions(team);
-    }
     // we need to know which accounts a user has access to
     return requireAccounts(state, USER_ACTIONS);
 };
