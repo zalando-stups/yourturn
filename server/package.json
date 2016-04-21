@@ -14,6 +14,7 @@
   },
   "homepage": "https://github.com/zalando-stups/yourturn",
   "dependencies": {
+    "appdynamics": "4.1.10",
     "newrelic": "1.24.0",
     "winston": "2.1.1",
     "express": "4.13.3",
