@@ -34,11 +34,11 @@ class VersionFormPlaceholder extends React.Component {
                             className='btn btn-default'>
                             <Icon name='edit' /> Edit {versionId}
                         </Link>
-                        <Link
-                            to={Routes.verApproval(LINK_PARAMS)}
-                            className='btn btn-primary'>
-                            <Icon name='check' /> Approvals <span className='badge'>0</span>
-                        </Link>
+                        //<Link
+                        //    to={Routes.verApproval(LINK_PARAMS)}
+                        //    className='btn btn-primary'>
+                        //    <Icon name='check' /> Approvals <span className='badge'>0</span>
+                        //</Link>
                     </div>
 
                     <table className='table'>
