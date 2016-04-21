@@ -6,7 +6,9 @@ class Badge extends React.Component {
         super();
     }
     render() {
-        return <span className={'badge' + (this.props.isDanger ? ' is-danger' : '')}>
+        return <span
+                    style={this.props.style}
+                    className={'badge' + (this.props.isDanger ? ' is-danger' : ' is-info')}>
                     {this.props.children}
                 </span>;
     }

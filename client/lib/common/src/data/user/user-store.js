@@ -26,7 +26,8 @@ function UserStore(state, action) {
     } else if (type === Types.FETCH_TOKENINFO) {
         return state.set('tokeninfo', Immutable.fromJS(payload));
     } else if (type === Types.FETCH_USERACCOUNTS) {
-        return state.set('accounts', Immutable.fromJS(payload));
+        const activeAccounts = payload.filter(acc => !acc.disabled);
+        return state.set('accounts', Immutable.fromJS(activeAccounts));
     } else if (type === Types.DELETE_TOKENINFO) {
         return state.set('tokeninfo', false);
     }

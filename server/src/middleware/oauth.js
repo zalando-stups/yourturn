@@ -1,5 +1,12 @@
 var request = require('superagent-bluebird-promise');
 
+function sendGenericError(res) {
+    return res
+            .status(401)
+            .set('WWW-Authenticate', 'OAuth2')
+            .send();
+}
+
 /**
  * OAuth 2 middleware.
  */
@@ -7,10 +14,7 @@ module.exports = function(req, res, next) {
     // if there is no token, respond with 401
     if (!req.headers.authorization ||
         !req.headers.authorization.startsWith('Bearer ')) {
-        return res
-                .status(401)
-                .set('WWW-Authenticate', 'OAuth2')
-                .send();
+        return sendGenericError(res);
     }
 
     var header = req.headers.authorization,
@@ -22,13 +26,12 @@ module.exports = function(req, res, next) {
         .query({
             access_token: token
         })
-        .then(() => {
-            next();
+        .then(tokeninfo => {
+            if (tokeninfo.body.realm === '/employees' ||
+                tokeninfo.body.realm === '/services') {
+                return next();
+            }
+            return sendGenericError(res);
         })
-        .catch(err => {
-            res
-            .status(401)
-            .set('WWW-Authenticate', 'OAuth2')
-            .send();
-        });
+        .catch(err => sendGenericError(res));
 };

@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React from 'react';
 import {Route, IndexRoute} from 'react-router';
 import {parseArtifact} from 'application/src/util';
@@ -14,6 +15,7 @@ import {connect} from 'react-redux';
 
 import * as KioGetter from 'common/src/data/kio/kio-getter';
 import * as UserGetter from 'common/src/data/user/user-getter';
+import * as TeamGetter from 'common/src/data/team/team-getter';
 import * as PieroneGetter from 'common/src/data/pierone/pierone-getter';
 import * as TwintipGetter from 'common/src/data/twintip/twintip-getter';
 import * as MintGetter from 'common/src/data/mint/mint-getter';
@@ -22,6 +24,7 @@ import * as EssentialsGetter from 'common/src/data/essentials/essentials-getter'
 import * as NotificationActions from 'common/src/data/notification/notification-actions';
 import * as KioActions from 'common/src/data/kio/kio-actions';
 import * as UserActions from 'common/src/data/user/user-actions';
+import * as TeamActions from 'common/src/data/team/team-actions';
 import * as TwintipActions from 'common/src/data/twintip/twintip-actions';
 import * as MintActions from 'common/src/data/mint/mint-actions';
 import * as EssentialsActions from 'common/src/data/essentials/essentials-actions';
@@ -37,12 +40,15 @@ import VersionForm from './version-form/version-form.jsx';
 import VersionDetail from './version-detail/version-detail.jsx';
 import ApprovalForm from './approval-form/approval-form.jsx';
 
+import {appList} from 'application/src/routes';
+
 const MINT_ACTIONS = bindActionsToStore(REDUX, MintActions),
       PIERONE_ACTIONS = bindActionsToStore(REDUX, PieroneActions),
       USER_ACTIONS = bindActionsToStore(REDUX, UserActions),
       KIO_ACTIONS = bindActionsToStore(REDUX, KioActions),
       ESSENTIALS_ACTIONS = bindActionsToStore(REDUX, EssentialsActions),
       NOTIFICATION_ACTIONS = bindActionsToStore(REDUX, NotificationActions),
+      TEAM_ACTIONS = bindActionsToStore(REDUX, TeamActions),
       TWINTIP_ACTIONS = bindActionsToStore(REDUX, TwintipActions);
 
 class AppListHandler extends React.Component {
@@ -50,36 +56,104 @@ class AppListHandler extends React.Component {
         super();
     }
 
+    checkForTeam(props) {
+        const {team, manageTabs} = props.location.query,
+              tabAccounts = props.kioStore.getTabAccounts(),
+              cloudAccounts = props.userStore.getUserCloudAccounts().map(a => a.name),
+              preferredAccount = props.kioStore.getPreferredAccount();
+
+        if (!tabAccounts.length) {
+            // no tab accounts => use cloud accounts, do nothing
+            KIO_ACTIONS.saveTabAccounts(cloudAccounts);
+            return;
+        }
+        if (team && tabAccounts.indexOf(team) === -1) {
+            // there is a team, but not in tab accounts => add it
+            KIO_ACTIONS.saveTabAccounts(_.unique(tabAccounts.concat([team])).sort());
+            return;
+        }
+        if (!(team || manageTabs) && preferredAccount) {
+            // no team, no manageTabs => redirect to preferred account
+            // make sure team is in tabs
+            this.context.router.replace({
+                pathname: appList(),
+                query: {
+                    team: preferredAccount || team
+                }
+            });
+        }
+    }
+
+    componentWillMount() {
+        this.checkForTeam(this.props);
+        KIO_ACTIONS.loadTabAccounts();
+        const {team, manageTabs} = this.props.location.query;
+        if (manageTabs) {
+            TEAM_ACTIONS.fetchAccounts();
+        }
+        if (team) {
+            KIO_ACTIONS.fetchApplications(team);
+            KIO_ACTIONS.fetchLatestApplicationVersions(team);
+        }
+        if (!manageTabs && !team) {
+            TEAM_ACTIONS.fetchAccounts();
+        }
+    }
+
+    componentWillReceiveProps(nextProps) {
+        this.checkForTeam(nextProps);
+        const {team, manageTabs} = nextProps.location.query;
+        if (team && team !== this.props.location.query.team) {
+            KIO_ACTIONS.fetchApplications(team);
+            KIO_ACTIONS.fetchLatestApplicationVersions(team);
+        }
+        if (manageTabs && manageTabs !== this.props.location.query.manageTabs) {
+            // manage tabs => fetch all accounts
+            TEAM_ACTIONS.fetchAccounts();
+            return;
+        }
+    }
+
+    onChangeTab(team) {
+        const query = {};
+        if (team) {
+            query.team = team;
+        } else {
+            query.manageTabs = true;
+        }
+        this.context.router.push({
+            pathname: appList(),
+            query
+        });
+    }
+
     render() {
+        const accounts = this.props.teamStore.getAccounts(),
+              selectedTab = this.props.location.query.team,
+              applicationsFetching = this.props.kioStore.getApplicationsFetchStatus(),
+              tabAccounts = this.props.kioStore.getTabAccounts();
         return <ApplicationList
                     kioActions={KIO_ACTIONS}
+                    tabAccounts={tabAccounts}
+                    selectedTab={selectedTab}
+                    applicationsFetching={applicationsFetching}
+                    accounts={accounts}
+                    onChangeTab={this.onChangeTab.bind(this)}
                     {...this.props} />;
     }
 }
 AppListHandler.displayName = 'AppListHandler';
-AppListHandler.propTypes = {
-    params: React.PropTypes.object.isRequired
+AppListHandler.contextTypes = {
+    router: React.PropTypes.object
 };
 AppListHandler.fetchData = function(routerState, state) {
-    // get all applications no matter what
-    KIO_ACTIONS.fetchApplications();
     // we need to know which accounts a user has access to
-    return requireAccounts(state, USER_ACTIONS)
-            .then(accs => {
-                // so we can determine a preselected account in tabs
-                let preferredAcc = KioGetter.getPreferredAccount(state.kio);
-                if (!preferredAcc && accs[0]) {
-                    preferredAcc = KIO_ACTIONS.savePreferredAccount(accs[0].name);
-                }
-                if (preferredAcc) {
-                    // and fetch latest application versions for it
-                    KIO_ACTIONS.fetchLatestApplicationVersions(preferredAcc);
-                }
-            });
+    return requireAccounts(state, USER_ACTIONS);
 };
 var ConnectedAppListHandler =
         connect(state => ({
             kioStore: bindGettersToState(state.kio, KioGetter),
+            teamStore: bindGettersToState(state.team, TeamGetter),
             userStore: bindGettersToState(state.user, UserGetter)
         }))(AppListHandler);
 

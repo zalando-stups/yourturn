@@ -1,0 +1,61 @@
+@import "../variables";
+
+.date-dropdown {
+    header {
+        .transition(background);
+        cursor: pointer;
+        width: 100%;
+        display: block;
+        outline: 1px solid @gray;
+
+        &:hover {
+            background: @gray-lighter;
+        }
+        span.fa:last-child {
+            float: right;
+            margin-top: 8px;
+        }
+    }
+
+    div.dateDropdown-dropdown {
+        position: absolute;
+        z-index: @layer-2;
+        width: 600px;
+        background: @white;
+        outline: 1px solid @gray;
+        box-shadow: 0px 5px 15px @gray-light;
+        display: flex;
+
+        .dateDropdown-quickselect {
+            flex: 0 0 auto;
+            margin: @padding-tiny;
+            ul {
+                list-style-type: none;
+                padding: 0;
+                li {
+                    .transition(background);
+                    padding: 0 @padding-tiny;
+                    &:hover {
+                        background: #eee;
+                        cursor: pointer;
+                    }
+                }
+            }
+        }
+
+        .dateDropdown-container {
+            flex: 1 1 auto;
+            .dp-current {
+                color: @orange;
+            }
+            .dp-footer {
+                > * {
+                    .transition(background);
+                    &:hover {
+                        background: #eee;
+                    }
+                }
+            }
+        }
+    }
+}

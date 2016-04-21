@@ -1,58 +1,64 @@
 @import "../variables";
 
 .violationCard {
-        padding: @padding-small;
-        border: 1px solid @gray-light;
-        border-radius: @border-radius;
-        border-left: 10px solid @gray-light;
+    padding: @padding-small;
+    border: 1px solid @gray-light;
+    border-radius: @border-radius;
+    border-left: 10px solid @gray-light;
+    background: @white;
+    box-shadow: 0px 0px 20px @gray-light;
 
-        &[data-severity="3"]:not(.is-resolved),
-        &[data-severity="4"]:not(.is-resolved) {
-            border-color: @red;
-        }
+    &[data-priority="1"]:not(.is-resolved) {
+        border-color: @red;
+    }
 
-        &.is-resolved {
-            border-color: @green;
-        }
+    &.is-resolved {
+        border-color: @green;
+    }
 
-        strong,
-        header {
-            color: @gray;
-        }
-        .violationCard-id {
-            float: right;
-            &:before {
-                content: '#';
-            }
-        }
+    p {
+        max-width: 600px;
+    }
 
-        .violationCard-metadata > * {
-            padding: @padding-tiny;
-            border-bottom: 1px solid @gray-lighter;
-            &:first-child {
-                border-top: 1px solid @gray-lighter;
-            }
-        }
-
-        .violationCard-metadata-key {
-            font-weight: 700;
-            color: @gray-dark;
-        }
-
-        .violationCard-resolutionMessage {
-            margin-top: @padding-small;
-            margin-bottom: @padding-small;
-            &:before {
-                content: '\f10d';
-                font-family: 'FontAwesome';
-                float: left;
-                display: block;
-                margin-left: -30px;
-                font-size: 1em;
-                color: @gray-lighter;
-            }
-        }
-        + .violationCard {
-            margin-top: @padding-small;
+    strong,
+    header {
+        color: @gray;
+    }
+    .violationCard-id {
+        float: right;
+        &:before {
+            content: '#';
         }
     }
+
+    .violationCard-metadata > * {
+        padding: @padding-tiny;
+        border-bottom: 1px solid @gray-lighter;
+        overflow: auto;
+        &:first-child {
+            border-top: 1px solid @gray-lighter;
+        }
+    }
+
+    .violationCard-metadata-key {
+        font-weight: 700;
+        color: @gray-dark;
+    }
+
+    .violationCard-resolutionMessage {
+        margin-top: @padding-small;
+        margin-bottom: @padding-small;
+        &:before {
+            content: '\f10d';
+            font-family: 'FontAwesome';
+            float: left;
+            display: block;
+            margin-left: -30px;
+            font-size: 1em;
+            color: @gray-lighter;
+        }
+    }
+    + .violationCard {
+        margin-top: @padding-small;
+    }
+}

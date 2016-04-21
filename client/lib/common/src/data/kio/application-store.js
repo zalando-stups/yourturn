@@ -8,7 +8,8 @@ const FETCH_STATE = 'fetchApplications',
     DEFAULT_STATE = Immutable.fromJS({
         'fetchApplications': false,
         'applications': {},
-        'preferredAccount': false
+        'preferredAccount': false,
+        'tabAccounts': []
     });
 
 function ApplicationStore(state = DEFAULT_STATE, action) {
@@ -40,6 +41,9 @@ function ApplicationStore(state = DEFAULT_STATE, action) {
     } else if (type === Types.LOAD_PREFERRED_ACCOUNT ||
                type === Types.SAVE_PREFERRED_ACCOUNT) {
         return state.set(PREF_ACCOUNT, action.payload);
+    } else if (type === Types.LOAD_TAB_ACCOUNTS ||
+               type === Types.SAVE_TAB_ACCOUNTS) {
+        return state.set('tabAccounts', action.payload);
     }
     return state;
 }

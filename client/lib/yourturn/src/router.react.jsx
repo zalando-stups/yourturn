@@ -64,11 +64,7 @@ class LoginHandler extends React.Component {
                     USER_ACTIONS
                         .fetchAccounts(info.uid)
                         .then(accounts => {
-                            FULLSTOP_ACTIONS.loadLastVisited();
-                            FULLSTOP_ACTIONS
-                                .fetchOwnTotal(
-                                    FullstopGetter.getLastVisited(REDUX.getState().fullstop),
-                                    accounts.map(a => a.id));
+                            FULLSTOP_ACTIONS.fetchOwnTotal(accounts.map(a => a.id));
                         });
                     USER_ACTIONS.fetchUserInfo(info.uid);
 

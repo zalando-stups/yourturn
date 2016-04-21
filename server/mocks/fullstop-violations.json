@@ -5,7 +5,7 @@
       "event_id": "963645c3-1234-1234-1234-7696d09f6993",
       "account_id": "123456789",
       "region": "eu-central-1",
-      "meta_info": {"missing_approval_types": ["foo", "bar"]},
+      "meta_info": null,
       "comment": null,
       "instance_id": null,
       "plugin_fully_qualified_class_name": null,
@@ -18,7 +18,8 @@
         "created_by": "npiccolotto",
         "last_modified": null,
         "last_modified_by": null,
-        "audit_relevant": true
+        "audit_relevant": true,
+        "priority": 2
       },
       "created": "2015-06-11T15:39:06.022Z",
       "created_by": "FULLSTOP",
@@ -44,7 +45,8 @@
         "created_by": "npiccolotto",
         "last_modified": null,
         "last_modified_by": null,
-        "audit_relevant": false
+        "audit_relevant": false,
+        "priority": 3
       },
       "created": "2015-06-11T15:43:22.924Z",
       "created_by": "FULLSTOP",
@@ -70,7 +72,8 @@
         "created_by": "npiccolotto",
         "last_modified": null,
         "last_modified_by": null,
-        "audit_relevant": false
+        "audit_relevant": false,
+        "priority": 1
       },
       "created": "2015-06-11T15:43:23.188Z",
       "created_by": "FULLSTOP",
@@ -96,7 +99,8 @@
         "created_by": "npiccolotto",
         "last_modified": null,
         "last_modified_by": null,
-        "audit_relevant": false
+        "audit_relevant": false,
+        "priority": 2
       },
       "created": "2015-06-11T15:43:23.553Z",
       "created_by": "FULLSTOP",
@@ -122,7 +126,8 @@
         "created_by": "npiccolotto",
         "last_modified": null,
         "last_modified_by": null,
-        "audit_relevant": false
+        "audit_relevant": false,
+        "priority": 2
       },
       "created": "2015-06-11T15:48:20.420Z",
       "created_by": "FULLSTOP",
@@ -148,7 +153,8 @@
         "created_by": "npiccolotto",
         "last_modified": null,
         "last_modified_by": null,
-        "audit_relevant": false
+        "audit_relevant": false,
+        "priority": 2
       },
       "created": "2015-06-11T15:48:25.233Z",
       "created_by": "FULLSTOP",
@@ -174,7 +180,8 @@
         "created_by": "npiccolotto",
         "last_modified": null,
         "last_modified_by": null,
-        "audit_relevant": false
+        "audit_relevant": false,
+        "priority": 2
       },
       "created": "2015-06-11T15:48:25.243Z",
       "created_by": "FULLSTOP",
@@ -200,7 +207,8 @@
         "created_by": "npiccolotto",
         "last_modified": null,
         "last_modified_by": null,
-        "audit_relevant": false
+        "audit_relevant": false,
+        "priority": 2
       },
       "created": "2015-06-11T16:08:25.163Z",
       "created_by": "FULLSTOP",
@@ -226,8 +234,13 @@
         "created_by": "npiccolotto",
         "last_modified": null,
         "last_modified_by": null,
-        "audit_relevant": false
-      }
+        "audit_relevant": false,
+        "priority": 2
+      },
+      "created": "2015-06-11T16:08:25.163Z",
+      "created_by": "FULLSTOP",
+      "last_modified": "2015-06-11T16:08:25.163Z",
+      "last_modified_by": "FULLSTOP"
     },
     {
       "id": 160143,
@@ -235,7 +248,7 @@
       "event_id": "51a6e8b1-1234-1234-1234-032e12df9985",
       "account_id": "0987654321",
       "region": "eu-central-1",
-      "meta_info": {"test": "foo"},
+      "meta_info": {"application_id": "foo", "version_id": "bar"},
       "comment": null,
       "instance_id": "i-asdfasdf",
       "plugin_fully_qualified_class_name": "org.zalando.stups.fullstop.plugin.keypair.KeyPairPlugin",
@@ -248,7 +261,8 @@
         "created_by": "npiccolotto",
         "last_modified": null,
         "last_modified_by": null,
-        "audit_relevant": false
+        "audit_relevant": false,
+        "priority": 2
       },
       "created": "2015-08-10T09:45:38.383Z",
       "created_by": "FULLSTOP",

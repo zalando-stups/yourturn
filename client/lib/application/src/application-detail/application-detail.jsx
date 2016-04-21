@@ -151,6 +151,14 @@ class ApplicationDetail extends React.Component {
                                 </td>
                             </tr>
                             <tr>
+                                <th>Documentation</th>
+                                <td>
+                                    <a href={app.documentation_url}>
+                                        {app.documentation_url}
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr>
                                 <th>Specification</th>
                                 <td>
                                     <a href={app.specification_url}>
@@ -159,11 +167,9 @@ class ApplicationDetail extends React.Component {
                                 </td>
                             </tr>
                             <tr>
-                                <th>Documentation</th>
+                                <th>Specification Type</th>
                                 <td>
-                                    <a href={app.documentation_url}>
-                                        {app.documentation_url}
-                                    </a>
+                                    {app.specification_type}
                                 </td>
                             </tr>
                             <tr>

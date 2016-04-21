@@ -1,9 +1,12 @@
 import React from 'react';
-import {Link} from 'react-router';
 import Icon from 'react-fa';
+import {Link} from 'react-router';
 import Timestamp from 'react-time';
 import Config from 'common/src/config';
+import Badge from 'common/src/badge.jsx'
 import 'common/asset/less/violation/violation-card.less';
+import ViolationViz from 'violation/src/violation-viz.jsx';
+import listenToOutsideClick from 'react-onclickoutside/decorator';
 
 class ViolationCard extends React.Component {
     constructor() {
@@ -11,6 +14,12 @@ class ViolationCard extends React.Component {
         this.state = {
             message: ''
         };
+    }
+
+    handleClickOutside() {
+        if (this.props.onClickOutside) {
+            this.props.onClickOutside();
+        }
     }
 
     updateMessage(evt) {
@@ -32,13 +41,16 @@ class ViolationCard extends React.Component {
     }
 
     render() {
+        if (!this.props.violation) {
+            return null;
+        }
         let {violation} = this.props,
-            account = this.props.accounts.filter(a => a.id === violation.account_id)[0],
+            account = this.props.accounts[violation.account_id],
             {violation_type} = violation;
-
         return <div
+                    style={this.props.style || {}}
                     data-block='violation-card'
-                    data-severity={violation_type.violation_severity}
+                    data-priority={violation_type.priority}
                     className={'violationCard ' +
                                 (violation.comment != null ? 'is-resolved ' : '')}>
                     <header>
@@ -50,14 +62,26 @@ class ViolationCard extends React.Component {
                         <div>
                             <Icon
                                 fixedWidth
+                                name='exclamation-triangle'
+                                title='Priority' /> <ViolationViz priority={violation_type.priority} />
+                        </div>
+                        <div>
+                            <Icon
+                                fixedWidth
                                 name='calendar-o'
                                 title='Time when this violation was discovered' /> <Timestamp value={violation.timestamp} format={Config.DATE_FORMAT} />
                         </div>
                         <div>
                             <Icon
                                 fixedWidth
+                                name='users'
+                                title='The team the account belongs to' /> {account && account.owner}
+                        </div>
+                        <div>
+                            <Icon
+                                fixedWidth
                                 name='cloud'
-                                title='The cloud account number' /> {account.name} ({violation.account_id})
+                                title='The cloud account number' /> {account && account.name} ({violation.account_id})
                         </div>
                         <div>
                             <Icon
@@ -74,16 +98,30 @@ class ViolationCard extends React.Component {
                             </div>
                             :
                             null}
+                        {violation.username != null ?
+                            <div>
+                                <Icon fixedWidth
+                                      name='user'
+                                      title='Which user caused this violation' /> {violation.username}
+                            </div>
+                            :
+                            null}
+                        {violation.rule_id != null ?
+                            <div>
+                                <Badge>Whitelisted</Badge>
+                            </div>
+                            :
+                            null}
                     </header>
                     <div>
-                        <h5>{violation_type.id}</h5>
+                        <h5>{violation_type.name || violation_type.id}</h5>
                         <p>{violation_type.help_text}</p>
                         {!!violation.meta_info ?
                             <code className='violationCard-metadata'>
                                 {typeof violation.meta_info === 'string' ?
                                     violation.meta_info :
                                     Object.keys(violation.meta_info)
-                                    .map(key => <div><span className='violationCard-metadata-key'>{key}</span>: {JSON.stringify(violation.meta_info[key])}</div>)}
+                                    .map(key => <div key={key}><span className='violationCard-metadata-key'>{key}</span>: {JSON.stringify(violation.meta_info[key])}</div>)}
                             </code>
                             :
                             null}
@@ -98,7 +136,7 @@ class ViolationCard extends React.Component {
                                 <blockquote className='violationCard-resolutionMessage'>{violation.comment}</blockquote>
                             </div>
                             :
-                            this.props.editable ?
+                            !violation.is_whitelisted && this.props.editable ?
                                 <form onSubmit={this.resolve.bind(this)} className='form'>
                                     <div className='input-group'>
                                         <input
@@ -127,8 +165,10 @@ ViolationCard.contextTypes = {
 ViolationCard.propTypes = {
     autoFocus: React.PropTypes.bool,
     onResolve: React.PropTypes.func,
+    onClickOutside: React.PropTypes.func,
+    accounts: React.PropTypes.object,
     violation: React.PropTypes.object.isRequired,
     editable: React.PropTypes.bool
 };
 
-export default ViolationCard;
+export default listenToOutsideClick(ViolationCard);

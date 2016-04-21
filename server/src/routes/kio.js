@@ -47,10 +47,7 @@ function partition(array, partitionSize) {
 
 function _getLatestVersions(team) {
     return kio
-            .apps()
-            // filter by team
-            // TODO use team filter in kio when it's available
-            .then(apps => apps.filter(a => a.team_id === team))
+            .apps(team)
             // get versions for all apps of this team
             // but batch them and execute only [batch size] requests in parallel
             // to not overwhelm kio with hundreds requests

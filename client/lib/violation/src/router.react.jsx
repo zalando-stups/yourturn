@@ -37,18 +37,15 @@ function ensureDefaultSearchParams(router, props, forceAddAccounts=false) {
         defaultAccounts = userStore.getUserCloudAccounts(),
         queryParams = Object.assign({}, location.query);
 
-    if (!queryParams.activeTab ||
-        (!queryParams.accounts && forceAddAccounts) ||
+    if ((!queryParams.accounts && forceAddAccounts) ||
         !queryParams.showUnresolved ||
         !queryParams.showResolved ||
         !queryParams.sortAsc ||
-        !queryParams.from ||
-        !queryParams.to) {
+        !queryParams.sortBy ||
+        !queryParams.size ||
+        !queryParams.page) {
 
         // ensure default params are in url
-        if (!queryParams.activeTab) {
-            queryParams.activeTab = defaultParams.activeTab;
-        }
         if (!queryParams.accounts) {
             queryParams.accounts = [];
             // this might or might not have an effect since transition hook is fired before fetchData
@@ -64,11 +61,23 @@ function ensureDefaultSearchParams(router, props, forceAddAccounts=false) {
         if (!queryParams.sortAsc) {
             queryParams.sortAsc = defaultParams.sortAsc;
         }
+        if (!queryParams.sortBy) {
+            queryParams.sortBy = defaultParams.sortBy;
+        }
+        if (!queryParams.sortBy) {
+            queryParams.sortBy = defaultParams.sortBy;
+        }
         if (!queryParams.from) {
-            queryParams.from = defaultParams.from.toISOString();
+            queryParams.from = defaultParams.from;
         }
         if (!queryParams.to) {
-            queryParams.to = defaultParams.to.toISOString();
+            queryParams.to = defaultParams.to;
+        }
+        if (!queryParams.page) {
+            queryParams.page = defaultParams.page;
+        }
+        if (!queryParams.size) {
+            queryParams.size = defaultParams.size;
         }
         router.replace({
             pathname: '/violation',
@@ -76,37 +85,7 @@ function ensureDefaultSearchParams(router, props, forceAddAccounts=false) {
         });
     }
 }
-function ensureDataAvailability(searchParams, getAccounts, getAlias) {
-    if (searchParams.activeTab === 0) {
-        // tab 1
-        FULLSTOP_ACTIONS.fetchViolationCount(searchParams);
-        if (searchParams.accounts && searchParams.accounts.length) {
-            let accs = getAccounts();
-            searchParams.accounts.forEach(acc => {
-                // for every account
-                // get its name
-                let account = accs.filter(account => account.id === acc)[0];
-                if (account) {
-                    let alias = getAlias(account.name);
-                    // and ask the team service about it
-                    if (!alias) {
-                        TEAM_ACTIONS.fetchTeam(account.name);
-                    }
-                }
-            });
-        }
-    } else if (searchParams.activeTab === 1) {
-        // tab 2
-        if (searchParams.accounts[0]) {
-            FULLSTOP_ACTIONS.fetchViolationCountIn(
-                searchParams.cross_inspectedAccount ? searchParams.cross_inspectedAccount : searchParams.accounts[0],
-                searchParams);
-        }
-    } else if (searchParams.activeTab === 2) {
-        // tab 3
-        FULLSTOP_ACTIONS.fetchViolations(searchParams);
-    }
-}
+
 class ViolationHandler extends React.Component {
     constructor() {
         super();
@@ -114,35 +93,44 @@ class ViolationHandler extends React.Component {
 
     componentWillMount() {
         ensureDefaultSearchParams(this.context.router, this.props, true);
-        ensureDataAvailability(
-            parseSearchParams(this.props.location.search),
-            this.props.teamStore.getAccounts,
-            this.props.teamStore.getAlias);
+        FULLSTOP_ACTIONS.fetchViolations(parseSearchParams(this.props.routing.location.search));
     }
 
     componentWillReceiveProps(nextProps) {
         ensureDefaultSearchParams(this.context.router, nextProps);
         if (nextProps.location.search !== this.props.location.search) {
-            ensureDataAvailability(
-                parseSearchParams(nextProps.location.search),
-                this.props.teamStore.getAccounts,
-                this.props.teamStore.getAlias);
+            FULLSTOP_ACTIONS.fetchViolations(parseSearchParams(nextProps.location.search));
         }
     }
 
     render() {
+        let violations = this.props.fullstopStore.getViolations(),
+            userAccs = this.props.userStore.getUserCloudAccounts(),
+            // index accounts by id and set access flag
+            accounts = this.props.teamStore.getAccounts().reduce((m, a) => {
+                a.userAccess = userAccs.filter(ua => ua.id === a.id).length > 0;
+                m[a.id] = a;
+                return m; },
+            {}),
+            violationTypes = Object.keys(this.props.fullstopStore.getViolationTypes()),
+            violationLoading = this.props.fullstopStore.getLoading(),
+            violationError = this.props.fullstopStore.getError(),
+            pagingInfo = this.props.fullstopStore.getPagingInfo();
         return <Violation
                     notificationActions={NOTIFICATION_ACTIONS}
                     fullstopActions={FULLSTOP_ACTIONS}
-                    {...this.props} />;
+                    fullstopStore={this.props.fullstopStore}
+                    violations={violations}
+                    violationTypes={violationTypes}
+                    loading={violationLoading}
+                    error={violationError}
+                    accounts={accounts}
+                    pagingInfo={pagingInfo}
+                    params={parseSearchParams(this.props.location.search)}
+                    routing={this.props.routing} />;
     }
 }
 ViolationHandler.fetchData = function(routerState, state) {
-    // check all query params are in place
-    // save last visited date
-    FULLSTOP_ACTIONS.saveLastVisited(Date.now());
-    let searchParams = parseSearchParams(routerState.location.search);
-
     let promises = [],
         accountsPromise = TeamGetter.getAccounts(state.team).length === 0 ?
                             TEAM_ACTIONS.fetchAccounts() :
@@ -173,8 +161,10 @@ class ViolationDetailHandler extends React.Component {
     }
 
     render() {
+        const accounts = this.props.teamStore.getAccounts().reduce((m, a) => {m[a.id] = a; return m; }, {});
         return <ViolationDetail
-                    violationId={this.props.params.violationId}
+                    violationId={parseInt(this.props.params.violationId, 10)}
+                    accounts={accounts}
                     fullstopActions={FULLSTOP_ACTIONS}
                     {...this.props} />;
     }
@@ -191,6 +181,7 @@ ViolationDetailHandler.propTypes = {
 };
 let ConnectedViolationDetailHandler = connect(state => ({
     userStore: bindGettersToState(state.user, UserGetter),
+    teamStore: bindGettersToState(state.team, TeamGetter),
     fullstopStore: bindGettersToState(state.fullstop, FullstopGetter)
 }))(ViolationDetailHandler);
 
@@ -198,7 +189,10 @@ let ConnectedViolationDetailHandler = connect(state => ({
 class ViolationShortUrlHandler extends React.Component {
     constructor(props, context) {
         super();
-        context.router.transitionTo('violation', null, JSON.parse(lzw.decompressFromEncodedURIComponent(props.params.shortened)));
+        context.router.replace({
+            pathname: 'violation',
+            query: JSON.parse(lzw.decompressFromEncodedURIComponent(props.params.shortened))
+        })
     }
 
     render() {
@@ -210,7 +204,7 @@ ViolationShortUrlHandler.propTypes = {
     params: React.PropTypes.object.isRequired
 };
 ViolationShortUrlHandler.contextTypes = {
-    router: React.PropTypes.func.isRequired
+    router: React.PropTypes.object.isRequired
 };
 
 const ROUTES =

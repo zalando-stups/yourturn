@@ -37,17 +37,17 @@ var applications = {
         criticality_level: 2,
         publicly_accessible: true
     },
-    blork: {
-        documentation_url: 'https://github.com/zalando-stups/blork',
-        specification_url: 'https://github.com/zalando-stups/blork/issues',
-        scm_url: 'https://github.com/zalando-stups/blork.git',
+    spilo: {
+        documentation_url: 'https://github.com/zalando-stups/spilo',
+        specification_url: 'https://github.com/zalando-stups/spilo/issues',
+        scm_url: 'https://github.com/zalando-stups/spilo.git',
         service_url: 'http://localhost:5000/',
         description: '**An application registry to manage application base information.**',
         subtitle: 'STUPS application registry',
         name: 'Blork',
         active: true,
-        team_id: 'blork-team',
-        id: 'blork',
+        team_id: 'acid',
+        id: 'spilo',
         required_approvers: 2,
         criticality_level: 3,
         publicly_accessible: true
@@ -157,6 +157,10 @@ server.get('/apps', function(req,res) {
                                 }
                                 return a;
                             });
+            return res.status(200).send(results);
+        }
+        if (req.query.team_id) {
+            var results = apps.filter(a => a.team_id === req.query.team_id);
             return res.status(200).send(results);
         }
         res.status( 200 ).send( apps );

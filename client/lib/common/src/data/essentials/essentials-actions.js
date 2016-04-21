@@ -34,6 +34,7 @@ function saveResource(resourceId, resource) {
 function saveScope(resourceId, scopeId, scope) {
     let copy = _.extend({}, scope);
     copy.id = undefined;
+    copy.resource_type_id = undefined;
     return request
             .put(`${Services.essentials.url}${Services.essentials.root}/${resourceId}/scopes/${scopeId}`)
             .type('json')

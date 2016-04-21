@@ -12,7 +12,9 @@ const TYPES = [
     'SAVE_APPROVAL',
     'FETCH_APPROVAL_TYPES',
     'LOAD_PREFERRED_ACCOUNT',
-    'SAVE_PREFERRED_ACCOUNT'
+    'SAVE_PREFERRED_ACCOUNT',
+    'LOAD_TAB_ACCOUNTS',
+    'SAVE_TAB_ACCOUNTS'
 ];
 
 export default createActionTypes(TYPES);

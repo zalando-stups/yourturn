@@ -28,13 +28,14 @@ class AccountAppList extends React.Component {
                                     <th></th>
                                 </tr>
                             </thead>
-                            <tbody data-block='team-apps'>
+                            <tbody data-block='apps'>
                             {
                                 apps
                                 .filter(ta => (!ta.active && showInactive) || ta.active)
                                 .map(
                                     ta =>
                                     <tr key={ta.id}
+                                        data-block='app'
                                         className={'app ' + (ta.active ? '' : 'is-inactive')}>
                                         <td>
                                             <Link

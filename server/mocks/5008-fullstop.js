@@ -29,6 +29,7 @@ server.get('/violations', function(req, res) {
             .type('json')
             .send({
                 total_elements: all.length,
+                total_pages: 5,
                 last: true,
                 number: 2,
                 content: all

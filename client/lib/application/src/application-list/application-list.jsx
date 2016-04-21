@@ -1,6 +1,7 @@
 /* global ENV_TEST */
 import React from 'react';
 import Icon from 'react-fa';
+import AccountList from './account-list.jsx';
 import AccountAppList from './account-app-list.jsx';
 import {Tabs, TabPanel, TabList, Tab} from 'react-tabs';
 import {Link} from 'react-router';
@@ -12,24 +13,22 @@ import 'common/asset/less/common/tabs.less';
 class ApplicationList extends React.Component {
     constructor(props) {
         super();
-        let prefAccount = props.kioStore.getPreferredAccount(),
-            userAccIds = _.pluck(props.userStore.getUserCloudAccounts(), 'name').sort();
-
         this.state = {
             term: '',
-            showCount: 20,
-            showAll: false,
             showInactive: false,
-            userAccIds,
-            selectedTab: userAccIds.indexOf(props.kioStore.getPreferredAccount()) || 0
+            tabAccounts: props.tabAccounts,
+            selectedTab: props.tabAccounts.indexOf(props.selectedTab) + 1 // first is management tab
         };
     }
 
-
-    showAll() {
-        this.setState({
-            showAll: true
-        });
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.selectedTab !== this.props.selectedTab ||
+            nextProps.tabAccounts.length !== this.props.tabAccounts.length) {
+            this.setState({
+                selectedTab: nextProps.tabAccounts.indexOf(nextProps.selectedTab) + 1,
+                tabAccounts: nextProps.tabAccounts
+            });
+        }
     }
 
     filter(evt) {
@@ -38,31 +37,40 @@ class ApplicationList extends React.Component {
         });
     }
 
-    updateShowInactive() {
+    toggleShowInactive() {
         this.setState({
             showInactive: !this.state.showInactive
         });
     }
 
-    _selectTab(tab) {
-        let account = this.state.userAccIds[tab];
-        this.props.kioActions.savePreferredAccount(account);
-        this.props.kioActions.fetchLatestApplicationVersions(account);
-        this.setState({
-            selectedTab: tab
-        });
+    selectTab(tab) {
+        if (tab > 0) {
+            let account = this.state.tabAccounts[tab - 1];
+            this.props.kioActions.savePreferredAccount(account);
+            if (this.props.onChangeTab) {
+                this.props.onChangeTab(account);
+            }
+            return;
+        }
+        if (this.props.onChangeTab) {
+            this.props.onChangeTab();
+        }
+    }
+
+    updateAccounts(tabAccounts) {
+        this.props.kioActions.saveTabAccounts(tabAccounts);
+        this.setState({tabAccounts});
     }
 
     render() {
-        let {term, showCount, showAll, showInactive, userAccIds} = this.state,
-            apps = this.props.kioStore.getApplications(),
-            fetchStatus = this.props.kioStore.getApplicationsFetchStatus(),
-            otherApps = apps.filter(app => userAccIds.indexOf(app.team_id) < 0),
-            shortApps = !showAll && otherApps.length > showCount ? _.slice(otherApps, 0, showCount) : otherApps,
-            remainingAppsCount = otherApps.length - showCount;
-
+        let {term, showInactive, tabAccounts, selectedTab} = this.state,
+            {applicationsFetching} = this.props;
         return <div className='applicationList'>
-                    <h2 className='applicationList-headline'>Applications</h2>
+                    <h2 className='applicationList-headline'>Applications&nbsp;
+                        <small>{applicationsFetching !== false && applicationsFetching.isPending() ?
+                            <Icon name='circle-o-notch' spin /> :
+                            null}</small>
+                    </h2>
                     <div className='btn-group'>
                         <Link
                             to={Routes.appCreate()}
@@ -70,40 +78,47 @@ class ApplicationList extends React.Component {
                             <Icon name='plus' /> Create Application
                         </Link>
                     </div>
-                    <div className='form'>
-                        <label htmlFor='yourturn-search'>Search:</label>
-                        <div className='input-group'>
-                            <div
-                                className='input-addon'>
-                                <Icon name='search' />
-                            </div>
-                            <input
-                                name='yourturn_search'
-                                autoFocus={true}
-                                value={term}
-                                onChange={this.filter.bind(this)}
-                                type='search'
-                                aria-label='Enter your term'
-                                placeholder='Kio' />
-                        </div>
-                        <label>
-                            <input data-block='show-inactive-checkbox' type='checkbox'
-                                   checked={showInactive}
-                                   onChange={this.updateShowInactive.bind(this)}>
-                            </input> show inactive
-                        </label>
-                    </div>
-                    <h4>Your Applications {fetchStatus !== false && fetchStatus.isPending() ?
-                                            <Icon name='circle-o-notch u-spinner' spin /> :
-                                            null}</h4>
                     {!ENV_TEST ?
                         <Tabs
-                            onSelect={this._selectTab.bind(this)}
-                            selectedIndex={this.state.selectedTab}>
+                            onSelect={this.selectTab.bind(this)}
+                            selectedIndex={selectedTab}>
                             <TabList>
-                                {userAccIds.map(acc => <Tab key={acc}>{acc}</Tab>)}
+                                <Tab key='manage_tabs'><Icon name='gear' /></Tab>
+                                {tabAccounts.map(acc => <Tab key={acc}>{acc}</Tab>)}
                             </TabList>
-                            {userAccIds.map(acc => <TabPanel key={acc}>
+                            <TabPanel>
+                                <p className='u-info'>
+                                    You can add or remove tabs by checking or unchecking them in this list. It will be
+                                    automatically saved.
+                                </p>
+                                <AccountList
+                                    onChange={this.updateAccounts.bind(this)}
+                                    selected={tabAccounts}
+                                    accounts={this.props.accounts.map(a => a.name)} />
+                            </TabPanel>
+                            {tabAccounts.map(acc => <TabPanel key={acc}>
+                                                        <div className='form'>
+                                                            <div className='input-group'>
+                                                                <div
+                                                                    className='input-addon'>
+                                                                    <Icon name='search' />
+                                                                </div>
+                                                                <input
+                                                                    name='yourturn_search'
+                                                                    autoFocus={true}
+                                                                    value={term}
+                                                                    onChange={this.filter.bind(this)}
+                                                                    type='search'
+                                                                    aria-label='Enter your term'
+                                                                    placeholder='Kio' />
+                                                            </div>
+                                                            <label>
+                                                                <input data-block='show-inactive-checkbox' type='checkbox'
+                                                                       checked={showInactive}
+                                                                       onChange={this.toggleShowInactive.bind(this)}>
+                                                                </input> show inactive
+                                                            </label>
+                                                        </div>
                                                         <AccountAppList
                                                             account={acc}
                                                             search={term}
@@ -111,55 +126,6 @@ class ApplicationList extends React.Component {
                                                             kioStore={this.props.kioStore} />
                                                     </TabPanel>)}
                         </Tabs>
-                        :
-                        null
-                    }
-
-                    <h4>Other Applications {fetchStatus !== false && fetchStatus.isPending() ?
-                                                <Icon name='circle-o-notch u-spinner' spin /> :
-                                                null}</h4>
-                    {otherApps.length ?
-                        <table className='table'>
-                            <colgroup>
-                                <col width='100%' />
-                                <col width='0*' />
-                            </colgroup>
-                            <thead>
-                                <tr>
-                                    <th>Application</th>
-                                    <th>Team</th>
-                                </tr>
-                            </thead>
-                            <tbody data-block='other-apps'>
-                                {shortApps.filter(
-                                    (ta) => (!ta.active && showInactive) || ta.active ).map(
-                                    other =>
-                                        <tr key={other.id}
-                                            className={'app ' + (other.active ? '' : 'is-inactive')}>
-                                            <td>
-                                                <Link
-                                                    to={Routes.appDetail({
-                                                        applicationId: other.id
-                                                    })}>
-                                                    {other.name}
-                                                </Link>
-                                            </td>
-                                            <td><div className='team'>{other.team_id}</div></td>
-                                        </tr>
-                                )}
-                            </tbody>
-                        </table>
-                        :
-                        <span>No applications owned by other teams.</span>
-                    }
-                    {!showAll && !term.length && remainingAppsCount > 0 ?
-                        <div className='btn-group'>
-                            <div
-                                onClick={this.showAll.bind(this)}
-                                className='btn btn-default'>
-                                Display remaining {remainingAppsCount} {remainingAppsCount > 1 ? 'applications' : 'application'}
-                            </div>
-                        </div>
                         :
                         null
                     }

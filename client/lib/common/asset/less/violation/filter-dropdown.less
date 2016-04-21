@@ -1,0 +1,84 @@
+@import "../variables";
+
+.filter-dropdown {
+    input[type="search"] {
+        width: 100%;
+    }
+    header {
+        .transition(background);
+        cursor: pointer;
+        width: 100%;
+        display: inline-block;
+        outline: 1px solid @gray;
+
+        &:hover {
+            background: @gray-lighter;
+        }
+        span.fa:last-child {
+            float: right;
+            margin-top: 8px;
+        }
+    }
+
+    div.filterDropdown-dropdown {
+        position: absolute;
+        z-index: @layer-2;
+        background: @white;
+        outline: 1px solid @gray;
+        box-shadow: 0px 5px 15px @gray-light;
+
+        .filterDropdown-special-button {
+            display: flex;
+            span {
+                .transition(background);
+                flex: 1 1 auto;
+                text-align: center;
+                cursor: pointer;
+                &:hover {
+                    background: @gray-lighter;
+                }
+                &:before {
+                    margin-right: 5px;
+                }
+            }
+            span:first-child:before {
+                content: "\f046";
+                font-family: "FontAwesome";
+            }
+            span:last-child:before {
+                content: "\f096";
+                font-family: "FontAwesome";
+            }
+        }
+
+        .filterDropdown-list-container {
+            max-height: 400px;
+            overflow: auto;
+        }
+
+        ul {
+            margin: 0;
+            padding: 0;
+
+            li {
+                list-style-type: none;
+            }
+
+            li.filterButton-list-item {
+                .transition(background);
+                cursor: pointer;
+                padding: .25em;
+                &:hover {
+                    background: @orange-lighter;
+                }
+                &.selected {
+                    background: @orange-light;
+                    color: @orange-darker;
+                }
+                label {
+                    cursor: pointer;
+                }
+            }
+        }
+    }
+}
