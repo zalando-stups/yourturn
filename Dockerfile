@@ -1,4 +1,5 @@
-FROM registry.opensource.zalan.do/stups/node:5.10-22
+# FROM registry.opensource.zalan.do/stups/node:5.10-22
+FROM node:5.0 # first try if it works, then upgrade to reasonable node
 
 MAINTAINER Zalando SE
 
@@ -26,6 +27,9 @@ COPY ./server/src/redis-utils.js /www/
 
 # create env.js as user
 RUN touch /www/dist/env.js && chmod 0666 /www/dist/env.js
+
+# create appdynamics directory
+RUN mkdir /tmp/appd && chmod -R 0777 /tmp/appd
 
 # create new relic log directory
 RUN touch /www/newrelic_agent.log && chmod 0666 /www/newrelic_agent.log

@@ -3,15 +3,15 @@ var camel = require('camel-case'),
     yml2js = require('js-yaml'),
     winston = require('winston'),
     fs = require('fs'),
+    APPDYNAMICS_CONFIG = '/agents/appdynamics-jvm/conf/controller-info.xml',
     NEW_RELIC_CONFIG = '/agents/newrelic/newrelic.yml';
 
 
 // FIRST, LETS CHECK FOR APPDYNAMICS
-if (process.env.YTENV_USE_APPDYNAMICS) {
-
+if (fs.existsSync(APPDYNAMICS_CONFIG)) {
     var xmlFile;
     try {
-        xmlFile = String(fs.readFileSync('/agents/appdynamics-jvm/conf/controller-info.xml'));
+        xmlFile = String(fs.readFileSync(APPDYNAMICS_CONFIG));
     } catch (err) {
         winston.error('Could not read appdynamics config XML.', err.message);
     }
@@ -22,11 +22,22 @@ if (process.env.YTENV_USE_APPDYNAMICS) {
         }
         var config = Object
             .keys(result)
-            .map(function (key) {
-                return [camel(key), result[key]];
+            .map(function(key) {
+                return [camel(key), result[key][0]];
             })
-            .reduce(function (prev, cur) {
-                prev[cur[0]] = cur[1];
+            .reduce(function(prev, cur) {
+                var key = cur[0] === 'controllerHost' ? 'controllerHostName' : cur[0],
+                    val = cur[1];
+                // convert string values
+                if (val === 'true') {
+                    prev[key] = true;
+                } else if (val === 'false') {
+                    prev[key] = false;
+                } else if (/^[0-9]+$/.test(val)) {
+                    prev[key] = parseInt(val, 10);
+                } else {
+                    prev[key] = val;
+                }
                 return prev;
             }, {});
         require('appdynamics').profile(config);

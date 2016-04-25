@@ -83,7 +83,7 @@
         <script>
             var head = document.getElementsByTagName('head')[0],
                 js = document.createElement('script');
-            if (window.YTENV_USE_APPDYNAMICS) {
+            if (window.YTENV_APPDYNAMICS_EUM) {
                 // load appdynamics
                 js.src = '/dist/appdynamics.js?v=${timestamp}';
             } else if (window.YTENV_NEW_RELIC_BROWSER_APP_ID) {
