@@ -1,5 +1,5 @@
 # FROM registry.opensource.zalan.do/stups/node:5.10-22
-FROM node:5.0 # first try if it works, then upgrade to reasonable node
+FROM node:5.0
 
 MAINTAINER Zalando SE
 
