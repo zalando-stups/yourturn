@@ -3,7 +3,7 @@ var camel = require('camel-case'),
     yml2js = require('js-yaml'),
     winston = require('winston'),
     fs = require('fs'),
-    APPDYNAMICS_CONFIG = '/agents/appdynamics-jvm/conf/controller-info.xml',
+    APPDYNAMICS_CONFIG = '/opt/proprietary/appdynamics-machine/conf/controller-info.xml',
     NEW_RELIC_CONFIG = '/agents/newrelic/newrelic.yml';
 
 
@@ -40,7 +40,8 @@ if (fs.existsSync(APPDYNAMICS_CONFIG)) {
                 }
                 return prev;
             }, {});
-        config.rootTmpDir = '/tmp/appd';
+        config.tmpDir = '/tmp/appd';
+        config.tierName = 'yourturn';
         require('appdynamics').profile(config);
         winston.info('Successfully started appdynamics with config %s', JSON.stringify(config, null, 4));
     });
