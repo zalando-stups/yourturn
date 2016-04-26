@@ -16,6 +16,7 @@ import * as EssentialsGetter from 'common/src/data/essentials/essentials-getter'
 import * as NotificationActions from 'common/src/data/notification/notification-actions';
 import * as UserActions from 'common/src/data/user/user-actions';
 import * as EssentialsActions from 'common/src/data/essentials/essentials-actions';
+import * as KioActions from 'common/src/data/kio/kio-actions';
 
 import ResourceForm from './resource-form/resource-form.jsx';
 import ResourceList from './resource-list/resource-list.jsx';
@@ -25,7 +26,8 @@ import ScopeForm from './scope-form/scope-form.jsx';
 
 const USER_ACTIONS = bindActionsToStore(REDUX, UserActions),
       ESSENTIALS_ACTIONS = bindActionsToStore(REDUX, EssentialsActions),
-      NOTIFICATION_ACTIONS = bindActionsToStore(REDUX, NotificationActions);
+      NOTIFICATION_ACTIONS = bindActionsToStore(REDUX, NotificationActions),
+      KIO_ACTIONS = bindActionsToStore(REDUX, KioActions);
 
 // QUICKFIX #133
 function isWhitelisted(token) {
@@ -62,11 +64,17 @@ class CreateResourceFormHandler extends React.Component {
     }
 
     render() {
+        const resources = this.props.essentialsStore.getResources(),
+              whitelisted = this.props.userStore.isWhitelisted(),
+              userAccounts = this.props.userStore.getUserCloudAccounts().map(a => a.name);
         return <ResourceForm
                     edit={false}
                     essentialsActions={ESSENTIALS_ACTIONS}
                     notificationActions={ESSENTIALS_ACTIONS}
-                    {...this.props} />;
+                    kioActions={KIO_ACTIONS}
+                    userAccounts={userAccounts}
+                    isUserWhitelisted={whitelisted}
+                    resources={resources} />;
     }
 }
 CreateResourceFormHandler.displayName = 'CreateResourceFormHandler';
@@ -80,7 +88,8 @@ CreateResourceFormHandler.fetchData = function(routerState, state) {
     ]);
 };
 let ConnectedCreateResourceFormHandler = connect(state => ({
-    essentialsStore: bindGettersToState(state.essentials, EssentialsGetter)
+    essentialsStore: bindGettersToState(state.essentials, EssentialsGetter),
+    userStore: bindGettersToState(state.user, UserGetter)
 }))(CreateResourceFormHandler);
 
 

@@ -14,7 +14,7 @@ function getResource(state, resourceId) {
 }
 
 /**
- * Returns the IDs of all available resources.
+ * Returns the all available resources.
  *
  * @param  {object} state The current state of the store
  * @return {array} An empty array if there are none.

@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Icon from 'react-fa';
@@ -6,20 +7,21 @@ import * as Routes from 'resource/src/routes';
 import Markdown from 'common/src/markdown.jsx';
 import 'common/asset/less/resource/resource-form.less';
 
+// this is ugly...
+function setCustomValidity(message) {
+    document.getElementById('resource_id').setCustomValidity(message);
+}
+
 class ResourceForm extends React.Component {
     constructor(props) {
         super();
         let {edit, resourceId} = props;
         this.state = {
-            resource: edit ? props.essentialsStore.getResource(resourceId) : {resource_owners: []}
+            resource: edit ? props.resource : {resource_owners: []},
+            checkingId: false,
+            invalidIdReason: '',
+            checkIfIdInvalid: _.debounce(this._checkIfIdInvalid.bind(this), 200)
         };
-    }
-
-    setCustomValidity(evt) {
-        ReactDOM.findDOMNode(evt.target).setCustomValidity(
-            this.state.resourceIdTaken ?
-                'Resource ID is already taken' :
-                '');
     }
 
     updateResourceOwner(owner) {
@@ -52,17 +54,70 @@ class ResourceForm extends React.Component {
         });
     }
 
+    _checkIfIdInvalid() {
+        console.debug('checking invalidity')
+        // check if there already a resource with thid id
+        if (this.props.resources.some(r => r.id === this.state.resource.id)) {
+            const invalidReason = 'Resource ID already taken.';
+            this.setState({
+                invalidIdReason: invalidReason,
+                checkingId: false
+            });
+            setCustomValidity(invalidReason);
+            return;
+        }
+        // check if first part before dot is an app and belongs to correct team
+        const APP_REGEX = /^([a-z][a-z\-]+[a-z])(\..+)?/,
+              match = this.state.resource.id.match(APP_REGEX);
+        // at least the regex matches
+        if (match) {
+            const app_id = match[1];
+            this.setState({ checkingId: true });
+            // fetching team
+            this.props.kioActions.fetchApplication(app_id)
+            .then(({team_id}) => {
+                // check if team_id is in userAccounts
+                const ownApp = this.props.userAccounts.indexOf(team_id) >= 0,
+                      invalidReason = `Application ${app_id} is not yours. (Team: ${team_id})`;
+                this.setState({
+                    invalidIdReason: ownApp ?
+                                        '' :
+                                        invalidReason,
+                    checkingId: false
+                });
+                if (ownApp) {
+                    setCustomValidity('');
+                } else {
+                    setCustomValidity(invalidReason);
+                }
+            })
+            .catch(e => {
+                // app does not exist or kio is down, so fall back to whitelisting
+                const invalidReason = 'Not a whitelisted user.';
+                this.setState({
+                    checkingId: false,
+                    invalidIdReason: this.props.isUserWhitelisted ? '' : invalidReason
+                });
+                if (this.props.isUserWhitelisted) {
+                    setCustomValidity('');
+                } else {
+                    setCustomValidity(invalidReason);
+                }
+            });
+        }
+    }
+
     update(field, prop, evt) {
         this.state.resource[field] = evt.target[prop];
-        this.setState({
-            resource: this.state.resource,
-            resourceIdTaken: this.props.essentialsStore.getResource(this.state.resource.id) !== false
-        });
+        this.setState({resource: this.state.resource});
+        if (field === 'id') {
+            this.state.checkIfIdInvalid();
+        }
     }
 
     render() {
         let {edit, resourceId} = this.props,
-            {resourceIdTaken, resource} = this.state;
+            {invalidIdReason, resource, checkingId} = this.state;
         const LINK_PARAMS = {
             resourceId: resourceId
         };
@@ -97,35 +152,30 @@ class ResourceForm extends React.Component {
                             <small>The ID of the resource type</small>
                             <div className='input-group'>
                                 <div className='input-addon'>
-                                    {resourceIdTaken && !edit ?
-                                        <Icon
-                                            data-block='taken-symbol'
-                                            title='Resource ID is already taken.'
-                                            className='is-taken'
-                                            name='close'
-                                            fixedWidth />
-                                        :
-                                        <Icon
-                                            data-block='available-symbol'
-                                            title='Resource ID is available.'
-                                            className='is-available'
-                                            name='check'
-                                            fixedWidth />}
+                                    <Icon
+                                        data-block='symbol'
+                                        title={invalidIdReason || 'Resource ID is valid.'}
+                                        className={invalidIdReason ? 'is-taken' : 'is-valid'}
+                                        name={checkingId ?
+                                                'refresh' :
+                                                invalidIdReason ?
+                                                    'close' :
+                                                    'check'}
+                                        fixedWidth />
                                 </div>
                                 <input
-                                        id='resource_id'
-                                        autoFocus='autofocus'
-                                        value={resource.id}
-                                        onChange={this.update.bind(this, 'id', 'value')}
-                                        onKeyUp={this.setCustomValidity.bind(this)}
-                                        disabled={edit}
-                                        pattern='[a-z][a-z0-9-_]*(?:\.[a-z0-9-_]*)?[a-z0-9]'
-                                        title='Only lowercase characters, at most one dot and any hyphens or underscores.'
-                                        name='yourturn_resource_id'
-                                        data-block='id-input'
-                                        required={true}
-                                        placeholder='sales_order'
-                                        type='text' />
+                                    id='resource_id'
+                                    autoFocus='autofocus'
+                                    value={resource.id}
+                                    onChange={this.update.bind(this, 'id', 'value')}
+                                    disabled={edit}
+                                    pattern='[a-z][a-z0-9-_]*(?:\.[a-z0-9-_]*)?[a-z0-9]'
+                                    title='Only lowercase characters, at most one dot and any hyphens or underscores.'
+                                    name='yourturn_resource_id'
+                                    data-block='id-input'
+                                    required={true}
+                                    placeholder='sales_order'
+                                    type='text' />
                             </div>
                         </div>
                         <div className='form-group'>
