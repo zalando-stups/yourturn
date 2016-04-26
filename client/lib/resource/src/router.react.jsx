@@ -23,9 +23,7 @@ import ResourceDetail from './resource-detail/resource-detail.jsx';
 import ScopeDetail from './scope-detail/scope-detail.jsx';
 import ScopeForm from './scope-form/scope-form.jsx';
 
-const USER_STORE = undefined,
-      ESSENTIALS_STORE = undefined,
-      USER_ACTIONS = bindActionsToStore(REDUX, UserActions),
+const USER_ACTIONS = bindActionsToStore(REDUX, UserActions),
       ESSENTIALS_ACTIONS = bindActionsToStore(REDUX, EssentialsActions),
       NOTIFICATION_ACTIONS = bindActionsToStore(REDUX, NotificationActions);
 
@@ -71,9 +69,6 @@ class CreateResourceFormHandler extends React.Component {
                     {...this.props} />;
     }
 }
-CreateResourceFormHandler.isAllowed = function(routerState, state) {
-    return requireWhitelisted(state);
-};
 CreateResourceFormHandler.displayName = 'CreateResourceFormHandler';
 CreateResourceFormHandler.propTypes = {
     params: React.PropTypes.object
@@ -81,7 +76,7 @@ CreateResourceFormHandler.propTypes = {
 CreateResourceFormHandler.fetchData = function(routerState, state) {
     return Promise.all([
         ESSENTIALS_ACTIONS.fetchResources(),
-        requireToken(state, USER_ACTIONS)
+        requireAccounts(state, USER_ACTIONS)
     ]);
 };
 let ConnectedCreateResourceFormHandler = connect(state => ({
@@ -126,7 +121,8 @@ class ResourceListHandler extends React.Component {
         super();
     }
     render() {
-        return <ResourceList {...this.props} />;
+        const resources = this.props.essentialsStore.getResources()
+        return <ResourceList resources={resources} />;
     }
 }
 ResourceListHandler.displayName = 'ResourceListHandler';
@@ -137,8 +133,7 @@ ResourceListHandler.fetchData = function() {
     ESSENTIALS_ACTIONS.fetchResources();
 };
 let ConnectedResourceListHandler = connect(state => ({
-    essentialsStore: bindGettersToState(state.essentials, EssentialsGetter),
-    userStore: bindGettersToState(state.user, UserGetter)
+    essentialsStore: bindGettersToState(state.essentials, EssentialsGetter)
 }))(ResourceListHandler);
 
 class ResourceDetailHandler extends React.Component {

@@ -19,14 +19,11 @@ function getResource(state, resourceId) {
  * @param  {object} state The current state of the store
  * @return {array} An empty array if there are none.
  */
-function getResources(state, term) {
-    let lcTerm = term ? term.toLowerCase() : '';
-
+function getResources(state) {
     return state
             .resources
             .valueSeq()
             .filter(r => !r.getResult)
-            .filter(r => term ? fuzzy(lcTerm, r.get('name').toLowerCase()) : true)
             .sortBy(r => r.get('name').toLowerCase())
             .toJS();
 }
