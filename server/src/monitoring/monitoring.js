@@ -3,7 +3,7 @@ var camel = require('camel-case'),
     yml2js = require('js-yaml'),
     winston = require('winston'),
     fs = require('fs'),
-    APPDYNAMICS_CONFIG = '/opt/proprietary/appdynamics-jvm/conf/controller-info.xml',
+    APPDYNAMICS_CONFIG = '/agents/appdynamics-jvm/conf/controller-info.xml',
     NEW_RELIC_CONFIG = '/agents/newrelic/newrelic.yml';
 
 
