@@ -9,9 +9,9 @@ import 'common/asset/less/resource/scope-form.less';
 class ScopeForm extends React.Component {
     constructor(props) {
         super();
-        let {resourceId, scopeId, edit} = props;
+        let {resourceId, scopeId, edit, scope} = props;
         this.state = {
-            scope: edit ? props.essentialsStore.getScope(resourceId, scopeId) : { is_resource_owner_scope: false },
+            scope: edit ? scope : { is_resource_owner_scope: false },
             scopeIdTaken: false
         };
     }
@@ -23,7 +23,7 @@ class ScopeForm extends React.Component {
         }
         this.setState({
             scope: this.state.scope,
-            scopeIdTaken: this.props.essentialsStore.getScope(this.props.resourceId, this.state.scope.id) !== false
+            scopeIdTaken: this.props.scopes.indexOf(this.state.scope.id) !== -1
         });
     }
 
@@ -37,8 +37,7 @@ class ScopeForm extends React.Component {
     save(evt) {
         evt.preventDefault();
 
-        let {resourceId, essentialsStore} = this.props,
-            resource = essentialsStore.getResource(resourceId),
+        let {resourceId, resource} = this.props,
             {scope} = this.state;
 
         // send it off to the store
@@ -57,9 +56,8 @@ class ScopeForm extends React.Component {
     }
 
     render() {
-        let {edit, scopeId, resourceId} = this.props,
-            {scope, scopeIdTaken} = this.state,
-            resource = this.props.essentialsStore.getResource(resourceId);
+        let {edit, scopeId, resourceId, resource} = this.props,
+            {scope, scopeIdTaken} = this.state;
         const LINK_PARAMS = {
             resourceId: resourceId,
             scopeId: scopeId
@@ -178,8 +176,8 @@ class ScopeForm extends React.Component {
                                         <p>
                                             <small>
                                                 {resource.resource_owners.map(
-                                                    (owner, i, all) => <span>
-                                                                            <strong key={i}>{owner}</strong>
+                                                    (owner, i, all) => <span key={i}>
+                                                                            <strong>{owner}</strong>
                                                                             {i === all.length - 1 ? '' : ', '}
                                                                         </span>)} can grant <strong>{scope.id}</strong> access on his <strong>{resource.name}</strong> data to applications.
                                             </small>
@@ -250,7 +248,6 @@ ScopeForm.propTypes = {
     edit: React.PropTypes.bool.isRequired,
     essentialsActions: React.PropTypes.object.isRequired,
     notificationActions: React.PropTypes.object.isRequired,
-    essentialsStore: React.PropTypes.object.isRequired
 };
 ScopeForm.contextTypes = {
     router: React.PropTypes.object

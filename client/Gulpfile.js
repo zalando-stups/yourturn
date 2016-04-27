@@ -18,6 +18,7 @@ process.on('uncaughtException', console.log.bind(console));
 var LODASH_FUNCS = [
         // own
         'chain',
+        'debounce',
         'defer',
         'difference',
         'extend',
@@ -35,6 +36,7 @@ var LODASH_FUNCS = [
         'sortByOrder',
         'slice',
         'take',
+        'throttle',
         'times',
         'unique',
         'value',

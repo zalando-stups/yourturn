@@ -5,6 +5,7 @@ import Icon from 'react-fa';
 import {Link} from 'react-router';
 import * as Routes from 'resource/src/routes';
 import Markdown from 'common/src/markdown.jsx';
+import {getApplicationFromResource} from 'resource/src/util';
 import 'common/asset/less/resource/resource-form.less';
 
 // this is ugly...
@@ -19,7 +20,8 @@ class ResourceForm extends React.Component {
         this.state = {
             resource: edit ? props.resource : {resource_owners: []},
             checkingId: false,
-            invalidIdReason: ''
+            invalidIdReason: '',
+            checkIfIdInvalid: _.throttle(this._checkIfIdInvalid.bind(this), 200)
         };
     }
 
@@ -53,13 +55,13 @@ class ResourceForm extends React.Component {
         });
     }
 
-    checkIfIdInvalid() {
-        if (this.state.checkingId) {
-            // request to kio in flight
-            // wait until done
-            _.defer(this.checkIfIdInvalid.bind(this), arguments);
-            return;
-        }
+    _checkIfIdInvalid() {
+        // if (this.state.checkingId) {
+        //     // request to kio in flight
+        //     // wait until done
+        //     _.defer(this.checkIfIdInvalid.bind(this), arguments);
+        //     return;
+        // }
         // check if there already a resource with thid id
         if (this.props.resources.some(r => r.id === this.state.resource.id)) {
             const invalidReason = 'Resource ID already taken.';
@@ -71,20 +73,23 @@ class ResourceForm extends React.Component {
             return;
         }
         // check if first part before dot is an app and belongs to correct team
-        const APP_REGEX = /^([a-z][a-z\-]+[a-z])(\..+)?/,
-              match = this.state.resource.id.match(APP_REGEX);
+        const app_id = getApplicationFromResource(this.state.resource.id);
+        if (!app_id) {
+            this.setState({
+                checkingId: false,
+                invalidIdReason: 'Invalid format.'
+            });
+        }
         // at least the regex matches
-        if (match) {
-            const app_id = match[1];
+        else {
             this.setState({ checkingId: true });
             // fetching team
             this.props.kioActions.fetchApplication(app_id)
             .then(({team_id, id}) => {
                 // maybe id is already different than what's in the form
-                if (id !== this.state.resource.id) {
+                if (id !== app_id) {
                     return;
                 }
-
                 // check if team_id is in userAccounts
                 const ownApp = this.props.userAccounts.indexOf(team_id) >= 0,
                       invalidReason = `Application ${app_id} is not yours. (Team: ${team_id})`;
@@ -120,7 +125,7 @@ class ResourceForm extends React.Component {
         this.state.resource[field] = evt.target[prop];
         this.setState({resource: this.state.resource});
         if (field === 'id') {
-            this.checkIfIdInvalid();
+            this.state.checkIfIdInvalid();
         }
     }
 
@@ -259,7 +264,6 @@ ResourceForm.displayName = 'ResourceForm';
 ResourceForm.propTypes = {
     edit: React.PropTypes.bool.isRequired,
     resourceId: React.PropTypes.string,
-    essentialsStore: React.PropTypes.object.isRequired,
     essentialsActions: React.PropTypes.object.isRequired,
     notificationActions: React.PropTypes.object.isRequired
 };
