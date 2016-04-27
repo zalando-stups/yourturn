@@ -23,7 +23,7 @@ class ScopeForm extends React.Component {
         }
         this.setState({
             scope: this.state.scope,
-            scopeIdTaken: this.props.scopes.indexOf(this.state.scope.id) !== -1
+            scopeIdTaken: this.props.existingScopeIds.indexOf(this.state.scope.id) !== -1
         });
     }
 
@@ -58,10 +58,7 @@ class ScopeForm extends React.Component {
     render() {
         let {edit, scopeId, resourceId, resource} = this.props,
             {scope, scopeIdTaken} = this.state;
-        const LINK_PARAMS = {
-            resourceId: resourceId,
-            scopeId: scopeId
-        };
+        const LINK_PARAMS = { resourceId, scopeId };
         return <div className='scopeForm'>
                     <h2>
                         {edit ?
@@ -247,7 +244,7 @@ ScopeForm.propTypes = {
     resourceId: React.PropTypes.string.isRequired,
     edit: React.PropTypes.bool.isRequired,
     essentialsActions: React.PropTypes.object.isRequired,
-    notificationActions: React.PropTypes.object.isRequired,
+    notificationActions: React.PropTypes.object.isRequired
 };
 ScopeForm.contextTypes = {
     router: React.PropTypes.object

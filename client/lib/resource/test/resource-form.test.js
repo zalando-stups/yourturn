@@ -1,11 +1,8 @@
 /* globals expect, sinon, Promise, $, TestUtils, reset, render, React */
-import EssentialsStore from 'common/src/data/essentials/essentials-store';
-import EssentialsTypes from 'common/src/data/essentials/essentials-types';
-import * as EssentialsGetter from 'common/src/data/essentials/essentials-getter';
 import * as EssentialsActions from 'common/src/data/essentials/essentials-actions';
+import * as KioActions from 'common/src/data/kio/kio-actions';
 
 import Form from 'resource/src/resource-form/resource-form.jsx';
-import {bindGettersToState} from 'common/src/util';
 
 const RES_ID = 'sales_order',
     TEST_RES = {
@@ -24,11 +21,8 @@ describe('The resource form view', () => {
         beforeEach(() => {
             reset();
 
-            let essentialsActions = Object.assign({}, EssentialsActions),
-                essentialsState = EssentialsStore(EssentialsStore(), {
-                    type: EssentialsTypes.FETCH_RESOURCE,
-                    payload: TEST_RES
-                });
+            const essentialsActions = Object.assign({}, EssentialsActions),
+                  kioActions = Object.assign({}, KioActions);
 
             actionSpy = sinon.stub(essentialsActions, 'saveResource', function () {
                 return Promise.resolve();
@@ -37,14 +31,18 @@ describe('The resource form view', () => {
             props = {
                 resourceId: RES_ID,
                 edit: true,
-                essentialsStore: bindGettersToState(essentialsState, EssentialsGetter),
-                essentialsActions
+                resource: TEST_RES,
+                userAccounts: [],
+                isUserWhitelisted: false,
+                essentialsActions,
+                kioActions
             };
             form = render(Form, props);
         });
 
-        it('should display the available symbol', () => {
-            TestUtils.findRenderedDOMComponentWithAttributeValue(form, 'data-block', 'available-symbol');
+        it('should display the available symbol initally', () => {
+            const symbol = TestUtils.findRenderedDOMComponentWithAttributeValue(form, 'data-block', 'symbol');
+            expect($(React.findDOMNode(symbol)).hasClass('fa-check')).to.be.true;
         });
 
         it('should disable the ID input', () => {

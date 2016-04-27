@@ -56,12 +56,6 @@ class ResourceForm extends React.Component {
     }
 
     _checkIfIdInvalid() {
-        // if (this.state.checkingId) {
-        //     // request to kio in flight
-        //     // wait until done
-        //     _.defer(this.checkIfIdInvalid.bind(this), arguments);
-        //     return;
-        // }
         // check if there already a resource with thid id
         if (this.props.resources.some(r => r.id === this.state.resource.id)) {
             const invalidReason = 'Resource ID already taken.';

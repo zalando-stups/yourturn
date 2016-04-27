@@ -31,15 +31,6 @@ const USER_ACTIONS = bindActionsToStore(REDUX, UserActions),
       NOTIFICATION_ACTIONS = bindActionsToStore(REDUX, NotificationActions),
       KIO_ACTIONS = bindActionsToStore(REDUX, KioActions);
 
-// QUICKFIX #133
-function isWhitelisted(token) {
-    // ignore whitelist if it's empty
-    if (Config.RESOURCE_WHITELIST.length === 0) {
-        return true;
-    }
-    return token && Config.RESOURCE_WHITELIST.indexOf(token.uid) >= 0;
-}
-
 function requireToken(state, UserActions) {
     let tokeninfo = UserGetter.getTokenInfo(state.user);
     if (!tokeninfo.uid) {
@@ -276,13 +267,13 @@ class CreateScopeFormHandler extends React.Component {
     render() {
         const {resourceId, scopeId} = this.props.params,
               resource = this.props.essentialsStore.getResource(resourceId),
-              scopes = this.props.essentialsStore.getScopes(resourceId);
+              existingScopeIds = this.props.essentialsStore.getScopes(resourceId).map(s => s.id);
         return <ScopeForm
                     resourceId={resourceId}
                     scopeId={scopeId}
                     resource={resource}
                     edit={false}
-                    scopes={scopes}
+                    existingScopeIds={scopes}
                     notificationActions={NOTIFICATION_ACTIONS}
                     essentialsActions={ESSENTIALS_ACTIONS} />;
     }
