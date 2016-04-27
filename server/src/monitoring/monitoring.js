@@ -40,6 +40,7 @@ if (fs.existsSync(APPDYNAMICS_CONFIG)) {
                 }
                 return prev;
             }, {});
+        config.tmpDir = '/tmp/appd';
         require('appdynamics').profile(config);
         winston.info('Successfully started appdynamics with config %s', JSON.stringify(config, null, 4));
     });
