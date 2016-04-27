@@ -19,8 +19,7 @@ class ResourceForm extends React.Component {
         this.state = {
             resource: edit ? props.resource : {resource_owners: []},
             checkingId: false,
-            invalidIdReason: '',
-            checkIfIdInvalid: _.debounce(this._checkIfIdInvalid.bind(this), 200)
+            invalidIdReason: ''
         };
     }
 
@@ -54,8 +53,13 @@ class ResourceForm extends React.Component {
         });
     }
 
-    _checkIfIdInvalid() {
-        console.debug('checking invalidity')
+    checkIfIdInvalid() {
+        if (this.state.checkingId) {
+            // request to kio in flight
+            // wait until done
+            _.defer(this.checkIfIdInvalid.bind(this), arguments);
+            return;
+        }
         // check if there already a resource with thid id
         if (this.props.resources.some(r => r.id === this.state.resource.id)) {
             const invalidReason = 'Resource ID already taken.';
@@ -75,7 +79,12 @@ class ResourceForm extends React.Component {
             this.setState({ checkingId: true });
             // fetching team
             this.props.kioActions.fetchApplication(app_id)
-            .then(({team_id}) => {
+            .then(({team_id, id}) => {
+                // maybe id is already different than what's in the form
+                if (id !== this.state.resource.id) {
+                    return;
+                }
+
                 // check if team_id is in userAccounts
                 const ownApp = this.props.userAccounts.indexOf(team_id) >= 0,
                       invalidReason = `Application ${app_id} is not yours. (Team: ${team_id})`;
@@ -111,7 +120,7 @@ class ResourceForm extends React.Component {
         this.state.resource[field] = evt.target[prop];
         this.setState({resource: this.state.resource});
         if (field === 'id') {
-            this.state.checkIfIdInvalid();
+            this.checkIfIdInvalid();
         }
     }
 
@@ -161,6 +170,7 @@ class ResourceForm extends React.Component {
                                                 invalidIdReason ?
                                                     'close' :
                                                     'check'}
+                                        spin={checkingId}
                                         fixedWidth />
                                 </div>
                                 <input
