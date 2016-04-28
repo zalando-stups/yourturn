@@ -160,7 +160,7 @@ class ResourceDetailHandler extends React.Component {
               resource = this.props.essentialsStore.getResource(resourceId),
               scopes = this.props.essentialsStore.getScopes(resourceId),
               whitelisted = this.props.userStore.isWhitelisted(),
-              canEdit = application && application.team_id ? userAccounts.indexOf(application.team_id) !== -1 : whitelisted;
+              canEdit = isWhitelistedOrOwner(userAccounts, application, whitelisted);
         return <ResourceDetail
                     resource={resource}
                     canEdit={canEdit}
@@ -199,7 +199,7 @@ class ScopeDetailHandler extends React.Component {
               scopeApps = this.props.essentialsStore.getScopeApplications(resourceId, scopeId),
               userAccounts = this.props.userStore.getUserCloudAccounts().map(a => a.name),
               whitelisted = this.props.userStore.isWhitelisted(),
-              canEdit = app && app.team_id ? userAccounts.indexOf(app.team_id) !== -1 : whitelisted;
+              canEdit = isWhitelistedOrOwner(userAccounts, app, whitelisted);
         return <ScopeDetail
                     resourceId={this.props.params.resourceId}
                     scopeId={this.props.params.scopeId}
