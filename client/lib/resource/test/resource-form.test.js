@@ -15,32 +15,93 @@ const RES_ID = 'sales_order',
 describe('The resource form view', () => {
     var props,
         actionSpy,
-        form;
+        form,
+        essentialsActions,
+        kioActions;
 
-    describe('in edit mode', () => {
-        beforeEach(() => {
-            reset();
+    beforeEach(() => {
+        reset();
 
-            const essentialsActions = Object.assign({}, EssentialsActions),
-                  kioActions = Object.assign({}, KioActions);
+        essentialsActions = Object.assign({}, EssentialsActions);
+        kioActions = Object.assign({}, KioActions);
 
-            actionSpy = sinon.stub(essentialsActions, 'saveResource', function () {
-                return Promise.resolve();
-            });
-
-            props = {
-                resourceId: RES_ID,
-                edit: true,
-                resource: TEST_RES,
-                userAccounts: [],
-                isUserWhitelisted: false,
-                essentialsActions,
-                kioActions
-            };
-            form = render(Form, props);
+        actionSpy = sinon.stub(essentialsActions, 'saveResource', function () {
+            return Promise.resolve();
         });
 
-        it('should display the available symbol initally', () => {
+        props = {
+            resourceId: RES_ID,
+            edit: true,
+            resource: TEST_RES,
+            userAccounts: [],
+            isUserWhitelisted: false,
+            existingResourceIds: [],
+            essentialsActions,
+            kioActions
+        };
+        form = render(Form, props);
+    });
+
+    describe('in create mode', () => {
+        it('should check already existing resources', done => {
+            props.existingResourceIds = ['kio.app'];
+            form = render(Form, props);
+            const input = TestUtils.findRenderedDOMComponentWithAttributeValue(form, 'data-block', 'id-input');
+            input.value = 'kio.app';
+            TestUtils.Simulate.change(input);
+            setTimeout(() => {
+                expect($(input).hasClass('invalid')).to.be.true;
+                done();
+            }, 200);
+        });
+
+        it('should check team membership of app', done => {
+            props.kioActions = {
+                fetchApplication: id => Promise.resolve({ id: 'kio', team_id: 'stups' })
+            };
+            props.userAccounts = ['stups'];
+            props.existingResourceIds = ['foo', 'bar'];
+            form = render(Form, props);
+            const input = TestUtils.findRenderedDOMComponentWithAttributeValue(form, 'data-block', 'id-input');
+            input.value = 'kio.application';
+            TestUtils.Simulate.change(input);
+            setTimeout(() => {
+                expect($(input).hasClass('valid')).to.be.true;
+                done();
+            }, 200);
+        });
+        it('should allow if user is whitelisted and no app exists', done => {
+            props.kioActions = {
+                fetchApplication: id => Promise.reject()
+            };
+            props.isUserWhitelisted = true;
+            form = render(Form, props);
+            const input = TestUtils.findRenderedDOMComponentWithAttributeValue(form, 'data-block', 'id-input');
+            input.value = 'kio.application';
+            TestUtils.Simulate.change(input);
+            setTimeout(() => {
+                expect($(input).hasClass('valid')).to.be.true;
+                done();
+            }, 200);
+        });
+
+        it('should not allow if user is not whitelisted and no app exists', done => {
+            props.kioActions = {
+                fetchApplication: id => Promise.reject()
+            };
+            form = render(Form, props);
+            const input = TestUtils.findRenderedDOMComponentWithAttributeValue(form, 'data-block', 'id-input');
+            input.value = 'kio.application';
+            TestUtils.Simulate.change(input);
+            setTimeout(() => {
+                expect($(input).hasClass('invalid')).to.be.true;
+                done();
+            }, 200);
+        });
+    });
+
+    describe('in edit mode', () => {
+        it('should display the available symbol', () => {
             const symbol = TestUtils.findRenderedDOMComponentWithAttributeValue(form, 'data-block', 'symbol');
             expect($(React.findDOMNode(symbol)).hasClass('fa-check')).to.be.true;
         });

@@ -62,7 +62,7 @@ class CreateResourceFormHandler extends React.Component {
     }
 
     render() {
-        const resources = this.props.essentialsStore.getResources(),
+        const existingResourceIds = this.props.essentialsStore.getResources().map(r => r.id),
               whitelisted = this.props.userStore.isWhitelisted(),
               userAccounts = this.props.userStore.getUserCloudAccounts().map(a => a.name);
         return <ResourceForm
@@ -72,7 +72,7 @@ class CreateResourceFormHandler extends React.Component {
                     kioActions={KIO_ACTIONS}
                     userAccounts={userAccounts}
                     isUserWhitelisted={whitelisted}
-                    resources={resources} />;
+                    existingResourceIds={existingResourceIds} />;
     }
 }
 CreateResourceFormHandler.displayName = 'CreateResourceFormHandler';

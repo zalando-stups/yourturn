@@ -1,3 +1,4 @@
+/* global ENV_TEST */
 import _ from 'lodash';
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -7,11 +8,6 @@ import * as Routes from 'resource/src/routes';
 import Markdown from 'common/src/markdown.jsx';
 import {getApplicationFromResource} from 'resource/src/util';
 import 'common/asset/less/resource/resource-form.less';
-
-// this is ugly...
-function setCustomValidity(message) {
-    document.getElementById('resource_id').setCustomValidity(message);
-}
 
 class ResourceForm extends React.Component {
     constructor(props) {
@@ -23,6 +19,12 @@ class ResourceForm extends React.Component {
             invalidIdReason: '',
             checkIfIdInvalid: _.throttle(this._checkIfIdInvalid.bind(this), 200)
         };
+    }
+
+    setCustomValidity(message) {
+        if (this.idInput && !ENV_TEST) {
+            this.idInput.setCustomValidity(message);
+        }
     }
 
     updateResourceOwner(owner) {
@@ -57,13 +59,13 @@ class ResourceForm extends React.Component {
 
     _checkIfIdInvalid() {
         // check if there already a resource with thid id
-        if (this.props.resources.some(r => r.id === this.state.resource.id)) {
+        if (this.props.existingResourceIds.some(id => id === this.state.resource.id)) {
             const invalidReason = 'Resource ID already taken.';
             this.setState({
                 invalidIdReason: invalidReason,
                 checkingId: false
             });
-            setCustomValidity(invalidReason);
+            this.setCustomValidity(invalidReason);
             return;
         }
         // check if first part before dot is an app and belongs to correct team
@@ -94,9 +96,9 @@ class ResourceForm extends React.Component {
                     checkingId: false
                 });
                 if (ownApp) {
-                    setCustomValidity('');
+                    this.setCustomValidity('');
                 } else {
-                    setCustomValidity(invalidReason);
+                    this.setCustomValidity(invalidReason);
                 }
             })
             .catch(e => {
@@ -107,9 +109,9 @@ class ResourceForm extends React.Component {
                     invalidIdReason: this.props.isUserWhitelisted ? '' : invalidReason
                 });
                 if (this.props.isUserWhitelisted) {
-                    setCustomValidity('');
+                    this.setCustomValidity('');
                 } else {
-                    setCustomValidity(invalidReason);
+                    this.setCustomValidity(invalidReason);
                 }
             });
         }
@@ -178,11 +180,13 @@ class ResourceForm extends React.Component {
                                     value={resource.id}
                                     onChange={this.update.bind(this, 'id', 'value')}
                                     disabled={edit}
+                                    ref={(ref) => this.idInput = ref}
                                     pattern='[a-z][a-z0-9-_]*(?:\.[a-z0-9-_]*)?[a-z0-9]'
                                     title='Only lowercase characters, at most one dot and any hyphens or underscores.'
                                     name='yourturn_resource_id'
                                     data-block='id-input'
                                     required={true}
+                                    className={!!invalidIdReason ? 'invalid' : 'valid'}
                                     placeholder='sales_order'
                                     type='text' />
                             </div>

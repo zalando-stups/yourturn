@@ -75,7 +75,7 @@
     "coveralls": "2.11.6",
     "css-loader": "0.23.1",
     "del": "2.2.0",
-    "domino": "1.0.21",
+    "domino": "1.0.24",
     "eslint": "1.10.3",
     "eslint-loader": "1.2.0",
     "eslint-plugin-react": "3.15.0",

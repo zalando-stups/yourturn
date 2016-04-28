@@ -136,6 +136,7 @@ class ScopeForm extends React.Component {
                                 name='yourturn_scope_summary'
                                 id='scope_summary'
                                 maxLength='140'
+                                required='required'
                                 value={scope.summary}
                                 onChange={this.update.bind(this, 'summary', 'value')}
                                 type='text' />
