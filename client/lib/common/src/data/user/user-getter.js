@@ -25,6 +25,10 @@ function getTokenInfo(state) {
 // QUICKFIX #133
 function isWhitelisted(state) {
     let token = state.get('tokeninfo').toJS();
+    return isTokenWhitelisted(token);
+}
+
+function isTokenWhitelisted(token) {
     // ignore whitelist if it's empty
     if (Config.RESOURCE_WHITELIST.length === 0) {
         return true;
@@ -35,6 +39,7 @@ function isWhitelisted(state) {
 export {
     getTokenInfo,
     isWhitelisted,
+    isTokenWhitelisted,
     getUserCloudAccounts,
     getUserInfo
 };

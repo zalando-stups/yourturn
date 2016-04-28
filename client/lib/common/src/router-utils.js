@@ -32,8 +32,8 @@ function wrapEnter(fetchFn = noop, authFn = noop) {
             fetch = fetchFn(routerState, state, replaceFn);
         Promise
         .resolve(fetch)
-        .then(() => {
-            let auth = authFn(routerState, state, replaceFn);
+        .then(function() {
+            const auth = authFn(routerState, state, ...arguments, replaceFn);
             Promise
             .resolve(auth)
             .then(err => {

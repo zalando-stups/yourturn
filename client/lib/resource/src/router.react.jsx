@@ -39,12 +39,14 @@ function requireToken(state, UserActions) {
     return Promise.resolve(tokeninfo);
 }
 
-function requireWhitelistedOrOwner(state, routerState) {
-    const whitelisted = UserGetter.isWhitelisted(state.user),
-          userAccounts = UserGetter.getUserCloudAccounts(state.user).map(a => a.name),
-          app = KioGetter.getApplication(state.kio, getApplicationFromResource(routerState.params.resourceId)),
-          canEdit = app && app.team_id ? userAccounts.indexOf(app.team_id) !== -1 : whitelisted;
-    if (!canEdit) {
+function isWhitelistedOrOwner(userAccounts, app, whitelisted) {
+    return app && app.team_id ? userAccounts.indexOf(app.team_id) !== -1 : whitelisted;
+}
+
+function requireWhitelistedOrOwner(state, token, app) {
+    const whitelisted = UserGetter.isTokenWhitelisted(token),
+          userAccounts = UserGetter.getUserCloudAccounts(state.user).map(a => a.name);
+    if (!isWhitelistedOrOwner(userAccounts, app, whitelisted)) {
         let error = new Error();
         error.name = 'Not allowed';
         error.message = 'You are not allowed to view this page. Sorry!';
@@ -104,18 +106,22 @@ class EditResourceFormHandler extends React.Component {
                     resource={resource} />;
     }
 }
-EditResourceFormHandler.isAllowed = function(routerState, state) {
-    return requireWhitelistedOrOwner(state, routerState);
+EditResourceFormHandler.isAllowed = function(routerState, state, [token, , app]) {
+    return requireWhitelistedOrOwner(state, token, app);
 };
 EditResourceFormHandler.displayName = 'EditResourceFormHandler';
 EditResourceFormHandler.propTypes = {
     params: React.PropTypes.object
 };
 EditResourceFormHandler.fetchData = function(routerState, state) {
+    const app = getApplicationFromResource(routerState.params.resourceId),
+          // we have to catch here as otherwise the route component is not displayed at all and the
+          // app might not exist
+          appPromise = app ? KIO_ACTIONS.fetchApplication(app).catch(e => undefined) : Promise.resolve();
     return Promise.all([
+        requireToken(state, USER_ACTIONS),
         ESSENTIALS_ACTIONS.fetchResource(routerState.params.resourceId),
-        KIO_ACTIONS.fetchApplication(getApplicationFromResource(routerState.params.resourceId)),
-        requireToken(state, USER_ACTIONS)
+        appPromise
     ]);
 };
 let ConnectedEditResourceFormHandler = connect(state => ({
@@ -239,20 +245,22 @@ class EditScopeFormHandler extends React.Component {
                     essentialsActions={ESSENTIALS_ACTIONS} />;
     }
 }
-EditScopeFormHandler.isAllowed = function(routerState, state) {
-    return requireWhitelistedOrOwner(state, routerState);
+EditScopeFormHandler.isAllowed = function(routerState, state, [token, , app]) {
+    return requireWhitelistedOrOwner(state, token, app);
 };
 EditScopeFormHandler.displayName = 'EditScopeFormHandler';
 EditScopeFormHandler.propTypes = {
     params: React.PropTypes.object
 };
 EditScopeFormHandler.fetchData = function(routerState, state) {
-    let {resourceId, scopeId} = routerState.params;
+    const {resourceId, scopeId} = routerState.params,
+          app = getApplicationFromResource(resourceId),
+          appPromise = app ? KIO_ACTIONS.fetchApplication(app).catch(e => undefined) : Promise.resolve();
     ESSENTIALS_ACTIONS.fetchResource(resourceId);
     return Promise.all([
+        requireToken(state, USER_ACTIONS),
         ESSENTIALS_ACTIONS.fetchScope(resourceId, scopeId),
-        KIO_ACTIONS.fetchApplication(getApplicationFromResource(resourceId)),
-        requireToken(state, USER_ACTIONS)
+        appPromise
     ]);
 };
 let ConnectedEditScopeFormHandler = connect(state => ({
@@ -273,24 +281,27 @@ class CreateScopeFormHandler extends React.Component {
                     scopeId={scopeId}
                     resource={resource}
                     edit={false}
-                    existingScopeIds={scopes}
+                    existingScopeIds={existingScopeIds}
                     notificationActions={NOTIFICATION_ACTIONS}
                     essentialsActions={ESSENTIALS_ACTIONS} />;
     }
 }
-CreateScopeFormHandler.isAllowed = function(routerState, state) {
-    return requireWhitelistedOrOwner(state, routerState);
+CreateScopeFormHandler.isAllowed = function(routerState, state, [token, , app]) {
+    return requireWhitelistedOrOwner(state, token, app);
 };
 CreateScopeFormHandler.displayName = 'CreateScopeFormHandler';
 CreateScopeFormHandler.propTypes = {
     params: React.PropTypes.object
 };
 CreateScopeFormHandler.fetchData = function(routerState, state) {
-    let {resourceId} = routerState.params;
+    const {resourceId} = routerState.params,
+          app = getApplicationFromResource(resourceId),
+          appPromise = app ? KIO_ACTIONS.fetchApplication(app).catch(e => undefined) : Promise.resolve();
     ESSENTIALS_ACTIONS.fetchResource(resourceId);
     return Promise.all([
+        requireToken(state, USER_ACTIONS),
         ESSENTIALS_ACTIONS.fetchScopes(resourceId),
-        requireToken(state, USER_ACTIONS)
+        appPromise
     ]);
 };
 let ConnectedCreateScopeFormHandler = connect(state => ({
