@@ -19,6 +19,7 @@ var LODASH_FUNCS = [
         // own
         'chain',
         'debounce',
+        'defer',
         'difference',
         'extend',
         'filter',
@@ -35,6 +36,7 @@ var LODASH_FUNCS = [
         'sortByOrder',
         'slice',
         'take',
+        'throttle',
         'times',
         'unique',
         'value',

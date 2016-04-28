@@ -39,22 +39,6 @@ describe('The essentials getter function', () => {
         expect(resources[0].id).to.equal('customer');
     });
 
-    it('#getResources should filter results', () => {
-        let state = Immutable.fromJS({
-            customer: {
-                id: 'customer',
-                name: 'Customer'
-            },
-            sales_order: new Pending()
-        });
-        state = {
-            resources: state
-        };
-        expect(Getter.getResources(state, 'customer').length).to.equal(1);
-        expect(Getter.getResources(state, 'Customer').length).to.equal(1);
-        expect(Getter.getResources(state, 'other').length).to.equal(0);
-    });
-
     it('#getScopes should not return fetch results', () => {
         let state = Immutable.fromJS({
                 customer: {

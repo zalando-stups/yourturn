@@ -1,7 +1,7 @@
 /**
  * @license
  * lodash 3.10.1 (Custom Build) <https://lodash.com/>
- * Build: `lodash modern include="chain,debounce,difference,extend,filter,findLastIndex,flatten,forOwn,groupBy,intersection,isEmpty,partition,pluck,reverse,sortBy,sortByOrder,slice,take,times,unique,value,values" -d -o lib/common/src/lodash.custom.js`
+ * Build: `lodash modern include="chain,debounce,defer,difference,extend,filter,findLastIndex,flatten,forOwn,groupBy,intersection,isEmpty,partition,pluck,reverse,sortBy,sortByOrder,slice,take,throttle,times,unique,value,values" -d -o lib/common/src/lodash.custom.js`
  * Copyright 2012-2015 The Dojo Foundation <http://dojofoundation.org/>
  * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
  * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
@@ -1070,6 +1070,23 @@
       return result || {};
     };
   }());
+
+  /**
+   * The base implementation of `_.delay` and `_.defer` which accepts an index
+   * of where to slice the arguments to provide to `func`.
+   *
+   * @private
+   * @param {Function} func The function to delay.
+   * @param {number} wait The number of milliseconds to delay invocation.
+   * @param {Object} args The arguments provide to `func`.
+   * @returns {number} Returns the timer id.
+   */
+  function baseDelay(func, wait, args) {
+    if (typeof func != 'function') {
+      throw new TypeError(FUNC_ERROR_TEXT);
+    }
+    return setTimeout(function() { func.apply(undefined, args); }, wait);
+  }
 
   /**
    * The base implementation of `_.difference` which accepts a single array
@@ -3961,6 +3978,27 @@
   }
 
   /**
+   * Defers invoking the `func` until the current call stack has cleared. Any
+   * additional arguments are provided to `func` when it's invoked.
+   *
+   * @static
+   * @memberOf _
+   * @category Function
+   * @param {Function} func The function to defer.
+   * @param {...*} [args] The arguments to invoke the function with.
+   * @returns {number} Returns the timer id.
+   * @example
+   *
+   * _.defer(function(text) {
+   *   console.log(text);
+   * }, 'deferred');
+   * // logs 'deferred' after one or more milliseconds
+   */
+  var defer = restParam(function(func, args) {
+    return baseDelay(func, 1, args);
+  });
+
+  /**
    * Creates a function that invokes `func` with the `this` binding of the
    * created function and arguments from `start` and beyond provided as an array.
    *
@@ -4009,6 +4047,61 @@
       otherArgs[start] = rest;
       return func.apply(this, otherArgs);
     };
+  }
+
+  /**
+   * Creates a throttled function that only invokes `func` at most once per
+   * every `wait` milliseconds. The throttled function comes with a `cancel`
+   * method to cancel delayed invocations. Provide an options object to indicate
+   * that `func` should be invoked on the leading and/or trailing edge of the
+   * `wait` timeout. Subsequent calls to the throttled function return the
+   * result of the last `func` call.
+   *
+   * **Note:** If `leading` and `trailing` options are `true`, `func` is invoked
+   * on the trailing edge of the timeout only if the the throttled function is
+   * invoked more than once during the `wait` timeout.
+   *
+   * See [David Corbacho's article](http://drupalmotion.com/article/debounce-and-throttle-visual-explanation)
+   * for details over the differences between `_.throttle` and `_.debounce`.
+   *
+   * @static
+   * @memberOf _
+   * @category Function
+   * @param {Function} func The function to throttle.
+   * @param {number} [wait=0] The number of milliseconds to throttle invocations to.
+   * @param {Object} [options] The options object.
+   * @param {boolean} [options.leading=true] Specify invoking on the leading
+   *  edge of the timeout.
+   * @param {boolean} [options.trailing=true] Specify invoking on the trailing
+   *  edge of the timeout.
+   * @returns {Function} Returns the new throttled function.
+   * @example
+   *
+   * // avoid excessively updating the position while scrolling
+   * jQuery(window).on('scroll', _.throttle(updatePosition, 100));
+   *
+   * // invoke `renewToken` when the click event is fired, but not more than once every 5 minutes
+   * jQuery('.interactive').on('click', _.throttle(renewToken, 300000, {
+   *   'trailing': false
+   * }));
+   *
+   * // cancel a trailing throttled call
+   * jQuery(window).on('popstate', throttled.cancel);
+   */
+  function throttle(func, wait, options) {
+    var leading = true,
+        trailing = true;
+
+    if (typeof func != 'function') {
+      throw new TypeError(FUNC_ERROR_TEXT);
+    }
+    if (options === false) {
+      leading = false;
+    } else if (isObject(options)) {
+      leading = 'leading' in options ? !!options.leading : leading;
+      trailing = 'trailing' in options ? !!options.trailing : trailing;
+    }
+    return debounce(func, wait, { 'leading': leading, 'maxWait': +wait, 'trailing': trailing });
   }
 
   /*------------------------------------------------------------------------*/
@@ -4718,6 +4811,7 @@
   lodash.callback = callback;
   lodash.chain = chain;
   lodash.debounce = debounce;
+  lodash.defer = defer;
   lodash.difference = difference;
   lodash.filter = filter;
   lodash.flatten = flatten;
@@ -4739,6 +4833,7 @@
   lodash.sortByOrder = sortByOrder;
   lodash.take = take;
   lodash.tap = tap;
+  lodash.throttle = throttle;
   lodash.thru = thru;
   lodash.times = times;
   lodash.uniq = uniq;

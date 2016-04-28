@@ -1,12 +1,11 @@
 /* globals expect, $, TestUtils, reset, render, React */
-import EssentialsStore from 'common/src/data/essentials/essentials-store';
-import EssentialsTypes from 'common/src/data/essentials/essentials-types';
-import * as EssentialsGetter from 'common/src/data/essentials/essentials-getter';
-
 import Form from 'resource/src/scope-form/scope-form.jsx';
-import {bindGettersToState} from 'common/src/util';
 
-const RES_ID = 'sales_order';
+const RES_ID = 'sales_order',
+      TEST_RES = {
+        id: RES_ID,
+        name: 'Sales Order'
+      };
 
 describe('The scope form view', () => {
     var props,
@@ -17,7 +16,11 @@ describe('The scope form view', () => {
             reset();
 
             props = {
-                essentialsStore: bindGettersToState(EssentialsStore(), EssentialsGetter)
+                existingScopeIds: [],
+                edit: false,
+                resourceId: RES_ID,
+                scopeId: 'test',
+                resource: TEST_RES
             };
             form = render(Form, props);
         });

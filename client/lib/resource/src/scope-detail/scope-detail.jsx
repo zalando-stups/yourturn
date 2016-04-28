@@ -15,14 +15,9 @@ class ScopeDetail extends React.Component {
     }
 
     render() {
-        let {resourceId, scopeId, userStore, essentialsStore} = this.props,
-            scope = essentialsStore.getScope(resourceId, scopeId),
-            applications = essentialsStore.getScopeApplications(resourceId, scopeId),
-            whitelisted = userStore.isWhitelisted();
-        const LINK_PARAMS = {
-            resourceId: resourceId,
-            scopeId: scopeId
-        };
+        let {resourceId, scopeId, scope, resource, scopeApps, canEdit} = this.props;
+        const LINK_PARAMS = { resourceId, scopeId };
+
         if (scope instanceof FetchResult) {
             return scope.isPending() ?
                     <Placeholder
@@ -45,7 +40,7 @@ class ScopeDetail extends React.Component {
                         </Link>
                         <Link
                             to={Routes.scpEdit(LINK_PARAMS)}
-                            className={`btn btn-primary ${whitelisted ? '' : 'btn-disabled'}`}>
+                            className={`btn btn-primary ${canEdit ? '' : 'btn-disabled'}`}>
                             <Icon name='edit' /> Edit {scope.id || scopeId}
                         </Link>
                     </div>
@@ -75,9 +70,9 @@ class ScopeDetail extends React.Component {
                             <tr>
                                 <th>Applications</th>
                                 <td>
-                                    {applications.length ?
+                                    {scopeApps.length ?
                                         <ul data-block='app-list'>
-                                            {applications.map(
+                                            {scopeApps.map(
                                                 app => <li key={app.id}>
                                                             <Link
                                                                 to={AppRoutes.appDetail({
