@@ -23,6 +23,7 @@ class ApplicationForm extends React.Component {
         } else {
             this.state.app = {
                 active: true,
+                criticality_level: 2,
                 publicly_accessible: false,
                 team_id: cloudAccounts.length ? cloudAccounts[0].name : undefined
             };
@@ -65,7 +66,11 @@ class ApplicationForm extends React.Component {
     }
 
     update(field, prop, evt) {
-        this.state.app[field] = evt.target[prop];
+        if (field === 'criticality_level') {
+            this.state.app[field] = parseInt(evt.target[prop], 10);
+        } else {
+            this.state.app[field] = evt.target[prop];
+        }
         if (!this.props.edit && this.state.autocompleteServiceUrl) {
             this.state.app.service_url = `${this.state.app.id || 'app'}.${this.state.app.team_id}.${SERVICE_URL_TLD}`;
         }
@@ -284,6 +289,17 @@ class ApplicationForm extends React.Component {
                                 onChange={this.update.bind(this, 'specification_type', 'value')}
                                 name='yourturn_app_specification_type'
                                 type='text' />
+                        </div>
+                        <div className='form-group'>
+                            <label htmlFor='criticality_level'>Criticality Level</label>
+                            <small>How critical your application is.</small>
+                            <select
+                                id='criticality_level'
+                                value={app.criticality_level}
+                                onChange={this.update.bind(this, 'criticality_level', 'value')}
+                                name='yourturn_app_criticality_level'>
+                                {[1, 2, 3].map(i => <option key={i} value={i}>{i}</option>)}
+                            </select>
                         </div>
                         <div className='form-group'>
                             <label htmlFor='description'>Description</label>

@@ -200,11 +200,8 @@ class EditAppFormHandler extends React.Component {
                         {...this.props} />
     }
 }
-EditAppFormHandler.isAllowed = function(routerState, state) {
-    let {applicationId} = routerState.params,
-        application = KioGetter.getApplication(state.kio, applicationId),
-        userTeams = UserGetter.getUserCloudAccounts(state.user),
-        isOwnTeam = userTeams
+EditAppFormHandler.isAllowed = function(routerState, state, [application, userTeams]) {
+    const isOwnTeam = userTeams
                         .map(t => t.name)
                         .indexOf(application.team_id) >= 0;
     if (!isOwnTeam) {
@@ -237,11 +234,19 @@ class AppDetailHandler extends React.Component {
     }
 
     render() {
+        const   {applicationId} = this.props.params,
+                app = this.props.kioStore.getApplication(applicationId),
+                api = this.props.twintipStore.getApi(applicationId),
+                versions = _.take(this.props.kioStore.getApplicationVersions(applicationId), 3),
+                editable = this.props.userStore.getUserCloudAccounts().map(a => a.name).indexOf(app.team_id) >= 0;
         return <ApplicationDetail
                     applicationId={this.props.params.applicationId}
+                    application={app}
+                    versions={versions}
+                    editable={editable}
+                    api={api}
                     kioActions={KIO_ACTIONS}
-                    notificationActions={NOTIFICATION_ACTIONS}
-                    {...this.props} />;
+                    notificationActions={NOTIFICATION_ACTIONS} />;
     }
 }
 AppDetailHandler.displayName = 'AppDetailHandler';

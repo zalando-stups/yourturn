@@ -38,29 +38,11 @@ function saveApplication(id, app) {
     copy.created_by = undefined;
     copy.last_modified = undefined;
     copy.last_modified_by = undefined;
-    copy.criticality_level = undefined;
     return request
             .put(`${Services.kio.url}${Services.kio.root}/${id}`)
             .type('json')
             .accept('json')
             .send(copy)
-            .oauth(Provider, RequestConfig)
-            .exec(saveRoute)
-            .then(res => res.body)
-            .catch(err => {
-                err.id = id;
-                throw err;
-            });
-}
-
-function saveApplicationCriticality(id, criticality) {
-    return request
-            .put(`${Services.kio.url}${Services.kio.root}/${id}/criticality`)
-            .type('json')
-            .accept('json')
-            .send({
-                criticality_level: criticality
-            })
             .oauth(Provider, RequestConfig)
             .exec(saveRoute)
             .then(res => res.body)
@@ -198,7 +180,6 @@ function loadTabAccounts() {
 let fetchAppsAction = flummoxCompatWrap(createAction(Type.FETCH_APPLICATIONS, fetchApplications)),
     fetchAppAction = flummoxCompatWrap(createAction(Type.FETCH_APPLICATION, fetchApplication)),
     saveAppAction = createAction(Type.SAVE_APPLICATION, saveApplication),
-    saveAppCritAction = createAction(Type.SAVE_APPLICATION_CRITICALITY, saveApplicationCriticality),
     fetchLatestVersAction = createAction(Type.FETCH_APPLICATION_VERSIONS, fetchLatestApplicationVersions),
     fetchVersAction = createAction(Type.FETCH_APPLICATION_VERSIONS, fetchApplicationVersions),
     fetchVerAction = flummoxCompatWrap(createAction(Type.FETCH_APPLICATION_VERSION, fetchApplicationVersion)),
@@ -215,7 +196,6 @@ export {
     fetchAppsAction as fetchApplications,
     fetchAppAction as fetchApplication,
     saveAppAction as saveApplication,
-    saveAppCritAction as saveApplicationCriticality,
     fetchLatestVersAction as fetchLatestApplicationVersions,
     fetchVersAction as fetchApplicationVersions,
     fetchVerAction as fetchApplicationVersion,
