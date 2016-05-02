@@ -28,7 +28,7 @@ COPY ./server/src/redis-utils.js /www/
 RUN touch /www/dist/env.js && chmod 0666 /www/dist/env.js
 
 # create appdynamics directory
-RUN mkdir /tmp/appd && chmod -R 0777 /tmp/appd
+RUN mkdir -p /tmp/appd && chmod -R 0777 /tmp/appd
 
 # create new relic log directory
 RUN touch /www/newrelic_agent.log && chmod 0666 /www/newrelic_agent.log
