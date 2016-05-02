@@ -130,7 +130,7 @@ function getPreferredAccount(state) {
 }
 
 function getTabAccounts(state) {
-    return state.applications.get('tabAccounts');
+    return state.applications.get('tabAccounts').toJS();
 }
 
 export {
