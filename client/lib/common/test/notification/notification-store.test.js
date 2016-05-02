@@ -21,4 +21,13 @@ describe('The redux notification store', () => {
         expect(msg.created).to.be.defined;
         expect(msg.message).to.equal('Hello');
     });
+
+    it('should return the same state if there is nothing to remove', () => {
+        const state = [],
+              newState = (Store(state, {
+                type: Type.REMOVE_NOTIFICATIONS_OLDER_THAN,
+                payload: 5000
+              }));
+        expect(state === newState).to.be.true;
+    });
 });

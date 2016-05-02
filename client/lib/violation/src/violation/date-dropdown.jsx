@@ -1,5 +1,7 @@
 import React from 'react';
 import Icon from 'react-fa';
+import Timestamp from 'react-time';
+import Config from 'common/src/config';
 import moment from 'moment';
 import Picker from 'react-date-picker';
 import 'react-date-picker/index.css';
@@ -11,7 +13,8 @@ class DateDropdown extends React.Component {
         super();
         this.state = {
             outsideClickHandler: null,
-            visible: false
+            visible: false,
+            range: props.range
         };
     }
 
@@ -22,13 +25,19 @@ class DateDropdown extends React.Component {
 
     handleClickOutside() {
         this.setState({
-            visible: false
+            visible: false,
+            range: this.props.range
         });
     }
 
-    onUpdate(stringRange, momentRange) {
-        if (this.props.onUpdate) {
-            this.props.onUpdate(momentRange);
+    componentWillReceiveProps({range}) {
+        this.setState({range});
+    }
+
+    onUpdate(_, range) {
+        this.setState({range});
+        if (this.props.onUpdate && range.length > 1) {
+            this.props.onUpdate(range);
         }
     }
 
@@ -47,21 +56,26 @@ class DateDropdown extends React.Component {
                 </header>
                 {this.state.visible ?
                     <div className='dateDropdown-dropdown'>
-                        <div className='dateDropdown-quickselect'>
-                            <small>Quickselect</small>
-                            <ul>
-                                <li onClick={() => this.updateWithMinus(1, 'day')}>Yesterday</li>
-                                <li onClick={() => this.updateWithMinus(1, 'week')}>Last 7 days</li>
-                                <li onClick={() => this.updateWithMinus(1, 'month')}>Last 4 weeks</li>
-                                <li onClick={() => this.updateWithMinus(6, 'months')}>Last 6 months</li>
-                                <li onClick={() => this.updateWithMinus(1, 'year')}>Last year</li>
-                            </ul>
-                        </div>
-                        <div className='dateDropdown-container'>
-                            <Picker
-                                weekStartDay={1}
-                                onRangeChange={this.onUpdate.bind(this)}
-                                range={this.props.range} />
+                        <header>
+                            <Timestamp value={this.props.range[0]} format={'YYYY-MM-DD'} /> – <Timestamp value={this.props.range[1]} format={'YYYY-MM-DD'} />
+                        </header>
+                        <div>
+                            <div className='dateDropdown-quickselect'>
+                                <small>Quickselect</small>
+                                <ul>
+                                    <li onClick={() => this.updateWithMinus(1, 'day')}>Yesterday</li>
+                                    <li onClick={() => this.updateWithMinus(1, 'week')}>Last 7 days</li>
+                                    <li onClick={() => this.updateWithMinus(1, 'month')}>Last 4 weeks</li>
+                                    <li onClick={() => this.updateWithMinus(6, 'months')}>Last 6 months</li>
+                                    <li onClick={() => this.updateWithMinus(1, 'year')}>Last year</li>
+                                </ul>
+                            </div>
+                            <div className='dateDropdown-container'>
+                                <Picker
+                                    weekStartDay={1}
+                                    range={this.state.range}
+                                    onRangeChange={this.onUpdate.bind(this)} />
+                            </div>
                         </div>
                     </div> :
                     null}

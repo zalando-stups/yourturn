@@ -5,6 +5,7 @@ import Timestamp from 'react-time';
 import Config from 'common/src/config';
 import Badge from 'common/src/badge.jsx'
 import 'common/asset/less/violation/violation-card.less';
+import * as Routes from 'violation/src/routes';
 import ViolationViz from 'violation/src/violation-viz.jsx';
 import listenToOutsideClick from 'react-onclickoutside/decorator';
 
@@ -28,6 +29,12 @@ class ViolationCard extends React.Component {
         });
     }
 
+    close() {
+        if (this.props.onClose) {
+            this.props.onClose();
+        }
+    }
+
     resolve(evt) {
         if (evt) {
             evt.preventDefault();
@@ -44,7 +51,7 @@ class ViolationCard extends React.Component {
         if (!this.props.violation) {
             return null;
         }
-        let {violation} = this.props,
+        let {violation, closable} = this.props,
             account = this.props.accounts[violation.account_id],
             {violation_type} = violation;
         return <div
@@ -54,9 +61,14 @@ class ViolationCard extends React.Component {
                     className={'violationCard ' +
                                 (violation.comment != null ? 'is-resolved ' : '')}>
                     <header>
+                        {closable ?
+                            <div onClick={this.close.bind(this)}
+                                 className='btn btn-default violationCard-close'>
+                                <Icon name='times' /> Close</div>
+                            : null}
                         <div className='violationCard-id'>
                             <Link
-                                to={`/violation/${violation.id}`}>{violation.id}
+                                to={`${Routes.vioDetail({violationId: violation.id})}`}>{violation.id}
                             </Link>
                         </div>
                         <div>
