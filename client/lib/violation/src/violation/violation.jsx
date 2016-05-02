@@ -39,7 +39,7 @@ class Violation extends React.Component {
     onSelectViolation({props, getDOMNode}) {
         const bbox = getDOMNode().getBoundingClientRect();
         this.setState({
-            selectedViolation: props.data.id === this.state.selectedViolation ? null : props.data.id,
+            selectedViolation: props.data.id,
             selectedViolationTop: window.scrollY + bbox.top + bbox.height
         });
     }
@@ -87,8 +87,10 @@ class Violation extends React.Component {
                             onChangeSort={this.onChangeSort.bind(this)}
                             onSetPage={this.onSetPage.bind(this)}
                             onSetPageSize={this.onSetPageSize.bind(this)}
-                            selectedViolation={this.state.selectedViolation}
-                            {...this.props} />
+                            violations={this.props.violations}
+                            accounts={this.props.accounts}
+                            pagingInfo={this.props.pagingInfo}
+                            params={this.props.params} />
                     </div>
                     <div style={{
                         display: !!this.state.selectedViolation ? 'block' : 'none',
@@ -97,11 +99,17 @@ class Violation extends React.Component {
                     }}>
                         {!!this.state.selectedViolation ?
                             <ViolationCard
+                                closable={true}
                                 editable={this.props.accounts[selectedViolation.account_id].userAccess}
-                                style={{maxWidth: 600, fontSize: '.66em', lineHeight: '1.75em'}}
+                                style={{
+                                    maxWidth: 600,
+                                    fontSize: '.66em',
+                                    lineHeight: '1.75em'
+                                }}
                                 accounts={this.props.accounts}
-                                onClickOutside={this.closeCard.bind(this)}
                                 autoFocus={true}
+                                onClickOutside={this.closeCard.bind(this)}
+                                onClose={this.closeCard.bind(this)}
                                 onResolve={this.onResolveViolation.bind(this)}
                                 violation={selectedViolation} />
                         :

@@ -7,6 +7,30 @@
     .violationTable {
         margin-bottom: 12em;
     }
+
+    .violationCard {
+        position: relative;
+        left: -10px;
+        &:before {
+            content: ' ';
+            width: 10px;
+            height: 42px;
+            top: -42px;
+            left: -10px;
+            background: @gray-light;
+            position: absolute;
+        }
+        &.is-resolved {
+            &:before {
+                background: @green;
+            }
+        }
+        &[data-priority="1"]:not(.is-resolved) {
+            &:before {
+                background: @red;
+            }
+        }
+    }
 }
 
 .violationViz {
@@ -83,9 +107,6 @@
                 td {
                     overflow: hidden;
                     border-bottom: 1px solid @gray-lighter;
-                }
-                &.selected {
-                    background: @orange-light;
                 }
             }
         }

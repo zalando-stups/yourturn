@@ -156,6 +156,13 @@ class ViolationTable extends React.Component {
         this.props.onSetPageSize(size);
     }
 
+    shouldComponentUpdate(nextProps, nextState) {
+        return this.props.violations !== nextProps.violations ||
+                this.props.accounts !== nextProps.accounts ||
+                this.props.params !== nextProps.params ||
+                this.state.numPages !== nextState.numPages;
+    }
+
     render() {
         var gridColumns = [
                 'account_id',
@@ -201,11 +208,6 @@ class ViolationTable extends React.Component {
                 customComponent: BooleanCell
             }];
 
-        const rowMeta = {
-            bodyCssClassName: (row) => this.props.selectedViolation === row.id ?
-            'standard-row selected' :
-            'standard-row'
-        };
         // ui of setting page size broken because of this https://github.com/GriddleGriddle/Griddle/issues/283
         return <Griddle
                     tableClassName='violationTable'
@@ -229,7 +231,6 @@ class ViolationTable extends React.Component {
                     showSettings={true}
                     columns={gridColumns}
                     columnMetadata={columnMetadata}
-                    rowMetadata={rowMeta}
                     results={this.props.violations} />;
     }
 }
