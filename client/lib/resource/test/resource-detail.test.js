@@ -1,14 +1,5 @@
 /* globals expect, $, TestUtils, reset, render, React */
-import EssentialsStore from 'common/src/data/essentials/essentials-store';
-import EssentialsTypes from 'common/src/data/essentials/essentials-types';
-import * as EssentialsGetter from 'common/src/data/essentials/essentials-getter';
-
-import UserStore from 'common/src/data/user/user-store';
-import UserTypes from 'common/src/data/user/user-types';
-import * as UserGetter from 'common/src/data/user/user-getter';
-
 import Detail from 'resource/src/resource-detail/resource-detail.jsx';
-import {bindGettersToState} from 'common/src/util';
 
 const ID = 'sales_order',
       TEST_RES = {
@@ -24,16 +15,11 @@ describe('The resource detail view', () => {
 
     beforeEach(() => {
         reset();
-        let essentialsState = EssentialsStore(EssentialsStore(), {
-            type: EssentialsTypes.FETCH_RESOURCE,
-            payload: TEST_RES
-        }),
-        userState = UserStore();
-
         props = {
             resourceId: ID,
-            essentialsStore: bindGettersToState(essentialsState, EssentialsGetter),
-            userStore: bindGettersToState(userState, UserGetter)
+            resource: TEST_RES,
+            scopes: [],
+            canEdit: true
         };
         detail = render(Detail, props);
     });

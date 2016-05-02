@@ -1,11 +1,8 @@
 /* globals expect, sinon, Promise, $, TestUtils, reset, render, React */
-import EssentialsStore from 'common/src/data/essentials/essentials-store';
-import EssentialsTypes from 'common/src/data/essentials/essentials-types';
-import * as EssentialsGetter from 'common/src/data/essentials/essentials-getter';
 import * as EssentialsActions from 'common/src/data/essentials/essentials-actions';
+import * as KioActions from 'common/src/data/kio/kio-actions';
 
 import Form from 'resource/src/resource-form/resource-form.jsx';
-import {bindGettersToState} from 'common/src/util';
 
 const RES_ID = 'sales_order',
     TEST_RES = {
@@ -18,33 +15,95 @@ const RES_ID = 'sales_order',
 describe('The resource form view', () => {
     var props,
         actionSpy,
-        form;
+        form,
+        essentialsActions,
+        kioActions;
 
-    describe('in edit mode', () => {
-        beforeEach(() => {
-            reset();
+    beforeEach(() => {
+        reset();
 
-            let essentialsActions = Object.assign({}, EssentialsActions),
-                essentialsState = EssentialsStore(EssentialsStore(), {
-                    type: EssentialsTypes.FETCH_RESOURCE,
-                    payload: TEST_RES
-                });
+        essentialsActions = Object.assign({}, EssentialsActions);
+        kioActions = Object.assign({}, KioActions);
 
-            actionSpy = sinon.stub(essentialsActions, 'saveResource', function () {
-                return Promise.resolve();
-            });
-
-            props = {
-                resourceId: RES_ID,
-                edit: true,
-                essentialsStore: bindGettersToState(essentialsState, EssentialsGetter),
-                essentialsActions
-            };
-            form = render(Form, props);
+        actionSpy = sinon.stub(essentialsActions, 'saveResource', function () {
+            return Promise.resolve();
         });
 
+        props = {
+            resourceId: RES_ID,
+            edit: true,
+            resource: TEST_RES,
+            userAccounts: [],
+            isUserWhitelisted: false,
+            existingResourceIds: [],
+            essentialsActions,
+            kioActions
+        };
+        form = render(Form, props);
+    });
+
+    describe('in create mode', () => {
+        it('should check already existing resources', done => {
+            props.existingResourceIds = ['kio.app'];
+            form = render(Form, props);
+            const input = TestUtils.findRenderedDOMComponentWithAttributeValue(form, 'data-block', 'id-input');
+            input.value = 'kio.app';
+            TestUtils.Simulate.change(input);
+            setTimeout(() => {
+                expect($(input).hasClass('invalid')).to.be.true;
+                done();
+            }, 200);
+        });
+
+        it('should check team membership of app', done => {
+            props.kioActions = {
+                fetchApplication: id => Promise.resolve({ id: 'kio', team_id: 'stups' })
+            };
+            props.userAccounts = ['stups'];
+            props.existingResourceIds = ['foo', 'bar'];
+            form = render(Form, props);
+            const input = TestUtils.findRenderedDOMComponentWithAttributeValue(form, 'data-block', 'id-input');
+            input.value = 'kio.application';
+            TestUtils.Simulate.change(input);
+            setTimeout(() => {
+                expect($(input).hasClass('valid')).to.be.true;
+                done();
+            }, 200);
+        });
+        it('should allow if user is whitelisted and no app exists', done => {
+            props.kioActions = {
+                fetchApplication: id => Promise.reject()
+            };
+            props.isUserWhitelisted = true;
+            form = render(Form, props);
+            const input = TestUtils.findRenderedDOMComponentWithAttributeValue(form, 'data-block', 'id-input');
+            input.value = 'kio.application';
+            TestUtils.Simulate.change(input);
+            setTimeout(() => {
+                expect($(input).hasClass('valid')).to.be.true;
+                done();
+            }, 200);
+        });
+
+        it('should not allow if user is not whitelisted and no app exists', done => {
+            props.kioActions = {
+                fetchApplication: id => Promise.reject()
+            };
+            form = render(Form, props);
+            const input = TestUtils.findRenderedDOMComponentWithAttributeValue(form, 'data-block', 'id-input');
+            input.value = 'kio.application';
+            TestUtils.Simulate.change(input);
+            setTimeout(() => {
+                expect($(input).hasClass('invalid')).to.be.true;
+                done();
+            }, 200);
+        });
+    });
+
+    describe('in edit mode', () => {
         it('should display the available symbol', () => {
-            TestUtils.findRenderedDOMComponentWithAttributeValue(form, 'data-block', 'available-symbol');
+            const symbol = TestUtils.findRenderedDOMComponentWithAttributeValue(form, 'data-block', 'symbol');
+            expect($(React.findDOMNode(symbol)).hasClass('fa-check')).to.be.true;
         });
 
         it('should disable the ID input', () => {

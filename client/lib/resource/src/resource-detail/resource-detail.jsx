@@ -14,20 +14,17 @@ class ResourceDetail extends React.Component {
     }
 
     render() {
-        let {resourceId, essentialsStore, userStore} = this.props,
-            whitelisted = userStore.isWhitelisted(),
-            resource = essentialsStore.getResource(resourceId),
-            scopes = essentialsStore.getScopes(resourceId),
+        let {resourceId, canEdit, resource, scopes} = this.props,
             appScopes = scopes.filter(s => !s.is_resource_owner_scope),
-            ownerScopes = scopes.filter(s => s.is_resource_owner_scope);
-        const LINK_PARAMS = {
-            resourceId: resourceId
-        };
+            ownerScopes = scopes.filter(s => s.is_resource_owner_scope)
+
+        const LINK_PARAMS = {resourceId};
         if (resource instanceof FetchResult) {
             return resource.isPending() ?
                     <Placeholder
                         resourceId={resourceId} /> :
-                    <DefaultError error={resource.getResult()} />;
+                    <DefaultError
+                        error={resource.getResult()} />;
         }
 
         return <div className='resourceDetail'>
@@ -40,12 +37,12 @@ class ResourceDetail extends React.Component {
                         </Link>
                         <Link
                             to={Routes.resEdit(LINK_PARAMS)}
-                            className={`btn btn-default ${ whitelisted ? '' : 'btn-disabled'}`}>
+                            className={`btn btn-default ${ canEdit ? '' : 'btn-disabled'}`}>
                             <Icon name='edit' /> Edit {resource.name}
                         </Link>
                         <Link
                             to={Routes.scpCreate(LINK_PARAMS)}
-                            className={`btn btn-primary ${ whitelisted ? '' : 'btn-disabled'}`}>
+                            className={`btn btn-primary ${ canEdit ? '' : 'btn-disabled'}`}>
                             <Icon name='plus' /> Create Scope
                         </Link>
                     </div>

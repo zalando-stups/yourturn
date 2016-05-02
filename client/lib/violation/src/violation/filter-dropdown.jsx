@@ -34,6 +34,7 @@ class FilterDropdown extends React.Component {
     }
 
     handleClickOutside() {
+        this.filter('');
         this.setState({
             visible: false
         });
@@ -58,9 +59,9 @@ class FilterDropdown extends React.Component {
         this.setState(this.state);
     }
 
-    onItemFilter(evt) {
-        let filter = evt.target.value.toLowerCase(),
-            lowerCaseItems = this.props.items.map(i => i.toLowerCase());
+    filter(term) {
+        let filter = term.toLowerCase(),
+            lowerCaseItems = this.props.items.map(i => i.toLowerCase ? i.toLowerCase() : i);
         if (filter) {
             this.setState({
                 filtered: true,
@@ -71,6 +72,10 @@ class FilterDropdown extends React.Component {
                 filtered: false
             });
         }
+    }
+
+    onItemFilter(evt) {
+        this.filter(evt.target.value.toLowerCase());
     }
 
     publishSelectionUpdate(data) {

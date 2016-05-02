@@ -19,18 +19,22 @@ function padLeading(digit, number, totalLength) {
 
 
 function formatDate(ts) {
-    const date = new Date(ts);
-    let year = date.getUTCFullYear();
-    let month = date.getUTCMonth() + 1;
-    let day = date.getUTCDate();
-    let hour = date.getUTCHours();
-    let minute = date.getUTCMinutes();
+    try {
+        const date = new Date(ts);
+        let year = date.getUTCFullYear();
+        let month = date.getUTCMonth() + 1;
+        let day = date.getUTCDate();
+        let hour = date.getUTCHours();
+        let minute = date.getUTCMinutes();
 
-    month = padLeading(0, month, 2);
-    day = padLeading(0, day, 2);
-    hour = padLeading(0, hour, 2);
-    minute = padLeading(0, minute, 2);
-    return `${year}-${month}-${day} ${hour}:${minute}`;
+        month = padLeading(0, month, 2);
+        day = padLeading(0, day, 2);
+        hour = padLeading(0, hour, 2);
+        minute = padLeading(0, minute, 2);
+        return `${year}-${month}-${day} ${hour}:${minute}`;
+    } catch(e) {
+        return '-';
+    }
 }
 
 const FORMATTED_DATES = {};
@@ -49,7 +53,7 @@ function TimestampCell({data}) {
 }
 
 function DefaultValueCell({data}) {
-    return <div>{!!data ? data : '-'}</div>
+    return <div>{data || '-'}</div>;
 }
 
 function BooleanCell({data}) {

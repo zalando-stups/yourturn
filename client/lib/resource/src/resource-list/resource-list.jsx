@@ -1,5 +1,6 @@
 import React from 'react';
 import Icon from 'react-fa';
+import fuzzy from 'fuzzysearch';
 import {Link} from 'react-router';
 import * as Routes from 'resource/src/routes';
 import 'common/asset/less/resource/resource-list.less';
@@ -19,10 +20,9 @@ class ResourceList extends React.Component {
     }
 
     render() {
-        let {essentialsStore, userStore} = this.props,
+        let {resources} = this.props,
             {term} = this.state,
-            whitelisted = userStore.isWhitelisted(),
-            resources = essentialsStore.getResources(term);
+            filteredResources = resources.filter(r => fuzzy(term.toLowerCase(), r.name.toLowerCase()));
         return <div className='resourceList'>
                     <h2>Resource Types</h2>
                     <div className='u-info'>
@@ -33,7 +33,7 @@ class ResourceList extends React.Component {
                     <div className='btn-group'>
                         <Link
                             to={Routes.resCreate()}
-                            className={`btn btn-primary ${whitelisted ? '' : 'btn-disabled'}`}>
+                            className='btn btn-primary'>
                             <Icon name='plus' /> Create Resource Type
                         </Link>
                     </div>
@@ -55,9 +55,9 @@ class ResourceList extends React.Component {
                             </div>
                         </form>
                     </div>
-                    {resources.length ?
+                    {filteredResources.length ?
                         <ul data-block='resources'>
-                            {resources.map(
+                            {filteredResources.map(
                                 res =>
                                     <li key={res.id}>
                                         <Link
