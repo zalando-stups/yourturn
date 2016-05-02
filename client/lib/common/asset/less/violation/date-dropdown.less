@@ -25,6 +25,16 @@
         outline: 1px solid @gray;
         box-shadow: 0px 5px 15px @gray-light;
         display: flex;
+        flex-direction: column;
+
+        header {
+            text-align: center;
+        }
+
+        > *:not(header) {
+            display: flex;
+            flex-direction: row;
+        }
 
         .dateDropdown-quickselect {
             flex: 0 0 auto;
