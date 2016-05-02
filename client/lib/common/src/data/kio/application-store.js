@@ -43,7 +43,7 @@ function ApplicationStore(state = DEFAULT_STATE, action) {
         return state.set(PREF_ACCOUNT, action.payload);
     } else if (type === Types.LOAD_TAB_ACCOUNTS ||
                type === Types.SAVE_TAB_ACCOUNTS) {
-        return state.set('tabAccounts', action.payload);
+        return state.set('tabAccounts', Immutable.fromJS(action.payload));
     }
     return state;
 }
