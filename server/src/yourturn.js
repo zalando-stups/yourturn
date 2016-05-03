@@ -1,6 +1,3 @@
-/* global require, process */
-var fs = require('fs');
-
 // set up logging
 var IN_PROD = process.env.NODE_ENV === 'production',
     winston = require('winston');
@@ -19,7 +16,8 @@ require('./monitoring/monitoring');
 require('./env');
 
 // this is the actual server code
-var express = require('express'),
+var fs = require('fs'),
+    express = require('express'),
     compression = require('compression'),
     server = express(),
     routes = require('./routes/index'),
