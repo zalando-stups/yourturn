@@ -22,7 +22,6 @@ var fs = require('fs'),
     server = express(),
     routes = require('./routes/index'),
     oauth = require('./middleware/oauth'),
-    request = require('superagent'),
     index = fs.readFileSync('./index.html'),
     ONE_WEEK =  1000 *    // 1s
                   60 *    // 1m

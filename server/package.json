@@ -14,6 +14,7 @@
   },
   "homepage": "https://github.com/zalando-stups/yourturn",
   "dependencies": {
+    "appdynamics": "4.1.10",
     "newrelic": "1.24.0",
     "winston": "2.1.1",
     "express": "4.13.3",
@@ -22,6 +23,8 @@
     "node-tokens": "0.0.9",
     "bluebird": "3.1.1",
     "redis": "2.4.2",
-    "superagent-bluebird-promise": "3.0.0"
+    "superagent-bluebird-promise": "3.0.0",
+    "xml2js": "0.4.16",
+    "camel-case": "1.2.2"
   }
 }
