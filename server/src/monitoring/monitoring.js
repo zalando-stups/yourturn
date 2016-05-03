@@ -6,7 +6,6 @@ var camel = require('camel-case'),
     APPDYNAMICS_CONFIG = '/agents/appdynamics-jvm/conf/controller-info.xml',
     NEW_RELIC_CONFIG = '/agents/newrelic/newrelic.yml';
 
-
 // FIRST, LETS CHECK FOR APPDYNAMICS
 if (fs.existsSync(APPDYNAMICS_CONFIG)) {
     var xmlFile;
@@ -21,9 +20,9 @@ if (fs.existsSync(APPDYNAMICS_CONFIG)) {
             return;
         }
         var config = Object
-            .keys(result)
+            .keys(result['controller-info'])
             .map(function(key) {
-                return [camel(key), result[key][0]];
+                return [camel(key), result['controller-info'][key][0]];
             })
             .reduce(function(prev, cur) {
                 var key = cur[0] === 'controllerHost' ? 'controllerHostName' : cur[0],
@@ -40,7 +39,6 @@ if (fs.existsSync(APPDYNAMICS_CONFIG)) {
                 }
                 return prev;
             }, {});
-        config.tmpDir = '/tmp/appd';
         require('appdynamics').profile(config);
         winston.info('Successfully started appdynamics with config %s', JSON.stringify(config, null, 4));
     });
