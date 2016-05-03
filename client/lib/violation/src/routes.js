@@ -11,7 +11,7 @@ function short({shortened}) {
 }
 
 function vioDetail({violationId}) {
-    return `violation/${violationId}`;
+    return `/violation/${violationId}`;
 }
 
 export {

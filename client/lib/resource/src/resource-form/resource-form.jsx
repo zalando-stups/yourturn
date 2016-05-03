@@ -1,9 +1,12 @@
+/* global ENV_TEST */
+import _ from 'lodash';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Icon from 'react-fa';
 import {Link} from 'react-router';
 import * as Routes from 'resource/src/routes';
 import Markdown from 'common/src/markdown.jsx';
+import {getApplicationFromResource} from 'resource/src/util';
 import 'common/asset/less/resource/resource-form.less';
 
 class ResourceForm extends React.Component {
@@ -11,15 +14,17 @@ class ResourceForm extends React.Component {
         super();
         let {edit, resourceId} = props;
         this.state = {
-            resource: edit ? props.essentialsStore.getResource(resourceId) : {resource_owners: []}
+            resource: edit ? props.resource : {resource_owners: []},
+            checkingId: false,
+            invalidIdReason: '',
+            checkIfIdInvalid: _.throttle(this._checkIfIdInvalid.bind(this), 200)
         };
     }
 
-    setCustomValidity(evt) {
-        ReactDOM.findDOMNode(evt.target).setCustomValidity(
-            this.state.resourceIdTaken ?
-                'Resource ID is already taken' :
-                '');
+    setCustomValidity(message) {
+        if (this.idInput && !ENV_TEST) {
+            this.idInput.setCustomValidity(message);
+        }
     }
 
     updateResourceOwner(owner) {
@@ -52,17 +57,77 @@ class ResourceForm extends React.Component {
         });
     }
 
+    _checkIfIdInvalid() {
+        // check if there already a resource with thid id
+        if (this.props.existingResourceIds.some(id => id === this.state.resource.id)) {
+            const invalidReason = 'Resource ID already taken.';
+            this.setState({
+                invalidIdReason: invalidReason,
+                checkingId: false
+            });
+            this.setCustomValidity(invalidReason);
+            return;
+        }
+        // check if first part before dot is an app and belongs to correct team
+        const app_id = getApplicationFromResource(this.state.resource.id);
+        if (!app_id) {
+            this.setState({
+                checkingId: false,
+                invalidIdReason: 'Invalid format.'
+            });
+        }
+        // at least the regex matches
+        else {
+            this.setState({ checkingId: true });
+            // fetching team
+            this.props.kioActions.fetchApplication(app_id)
+            .then(({team_id, id}) => {
+                // maybe id is already different than what's in the form
+                if (id !== app_id) {
+                    return;
+                }
+                // check if team_id is in userAccounts
+                const ownApp = this.props.userAccounts.indexOf(team_id) >= 0,
+                      invalidReason = `Application ${app_id} is not yours. (Team: ${team_id})`;
+                this.setState({
+                    invalidIdReason: ownApp ?
+                                        '' :
+                                        invalidReason,
+                    checkingId: false
+                });
+                if (ownApp) {
+                    this.setCustomValidity('');
+                } else {
+                    this.setCustomValidity(invalidReason);
+                }
+            })
+            .catch(e => {
+                // app does not exist or kio is down, so fall back to whitelisting
+                const invalidReason = 'Not a whitelisted user.';
+                this.setState({
+                    checkingId: false,
+                    invalidIdReason: this.props.isUserWhitelisted ? '' : invalidReason
+                });
+                if (this.props.isUserWhitelisted) {
+                    this.setCustomValidity('');
+                } else {
+                    this.setCustomValidity(invalidReason);
+                }
+            });
+        }
+    }
+
     update(field, prop, evt) {
         this.state.resource[field] = evt.target[prop];
-        this.setState({
-            resource: this.state.resource,
-            resourceIdTaken: this.props.essentialsStore.getResource(this.state.resource.id) !== false
-        });
+        this.setState({resource: this.state.resource});
+        if (field === 'id') {
+            this.state.checkIfIdInvalid();
+        }
     }
 
     render() {
         let {edit, resourceId} = this.props,
-            {resourceIdTaken, resource} = this.state;
+            {invalidIdReason, resource, checkingId} = this.state;
         const LINK_PARAMS = {
             resourceId: resourceId
         };
@@ -97,35 +162,33 @@ class ResourceForm extends React.Component {
                             <small>The ID of the resource type</small>
                             <div className='input-group'>
                                 <div className='input-addon'>
-                                    {resourceIdTaken && !edit ?
-                                        <Icon
-                                            data-block='taken-symbol'
-                                            title='Resource ID is already taken.'
-                                            className='is-taken'
-                                            name='close'
-                                            fixedWidth />
-                                        :
-                                        <Icon
-                                            data-block='available-symbol'
-                                            title='Resource ID is available.'
-                                            className='is-available'
-                                            name='check'
-                                            fixedWidth />}
+                                    <Icon
+                                        data-block='symbol'
+                                        title={invalidIdReason || 'Resource ID is valid.'}
+                                        className={invalidIdReason ? 'is-taken' : 'is-valid'}
+                                        name={checkingId ?
+                                                'refresh' :
+                                                invalidIdReason ?
+                                                    'close' :
+                                                    'check'}
+                                        spin={checkingId}
+                                        fixedWidth />
                                 </div>
                                 <input
-                                        id='resource_id'
-                                        autoFocus='autofocus'
-                                        value={resource.id}
-                                        onChange={this.update.bind(this, 'id', 'value')}
-                                        onKeyUp={this.setCustomValidity.bind(this)}
-                                        disabled={edit}
-                                        pattern='[a-z][a-z0-9-_]*(?:\.[a-z0-9-_]*)?[a-z0-9]'
-                                        title='Only lowercase characters, at most one dot and any hyphens or underscores.'
-                                        name='yourturn_resource_id'
-                                        data-block='id-input'
-                                        required={true}
-                                        placeholder='sales_order'
-                                        type='text' />
+                                    id='resource_id'
+                                    autoFocus='autofocus'
+                                    value={resource.id}
+                                    onChange={this.update.bind(this, 'id', 'value')}
+                                    disabled={edit}
+                                    ref={(ref) => this.idInput = ref}
+                                    pattern='[a-z][a-z0-9-_]*(?:\.[a-z0-9-_]*)?[a-z0-9]'
+                                    title='Only lowercase characters, at most one dot and any hyphens or underscores.'
+                                    name='yourturn_resource_id'
+                                    data-block='id-input'
+                                    required={true}
+                                    className={!!invalidIdReason ? 'invalid' : 'valid'}
+                                    placeholder='sales_order'
+                                    type='text' />
                             </div>
                         </div>
                         <div className='form-group'>
@@ -199,7 +262,6 @@ ResourceForm.displayName = 'ResourceForm';
 ResourceForm.propTypes = {
     edit: React.PropTypes.bool.isRequired,
     resourceId: React.PropTypes.string,
-    essentialsStore: React.PropTypes.object.isRequired,
     essentialsActions: React.PropTypes.object.isRequired,
     notificationActions: React.PropTypes.object.isRequired
 };
