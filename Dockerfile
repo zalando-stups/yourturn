@@ -29,6 +29,10 @@ RUN touch /www/dist/env.js && chmod 0666 /www/dist/env.js
 
 # create appdynamics directory
 RUN mkdir -p /tmp/appd && chmod -R 0777 /tmp/appd
+RUN mkdir -p /tmp/appd/proxy && chmod -R 0777 /tmp/appd/proxy
+RUN mkdir -p /tmp/appd/proxy/c && chmod -R 0777 /tmp/appd/proxy/c
+RUN mkdir -p /tmp/appd/proxy/l && chmod -R 0777 /tmp/appd/proxy/l
+RUN mkdir -p /tmp/appd/proxy/r && chmod -R 0777 /tmp/appd/proxy/r
 
 # create new relic log directory
 RUN touch /www/newrelic_agent.log && chmod 0666 /www/newrelic_agent.log

@@ -3,8 +3,14 @@ var camel = require('camel-case'),
     yml2js = require('js-yaml'),
     winston = require('winston'),
     fs = require('fs'),
+    shell = require('shelljs'),
     APPDYNAMICS_CONFIG = '/agents/appdynamics-jvm/conf/controller-info.xml',
-    NEW_RELIC_CONFIG = '/agents/newrelic/newrelic.yml';
+    NEW_RELIC_CONFIG = '/agents/newrelic/newrelic.yml',
+    PROXY_DIR = '/tmp/appd/proxy',
+    PROXY_COMM_DIR = PROXY_DIR + '/c',
+    PROXY_LOGS_DIR = PROXY_DIR + '/l',
+    PROXY_RUNTIME_DIR = PROXY_DIR + '/r';
+
 
 // FIRST, LETS CHECK FOR APPDYNAMICS
 if (fs.existsSync(APPDYNAMICS_CONFIG)) {
@@ -21,10 +27,10 @@ if (fs.existsSync(APPDYNAMICS_CONFIG)) {
         }
         var config = Object
             .keys(result['controller-info'])
-            .map(function(key) {
+            .map(function (key) {
                 return [camel(key), result['controller-info'][key][0]];
             })
-            .reduce(function(prev, cur) {
+            .reduce(function (prev, cur) {                                                                                                                             q
                 var key = cur[0] === 'controllerHost' ? 'controllerHostName' : cur[0],
                     val = cur[1];
                 // convert string values
@@ -39,6 +45,15 @@ if (fs.existsSync(APPDYNAMICS_CONFIG)) {
                 }
                 return prev;
             }, {});
+        var proxyCmd = require('appdynamics-proxy').dir + '/runProxy'
+            + ' -r ' + PROXY_RUNTIME_DIR
+            + ' -j ' + require('appdynamics-jre').dir
+            + ' -- '
+            + PROXY_COMM_DIR + ' ' + PROXY_LOGS_DIR
+            + ' -Dappdynamics.agent.uniqueHostId=' + config.nodeName;
+        shell.exec(proxyCmd, {async: true, silent: true});
+        config.proxyAutolaunchDisabled = true;
+        config.proxyCtrlDir = PROXY_COMM_DIR;
         require('appdynamics').profile(config);
         winston.info('Successfully started appdynamics with config %s', JSON.stringify(config, null, 4));
     });
