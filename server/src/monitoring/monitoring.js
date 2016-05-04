@@ -30,7 +30,7 @@ if (fs.existsSync(APPDYNAMICS_CONFIG)) {
             .map(function (key) {
                 return [camel(key), result['controller-info'][key][0]];
             })
-            .reduce(function (prev, cur) {                                                                                                                             q
+            .reduce(function (prev, cur) {
                 var key = cur[0] === 'controllerHost' ? 'controllerHostName' : cur[0],
                     val = cur[1];
                 // convert string values
