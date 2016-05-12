@@ -3,7 +3,6 @@ import {
     fetchApplications,
     fetchApplication,
     saveApplication,
-    saveApplicationCriticality,
     fetchApplicationVersions,
     fetchApplicationVersion,
     saveApplicationVersion,
@@ -35,11 +34,6 @@ describe('The kio actions', () => {
         it('#saveApplication', () => {
             mitm.on('request', assertOAuthHeader);
             saveApplication(APP_ID);
-        });
-
-        it('#saveApplicationCriticality', () => {
-            mitm.on('request', assertOAuthHeader);
-            saveApplicationCriticality(APP_ID);
         });
 
         it('#fetchApplications', () => {
