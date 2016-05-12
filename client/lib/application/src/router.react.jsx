@@ -64,7 +64,7 @@ class AppListHandler extends React.Component {
 
         if (!tabAccounts.length) {
             // no tab accounts => use cloud accounts, do nothing
-            KIO_ACTIONS.saveTabAccounts(cloudAccounts);
+            KIO_ACTIONS.saveTabAccounts(cloudAccounts.sort());
             return;
         }
         if (team && tabAccounts.indexOf(team) === -1) {
@@ -86,7 +86,6 @@ class AppListHandler extends React.Component {
 
     componentWillMount() {
         this.checkForTeam(this.props);
-        KIO_ACTIONS.loadTabAccounts();
         const {team, manageTabs} = this.props.location.query;
         if (manageTabs) {
             TEAM_ACTIONS.fetchAccounts();
@@ -148,6 +147,7 @@ AppListHandler.contextTypes = {
 };
 AppListHandler.fetchData = function(routerState, state) {
     // we need to know which accounts a user has access to
+    KIO_ACTIONS.loadTabAccounts();
     return requireAccounts(state, USER_ACTIONS);
 };
 var ConnectedAppListHandler =

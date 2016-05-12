@@ -10,7 +10,7 @@ function NotificationStore(notifications = [], action) {
     if (action.type === Types.ADD_NOTIFICATION) {
         // add
         let [message, type] = action.payload;
-        notifications = notifications.concat([{
+        return notifications.concat([{
                     type: type || 'default',
                     message: message,
                     id: uniq(),
@@ -19,12 +19,15 @@ function NotificationStore(notifications = [], action) {
     } else if (action.type === Types.REMOVE_NOTIFICATION) {
         // remove
         let id = action.payload;
-        notifications = notifications.filter(n => n.id !== id);
+        return notifications.filter(n => n.id !== id);
     } else if (action.type === Types.REMOVE_NOTIFICATIONS_OLDER_THAN) {
         // remove old
-        let now = Date.now(),
-            ms = action.payload;
-        notifications = notifications.filter(n => n.created > (now - ms));
+        const now = Date.now(),
+              ms = action.payload,
+              containsOld = notifications.some(n => n.created <= (now - ms));
+        if (containsOld) {
+            return notifications.filter(n => n.created > (now - ms));
+        }
     }
     return notifications;
 }
