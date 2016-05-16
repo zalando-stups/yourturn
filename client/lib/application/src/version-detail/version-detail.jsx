@@ -126,11 +126,11 @@ class VersionDetail extends React.Component {
                             className={`btn btn-default ${isOwnApplication ? '' : 'btn-disabled'}`}>
                             <Icon name='edit' /> Edit {versionId}
                         </Link>
-                        <Link
-                            to={Routes.verApproval(LINK_PARAMS)}
-                            className='btn btn-primary'>
-                            <Icon name='edit' /> Approvals <Badge>{approvals.length}</Badge>
-                        </Link>
+                        //<Link
+                        //    to={Routes.verApproval(LINK_PARAMS)}
+                        //    className='btn btn-primary'>
+                        //    <Icon name='edit' /> Approvals <Badge>{approvals.length}</Badge>
+                        //</Link>
                     </div>
 
                     <table className='table'>
