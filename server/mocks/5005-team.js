@@ -15,6 +15,14 @@ var teams = {
             alias: []
         }
     },
+    userTeams = {
+        npiccolotto: [{
+            id: 'stups',
+            id_name: 'STUPS',
+            name: 'stups',
+            alias: ['stups-test']
+        }]
+    },
     accounts = [{
             id: '1029384756',
             name: 'acid',
@@ -73,6 +81,20 @@ server.get('/accounts/:id', function(req,res){
         res.status(200).send(userAccounts[id]);
     }, Math.random() * 2000 );
 });
+
+server.get('/users/:user/accounts', function(req, res) {
+    setTimeout(function() {
+        var user = req.params.user;
+        res.status(200).send(userAccounts[user] || []);
+    }, Math.random() * 2000);
+})
+
+server.get('/users/:user/teams', function(req, res) {
+    setTimeout(function() {
+        var user = req.params.user;
+        res.status(200).send(userTeams[user] || []);
+    }, Math.random() * 2000);
+})
 
 server.get('/teams/:id', function(req, res) {
     setTimeout(function() {

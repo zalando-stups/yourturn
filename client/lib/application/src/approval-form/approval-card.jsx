@@ -35,7 +35,7 @@ class ApprovalCard extends React.Component {
                                     https={true}
                                     email={userinfo.email || 'foo@example.com'} />
                                 <div title={approval.user_id}>
-                                    {userinfo ? userinfo.name.split(' ')[0] : approval.user_id}
+                                    {userinfo && userinfo.name ? userinfo.name.split(' ')[0] : approval.user_id}
                                 </div>
                             </div>
                             <div className='grid-col col-2-3 approvalCard-meta'>

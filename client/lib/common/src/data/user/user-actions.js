@@ -56,9 +56,22 @@ function fetchUserInfo(userId) {
             });
 }
 
+function fetchTeams(userId) {
+    return request
+            .get(`${ENV_DEVELOPMENT ? 'http://localhost:5005' : ''}/users/${userId}/teams`)
+            .accept('json')
+            .oauth(Provider, RequestConfig)
+            .exec(saveRoute)
+            .then(({body}) => body)
+            .catch(e => {
+                e.id = userId;
+                throw e;
+            });
+}
+
 function fetchAccounts(userId) {
     return request
-            .get(`${ENV_DEVELOPMENT ? 'http://localhost:5005' : ''}/accounts/${userId}`)
+            .get(`${ENV_DEVELOPMENT ? 'http://localhost:5005' : ''}/users/${userId}/accounts`)
             .accept('json')
             .oauth(Provider, RequestConfig)
             .exec(saveRoute)
@@ -72,12 +85,14 @@ function fetchAccounts(userId) {
 let fetchInfoAction = createAction(Type.FETCH_TOKENINFO, fetchTokenInfo),
     deleteTokenAction = createAction(Type.DELETE_TOKENINFO, deleteTokenInfo),
     fetchUserAction = createAction(Type.FETCH_USERINFO, fetchUserInfo),
-    fetchAccountsAction = createAction(Type.FETCH_USERACCOUNTS, fetchAccounts);
+    fetchAccountsAction = createAction(Type.FETCH_USERACCOUNTS, fetchAccounts),
+    fetchTeamsAction = createAction(Type.FETCH_USERTEAMS, fetchTeams);
 
 export {
     fetchAccessToken,
     fetchInfoAction as fetchTokenInfo,
     deleteTokenAction as deleteTokenInfo,
     fetchUserAction as fetchUserInfo,
-    fetchAccountsAction as fetchAccounts
+    fetchAccountsAction as fetchAccounts,
+    fetchTeamsAction as fetchTeams
 };

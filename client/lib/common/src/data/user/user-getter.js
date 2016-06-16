@@ -4,6 +4,10 @@ function getUserCloudAccounts(state) {
     return state.get('accounts').toJS();
 }
 
+function getUserTeams(state) {
+    return state.get('teams').toJS();
+}
+
 function getUserInfo(state, user) {
     let info;
     if (user) {
@@ -41,5 +45,6 @@ export {
     isWhitelisted,
     isTokenWhitelisted,
     getUserCloudAccounts,
-    getUserInfo
+    getUserInfo,
+    getUserTeams
 };

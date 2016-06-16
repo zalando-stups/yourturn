@@ -3,6 +3,7 @@ import KIO_BASE_URL from 'KIO_BASE_URL';
 import MINT_BASE_URL from 'MINT_BASE_URL';
 import ESSENTIALS_BASE_URL from 'ESSENTIALS_BASE_URL';
 import PIERONE_BASE_URL from 'PIERONE_BASE_URL';
+import MAGNIFICENT_BASE_URL from 'MAGNIFICENT_BASE_URL';
 
 const SERVICES = {
     kio: {
@@ -16,6 +17,9 @@ const SERVICES = {
         root: '/apps',
         id: 'application_id',
         searchQuery: 'search'
+    },
+    magnificent: {
+        url: MAGNIFICENT_BASE_URL
     },
     mint: {
         url: MINT_BASE_URL,

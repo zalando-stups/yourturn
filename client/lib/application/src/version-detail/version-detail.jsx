@@ -6,7 +6,6 @@ import Timestamp from 'react-time';
 import Config from 'common/src/config';
 import ScmSourceWarning from './scm-source-warning.jsx';
 import Markdown from 'common/src/markdown.jsx';
-import {parseArtifact} from 'application/src/util';
 import FetchResult from 'common/src/fetch-result';
 import Placeholder from './placeholder.jsx';
 import DefaultError from 'common/src/error.jsx';
@@ -87,13 +86,7 @@ class VersionDetail extends React.Component {
     }
 
     render() {
-        let {applicationId, versionId, kioStore, pieroneStore, userStore} = this.props,
-            application = kioStore.getApplication(applicationId),
-            version = kioStore.getApplicationVersion(applicationId, versionId),
-            {team, artifact, tag} = parseArtifact(version.artifact),
-            scmSource = pieroneStore.getScmSource(team, artifact, tag),
-            approvals = kioStore.getApprovals(applicationId, versionId),
-            isOwnApplication = userStore.getUserCloudAccounts().some(t => t.name === application.team_id);
+        let {applicationId, versionId, application, version, approvalCount, editable, tags, artifactInfo, scmSource} = this.props;
 
         const LINK_PARAMS = {
             applicationId: applicationId,
@@ -123,13 +116,13 @@ class VersionDetail extends React.Component {
                         </Link>
                         <Link
                             to={Routes.verEdit(LINK_PARAMS)}
-                            className={`btn btn-default ${isOwnApplication ? '' : 'btn-disabled'}`}>
+                            className={`btn btn-default ${editable ? '' : 'btn-disabled'}`}>
                             <Icon name='edit' /> Edit {versionId}
                         </Link>
                         <Link
                             to={Routes.verApproval(LINK_PARAMS)}
                             className='btn btn-primary'>
-                            <Icon name='edit' /> Approvals <Badge>{approvals.length}</Badge>
+                            <Icon name='edit' /> Approvals <Badge>{approvalCount}</Badge>
                         </Link>
                     </div>
 
@@ -157,10 +150,10 @@ class VersionDetail extends React.Component {
                     </table>
 
                     <ScmSourceWarning
-                        pieroneStore={this.props.pieroneStore}
-                        scmSource={scmSource}
-                        application={application}
-                        version={version} />
+                        artifactInfo={artifactInfo}
+                        tags={tags}
+                        artifact={version.artifact}
+                        scmSource={scmSource} />
 
                     <h4 className='versionDetail-notesTitle'>Notes</h4>
                     {version.notes ?

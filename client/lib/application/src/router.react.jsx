@@ -9,7 +9,9 @@ import {
 } from 'common/src/util';
 import {
     wrapEnter,
-    requireAccounts
+    requireAccounts,
+    requireAuth,
+    requireTeams
 } from 'common/src/router-utils';
 import {connect} from 'react-redux';
 
@@ -20,6 +22,7 @@ import * as PieroneGetter from 'common/src/data/pierone/pierone-getter';
 import * as TwintipGetter from 'common/src/data/twintip/twintip-getter';
 import * as MintGetter from 'common/src/data/mint/mint-getter';
 import * as EssentialsGetter from 'common/src/data/essentials/essentials-getter';
+import * as MagnificentGetter from 'common/src/data/magnificent/magnificent-getter';
 
 import * as NotificationActions from 'common/src/data/notification/notification-actions';
 import * as KioActions from 'common/src/data/kio/kio-actions';
@@ -29,6 +32,7 @@ import * as TwintipActions from 'common/src/data/twintip/twintip-actions';
 import * as MintActions from 'common/src/data/mint/mint-actions';
 import * as EssentialsActions from 'common/src/data/essentials/essentials-actions';
 import * as PieroneActions from 'common/src/data/pierone/pierone-actions';
+import * as MagnificentActions from 'common/src/data/magnificent/magnificent-actions';
 
 import ApplicationList from './application-list/application-list.jsx';
 import ApplicationForm from './application-form/application-form.jsx';
@@ -49,7 +53,8 @@ const MINT_ACTIONS = bindActionsToStore(REDUX, MintActions),
       ESSENTIALS_ACTIONS = bindActionsToStore(REDUX, EssentialsActions),
       NOTIFICATION_ACTIONS = bindActionsToStore(REDUX, NotificationActions),
       TEAM_ACTIONS = bindActionsToStore(REDUX, TeamActions),
-      TWINTIP_ACTIONS = bindActionsToStore(REDUX, TwintipActions);
+      TWINTIP_ACTIONS = bindActionsToStore(REDUX, TwintipActions),
+      MAGNIFICENT_ACTIONS = bindActionsToStore(REDUX, MagnificentActions);
 
 class AppListHandler extends React.Component {
     constructor() {
@@ -148,7 +153,9 @@ AppListHandler.contextTypes = {
 AppListHandler.fetchData = function(routerState, state) {
     // we need to know which accounts a user has access to
     KIO_ACTIONS.loadTabAccounts();
-    return requireAccounts(state, USER_ACTIONS);
+    return Promise.all([
+        requireAccounts(state, USER_ACTIONS)
+    ]);
 };
 var ConnectedAppListHandler =
         connect(state => ({
@@ -163,8 +170,10 @@ class CreateAppFormHandler extends React.Component {
     }
 
     render() {
+        const userTeams = this.props.userStore.getUserTeams();
         return  <ApplicationForm
                     edit={false}
+                    userTeams={userTeams}
                     notificationActions={NOTIFICATION_ACTIONS}
                     kioActions={KIO_ACTIONS}
                     {...this.props} />;
@@ -176,7 +185,7 @@ CreateAppFormHandler.propTypes = {
 };
 CreateAppFormHandler.fetchData = function(routerState, state) {
     return Promise.all([
-        requireAccounts(state, USER_ACTIONS),
+        requireTeams(state, USER_ACTIONS),
         KIO_ACTIONS.fetchApplications()
     ]);
 };
@@ -192,19 +201,25 @@ class EditAppFormHandler extends React.Component {
     }
 
     render() {
+        const {applicationId} = this.props.params,
+              userAccounts = this.props.userStore.getUserCloudAccounts().map(a => a.name),
+              userTeams = this.props.userStore.getUserTeams().map(t => t.id),
+              accountsAndTeams = new Set(userAccounts.concat(userTeams)),
+              application = this.props.kioStore.getApplication(applicationId),
+              applicationIds = this.props.kioStore.getApplications().map(a => a.id);
+
         return <ApplicationForm
-                        edit={true}
-                        applicationId={this.props.params.applicationId}
-                        notificationActions={NOTIFICATION_ACTIONS}
-                        kioActions={KIO_ACTIONS}
-                        {...this.props} />
+                    edit={true}
+                    applicationId={applicationId}
+                    notificationActions={NOTIFICATION_ACTIONS}
+                    kioActions={KIO_ACTIONS}
+                    application={application}
+                    applicationIds={applicationIds}
+                    userTeams={[...accountsAndTeams]} />
     }
 }
-EditAppFormHandler.isAllowed = function(routerState, state, [application, userTeams]) {
-    const isOwnTeam = userTeams
-                        .map(t => t.name)
-                        .indexOf(application.team_id) >= 0;
-    if (!isOwnTeam) {
+EditAppFormHandler.isAllowed = function(routerState, state, [hasAuth]) {
+    if (!hasAuth) {
         let error = new Error();
         error.name = 'Forbidden';
         error.message = 'You can only edit your own applications!';
@@ -217,10 +232,12 @@ EditAppFormHandler.propTypes = {
     params: React.PropTypes.object.isRequired
 };
 EditAppFormHandler.fetchData = function(routerState, state) {
-    return Promise.all([
-            KIO_ACTIONS.fetchApplication(routerState.params.applicationId),
+    return KIO_ACTIONS.fetchApplication(routerState.params.applicationId)
+        .then(app => Promise.all([
+            requireAuth(state, app.team_id, MAGNIFICENT_ACTIONS),
+            requireTeams(state, USER_ACTIONS),
             requireAccounts(state, USER_ACTIONS)
-        ]);
+        ]));
 };
 var ConnectedEditAppFormHandler =
     connect(state => ({
@@ -237,8 +254,8 @@ class AppDetailHandler extends React.Component {
         const   {applicationId} = this.props.params,
                 app = this.props.kioStore.getApplication(applicationId),
                 api = this.props.twintipStore.getApi(applicationId),
-                versions = _.take(this.props.kioStore.getApplicationVersions(applicationId), 3),
-                editable = this.props.userStore.getUserCloudAccounts().map(a => a.name).indexOf(app.team_id) >= 0;
+                editable = app.team_id ? this.props.magnificentStore.getAuth(app.team_id) : false,
+                versions = _.take(this.props.kioStore.getApplicationVersions(applicationId), 3);
         return <ApplicationDetail
                     applicationId={this.props.params.applicationId}
                     application={app}
@@ -254,16 +271,19 @@ AppDetailHandler.propTypes = {
     params: React.PropTypes.object.isRequired
 };
 AppDetailHandler.fetchData = function(routerState, state) {
-    let {applicationId} = routerState.params;
-    KIO_ACTIONS.fetchApplication(applicationId);
+    const {applicationId} = routerState.params;
     KIO_ACTIONS.fetchApplicationVersions(applicationId);
     TWINTIP_ACTIONS.fetchApi(applicationId);
+    return KIO_ACTIONS
+            .fetchApplication(applicationId)
+            .then(({team_id}) => requireAuth(state, team_id, MAGNIFICENT_ACTIONS));
 };
 var ConnectedAppDetailHandler =
     connect(state => ({
         kioStore: bindGettersToState(state.kio, KioGetter),
         userStore: bindGettersToState(state.user, UserGetter),
-        twintipStore: bindGettersToState(state.twintip, TwintipGetter)
+        twintipStore: bindGettersToState(state.twintip, TwintipGetter),
+        magnificentStore: bindGettersToState(state.magnificent, MagnificentGetter)
     }))(AppDetailHandler);
 
 class OAuthFormHandler extends React.Component {
@@ -272,11 +292,22 @@ class OAuthFormHandler extends React.Component {
     }
 
     render() {
+        const  {applicationId} = this.props.params,
+               {kioStore, magnificentStore, essentialsStore, mintStore} = this.props,
+               application = kioStore.getApplication(applicationId),
+               editable = magnificentStore.getAuth(application.team_id),
+               oauthConfig = mintStore.getOAuthConfig(applicationId),
+               allScopes = essentialsStore.getAllScopes(),
+               resourceOwnerScopes = allScopes.filter(s => s.is_resource_owner_scope);
         return <OAuthForm
-                    applicationId={this.props.params.applicationId}
+                    applicationId={applicationId}
+                    editable={editable}
+                    application={application}
+                    allScopes={allScopes}
+                    resourceOwnerScopes={resourceOwnerScopes}
+                    oauthConfig={oauthConfig}
                     mintActions={MINT_ACTIONS}
-                    notificationActions={NOTIFICATION_ACTIONS}
-                    {...this.props} />;
+                    notificationActions={NOTIFICATION_ACTIONS} />;
     }
 }
 OAuthFormHandler.displayName = 'OAuthFormHandler';
@@ -284,21 +315,23 @@ OAuthFormHandler.propTypes = {
     params: React.PropTypes.object.isRequired
 };
 OAuthFormHandler.fetchData = function(routerState, state) {
-    let id = routerState.params.applicationId;
+    const id = routerState.params.applicationId,
+          app = KioGetter.getApplication(state.kio, id);
     ESSENTIALS_ACTIONS.fetchAllScopes();
-    if (!KioGetter.getApplication(state.kio, id)) {
-        KIO_ACTIONS.fetchApplication(id);
+    if (!app) {
+        KIO_ACTIONS.fetchApplication(id)
+            .then(({team_id}) => requireAuth(state, team_id, MAGNIFICENT_ACTIONS))
+    } else {
+        requireAuth(state, app.team_id, MAGNIFICENT_ACTIONS);
     }
-    return Promise.all([
-        requireAccounts(state, USER_ACTIONS),
-        MINT_ACTIONS.fetchOAuthConfig(id)
-    ]);
+    return MINT_ACTIONS.fetchOAuthConfig(id);
 };
 let ConnectedOAuthFormHandler = connect(state => ({
-    mintStore: bindGettersToState(state.mint, MintGetter),
     kioStore: bindGettersToState(state.kio, KioGetter),
+    mintStore: bindGettersToState(state.mint, MintGetter),
     userStore: bindGettersToState(state.user, UserGetter),
-    essentialsStore: bindGettersToState(state.essentials, EssentialsGetter)
+    essentialsStore: bindGettersToState(state.essentials, EssentialsGetter),
+    magnificentStore: bindGettersToState(state.magnificent, MagnificentGetter)
 }))(OAuthFormHandler);
 
 class AccessFormHandler extends React.Component {
@@ -307,11 +340,24 @@ class AccessFormHandler extends React.Component {
     }
 
     render() {
+        const {applicationId} = this.props.params,
+            {magnificentStore, kioStore, mintStore, essentialsStore, userStore} = this.props,
+            application = kioStore.getApplication(applicationId),
+            oauthConfig = mintStore.getOAuthConfig(applicationId),
+            cloudAccounts = userStore.getUserCloudAccounts(),
+            defaultAccount = cloudAccounts.length ? cloudAccounts[0].id : false,
+            allScopes = essentialsStore.getAllScopes(),
+            applicationScopes = allScopes.filter(s => !s.is_resource_owner_scope),
+            editable = magnificentStore.getAuth(application.team_id);
         return <AccessForm
-                        applicationId={this.props.params.applicationId}
-                        mintActions={MINT_ACTIONS}
-                        notificationActions={NOTIFICATION_ACTIONS}
-                        {...this.props} />;
+                applicationId={this.props.params.applicationId}
+                editable={editable}
+                oauthConfig={oauthConfig}
+                mintActions={MINT_ACTIONS}
+                defaultAccount={defaultAccount}
+                applicationScopes={applicationScopes}
+                notificationActions={NOTIFICATION_ACTIONS}
+                application={application} />;
     }
 }
 AccessFormHandler.displayName = 'AccessFormHandler';
@@ -321,19 +367,23 @@ AccessFormHandler.propTypes = {
 AccessFormHandler.fetchData = function(routerState, state) {
     let id = routerState.params.applicationId;
     ESSENTIALS_ACTIONS.fetchAllScopes();
-    if (!KioGetter.getApplication(state.kio, id)) {
-        KIO_ACTIONS.fetchApplication(id);
+    const application = KioGetter.getApplication(state.kio, id);
+    if (!application) {
+        KIO_ACTIONS
+            .fetchApplication(id)
+            .then(({team_id}) => requireAuth(state, team_id, MAGNIFICENT_ACTIONS));
+    } else {
+        requireAuth(state, application.team_id, MAGNIFICENT_ACTIONS)
     }
-    return Promise.all([
-        MINT_ACTIONS.fetchOAuthConfig(id),
-        requireAccounts(state, USER_ACTIONS)
-    ]);
+    requireAccounts(state, USER_ACTIONS);
+    return MINT_ACTIONS.fetchOAuthConfig(id);
 };
 let ConnectedAccessFormHandler = connect(state => ({
     mintStore: bindGettersToState(state.mint, MintGetter),
     kioStore: bindGettersToState(state.kio, KioGetter),
     userStore: bindGettersToState(state.user, UserGetter),
-    essentialsStore: bindGettersToState(state.essentials, EssentialsGetter)
+    essentialsStore: bindGettersToState(state.essentials, EssentialsGetter),
+    magnificentStore: bindGettersToState(state.magnificent, MagnificentGetter)
 }))(AccessFormHandler);
 
 class VersionListHandler extends React.Component {
@@ -369,9 +419,26 @@ class VersionDetailHandler extends React.Component {
     }
 
     render() {
+        const {applicationId, versionId} = this.props.params,
+            {kioStore, magnificentStore, pieroneStore} = this.props,
+            application = kioStore.getApplication(applicationId),
+            version = kioStore.getApplicationVersion(applicationId, versionId),
+            {team, artifact, tag} = parseArtifact(version.artifact),
+            artifactInfo = {team, artifact, tag},
+            tags = pieroneStore.getTags(team, artifact),
+            approvalCount = kioStore.getApprovals(applicationId, versionId).length,
+            editable = magnificentStore.getAuth(application.team_id),
+            scmSource = pieroneStore.getScmSource(team, artifact, tag);;
         return <VersionDetail
                     applicationId={this.props.params.applicationId}
                     versionId={this.props.params.versionId}
+                    application={application}
+                    version={version}
+                    editable={editable}
+                    approvalCount={approvalCount}
+                    scmSource={scmSource}
+                    artifactInfo={artifactInfo}
+                    tags={tags}
                     {...this.props} />;
     }
 }
@@ -383,12 +450,6 @@ VersionDetailHandler.fetchData = function(routerState, state) {
     let {applicationId, versionId} = routerState.params;
     // fetch approvals for version
     KIO_ACTIONS.fetchApprovals(applicationId, versionId);
-
-    // fetch the application if it's not there aleady
-    if (!KioGetter.getApplication(state.kio, applicationId)) {
-        KIO_ACTIONS.fetchApplication(applicationId);
-    }
-
     // fetch version itself
     KIO_ACTIONS
         .fetchApplicationVersion(applicationId, versionId)
@@ -398,11 +459,16 @@ VersionDetailHandler.fetchData = function(routerState, state) {
             PIERONE_ACTIONS.fetchScmSource(team, artifact, tag);
             PIERONE_ACTIONS.fetchTags(team, artifact);
         });
+    // fetch the application if it's not there aleady
+    const app = KioGetter.getApplication(state.kio, applicationId),
+        appPromise = !app ? KIO_ACTIONS.fetchApplication(applicationId) : Promise.resolve(app);
+    return appPromise.then(({team_id}) => requireAuth(state, team_id, MAGNIFICENT_ACTIONS));
 };
 let ConnectedVersionDetailHandler = connect(state => ({
     kioStore: bindGettersToState(state.kio, KioGetter),
     userStore: bindGettersToState(state.user, UserGetter),
-    pieroneStore: bindGettersToState(state.pierone, PieroneGetter)
+    pieroneStore: bindGettersToState(state.pierone, PieroneGetter),
+    magnificentStore: bindGettersToState(state.magnificent, MagnificentGetter)
 }))(VersionDetailHandler);
 
 class CreateVersionFormHandler extends React.Component {
@@ -411,13 +477,22 @@ class CreateVersionFormHandler extends React.Component {
     }
 
     render() {
+        const {applicationId, versionId} = this.props.params,
+            {kioStore} = this.props,
+            application = kioStore.getApplication(applicationId),
+            version = kioStore.getApplicationVersion(applicationId, versionId),
+            approvalCount = kioStore.getApprovals(applicationId, versionId).length,
+            versionIds = kioStore.getApplicationVersions(applicationId).map(v => v.id);
         return <VersionForm
                     edit={false}
-                    applicationId={this.props.params.applicationId}
-                    versionId={this.props.params.versionId}
+                    applicationId={applicationId}
+                    versionId={versionId}
+                    application={application}
+                    version={version}
+                    versionIds={versionIds}
+                    approvalCount={approvalCount}
                     kioActions={KIO_ACTIONS}
-                    notificationActions={NOTIFICATION_ACTIONS}
-                    {...this.props} />;
+                    notificationActions={NOTIFICATION_ACTIONS} />;
     }
 }
 CreateVersionFormHandler.displayName = 'CreateVersionFormHandler';
@@ -425,21 +500,15 @@ CreateVersionFormHandler.propTypes = {
     params: React.PropTypes.object.isRequired
 };
 CreateVersionFormHandler.fetchData = function(routerState, state) {
-    let {applicationId} = routerState.params;
-    return Promise.all([
-        requireAccounts(state, USER_ACTIONS),
-        !!KioGetter.getApplication(state.kio, applicationId) ?
-            Promise.resolve() :
-            KIO_ACTIONS.fetchApplication(applicationId),
-        KIO_ACTIONS.fetchApplicationVersions(applicationId)
-    ]);
+    const {applicationId} = routerState.params,
+          app = KioGetter.getApplication(state.kio, applicationId),
+          appPromise = !!app ?
+                            Promise.resolve(app) :
+                            KIO_ACTIONS.fetchApplication(applicationId);
+    return appPromise.then(({team_id}) => requireAuth(state, team_id, MAGNIFICENT_ACTIONS))
 };
-CreateVersionFormHandler.isAllowed = function(routerState, state) {
-    let {applicationId} = routerState.params,
-        application = KioGetter.getApplication(state.kio, applicationId),
-        userTeams = UserGetter.getUserCloudAccounts(state.user),
-        isOwnTeam = userTeams.map(t => t.name).indexOf(application.team_id) >= 0;
-    if (!isOwnTeam) {
+CreateVersionFormHandler.isAllowed = function(routerState, state, hasAuth) {
+    if (!hasAuth) {
         let error = new Error();
         error.name = 'Forbidden';
         error.message = 'You can only add versions for your own applications!';
@@ -457,22 +526,27 @@ class EditVersionFormHandler extends React.Component {
     }
 
     render() {
+        const {applicationId, versionId} = this.props.params,
+            {kioStore} = this.props,
+            application = kioStore.getApplication(applicationId),
+            version = kioStore.getApplicationVersion(applicationId, versionId),
+            approvalCount = kioStore.getApprovals(applicationId, versionId).length,
+            versionIds = kioStore.getApplicationVersions(applicationId).map(v => v.id);
         return <VersionForm
                 edit={true}
-                applicationId={this.props.params.applicationId}
-                versionId={this.props.params.versionId}
+                applicationId={applicationId}
+                versionId={versionId}
+                application={application}
+                version={version}
+                versionIds={versionIds}
+                approvalCount={approvalCount}
                 notificationActions={NOTIFICATION_ACTIONS}
-                kioActions={KIO_ACTIONS}
-                {...this.props} />;
+                kioActions={KIO_ACTIONS} />;
     }
 }
 
-EditVersionFormHandler.isAllowed = function(routerState, state) {
-    let {applicationId} = routerState.params,
-        application = KioGetter.getApplication(state.kio, applicationId),
-        userTeams = UserGetter.getUserCloudAccounts(state.user),
-        isOwnTeam = userTeams.map(t => t.name).indexOf(application.team_id) >= 0;
-    if (!isOwnTeam) {
+EditVersionFormHandler.isAllowed = function(routerState, state, [hasAuth]) {
+    if (!hasAuth) {
         let error = new Error();
         error.name = 'Forbidden';
         error.message = 'You can only edit versions of your own applications!';
@@ -487,13 +561,14 @@ EditVersionFormHandler.propTypes = {
 EditVersionFormHandler.fetchData = function(routerState, state) {
     let {applicationId, versionId} = routerState.params;
     KIO_ACTIONS.fetchApprovals(applicationId, versionId);
-    return Promise.all([
-        requireAccounts(state, USER_ACTIONS),
-        KIO_ACTIONS.fetchApplicationVersion(applicationId, versionId),
-        KioGetter.getApplication(state.kio, applicationId) ?
-            Promise.resolve() :
-            KIO_ACTIONS.fetchApplication(applicationId)
-    ]);
+    const app = KioGetter.getApplication(state.kio, applicationId),
+          appPromise = !!app ?
+                        Promise.resolve(app) :
+                        KIO_ACTIONS.fetchApplication(applicationId);
+    return appPromise.then(({team_id}) => Promise.all([
+        requireAuth(state, team_id, MAGNIFICENT_ACTIONS),
+        KIO_ACTIONS.fetchApplicationVersion(applicationId, versionId)
+    ]));
 };
 let ConnectedEditVersionFormHandler = connect(state => ({
     kioStore: bindGettersToState(state.kio, KioGetter)
@@ -505,12 +580,27 @@ class ApprovalFormHandler extends React.Component {
     }
 
     render() {
+        const {applicationId, versionId} = this.props.params,
+            {kioStore, magnificentStore, userStore} = this.props,
+            application = kioStore.getApplication(applicationId),
+            version = kioStore.getApplicationVersion(applicationId, versionId),
+            approvals = kioStore.getApprovals(applicationId, versionId),
+            approvalTypes = kioStore.getApprovalTypes(),
+            userInfos = approvals
+                .map(({user_id}) => ({...userStore.getUserInfo(user_id), user_id}))
+                .reduce((map, info) => {map[info.user_id] = info; return map;}, {}),
+            editable = magnificentStore.getAuth(application.team_id);
         return <ApprovalForm
-                    applicationId={this.props.params.applicationId}
-                    versionId={this.props.params.versionId}
+                    applicationId={applicationId}
+                    versionId={versionId}
+                    editable={editable}
+                    application={application}
+                    version={version}
+                    approvals={approvals}
+                    userInfos={userInfos}
+                    approvalTypes={approvalTypes}
                     kioActions={KIO_ACTIONS}
-                    notificationActions={NOTIFICATION_ACTIONS}
-                    {...this.props} />;
+                    notificationActions={NOTIFICATION_ACTIONS} />;
     }
 }
 ApprovalFormHandler.displayName = 'ApprovalFormHandler';
@@ -519,9 +609,9 @@ ApprovalFormHandler.propTypes = {
 };
 ApprovalFormHandler.fetchData = function(routerState, state) {
     let {applicationId, versionId} = routerState.params;
-    if (!KioGetter.getApplication(state.kio, applicationId)) {
-        KIO_ACTIONS.fetchApplication(applicationId);
-    }
+    const app = KioGetter.getApplication(state.kio, applicationId),
+        appPromise = !app ? KIO_ACTIONS.fetchApplication(applicationId) : Promise.resolve(app);
+
     if (!KioGetter.getApplicationVersion(state.kio, applicationId, versionId)) {
         KIO_ACTIONS.fetchApplicationVersion(applicationId, versionId);
     }
@@ -530,12 +620,15 @@ ApprovalFormHandler.fetchData = function(routerState, state) {
         .then((args) => args[2]
                         .map(a => a.user_id)
                         .forEach(u => USER_ACTIONS.fetchUserInfo(u)));
-    return KIO_ACTIONS.fetchApprovalTypes(applicationId);
+    return appPromise.then(({team_id}) => Promise.all([
+        KIO_ACTIONS.fetchApprovalTypes(applicationId),
+        requireAuth(state, team_id, MAGNIFICENT_ACTIONS)
+    ]));
 };
 let ConnectedApprovalFormHandler = connect(state => ({
     kioStore: bindGettersToState(state.kio, KioGetter),
-    pieroneStore: bindGettersToState(state.pierone, PieroneGetter),
-    userStore: bindGettersToState(state.user, UserGetter)
+    userStore: bindGettersToState(state.user, UserGetter),
+    magnificentStore: bindGettersToState(state.magnificent, MagnificentGetter)
 }))(ApprovalFormHandler);
 
 const ROUTES =

@@ -1,7 +1,6 @@
 import Immutable from 'immutable';
 import {Pending, Failed} from 'common/src/fetch-result';
 import Types from './mint-types';
-import * as Getter from './mint-getter';
 
 function MintStore(state = Immutable.Map(), action) {
     if (!action) {
@@ -18,7 +17,6 @@ function MintStore(state = Immutable.Map(), action) {
         let [applicationId, config] = payload;
         return state.set(applicationId, Immutable.fromJS(config));
     }
-
     return state;
 }
 

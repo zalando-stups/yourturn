@@ -11,16 +11,16 @@ import MINT_BUCKET_TEMPLATE from 'MINT_BUCKET_TEMPLATE';
 
 function getDefaultBucket(account) {
     return MINT_BUCKET_TEMPLATE
-            .replace('${id}', account.id);
+            .replace('${id}', account);
 }
 
 class AccessForm extends React.Component {
     constructor(props) {
         super();
-        let oauth = props.mintStore.getOAuthConfig(props.applicationId);
+        const {oauthConfig} = props;
         this.state = {
-            s3_buckets: oauth.s3_buckets,
-            scopes: oauth.scopes
+            s3_buckets: oauthConfig.s3_buckets,
+            scopes: oauthConfig.scopes
         };
     }
 
@@ -50,13 +50,11 @@ class AccessForm extends React.Component {
     save(evt) {
         evt.preventDefault();
 
-        let {applicationId} = this.props,
-            scopes = this.props.essentialsStore.getAllScopes(),
+        let {applicationId, allScopes, oauthConfig} = this.props,
             appscopes = this.state.scopes,
-            oauthConfig = this.props.mintStore.getOAuthConfig(applicationId),
             ownerscopes = oauthConfig
                             .scopes
-                            .filter(s => scopes.some(scp => scp.id === s.id &&
+                            .filter(s => allScopes.some(scp => scp.id === s.id &&
                                                             scp.resource_type_id === s.resource_type_id &&
                                                             scp.is_resource_owner_scope ));
 
@@ -75,17 +73,14 @@ class AccessForm extends React.Component {
     }
 
     render() {
-        let {applicationId, kioStore, userStore, mintStore, essentialsStore} = this.props,
-            allAppScopes = essentialsStore.getAllScopes().filter(s => !s.is_resource_owner_scope),
-            application = kioStore.getApplication(applicationId),
-            defaultAccount = userStore.getUserCloudAccounts().filter(a => a.name === application.team_id)[0],
-            isOwnApplication = userStore.getUserCloudAccounts().some(t => t.name === application.team_id),
-            oauth = mintStore.getOAuthConfig(applicationId);
-
-        const LINK_PARAMS = {
-            applicationId: applicationId
-        };
-
+        const {
+            applicationId,
+            application,
+            applicationScopes,
+            oauthConfig,
+            defaultAccount,
+            editable } = this.props,
+            LINK_PARAMS = {applicationId};
         return <div className='accessForm'>
                     <h2>
                         <Link to={Routes.appDetail(LINK_PARAMS)}>
@@ -100,8 +95,8 @@ class AccessForm extends React.Component {
                         </Link>
                     </div>
                     <OAuthSyncInfo
-                        onRenewCredentials={isOwnApplication ? this.onRenewCredentials.bind(this) : false}
-                        oauth={oauth} />
+                        onRenewCredentials={editable ? this.onRenewCredentials.bind(this) : false}
+                        oauth={oauthConfig} />
                     <form
                         data-block='form'
                         onSubmit={this.save.bind(this)}
@@ -129,14 +124,14 @@ class AccessForm extends React.Component {
                                 maxlength={64}
                                 onChange={this.updateBuckets.bind(this)}
                                 items={this.state.s3_buckets}
-                                markedItems={_.difference(this.state.s3_buckets, oauth.s3_buckets)}
+                                markedItems={_.difference(this.state.s3_buckets, oauthConfig.s3_buckets)}
                                 pattern={'^[a-z0-9][a-z0-9\-\.]*[a-z0-9]$'} />
                         </div>
                         <div className='btn-group'>
                             <button
                                 type='submit'
                                 data-block='save-button'
-                                className={`btn btn-primary ${isOwnApplication ? '' : 'btn-disabled'}`}>
+                                className={`btn btn-primary ${editable ? '' : 'btn-disabled'}`}>
                                 <Icon name='save' /> Save
                             </button>
                         </div>
@@ -145,14 +140,14 @@ class AccessForm extends React.Component {
                             <small>{application.name} has the permission to access data with these scopes:</small>
                             <ScopeList
                                 selected={this.state.scopes}
-                                scopes={allAppScopes}
+                                scopes={applicationScopes}
                                 onSelect={this.updateScopes.bind(this)} />
                         </div>
                         <div className='btn-group'>
                             <button
                                 type='submit'
                                 data-block='save-button'
-                                className={`btn btn-primary ${isOwnApplication ? '' : 'btn-disabled'}`}>
+                                className={`btn btn-primary ${editable ? '' : 'btn-disabled'}`}>
                                 <Icon name='save' /> Save
                             </button>
                         </div>
@@ -165,11 +160,7 @@ AccessForm.displayName = 'AccessForm';
 AccessForm.propTypes = {
     applicationId: React.PropTypes.string.isRequired,
     mintActions: React.PropTypes.object.isRequired,
-    notificationActions: React.PropTypes.object.isRequired,
-    kioStore: React.PropTypes.object.isRequired,
-    mintStore: React.PropTypes.object.isRequired,
-    userStore: React.PropTypes.object.isRequired,
-    essentialsStore: React.PropTypes.object.isRequired
+    notificationActions: React.PropTypes.object.isRequired
 };
 AccessForm.contextTypes = {
     router: React.PropTypes.object

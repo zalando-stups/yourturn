@@ -57,6 +57,19 @@ class ResourceForm extends React.Component {
         });
     }
 
+    _applyStateIfWhitelisted() {
+        const invalidReason = 'Not a whitelisted user.';
+        this.setState({
+            checkingId: false,
+            invalidIdReason: this.props.isUserWhitelisted ? '' : invalidReason
+        });
+        if (this.props.isUserWhitelisted) {
+            this.setCustomValidity('');
+        } else {
+            this.setCustomValidity(invalidReason);
+        }
+    }
+
     _checkIfIdInvalid() {
         // check if there already a resource with thid id
         if (this.props.existingResourceIds.some(id => id === this.state.resource.id)) {
@@ -86,34 +99,25 @@ class ResourceForm extends React.Component {
                 if (id !== app_id) {
                     return;
                 }
-                // check if team_id is in userAccounts
-                const ownApp = this.props.userAccounts.indexOf(team_id) >= 0,
-                      invalidReason = `Application ${app_id} is not yours. (Team: ${team_id})`;
-                this.setState({
-                    invalidIdReason: ownApp ?
-                                        '' :
-                                        invalidReason,
-                    checkingId: false
-                });
-                if (ownApp) {
-                    this.setCustomValidity('');
-                } else {
-                    this.setCustomValidity(invalidReason);
-                }
+                this.props.magnificentActions.fetchAuth(team_id)
+                    .then(({allowed}) => {
+                        const invalidReason = `Application ${app_id} is not yours. (Team: ${team_id})`
+                        if (allowed) {
+                            this.setCustomValidity('');
+                        } else {
+                            this.setCustomValidity(invalidReason);
+                        }
+                        this.setState({
+                            invalidIdReason: allowed ?
+                                '' :
+                                invalidReason,
+                            checkingId: false
+                        });
+                    })
+                    // magnificent returned an error, so fall back to whitelisting
+                    .catch(() => this._applyStateIfWhitelisted());
             })
-            .catch(e => {
-                // app does not exist or kio is down, so fall back to whitelisting
-                const invalidReason = 'Not a whitelisted user.';
-                this.setState({
-                    checkingId: false,
-                    invalidIdReason: this.props.isUserWhitelisted ? '' : invalidReason
-                });
-                if (this.props.isUserWhitelisted) {
-                    this.setCustomValidity('');
-                } else {
-                    this.setCustomValidity(invalidReason);
-                }
-            });
+            .catch(() => this._applyStateIfWhitelisted());
         }
     }
 

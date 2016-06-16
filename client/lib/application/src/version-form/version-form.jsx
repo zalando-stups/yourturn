@@ -11,8 +11,7 @@ class VersionForm extends React.Component {
     constructor(props) {
         super();
 
-        let version = props.kioStore.getApplicationVersion(props.applicationId, props.versionId),
-            {edit} = props;
+        let {version, edit} = props;
         this.state = {
             versionIdTaken: false,
             autocompleteArtifact: true,
@@ -40,9 +39,7 @@ class VersionForm extends React.Component {
     }
 
     update(field, prop, evt) {
-        let {applicationId, kioStore} = this.props,
-            versions = kioStore.getApplicationVersions(applicationId),
-            application = kioStore.getApplication(applicationId);
+        const {applicationId, versionIds, application} = this.props;
 
         this.state[field] = evt.target[prop];
         if (this.state.autocompleteArtifact) {
@@ -51,7 +48,7 @@ class VersionForm extends React.Component {
 
         if (field === 'id') {
             // check id availability
-            this.state.versionIdTaken = versions.map(v => v.id).indexOf(this.state.id) >= 0;
+            this.state.versionIdTaken = versionIds.indexOf(this.state.id) >= 0;
         }
 
         this.setState({
@@ -64,9 +61,8 @@ class VersionForm extends React.Component {
     save(evt) {
         evt.preventDefault();
 
-        let {applicationId, kioStore} = this.props,
+        let {applicationId, application} = this.props,
             versionId = this.state.id,
-            application = kioStore.getApplication(applicationId),
             version = {
                 id: versionId,
                 notes: this.state.notes,
@@ -88,16 +84,10 @@ class VersionForm extends React.Component {
     }
 
     render() {
-        let {applicationId, versionId, edit, kioStore} = this.props,
+        const {applicationId, versionId, edit, application, approvalCount} = this.props,
             {versionIdTaken, id, notes, artifact} = this.state,
-            application = kioStore.getApplication(applicationId),
-            version = edit ? kioStore.getApplicationVersion(applicationId, versionId) : false,
-            approvals = edit ? kioStore.getApprovals(applicationId, versionId) : false;
-
-        const LINK_PARAMS = {
-            applicationId: applicationId,
-            versionId: versionId
-        };
+            version = edit ? this.props.version : false,
+            LINK_PARAMS = {applicationId,versionId};
 
         return <div className='versionForm'>
                     <h2>
@@ -193,11 +183,11 @@ class VersionForm extends React.Component {
                                 placeholder='Fixes serious CSS race condition.'
                                 onChange={this.update.bind(this, 'notes', 'value')} />
                         </div>
-                        { edit && approvals.length ?
+                        { edit && approvalCount > 0 ?
                             <div
                                 data-block='warning'
                                 className='u-warning'>
-                                <div>Existing approvals ({approvals.length}) will be deleted after you save!</div>
+                                <div>Existing approvals ({approvalCount}) will be deleted after you save!</div>
                             </div>
                             :
                             null}
@@ -218,8 +208,7 @@ VersionForm.propTypes = {
     versionId: React.PropTypes.string,
     edit: React.PropTypes.bool,
     kioActions: React.PropTypes.object.isRequired,
-    notificationActions: React.PropTypes.object.isRequired,
-    kioStore: React.PropTypes.object.isRequired
+    notificationActions: React.PropTypes.object.isRequired
 };
 VersionForm.contextTypes = {
     router: React.PropTypes.object

@@ -7,7 +7,8 @@ function UserStore(state, action) {
         tokeninfo: {},
         uid: false,
         users: {},
-        accounts: []
+        accounts: [],
+        teams: []
     });
 
     if (!state) {
@@ -30,6 +31,8 @@ function UserStore(state, action) {
         return state.set('accounts', Immutable.fromJS(activeAccounts));
     } else if (type === Types.DELETE_TOKENINFO) {
         return state.set('tokeninfo', false);
+    } else if (type === Types.FETCH_USERTEAMS) {
+        return state.set('teams', Immutable.fromJS(payload));
     }
 
     return state;

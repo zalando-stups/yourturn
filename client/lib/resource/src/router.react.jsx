@@ -8,17 +8,23 @@ import {
     bindGettersToState,
     bindActionsToStore
 } from 'common/src/util';
-import {wrapEnter, requireAccounts} from 'common/src/router-utils';
+import {
+    wrapEnter,
+    requireAccounts,
+    requireAuth
+} from 'common/src/router-utils';
 import {getApplicationFromResource} from 'resource/src/util';
 
 import * as UserGetter from 'common/src/data/user/user-getter';
 import * as KioGetter from 'common/src/data/kio/kio-getter';
 import * as EssentialsGetter from 'common/src/data/essentials/essentials-getter';
+import * as MagnificentGetter from 'common/src/data/magnificent/magnificent-getter';
 
 import * as NotificationActions from 'common/src/data/notification/notification-actions';
 import * as UserActions from 'common/src/data/user/user-actions';
 import * as EssentialsActions from 'common/src/data/essentials/essentials-actions';
 import * as KioActions from 'common/src/data/kio/kio-actions';
+import * as MagnificentActions from 'common/src/data/magnificent/magnificent-actions';
 
 import ResourceForm from './resource-form/resource-form.jsx';
 import ResourceList from './resource-list/resource-list.jsx';
@@ -29,7 +35,8 @@ import ScopeForm from './scope-form/scope-form.jsx';
 const USER_ACTIONS = bindActionsToStore(REDUX, UserActions),
       ESSENTIALS_ACTIONS = bindActionsToStore(REDUX, EssentialsActions),
       NOTIFICATION_ACTIONS = bindActionsToStore(REDUX, NotificationActions),
-      KIO_ACTIONS = bindActionsToStore(REDUX, KioActions);
+      KIO_ACTIONS = bindActionsToStore(REDUX, KioActions),
+      MAGNIFICENT_ACTIONS = bindActionsToStore(REDUX, MagnificentActions);
 
 function requireToken(state, UserActions) {
     let tokeninfo = UserGetter.getTokenInfo(state.user);
@@ -39,14 +46,9 @@ function requireToken(state, UserActions) {
     return Promise.resolve(tokeninfo);
 }
 
-function isWhitelistedOrOwner(userAccounts, app, whitelisted) {
-    return app && app.team_id ? userAccounts.indexOf(app.team_id) !== -1 : whitelisted;
-}
-
-function requireWhitelistedOrOwner(state, token, app) {
-    const whitelisted = UserGetter.isTokenWhitelisted(token),
-          userAccounts = UserGetter.getUserCloudAccounts(state.user).map(a => a.name);
-    if (!isWhitelistedOrOwner(userAccounts, app, whitelisted)) {
+function requireWhitelistedOrOwner(token, auth) {
+    const whitelisted = UserGetter.isTokenWhitelisted(token);
+    if (!(whitelisted || !!auth)) {
         let error = new Error();
         error.name = 'Not allowed';
         error.message = 'You are not allowed to view this page. Sorry!';
@@ -63,14 +65,13 @@ class CreateResourceFormHandler extends React.Component {
 
     render() {
         const existingResourceIds = this.props.essentialsStore.getResources().map(r => r.id),
-              whitelisted = this.props.userStore.isWhitelisted(),
-              userAccounts = this.props.userStore.getUserCloudAccounts().map(a => a.name);
+              whitelisted = this.props.userStore.isWhitelisted();
         return <ResourceForm
                     edit={false}
                     essentialsActions={ESSENTIALS_ACTIONS}
                     notificationActions={ESSENTIALS_ACTIONS}
                     kioActions={KIO_ACTIONS}
-                    userAccounts={userAccounts}
+                    magnificentActions={MAGNIFICENT_ACTIONS}
                     isUserWhitelisted={whitelisted}
                     existingResourceIds={existingResourceIds} />;
     }
@@ -106,8 +107,8 @@ class EditResourceFormHandler extends React.Component {
                     resource={resource} />;
     }
 }
-EditResourceFormHandler.isAllowed = function(routerState, state, [token, , app]) {
-    return requireWhitelistedOrOwner(state, token, app);
+EditResourceFormHandler.isAllowed = function(routerState, state, [token, auth]) {
+    return requireWhitelistedOrOwner(token, auth);
 };
 EditResourceFormHandler.displayName = 'EditResourceFormHandler';
 EditResourceFormHandler.propTypes = {
@@ -118,11 +119,11 @@ EditResourceFormHandler.fetchData = function(routerState, state) {
           // we have to catch here as otherwise the route component is not displayed at all and the
           // app might not exist
           appPromise = app ? KIO_ACTIONS.fetchApplication(app).catch(e => undefined) : Promise.resolve();
-    return Promise.all([
+    return appPromise.then(app => Promise.all([
         requireToken(state, USER_ACTIONS),
-        ESSENTIALS_ACTIONS.fetchResource(routerState.params.resourceId),
-        appPromise
-    ]);
+        app ? requireAuth(state, app.team_id, MAGNIFICENT_ACTIONS) : Promise.resolve(null),
+        ESSENTIALS_ACTIONS.fetchResource(routerState.params.resourceId)
+    ]));
 };
 let ConnectedEditResourceFormHandler = connect(state => ({
     essentialsStore: bindGettersToState(state.essentials, EssentialsGetter)
@@ -155,12 +156,12 @@ class ResourceDetailHandler extends React.Component {
     }
     render() {
         const {resourceId} = this.props.params,
-              userAccounts = this.props.userStore.getUserCloudAccounts().map(a => a.name),
               application = this.props.kioStore.getApplication(getApplicationFromResource(resourceId)),
               resource = this.props.essentialsStore.getResource(resourceId),
               scopes = this.props.essentialsStore.getScopes(resourceId),
               whitelisted = this.props.userStore.isWhitelisted(),
-              canEdit = isWhitelistedOrOwner(userAccounts, application, whitelisted);
+              permitted = this.props.magnificentStore.getAuth(application.team_id),
+              canEdit = whitelisted || permitted;
         return <ResourceDetail
                     resource={resource}
                     canEdit={canEdit}
@@ -172,18 +173,21 @@ ResourceDetailHandler.displayName = 'ResourceDetailHandler';
 ResourceDetailHandler.propTypes = {
     params: React.PropTypes.object
 };
-ResourceDetailHandler.fetchData = function(routerState) {
+ResourceDetailHandler.fetchData = function(routerState, state) {
     ESSENTIALS_ACTIONS.fetchResource(routerState.params.resourceId);
     ESSENTIALS_ACTIONS.fetchScopes(routerState.params.resourceId);
-    const appId = getApplicationFromResource(routerState.params.resourceId);
-    if (appId) {
-        KIO_ACTIONS.fetchApplication(appId);
-    }
+    const appId = getApplicationFromResource(routerState.params.resourceId),
+          appPromise = appId ? KIO_ACTIONS.fetchApplication(appId) : Promise.resolve();
+    appPromise
+        .then(app => app ?
+            requireAuth(state, app.team_id, MAGNIFICENT_ACTIONS) :
+            Promise.resolve(null));
 };
 let ConnectedResourceDetailHandler = connect(state => ({
     essentialsStore: bindGettersToState(state.essentials, EssentialsGetter),
     userStore: bindGettersToState(state.user, UserGetter),
-    kioStore: bindGettersToState(state.kio, KioGetter)
+    kioStore: bindGettersToState(state.kio, KioGetter),
+    magnificentStore: bindGettersToState(state.magnificent, MagnificentGetter)
 }))(ResourceDetailHandler);
 
 class ScopeDetailHandler extends React.Component {
@@ -193,13 +197,13 @@ class ScopeDetailHandler extends React.Component {
 
     render() {
         const {resourceId, scopeId} = this.props.params,
-              app = this.props.kioStore.getApplication(getApplicationFromResource(resourceId)),
+              application = this.props.kioStore.getApplication(getApplicationFromResource(resourceId)),
               scope = this.props.essentialsStore.getScope(resourceId, scopeId),
               resource = this.props.essentialsStore.getResource(resourceId),
               scopeApps = this.props.essentialsStore.getScopeApplications(resourceId, scopeId),
-              userAccounts = this.props.userStore.getUserCloudAccounts().map(a => a.name),
               whitelisted = this.props.userStore.isWhitelisted(),
-              canEdit = isWhitelistedOrOwner(userAccounts, app, whitelisted);
+              permitted = this.props.magnificentStore.getAuth(application.team_id),
+              canEdit = whitelisted || permitted;
         return <ScopeDetail
                     resourceId={this.props.params.resourceId}
                     scopeId={this.props.params.scopeId}
@@ -213,17 +217,19 @@ ScopeDetailHandler.displayName = 'ScopeDetailHandler';
 ScopeDetailHandler.propTypes = {
     params: React.PropTypes.object
 };
-ScopeDetailHandler.fetchData = function(routerState) {
+ScopeDetailHandler.fetchData = function(routerState, state) {
     let {resourceId, scopeId} = routerState.params;
     ESSENTIALS_ACTIONS.fetchResource(resourceId);
     ESSENTIALS_ACTIONS.fetchScope(resourceId, scopeId);
     ESSENTIALS_ACTIONS.fetchScopeApplications(resourceId, scopeId);
-    KIO_ACTIONS.fetchApplication(getApplicationFromResource(resourceId));
+    KIO_ACTIONS.fetchApplication(getApplicationFromResource(resourceId))
+        .then(({team_id}) => requireAuth(state, team_id, MAGNIFICENT_ACTIONS));
 };
 let ConnectedScopeDetailHandler = connect(state => ({
     essentialsStore: bindGettersToState(state.essentials, EssentialsGetter),
     userStore: bindGettersToState(state.user, UserGetter),
-    kioStore: bindGettersToState(state.kio, KioGetter)
+    kioStore: bindGettersToState(state.kio, KioGetter),
+    magnificentStore: bindGettersToState(state.magnificent, MagnificentGetter)
 }))(ScopeDetailHandler);
 
 class EditScopeFormHandler extends React.Component {
@@ -245,8 +251,8 @@ class EditScopeFormHandler extends React.Component {
                     essentialsActions={ESSENTIALS_ACTIONS} />;
     }
 }
-EditScopeFormHandler.isAllowed = function(routerState, state, [token, , app]) {
-    return requireWhitelistedOrOwner(state, token, app);
+EditScopeFormHandler.isAllowed = function(routerState, state, [token, auth]) {
+    return requireWhitelistedOrOwner(token, auth);
 };
 EditScopeFormHandler.displayName = 'EditScopeFormHandler';
 EditScopeFormHandler.propTypes = {
@@ -257,11 +263,11 @@ EditScopeFormHandler.fetchData = function(routerState, state) {
           app = getApplicationFromResource(resourceId),
           appPromise = app ? KIO_ACTIONS.fetchApplication(app).catch(e => undefined) : Promise.resolve();
     ESSENTIALS_ACTIONS.fetchResource(resourceId);
-    return Promise.all([
+    return appPromise.then(app => Promise.all([
         requireToken(state, USER_ACTIONS),
-        ESSENTIALS_ACTIONS.fetchScope(resourceId, scopeId),
-        appPromise
-    ]);
+        app ? requireAuth(state, app.team_id, MAGNIFICENT_ACTIONS) : Promise.resolve(null),
+        ESSENTIALS_ACTIONS.fetchScope(resourceId, scopeId)
+    ]))
 };
 let ConnectedEditScopeFormHandler = connect(state => ({
     essentialsStore: bindGettersToState(state.essentials, EssentialsGetter)
@@ -286,8 +292,8 @@ class CreateScopeFormHandler extends React.Component {
                     essentialsActions={ESSENTIALS_ACTIONS} />;
     }
 }
-CreateScopeFormHandler.isAllowed = function(routerState, state, [token, , app]) {
-    return requireWhitelistedOrOwner(state, token, app);
+CreateScopeFormHandler.isAllowed = function(routerState, state, [token, auth]) {
+    return requireWhitelistedOrOwner(token, auth);
 };
 CreateScopeFormHandler.displayName = 'CreateScopeFormHandler';
 CreateScopeFormHandler.propTypes = {
@@ -298,11 +304,11 @@ CreateScopeFormHandler.fetchData = function(routerState, state) {
           app = getApplicationFromResource(resourceId),
           appPromise = app ? KIO_ACTIONS.fetchApplication(app).catch(e => undefined) : Promise.resolve();
     ESSENTIALS_ACTIONS.fetchResource(resourceId);
-    return Promise.all([
+    return appPromise.then(app => Promise.all([
         requireToken(state, USER_ACTIONS),
-        ESSENTIALS_ACTIONS.fetchScopes(resourceId),
-        appPromise
-    ]);
+        app ? requireAuth(state, app.team_id, MAGNIFICENT_ACTIONS) : Promise.resolve(null),
+        ESSENTIALS_ACTIONS.fetchScopes(resourceId)
+    ]));
 };
 let ConnectedCreateScopeFormHandler = connect(state => ({
     essentialsStore: bindGettersToState(state.essentials, EssentialsGetter)

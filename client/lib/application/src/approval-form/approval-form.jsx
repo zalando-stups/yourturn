@@ -40,7 +40,7 @@ const EXPLANATIONS = {
 };
 
 class ApprovalForm extends React.Component {
-    constructor(props) {
+    constructor() {
         super();
         this.state = {
             useCustomType: false,
@@ -66,9 +66,8 @@ class ApprovalForm extends React.Component {
 
     save(evt) {
         evt.preventDefault();
-        let {applicationId, versionId, kioStore} = this.props,
+        let {applicationId, versionId, application} = this.props,
             {notes, useCustomType, customType, selectedType} = this.state,
-            application = kioStore.getApplication(applicationId),
             approval;
 
         if (!useCustomType) {
@@ -131,15 +130,9 @@ class ApprovalForm extends React.Component {
     }
 
     render() {
-        let {applicationId, versionId, kioStore, userStore} = this.props,
-            application = kioStore.getApplication(applicationId),
-            approvalTypes = kioStore.getApprovalTypes(applicationId),
-            approvals = kioStore.getApprovals(applicationId, versionId),
-            isOwnApplication = userStore.getUserCloudAccounts().map(a => a.name).indexOf(application.team_id) >= 0;
-        const LINK_PARAMS = {
-            applicationId: applicationId,
-            versionId: versionId
-        };
+        const {applicationId, versionId, application, approvalTypes, approvals, editable, userInfos} = this.props,
+        LINK_PARAMS = {applicationId, versionId};
+        console.debug(userInfos)
         return <div className='approvalForm'>
                     <h2>
                         <Link
@@ -151,7 +144,7 @@ class ApprovalForm extends React.Component {
                         <Link
                             to={Routes.verDetail(LINK_PARAMS)}
                             className='btn btn-default'>
-                            <Icon name='chevron-left' /> {application.name} {versionId}
+                            <Icon name='chevron-left' /> {application.name || applicationId} {versionId}
                         </Link>
                     </div>
                     <div className='grid with-gutter'>
@@ -163,7 +156,7 @@ class ApprovalForm extends React.Component {
                                 {approvals.map(
                                     (a, i) => <ApprovalCard
                                                 key={i}
-                                                userinfo={userStore.getUserInfo(a.user_id)}
+                                                userinfo={userInfos[a.user_id]}
                                                 approval={a} />)}
                             </div>
                         </div>
@@ -252,7 +245,7 @@ class ApprovalForm extends React.Component {
                                         type='submit'
                                         className='btn btn-primary'
                                         data-block='submit-button'
-                                        disabled={!isOwnApplication}>
+                                        disabled={!editable}>
                                         <Icon
                                             fixedWidth
                                             spin={this.state.loading}
@@ -270,8 +263,6 @@ ApprovalForm.propTypes = {
     applicationId: React.PropTypes.string.isRequired,
     versionId: React.PropTypes.string.isRequired,
     notificationActions: React.PropTypes.object.isRequired,
-    kioActions: React.PropTypes.object.isRequired,
-    kioStore: React.PropTypes.object.isRequired,
-    userStore: React.PropTypes.object.isRequired
+    kioActions: React.PropTypes.object.isRequired
 };
 export default ApprovalForm;
