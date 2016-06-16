@@ -143,7 +143,7 @@ class AppListHandler extends React.Component {
                     tabAccounts={tabAccounts}
                     selectedTab={selectedTab}
                     applicationsFetching={applicationsFetching}
-                    accounts={[...accountsAndTeams]}
+                    accounts={accountsAndTeams}
                     onChangeTab={this.onChangeTab.bind(this)}
                     {...this.props} />;
     }

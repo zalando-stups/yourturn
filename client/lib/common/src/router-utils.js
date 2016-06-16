@@ -1,12 +1,12 @@
 import REDUX from 'yourturn/src/redux';
-import {Pending} from 'common/src/fetch-result';
+import FetchResult from 'common/src/fetch-result';
 import * as UserGetter from 'common/src/data/user/user-getter';
 import * as MagnificentGetter from 'common/src/data/magnificent/magnificent-getter';
 
 function requireAuth(state, team, magnificentActions) {
     const permitted = MagnificentGetter.getAuth(state.magnificent, team);
     // successful result
-    if (!(permitted instanceof Pending) && permitted !== null) {
+    if (!(permitted instanceof FetchResult) && permitted !== null) {
         return Promise.resolve(permitted);
     } else {
         // else fetch
