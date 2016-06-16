@@ -59,7 +59,7 @@
     "redux-simple-router": "2.0.2",
     "redux-thunk": "1.0.0",
     "remarkable": "1.6.1",
-    "superagent": "1.6.1",
+    "superagent": "1.8.2",
     "uniqueid": "0.1.0"
   },
   "devDependencies": {

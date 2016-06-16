@@ -18,4 +18,8 @@ server.get('/auth', function(req, res) {
     res.status(200).json('OK');
 });
 
+server.post('/auth', function(req, res) {
+    res.status(200).json('OK');
+});
+
 module.exports = server;

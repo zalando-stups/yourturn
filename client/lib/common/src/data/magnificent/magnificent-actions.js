@@ -7,28 +7,19 @@ import {Provider, RequestConfig, saveRoute} from 'common/src/oauth-provider';
 
 function fetchAuth(team, policy='relaxed-radical-agility') {
     return request
-            .get(`${Services.magnificent.url}/auth`)
+            .post(`${Services.magnificent.url}/auth`)
             .type('json')
+            .oauth(Provider, RequestConfig)
             .send({
                 policy,
                 payload: {team}
             })
-            .oauth(Provider, RequestConfig)
             .exec(saveRoute)
             .then(_ => ({
                 team,
                 allowed: true
             }))
-            .catch(err => {
-                if (err.status === 403) {
-                    return {
-                        team,
-                        allowed: false
-                    };
-                }
-                err.team = team;
-                throw err;
-            });
+            .catch(_ => ({team, allowed: false}));
 }
 
 let fetchAction = flummoxCompatWrap(createAction(Type.FETCH_AUTH, fetchAuth));

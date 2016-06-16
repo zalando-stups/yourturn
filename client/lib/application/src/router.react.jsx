@@ -132,7 +132,9 @@ class AppListHandler extends React.Component {
     }
 
     render() {
-        const accounts = this.props.teamStore.getAccounts(),
+        const accounts = this.props.teamStore.getAccounts().map(a => a.name),
+              teams = this.props.teamStore.getTeams().map(t => t.id),
+              accountsAndTeams = [...new Set(accounts.concat(teams))].sort(),
               selectedTab = this.props.location.query.team,
               applicationsFetching = this.props.kioStore.getApplicationsFetchStatus(),
               tabAccounts = this.props.kioStore.getTabAccounts();
@@ -141,7 +143,7 @@ class AppListHandler extends React.Component {
                     tabAccounts={tabAccounts}
                     selectedTab={selectedTab}
                     applicationsFetching={applicationsFetching}
-                    accounts={accounts}
+                    accounts={[...accountsAndTeams]}
                     onChangeTab={this.onChangeTab.bind(this)}
                     {...this.props} />;
     }
@@ -153,9 +155,10 @@ AppListHandler.contextTypes = {
 AppListHandler.fetchData = function(routerState, state) {
     // we need to know which accounts a user has access to
     KIO_ACTIONS.loadTabAccounts();
-    return Promise.all([
-        requireAccounts(state, USER_ACTIONS)
-    ]);
+    requireAccounts(state, USER_ACTIONS);
+    requireTeams(state, USER_ACTIONS);
+    TEAM_ACTIONS.fetchAccounts();
+    TEAM_ACTIONS.fetchTeams();
 };
 var ConnectedAppListHandler =
         connect(state => ({
@@ -254,7 +257,7 @@ class AppDetailHandler extends React.Component {
         const   {applicationId} = this.props.params,
                 app = this.props.kioStore.getApplication(applicationId),
                 api = this.props.twintipStore.getApi(applicationId),
-                editable = app.team_id ? this.props.magnificentStore.getAuth(app.team_id) : false,
+                editable = !!this.props.magnificentStore.getAuth(app.team_id),
                 versions = _.take(this.props.kioStore.getApplicationVersions(applicationId), 3);
         return <ApplicationDetail
                     applicationId={this.props.params.applicationId}
@@ -274,9 +277,9 @@ AppDetailHandler.fetchData = function(routerState, state) {
     const {applicationId} = routerState.params;
     KIO_ACTIONS.fetchApplicationVersions(applicationId);
     TWINTIP_ACTIONS.fetchApi(applicationId);
-    return KIO_ACTIONS
-            .fetchApplication(applicationId)
-            .then(({team_id}) => requireAuth(state, team_id, MAGNIFICENT_ACTIONS));
+    KIO_ACTIONS
+        .fetchApplication(applicationId)
+        .then(({team_id}) => requireAuth(state, team_id, MAGNIFICENT_ACTIONS));
 };
 var ConnectedAppDetailHandler =
     connect(state => ({
@@ -427,7 +430,7 @@ class VersionDetailHandler extends React.Component {
             artifactInfo = {team, artifact, tag},
             tags = pieroneStore.getTags(team, artifact).map(t => t.name),
             approvalCount = kioStore.getApprovals(applicationId, versionId).length,
-            editable = magnificentStore.getAuth(application.team_id),
+            editable = !!magnificentStore.getAuth(application.team_id),
             scmSource = pieroneStore.getScmSource(team, artifact, tag);;
         return <VersionDetail
                     applicationId={this.props.params.applicationId}
@@ -462,7 +465,7 @@ VersionDetailHandler.fetchData = function(routerState, state) {
     // fetch the application if it's not there aleady
     const app = KioGetter.getApplication(state.kio, applicationId),
         appPromise = !app ? KIO_ACTIONS.fetchApplication(applicationId) : Promise.resolve(app);
-    return appPromise.then(({team_id}) => requireAuth(state, team_id, MAGNIFICENT_ACTIONS));
+    appPromise.then(({team_id}) => requireAuth(state, team_id, MAGNIFICENT_ACTIONS));
 };
 let ConnectedVersionDetailHandler = connect(state => ({
     kioStore: bindGettersToState(state.kio, KioGetter),
