@@ -13,6 +13,11 @@ function getAccount(state, id) {
     return result.length ? result[0] : null;
 }
 
+function getTeams(state) {
+    const teams = state.get('teams').toJS();
+    return Object.keys(teams).map(id => teams[id]);
+}
+
 function getTeam(state, id) {
     let team = state.getIn(['teams', id]);
     return team ? team.toJS() : false;
@@ -30,6 +35,7 @@ export {
     getAccounts,
     getAccount,
     getTeam,
+    getTeams,
     getAlias,
     getAliase
 };

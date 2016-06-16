@@ -9,7 +9,7 @@ import 'common/asset/less/application/oauth-form.less';
 class OAuthForm extends React.Component {
     constructor(props) {
         super();
-        let oauthConfig = props.mintStore.getOAuthConfig(props.applicationId);
+        const {oauthConfig} = props;
         this.state = {
             scopes: oauthConfig.scopes,
             redirectUrl: oauthConfig.redirect_url,
@@ -18,7 +18,7 @@ class OAuthForm extends React.Component {
     }
 
     componentWillReceiveProps(newProps) {
-        let oauthConfig = newProps.mintStore.getOAuthConfig(this.props.applicationId);
+        const {oauthConfig} = newProps;
         if (oauthConfig && !this.state.scopes && !this.state.scopes.length) {
             this.setState({
                 scopes: oauthConfig.scopes
@@ -55,15 +55,13 @@ class OAuthForm extends React.Component {
     save(evt) {
         evt.preventDefault();
 
-        let {applicationId} = this.props,
-            scopes = this.props.essentialsStore.getAllScopes(),
+        let {applicationId, allScopes, oauthConfig} = this.props,
             ownerscopes = this.state.scopes,
-            oauthConfig = this.props.mintStore.getOAuthConfig(applicationId),
             appscopes = oauthConfig
                             .scopes
-                            .filter(s => scopes.some(scp => scp.id === s.id &&
-                                                            scp.resource_type_id === s.resource_type_id &&
-                                                            !scp.is_resource_owner_scope ));
+                            .filter(s => allScopes.some(scp => scp.id === s.id &&
+                                                                scp.resource_type_id === s.resource_type_id &&
+                                                                !scp.is_resource_owner_scope ));
 
         oauthConfig.scopes = ownerscopes.concat(appscopes);
         oauthConfig.redirect_url = this.state.redirectUrl;
@@ -86,16 +84,14 @@ class OAuthForm extends React.Component {
     }
 
     render() {
-        let {applicationId, kioStore, mintStore, userStore, essentialsStore} = this.props,
-            application = kioStore.getApplication(applicationId),
-            isOwnApplication = userStore.getUserCloudAccounts().some(t => t.name === application.team_id),
-            allRoScopes = essentialsStore.getAllScopes().filter(s => s.is_resource_owner_scope),
-            oauth = mintStore.getOAuthConfig(applicationId);
-
-        const LINK_PARAMS = {
-            applicationId: applicationId
-        };
-
+        const {
+                applicationId,
+                application,
+                resourceOwnerScopes,
+                oauthConfig,
+                editable
+            } = this.props,
+            LINK_PARAMS = {applicationId};
         return <div className='oAuthForm'>
                     <h2>
                         <Link
@@ -140,32 +136,33 @@ class OAuthForm extends React.Component {
                             <ScopeList
                                 onSelect={this.updateScopes.bind(this)}
                                 selected={this.state.scopes}
-                                scopes={allRoScopes} />
+                                scopes={resourceOwnerScopes} />
                         </div>
 
                         <div className='btn-group'>
                             <button
                                 type='submit'
-                                className={`btn btn-primary ${isOwnApplication ? '' : 'btn-disabled'}`}>
+                                className={`btn btn-primary ${editable ? '' : 'btn-disabled'}`}>
                                 <Icon name='save' /> Save
                             </button>
                         </div>
                     </form>
                     <OAuthSyncInfo
-                        onRenewCredentials={isOwnApplication ? this.onRenewCredentials.bind(this) : false}
-                        oauth={oauth} />
+                        onRenewCredentials={editable ? this.onRenewCredentials.bind(this) : false}
+                        oauth={oauthConfig} />
                 </div>;
     }
 }
 OAuthForm.displayName = 'OAuthForm';
 OAuthForm.propTypes = {
     applicationId: React.PropTypes.string.isRequired,
+    application: React.PropTypes.object.isRequired,
+    resourceOwnerScopes: React.PropTypes.array.isRequired,
+    allScopes: React.PropTypes.array.isRequired,
+    oauthConfig: React.PropTypes.object.isRequired,
+    editable: React.PropTypes.bool.isRequired,
     mintActions: React.PropTypes.object.isRequired,
-    notificationActions: React.PropTypes.object.isRequired,
-    kioStore: React.PropTypes.object.isRequired,
-    mintStore: React.PropTypes.object.isRequired,
-    userStore: React.PropTypes.object.isRequired,
-    essentialsStore: React.PropTypes.object.isRequired
+    notificationActions: React.PropTypes.object.isRequired
 };
 OAuthForm.contextTypes = {
     router: React.PropTypes.object

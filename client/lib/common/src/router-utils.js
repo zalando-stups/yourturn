@@ -1,9 +1,40 @@
-import * as UserGetter from 'common/src/data/user/user-getter';
 import REDUX from 'yourturn/src/redux';
+import FetchResult from 'common/src/fetch-result';
+import * as UserGetter from 'common/src/data/user/user-getter';
+import * as MagnificentGetter from 'common/src/data/magnificent/magnificent-getter';
+
+function requireAuth(state, team, magnificentActions) {
+    const permitted = MagnificentGetter.getAuth(state.magnificent, team);
+    // successful result
+    if (!(permitted instanceof FetchResult) && permitted !== null) {
+        return Promise.resolve(permitted);
+    } else {
+        // else fetch
+        return magnificentActions.fetchAuth(team)
+                    .then(auth => auth.allowed)
+                    .catch(() => false);
+    }
+}
+
+function requireTeams(state, userActions) {
+    const userTeams = UserGetter.getUserTeams(state.user);
+    if (!userTeams.length) {
+        const tokeninfo = UserGetter.getTokenInfo(state.user);
+        if (!tokeninfo.uid) {
+            return userActions
+                    .fetchTokenInfo()
+                    .then(token => userActions.fetchTeams(token.uid))
+                    .catch(() => userActions.fetchAccessToken());
+        }
+        return userActions.fetchTeams(tokeninfo.uid);
+    }
+    return Promise.resolve(userTeams)
+}
 
 function requireAccounts(state, userActions) {
-    if (!UserGetter.getUserCloudAccounts(state.user).length) {
-        let tokeninfo = UserGetter.getTokenInfo(state.user);
+    const userAccounts = UserGetter.getUserCloudAccounts(state.user);
+    if (!userAccounts.length) {
+        const tokeninfo = UserGetter.getTokenInfo(state.user);
         if (!tokeninfo.uid) {
             return userActions
                     .fetchTokenInfo()
@@ -12,7 +43,7 @@ function requireAccounts(state, userActions) {
         }
         return userActions.fetchAccounts(tokeninfo.uid);
     }
-    return Promise.resolve(UserGetter.getUserCloudAccounts(state.user));
+    return Promise.resolve(userAccounts);
 }
 
 function noop() {
@@ -55,6 +86,8 @@ function wrapEnter(fetchFn = noop, authFn = noop) {
 
 export {
     requireAccounts,
+    requireAuth,
     wrapEnter,
-    handleError
+    handleError,
+    requireTeams
 };

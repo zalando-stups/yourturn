@@ -10,22 +10,22 @@ import 'common/asset/less/application/application-form.less';
 class ApplicationForm extends React.Component {
     constructor(props) {
         super();
-        let cloudAccounts = props.userStore.getUserCloudAccounts();
         this.state = {
             autocompleteServiceUrl: true
         };
         if (props.edit) {
-            let app = props.kioStore.getApplication(props.applicationId);
-            app.service_url = app.service_url && app.service_url.indexOf('https://') === 0 ?
-                                app.service_url.substring('https://'.length) :
-                                app.service_url;
-            this.state.app = app;
+            let {application} = props;
+            application.service_url = application.service_url && application.service_url.indexOf('https://') === 0 ?
+                                application.service_url.substring('https://'.length) :
+                                application.service_url;
+            this.state.app = application;
         } else {
+            const {userTeams} = props;
             this.state.app = {
                 active: true,
                 criticality_level: 2,
                 publicly_accessible: false,
-                team_id: cloudAccounts.length ? cloudAccounts[0].name : undefined
+                team_id: userTeams.length ? userTeams[0] : undefined
             };
         }
     }
@@ -76,27 +76,25 @@ class ApplicationForm extends React.Component {
         }
         this.setState({
             app: this.state.app,
-            appIdTaken: this.props.kioStore.getApplication(this.state.app.id) !== false
+            appIdTaken: this.props.applicationIds.some(id => this.state.app.id === id)
         });
     }
 
     render() {
-        let {edit, applicationId} = this.props,
-            storeApp = this.props.kioStore.getApplication(applicationId),
-            {app} = this.state,
-            accounts = this.props.userStore.getUserCloudAccounts();
+        let {edit, applicationId, application, userTeams} = this.props,
+            {app} = this.state;
         const LINK_PARAMS = {applicationId};
         return <div className='applicationForm'>
                     {edit ?
                         <div>
                             <h2>Edit <Link
-                                        to={Routes.appDetail(LINK_PARAMS)}>{storeApp.name}</Link>
+                                        to={Routes.appDetail(LINK_PARAMS)}>{application.name || applicationId}</Link>
                             </h2>
                             <div className='btn-group'>
                                 <Link
                                     to={Routes.appDetail(LINK_PARAMS)}
                                     className='btn btn-default'>
-                                    <Icon name='chevron-left' /> {storeApp.name}
+                                    <Icon name='chevron-left' /> {application.name || applicationId}
                                 </Link>
                             </div>
                         </div>
@@ -144,17 +142,17 @@ class ApplicationForm extends React.Component {
                         <div className='form-group'>
                             <label htmlFor='team_id'>Team ID</label>
                             <small>The ID of the owning team.</small>
-                            {accounts.length ?
+                            {userTeams.length ?
                                 <select
                                     data-block='team-input'
                                     name='yourturn_app_team_id'
-                                    defaultValue={app.team_id || accounts[0].name}
+                                    defaultValue={app.team_id || userTeams[0]}
                                     onChange={this.update.bind(this, 'team_id', 'value')}
                                     id='team_id'>
-                                    {accounts.map(
-                                        a => <option
-                                                key={a.name}
-                                                value={a.name}>{a.name}</option>
+                                    {userTeams.map(
+                                        id => <option
+                                                key={id}
+                                                value={id}>{id}</option>
                                     )}
                                 </select>
                                 :
@@ -313,7 +311,7 @@ class ApplicationForm extends React.Component {
                             <button
                                 type='submit'
                                 data-block='save-button'
-                                disabled={accounts.length === 0}
+                                disabled={userTeams.length === 0}
                                 className='btn btn-primary'>
                                 <Icon name='save' /> Save
                             </button>
@@ -326,10 +324,11 @@ ApplicationForm.displayName = 'ApplicationForm';
 ApplicationForm.propTypes = {
     applicationId: React.PropTypes.string,
     edit: React.PropTypes.bool,
+    userTeams: React.PropTypes.array.isRequired,
+    application: React.PropTypes.object.isRequired,
+    applicationIds: React.PropTypes.array.isRequired,
     kioActions: React.PropTypes.object.isRequired,
-    notificationActions: React.PropTypes.object.isRequired,
-    userStore: React.PropTypes.object.isRequired,
-    kioStore: React.PropTypes.object.isRequired
+    notificationActions: React.PropTypes.object.isRequired
 };
 ApplicationForm.contextTypes = {
     router: React.PropTypes.object

@@ -23,6 +23,9 @@ function createActionTypes(types) {
     {});
 }
 
+/**
+ * DEPRECATED, use bindActionCreators from redux instead
+ */
 function bindActionsToStore(store, actions) {
     return Object
             .keys(actions)

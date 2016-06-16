@@ -9,9 +9,7 @@ class ScmSourceWarning extends React.Component {
     }
 
     render() {
-        let {scmSource, version, pieroneStore} = this.props,
-            {team, artifact, tag} = parseArtifact(version.artifact),
-            tags = pieroneStore.getTags(team, artifact),
+        let {scmSource, artifact, artifactInfo, tags} = this.props,
             locallyModified = <noscript />,
             missingScmSource = <noscript />;
 
@@ -21,11 +19,11 @@ class ScmSourceWarning extends React.Component {
                     <DefaultError error={scmSource.getResult()} />;
         }
         // no scm-source, but tag in pierone -> bad
-        if (!scmSource && tags.map(t => t.name).indexOf(tag) >= 0) {
+        if (!scmSource && tags.indexOf(artifactInfo.tag) >= 0) {
             missingScmSource = <div
                                     data-block='missing-scmsource-warning'
                                     className='u-warning'>
-                                    scm-source.json missing for {version.artifact}
+                                    scm-source.json missing for {artifact}
                                 </div>;
         }
 

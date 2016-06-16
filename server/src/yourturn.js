@@ -44,9 +44,10 @@ server.use(function(req, res, next) {
 server.get('/accounts/?', routes.team.accounts);
 server.get('/teams/?', routes.team.teams);
 server.get('/teams/:teamId', routes.team.team);
-server.get('/latestVersions/:team', oauth, routes.kio.latestVersions);
-server.get('/accounts/:userId', routes.user.accounts);
 server.get('/users/:userId', routes.user.detail);
+server.get('/users/:userId/teams', routes.user.teams)
+server.get('/users/:userId/accounts', routes.user.accounts);
+server.get('/latestVersions/:team', oauth, routes.kio.latestVersions);
 server.get('/tokeninfo', routes.tokeninfo.info);
 // default route just responds with index.html
 server.get('/*', function(req, res) {

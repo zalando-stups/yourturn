@@ -1,14 +1,6 @@
 /* globals expect, TestUtils, reset, render, sinon, Promise, $, React */
-import KioStore from 'common/src/data/kio/kio-store';
-import KioTypes from 'common/src/data/kio/kio-types';
-import * as KioGetter from 'common/src/data/kio/kio-getter';
 import * as KioActions from 'common/src/data/kio/kio-actions';
-
-import UserStore from 'common/src/data/user/user-store';
-import * as UserGetter from 'common/src/data/user/user-getter';
-
 import VersionForm from 'application/src/version-form/version-form.jsx';
-import {bindGettersToState} from 'common/src/util';
 
 const APP_ID = 'kio',
     VER_ID = '0.1',
@@ -28,20 +20,7 @@ const APP_ID = 'kio',
         application_id: APP_ID,
         artifact: `docker://stups/${APP_ID}:${VER_ID}`,
         notes: '# Test'
-    },
-    TEST_APPROVALS = [{
-        application_id: APP_ID,
-        version_id: VER_ID,
-        approval_type: 'TESTED',
-        user_id: 'npiccolotto',
-        approved_at: '2015-04-25T16:25:00'
-    }, {
-        application_id: APP_ID,
-        version_id: VER_ID,
-        approval_type: 'TESTED',
-        user_id: 'tobi',
-        approved_at: '2015-04-25T16:40:00'
-    }];
+    };
 
 describe('The version form view', () => {
     var actionSpy,
@@ -52,19 +31,7 @@ describe('The version form view', () => {
         beforeEach(() => {
             reset();
 
-            let kioActions = Object.assign({}, KioActions),
-                kioSetup = [{
-                    type: KioTypes.FETCH_APPLICATION,
-                    payload: TEST_APP
-                }, {
-                    type: KioTypes.FETCH_APPLICATION_VERSION,
-                    payload: TEST_VERSION
-                }, {
-                    type: KioTypes.FETCH_APPROVALS,
-                    payload: [APP_ID, VER_ID, TEST_APPROVALS]
-                }],
-                kioState = kioSetup.reduce((state, action) => KioStore(state, action), KioStore());
-
+            let kioActions = Object.assign({}, KioActions);
             actionSpy = sinon.stub(kioActions, 'saveApplicationVersion', function () {
                 return Promise.resolve();
             });
@@ -72,10 +39,11 @@ describe('The version form view', () => {
             props = {
                 applicationId: APP_ID,
                 versionId: VER_ID,
+                versionIds: ['foo'],
                 edit: false,
-                kioStore: bindGettersToState(kioState, KioGetter),
                 kioActions,
-                userStore: bindGettersToState(UserStore(), UserGetter)
+                application: TEST_APP,
+                approvalCount: 0
             };
             form = render(VersionForm, props);
         });
@@ -91,19 +59,7 @@ describe('The version form view', () => {
         beforeEach(() => {
             reset();
 
-            let kioActions = Object.assign({}, KioActions),
-                kioSetup = [{
-                    type: KioTypes.FETCH_APPLICATION,
-                    payload: TEST_APP
-                }, {
-                    type: KioTypes.FETCH_APPLICATION_VERSION,
-                    payload: TEST_VERSION
-                }, {
-                    type: KioTypes.FETCH_APPROVALS,
-                    payload: [APP_ID, VER_ID, TEST_APPROVALS]
-                }],
-                kioState = kioSetup.reduce((state, action) => KioStore(state, action), KioStore());
-
+            let kioActions = Object.assign({}, KioActions);
             actionSpy = sinon.stub(kioActions, 'saveApplicationVersion', function () {
                 return Promise.resolve();
             });
@@ -111,10 +67,12 @@ describe('The version form view', () => {
             props = {
                 applicationId: APP_ID,
                 versionId: VER_ID,
+                versionIds: [],
                 edit: true,
-                kioStore: bindGettersToState(kioState, KioGetter),
                 kioActions,
-                userStore: UserStore()
+                version: TEST_VERSION,
+                application: TEST_APP,
+                approvalCount: 2
             };
             form = render(VersionForm, props);
         });

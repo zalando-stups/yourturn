@@ -94,7 +94,7 @@ class ApplicationList extends React.Component {
                                 <AccountList
                                     onChange={this.updateAccounts.bind(this)}
                                     selected={tabAccounts}
-                                    accounts={this.props.accounts.map(a => a.name)} />
+                                    accounts={this.props.accounts} />
                             </TabPanel>
                             {tabAccounts.map(acc => <TabPanel key={acc}>
                                                         <div className='form'>

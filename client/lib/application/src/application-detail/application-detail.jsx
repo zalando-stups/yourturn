@@ -17,7 +17,7 @@ export default function ApplicationDetail({applicationId, application, versions,
                 <DefaultError error={application.getResult()} />;
     }
     return <div className='applicationDetail'>
-                <h1>{application.name}</h1>
+                <h1>{application.name || applicationId}</h1>
                 <div className='btn-group'>
                     <Link
                         to={Routes.appList(LINK_PARAMS)}
@@ -27,7 +27,7 @@ export default function ApplicationDetail({applicationId, application, versions,
                     <Link
                         to={Routes.appEdit(LINK_PARAMS)}
                         className={`btn btn-default ${editable ? '' : 'btn-disabled'}`}>
-                        <Icon name='pencil' /> Edit {application.name}
+                        <Icon name='pencil' /> Edit {application.name || applicationId}
                     </Link>
                     <Link
                         to={Routes.appOAuth(LINK_PARAMS)}

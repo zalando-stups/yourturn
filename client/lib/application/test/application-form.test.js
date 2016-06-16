@@ -1,15 +1,6 @@
 /* globals expect, $, TestUtils, reset, render, React, sinon, Promise */
-import KioStore from 'common/src/data/kio/kio-store';
-import KioTypes from 'common/src/data/kio/kio-types';
-import * as KioGetter from 'common/src/data/kio/kio-getter';
 import * as KioActions from 'common/src/data/kio/kio-actions';
-
-import UserStore from 'common/src/data/user/user-store';
-import UserTypes from 'common/src/data/user/user-types';
-import * as UserGetter from 'common/src/data/user/user-getter';
-
 import AppForm from 'application/src/application-form/application-form.jsx';
-import {bindGettersToState} from 'common/src/util';
 
 const APP_ID = 'kio',
     TEST_APP = {
@@ -32,16 +23,7 @@ describe('The application form view', () => {
     describe('in create mode', () => {
         beforeEach(() => {
             reset();
-            let kioActions = Object.assign({}, KioActions),
-                kioState = KioStore(),
-                userState = UserStore(UserStore(), {
-                    type: UserTypes.FETCH_USERACCOUNTS,
-                    payload: [{
-                        id: '123',
-                        name: 'stups'
-                    }]
-                });
-
+            let kioActions = Object.assign({}, KioActions);
             actionSpy = sinon.stub(kioActions, 'saveApplication', function () {
                 return Promise.resolve();
             });
@@ -49,8 +31,9 @@ describe('The application form view', () => {
             props = {
                 applicationId: APP_ID,
                 edit: false,
-                kioStore: bindGettersToState(kioState, KioGetter),
-                userStore: bindGettersToState(userState, UserGetter),
+                application: TEST_APP,
+                applicationIds: ['foo'],
+                userTeams: ['stups'],
                 kioActions
             };
 
@@ -67,9 +50,8 @@ describe('The application form view', () => {
             expect($(React.findDOMNode(checkbox)).is(':checked')).to.be.true;
         });
 
-        it('should disable save button without accounts', () => {
-            props.userStore = bindGettersToState(UserStore(), UserGetter);
-            form = render(AppForm, props);
+        it('should disable save button without teams', () => {
+            form = render(AppForm, {...props, userTeams: []});
             let btn = TestUtils.findRenderedDOMComponentWithAttributeValue(form, 'data-block', 'save-button');
             expect($(React.findDOMNode(btn)).is('[disabled="true"]')).to.be.false;
         });
@@ -78,18 +60,7 @@ describe('The application form view', () => {
     describe('in edit mode', () => {
         beforeEach(() => {
             reset();
-            let kioActions = Object.assign({}, KioActions),
-                kioState = KioStore(KioStore(), {
-                    type: KioTypes.FETCH_APPLICATION,
-                    payload: TEST_APP
-                }),
-                userState = UserStore(UserStore(), {
-                    type: UserTypes.FETCH_USERACCOUNTS,
-                    payload: [{
-                        id: '123',
-                        name: 'stups'
-                    }]
-                });
+            let kioActions = Object.assign({}, KioActions);
 
             actionSpy = sinon.stub(kioActions, 'saveApplication', function () {
                 return Promise.resolve();
@@ -98,8 +69,9 @@ describe('The application form view', () => {
             props = {
                 applicationId: APP_ID,
                 edit: true,
-                kioStore: bindGettersToState(kioState, KioGetter),
-                userStore: bindGettersToState(userState, UserGetter),
+                application: TEST_APP,
+                applicationIds: ['foo'],
+                userTeams: ['stups'],
                 kioActions
             };
 

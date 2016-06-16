@@ -23,6 +23,9 @@ function TeamStore(state = DEFAULT_STATE, action) {
         state = payload.alias.reduce((map, alias) => map.setIn(['alias', alias], payload.id), state);
         state = state.setIn(['alias', payload.id], payload.id);
         return state;
+    } else if (type === Types.FETCH_TEAMS) {
+        const teams = payload.reduce((map, team) => { map[team.id] = team; return map;}, {});
+        return state.set('teams', Immutable.fromJS(teams))
     }
 
     return state;

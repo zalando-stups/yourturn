@@ -1,25 +1,12 @@
 /* globals expect, $, TestUtils, reset, render, React, Promise, sinon */
-import KioStore from 'common/src/data/kio/kio-store';
-import KioTypes from 'common/src/data/kio/kio-types';
-import * as KioGetter from 'common/src/data/kio/kio-getter';
-import * as KioActions from 'common/src/data/kio/kio-actions';
-
-import MintStore from 'common/src/data/mint/mint-store';
 import * as MintActions from 'common/src/data/mint/mint-actions';
-import * as MintGetter from 'common/src/data/mint/mint-getter';
-import MintTypes from 'common/src/data/mint/mint-types';
-
-import EssentialsStore from 'common/src/data/essentials/essentials-store';
-import * as EssentialsGetter from 'common/src/data/essentials/essentials-getter';
-
-import UserStore from 'common/src/data/user/user-store';
-import UserTypes from 'common/src/data/user/user-types';
-import * as UserGetter from 'common/src/data/user/user-getter';
-
 import OAuthForm from 'application/src/oauth-form/oauth-form.jsx';
-import {bindGettersToState} from 'common/src/util';
 
-const MOCK_KIO = {
+const TEST_APP = {
+    id: 'kio',
+    name: 'Kio'
+},
+TEST_OAUTH = {
     id: 'kio',
     username: 'kio-robot',
     last_password_rotation: '2015-01-01T12:42:41Z',
@@ -45,25 +32,18 @@ describe('The oauth form view', () => {
     beforeEach(() => {
         reset();
 
-        let mintActions = Object.assign({}, MintActions),
-            kioState = KioStore(),
-            essentialsState = EssentialsStore(),
-            mintState = MintStore(MintStore(), {
-                type: MintTypes.FETCH_OAUTH_CONFIG,
-                payload: ['kio', MOCK_KIO]
-            }),
-            userState = UserStore();
-
+        let mintActions = Object.assign({}, MintActions);
         actionSpy = sinon.stub(mintActions, 'saveOAuthConfig', () => {
             return Promise.resolve();
         });
         props = {
             applicationId: 'kio',
             mintActions,
-            kioStore: bindGettersToState(kioState, KioGetter),
-            userStore: bindGettersToState(userState, UserGetter),
-            mintStore: bindGettersToState(mintState, MintGetter),
-            essentialsStore: bindGettersToState(essentialsState, EssentialsGetter)
+            application: TEST_APP,
+            allScopes: [],
+            resourceOwnerScopes: [],
+            oauthConfig: TEST_OAUTH,
+            editable: true
         };
 
         form = render(OAuthForm, props);
