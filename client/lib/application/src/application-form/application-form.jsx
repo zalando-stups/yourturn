@@ -146,7 +146,7 @@ class ApplicationForm extends React.Component {
                                 <select
                                     data-block='team-input'
                                     name='yourturn_app_team_id'
-                                    defaultValue={app.team_id || teams[0].id}
+                                    defaultValue={app.team_id || userTeams[0]}
                                     onChange={this.update.bind(this, 'team_id', 'value')}
                                     id='team_id'>
                                     {userTeams.map(
