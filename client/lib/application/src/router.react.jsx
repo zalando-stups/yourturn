@@ -431,7 +431,7 @@ class VersionDetailHandler extends React.Component {
             tags = pieroneStore.getTags(team, artifact).map(t => t.name),
             approvalCount = kioStore.getApprovals(applicationId, versionId).length,
             editable = !!magnificentStore.getAuth(application.team_id),
-            scmSource = pieroneStore.getScmSource(team, artifact, tag);;
+            scmSource = pieroneStore.getScmSource(team, artifact, tag);
         return <VersionDetail
                     applicationId={this.props.params.applicationId}
                     versionId={this.props.params.versionId}
