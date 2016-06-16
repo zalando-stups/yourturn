@@ -325,6 +325,8 @@ ApplicationForm.propTypes = {
     applicationId: React.PropTypes.string,
     edit: React.PropTypes.bool,
     userTeams: React.PropTypes.array.isRequired,
+    application: React.PropTypes.object.isRequired,
+    applicationIds: React.PropTypes.array.isRequired,
     kioActions: React.PropTypes.object.isRequired,
     notificationActions: React.PropTypes.object.isRequired
 };

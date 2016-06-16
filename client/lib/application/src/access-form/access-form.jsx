@@ -160,7 +160,13 @@ AccessForm.displayName = 'AccessForm';
 AccessForm.propTypes = {
     applicationId: React.PropTypes.string.isRequired,
     mintActions: React.PropTypes.object.isRequired,
-    notificationActions: React.PropTypes.object.isRequired
+    notificationActions: React.PropTypes.object.isRequired,
+    application: React.PropTypes.object.isRequired,
+    allScopes: React.PropTypes.array.isRequired,
+    applicationScopes: React.PropTypes.array.isRequired,
+    oauthConfig: React.PropTypes.object.isRequired,
+    defaultAccount: React.PropTypes.string.isRequired,
+    editable: React.PropTypes.bool.isRequired
 };
 AccessForm.contextTypes = {
     router: React.PropTypes.object

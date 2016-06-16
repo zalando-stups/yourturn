@@ -132,7 +132,6 @@ class ApprovalForm extends React.Component {
     render() {
         const {applicationId, versionId, application, approvalTypes, approvals, editable, userInfos} = this.props,
         LINK_PARAMS = {applicationId, versionId};
-        console.debug(userInfos)
         return <div className='approvalForm'>
                     <h2>
                         <Link
@@ -262,6 +261,11 @@ ApprovalForm.displayName = 'ApprovalForm';
 ApprovalForm.propTypes = {
     applicationId: React.PropTypes.string.isRequired,
     versionId: React.PropTypes.string.isRequired,
+    application: React.PropTypes.object.isRequired,
+    approvalTypes: React.PropTypes.array.isRequired,
+    approvals: React.PropTypes.array.isRequired,
+    editable: React.PropTypes.bool.isRequired,
+    userInfos: React.PropTypes.object.isRequired,
     notificationActions: React.PropTypes.object.isRequired,
     kioActions: React.PropTypes.object.isRequired
 };

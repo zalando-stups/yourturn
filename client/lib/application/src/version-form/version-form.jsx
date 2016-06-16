@@ -84,7 +84,12 @@ class VersionForm extends React.Component {
     }
 
     render() {
-        const {applicationId, versionId, edit, application, approvalCount} = this.props,
+        const {applicationId,
+                versionId,
+                edit,
+                application,
+                approvalCount
+            } = this.props,
             {versionIdTaken, id, notes, artifact} = this.state,
             version = edit ? this.props.version : false,
             LINK_PARAMS = {applicationId,versionId};
@@ -206,7 +211,10 @@ VersionForm.displayName = 'VersionForm';
 VersionForm.propTypes = {
     applicationId: React.PropTypes.string.isRequired,
     versionId: React.PropTypes.string,
-    edit: React.PropTypes.bool,
+    edit: React.PropTypes.bool.isRequired,
+    application: React.PropTypes.object.isRequired,
+    version: React.PropTypes.object,
+    approvalCount: React.PropTypes.number.isRequired,
     kioActions: React.PropTypes.object.isRequired,
     notificationActions: React.PropTypes.object.isRequired
 };

@@ -1,7 +1,7 @@
 /* globals expect, sinon, Promise, $, TestUtils, reset, render, React */
 import * as EssentialsActions from 'common/src/data/essentials/essentials-actions';
 import * as KioActions from 'common/src/data/kio/kio-actions';
-
+import * as MagnificentActions from 'common/src/data/magnificent/magnificent-actions';
 import Form from 'resource/src/resource-form/resource-form.jsx';
 
 const RES_ID = 'sales_order',
@@ -17,14 +17,13 @@ describe('The resource form view', () => {
         actionSpy,
         form,
         essentialsActions,
+        magnificentActions,
         kioActions;
 
     beforeEach(() => {
         reset();
 
         essentialsActions = Object.assign({}, EssentialsActions);
-        kioActions = Object.assign({}, KioActions);
-
         actionSpy = sinon.stub(essentialsActions, 'saveResource', function () {
             return Promise.resolve();
         });
@@ -59,7 +58,9 @@ describe('The resource form view', () => {
             props.kioActions = {
                 fetchApplication: id => Promise.resolve({ id: 'kio', team_id: 'stups' })
             };
-            props.userAccounts = ['stups'];
+            props.magnificentActions = {
+                fetchAuth: () => Promise.resolve({allowed: true})
+            }
             props.existingResourceIds = ['foo', 'bar'];
             form = render(Form, props);
             const input = TestUtils.findRenderedDOMComponentWithAttributeValue(form, 'data-block', 'id-input');

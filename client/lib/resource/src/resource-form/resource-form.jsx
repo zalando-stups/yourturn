@@ -130,11 +130,9 @@ class ResourceForm extends React.Component {
     }
 
     render() {
-        let {edit, resourceId} = this.props,
-            {invalidIdReason, resource, checkingId} = this.state;
-        const LINK_PARAMS = {
-            resourceId: resourceId
-        };
+        const {edit, resourceId} = this.props,
+            {invalidIdReason, resource, checkingId} = this.state,
+            LINK_PARAMS = {resourceId};
         return <div className='resourceForm'>
                     <h2>
                         {edit ?
@@ -267,7 +265,8 @@ ResourceForm.propTypes = {
     edit: React.PropTypes.bool.isRequired,
     resourceId: React.PropTypes.string,
     essentialsActions: React.PropTypes.object.isRequired,
-    notificationActions: React.PropTypes.object.isRequired
+    notificationActions: React.PropTypes.object.isRequired,
+    magnificentActions: React.PropTypes.object.isRequired
 };
 ResourceForm.contextTypes = {
     router: React.PropTypes.object

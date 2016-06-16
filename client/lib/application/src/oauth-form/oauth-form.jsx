@@ -156,6 +156,11 @@ class OAuthForm extends React.Component {
 OAuthForm.displayName = 'OAuthForm';
 OAuthForm.propTypes = {
     applicationId: React.PropTypes.string.isRequired,
+    application: React.PropTypes.object.isRequired,
+    resourceOwnerScopes: React.PropTypes.array.isRequired,
+    allScopes: React.PropTypes.array.isRequired,
+    oauthConfig: React.PropTypes.object.isRequired,
+    editable: React.PropTypes.bool.isRequired,
     mintActions: React.PropTypes.object.isRequired,
     notificationActions: React.PropTypes.object.isRequired
 };

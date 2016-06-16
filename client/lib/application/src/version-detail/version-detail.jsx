@@ -86,12 +86,17 @@ class VersionDetail extends React.Component {
     }
 
     render() {
-        let {applicationId, versionId, application, version, approvalCount, editable, tags, artifactInfo, scmSource} = this.props;
-
-        const LINK_PARAMS = {
-            applicationId: applicationId,
-            versionId: versionId
-        };
+        const {
+            applicationId,
+            versionId,
+            application,
+            version,
+            approvalCount,
+            editable,
+            tags,
+            artifactInfo,
+            scmSource} = this.props,
+        LINK_PARAMS = {applicationId, versionId};
 
         if (version instanceof FetchResult) {
             return version.isPending() ?
@@ -169,7 +174,14 @@ class VersionDetail extends React.Component {
 VersionDetail.displayName = 'VersionDetail';
 VersionDetail.propTypes = {
     applicationId: React.PropTypes.string.isRequired,
-    versionId: React.PropTypes.string.isRequired
+    versionId: React.PropTypes.string.isRequired,
+    application: React.PropTypes.object.isRequired,
+    version: React.PropTypes.object.isRequired,
+    approvalCount: React.PropTypes.number.isRequired,
+    editable: React.PropTypes.bool.isRequired,
+    tags: React.PropTypes.array.isRequired,
+    artifactInfo: React.PropTypes.object.isRequired,
+    scmSource: React.PropTypes.object.isRequired
 };
 
 export default VersionDetail;

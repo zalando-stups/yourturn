@@ -19,7 +19,7 @@ class ScmSourceWarning extends React.Component {
                     <DefaultError error={scmSource.getResult()} />;
         }
         // no scm-source, but tag in pierone -> bad
-        if (!scmSource && tags.map(t => t.name).indexOf(artifactInfo.tag) >= 0) {
+        if (!scmSource && tags.indexOf(artifactInfo.tag) >= 0) {
             missingScmSource = <div
                                     data-block='missing-scmsource-warning'
                                     className='u-warning'>
