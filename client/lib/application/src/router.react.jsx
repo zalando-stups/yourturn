@@ -173,13 +173,14 @@ class CreateAppFormHandler extends React.Component {
     }
 
     render() {
-        const userTeams = this.props.userStore.getUserTeams();
+        const userTeams = this.props.userStore.getUserTeams().map(t => t.id),
+            applicationIds = this.props.kioStore.getApplications().map(a => a.id);
         return  <ApplicationForm
                     edit={false}
                     userTeams={userTeams}
+                    applicationIds={applicationIds}
                     notificationActions={NOTIFICATION_ACTIONS}
-                    kioActions={KIO_ACTIONS}
-                    {...this.props} />;
+                    kioActions={KIO_ACTIONS} />;
     }
 }
 CreateAppFormHandler.displayName = 'CreateAppFormHandler';

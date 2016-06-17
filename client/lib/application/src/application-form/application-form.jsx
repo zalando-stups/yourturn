@@ -323,9 +323,9 @@ class ApplicationForm extends React.Component {
 ApplicationForm.displayName = 'ApplicationForm';
 ApplicationForm.propTypes = {
     applicationId: React.PropTypes.string,
-    edit: React.PropTypes.bool,
+    edit: React.PropTypes.bool.isRequired,
     userTeams: React.PropTypes.array.isRequired,
-    application: React.PropTypes.object.isRequired,
+    application: React.PropTypes.object,
     applicationIds: React.PropTypes.array.isRequired,
     kioActions: React.PropTypes.object.isRequired,
     notificationActions: React.PropTypes.object.isRequired
