@@ -16,7 +16,7 @@ var applications = {
         subtitle: 'STUPS application registry',
         name: 'Kio',
         active: true,
-        team_id: 'stups',
+        team_id: 'stups-test',
         id: 'kio',
         required_approvers: 2,
         criticality_level: 3,
