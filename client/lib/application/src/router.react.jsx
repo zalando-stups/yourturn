@@ -206,10 +206,9 @@ class EditAppFormHandler extends React.Component {
 
     render() {
         const {applicationId} = this.props.params,
-              userAccounts = this.props.userStore.getUserCloudAccounts().map(a => a.name),
               userTeams = this.props.userStore.getUserTeams().map(t => t.id),
-              accountsAndTeams = new Set(userAccounts.concat(userTeams)),
               application = this.props.kioStore.getApplication(applicationId),
+              teamsAndPreviousValue = new Set([...userTeams, application.team_id]),
               applicationIds = this.props.kioStore.getApplications().map(a => a.id);
 
         return <ApplicationForm
@@ -219,7 +218,7 @@ class EditAppFormHandler extends React.Component {
                     kioActions={KIO_ACTIONS}
                     application={application}
                     applicationIds={applicationIds}
-                    userTeams={[...accountsAndTeams]} />
+                    userTeams={[...teamsAndPreviousValue].sort()} />
     }
 }
 EditAppFormHandler.isAllowed = function(routerState, state, [hasAuth]) {
@@ -239,8 +238,7 @@ EditAppFormHandler.fetchData = function(routerState, state) {
     return KIO_ACTIONS.fetchApplication(routerState.params.applicationId)
         .then(app => Promise.all([
             requireAuth(state, app.team_id, MAGNIFICENT_ACTIONS),
-            requireTeams(state, USER_ACTIONS),
-            requireAccounts(state, USER_ACTIONS)
+            requireTeams(state, USER_ACTIONS)
         ]));
 };
 var ConnectedEditAppFormHandler =
