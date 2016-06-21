@@ -359,7 +359,8 @@ class AccessFormHandler extends React.Component {
                 defaultAccount={defaultAccount}
                 applicationScopes={applicationScopes}
                 notificationActions={NOTIFICATION_ACTIONS}
-                application={application} />;
+                application={application}
+                allScopes={allScopes} />;
     }
 }
 AccessFormHandler.displayName = 'AccessFormHandler';
