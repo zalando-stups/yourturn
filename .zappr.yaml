@@ -6,3 +6,4 @@ approvals:
         orgs:
           - zalando
 X-Zalando-Team: torch
+X-Zalando-Type: code
