@@ -4,10 +4,13 @@ var IN_PROD = process.env.NODE_ENV === 'production',
 
 winston.remove(winston.transports.Console);
 winston.add(winston.transports.Console, {
-    timestamp: true,
+    timestamp: () => (new Date()).toISOString(),
     showLevel: true,
-    colorize: IN_PROD ? false : true,
-    level:  IN_PROD ? 'info' : 'debug'
+    colorize: false,
+    level:  IN_PROD ? 'info' : 'debug',
+    formatter: IN_PROD ?
+                opts => `${opts.level.toUpperCase()} ${opts.message || ''} ${opts.meta ? '[' + JSON.stringify(opts.meta) + ']' : ''}` :
+                opts => `${opts.timestamp()} ${opts.level.toUpperCase()} ${opts.message || ''} ${opts.meta ? '[' + JSON.stringify(opts.meta) + ']' : ''}`
 });
 
 // set up 3rd party monitoring
