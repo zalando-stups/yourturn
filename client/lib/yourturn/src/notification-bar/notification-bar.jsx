@@ -24,8 +24,8 @@ Notification.displayName = 'Notification';
 // ========
 
 class NotificationBar extends React.Component {
-    constructor(props) {
-        super(props);
+    constructor() {
+        super();
         this.state = {
             interval: false
         };
