@@ -16,7 +16,7 @@ export default function ApplicationDetail({applicationId, application, versions,
                 <Placeholder applicationId={applicationId} /> :
                 <DefaultError error={application.getResult()} />;
     }
-    console.log("ENV_TEST = %O", ENV_TEST);
+
     return <div className='applicationDetail'>
                 <h1>{application.name || applicationId}</h1>
                 <div className='btn-group'>
