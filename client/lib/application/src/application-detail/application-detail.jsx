@@ -16,6 +16,7 @@ export default function ApplicationDetail({applicationId, application, versions,
                 <Placeholder applicationId={applicationId} /> :
                 <DefaultError error={application.getResult()} />;
     }
+    console.log("ENV_TEST = %O", ENV_TEST);
     return <div className='applicationDetail'>
                 <h1>{application.name || applicationId}</h1>
                 <div className='btn-group'>
@@ -44,6 +45,14 @@ export default function ApplicationDetail({applicationId, application, versions,
                         className='btn btn-primary'>
                         <Icon name='list' /> Versions
                     </Link>
+                    {ENV_DEVELOPMENT ?
+                        <Link
+                            to={Routes.lifecycle(LINK_PARAMS)}
+                            className='btn btn-primary'>
+                            <Icon name='list' /> Lifecycle
+                        </Link>
+                        : null
+                    }
                 </div>
 
                 <h4>
