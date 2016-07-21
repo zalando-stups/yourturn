@@ -34,12 +34,33 @@ class NotificationBar extends React.Component {
     dismiss(id) {
         this.props.dispatch(Actions.removeNotification(id));
     }
+    
+    componentWillReceiveProps(nextProps) {
+        const { notifications = [] } = nextProps;
+
+        if (!this.state.interval && notifications.length > 0) {
+            this.startInterval();
+        } else if (this.state.interval && notifications.length == 0) {
+            this.stopInterval();
+        }
+    }
 
     componentDidMount() {
         /**
          * Continually dismiss old notifications.
          */
-        let interval = setInterval(() => {
+        const { notifications = [] } = this.props;
+        if (notifications.length > 0) {
+            this.startInterval();
+        }
+    }
+
+    componentWillUnmount() {
+        this.stopInterval();
+    }
+
+    startInterval() {
+        const interval = setInterval(() => {
             this.props.dispatch(Actions.removeNotificationsOlderThan(5000));
         }, 5000);
         this.setState({
@@ -47,7 +68,10 @@ class NotificationBar extends React.Component {
         });
     }
 
-    componentWillUnmount() {
+    stopInterval() {
+        this.setState({
+            interval: false
+        });
         clearInterval(this.state.interval);
     }
 
