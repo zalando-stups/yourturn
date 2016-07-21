@@ -24,8 +24,8 @@ Notification.displayName = 'Notification';
 // ========
 
 class NotificationBar extends React.Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
             interval: false
         };
@@ -34,17 +34,38 @@ class NotificationBar extends React.Component {
     dismiss(id) {
         this.props.dispatch(Actions.removeNotification(id));
     }
+    
+    componentWillReceiveProps(nextProps) {
+        const { notifications = [] } = nextProps;
+
+        if (!this.state.interval && notifications.length > 0) {
+            let interval = setInterval(() => {
+                this.props.dispatch(Actions.removeNotificationsOlderThan(5000));
+            }, 5000);
+            this.setState({
+                interval
+            });
+        } else if (this.state.interval && notifications.length == 0) {
+            clearInterval(this.state.interval);
+            this.setState({
+                interval: false
+            });
+        }
+    }
 
     componentDidMount() {
         /**
          * Continually dismiss old notifications.
          */
-        let interval = setInterval(() => {
-            this.props.dispatch(Actions.removeNotificationsOlderThan(5000));
-        }, 5000);
-        this.setState({
-            interval
-        });
+        const { notifications = [] } = this.props;
+        if (notifications.length > 0) {
+            let interval = setInterval(() => {
+                this.props.dispatch(Actions.removeNotificationsOlderThan(5000));
+            }, 5000);
+            this.setState({
+                interval
+            });
+        }
     }
 
     componentWillUnmount() {
