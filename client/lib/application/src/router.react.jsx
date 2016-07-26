@@ -650,9 +650,6 @@ ApplicationLifecycleHandler.displayName = 'ApplicationLifecycleHandler';
 ApplicationLifecycleHandler.propTypes = {
     params: React.PropTypes.object.isRequired
 };
-ApplicationLifecycleHandler.fetchData = function(routerState, state) {
-    return;
-};
 let ConnectedApplicationLifecycleHandler = connect(state => ({
     kioStore: bindGettersToState(state.kio, KioGetter)
 }))(ApplicationLifecycleHandler);

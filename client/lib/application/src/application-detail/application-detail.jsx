@@ -49,7 +49,7 @@ export default function ApplicationDetail({applicationId, application, versions,
                         <Link
                             to={Routes.lifecycle(LINK_PARAMS)}
                             className='btn btn-primary'>
-                            <Icon name='list' /> Lifecycle
+                            <Icon name='bar-chart' /> Lifecycle
                         </Link>
                         : null
                     }
