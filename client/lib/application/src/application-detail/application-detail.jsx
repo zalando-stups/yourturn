@@ -1,3 +1,4 @@
+/* global ENV_DEVELOPMENT */
 import React from 'react';
 import Icon from 'react-fa';
 import {Link} from 'react-router';
@@ -16,6 +17,7 @@ export default function ApplicationDetail({applicationId, application, versions,
                 <Placeholder applicationId={applicationId} /> :
                 <DefaultError error={application.getResult()} />;
     }
+
     return <div className='applicationDetail'>
                 <h1>{application.name || applicationId}</h1>
                 <div className='btn-group'>
@@ -44,6 +46,14 @@ export default function ApplicationDetail({applicationId, application, versions,
                         className='btn btn-primary'>
                         <Icon name='list' /> Versions
                     </Link>
+                    {ENV_DEVELOPMENT ?
+                        <Link
+                            to={Routes.lifecycle(LINK_PARAMS)}
+                            className='btn btn-primary'>
+                            <Icon name='bar-chart' /> Lifecycle
+                        </Link>
+                        : null
+                    }
                 </div>
 
                 <h4>

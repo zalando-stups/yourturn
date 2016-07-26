@@ -1,3 +1,4 @@
+/* global ENV_DEVELOPMENT */
 import _ from 'lodash';
 import React from 'react';
 import {Route, IndexRoute} from 'react-router';
@@ -43,6 +44,7 @@ import VersionList from './version-list/version-list.jsx';
 import VersionForm from './version-form/version-form.jsx';
 import VersionDetail from './version-detail/version-detail.jsx';
 import ApprovalForm from './approval-form/approval-form.jsx';
+import ApplicationLifeCycle from './application-lifecycle/application-lifecycle.jsx'
 
 import {appList} from 'application/src/routes';
 
@@ -634,6 +636,26 @@ let ConnectedApprovalFormHandler = connect(state => ({
     magnificentStore: bindGettersToState(state.magnificent, MagnificentGetter)
 }))(ApprovalFormHandler);
 
+class ApplicationLifecycleHandler extends React.Component {
+    constructor() {
+        super();
+    }
+
+    render() {
+        return <ApplicationLifeCycle
+            applicationId={this.props.params.applicationId}
+            {...this.props} />;
+    }
+}
+ApplicationLifecycleHandler.displayName = 'ApplicationLifecycleHandler';
+ApplicationLifecycleHandler.propTypes = {
+    params: React.PropTypes.object.isRequired
+};
+let ConnectedApplicationLifecycleHandler = connect(state => ({
+    kioStore: bindGettersToState(state.kio, KioGetter)
+}))(ApplicationLifecycleHandler);
+
+
 const ROUTES =
         <Route path='application'>
             <IndexRoute
@@ -660,6 +682,14 @@ const ROUTES =
                 <IndexRoute
                     onEnter={wrapEnter(AppDetailHandler.fetchData)}
                     component={ConnectedAppDetailHandler} />
+                {ENV_DEVELOPMENT ?
+                    <Route path='lifecycle'>
+                        <IndexRoute
+                            onEnter={wrapEnter(ApplicationLifecycleHandler.fetchData)}
+                            component={ConnectedApplicationLifecycleHandler}/>
+                    </Route>
+                    : null
+                }
                 <Route path='version'>
                     <IndexRoute
                         onEnter={wrapEnter(VersionListHandler.fetchData)}

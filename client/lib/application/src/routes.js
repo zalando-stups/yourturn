@@ -46,6 +46,10 @@ function verEdit({applicationId, versionId}) {
     return `/application/detail/${applicationId}/version/edit/${versionId}`;
 }
 
+function lifecycle({applicationId}) {
+    return `/application/detail/${applicationId}/lifecycle`;
+}
+
 export {
     appList,
     appCreate,
@@ -57,5 +61,6 @@ export {
     verCreate,
     verApproval,
     verDetail,
-    verEdit
+    verEdit,
+    lifecycle
 };
