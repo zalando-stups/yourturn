@@ -1,3 +1,4 @@
+/* global ENV_DEVELOPMENT */
 import React from 'react';
 import Icon from 'react-fa';
 import {Link} from 'react-router';

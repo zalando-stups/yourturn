@@ -1,3 +1,4 @@
+/* global ENV_DEVELOPMENT */
 import _ from 'lodash';
 import React from 'react';
 import {Route, IndexRoute} from 'react-router';
