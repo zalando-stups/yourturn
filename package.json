@@ -52,6 +52,7 @@
     "react-time": "4.0.0",
     "react-tooltip": "1.1.4",
     "react-typeahead": "1.1.5",
+    "react-widgets": "^3.4.3",
     "redux": "3.0.4",
     "redux-actions": "0.8.0",
     "redux-logger": "2.2.1",
