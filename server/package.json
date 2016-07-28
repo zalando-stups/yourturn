@@ -27,5 +27,8 @@
     "xml2js": "0.4.16",
     "camel-case": "1.2.2",
     "shelljs": "0.5.3"
+  },
+  "devDependencies": {
+    "moment": "^2.14.1"
   }
 }
