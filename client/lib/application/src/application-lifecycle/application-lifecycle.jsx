@@ -27,15 +27,13 @@ class ApplicationLifeCycle extends React.Component {
 
     render() {
         const {applicationId, kioStore} = this.props,
-            application = kioStore.getApplication(applicationId),
-            versions = kioStore.getApplicationVersions(applicationId, '');
+            application = kioStore.getApplication(applicationId);
         const LINK_PARAMS = {
             applicationId: applicationId
         };
 
         console.log("props: %O", this.props);
         console.log("state: %O", this.state);
-        console.log("versions: %O", versions);
 
         return (
             <div>
@@ -57,7 +55,7 @@ class ApplicationLifeCycle extends React.Component {
                         valueField       = 'id'
                         textField        = 'id'
                         value            = {this.state.selectedVersions}
-                        data             = {versions}
+                        data             = {[]}
                         onChange         = {this.onComboBoxSelect}
                         onReset          = {this.onComboBoxReset}
                         resetButtonTitle = 'Reset'

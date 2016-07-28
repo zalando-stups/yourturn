@@ -141,10 +141,8 @@ function limitData(data, start, end) {
 function getData(appId, start, end) {
     var found = data.filter( d => d.application == appId)[0].versions;
     var result = [];
-    console.log(JSON.stringify(found));
 
     for (var i = 0; i < found.length; i++) {
-        console.log(JSON.stringify(found[i]));
         result.push({
             version_id: found[i].version_id,
             metadata: found[i].metadata,
@@ -163,7 +161,7 @@ server.use(function(req, res, next) {
     next();
 });
 
-server.get('/apps/:application_id', function(req,res) {
+server.get('/servercount/:application_id', function(req,res) {
     var startDate = new Date(req.query.from);
     var endDate = new Date(req.query.to);
     var applicationId = req.params.application_id;

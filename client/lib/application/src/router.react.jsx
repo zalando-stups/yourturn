@@ -34,6 +34,7 @@ import * as MintActions from 'common/src/data/mint/mint-actions';
 import * as EssentialsActions from 'common/src/data/essentials/essentials-actions';
 import * as PieroneActions from 'common/src/data/pierone/pierone-actions';
 import * as MagnificentActions from 'common/src/data/magnificent/magnificent-actions';
+import * as AliceActions from 'common/src/data/alice/alice-action';
 
 import ApplicationList from './application-list/application-list.jsx';
 import ApplicationForm from './application-form/application-form.jsx';
@@ -46,6 +47,8 @@ import VersionDetail from './version-detail/version-detail.jsx';
 import ApprovalForm from './approval-form/approval-form.jsx';
 import ApplicationLifeCycle from './application-lifecycle/application-lifecycle.jsx'
 
+import { ConnectedApplicationLifecycleHandler, ConnectedApplicationLifecycleFetchData } from './application-lifecycle/ApplicationLifeCycleComponent.jsx';
+
 import {appList} from 'application/src/routes';
 
 const MINT_ACTIONS = bindActionsToStore(REDUX, MintActions),
@@ -56,7 +59,8 @@ const MINT_ACTIONS = bindActionsToStore(REDUX, MintActions),
       NOTIFICATION_ACTIONS = bindActionsToStore(REDUX, NotificationActions),
       TEAM_ACTIONS = bindActionsToStore(REDUX, TeamActions),
       TWINTIP_ACTIONS = bindActionsToStore(REDUX, TwintipActions),
-      MAGNIFICENT_ACTIONS = bindActionsToStore(REDUX, MagnificentActions);
+      MAGNIFICENT_ACTIONS = bindActionsToStore(REDUX, MagnificentActions),
+      ALICE_ACTIONS = bindActionsToStore(REDUX, AliceActions);
 
 class AppListHandler extends React.Component {
     constructor() {
@@ -636,26 +640,6 @@ let ConnectedApprovalFormHandler = connect(state => ({
     magnificentStore: bindGettersToState(state.magnificent, MagnificentGetter)
 }))(ApprovalFormHandler);
 
-class ApplicationLifecycleHandler extends React.Component {
-    constructor() {
-        super();
-    }
-
-    render() {
-        return <ApplicationLifeCycle
-            applicationId={this.props.params.applicationId}
-            {...this.props} />;
-    }
-}
-ApplicationLifecycleHandler.displayName = 'ApplicationLifecycleHandler';
-ApplicationLifecycleHandler.propTypes = {
-    params: React.PropTypes.object.isRequired
-};
-let ConnectedApplicationLifecycleHandler = connect(state => ({
-    kioStore: bindGettersToState(state.kio, KioGetter)
-}))(ApplicationLifecycleHandler);
-
-
 const ROUTES =
         <Route path='application'>
             <IndexRoute
@@ -685,7 +669,7 @@ const ROUTES =
                 {ENV_DEVELOPMENT ?
                     <Route path='lifecycle'>
                         <IndexRoute
-                            onEnter={wrapEnter(ApplicationLifecycleHandler.fetchData)}
+                            onEnter={wrapEnter(ConnectedApplicationLifecycleFetchData)}
                             component={ConnectedApplicationLifecycleHandler}/>
                     </Route>
                     : null

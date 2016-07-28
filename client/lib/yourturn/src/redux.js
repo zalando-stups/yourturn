@@ -25,6 +25,7 @@ import EssentialsStore from 'common/src/data/essentials/essentials-store';
 import FullstopStore from 'common/src/data/fullstop/fullstop-store';
 import TeamStore from 'common/src/data/team/team-store';
 import SearchStore from 'common/src/data/search/search-store';
+import AliceReducer from 'common/src/data/alice/alice-reducer';
 
 const logger = createLogger(),
     STORE = combineReducers({
@@ -39,7 +40,8 @@ const logger = createLogger(),
         fullstop: FullstopStore,
         team: TeamStore,
         search: SearchStore,
-        routing: routeReducer
+        routing: routeReducer,
+        alice: AliceReducer
     }),
     createWithMiddleware = applyMiddleware(
                             syncHistory(browserHistory),
@@ -53,7 +55,7 @@ const logger = createLogger(),
                             reduxPromiseMiddleware,
                             // logging, but only in dev
                             // reduxIdentityMiddleware
-                            ENV_DEVELOPMENT ? logger : reduxIdentityMiddleware
+                            ENV_DEVELOPMENT && false ? logger : reduxIdentityMiddleware
                         )(createStore);
 
 export default createWithMiddleware(STORE);
