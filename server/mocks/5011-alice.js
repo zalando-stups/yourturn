@@ -67,14 +67,15 @@ function generateVersionEventData (k) {
         } else {
             currentMoment = moment(currentMoment).subtract(dataSpec.minus, dataSpec.prop);
         }
-        var resources = [];
-        for (var k = 0; k < i %3; k++) {
-            resources.push({instance_id: "instance"+k+""+i, image_id: "image"+k+""+i})
-        }
         var entry = {
             timestamp: currentMoment,
             count: dataSpec.amount,
-            resources: resources
+            resources: [
+                {
+                    event_type: 'event_type',
+                    instance_id: 'instance_id'
+                }
+            ]
         };
         result.push(entry);
     }
@@ -92,7 +93,17 @@ function generateVersionEventData (k) {
         for (var k=0; k < applicationsAndVersions[i].versions.length; k++) {
             var genVersion = {
                 version_id: applicationsAndVersions[i].versions[k],
-                metadata: {},
+                metadata: {
+                    scm_source: {
+                        repo_url: 'repo_url',
+                        git_hash: 'git_hash',
+                        commiter: 'commiter'
+                    },
+                    docker_source: 'docker_source',
+                    pull_request: {
+                        link: 'link'
+                    }
+                },
                 events: generateVersionEventData(k)
             }
             genEntry.versions.push(genVersion);
