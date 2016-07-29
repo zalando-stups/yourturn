@@ -4,7 +4,7 @@ import request from 'common/src/superagent';
 import {Services} from 'common/src/data/services';
 import {Provider, RequestConfig, saveRoute} from 'common/src/oauth-provider';
 
-export function fetchedServerCount(serverCountData) {
+function fetchedServerCount(serverCountData) {
     return {
         type: types.FETCHED_SERVER_COUNT,
         serverCountData

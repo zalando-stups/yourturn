@@ -1,26 +1,33 @@
 import React from 'react';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 
-import REDUX from 'yourturn/src/redux';
-import {parseArtifact} from 'application/src/util';
-import {
-    bindGettersToState,
-    bindActionsToStore
-} from 'common/src/util';
+import { parseArtifact } from 'application/src/util';
+import { bindActionCreators } from 'redux';
+import { bindGettersToState } from 'common/src/util';
 
 import * as KioGetter from 'common/src/data/kio/kio-getter';
 import * as AliceActions from 'common/src/data/alice/alice-action';
 
 import ApplicationLifeCycle from './application-lifecycle.jsx'
 
-const ALICE_ACTIONS = bindActionsToStore(REDUX, AliceActions);
-
 class ApplicationLifecycleHandler extends React.Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
+        console.log("constructor props: %O", props);
+    }
+
+    componentDidMount() {
+        console.log("componentDidMount %O", this.props);
+        this.props.actions.fetchServerCount('kio');
+    }
+
+    componentWillReceiveProps(nextProps) {
+        console.log("componentWillReceiveProps %O", nextProps);
     }
 
     render() {
+        console.log("render props: %O", this.props);
+
         return <ApplicationLifeCycle
             applicationId={this.props.params.applicationId}
             {...this.props} />;
@@ -47,9 +54,15 @@ function mapStateToProps(state, ownProps) {
     };
 }
 
-let ConnectedApplicationLifecycleHandler = connect(mapStateToProps)(ApplicationLifecycleHandler);
+function mapDispatchToProps(dispatch) {
+    return {
+        actions: bindActionCreators(AliceActions, dispatch)
+    };
+}
+
+
+const ConnectedApplicationLifecycleHandler = connect(mapStateToProps, mapDispatchToProps)(ApplicationLifecycleHandler);
 
 export {
-    ConnectedApplicationLifecycleHandler,
-    fetchData as ConnectedApplicationLifecycleFetchData
+    ConnectedApplicationLifecycleHandler
 }

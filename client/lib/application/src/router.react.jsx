@@ -669,7 +669,6 @@ const ROUTES =
                 {ENV_DEVELOPMENT ?
                     <Route path='lifecycle'>
                         <IndexRoute
-                            onEnter={wrapEnter(ConnectedApplicationLifecycleFetchData)}
                             component={ConnectedApplicationLifecycleHandler}/>
                     </Route>
                     : null
