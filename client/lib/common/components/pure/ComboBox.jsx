@@ -38,7 +38,9 @@ ComboBox.propTypes = {
 
 ComboBox.defaultProps = {
     resetButtonTitle: 'Reset',
-    title: 'Select'
+    title: 'Select',
+    valueField: 'id',
+    textField: 'id'
 }
 
 export default ComboBox;

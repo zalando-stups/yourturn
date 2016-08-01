@@ -70,7 +70,7 @@ function generateVersionEventData (k) {
         var entry = {
             timestamp: currentMoment,
             count: dataSpec.amount,
-            resources: [
+            instances: [
                 {
                     event_type: 'event_type',
                     instance_id: 'instance_id'
