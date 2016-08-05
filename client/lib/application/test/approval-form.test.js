@@ -1,13 +1,8 @@
 /* globals expect, $, TestUtils, reset, render, React */
-import * as KioActions from 'common/src/data/kio/kio-actions';
 import ApprovalForm from 'application/src/approval-form/approval-form.jsx';
 
 const APP_ID = 'kio',
     VER_ID = '0.1',
-    TEST_ACCOUNT = {
-        id: '234',
-        name: 'greendale'
-    },
     TEST_APP = {
         id: APP_ID,
         team_id: 'stups'

@@ -1,5 +1,4 @@
 /* globals sinon */
-import _ from 'lodash';
 import * as UserActions from 'common/src/data/user/user-actions';
 import validateResponse from 'yourturn/src/validate-oauth-response';
 

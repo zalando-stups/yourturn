@@ -9,7 +9,7 @@ function stringifySearchParams(searchParams) {
     let result = Object.assign({}, searchParams);
     Object.keys(result).forEach(k => {
         if (moment.isMoment(result[k])) {
-            // dates have to parsed to timestamp again
+            // dates have to be parsed to timestamp again
             result[k] = result[k].toISOString();
         }
     });

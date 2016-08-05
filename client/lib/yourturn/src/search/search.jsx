@@ -134,4 +134,16 @@ class Search extends React.Component {
 }
 Search.displayName = 'Search';
 
+// TODO specify in more detail
+Search.propTypes = {
+    searchActions: React.PropTypes.shape({
+        clearSearchResults: React.PropTypes.func,
+        fetchSearchResultsFrom: React.PropTypes.func
+    }).isRequired,
+    searchStore: React.PropTypes.shape({
+        hasResults: React.PropTypes.func,
+        getSearchResults: React.PropTypes.func
+    }).isRequired
+};
+
 export default Search;

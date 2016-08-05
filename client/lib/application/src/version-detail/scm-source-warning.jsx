@@ -1,5 +1,4 @@
 import React from 'react';
-import {parseArtifact} from 'application/src/util';
 import FetchResult from 'common/src/fetch-result';
 import DefaultError from 'common/src/error.jsx';
 
@@ -43,10 +42,17 @@ class ScmSourceWarning extends React.Component {
                 </div>;
     }
 }
+
 ScmSourceWarning.displayName = 'ScmSourceWarning';
+
 ScmSourceWarning.propTypes = {
     scmSource: React.PropTypes.object.isRequired,
-    version: React.PropTypes.object.isRequired
+    version: React.PropTypes.object.isRequired,
+    artifact: React.PropTypes.string,
+    artifactInfo: React.PropTypes.shape({
+        tag: React.PropTypes.string
+    }).isRequired,
+    tags: React.PropTypes.array
 };
 
 export default ScmSourceWarning;

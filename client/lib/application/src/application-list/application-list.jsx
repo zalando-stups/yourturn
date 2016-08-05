@@ -6,7 +6,6 @@ import AccountAppList from './account-app-list.jsx';
 import {Tabs, TabPanel, TabList, Tab} from 'react-tabs';
 import {Link} from 'react-router';
 import * as Routes from 'application/src/routes';
-import _ from 'lodash';
 import 'common/asset/less/application/application-list.less';
 import 'common/asset/less/common/tabs.less';
 
@@ -133,5 +132,17 @@ class ApplicationList extends React.Component {
     }
 }
 ApplicationList.displayName = 'ApplicationList';
+
+// TODO be more specific
+ApplicationList.propTypes = {
+    kioStore: React.PropTypes.object,
+    showInactive: React.PropTypes.bool,
+    onChangeTab: React.PropTypes.func,
+    kioActions: React.PropTypes.shape({
+            savePreferredAccount: React.PropTypes.func,
+            saveTabAccounts: React.PropTypes.func
+        }).isRequired,
+    applicationsFetching: React.PropTypes.any
+}
 
 export default ApplicationList;

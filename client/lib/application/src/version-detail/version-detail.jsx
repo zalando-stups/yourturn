@@ -82,7 +82,7 @@ ScmAuthorInfo.propTypes = {
 
 class VersionDetail extends React.Component {
     constructor(props) {
-        super();
+        super(props);
     }
 
     render() {
@@ -171,7 +171,9 @@ class VersionDetail extends React.Component {
                 </div>;
     }
 }
+
 VersionDetail.displayName = 'VersionDetail';
+
 VersionDetail.propTypes = {
     applicationId: React.PropTypes.string.isRequired,
     versionId: React.PropTypes.string.isRequired,

@@ -21,7 +21,6 @@ const TEAM = 'stups',
 
 describe('The version detail view', () => {
     var props,
-        pieroneState,
         detail;
 
     beforeEach(() => {

@@ -1,9 +1,7 @@
 import React from 'react';
 import {Route, IndexRoute} from 'react-router';
-import moment from 'moment';
 import Icon from 'react-fa';
 import lzw from 'lz-string';
-import _ from 'lodash';
 
 import Violation from './violation/violation.jsx';
 import ViolationDetail from './violation-detail/violation-detail.jsx';
@@ -146,7 +144,12 @@ ViolationHandler.fetchData = function(routerState, state) {
 };
 ViolationHandler.displayName = 'ViolationHandler';
 ViolationHandler.contextTypes = {
-    router: React.PropTypes.object
+    router: React.PropTypes.object,
+    routing: React.PropTypes.object,
+    location: React.PropTypes.object,
+    userStore: React.PropTypes.object,
+    fullstopStore: React.PropTypes.object,
+    teamStore: React.PropTypes.object
 };
 let ConnectedViolationHandler = connect(state => ({
     routing: state.routing,

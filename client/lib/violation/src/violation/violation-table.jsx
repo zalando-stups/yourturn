@@ -51,19 +51,28 @@ function cacheFormat(ts) {
 function TimestampCell({data}) {
     return <div>{cacheFormat(data)}</div>;
 }
+TimestampCell.displayName = 'TimestampCell';
+TimestampCell.propTypes = {data: React.PropTypes.instanceOf(Date)};
 
 function DefaultValueCell({data}) {
     return <div>{data || '-'}</div>;
 }
+DefaultValueCell.displayName = 'DefaultValueCell';
+DefaultValueCell.propTypes = {data: React.PropTypes.string};
 
 function BooleanCell({data}) {
     return <Icon name={data ? 'check' : 'times'} />
 }
+BooleanCell.displayName = 'BooleanCell';
+BooleanCell.propTypes = {data: React.PropTypes.bool};
 
 function PriorityCell({data}) {
     return <ViolationViz priority={data} />;
 }
+PriorityCell.displayName = 'PriorityCell';
+PriorityCell.propTypes = {data: React.PropTypes.number};
 
+/*eslint-disable react/display-name, react/prop-types */
 function AccountCell(accounts) {
     return function(props) {
         const acc = accounts[props.data];
@@ -73,7 +82,11 @@ function AccountCell(accounts) {
         return <div>{props.data}</div>;
     }
 }
+/*eslint-enable react/display-name, react/prop-types */
+AccountCell.displayName = 'AccountCell';
+AccountCell.propTypes = React.PropTypes.arrayOf(React.PropTypes.shape({name: React.PropTypes.string}));
 
+/*eslint-disable react/display-name, react/prop-types */
 function TeamCell(accounts) {
     return function(props) {
         const acc = accounts[props.data];
@@ -83,10 +96,14 @@ function TeamCell(accounts) {
         return <div>{props.data}</div>;
     }
 }
+/*eslint-enable react/display-name, react/prop-types */
+TeamCell.displayName = 'TeamCell';
+TeamCell.propTypes = React.PropTypes.arrayOf(React.PropTypes.shape({owner: React.PropTypes.string}));
 
 function TooltipCell({data}) {
     return <div><Tooltip /><span data-tip={data}>{data}</span></div>;
 }
+TooltipCell.displayName = 'TooltipCell';
 
 class Pager extends React.Component {
     constructor() {
@@ -134,6 +151,18 @@ class Pager extends React.Component {
     }
 }
 
+Pager.displayName = 'Pager';
+Pager.propTypes = {
+    maxPage: React.PropTypes.number,
+    setPage: React.PropTypes.func,
+    next: React.PropTypes.func,
+    previous: React.PropTypes.func,
+    pageChange: React.PropTypes.func,
+    currentPage: React.PropTypes.number,
+    nextText: React.PropTypes.string,
+    previousText: React.PropTypes.string
+};
+
 class ViolationTable extends React.Component {
     constructor() {
         super();
@@ -148,8 +177,8 @@ class ViolationTable extends React.Component {
         this.props.onChangeSort(sort, sortAsc);
     }
 
-    setFilter(filter) {
-        // left empty
+    setFilter(filter) { // eslint-disable-line no-unused-vars
+        // TODO either remove or fill with code
     }
 
     setPage(page) {
@@ -238,6 +267,46 @@ class ViolationTable extends React.Component {
                     results={this.props.violations} />;
     }
 }
+
 ViolationTable.displayName = 'ViolationTable';
+
+ViolationTable.propTypes = {
+    onChangeSort: React.PropTypes.func.isRequired,
+    onSetPage: React.PropTypes.func.isRequired,
+    onSetPageSize: React.PropTypes.func.isRequired,
+    onRowClick: React.PropTypes.func.isRequired,
+    accounts: React.PropTypes.object,
+    violations : React.PropTypes.arrayOf(React.PropTypes.shape({
+        comment: React.PropTypes.string,
+        id: React.PropTypes.string,
+        account_id: React.PropTypes.string,
+        region: React.PropTypes.string,
+        instance_id: React.PropTypes.string,
+        username: React.PropTypes.string,
+        message: React.PropTypes.string,
+        rule_id: React.PropTypes.string,
+        meta_info: React.PropTypes.oneOfType(React.PropTypes.string, React.PropTypes.object),
+        is_whitelisted: React.PropTypes.bool,
+        violation_type: React.PropTypes.shape({
+            priority: React.PropTypes.number
+        }),
+        last_modified_by: React.PropTypes.string,
+        timestamp: React.PropTypes.instanceOf(Date),
+        last_modified: React.PropTypes.instanceOf(Date)
+    })).isRequired,
+    pagingInfo: React.PropTypes.shape({
+        last: React.PropTypes.bool,
+        size: React.PropTypes.number,
+        page: React.PropTypes.number,
+        total: React.PropTypes.number,
+        total_pages: React.PropTypes.number
+    }).isRequired,
+    loading: React.PropTypes.bool,
+    params: React.PropTypes.shape({
+        page: React.PropTypes.number,
+        sortBy: React.PropTypes.func.isRequired,
+        sortAsc: React.PropTypes.func.isRequired
+    }).isRequired
+};
 
 export default ViolationTable;

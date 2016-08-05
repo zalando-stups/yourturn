@@ -39,7 +39,7 @@ class VersionForm extends React.Component {
     }
 
     update(field, prop, evt) {
-        const {applicationId, versionIds, application} = this.props;
+        const {versionIds, application} = this.props;
 
         this.state[field] = evt.target[prop];
         if (this.state.autocompleteArtifact) {
@@ -216,7 +216,8 @@ VersionForm.propTypes = {
     version: React.PropTypes.object,
     approvalCount: React.PropTypes.number.isRequired,
     kioActions: React.PropTypes.object.isRequired,
-    notificationActions: React.PropTypes.object.isRequired
+    notificationActions: React.PropTypes.object.isRequired,
+    versionIds: React.PropTypes.array
 };
 VersionForm.contextTypes = {
     router: React.PropTypes.object

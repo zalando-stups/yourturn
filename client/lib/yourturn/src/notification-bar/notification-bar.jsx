@@ -93,8 +93,17 @@ class NotificationBar extends React.Component {
         return null;
     }
 }
+
 NotificationBar.displayName = 'NotificationBar';
 
+NotificationBar.propTypes = {
+    dispatch: React.PropTypes.func.isRequired,
+    notifications: React.PropTypes.shape({
+        id: React.PropTypes.string,
+        type: React.PropTypes.string,
+        message: React.PropTypes.string
+    }).isRequired
+};
 
 export default connect(state => ({
     notifications: state.notifications

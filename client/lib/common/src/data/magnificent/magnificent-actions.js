@@ -15,11 +15,11 @@ function fetchAuth(team, policy='relaxed-radical-agility') {
                 payload: {team}
             })
             .exec(saveRoute)
-            .then(_ => ({
+            .then(() => ({
                 team,
                 allowed: true
             }))
-            .catch(_ => ({team, allowed: false}));
+            .catch(() => ({team, allowed: false}));
 }
 
 let fetchAction = flummoxCompatWrap(createAction(Type.FETCH_AUTH, fetchAuth));

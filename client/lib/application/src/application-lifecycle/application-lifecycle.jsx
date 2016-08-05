@@ -19,4 +19,6 @@ class ApplicationLifeCycle extends React.Component {
     }
 }
 
+ApplicationLifeCycle.displayName = 'ApplicationLifeCycle';
+
 export default ApplicationLifeCycle;

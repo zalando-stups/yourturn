@@ -13,12 +13,22 @@ class ListItem extends React.Component {
                 <label>
                     <input
                         checked={this.props.selected}
-                        type="checkbox" />
+                        type='checkbox' />
                     {this.props.content}
                 </label>
                </li>;
     }
 }
+
+ListItem.displayName = 'ListItem';
+
+ListItem.propTypes = {
+    onChange: React.PropTypes.func.isRequired,
+    content: React.PropTypes.string,
+    checked: React.PropTypes.string,
+    className: React.PropTypes.string,
+    selected: React.PropTypes.bool
+};
 
 class FilterDropdown extends React.Component {
     constructor(props) {
@@ -142,8 +152,8 @@ class FilterDropdown extends React.Component {
                             <div>
                                 <input
                                     onChange={this.onItemFilter.bind(this)}
-                                    placeholder="Search"
-                                    type="search" />
+                                    placeholder='Search'
+                                    type='search' />
                             </div>
                         }
                         <div className='filterDropdown-list-container'>
@@ -171,6 +181,17 @@ class FilterDropdown extends React.Component {
                 </div>;
     }
 }
+
 FilterDropdown.displayName = 'FilterDropdown';
+
+FilterDropdown.propTypes = {
+    selection: React.PropTypes.arrayOf(React.PropTypes.string),
+    title: React.PropTypes.string,
+    items: React.PropTypes.array.isRequired,
+    onUpdate: React.PropTypes.func,
+    singleMode: React.PropTypes.bool,
+    customComponentFn: React.PropTypes.func,
+    disableSearch: React.PropTypes.bool
+};
 
 export default listenToOutsideClick(FilterDropdown);
