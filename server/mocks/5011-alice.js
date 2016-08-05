@@ -73,7 +73,10 @@ function generateVersionEventData (k) {
             instances: [
                 {
                     event_type: 'event_type',
-                    instance_id: 'instance_id'
+                    ccount_type: "aws",
+                    account_id: "123456789012",
+                    region: "eu-west-1",
+                    instance_id: "i-123456"
                 }
             ]
         };
@@ -97,7 +100,7 @@ function generateVersionEventData (k) {
                     scm_source: {
                         repo_url: 'repo_url',
                         git_hash: 'git_hash',
-                        commiter: 'commiter'
+                        committer: 'committer'
                     },
                     docker_source: 'docker_source',
                     pull_request: {
@@ -172,7 +175,7 @@ server.use(function(req, res, next) {
     next();
 });
 
-server.get('/servercount/:application_id', function(req,res) {
+server.get('/instance-count/:application_id', function(req,res) {
     var startDate = new Date(req.query.from);
     var endDate = new Date(req.query.to);
     var applicationId = req.params.application_id;
@@ -199,7 +202,7 @@ server.get('/servercount/:application_id', function(req,res) {
 
     setTimeout( function() {
         res.status( 200 ).send( getData(applicationId, startDate, endDate) );
-    }, Math.random() * 2000 );
+    }, 2000 + Math.random() * 8000 );
 });
 
 module.exports = server;

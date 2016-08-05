@@ -134,4 +134,10 @@ class Search extends React.Component {
 }
 Search.displayName = 'Search';
 
+// TODO specify in more detail
+Search.propTypes = {
+    searchActions: React.PropTypes.object,
+    searchStore: React.PropTypes.object
+}
+
 export default Search;

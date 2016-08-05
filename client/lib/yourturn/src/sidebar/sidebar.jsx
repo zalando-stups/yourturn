@@ -159,6 +159,19 @@ Sidebar.displayName = 'Sidebar';
 Sidebar.contextTypes = {
     router: React.PropTypes.object
 };
+
+// TODO specify in more detail
+Sidebar.propTypes = {
+    tokenInfo: React.PropTypes.object,
+    userInfo: React.PropTypes.shape({
+        email: React.PropTypes.string,
+        name: React.PropTypes.string
+    }),
+    violationCount: React.PropTypes.number,
+    dispatch: React.PropTypes.func.isRequired,
+    activeRoute: React.PropTypes.object
+}
+
 export default connect(state => ({
     userInfo: UserGetter.getUserInfo(state.user),
     tokenInfo: UserGetter.getTokenInfo(state.user),

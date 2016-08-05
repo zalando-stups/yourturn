@@ -33,8 +33,16 @@ class ViolationDetail extends React.Component {
                 </div>;
     }
 }
+
 ViolationDetail.displayName = 'ViolationDetail';
+
+// TODO specify in more detail
 ViolationDetail.propTypes = {
-    violationId: React.PropTypes.number.isRequired
+    violationId: React.PropTypes.number.isRequired,
+    fullstopActions: React.PropTypes.object.isRequired,
+    fullstopStore: React.PropTypes.object.isRequired,
+    userStore: React.PropTypes.object.isRequired,
+    accounts: React.PropTypes.arrayOf(React.PropTypes.object)
 };
+
 export default ViolationDetail;

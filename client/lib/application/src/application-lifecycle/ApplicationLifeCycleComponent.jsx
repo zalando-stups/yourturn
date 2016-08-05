@@ -26,14 +26,11 @@ class ApplicationLifecycleHandler extends React.Component {
     // component's lifecycle functions
 
     componentDidMount() {
-        console.log("componentDidMount %O", this.props);
         this.props.aliceActions.fetchServerCount('kio');
     }
 
     componentWillReceiveProps(nextProps) {
-        console.log("componentWillReceiveProps %O", nextProps);
         const versions = nextProps.aliceStore.serverCountData.map( e => {return {id: e.version_id}});
-        console.log("componentWillReceiveProps versions %O", versions);
         this.setState({
             versions,
             selectedVersions: versions
@@ -44,7 +41,6 @@ class ApplicationLifecycleHandler extends React.Component {
 
     onVersionsSelect(param) {
         this.setState({selectedVersions: param});
-        console.log("onVersionsSelect %O", param);
     }
 
     onVersionReset() {
@@ -54,16 +50,15 @@ class ApplicationLifecycleHandler extends React.Component {
     // render function
 
     render() {
-        console.log("render props: %O", this.props);
-        console.log("render state: %O", this.state);
-
-        return <ApplicationLifeCycle
-            applicationId    = {this.props.params.applicationId}
-            versions         = {this.state.versions}
-            selectedVersions = {this.state.selectedVersions}
-            onVersionsSelect = {this.onVersionsSelect}
-            onVersionReset   = {this.onVersionReset}
-            {...this.props} />;
+        return (
+            <ApplicationLifeCycle
+                applicationId    = {this.props.params.applicationId}
+                versions         = {this.state.versions}
+                selectedVersions = {this.state.selectedVersions}
+                onVersionsSelect = {this.onVersionsSelect}
+                onVersionReset   = {this.onVersionReset}
+                {...this.props} />
+        );
     }
 }
 
@@ -74,13 +69,11 @@ ApplicationLifecycleHandler.propTypes = {
 };
 
 const fetchData = function(routerState, state) {
-    console.log("routerState %O", routerState);
     const {applicationId} = routerState.params;
     ALICE_ACTIONS.fetchServerCount(applicationId);
 };
 
 function mapStateToProps(state, ownProps) {
-    console.log("mapStateToProps %O", state);
     return {
         aliceStore: state.alice,
         kioStore: bindGettersToState(state.kio, KioGetter)

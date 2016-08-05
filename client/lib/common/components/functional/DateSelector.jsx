@@ -49,7 +49,7 @@ class DateSelector extends React.Component {
         return (
             <div>
                 <div
-                    className = 'btn btn-danger btn-small'
+                    className = 'btn btn-primary'
                     onClick = {this.handleButtonClick}>
                     {this.props.title}
                 </div>
@@ -57,7 +57,6 @@ class DateSelector extends React.Component {
             </div>
         )
     }
-
 }
 
 
