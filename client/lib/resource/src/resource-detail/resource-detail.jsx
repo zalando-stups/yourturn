@@ -114,7 +114,7 @@ ResourceDetail.displayName = 'ResourceDetail';
 
 // TODO go more into detail
 ResourceDetail.propTypes = {
-    canEdit: React.PropTypes.func.isRequired,
+    canEdit: React.PropTypes.bool,
     resource: React.PropTypes.object.isRequired,
     resourceId: React.PropTypes.string.isRequired,
     scopes: React.PropTypes.arrayOf(React.PropTypes.shape({
