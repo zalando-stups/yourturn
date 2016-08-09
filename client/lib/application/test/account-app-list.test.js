@@ -1,4 +1,4 @@
-/* globals expect, reset, render, Promise, TestUtils */
+/* globals expect, reset, render, TestUtils */
 import KioStore from 'common/src/data/kio/kio-store';
 import KioTypes from 'common/src/data/kio/kio-types';
 import * as KioGetter from 'common/src/data/kio/kio-getter';

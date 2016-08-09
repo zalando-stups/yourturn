@@ -190,8 +190,18 @@ export default function ApplicationDetail({applicationId, application, versions,
 
 ApplicationDetail.displayName = 'ApplicationDetail';
 ApplicationDetail.propTypes = {
+    api: React.PropTypes.shape({
+        ui: React.PropTypes.string,
+        version: React.PropTypes.string,
+        status: React.PropTypes.string
+    }).isRequired,
+    application: React.PropTypes.object.isRequired,
     applicationId: React.PropTypes.string.isRequired,
+    editable: React.PropTypes.bool,
+    kioActions: React.PropTypes.object.isRequired,
     notificationActions: React.PropTypes.object.isRequired,
-    kioActions: React.PropTypes.object.isRequired
+    versions: React.PropTypes.arrayOf(React.PropTypes.shape({
+        id: React.PropTypes.string
+    }))
 };
 

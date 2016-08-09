@@ -127,23 +127,29 @@ Violation.contextTypes = {
 
 // TODO make propTypes more specific
 Violation.propTypes = {
+    accounts: React.PropTypes.object,
     error: React.PropTypes.object,
-    params: React.PropTypes.object,
     fullstopActions: React.PropTypes.shape({
         resolveViolation: React.PropTypes.func
-    }).isRequired,
-    notificationActions: React.PropTypes.shape({
-        addNotification: React.PropTypes.func
     }).isRequired,
     fullstopStore: React.PropTypes.shape({
         getViolation: React.PropTypes.func
     }).isRequired,
     loading: React.PropTypes.bool,
+    notificationActions: React.PropTypes.shape({
+        addNotification: React.PropTypes.func
+    }).isRequired,
+    pagingInfo: React.PropTypes.shape({
+        last: React.PropTypes.bool,
+        page: React.PropTypes.number,
+        total: React.PropTypes.number,
+        total_pages: React.PropTypes.number
+    }).isRequired,
+    params: React.PropTypes.object,
     violationTypes: React.PropTypes.arrayOf(React.PropTypes.string).isRequired,
-    accounts: React.PropTypes.object,
     violations : React.PropTypes.arrayOf(React.PropTypes.shape({
         comment: React.PropTypes.string,
-        id: React.PropTypes.string,
+        id: React.PropTypes.number,
         account_id: React.PropTypes.string,
         region: React.PropTypes.string,
         instance_id: React.PropTypes.string,
@@ -156,15 +162,9 @@ Violation.propTypes = {
             priority: React.PropTypes.number
         }),
         last_modified_by: React.PropTypes.string,
-        timestamp: React.PropTypes.instanceOf(Date),
-        last_modified: React.PropTypes.instanceOf(Date)
-    })).isRequired,
-    pagingInfo: React.PropTypes.shape({
-        last: React.PropTypes.bool,
-        page: React.PropTypes.number,
-        total: React.PropTypes.number,
-        total_pages: React.PropTypes.number
-    }).isRequired
+        timestamp: React.PropTypes.number,
+        last_modified: React.PropTypes.string
+    })).isRequired
 };
 
 export default Violation;

@@ -17,3 +17,7 @@ export default function ViolationViz({priority}) {
 }
 
 ViolationViz.displayName = 'ViolationViz';
+
+ViolationViz.propTypes = {
+    priority: React.PropTypes.number.isRequired
+};

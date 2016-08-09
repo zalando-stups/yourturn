@@ -1,6 +1,8 @@
 /* globals expect, $, TestUtils, reset, render, React */
 import ApprovalForm from 'application/src/approval-form/approval-form.jsx';
 
+/*eslint-disable react/no-deprecated */
+// TODO rework usage of React.findDOMNode
 const APP_ID = 'kio',
     VER_ID = '0.1',
     TEST_APP = {
@@ -73,3 +75,4 @@ describe('The approval form view', () => {
         expect(btn.props.disabled).to.be.true;
     });
 });
+/*eslint-enable react/no-deprecated */

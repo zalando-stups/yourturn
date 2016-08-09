@@ -1,9 +1,7 @@
 /* globals expect */
-import Immutable from 'immutable';
 import FullstopStore from 'common/src/data/fullstop/fullstop-store';
 import Type from 'common/src/data/fullstop/fullstop-types';
 import * as Getter from 'common/src/data/fullstop/fullstop-getter';
-import FetchResult from 'common/src/fetch-result';
 
 const VIOLATION_A = {
         id: 1,

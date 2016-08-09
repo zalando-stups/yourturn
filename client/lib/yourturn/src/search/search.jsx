@@ -4,32 +4,31 @@ import _ from 'lodash';
 import {Services} from 'common/src/data/services';
 import 'common/asset/less/yourturn/search.less';
 
-class SearchResult extends React.Component {
-    constructor() {
-        super();
-    }
+const  SearchResult = (props) => {
+    /*eslint-disable react/no-danger */
+    let body = <quote dangerouslySetInnerHTML={{__html: this.props.description}} />;
+    /*eslint-disable react/no-danger */
 
-    render() {
-        let body = <quote dangerouslySetInnerHTML={{__html: this.props.description}} />;
-        if (!this.props.link) {
-            return <li className='search-result'>
-                        <header>{this.props.name}</header>
-                        {body}
-                    </li>;
-        }
+    if (!props.link) {
         return <li className='search-result'>
-                    <header>
-                        <a href={this.props.link}>{this.props.name}</a>
-                    </header>
+                    <header>{props.name}</header>
                     {body}
                 </li>;
     }
-}
+    return <li className='search-result'>
+                <header>
+                    <a href={props.link}>{props.name}</a>
+                </header>
+                {body}
+            </li>
+};
+
 SearchResult.displayName = 'SearchResult';
+
 SearchResult.propTypes = {
-    name: React.PropTypes.string,
     description: React.PropTypes.string,
-    link: React.PropTypes.string
+    link: React.PropTypes.string,
+    name: React.PropTypes.string
 };
 
 class Search extends React.Component {
@@ -98,9 +97,11 @@ class Search extends React.Component {
                     {results.kio && results.kio.length ?
                         <ol>
                             {results.kio.map(
-                                app => <SearchResult name={app.name}
-                                               description={app.matched_description}
-                                               link={app._url} />)}
+                                (app, index) => <SearchResult
+                                                    key = {index}
+                                                    name = {app.name}
+                                                    description = {app.matched_description}
+                                                    link = {app._url} />)}
                         </ol>
                         :
                         <span>No applications found for {term}</span>}
@@ -110,9 +111,11 @@ class Search extends React.Component {
                     {results.twintip && results.twintip.length ?
                         <ol>
                             {results.twintip.map(
-                                app => <SearchResult name={app.name}
-                                               description={app.matched_description}
-                                               link={app._url} />)}
+                                (app, index) => <SearchResult
+                                                    key = {index}
+                                                    name = {app.name}
+                                                    description = {app.matched_description}
+                                                    link = {app._url} />)}
                         </ol>
                         :
                         <span>No APIs found for {term}</span>}
@@ -122,9 +125,11 @@ class Search extends React.Component {
                     {results.pierone && results.pierone.length ?
                         <ol>
                             {results.pierone.map(
-                                app => <SearchResult name={app.name}
-                                               description={app.matched_description}
-                                               link={app._url} />)}
+                                (app, index) => <SearchResult
+                                                    key = {index}
+                                                    name = {app.name}
+                                                    description = {app.matched_description}
+                                                    link = {app._url} />)}
                         </ol>
                         :
                         <span>No Docker images found for {term}</span>}

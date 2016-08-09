@@ -1,6 +1,8 @@
 /* globals expect, $, TestUtils, reset, render, React */
 import Detail from 'resource/src/resource-detail/resource-detail.jsx';
 
+/*eslint-disable react/no-deprecated */
+// TODO rework usage of React.findDOMNode
 const ID = 'sales_order',
       TEST_RES = {
             id: 'sales_order',
@@ -30,3 +32,4 @@ describe('The resource detail view', () => {
     });
 
 });
+/*eslint-enable react/no-deprecated */

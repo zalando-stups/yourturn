@@ -2,6 +2,8 @@
 import * as MintActions from 'common/src/data/mint/mint-actions';
 import OAuthForm from 'application/src/oauth-form/oauth-form.jsx';
 
+/*eslint-disable react/no-deprecated */
+// TODO rework usage of React.findDOMNode
 const TEST_APP = {
     id: 'kio',
     name: 'Kio'
@@ -60,3 +62,4 @@ describe('The oauth form view', () => {
         expect(actionSpy.calledOnce).to.be.true;
     });
 });
+/*eslint-enable react/no-deprecated */

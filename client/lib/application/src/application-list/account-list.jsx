@@ -59,7 +59,7 @@ export default class AccountList extends React.Component {
                                     data-block='accountList-item-input'
                                     onChange={this.toggle.bind(this, a)}
                                     checked={!!selection[a]}
-                                    type="checkbox" />&nbsp;{a}
+                                    type='checkbox' />&nbsp;{a}
                             </label>
                        </li>
                     )}
@@ -67,3 +67,12 @@ export default class AccountList extends React.Component {
                 </div>;
     }
 }
+
+AccountList.displayName = 'AccountList';
+
+// TODO be more specific
+AccountList.propTypes = {
+    accounts: React.PropTypes.array.isRequired,
+    onChange: React.PropTypes.func,
+    selected: React.PropTypes.array.isRequired
+};

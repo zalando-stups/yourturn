@@ -177,15 +177,19 @@ ViolationCard.contextTypes = {
 };
 
 ViolationCard.propTypes = {
-    autoFocus: React.PropTypes.bool,
-    onResolve: React.PropTypes.func,
-    onClickOutside: React.PropTypes.func,
     accounts: React.PropTypes.arrayOf(React.PropTypes.shape(
         {
             name: React.PropTypes.string,
             owner: React.PropTypes.string
         }
     )),
+    autoFocus: React.PropTypes.bool,
+    closable: React.PropTypes.bool,
+    editable: React.PropTypes.bool,
+    onClickOutside: React.PropTypes.func,
+    onClose: React.PropTypes.func,
+    onResolve: React.PropTypes.func,
+    style: React.PropTypes.object,
     violation: React.PropTypes.shape({
         comment: React.PropTypes.string,
         id: React.PropTypes.string,
@@ -203,11 +207,7 @@ ViolationCard.propTypes = {
         last_modified_by: React.PropTypes.string,
         timestamp: React.PropTypes.instanceOf(Date),
         last_modified: React.PropTypes.instanceOf(Date)
-    }).isRequired,
-    editable: React.PropTypes.bool,
-    onClose: React.PropTypes.func,
-    closable: React.PropTypes.bool,
-    style: React.PropTypes.object
+    }).isRequired
 };
 
 export default listenToOutsideClick(ViolationCard);

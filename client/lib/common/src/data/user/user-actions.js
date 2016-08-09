@@ -1,7 +1,6 @@
 /* globals Date, Promise, ENV_DEVELOPMENT */
 import request from 'common/src/superagent';
 import {createAction} from 'redux-actions';
-import {flummoxCompatWrap} from 'common/src/redux-middlewares';
 import Type from './user-types';
 import {Provider, RequestConfig, saveRoute} from 'common/src/oauth-provider';
 

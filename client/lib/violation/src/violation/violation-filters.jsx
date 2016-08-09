@@ -151,10 +151,11 @@ ViolationFilters.contextTypes = {
     router: React.PropTypes.object
 };
 
+// TODO specifiy params in detail if possible
 ViolationFilters.propTypes = {
-    params: React.PropTypes.object,
+    accounts: React.PropTypes.object,
     onUpdate: React.PropTypes.func,
-    accounts: React.PropTypes.arrayOf(React.PropTypes.object),
+    params: React.PropTypes.object,
     violationTypes: React.PropTypes.arrayOf(React.PropTypes.string)
 };
 

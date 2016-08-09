@@ -2,6 +2,8 @@
 import * as KioActions from 'common/src/data/kio/kio-actions';
 import AppForm from 'application/src/application-form/application-form.jsx';
 
+/*eslint-disable react/no-deprecated */
+// TODO rework usage of React.findDOMNode
 const APP_ID = 'kio',
     TEST_APP = {
         documentation_url: 'https://github.com/zalando-stups/kio',
@@ -105,3 +107,4 @@ describe('The application form view', () => {
     });
 
 });
+/*eslint-ensable react/no-deprecated */

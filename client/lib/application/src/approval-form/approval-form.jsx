@@ -259,14 +259,14 @@ class ApprovalForm extends React.Component {
 }
 ApprovalForm.displayName = 'ApprovalForm';
 ApprovalForm.propTypes = {
-    applicationId: React.PropTypes.string.isRequired,
-    versionId: React.PropTypes.string.isRequired,
     application: React.PropTypes.object.isRequired,
+    applicationId: React.PropTypes.string.isRequired,
     approvalTypes: React.PropTypes.array.isRequired,
     approvals: React.PropTypes.array.isRequired,
     editable: React.PropTypes.bool.isRequired,
-    userInfos: React.PropTypes.object.isRequired,
+    kioActions: React.PropTypes.object.isRequired,
     notificationActions: React.PropTypes.object.isRequired,
-    kioActions: React.PropTypes.object.isRequired
+    userInfos: React.PropTypes.object.isRequired,
+    versionId: React.PropTypes.string.isRequired
 };
 export default ApprovalForm;

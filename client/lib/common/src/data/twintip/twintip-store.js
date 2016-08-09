@@ -1,6 +1,5 @@
 import Immutable from 'immutable';
 import Types from './twintip-types';
-import * as Getter from './twintip-getter';
 import {Pending, Failed} from 'common/src/fetch-result';
 
 function TwintipStore(state = Immutable.Map(), action) {

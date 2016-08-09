@@ -2,6 +2,8 @@
 import * as EssentialsActions from 'common/src/data/essentials/essentials-actions';
 import Form from 'resource/src/resource-form/resource-form.jsx';
 
+/*eslint-disable react/no-deprecated */
+// TODO rework usage of React.findDOMNode
 const RES_ID = 'sales_order',
     TEST_RES = {
         id: 'sales_order',
@@ -117,3 +119,4 @@ describe('The resource form view', () => {
 
     });
 });
+/*eslint-enable react/no-deprecated */

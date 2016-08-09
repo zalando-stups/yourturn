@@ -1,6 +1,5 @@
 import React from 'react';
 import {Route, IndexRoute} from 'react-router';
-import Config from 'common/src/config';
 
 import REDUX from 'yourturn/src/redux';
 import {connect} from 'react-redux';
@@ -58,27 +57,27 @@ function requireWhitelistedOrOwner(token, auth) {
     return true;
 }
 
-class CreateResourceFormHandler extends React.Component {
-    constructor() {
-        super();
-    }
-
-    render() {
-        const existingResourceIds = this.props.essentialsStore.getResources().map(r => r.id),
-              whitelisted = this.props.userStore.isWhitelisted();
-        return <ResourceForm
-                    edit={false}
-                    essentialsActions={ESSENTIALS_ACTIONS}
-                    notificationActions={ESSENTIALS_ACTIONS}
-                    kioActions={KIO_ACTIONS}
-                    magnificentActions={MAGNIFICENT_ACTIONS}
-                    isUserWhitelisted={whitelisted}
-                    existingResourceIds={existingResourceIds} />;
-    }
-}
+const CreateResourceFormHandler = (props) => {
+    const existingResourceIds = props.essentialsStore.getResources().map(r => r.id),
+          whitelisted = props.userStore.isWhitelisted();
+    return <ResourceForm
+                edit={false}
+                essentialsActions={ESSENTIALS_ACTIONS}
+                notificationActions={ESSENTIALS_ACTIONS}
+                kioActions={KIO_ACTIONS}
+                magnificentActions={MAGNIFICENT_ACTIONS}
+                isUserWhitelisted={whitelisted}
+                existingResourceIds={existingResourceIds} />;
+};
 CreateResourceFormHandler.displayName = 'CreateResourceFormHandler';
 CreateResourceFormHandler.propTypes = {
-    params: React.PropTypes.object
+    essentialsStore: React.PropTypes.shape({
+        getResources: React.PropTypes.func
+    }).isRequired,
+    params: React.PropTypes.object,
+    userStore: React.PropTypes.shape({
+        isWhitelisted: React.PropTypes.func
+    }).isRequired
 };
 CreateResourceFormHandler.fetchData = function(routerState, state) {
     return Promise.all([
@@ -92,33 +91,30 @@ let ConnectedCreateResourceFormHandler = connect(state => ({
 }))(CreateResourceFormHandler);
 
 
-class EditResourceFormHandler extends React.Component {
-    constructor() {
-        super();
-    }
-
-    render() {
-        const resource = this.props.essentialsStore.getResource(this.props.params.resourceId);
-        return <ResourceForm
-                    resourceId={this.props.params.resourceId}
-                    edit={true}
-                    notificationActions={NOTIFICATION_ACTIONS}
-                    essentialsActions={ESSENTIALS_ACTIONS}
-                    resource={resource} />;
-    }
-}
+const EditResourceFormHandler = (props) => {
+    const resource = props.essentialsStore.getResource(this.props.params.resourceId);
+    return <ResourceForm
+                resourceId={props.params.resourceId}
+                edit={true}
+                notificationActions={NOTIFICATION_ACTIONS}
+                essentialsActions={ESSENTIALS_ACTIONS}
+                resource={resource} />;
+};
 EditResourceFormHandler.isAllowed = function(routerState, state, [token, auth]) {
     return requireWhitelistedOrOwner(token, auth);
 };
 EditResourceFormHandler.displayName = 'EditResourceFormHandler';
 EditResourceFormHandler.propTypes = {
+    essentialsStore: React.PropTypes.shape({
+        getResource: React.PropTypes.func
+    }).isRequired,
     params: React.PropTypes.object
 };
 EditResourceFormHandler.fetchData = function(routerState, state) {
     const app = getApplicationFromResource(routerState.params.resourceId),
           // we have to catch here as otherwise the route component is not displayed at all and the
           // app might not exist
-          appPromise = app ? KIO_ACTIONS.fetchApplication(app).catch(e => undefined) : Promise.resolve();
+          appPromise = app ? KIO_ACTIONS.fetchApplication(app).catch(() => undefined) : Promise.resolve();
     return appPromise.then(app => Promise.all([
         requireToken(state, USER_ACTIONS),
         app ? requireAuth(state, app.team_id, MAGNIFICENT_ACTIONS) : Promise.resolve(null),
@@ -130,17 +126,15 @@ let ConnectedEditResourceFormHandler = connect(state => ({
 }))(EditResourceFormHandler);
 
 
-class ResourceListHandler extends React.Component {
-    constructor() {
-        super();
-    }
-    render() {
-        const resources = this.props.essentialsStore.getResources()
-        return <ResourceList resources={resources} />;
-    }
-}
+const ResourceListHandler = (props) => {
+    const resources = props.essentialsStore.getResources();
+    return <ResourceList resources={resources} />;
+};
 ResourceListHandler.displayName = 'ResourceListHandler';
 ResourceListHandler.propTypes = {
+    essentialsStore: React.PropTypes.shape({
+        getResources: React.PropTypes.func
+    }).isRequired,
     params: React.PropTypes.object
 };
 ResourceListHandler.fetchData = function() {
@@ -150,28 +144,36 @@ let ConnectedResourceListHandler = connect(state => ({
     essentialsStore: bindGettersToState(state.essentials, EssentialsGetter)
 }))(ResourceListHandler);
 
-class ResourceDetailHandler extends React.Component {
-    constructor() {
-        super();
-    }
-    render() {
-        const {resourceId} = this.props.params,
-              application = this.props.kioStore.getApplication(getApplicationFromResource(resourceId)),
-              resource = this.props.essentialsStore.getResource(resourceId),
-              scopes = this.props.essentialsStore.getScopes(resourceId),
-              whitelisted = this.props.userStore.isWhitelisted(),
-              permitted = this.props.magnificentStore.getAuth(application.team_id),
-              canEdit = whitelisted || permitted;
-        return <ResourceDetail
-                    resource={resource}
-                    canEdit={canEdit}
-                    scopes={scopes}
-                    resourceId={resourceId} />;
-    }
-}
+const ResourceDetailHandler = (props) => {
+    const {resourceId} = props.params,
+          application = props.kioStore.getApplication(getApplicationFromResource(resourceId)),
+          resource = props.essentialsStore.getResource(resourceId),
+          scopes = props.essentialsStore.getScopes(resourceId),
+          whitelisted = props.userStore.isWhitelisted(),
+          permitted = props.magnificentStore.getAuth(application.team_id),
+          canEdit = whitelisted || permitted;
+    return <ResourceDetail
+                resource={resource}
+                canEdit={canEdit}
+                scopes={scopes}
+                resourceId={resourceId} />;
+};
 ResourceDetailHandler.displayName = 'ResourceDetailHandler';
 ResourceDetailHandler.propTypes = {
-    params: React.PropTypes.object
+    essentialsStore: React.PropTypes.shape({
+        getResource: React.PropTypes.func,
+        getScopes: React.PropTypes.func
+    }).isRequired,
+    kioStore: React.PropTypes.shape({
+        getApplication: React.PropTypes.func
+    }).isRequired,
+    magnificentStore: React.PropTypes.shape({
+        getAuth: React.PropTypes.func
+    }).isRequired,
+    params: React.PropTypes.object,
+    userStore: React.PropTypes.shape({
+        isWhitelisted: React.PropTypes.func
+    }).isRequired
 };
 ResourceDetailHandler.fetchData = function(routerState, state) {
     ESSENTIALS_ACTIONS.fetchResource(routerState.params.resourceId);
@@ -190,32 +192,40 @@ let ConnectedResourceDetailHandler = connect(state => ({
     magnificentStore: bindGettersToState(state.magnificent, MagnificentGetter)
 }))(ResourceDetailHandler);
 
-class ScopeDetailHandler extends React.Component {
-    constructor() {
-        super();
-    }
-
-    render() {
-        const {resourceId, scopeId} = this.props.params,
-              application = this.props.kioStore.getApplication(getApplicationFromResource(resourceId)),
-              scope = this.props.essentialsStore.getScope(resourceId, scopeId),
-              resource = this.props.essentialsStore.getResource(resourceId),
-              scopeApps = this.props.essentialsStore.getScopeApplications(resourceId, scopeId),
-              whitelisted = this.props.userStore.isWhitelisted(),
-              permitted = this.props.magnificentStore.getAuth(application.team_id),
-              canEdit = whitelisted || permitted;
-        return <ScopeDetail
-                    resourceId={this.props.params.resourceId}
-                    scopeId={this.props.params.scopeId}
-                    canEdit={canEdit}
-                    scope={scope}
-                    resource={resource}
-                    scopeApps={scopeApps} />
-    }
-}
+const ScopeDetailHandler = (props) => {
+    const {resourceId, scopeId} = props.params,
+          application = props.kioStore.getApplication(getApplicationFromResource(resourceId)),
+          scope = props.essentialsStore.getScope(resourceId, scopeId),
+          resource = props.essentialsStore.getResource(resourceId),
+          scopeApps = props.essentialsStore.getScopeApplications(resourceId, scopeId),
+          whitelisted = props.userStore.isWhitelisted(),
+          permitted = props.magnificentStore.getAuth(application.team_id),
+          canEdit = whitelisted || permitted;
+    return <ScopeDetail
+                resourceId={this.props.params.resourceId}
+                scopeId={this.props.params.scopeId}
+                canEdit={canEdit}
+                scope={scope}
+                resource={resource}
+                scopeApps={scopeApps} />
+};
 ScopeDetailHandler.displayName = 'ScopeDetailHandler';
 ScopeDetailHandler.propTypes = {
-    params: React.PropTypes.object
+    essentialsStore: React.PropTypes.shape({
+        getResource: React.PropTypes.func,
+        getScope: React.PropTypes.func,
+        getScopeApplications: React.PropTypes.func
+    }).isRequired,
+    kioStore: React.PropTypes.shape({
+        getApplication: React.PropTypes.func
+    }).isRequired,
+    magnificentStore: React.PropTypes.shape({
+        getAuth: React.PropTypes.func
+    }).isRequired,
+    params: React.PropTypes.object,
+    userStore: React.PropTypes.shape({
+        isWhitelisted: React.PropTypes.func
+    }).isRequired
 };
 ScopeDetailHandler.fetchData = function(routerState, state) {
     let {resourceId, scopeId} = routerState.params;
@@ -232,36 +242,34 @@ let ConnectedScopeDetailHandler = connect(state => ({
     magnificentStore: bindGettersToState(state.magnificent, MagnificentGetter)
 }))(ScopeDetailHandler);
 
-class EditScopeFormHandler extends React.Component {
-    constructor() {
-        super();
-    }
-
-    render() {
-        const {resourceId, scopeId} = this.props.params,
-              scope = this.props.essentialsStore.getScope(resourceId, scopeId),
-              resource = this.props.essentialsStore.getResource(resourceId);
-        return <ScopeForm
-                    resourceId={this.props.params.resourceId}
-                    scopeId={this.props.params.scopeId}
-                    scope={scope}
-                    edit={true}
-                    resource={resource}
-                    notificationActions={NOTIFICATION_ACTIONS}
-                    essentialsActions={ESSENTIALS_ACTIONS} />;
-    }
-}
+const EditScopeFormHandler = (props) => {
+    const {resourceId, scopeId} = props.params,
+          scope = props.essentialsStore.getScope(resourceId, scopeId),
+          resource = props.essentialsStore.getResource(resourceId);
+    return <ScopeForm
+                resourceId={this.props.params.resourceId}
+                scopeId={this.props.params.scopeId}
+                scope={scope}
+                edit={true}
+                resource={resource}
+                notificationActions={NOTIFICATION_ACTIONS}
+                essentialsActions={ESSENTIALS_ACTIONS} />;
+};
 EditScopeFormHandler.isAllowed = function(routerState, state, [token, auth]) {
     return requireWhitelistedOrOwner(token, auth);
 };
 EditScopeFormHandler.displayName = 'EditScopeFormHandler';
 EditScopeFormHandler.propTypes = {
+    essentialsStore: React.PropTypes.shape({
+        getResource: React.PropTypes.func,
+        getScope: React.PropTypes.func
+    }).isRequired,
     params: React.PropTypes.object
 };
 EditScopeFormHandler.fetchData = function(routerState, state) {
     const {resourceId, scopeId} = routerState.params,
           app = getApplicationFromResource(resourceId),
-          appPromise = app ? KIO_ACTIONS.fetchApplication(app).catch(e => undefined) : Promise.resolve();
+          appPromise = app ? KIO_ACTIONS.fetchApplication(app).catch(() => undefined) : Promise.resolve();
     ESSENTIALS_ACTIONS.fetchResource(resourceId);
     return appPromise.then(app => Promise.all([
         requireToken(state, USER_ACTIONS),
@@ -273,36 +281,34 @@ let ConnectedEditScopeFormHandler = connect(state => ({
     essentialsStore: bindGettersToState(state.essentials, EssentialsGetter)
 }))(EditScopeFormHandler);
 
-class CreateScopeFormHandler extends React.Component {
-    constructor() {
-        super();
-    }
-
-    render() {
-        const {resourceId, scopeId} = this.props.params,
-              resource = this.props.essentialsStore.getResource(resourceId),
-              existingScopeIds = this.props.essentialsStore.getScopes(resourceId).map(s => s.id);
-        return <ScopeForm
-                    resourceId={resourceId}
-                    scopeId={scopeId}
-                    resource={resource}
-                    edit={false}
-                    existingScopeIds={existingScopeIds}
-                    notificationActions={NOTIFICATION_ACTIONS}
-                    essentialsActions={ESSENTIALS_ACTIONS} />;
-    }
-}
+const CreateScopeFormHandler = (props) => {
+    const {resourceId, scopeId} = props.params,
+          resource = props.essentialsStore.getResource(resourceId),
+          existingScopeIds = props.essentialsStore.getScopes(resourceId).map(s => s.id);
+    return <ScopeForm
+                resourceId={resourceId}
+                scopeId={scopeId}
+                resource={resource}
+                edit={false}
+                existingScopeIds={existingScopeIds}
+                notificationActions={NOTIFICATION_ACTIONS}
+                essentialsActions={ESSENTIALS_ACTIONS} />;
+};
 CreateScopeFormHandler.isAllowed = function(routerState, state, [token, auth]) {
     return requireWhitelistedOrOwner(token, auth);
 };
 CreateScopeFormHandler.displayName = 'CreateScopeFormHandler';
 CreateScopeFormHandler.propTypes = {
+    essentialsStore: React.PropTypes.shape({
+        getResource: React.PropTypes.func,
+        getScopes: React.PropTypes.func
+    }).isRequired,
     params: React.PropTypes.object
 };
 CreateScopeFormHandler.fetchData = function(routerState, state) {
     const {resourceId} = routerState.params,
           app = getApplicationFromResource(resourceId),
-          appPromise = app ? KIO_ACTIONS.fetchApplication(app).catch(e => undefined) : Promise.resolve();
+          appPromise = app ? KIO_ACTIONS.fetchApplication(app).catch(() => undefined) : Promise.resolve();
     ESSENTIALS_ACTIONS.fetchResource(resourceId);
     return appPromise.then(app => Promise.all([
         requireToken(state, USER_ACTIONS),

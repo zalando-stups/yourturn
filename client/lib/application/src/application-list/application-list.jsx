@@ -135,14 +135,17 @@ ApplicationList.displayName = 'ApplicationList';
 
 // TODO be more specific
 ApplicationList.propTypes = {
-    kioStore: React.PropTypes.object,
-    showInactive: React.PropTypes.bool,
-    onChangeTab: React.PropTypes.func,
+    accounts: React.PropTypes.array,
+    applicationsFetching: React.PropTypes.any,
     kioActions: React.PropTypes.shape({
-            savePreferredAccount: React.PropTypes.func,
-            saveTabAccounts: React.PropTypes.func
-        }).isRequired,
-    applicationsFetching: React.PropTypes.any
+        savePreferredAccount: React.PropTypes.func,
+        saveTabAccounts: React.PropTypes.func
+    }).isRequired,
+    kioStore: React.PropTypes.object,
+    onChangeTab: React.PropTypes.func,
+    selectedTab: React.PropTypes.any,
+    showInactive: React.PropTypes.bool,
+    tabAccounts: React.PropTypes.array
 }
 
 export default ApplicationList;

@@ -42,7 +42,7 @@ class ApprovalCard extends React.Component {
                                 <small className='approvalCard-time'>
                                     <Icon
                                         fixedWidth
-                                        name='calendar-o'/> <Timestamp
+                                        name='calendar-o' /> <Timestamp
                                             format={Config.DATE_FORMAT}
                                             value={approval.timestamp} />
                                 </small>

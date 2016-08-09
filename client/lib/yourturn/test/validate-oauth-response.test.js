@@ -1,4 +1,4 @@
-/* globals sinon */
+/* globals sinon, Promise */
 import * as UserActions from 'common/src/data/user/user-actions';
 import validateResponse from 'yourturn/src/validate-oauth-response';
 

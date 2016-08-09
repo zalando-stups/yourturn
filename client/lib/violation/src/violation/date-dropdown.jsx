@@ -18,8 +18,7 @@ class DateDropdown extends React.Component {
     }
 
     onHeaderClick() {
-        this.state.visible = !this.state.visible;
-        this.setState(this.state);
+        this.setState({visible: !this.state.visible});
     }
 
     handleClickOutside() {
@@ -85,9 +84,9 @@ class DateDropdown extends React.Component {
 DateDropdown.displayName = 'DateDropdown';
 
 DateDropdown.propTypes = {
-    title: React.PropTypes.string,
     onUpdate: React.PropTypes.func,
-    range: React.PropTypes.arrayOf(React.PropTypes.instanceOf(Date))
+    range: React.PropTypes.array,
+    title: React.PropTypes.string
 };
 
 export default listenToOutsideClick(DateDropdown);

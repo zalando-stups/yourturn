@@ -114,9 +114,12 @@ function fetchViolationCountIn(account, params) {
             .then(res => [account, res.body]);
 }
 
+// TODO remove?
+/*eslint-disable no-unused-vars */
 function deleteViolations() {
     return true;
 }
+/*eslint-enable no-unused-vars */
 
 let fetchViolationAction = flummoxCompatWrap(createAction(Type.FETCH_VIOLATION, fetchViolation)),
     fetchViolationsAction = flummoxCompatWrap(createAction(Type.FETCH_VIOLATIONS, fetchViolations)),

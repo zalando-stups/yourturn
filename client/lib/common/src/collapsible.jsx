@@ -30,9 +30,14 @@ class Collapsible extends React.Component {
                 </div>;
     }
 }
+
 Collapsible.displayName = 'Collapsible';
+
+//TODO define children more in detail
 Collapsible.propTypes = {
+    children: React.PropTypes.any,
     header: React.PropTypes.string,
     initialCollapsed: React.PropTypes.bool
 };
+
 export default Collapsible;

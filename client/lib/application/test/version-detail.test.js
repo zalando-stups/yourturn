@@ -1,6 +1,8 @@
 /* globals expect, $, TestUtils, reset, render, React */
 import Detail from 'application/src/version-detail/version-detail.jsx';
 
+/*eslint-disable react/no-deprecated */
+// TODO rework usage of React.findDOMNode
 const TEAM = 'stups',
     VER = '0.1',
     APP = 'kio',
@@ -59,3 +61,4 @@ describe('The version detail view', () => {
         TestUtils.findRenderedDOMComponentWithAttributeValue(detail, 'data-block', 'missing-scmsource-warning');
     });
 });
+/*eslint-enable react/no-deprecated */

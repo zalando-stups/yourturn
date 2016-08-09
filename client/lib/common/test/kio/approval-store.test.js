@@ -2,7 +2,6 @@
 import Store from 'common/src/data/kio/kio-store';
 import Types from 'common/src/data/kio/kio-types';
 import * as Getter from 'common/src/data/kio/kio-getter';
-import {Pending, Failed} from 'common/src/fetch-result';
 
 describe('The redux approval store', () => {
     it('should receive approvals', () => {

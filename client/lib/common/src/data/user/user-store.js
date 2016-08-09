@@ -1,6 +1,5 @@
 import Immutable from 'immutable';
 import Types from './user-types';
-import * as Getter from './user-getter';
 
 function UserStore(state, action) {
     const DEFAULT_STATE = Immutable.fromJS({

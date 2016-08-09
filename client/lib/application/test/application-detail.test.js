@@ -2,6 +2,8 @@
 import Detail from 'application/src/application-detail/application-detail.jsx';
 import {Pending} from 'common/src/fetch-result';
 
+/*eslint-disable react/no-deprecated */
+// TODO rework usage of React.findDOMNode
 describe('The application detail view', () => {
     var TEST_APP,
         props,
@@ -72,3 +74,5 @@ describe('The application detail view', () => {
         TestUtils.findRenderedDOMComponentWithAttributeValue(detail, 'data-block', 'public-badge');
     });
 });
+/*eslint-enable react/no-deprecated */
+

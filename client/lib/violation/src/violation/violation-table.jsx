@@ -52,7 +52,7 @@ function TimestampCell({data}) {
     return <div>{cacheFormat(data)}</div>;
 }
 TimestampCell.displayName = 'TimestampCell';
-TimestampCell.propTypes = {data: React.PropTypes.instanceOf(Date)};
+TimestampCell.propTypes = {data: React.PropTypes.string};
 
 function DefaultValueCell({data}) {
     return <div>{data || '-'}</div>;
@@ -84,7 +84,11 @@ function AccountCell(accounts) {
 }
 /*eslint-enable react/display-name, react/prop-types */
 AccountCell.displayName = 'AccountCell';
-AccountCell.propTypes = React.PropTypes.arrayOf(React.PropTypes.shape({name: React.PropTypes.string}));
+// TODO make propTypes more specific
+AccountCell.propTypes = {
+    data: React.PropTypes.any
+}
+
 
 /*eslint-disable react/display-name, react/prop-types */
 function TeamCell(accounts) {
@@ -104,6 +108,10 @@ function TooltipCell({data}) {
     return <div><Tooltip /><span data-tip={data}>{data}</span></div>;
 }
 TooltipCell.displayName = 'TooltipCell';
+// TODO make propTypes more specific
+TooltipCell.propTypes = {
+    data: React.PropTypes.any
+}
 
 class Pager extends React.Component {
     constructor() {
@@ -153,14 +161,14 @@ class Pager extends React.Component {
 
 Pager.displayName = 'Pager';
 Pager.propTypes = {
-    maxPage: React.PropTypes.number,
-    setPage: React.PropTypes.func,
-    next: React.PropTypes.func,
-    previous: React.PropTypes.func,
-    pageChange: React.PropTypes.func,
     currentPage: React.PropTypes.number,
+    maxPage: React.PropTypes.number,
+    next: React.PropTypes.func,
     nextText: React.PropTypes.string,
-    previousText: React.PropTypes.string
+    pageChange: React.PropTypes.func,
+    previous: React.PropTypes.func,
+    previousText: React.PropTypes.string,
+    setPage: React.PropTypes.func
 };
 
 class ViolationTable extends React.Component {
@@ -270,15 +278,29 @@ class ViolationTable extends React.Component {
 
 ViolationTable.displayName = 'ViolationTable';
 
+// TODO make propTypes more specific
 ViolationTable.propTypes = {
+    accounts: React.PropTypes.object,
+    loading: React.PropTypes.bool,
     onChangeSort: React.PropTypes.func.isRequired,
+    onRowClick: React.PropTypes.func.isRequired,
     onSetPage: React.PropTypes.func.isRequired,
     onSetPageSize: React.PropTypes.func.isRequired,
-    onRowClick: React.PropTypes.func.isRequired,
-    accounts: React.PropTypes.object,
+    pagingInfo: React.PropTypes.shape({
+        last: React.PropTypes.bool,
+        size: React.PropTypes.number,
+        page: React.PropTypes.number,
+        total: React.PropTypes.number,
+        total_pages: React.PropTypes.number
+    }).isRequired,
+    params: React.PropTypes.shape({
+        page: React.PropTypes.number,
+        sortBy: React.PropTypes.string,
+        sortAsc: React.PropTypes.bool
+    }).isRequired,
     violations : React.PropTypes.arrayOf(React.PropTypes.shape({
         comment: React.PropTypes.string,
-        id: React.PropTypes.string,
+        id: React.PropTypes.number,
         account_id: React.PropTypes.string,
         region: React.PropTypes.string,
         instance_id: React.PropTypes.string,
@@ -291,22 +313,9 @@ ViolationTable.propTypes = {
             priority: React.PropTypes.number
         }),
         last_modified_by: React.PropTypes.string,
-        timestamp: React.PropTypes.instanceOf(Date),
+        timestamp: React.PropTypes.number,
         last_modified: React.PropTypes.instanceOf(Date)
-    })).isRequired,
-    pagingInfo: React.PropTypes.shape({
-        last: React.PropTypes.bool,
-        size: React.PropTypes.number,
-        page: React.PropTypes.number,
-        total: React.PropTypes.number,
-        total_pages: React.PropTypes.number
-    }).isRequired,
-    loading: React.PropTypes.bool,
-    params: React.PropTypes.shape({
-        page: React.PropTypes.number,
-        sortBy: React.PropTypes.func.isRequired,
-        sortAsc: React.PropTypes.func.isRequired
-    }).isRequired
+    })).isRequired
 };
 
 export default ViolationTable;

@@ -38,6 +38,8 @@ class VersionForm extends React.Component {
         });
     }
 
+    /*eslint-disable react/no-direct-mutation-state */
+    // TODO handle state correctly
     update(field, prop, evt) {
         const {versionIds, application} = this.props;
 
@@ -57,6 +59,7 @@ class VersionForm extends React.Component {
             notes: this.state.notes
         });
     }
+    /*eslint-enable react/no-direct-mutation-state */
 
     save(evt) {
         evt.preventDefault();
@@ -209,14 +212,14 @@ class VersionForm extends React.Component {
 }
 VersionForm.displayName = 'VersionForm';
 VersionForm.propTypes = {
-    applicationId: React.PropTypes.string.isRequired,
-    versionId: React.PropTypes.string,
-    edit: React.PropTypes.bool.isRequired,
     application: React.PropTypes.object.isRequired,
-    version: React.PropTypes.object,
+    applicationId: React.PropTypes.string.isRequired,
     approvalCount: React.PropTypes.number.isRequired,
+    edit: React.PropTypes.bool.isRequired,
     kioActions: React.PropTypes.object.isRequired,
     notificationActions: React.PropTypes.object.isRequired,
+    version: React.PropTypes.object,
+    versionId: React.PropTypes.string,
     versionIds: React.PropTypes.array
 };
 VersionForm.contextTypes = {
