@@ -92,7 +92,7 @@ let ConnectedCreateResourceFormHandler = connect(state => ({
 
 
 const EditResourceFormHandler = (props) => {
-    const resource = props.essentialsStore.getResource(this.props.params.resourceId);
+    const resource = props.essentialsStore.getResource(props.params.resourceId);
     return <ResourceForm
                 resourceId={props.params.resourceId}
                 edit={true}
@@ -202,8 +202,8 @@ const ScopeDetailHandler = (props) => {
           permitted = props.magnificentStore.getAuth(application.team_id),
           canEdit = whitelisted || permitted;
     return <ScopeDetail
-                resourceId={this.props.params.resourceId}
-                scopeId={this.props.params.scopeId}
+                resourceId={props.params.resourceId}
+                scopeId={props.params.scopeId}
                 canEdit={canEdit}
                 scope={scope}
                 resource={resource}
@@ -247,8 +247,8 @@ const EditScopeFormHandler = (props) => {
           scope = props.essentialsStore.getScope(resourceId, scopeId),
           resource = props.essentialsStore.getResource(resourceId);
     return <ScopeForm
-                resourceId={this.props.params.resourceId}
-                scopeId={this.props.params.scopeId}
+                resourceId={props.params.resourceId}
+                scopeId={props.params.scopeId}
                 scope={scope}
                 edit={true}
                 resource={resource}

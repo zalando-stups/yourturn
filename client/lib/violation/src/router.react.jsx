@@ -165,7 +165,7 @@ ViolationHandler.propTypes = {
     userStore: React.PropTypes.shape({
         getUserCloudAccounts: React.PropTypes.func
     }).isRequired
-}
+};
 ViolationHandler.contextTypes = {
     router: React.PropTypes.object,
     routing: React.PropTypes.object,
@@ -187,7 +187,7 @@ const ViolationDetailHandler = (props) => {
                 violationId={parseInt(props.params.violationId, 10)}
                 accounts={accounts}
                 fullstopActions={FULLSTOP_ACTIONS}
-                {...this.props} />;
+                {...props} />;
 };
 ViolationDetailHandler.fetchData = function (routerState, state) {
     FULLSTOP_ACTIONS.fetchViolation(routerState.params.violationId);
