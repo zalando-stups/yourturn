@@ -162,7 +162,7 @@ VersionDetail.propTypes = {
     approvalCount: React.PropTypes.number.isRequired,
     artifactInfo: React.PropTypes.object.isRequired,
     editable: React.PropTypes.bool.isRequired,
-    scmSource: React.PropTypes.object.isRequired,
+    scmSource: React.PropTypes.object,
     tags: React.PropTypes.array.isRequired,
     version: React.PropTypes.object.isRequired,
     versionId: React.PropTypes.string.isRequired

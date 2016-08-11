@@ -44,7 +44,7 @@ ScmSourceWarning.propTypes = {
     artifactInfo: React.PropTypes.shape({
         tag: React.PropTypes.string
     }).isRequired,
-    scmSource: React.PropTypes.object.isRequired,
+    scmSource: React.PropTypes.object,
     tags: React.PropTypes.array,
     version: React.PropTypes.object
 };
