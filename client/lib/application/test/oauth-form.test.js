@@ -45,7 +45,8 @@ describe('The oauth form view', () => {
             allScopes: [],
             resourceOwnerScopes: [],
             oauthConfig: TEST_OAUTH,
-            editable: true
+            editable: true,
+            notificationActions: {}
         };
 
         form = render(OAuthForm, props);

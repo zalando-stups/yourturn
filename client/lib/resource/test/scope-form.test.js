@@ -19,6 +19,8 @@ describe('The scope form view', () => {
 
             props = {
                 existingScopeIds: [],
+                essentialsActions: {},
+                notificationActions: {},
                 edit: false,
                 resourceId: RES_ID,
                 scopeId: 'test',
