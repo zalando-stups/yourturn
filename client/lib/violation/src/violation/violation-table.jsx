@@ -307,14 +307,14 @@ ViolationTable.propTypes = {
         username: React.PropTypes.string,
         message: React.PropTypes.string,
         rule_id: React.PropTypes.string,
-        meta_info: React.PropTypes.oneOfType(React.PropTypes.string, React.PropTypes.object),
+        meta_info: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.object]),
         is_whitelisted: React.PropTypes.bool,
         violation_type: React.PropTypes.shape({
             priority: React.PropTypes.number
         }),
         last_modified_by: React.PropTypes.string,
         timestamp: React.PropTypes.number,
-        last_modified: React.PropTypes.instanceOf(Date)
+        last_modified: React.PropTypes.string
     })).isRequired
 };
 

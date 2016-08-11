@@ -176,13 +176,9 @@ ViolationCard.contextTypes = {
     router: React.PropTypes.object
 };
 
+// TODO fix accounts
 ViolationCard.propTypes = {
-    accounts: React.PropTypes.arrayOf(React.PropTypes.shape(
-        {
-            name: React.PropTypes.string,
-            owner: React.PropTypes.string
-        }
-    )),
+    accounts: React.PropTypes.object.isRequired,
     autoFocus: React.PropTypes.bool,
     closable: React.PropTypes.bool,
     editable: React.PropTypes.bool,
@@ -192,21 +188,21 @@ ViolationCard.propTypes = {
     style: React.PropTypes.object,
     violation: React.PropTypes.shape({
         comment: React.PropTypes.string,
-        id: React.PropTypes.string,
+        id: React.PropTypes.number,
         account_id: React.PropTypes.string,
         region: React.PropTypes.string,
         instance_id: React.PropTypes.string,
         username: React.PropTypes.string,
         message: React.PropTypes.string,
         rule_id: React.PropTypes.string,
-        meta_info: React.PropTypes.oneOfType(React.PropTypes.string, React.PropTypes.object),
+        meta_info: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.object]),
         is_whitelisted: React.PropTypes.bool,
         violation_type: React.PropTypes.shape({
             priority: React.PropTypes.number
         }),
         last_modified_by: React.PropTypes.string,
-        timestamp: React.PropTypes.instanceOf(Date),
-        last_modified: React.PropTypes.instanceOf(Date)
+        timestamp: React.PropTypes.number,
+        last_modified: React.PropTypes.string
     }).isRequired
 };
 

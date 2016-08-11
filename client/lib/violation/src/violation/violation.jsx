@@ -156,7 +156,7 @@ Violation.propTypes = {
         username: React.PropTypes.string,
         message: React.PropTypes.string,
         rule_id: React.PropTypes.string,
-        meta_info: React.PropTypes.oneOfType(React.PropTypes.string, React.PropTypes.object),
+        meta_info: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.object]),
         is_whitelisted: React.PropTypes.bool,
         violation_type: React.PropTypes.shape({
             priority: React.PropTypes.number

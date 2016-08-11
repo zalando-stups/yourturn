@@ -145,7 +145,7 @@ class Sidebar extends React.Component {
                                                     <Counter
                                                         begin={0}
                                                         time={1000}
-                                                        end={violationCount + 1000} />
+                                                        end={violationCount}/>
                                                     :
                                                     0}
                                             </Badge> <Icon fixedWidth name='warning' />

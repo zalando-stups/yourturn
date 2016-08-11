@@ -46,7 +46,7 @@ ScmSourceWarning.propTypes = {
     }).isRequired,
     scmSource: React.PropTypes.object.isRequired,
     tags: React.PropTypes.array,
-    version: React.PropTypes.object.isRequired
+    version: React.PropTypes.object
 };
 
 export default ScmSourceWarning;

@@ -158,7 +158,7 @@ OAuthForm.propTypes = {
     allScopes: React.PropTypes.array.isRequired,
     application: React.PropTypes.object.isRequired,
     applicationId: React.PropTypes.string.isRequired,
-    editable: React.PropTypes.bool.isRequired,
+    editable: React.PropTypes.bool,
     mintActions: React.PropTypes.object.isRequired,
     notificationActions: React.PropTypes.object.isRequired,
     oauthConfig: React.PropTypes.object.isRequired,
