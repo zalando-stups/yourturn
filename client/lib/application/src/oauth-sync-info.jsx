@@ -83,7 +83,7 @@ class OAuthSyncInfo extends React.Component {
                                                 :
                                                 status[0] === STATUS.PENDING ?
                                                     <div className='btn btn-disabled'>
-                                                        <Icon name='refresh' spin/> Queueing renewal…
+                                                        <Icon name='refresh' spin /> Queueing renewal…
                                                     </div>
                                                     :
                                                     status[0] === STATUS.ISSUED ?

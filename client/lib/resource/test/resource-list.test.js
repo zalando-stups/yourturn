@@ -1,7 +1,8 @@
 /* globals expect, $, TestUtils, reset, render, React */
 import List from 'resource/src/resource-list/resource-list.jsx';
-import {bindGettersToState} from 'common/src/util';
 
+/*eslint-disable react/no-deprecated */
+// TODO rework usage of React.findDOMNode
 const TEST_RESOURCES = [{
     id: 'sales_order',
     name: 'Sales Order'
@@ -35,3 +36,4 @@ describe('The resource list view', () => {
         expect($(React.findDOMNode(resources)).children().length).to.equal(2);
     });
 });
+/*eslint-enable react/no-deprecated */

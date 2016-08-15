@@ -118,9 +118,53 @@ class Violation extends React.Component {
                 </div>;
     }
 }
+
 Violation.displayName = 'Violation';
+
 Violation.contextTypes = {
     router: React.PropTypes.object
+};
+
+// TODO make propTypes more specific
+Violation.propTypes = {
+    accounts: React.PropTypes.object,
+    error: React.PropTypes.object,
+    fullstopActions: React.PropTypes.shape({
+        resolveViolation: React.PropTypes.func
+    }).isRequired,
+    fullstopStore: React.PropTypes.shape({
+        getViolation: React.PropTypes.func
+    }).isRequired,
+    loading: React.PropTypes.bool,
+    notificationActions: React.PropTypes.shape({
+        addNotification: React.PropTypes.func
+    }).isRequired,
+    pagingInfo: React.PropTypes.shape({
+        last: React.PropTypes.bool,
+        page: React.PropTypes.number,
+        total: React.PropTypes.number,
+        total_pages: React.PropTypes.number
+    }).isRequired,
+    params: React.PropTypes.object,
+    violationTypes: React.PropTypes.arrayOf(React.PropTypes.string).isRequired,
+    violations : React.PropTypes.arrayOf(React.PropTypes.shape({
+        comment: React.PropTypes.string,
+        id: React.PropTypes.number,
+        account_id: React.PropTypes.string,
+        region: React.PropTypes.string,
+        instance_id: React.PropTypes.string,
+        username: React.PropTypes.string,
+        message: React.PropTypes.string,
+        rule_id: React.PropTypes.string,
+        meta_info: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.object]),
+        is_whitelisted: React.PropTypes.bool,
+        violation_type: React.PropTypes.shape({
+            priority: React.PropTypes.number
+        }),
+        last_modified_by: React.PropTypes.string,
+        timestamp: React.PropTypes.number,
+        last_modified: React.PropTypes.string
+    })).isRequired
 };
 
 export default Violation;

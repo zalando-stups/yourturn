@@ -1,5 +1,5 @@
 import React from 'react';
-
+/*eslint-disable */
 class ApplicationLifeCycle extends React.Component {
     constructor(props) {
         super(props);
@@ -18,5 +18,8 @@ class ApplicationLifeCycle extends React.Component {
         )
     }
 }
+/*eslint-enable */
+
+ApplicationLifeCycle.displayName = 'ApplicationLifeCycle';
 
 export default ApplicationLifeCycle;

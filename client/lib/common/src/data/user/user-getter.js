@@ -18,7 +18,7 @@ function getUserInfo(state, user) {
         let {uid} = getTokenInfo(state);
         info = uid ? state.getIn(['users', uid], false) : false;
     }
-    return info ? info.toJS() : false;
+    return info ? info.toJS() : false; // TODO maybe return undefined here
 }
 
 function getTokenInfo(state) {

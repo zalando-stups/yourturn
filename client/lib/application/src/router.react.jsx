@@ -151,6 +151,22 @@ class AppListHandler extends React.Component {
     }
 }
 AppListHandler.displayName = 'AppListHandler';
+AppListHandler.propTypes = {
+    kioStore: React.PropTypes.shape({
+        getApplicationsFetchStatus: React.PropTypes.func,
+        getTabAccounts: React.PropTypes.func
+    }).isRequired,
+    location: React.PropTypes.shape({
+        query: React.PropTypes.shape({
+            team: React.PropTypes.string,
+            manageTabs: React.PropTypes.any // TODO
+        })
+    }).isRequired,
+    teamStore: React.PropTypes.shape({
+        getAccounts: React.PropTypes.func,
+        getTeams: React.PropTypes.func
+    }).isRequired
+};
 AppListHandler.contextTypes = {
     router: React.PropTypes.object
 };
@@ -169,25 +185,25 @@ var ConnectedAppListHandler =
             userStore: bindGettersToState(state.user, UserGetter)
         }))(AppListHandler);
 
-class CreateAppFormHandler extends React.Component {
-    constructor() {
-        super();
-    }
-
-    render() {
-        const userTeams = this.props.userStore.getUserTeams().map(t => t.id),
-            applicationIds = this.props.kioStore.getApplications().map(a => a.id);
-        return  <ApplicationForm
-                    edit={false}
-                    userTeams={userTeams}
-                    applicationIds={applicationIds}
-                    notificationActions={NOTIFICATION_ACTIONS}
-                    kioActions={KIO_ACTIONS} />;
-    }
-}
+const CreateAppFormHandler = (props) => {
+    const userTeams = props.userStore.getUserTeams().map(t => t.id),
+        applicationIds = props.kioStore.getApplications().map(a => a.id);
+    return  <ApplicationForm
+                edit={false}
+                userTeams={userTeams}
+                applicationIds={applicationIds}
+                notificationActions={NOTIFICATION_ACTIONS}
+                kioActions={KIO_ACTIONS} />;
+};
 CreateAppFormHandler.displayName = 'CreateAppFormHandler';
 CreateAppFormHandler.propTypes = {
-    params: React.PropTypes.object.isRequired
+    kioStore: React.PropTypes.shape({
+        getApplications: React.PropTypes.func
+    }).isRequired,
+    params: React.PropTypes.object.isRequired,
+    userStore: React.PropTypes.shape({
+        getUserTeams: React.PropTypes.func
+    }).isRequired
 };
 CreateAppFormHandler.fetchData = function(routerState, state) {
     return Promise.all([
@@ -201,28 +217,22 @@ var ConnectedCreateAppFormHandler =
         userStore: bindGettersToState(state.user, UserGetter)
     }))(CreateAppFormHandler);
 
-class EditAppFormHandler extends React.Component {
-    constructor() {
-        super();
-    }
+const EditAppFormHandler = (props) => {
+    const {applicationId} = props.params,
+          userTeams = props.userStore.getUserTeams().map(t => t.id),
+          application = props.kioStore.getApplication(applicationId),
+          teamsAndPreviousValue = new Set([...userTeams, application.team_id]),
+          applicationIds = props.kioStore.getApplications().map(a => a.id);
 
-    render() {
-        const {applicationId} = this.props.params,
-              userTeams = this.props.userStore.getUserTeams().map(t => t.id),
-              application = this.props.kioStore.getApplication(applicationId),
-              teamsAndPreviousValue = new Set([...userTeams, application.team_id]),
-              applicationIds = this.props.kioStore.getApplications().map(a => a.id);
-
-        return <ApplicationForm
-                    edit={true}
-                    applicationId={applicationId}
-                    notificationActions={NOTIFICATION_ACTIONS}
-                    kioActions={KIO_ACTIONS}
-                    application={application}
-                    applicationIds={applicationIds}
-                    userTeams={[...teamsAndPreviousValue].sort()} />
-    }
-}
+    return <ApplicationForm
+                edit={true}
+                applicationId={applicationId}
+                notificationActions={NOTIFICATION_ACTIONS}
+                kioActions={KIO_ACTIONS}
+                application={application}
+                applicationIds={applicationIds}
+                userTeams={[...teamsAndPreviousValue].sort()} />
+};
 EditAppFormHandler.isAllowed = function(routerState, state, [hasAuth]) {
     if (!hasAuth) {
         let error = new Error();
@@ -234,7 +244,14 @@ EditAppFormHandler.isAllowed = function(routerState, state, [hasAuth]) {
 };
 EditAppFormHandler.displayName = 'EditAppFormHandler';
 EditAppFormHandler.propTypes = {
-    params: React.PropTypes.object.isRequired
+    kioStore: React.PropTypes.shape({
+        getApplication: React.PropTypes.func,
+        getApplications: React.PropTypes.func
+    }).isRequired,
+    params: React.PropTypes.object.isRequired,
+    userStore: React.PropTypes.shape({
+        getUserTeams: React.PropTypes.func
+    }).isRequired
 };
 EditAppFormHandler.fetchData = function(routerState, state) {
     return KIO_ACTIONS.fetchApplication(routerState.params.applicationId)
@@ -249,30 +266,34 @@ var ConnectedEditAppFormHandler =
         userStore: bindGettersToState(state.user, UserGetter)
     }))(EditAppFormHandler);
 
-class AppDetailHandler extends React.Component {
-    constructor() {
-        super();
-    }
-
-    render() {
-        const   {applicationId} = this.props.params,
-                app = this.props.kioStore.getApplication(applicationId),
-                api = this.props.twintipStore.getApi(applicationId),
-                editable = !!this.props.magnificentStore.getAuth(app.team_id),
-                versions = _.take(this.props.kioStore.getApplicationVersions(applicationId), 3);
-        return <ApplicationDetail
-                    applicationId={this.props.params.applicationId}
-                    application={app}
-                    versions={versions}
-                    editable={editable}
-                    api={api}
-                    kioActions={KIO_ACTIONS}
-                    notificationActions={NOTIFICATION_ACTIONS} />;
-    }
-}
+const AppDetailHandler = (props) => {
+    const   {applicationId} = props.params,
+            app = props.kioStore.getApplication(applicationId),
+            api = props.twintipStore.getApi(applicationId),
+            editable = !!props.magnificentStore.getAuth(app.team_id),
+            versions = _.take(props.kioStore.getApplicationVersions(applicationId), 3);
+    return <ApplicationDetail
+                applicationId={props.params.applicationId}
+                application={app}
+                versions={versions}
+                editable={editable}
+                api={api}
+                kioActions={KIO_ACTIONS}
+                notificationActions={NOTIFICATION_ACTIONS} />;
+};
 AppDetailHandler.displayName = 'AppDetailHandler';
 AppDetailHandler.propTypes = {
-    params: React.PropTypes.object.isRequired
+    kioStore: React.PropTypes.shape({
+        getApplication: React.PropTypes.func,
+        getApplicationVersions: React.PropTypes.func
+    }).isRequired,
+    magnificentStore: React.PropTypes.shape({
+        getAuth: React.PropTypes.func
+    }).isRequired,
+    params: React.PropTypes.object.isRequired,
+    twintipStore: React.PropTypes.shape({
+        getApi: React.PropTypes.func
+    }).isRequired
 };
 AppDetailHandler.fetchData = function(routerState, state) {
     const {applicationId} = routerState.params;
@@ -290,32 +311,38 @@ var ConnectedAppDetailHandler =
         magnificentStore: bindGettersToState(state.magnificent, MagnificentGetter)
     }))(AppDetailHandler);
 
-class OAuthFormHandler extends React.Component {
-    constructor() {
-        super();
-    }
-
-    render() {
-        const  {applicationId} = this.props.params,
-               {kioStore, magnificentStore, essentialsStore, mintStore} = this.props,
-               application = kioStore.getApplication(applicationId),
-               editable = magnificentStore.getAuth(application.team_id),
-               oauthConfig = mintStore.getOAuthConfig(applicationId),
-               allScopes = essentialsStore.getAllScopes(),
-               resourceOwnerScopes = allScopes.filter(s => s.is_resource_owner_scope);
-        return <OAuthForm
-                    applicationId={applicationId}
-                    editable={editable}
-                    application={application}
-                    allScopes={allScopes}
-                    resourceOwnerScopes={resourceOwnerScopes}
-                    oauthConfig={oauthConfig}
-                    mintActions={MINT_ACTIONS}
-                    notificationActions={NOTIFICATION_ACTIONS} />;
-    }
-}
+const OAuthFormHandler = (props) => {
+    const  {applicationId} = props.params,
+           {kioStore, magnificentStore, essentialsStore, mintStore} = props,
+           application = kioStore.getApplication(applicationId),
+           editable = magnificentStore.getAuth(application.team_id),
+           oauthConfig = mintStore.getOAuthConfig(applicationId),
+           allScopes = essentialsStore.getAllScopes(),
+           resourceOwnerScopes = allScopes.filter(s => s.is_resource_owner_scope);
+    return <OAuthForm
+                applicationId={applicationId}
+                editable={editable}
+                application={application}
+                allScopes={allScopes}
+                resourceOwnerScopes={resourceOwnerScopes}
+                oauthConfig={oauthConfig}
+                mintActions={MINT_ACTIONS}
+                notificationActions={NOTIFICATION_ACTIONS} />;
+};
 OAuthFormHandler.displayName = 'OAuthFormHandler';
 OAuthFormHandler.propTypes = {
+    essentialsStore: React.PropTypes.shape({
+        getAllScopes: React.PropTypes.func
+    }).isRequired,
+    kioStore: React.PropTypes.shape({
+        getApplication: React.PropTypes.func
+    }).isRequired,
+    magnificentStore: React.PropTypes.shape({
+        getAuth: React.PropTypes.func
+    }).isRequired,
+    mintStore: React.PropTypes.shape({
+        getOAuthConfig: React.PropTypes.func
+    }).isRequired,
     params: React.PropTypes.object.isRequired
 };
 OAuthFormHandler.fetchData = function(routerState, state) {
@@ -338,36 +365,45 @@ let ConnectedOAuthFormHandler = connect(state => ({
     magnificentStore: bindGettersToState(state.magnificent, MagnificentGetter)
 }))(OAuthFormHandler);
 
-class AccessFormHandler extends React.Component {
-    constructor() {
-        super();
-    }
-
-    render() {
-        const {applicationId} = this.props.params,
-            {magnificentStore, kioStore, mintStore, essentialsStore, userStore} = this.props,
-            application = kioStore.getApplication(applicationId),
-            oauthConfig = mintStore.getOAuthConfig(applicationId),
-            cloudAccounts = userStore.getUserCloudAccounts(),
-            defaultAccount = cloudAccounts.length ? cloudAccounts[0].id : false,
-            allScopes = essentialsStore.getAllScopes(),
-            applicationScopes = allScopes.filter(s => !s.is_resource_owner_scope),
-            editable = magnificentStore.getAuth(application.team_id);
-        return <AccessForm
-                applicationId={this.props.params.applicationId}
-                editable={editable}
-                oauthConfig={oauthConfig}
-                mintActions={MINT_ACTIONS}
-                defaultAccount={defaultAccount}
-                applicationScopes={applicationScopes}
-                notificationActions={NOTIFICATION_ACTIONS}
-                application={application}
-                allScopes={allScopes} />;
-    }
-}
+const AccessFormHandler = (props) => {
+    const {applicationId} = props.params,
+        {magnificentStore, kioStore, mintStore, essentialsStore, userStore} = props,
+        application = kioStore.getApplication(applicationId),
+        oauthConfig = mintStore.getOAuthConfig(applicationId),
+        cloudAccounts = userStore.getUserCloudAccounts(),
+        defaultAccount = cloudAccounts.length ? cloudAccounts[0].id : false,
+        allScopes = essentialsStore.getAllScopes(),
+        applicationScopes = allScopes.filter(s => !s.is_resource_owner_scope),
+        editable = magnificentStore.getAuth(application.team_id);
+    return <AccessForm
+            applicationId={props.params.applicationId}
+            editable={editable}
+            oauthConfig={oauthConfig}
+            mintActions={MINT_ACTIONS}
+            defaultAccount={defaultAccount}
+            applicationScopes={applicationScopes}
+            notificationActions={NOTIFICATION_ACTIONS}
+            application={application}
+            allScopes={allScopes} />;
+};
 AccessFormHandler.displayName = 'AccessFormHandler';
 AccessFormHandler.propTypes = {
-    params: React.PropTypes.object.isRequired
+    essentialsStore: React.PropTypes.shape({
+        getAllScopes: React.PropTypes.func
+    }).isRequired,
+    kioStore: React.PropTypes.shape({
+        getApplication: React.PropTypes.func
+    }).isRequired,
+    magnificentStore: React.PropTypes.shape({
+        getAuth: React.PropTypes.func
+    }).isRequired,
+    mintStore: React.PropTypes.shape({
+        getOAuthConfig: React.PropTypes.func
+    }).isRequired,
+    params: React.PropTypes.object.isRequired,
+    userStore: React.PropTypes.shape({
+        getUserCloudAccounts: React.PropTypes.func
+    }).isRequired
 };
 AccessFormHandler.fetchData = function(routerState, state) {
     let id = routerState.params.applicationId;
@@ -391,17 +427,11 @@ let ConnectedAccessFormHandler = connect(state => ({
     magnificentStore: bindGettersToState(state.magnificent, MagnificentGetter)
 }))(AccessFormHandler);
 
-class VersionListHandler extends React.Component {
-    constructor() {
-        super();
-    }
-
-    render() {
-        return <VersionList
-                    applicationId={this.props.params.applicationId}
-                    {...this.props} />;
-    }
-}
+const VersionListHandler = (props) => {
+    return <VersionList
+                applicationId={props.params.applicationId}
+                {...props} />;
+};
 VersionListHandler.displayName = 'VersionListHandler';
 VersionListHandler.propTypes = {
     params: React.PropTypes.object.isRequired
@@ -418,38 +448,44 @@ let ConnectedVersionListHandler = connect(state => ({
     userStore: bindGettersToState(state.user, UserGetter)
 }))(VersionListHandler);
 
-class VersionDetailHandler extends React.Component {
-    constructor() {
-        super();
-    }
-
-    render() {
-        const {applicationId, versionId} = this.props.params,
-            {kioStore, magnificentStore, pieroneStore} = this.props,
-            application = kioStore.getApplication(applicationId),
-            version = kioStore.getApplicationVersion(applicationId, versionId),
-            {team, artifact, tag} = parseArtifact(version.artifact),
-            artifactInfo = {team, artifact, tag},
-            tags = pieroneStore.getTags(team, artifact).map(t => t.name),
-            approvalCount = kioStore.getApprovals(applicationId, versionId).length,
-            editable = !!magnificentStore.getAuth(application.team_id),
-            scmSource = pieroneStore.getScmSource(team, artifact, tag);
-        return <VersionDetail
-                    applicationId={this.props.params.applicationId}
-                    versionId={this.props.params.versionId}
-                    application={application}
-                    version={version}
-                    editable={editable}
-                    approvalCount={approvalCount}
-                    scmSource={scmSource}
-                    artifactInfo={artifactInfo}
-                    tags={tags}
-                    {...this.props} />;
-    }
+const VersionDetailHandler = (props) => {
+    const {applicationId, versionId} = props.params,
+        {kioStore, magnificentStore, pieroneStore} = props,
+        application = kioStore.getApplication(applicationId),
+        version = kioStore.getApplicationVersion(applicationId, versionId),
+        {team, artifact, tag} = parseArtifact(version.artifact),
+        artifactInfo = {team, artifact, tag},
+        tags = pieroneStore.getTags(team, artifact).map(t => t.name),
+        approvalCount = kioStore.getApprovals(applicationId, versionId).length,
+        editable = !!magnificentStore.getAuth(application.team_id),
+        scmSource = pieroneStore.getScmSource(team, artifact, tag);
+    return <VersionDetail
+                applicationId={props.params.applicationId}
+                versionId={props.params.versionId}
+                application={application}
+                version={version}
+                editable={editable}
+                approvalCount={approvalCount}
+                scmSource={scmSource}
+                artifactInfo={artifactInfo}
+                tags={tags}
+                {...props} />;
 }
 VersionDetailHandler.displayName = 'VersionDetailHandler';
 VersionDetailHandler.propTypes = {
-    params: React.PropTypes.object.isRequired
+    kioStore: React.PropTypes.shape({
+        getApplication: React.PropTypes.func,
+        getApplicationVersion: React.PropTypes.func,
+        getApprovals: React.PropTypes.func
+    }).isRequired,
+    magnificentStore: React.PropTypes.shape({
+        getAuth: React.PropTypes.func
+    }).isRequired,
+    params: React.PropTypes.object.isRequired,
+    pieroneStore: React.PropTypes.shape({
+        getScmSource: React.PropTypes.func,
+        getTags: React.PropTypes.func
+    }).isRequired
 };
 VersionDetailHandler.fetchData = function(routerState, state) {
     let {applicationId, versionId} = routerState.params;
@@ -476,32 +512,32 @@ let ConnectedVersionDetailHandler = connect(state => ({
     magnificentStore: bindGettersToState(state.magnificent, MagnificentGetter)
 }))(VersionDetailHandler);
 
-class CreateVersionFormHandler extends React.Component {
-    constructor() {
-        super();
-    }
-
-    render() {
-        const {applicationId, versionId} = this.props.params,
-            {kioStore} = this.props,
-            application = kioStore.getApplication(applicationId),
-            version = kioStore.getApplicationVersion(applicationId, versionId),
-            approvalCount = kioStore.getApprovals(applicationId, versionId).length,
-            versionIds = kioStore.getApplicationVersions(applicationId).map(v => v.id);
-        return <VersionForm
-                    edit={false}
-                    applicationId={applicationId}
-                    versionId={versionId}
-                    application={application}
-                    version={version}
-                    versionIds={versionIds}
-                    approvalCount={approvalCount}
-                    kioActions={KIO_ACTIONS}
-                    notificationActions={NOTIFICATION_ACTIONS} />;
-    }
-}
+const CreateVersionFormHandler = (props) => {
+    const {applicationId, versionId} = props.params,
+        {kioStore} = props,
+        application = kioStore.getApplication(applicationId),
+        version = kioStore.getApplicationVersion(applicationId, versionId),
+        approvalCount = kioStore.getApprovals(applicationId, versionId).length,
+        versionIds = kioStore.getApplicationVersions(applicationId).map(v => v.id);
+    return <VersionForm
+                edit={false}
+                applicationId={applicationId}
+                versionId={versionId}
+                application={application}
+                version={version}
+                versionIds={versionIds}
+                approvalCount={approvalCount}
+                kioActions={KIO_ACTIONS}
+                notificationActions={NOTIFICATION_ACTIONS} />;
+};
 CreateVersionFormHandler.displayName = 'CreateVersionFormHandler';
 CreateVersionFormHandler.propTypes = {
+    kioStore: React.PropTypes.shape({
+        getApplication: React.PropTypes.func,
+        getApplicationVersion: React.PropTypes.func,
+        getApplicationVersions: React.PropTypes.func,
+        getApprovals: React.PropTypes.func
+    }).isRequired,
     params: React.PropTypes.object.isRequired
 };
 CreateVersionFormHandler.fetchData = function(routerState, state) {
@@ -525,31 +561,24 @@ let ConnectedCreateVersionFormHandler = connect(state => ({
     kioStore: bindGettersToState(state.kio, KioGetter)
 }))(CreateVersionFormHandler);
 
-class EditVersionFormHandler extends React.Component {
-    constructor() {
-        super();
-    }
-
-    render() {
-        const {applicationId, versionId} = this.props.params,
-            {kioStore} = this.props,
-            application = kioStore.getApplication(applicationId),
-            version = kioStore.getApplicationVersion(applicationId, versionId),
-            approvalCount = kioStore.getApprovals(applicationId, versionId).length,
-            versionIds = kioStore.getApplicationVersions(applicationId).map(v => v.id);
-        return <VersionForm
-                edit={true}
-                applicationId={applicationId}
-                versionId={versionId}
-                application={application}
-                version={version}
-                versionIds={versionIds}
-                approvalCount={approvalCount}
-                notificationActions={NOTIFICATION_ACTIONS}
-                kioActions={KIO_ACTIONS} />;
-    }
-}
-
+const EditVersionFormHandler = (props) => {
+    const {applicationId, versionId} = props.params,
+        {kioStore} = props,
+        application = kioStore.getApplication(applicationId),
+        version = kioStore.getApplicationVersion(applicationId, versionId),
+        approvalCount = kioStore.getApprovals(applicationId, versionId).length,
+        versionIds = kioStore.getApplicationVersions(applicationId).map(v => v.id);
+    return <VersionForm
+            edit={true}
+            applicationId={applicationId}
+            versionId={versionId}
+            application={application}
+            version={version}
+            versionIds={versionIds}
+            approvalCount={approvalCount}
+            notificationActions={NOTIFICATION_ACTIONS}
+            kioActions={KIO_ACTIONS} />;
+};
 EditVersionFormHandler.isAllowed = function(routerState, state, [hasAuth]) {
     if (!hasAuth) {
         let error = new Error();
@@ -561,6 +590,12 @@ EditVersionFormHandler.isAllowed = function(routerState, state, [hasAuth]) {
 };
 EditVersionFormHandler.displayName = 'EditVersionFormHandler';
 EditVersionFormHandler.propTypes = {
+    kioStore: React.PropTypes.shape({
+        getApplication: React.PropTypes.func,
+        getApplicationVersion: React.PropTypes.func,
+        getApplicationVersions: React.PropTypes.func,
+        getApprovals: React.PropTypes.func
+    }).isRequired,
     params: React.PropTypes.object.isRequired
 };
 EditVersionFormHandler.fetchData = function(routerState, state) {
@@ -579,38 +614,44 @@ let ConnectedEditVersionFormHandler = connect(state => ({
     kioStore: bindGettersToState(state.kio, KioGetter)
 }))(EditVersionFormHandler);
 
-class ApprovalFormHandler extends React.Component {
-    constructor() {
-        super();
-    }
-
-    render() {
-        const {applicationId, versionId} = this.props.params,
-            {kioStore, magnificentStore, userStore} = this.props,
-            application = kioStore.getApplication(applicationId),
-            version = kioStore.getApplicationVersion(applicationId, versionId),
-            approvals = kioStore.getApprovals(applicationId, versionId),
-            approvalTypes = kioStore.getApprovalTypes(),
-            userInfos = approvals
-                .map(({user_id}) => ({...userStore.getUserInfo(user_id), user_id}))
-                .reduce((map, info) => {map[info.user_id] = info; return map;}, {}),
-            editable = magnificentStore.getAuth(application.team_id);
-        return <ApprovalForm
-                    applicationId={applicationId}
-                    versionId={versionId}
-                    editable={editable}
-                    application={application}
-                    version={version}
-                    approvals={approvals}
-                    userInfos={userInfos}
-                    approvalTypes={approvalTypes}
-                    kioActions={KIO_ACTIONS}
-                    notificationActions={NOTIFICATION_ACTIONS} />;
-    }
-}
+const ApprovalFormHandler = (props) => {
+    const {applicationId, versionId} = props.params,
+        {kioStore, magnificentStore, userStore} = props,
+        application = kioStore.getApplication(applicationId),
+        version = kioStore.getApplicationVersion(applicationId, versionId),
+        approvals = kioStore.getApprovals(applicationId, versionId),
+        approvalTypes = kioStore.getApprovalTypes(),
+        userInfos = approvals
+            .map(({user_id}) => ({...userStore.getUserInfo(user_id), user_id}))
+            .reduce((map, info) => {map[info.user_id] = info; return map;}, {}),
+        editable = magnificentStore.getAuth(application.team_id);
+    return <ApprovalForm
+                applicationId={applicationId}
+                versionId={versionId}
+                editable={editable}
+                application={application}
+                version={version}
+                approvals={approvals}
+                userInfos={userInfos}
+                approvalTypes={approvalTypes}
+                kioActions={KIO_ACTIONS}
+                notificationActions={NOTIFICATION_ACTIONS} />;
+};
 ApprovalFormHandler.displayName = 'ApprovalFormHandler';
 ApprovalFormHandler.propTypes = {
-    params: React.PropTypes.object.isRequired
+    kioStore: React.PropTypes.shape({
+        getApplication: React.PropTypes.func,
+        getApplicationVersion: React.PropTypes.func,
+        getApprovals: React.PropTypes.func,
+        getApprovalTypes: React.PropTypes.func
+    }).isRequired,
+    magnificentStore: React.PropTypes.shape({
+        getAuth: React.PropTypes.func
+    }).isRequired,
+    params: React.PropTypes.object.isRequired,
+    userStore: React.PropTypes.shape({
+        getUserInfo: React.PropTypes.func
+    }).isRequired
 };
 ApprovalFormHandler.fetchData = function(routerState, state) {
     let {applicationId, versionId} = routerState.params;
@@ -636,17 +677,11 @@ let ConnectedApprovalFormHandler = connect(state => ({
     magnificentStore: bindGettersToState(state.magnificent, MagnificentGetter)
 }))(ApprovalFormHandler);
 
-class ApplicationLifecycleHandler extends React.Component {
-    constructor() {
-        super();
-    }
-
-    render() {
-        return <ApplicationLifeCycle
-            applicationId={this.props.params.applicationId}
-            {...this.props} />;
-    }
-}
+const ApplicationLifecycleHandler = (props) => {
+    return <ApplicationLifeCycle
+        applicationId={props.params.applicationId}
+        {...props} />;
+};
 ApplicationLifecycleHandler.displayName = 'ApplicationLifecycleHandler';
 ApplicationLifecycleHandler.propTypes = {
     params: React.PropTypes.object.isRequired
@@ -686,7 +721,7 @@ const ROUTES =
                     <Route path='lifecycle'>
                         <IndexRoute
                             onEnter={wrapEnter(ApplicationLifecycleHandler.fetchData)}
-                            component={ConnectedApplicationLifecycleHandler}/>
+                            component={ConnectedApplicationLifecycleHandler} />
                     </Route>
                     : null
                 }

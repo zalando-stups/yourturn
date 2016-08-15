@@ -9,13 +9,15 @@ import 'common/asset/less/resource/scope-form.less';
 class ScopeForm extends React.Component {
     constructor(props) {
         super();
-        let {resourceId, scopeId, edit, scope} = props;
+        let {edit, scope} = props;
         this.state = {
             scope: edit ? scope : { is_resource_owner_scope: false },
             scopeIdTaken: false
         };
     }
 
+    /*eslint-disable react/no-direct-mutation-state */
+    // TODO fix direct mutation of state here if possible
     update(field, prop, evt) {
         this.state.scope[field] = evt.target[prop];
         if (evt.target.id === 'scope_appScope') {
@@ -26,6 +28,7 @@ class ScopeForm extends React.Component {
             scopeIdTaken: this.props.existingScopeIds.indexOf(this.state.scope.id) !== -1
         });
     }
+    /*eslint-enable react/no-direct-mutation-state */
 
     setCustomValidity(evt) {
         ReactDOM.findDOMNode(evt.target).setCustomValidity(
@@ -239,14 +242,23 @@ class ScopeForm extends React.Component {
                 </div>;
     }
 }
+
 ScopeForm.displayName = 'ScopeForm';
+
 ScopeForm.propTypes = {
-    scopeId: React.PropTypes.string,
-    resourceId: React.PropTypes.string.isRequired,
     edit: React.PropTypes.bool.isRequired,
     essentialsActions: React.PropTypes.object.isRequired,
-    notificationActions: React.PropTypes.object.isRequired
+    existingScopeIds: React.PropTypes.array,
+    notificationActions: React.PropTypes.object.isRequired,
+    resource: React.PropTypes.shape({
+        id: React.PropTypes.string,
+        name: React.PropTypes.string,
+        resource_owners: React.PropTypes.arrayOf(React.PropTypes.string)
+    }).isRequired,
+    resourceId: React.PropTypes.string.isRequired,
+    scopeId: React.PropTypes.string
 };
+
 ScopeForm.contextTypes = {
     router: React.PropTypes.object
 };

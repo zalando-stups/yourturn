@@ -145,7 +145,7 @@ class Sidebar extends React.Component {
                                                     <Counter
                                                         begin={0}
                                                         time={1000}
-                                                        end={violationCount}/>
+                                                        end={violationCount} />
                                                     :
                                                     0}
                                             </Badge> <Icon fixedWidth name='warning' />
@@ -155,10 +155,25 @@ class Sidebar extends React.Component {
                 </aside>;
     }
 }
+
 Sidebar.displayName = 'Sidebar';
+
 Sidebar.contextTypes = {
     router: React.PropTypes.object
 };
+
+// TODO specify in more detail
+Sidebar.propTypes = {
+    activeRoute: React.PropTypes.string,
+    dispatch: React.PropTypes.func.isRequired,
+    tokenInfo: React.PropTypes.object,
+    userInfo: React.PropTypes.shape({
+        email: React.PropTypes.string,
+        name: React.PropTypes.string
+    }),
+    violationCount: React.PropTypes.number
+};
+
 export default connect(state => ({
     userInfo: UserGetter.getUserInfo(state.user),
     tokenInfo: UserGetter.getTokenInfo(state.user),

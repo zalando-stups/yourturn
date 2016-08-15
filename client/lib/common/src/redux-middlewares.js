@@ -1,3 +1,4 @@
+/* globals Promise */
 import _ from 'lodash';
 import {createAction} from 'redux-actions';
 

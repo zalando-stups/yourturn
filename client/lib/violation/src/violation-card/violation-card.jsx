@@ -171,16 +171,39 @@ class ViolationCard extends React.Component {
     }
 }
 ViolationCard.displayName = 'ViolationCard';
+
 ViolationCard.contextTypes = {
     router: React.PropTypes.object
 };
+
+// TODO fix accounts
 ViolationCard.propTypes = {
+    accounts: React.PropTypes.object.isRequired,
     autoFocus: React.PropTypes.bool,
-    onResolve: React.PropTypes.func,
+    closable: React.PropTypes.bool,
+    editable: React.PropTypes.bool,
     onClickOutside: React.PropTypes.func,
-    accounts: React.PropTypes.object,
-    violation: React.PropTypes.object.isRequired,
-    editable: React.PropTypes.bool
+    onClose: React.PropTypes.func,
+    onResolve: React.PropTypes.func,
+    style: React.PropTypes.object,
+    violation: React.PropTypes.shape({
+        comment: React.PropTypes.string,
+        id: React.PropTypes.number,
+        account_id: React.PropTypes.string,
+        region: React.PropTypes.string,
+        instance_id: React.PropTypes.string,
+        username: React.PropTypes.string,
+        message: React.PropTypes.string,
+        rule_id: React.PropTypes.string,
+        meta_info: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.object]),
+        is_whitelisted: React.PropTypes.bool,
+        violation_type: React.PropTypes.shape({
+            priority: React.PropTypes.number
+        }),
+        last_modified_by: React.PropTypes.string,
+        timestamp: React.PropTypes.number,
+        last_modified: React.PropTypes.string
+    }).isRequired
 };
 
 export default listenToOutsideClick(ViolationCard);

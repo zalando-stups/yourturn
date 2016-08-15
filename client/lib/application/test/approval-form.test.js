@@ -1,13 +1,10 @@
 /* globals expect, $, TestUtils, reset, render, React */
-import * as KioActions from 'common/src/data/kio/kio-actions';
 import ApprovalForm from 'application/src/approval-form/approval-form.jsx';
 
+/*eslint-disable react/no-deprecated */
+// TODO rework usage of React.findDOMNode
 const APP_ID = 'kio',
     VER_ID = '0.1',
-    TEST_ACCOUNT = {
-        id: '234',
-        name: 'greendale'
-    },
     TEST_APP = {
         id: APP_ID,
         team_id: 'stups'
@@ -78,3 +75,4 @@ describe('The approval form view', () => {
         expect(btn.props.disabled).to.be.true;
     });
 });
+/*eslint-enable react/no-deprecated */

@@ -2,6 +2,8 @@
 import * as EssentialsActions from 'common/src/data/essentials/essentials-actions';
 import Form from 'resource/src/resource-form/resource-form.jsx';
 
+/*eslint-disable react/no-deprecated */
+// TODO rework usage of React.findDOMNode
 const RES_ID = 'sales_order',
     TEST_RES = {
         id: 'sales_order',
@@ -53,7 +55,7 @@ describe('The resource form view', () => {
 
         it('should check team membership of app', done => {
             props.kioActions = {
-                fetchApplication: id => Promise.resolve({ id: 'kio', team_id: 'stups' })
+                fetchApplication: () => Promise.resolve({ id: 'kio', team_id: 'stups' })
             };
             props.magnificentActions = {
                 fetchAuth: () => Promise.resolve({allowed: true})
@@ -70,7 +72,7 @@ describe('The resource form view', () => {
         });
         it('should allow if user is whitelisted and no app exists', done => {
             props.kioActions = {
-                fetchApplication: id => Promise.reject()
+                fetchApplication: () => Promise.reject()
             };
             props.isUserWhitelisted = true;
             form = render(Form, props);
@@ -85,7 +87,7 @@ describe('The resource form view', () => {
 
         it('should not allow if user is not whitelisted and no app exists', done => {
             props.kioActions = {
-                fetchApplication: id => Promise.reject()
+                fetchApplication: () => Promise.reject()
             };
             form = render(Form, props);
             const input = TestUtils.findRenderedDOMComponentWithAttributeValue(form, 'data-block', 'id-input');
@@ -117,3 +119,4 @@ describe('The resource form view', () => {
 
     });
 });
+/*eslint-enable react/no-deprecated */

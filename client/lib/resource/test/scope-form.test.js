@@ -1,6 +1,8 @@
 /* globals expect, $, TestUtils, reset, render, React */
 import Form from 'resource/src/scope-form/scope-form.jsx';
 
+/*eslint-disable react/no-deprecated */
+// TODO rework usage of React.findDOMNode
 const RES_ID = 'sales_order',
       TEST_RES = {
         id: RES_ID,
@@ -31,3 +33,4 @@ describe('The scope form view', () => {
         });
     });
 });
+/*eslint-enable react/no-deprecated */

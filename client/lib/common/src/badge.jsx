@@ -1,21 +1,20 @@
 import React from 'react';
 import 'common/asset/less/common/badge.less';
 
-class Badge extends React.Component {
-    constructor() {
-        super();
-    }
-    render() {
-        return <span
-                    style={this.props.style}
-                    className={'badge' + (this.props.isDanger ? ' is-danger' : ' is-info')}>
-                    {this.props.children}
-                </span>;
-    }
-}
+const Badge = (props) => {
+    return (<span
+                style={props.style}
+                className={'badge' + (props.isDanger ? ' is-danger' : ' is-info')}>
+                {props.children}
+            </span>)
+};
+
 Badge.displayName = 'Badger'; // mushroom mushroom
+
 Badge.propTypes = {
-    isDanger: React.PropTypes.bool
+    children: React.PropTypes.any,
+    isDanger: React.PropTypes.bool,
+    style: React.PropTypes.object
 };
 
 export default Badge;

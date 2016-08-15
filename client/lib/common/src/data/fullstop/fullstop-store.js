@@ -2,7 +2,6 @@ import Immutable from 'immutable';
 import moment from 'moment';
 import {Pending, Failed} from 'common/src/fetch-result';
 import Types from './fullstop-types';
-import * as Getters from './fullstop-getter';
 
 const DEFAULT_PAGING = {
         last: true,
@@ -66,8 +65,8 @@ function FullstopStore(state, action) {
                         .set('is_resolved', true)
                         .set('last_modified', payload.last_modified)
                         .set('last_modified_by', payload.last_modified_by);
-        // replace
-        let violations = state.get('violations').update(index, false, v => violation);
+        // TODO replace
+        let violations = state.get('violations').update(index, false, () => violation);
         return state.set('violations', violations);
     } else if (type === Types.FETCH_VIOLATION) {
         return FullstopStore(state, {

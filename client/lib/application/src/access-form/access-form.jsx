@@ -156,18 +156,21 @@ class AccessForm extends React.Component {
                 </div>;
     }
 }
+
 AccessForm.displayName = 'AccessForm';
+
 AccessForm.propTypes = {
+    allScopes: React.PropTypes.array.isRequired,
+    application: React.PropTypes.object.isRequired,
     applicationId: React.PropTypes.string.isRequired,
+    applicationScopes: React.PropTypes.array.isRequired,
+    defaultAccount: React.PropTypes.string.isRequired,
+    editable: React.PropTypes.bool.isRequired,
     mintActions: React.PropTypes.object.isRequired,
     notificationActions: React.PropTypes.object.isRequired,
-    application: React.PropTypes.object.isRequired,
-    allScopes: React.PropTypes.array.isRequired,
-    applicationScopes: React.PropTypes.array.isRequired,
-    oauthConfig: React.PropTypes.object.isRequired,
-    defaultAccount: React.PropTypes.string.isRequired,
-    editable: React.PropTypes.bool.isRequired
+    oauthConfig: React.PropTypes.object.isRequired
 };
+
 AccessForm.contextTypes = {
     router: React.PropTypes.object
 };

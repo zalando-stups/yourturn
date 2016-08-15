@@ -112,10 +112,20 @@ class SortableTable extends React.Component {
                 </div>;
     }
 }
+
 SortableTable.displayName = 'SortableTable';
+
+// TODO be more specific here please
 SortableTable.propTypes = {
-    width: React.PropTypes.number,
+    children: React.PropTypes.any,
+    filter: React.PropTypes.string,
     filterExprFn: React.PropTypes.func,
-    helpText: React.PropTypes.string
+    helpText: React.PropTypes.string,
+    onSortChange: React.PropTypes.func,
+    rows: React.PropTypes.any,
+    sortBy: React.PropTypes.string,
+    sortOrder: React.PropTypes.string,
+    width: React.PropTypes.number
 };
+
 export default SortableTable;

@@ -1,7 +1,6 @@
 import Immutable from 'immutable';
 import {Pending, Failed} from 'common/src/fetch-result';
 import Types from './pierone-types';
-import * as Getter from './pierone-getter';
 
 function PieroneStore(state = Immutable.fromJS({
     scmSources: {},

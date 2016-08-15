@@ -2,7 +2,6 @@
 import KioStore from 'common/src/data/kio/kio-store';
 import KioTypes from 'common/src/data/kio/kio-types';
 import * as KioGetter from 'common/src/data/kio/kio-getter';
-import * as KioActions from 'common/src/data/kio/kio-actions';
 
 import UserStore from 'common/src/data/user/user-store';
 import * as UserGetter from 'common/src/data/user/user-getter';
@@ -10,6 +9,8 @@ import * as UserGetter from 'common/src/data/user/user-getter';
 import List from 'application/src/version-list/version-list.jsx';
 import {bindGettersToState} from 'common/src/util';
 
+/*eslint-disable react/no-deprecated */
+// TODO rework usage of React.findDOMNode
 const APP_ID = 'kio',
     APP_VERSIONS = [{
         id: 'few-squirrels',
@@ -63,3 +64,4 @@ describe('The version list view', () => {
         expect($(React.findDOMNode(versions)).children().length).to.equal(1);
     });
 });
+/*eslint-enable react/no-deprecated */

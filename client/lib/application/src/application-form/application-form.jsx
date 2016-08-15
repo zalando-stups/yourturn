@@ -8,6 +8,8 @@ import SERVICE_URL_TLD from 'SERVICE_URL_TLD';
 import 'common/asset/less/application/application-form.less';
 
 class ApplicationForm extends React.Component {
+    /*eslint-disable react/no-direct-mutation-state */
+    // TODO fix direct mutation of state here if possible
     constructor(props) {
         super();
         this.state = {
@@ -29,6 +31,7 @@ class ApplicationForm extends React.Component {
             };
         }
     }
+    /*eslint-enable react/no-direct-mutation-state */
 
     disableAutocomplete() {
         this.setState({
@@ -65,6 +68,8 @@ class ApplicationForm extends React.Component {
         });
     }
 
+    /*eslint-disable react/no-direct-mutation-state */
+    // TODO fix direct mutation of state here if possible
     update(field, prop, evt) {
         if (field === 'criticality_level') {
             this.state.app[field] = parseInt(evt.target[prop], 10);
@@ -79,6 +84,7 @@ class ApplicationForm extends React.Component {
             appIdTaken: this.props.applicationIds.some(id => this.state.app.id === id)
         });
     }
+    /*eslint-enable react/no-direct-mutation-state */
 
     render() {
         let {edit, applicationId, application, userTeams} = this.props,
@@ -320,16 +326,19 @@ class ApplicationForm extends React.Component {
                 </div>;
     }
 }
+
 ApplicationForm.displayName = 'ApplicationForm';
+
 ApplicationForm.propTypes = {
-    applicationId: React.PropTypes.string,
-    edit: React.PropTypes.bool.isRequired,
-    userTeams: React.PropTypes.array.isRequired,
     application: React.PropTypes.object,
+    applicationId: React.PropTypes.string,
     applicationIds: React.PropTypes.array.isRequired,
+    edit: React.PropTypes.bool.isRequired,
     kioActions: React.PropTypes.object.isRequired,
-    notificationActions: React.PropTypes.object.isRequired
+    notificationActions: React.PropTypes.object.isRequired,
+    userTeams: React.PropTypes.array.isRequired
 };
+
 ApplicationForm.contextTypes = {
     router: React.PropTypes.object
 };

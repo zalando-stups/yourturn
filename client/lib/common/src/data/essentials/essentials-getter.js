@@ -1,5 +1,4 @@
 import Immutable from 'immutable';
-import fuzzy from 'fuzzysearch';
 
 /**
  * Returns the resource with this ID, false otherwise.

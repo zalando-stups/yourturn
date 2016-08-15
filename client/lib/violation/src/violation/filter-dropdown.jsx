@@ -3,22 +3,26 @@ import Icon from 'react-fa';
 import listenToOutsideClick from 'react-onclickoutside/decorator';
 import 'common/asset/less/violation/filter-dropdown.less';
 
-class ListItem extends React.Component {
-    constructor() {
-        super();
-    }
+const ListItem = (props) => {
+    return (<li onClick={props.onChange} className={props.className + ' ' + (props.selected ? 'selected' : '')}>
+            <label>
+                <input
+                    checked={props.selected}
+                    type='checkbox' />
+                {props.content}
+            </label>
+           </li>)
+};
 
-    render() {
-        return <li onClick={this.props.onChange} className={this.props.className + ' ' + (this.props.selected ? 'selected' : '')}>
-                <label>
-                    <input
-                        checked={this.props.selected}
-                        type="checkbox" />
-                    {this.props.content}
-                </label>
-               </li>;
-    }
-}
+ListItem.displayName = 'ListItem';
+
+ListItem.propTypes = {
+    checked: React.PropTypes.string,
+    className: React.PropTypes.string,
+    content: React.PropTypes.string,
+    onChange: React.PropTypes.func.isRequired,
+    selected: React.PropTypes.bool
+};
 
 class FilterDropdown extends React.Component {
     constructor(props) {
@@ -44,6 +48,8 @@ class FilterDropdown extends React.Component {
         return <span>{item}</span>;
     }
 
+    /*eslint-disable react/no-direct-mutation-state */
+    // TODO fix
     componentWillReceiveProps(nextProps) {
         if (this.props.selection !== nextProps.selection) {
             if (nextProps.selection && nextProps.selection.length) {
@@ -53,10 +59,10 @@ class FilterDropdown extends React.Component {
             }
         }
     }
+    /*eslint-enable react/no-direct-mutation-state */
 
     onHeaderClick() {
-        this.state.visible = !this.state.visible;
-        this.setState(this.state);
+        this.setState({visible: !this.state.visible});
     }
 
     filter(term) {
@@ -100,6 +106,8 @@ class FilterDropdown extends React.Component {
         this.publishSelectionUpdate([]);
     }
 
+    /*eslint-disable react/no-direct-mutation-state */
+    // TODO fix
     onItemToggle(item) {
         if (this.state.selectedItems[item]) {
             delete this.state.selectedItems[item];
@@ -113,6 +121,7 @@ class FilterDropdown extends React.Component {
         this.publishSelectionUpdate(selected);
         this.setState(this.state);
     }
+    /*eslint-enable react/no-direct-mutation-state */
 
     render() {
         const items = this.props.items.sort(),
@@ -142,8 +151,8 @@ class FilterDropdown extends React.Component {
                             <div>
                                 <input
                                     onChange={this.onItemFilter.bind(this)}
-                                    placeholder="Search"
-                                    type="search" />
+                                    placeholder='Search'
+                                    type='search' />
                             </div>
                         }
                         <div className='filterDropdown-list-container'>
@@ -171,6 +180,17 @@ class FilterDropdown extends React.Component {
                 </div>;
     }
 }
+
 FilterDropdown.displayName = 'FilterDropdown';
+
+FilterDropdown.propTypes = {
+    customComponentFn: React.PropTypes.func,
+    disableSearch: React.PropTypes.bool,
+    items: React.PropTypes.array.isRequired,
+    onUpdate: React.PropTypes.func,
+    selection: React.PropTypes.array,
+    singleMode: React.PropTypes.bool,
+    title: React.PropTypes.string
+};
 
 export default listenToOutsideClick(FilterDropdown);

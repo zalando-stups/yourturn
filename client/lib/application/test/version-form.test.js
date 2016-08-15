@@ -2,6 +2,8 @@
 import * as KioActions from 'common/src/data/kio/kio-actions';
 import VersionForm from 'application/src/version-form/version-form.jsx';
 
+/*eslint-disable react/no-deprecated */
+// TODO rework usage of React.findDOMNode
 const APP_ID = 'kio',
     VER_ID = '0.1',
     TEST_APP = {
@@ -103,3 +105,4 @@ describe('The version form view', () => {
     });
 
 });
+/*eslint-enable react/no-deprecated */

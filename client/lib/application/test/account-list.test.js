@@ -1,4 +1,4 @@
-/* globals expect, $, TestUtils, reset, render, React */
+/* globals expect, TestUtils, reset, render */
 
 import AccountList from 'application/src/application-list/account-list.jsx';
 
