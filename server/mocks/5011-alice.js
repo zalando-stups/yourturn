@@ -190,7 +190,7 @@ server.get('/instance-count/:application_id', function(req,res) {
 
     var foundApp = applicationsAndVersions.find((e) => e.application == applicationId);
 
-    if (true || !foundApp) {
+    if (!foundApp) {
         res.status( 404 ).send( [] );
         return;
     }

@@ -1,19 +1,15 @@
 import React from 'react';
-import Icon from 'react-fa';
-import { Link } from 'react-router';
-import * as Routes from 'application/src/routes';
 import PropsExposer from 'common/components/pure/PropsExposer.jsx';
 import ComboBox from 'common/components/pure/ComboBox.jsx';
 import ThreeColumns from 'common/components/pure/ThreeColumns.jsx';
-import TitleWithButton from 'common/components/pure/TitleWithButton.jsx';
-import Chart from 'common/components/pure/Chart.jsx';
 import moment from 'moment';
-import Dimensions from 'react-dimensions'
-import Toolbar from 'components/toolbar.jsx'
-import Head from 'components/head.jsx'
-import Charts from 'components/charts.jsx'
+import Dimensions from 'react-dimensions';
+import Toolbar from './components/toolbar.jsx';
+import Head from './components/head.jsx';
+import Error from './components/error.jsx';
+import Loading from './components/loading.jsx';
+import Charts from './components/charts.jsx';
 
-const CHART_HEIGHT = 200;
 const INITAL_WIDTH = 50;
 
 class ApplicationLifeCycle extends React.Component {
@@ -80,57 +76,7 @@ class ApplicationLifeCycle extends React.Component {
             applicationId: applicationId
         };
 
-        console.log("data %O", this.props.aliceStore);
-
         const DimensionizedPropsExposer = Dimensions()(PropsExposer(() => (<div />), this.widthCallback));
-
-        const childrenForThreeColumns =
-            aliceStore.isLoading ?
-                <ThreeColumns
-                    leftChildren   = {<div></div>}
-                    middleChildren = {<div><Icon pulse size='5x' name="spinner" /> Loading</div>}
-                    rightChildren  = {<div></div>}
-                />
-            :
-                this.props.selectedVersions.map((version, index) => {
-                const versionDataSet = aliceStore.serverCountData.find(e => e.version_id == version.id);
-                    console.log("versionDataSet %O", versionDataSet);
-                return (
-                    <ThreeColumns key = {index}
-                                  leftChildren   = {<TitleWithButton
-                                                        title   = {version.id}
-                                                        onClick = {() => this.removeVersion(version.id)}
-                                                    />}
-                                  middleChildren = {<Chart
-                                                        height    = {CHART_HEIGHT}
-                                                        width     = {this.state.width}
-                                                        startDate = {this.state.brushExtentStartDate}
-                                                        endDate   = {this.state.brushExtentEndDate}
-                                                        dataSet   = {versionDataSet}
-                                                    />}
-                                  rightChildren  = {<div><Link
-                                                            to = {Routes.verApproval({
-                                                                applicationId: applicationId,
-                                                                versionId: version.id})}
-                                                            className='btn btn-default btn-small'>
-                                                                <Icon name='check' />
-                                                    </Link></div>}
-                    />
-            );
-        });
-
-        if (aliceStore.error) {
-            return <Error errorData = {aliceStore.error} />
-        } else if (aliceStore.isLoading) {
-            return <Loading />
-        } else if (3) {
-            return (
-                <div>
-                    <Toolbar />
-                    <Charts />
-                </div>
-            )
-        }
 
         return (
             <div>
@@ -152,18 +98,19 @@ class ApplicationLifeCycle extends React.Component {
                         title            = 'Select Versions'
                     />
                 </div>
+                <ThreeColumns leftChildren   = {<div style = {{height: '50px'}}></div>}
+                              middleChildren = {<DimensionizedPropsExposer />}
+                              rightChildren  = {<div></div>}
+                />
                 <Toolbar
                     brushExtentEndDate   = {this.state.brushExtentEndDate}
                     brushExtentStartDate = {this.state.brushExtentStartDate}
                     brushWidth           = {this.state.width}
                     endDate              = {this.state.endDate}
                     startDate            = {this.state.startDate}
+                    onBrushChanged       = {this.handleBrushChanged}
                     onEndDatePicked      = {this.handleEndDatePicked}
                     onStartDatePicked    = {this.handleStartDatePicked}
-                />
-                <ThreeColumns leftChildren   = {<div style = {{height: '50px'}}></div>}
-                              middleChildren = {<DimensionizedPropsExposer />}
-                              rightChildren  = {<div></div>}
                 />
                 {aliceStore.isLoading ?
                     <Loading />
@@ -174,6 +121,8 @@ class ApplicationLifeCycle extends React.Component {
                         versions        = {this.props.selectedVersions}
                         versionDataSets = {this.props.aliceStore.serverCountData}
                         width           = {this.state.width}
+                        extentStartDate = {this.state.brushExtentStartDate}
+                        extentEndDate   = {this.state.brushExtentEndDate}
                     />}
             </div>
         )

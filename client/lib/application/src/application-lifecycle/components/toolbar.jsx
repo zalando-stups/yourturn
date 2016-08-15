@@ -48,8 +48,9 @@ Toolbar.displayName = 'Toolbar';
 Toolbar.propTypes = {
     brushExtentEndDate: React.PropTypes.instanceOf(Date).isRequired,
     brushExtentStartDate: React.PropTypes.instanceOf(Date).isRequired,
-    brushWidth: React.PropTypes.string.isRequired,
+    brushWidth: React.PropTypes.number.isRequired,
     endDate: React.PropTypes.instanceOf(Date).isRequired,
+    onBrushChanged: React.PropTypes.func.isRequired,
     onEndDatePicked: React.PropTypes.func.isRequired,
     onStartDatePicked: React.PropTypes.func.isRequired,
     startDate: React.PropTypes.instanceOf(Date).isRequired

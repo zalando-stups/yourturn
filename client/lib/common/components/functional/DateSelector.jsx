@@ -69,7 +69,7 @@ DateSelector.propTypes = {
     defaultValue: React.PropTypes.instanceOf(Date)
 };
 
-DateSelector.propTypes = {
+DateSelector.defaultProps = {
     alignStyle: STYLE_LEFT
 }
 
