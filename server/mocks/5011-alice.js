@@ -108,13 +108,12 @@ function generateVersionEventData (k) {
                     }
                 },
                 events: generateVersionEventData(k)
-            }
+            };
             genEntry.versions.push(genVersion);
         }
 
         data.push(genEntry);
     }
-    console.log("I got called");
 }());
 
 function limitData(data, start, end) {
@@ -189,13 +188,9 @@ server.get('/instance-count/:application_id', function(req,res) {
         endDate = undefined;
     }
 
-    console.log(applicationId);
-    console.log(startDate);
-    console.log(endDate);
-
     var foundApp = applicationsAndVersions.find((e) => e.application == applicationId);
 
-    if (!foundApp) {
+    if (true || !foundApp) {
         res.status( 404 ).send( [] );
         return;
     }

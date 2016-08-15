@@ -7,6 +7,7 @@ import { bindGettersToState } from 'common/src/util';
 
 import * as KioGetter from 'common/src/data/kio/kio-getter';
 import * as AliceActions from 'common/src/data/alice/alice-action';
+import * as NotificationActions from 'common/src/data/notification/notification-actions';
 
 import ApplicationLifeCycle from './application-lifecycle.jsx'
 
@@ -82,7 +83,8 @@ function mapStateToProps(state, ownProps) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        aliceActions: bindActionCreators(AliceActions, dispatch)
+        aliceActions: bindActionCreators(AliceActions, dispatch),
+        notificationActions : bindActionCreators(NotificationActions, dispatch),
     };
 }
 

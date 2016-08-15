@@ -6,15 +6,15 @@ import PropsExposer from 'common/components/pure/PropsExposer.jsx';
 import ComboBox from 'common/components/pure/ComboBox.jsx';
 import ThreeColumns from 'common/components/pure/ThreeColumns.jsx';
 import TitleWithButton from 'common/components/pure/TitleWithButton.jsx';
-import Brush from 'common/components/pure/Brush.jsx';
-import DateSelector from 'common/components/functional/DateSelector.jsx';
 import Chart from 'common/components/pure/Chart.jsx';
 import moment from 'moment';
 import Dimensions from 'react-dimensions'
+import Toolbar from 'components/toolbar.jsx'
+import Head from 'components/head.jsx'
+import Charts from 'components/charts.jsx'
 
-const DATE_FORMAT = 'Do [of] MMM YY';
-const OUTER_STYLE = {padding: "40px"};
-
+const CHART_HEIGHT = 200;
+const INITAL_WIDTH = 50;
 
 class ApplicationLifeCycle extends React.Component {
     constructor(props) {
@@ -25,7 +25,7 @@ class ApplicationLifeCycle extends React.Component {
             endDate : moment().endOf('day').toDate(),
             brushExtentStartDate : moment().subtract(1, "weeks").startOf('day').toDate(),
             brushExtentEndDate : moment().endOf('day').toDate(),
-            width: 100
+            width: INITAL_WIDTH
         };
 
         this.handleStartDatePicked = this.handleStartDatePicked.bind(this);
@@ -74,82 +74,74 @@ class ApplicationLifeCycle extends React.Component {
     }
 
     render() {
-        const {applicationId, kioStore} = this.props,
+        const {applicationId, kioStore, aliceStore} = this.props,
             application = kioStore.getApplication(applicationId);
         const LINK_PARAMS = {
             applicationId: applicationId
         };
 
-        const WrappedPropsExposer = Dimensions()(PropsExposer(() => (<div />), this.widthCallback));
+        console.log("data %O", this.props.aliceStore);
 
-        const childrenForThreeColumns = this.props.selectedVersions.map((version, index) => {
-            const versionDataSet = this.props.aliceStore.serverCountData.find(e => e.version_id == version.id);
-            return (
-                <ThreeColumns key = {index}
-                              leftChildren   = {<TitleWithButton
-                                                    title   = {version.id}
-                                                    onClick = {() => this.removeVersion(version.id)}
-                                                    />}
-                              middleChildren = {<Chart
-                                                    height    = {200}
-                                                    width     = {this.state.width}
-                                                    startDate = {this.state.brushExtentStartDate}
-                                                    endDate   = {this.state.brushExtentEndDate}
-                                                    dataSet   = {versionDataSet}
-                                                />}
-                              rightChildren  = {<div><Link
-                                                        to={Routes.verApproval({
-                                                            applicationId: applicationId,
-                                                            versionId: version.id})}
-                                                        className='btn btn-default btn-small'>
-                                                            <Icon name='check' />
-                                                </Link></div>}
+        const DimensionizedPropsExposer = Dimensions()(PropsExposer(() => (<div />), this.widthCallback));
+
+        const childrenForThreeColumns =
+            aliceStore.isLoading ?
+                <ThreeColumns
+                    leftChildren   = {<div></div>}
+                    middleChildren = {<div><Icon pulse size='5x' name="spinner" /> Loading</div>}
+                    rightChildren  = {<div></div>}
                 />
+            :
+                this.props.selectedVersions.map((version, index) => {
+                const versionDataSet = aliceStore.serverCountData.find(e => e.version_id == version.id);
+                    console.log("versionDataSet %O", versionDataSet);
+                return (
+                    <ThreeColumns key = {index}
+                                  leftChildren   = {<TitleWithButton
+                                                        title   = {version.id}
+                                                        onClick = {() => this.removeVersion(version.id)}
+                                                    />}
+                                  middleChildren = {<Chart
+                                                        height    = {CHART_HEIGHT}
+                                                        width     = {this.state.width}
+                                                        startDate = {this.state.brushExtentStartDate}
+                                                        endDate   = {this.state.brushExtentEndDate}
+                                                        dataSet   = {versionDataSet}
+                                                    />}
+                                  rightChildren  = {<div><Link
+                                                            to = {Routes.verApproval({
+                                                                applicationId: applicationId,
+                                                                versionId: version.id})}
+                                                            className='btn btn-default btn-small'>
+                                                                <Icon name='check' />
+                                                    </Link></div>}
+                    />
             );
         });
 
-        const brush = <Brush
-            width       = {this.state.width}
-            height      = {50}
-            startDate   = {this.state.startDate}
-            endDate     = {this.state.endDate}
-            startExtent = {this.state.brushExtentStartDate}
-            endExtent   = {this.state.brushExtentEndDate}
-            onChange    = {this.handleBrushChanged}
-        />;
-
-        const startDateSelector = <DateSelector
-            datePicked   = {this.handleStartDatePicked}
-            title        = 'Select Start Date'
-            defaultValue = {this.state.startDate}
-            maxDate      = {this.state.endDate}
-        />;
-
-        const endDateSelector = <DateSelector
-            datePicked   = {this.handleEndDatePicked}
-            title        = 'Select End Date'
-            align        = 'right'
-            defaultValue = {this.state.endDate}
-            minDate      = {this.state.startDate}
-            maxDate      = {moment().endOf('day').toDate()}
-        />;
+        if (aliceStore.error) {
+            return <Error errorData = {aliceStore.error} />
+        } else if (aliceStore.isLoading) {
+            return <Loading />
+        } else if (3) {
+            return (
+                <div>
+                    <Toolbar />
+                    <Charts />
+                </div>
+            )
+        }
 
         return (
             <div>
-                <h2>
-                    {this.props.containerWidth}
-                    <Link
-                        to={Routes.appDetail(LINK_PARAMS)}>
-                        {application.name || applicationId}'s
-                    </Link> application lifecycle
-                </h2>
-                <div className='btn-group'>
-                    <Link
-                        to={Routes.appDetail(LINK_PARAMS)}
-                        className='btn btn-default'>
-                        <Icon name='chevron-left' /> {application.name || applicationId}
-                    </Link>
-                </div>
+                {aliceStore.error ?
+                    <Error errorData = {aliceStore.error} />
+                    :
+                    null}
+                <Head
+                    linkParams  = {LINK_PARAMS}
+                    application = {application.name || applicationId}
+                />
                 <div>
                     <ComboBox
                         value            = {this.props.selectedVersions}
@@ -160,16 +152,29 @@ class ApplicationLifeCycle extends React.Component {
                         title            = 'Select Versions'
                     />
                 </div>
-                <ThreeColumns leftChildren   = {<h3>{moment(this.state.startDate).format(DATE_FORMAT)}</h3>}
-                              middleChildren = {<WrappedPropsExposer />}
-                              rightChildren  = {<h3>{moment(this.state.endDate).format(DATE_FORMAT)}</h3>}
+                <Toolbar
+                    brushExtentEndDate   = {this.state.brushExtentEndDate}
+                    brushExtentStartDate = {this.state.brushExtentStartDate}
+                    brushWidth           = {this.state.width}
+                    endDate              = {this.state.endDate}
+                    startDate            = {this.state.startDate}
+                    onEndDatePicked      = {this.handleEndDatePicked}
+                    onStartDatePicked    = {this.handleStartDatePicked}
                 />
-                <ThreeColumns leftChildren   = {startDateSelector}
-                              middleChildren = {brush}
-                              rightChildren  = {endDateSelector}
+                <ThreeColumns leftChildren   = {<div style = {{height: '50px'}}></div>}
+                              middleChildren = {<DimensionizedPropsExposer />}
+                              rightChildren  = {<div></div>}
                 />
-                {childrenForThreeColumns}
-
+                {aliceStore.isLoading ?
+                    <Loading />
+                    :
+                    <Charts
+                        applicationId   = {applicationId}
+                        onDeselect      = {this.removeVersion}
+                        versions        = {this.props.selectedVersions}
+                        versionDataSets = {this.props.aliceStore.serverCountData}
+                        width           = {this.state.width}
+                    />}
             </div>
         )
     }

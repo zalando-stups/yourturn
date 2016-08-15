@@ -45,9 +45,7 @@ import VersionList from './version-list/version-list.jsx';
 import VersionForm from './version-form/version-form.jsx';
 import VersionDetail from './version-detail/version-detail.jsx';
 import ApprovalForm from './approval-form/approval-form.jsx';
-import ApplicationLifeCycle from './application-lifecycle/application-lifecycle.jsx'
-
-import { ConnectedApplicationLifecycleHandler, ConnectedApplicationLifecycleFetchData } from './application-lifecycle/ApplicationLifeCycleComponent.jsx';
+import { ConnectedApplicationLifecycleHandler } from './application-lifecycle/ApplicationLifeCycleComponent.jsx';
 
 import {appList} from 'application/src/routes';
 

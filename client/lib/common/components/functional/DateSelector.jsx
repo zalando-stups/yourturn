@@ -31,7 +31,7 @@ class DateSelector extends React.Component {
         let dateFieldComponent = null;
         if (this.state.openDatePicker) {
             dateFieldComponent =
-                <div style = {this.props.align == "right" ? STYLE_RIGHT : STYLE_LEFT}>
+                <div style = {this.props.alignStyle}>
                     <Calendar
                         updateOnDateClick   = {true}
                         collapseOnDateClick = {true}
@@ -63,10 +63,18 @@ class DateSelector extends React.Component {
 DateSelector.propTypes = {
     title: React.PropTypes.string,
     datePicked: React.PropTypes.func.isRequired,
-    align: React.PropTypes.string,
+    alignStyle: React.PropTypes.object,
     minDate: React.PropTypes.instanceOf(Date),
     maxDate: React.PropTypes.instanceOf(Date),
     defaultValue: React.PropTypes.instanceOf(Date)
 };
 
-export default DateSelector;
+DateSelector.propTypes = {
+    alignStyle: STYLE_LEFT
+}
+
+export {
+    DateSelector as default,
+    STYLE_LEFT,
+    STYLE_RIGHT
+};
