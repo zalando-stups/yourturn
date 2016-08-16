@@ -15,13 +15,15 @@ const APP_ID = 'kio',
         version_id: VER_ID,
         approval_type: 'TEST',
         user_id: 'npiccolotto',
-        approved_at: '2015-04-25T16:25:00'
+        approved_at: '2015-04-25T16:25:00',
+        timestamp: 0
     }, {
         application_id: APP_ID,
         version_id: VER_ID,
         approval_type: 'TEST',
         user_id: 'tobi',
-        approved_at: '2015-04-25T16:40:00'
+        approved_at: '2015-04-25T16:40:00',
+        timestamp: 100
     }];
 
 describe('The approval form view', () => {
@@ -46,7 +48,9 @@ describe('The approval form view', () => {
                     name: 'Nikolaus Piccolotto',
                     email: 'n@piccolot.to'
                 }
-            }
+            },
+            kioActions: {},
+            notificationActions: {}
         };
         form = render(ApprovalForm, props);
     });

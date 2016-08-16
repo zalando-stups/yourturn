@@ -44,7 +44,8 @@ describe('The access control form view', () => {
             applicationScopes: [],
             oauthConfig: OAUTH_KIO,
             defaultAccount: 'foo',
-            editable: true
+            editable: true,
+            notificationActions: {}
         };
         form = render(AccessForm, props);
     });

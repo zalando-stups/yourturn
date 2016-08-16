@@ -14,7 +14,8 @@ const TEAM = 'stups',
         id: VER,
         application_id: APP,
         artifact: `docker://docker.io/${TEAM}/${APP}:${VER}`,
-        notes: '# Test'
+        notes: '# Test',
+        last_modified: 100
     },
     TEST_SOURCE = {
         author: 'npiccolotto',

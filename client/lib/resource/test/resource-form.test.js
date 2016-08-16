@@ -16,8 +16,7 @@ describe('The resource form view', () => {
     var props,
         actionSpy,
         form,
-        essentialsActions,
-        kioActions;
+        essentialsActions;
 
     beforeEach(() => {
         reset();
@@ -35,7 +34,9 @@ describe('The resource form view', () => {
             isUserWhitelisted: false,
             existingResourceIds: [],
             essentialsActions,
-            kioActions
+            kioActions: {},
+            magnificentActions: {},
+            notificationActions: {}
         };
         form = render(Form, props);
     });
