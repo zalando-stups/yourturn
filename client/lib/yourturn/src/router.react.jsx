@@ -15,7 +15,6 @@ import {
     bindGettersToState
 } from 'common/src/util';
 
-import * as FullstopGetter from 'common/src/data/fullstop/fullstop-getter';
 import * as SearchGetter from 'common/src/data/search/search-getter';
 
 import * as NotificationActions from 'common/src/data/notification/notification-actions';
@@ -91,31 +90,25 @@ LoginHandler.contextTypes = {
 };
 
 
-class SearchHandler extends React.Component {
-    constructor() {
-        super();
-    }
-
-    render() {
-        return <Search
-                    searchActions={SEARCH_ACTIONS}
-                    {...this.props}/>;
-    }
-}
+const SearchHandler = (props) => {
+    return (<Search
+                searchActions={SEARCH_ACTIONS}
+                {...props} />)
+};
 SearchHandler.displayName = 'SearchHandler';
 let ConnectedSearchHandler = connect(state => ({
     searchStore: bindGettersToState(state.search, SearchGetter)
 }))(SearchHandler);
 
-class ErrorHandler extends React.Component {
-    constructor() {
-        super();
-    }
-
-    render() {
-        return <DefaultError error={this.props.location.state} />
-    }
-}
+const ErrorHandler = (props) => {
+    return <DefaultError error={props.location.state} />
+};
+ErrorHandler.displayName = 'ErrorHandler';
+ErrorHandler.propTypes = {
+    location: React.PropTypes.shape({
+        state: React.PropTypes.string
+    })
+};
 
 const ROUTES =
     <Route component={YourTurn} path='/'>

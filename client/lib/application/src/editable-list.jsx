@@ -26,6 +26,8 @@ class EditableList extends React.Component {
         }
     }
 
+    /*eslint-disable react/no-direct-mutation-state */
+    // TODO rewrite state handling here
     addItem(evt) {
         evt.preventDefault();
         let regex = new RegExp(this.props.pattern);
@@ -71,6 +73,7 @@ class EditableList extends React.Component {
             this.props.onChange(this.state.items);
         }
     }
+    /*eslint-enable react/no-direct-mutation-state */
 
     render() {
         let {items, input, limbo} = this.state;
@@ -121,16 +124,18 @@ class EditableList extends React.Component {
                 </div>;
     }
 }
+
 EditableList.displayName = 'EditableList';
+
 EditableList.propTypes = {
-    pattern: React.PropTypes.string.isRequired,
-    minlength: React.PropTypes.number.isRequired,
-    maxlength: React.PropTypes.number.isRequired,
-    placeholder: React.PropTypes.string,
     itemName: React.PropTypes.string,
     items: React.PropTypes.array,
     markedItems: React.PropTypes.array,
-    onChange: React.PropTypes.func.isRequired
+    maxlength: React.PropTypes.number.isRequired,
+    minlength: React.PropTypes.number.isRequired,
+    onChange: React.PropTypes.func.isRequired,
+    pattern: React.PropTypes.string.isRequired,
+    placeholder: React.PropTypes.string
 };
 
 export default EditableList;

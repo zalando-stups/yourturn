@@ -1,5 +1,4 @@
 import React from 'react';
-import Icon from 'react-fa';
 import DateDropdown from './date-dropdown.jsx';
 import * as Routes from 'violation/src/routes';
 import FilterDropdown from './filter-dropdown.jsx';
@@ -145,9 +144,19 @@ class ViolationFilters extends React.Component {
                 </div>;
     }
 }
+
 ViolationFilters.displayName = 'ViolationFilters';
+
 ViolationFilters.contextTypes = {
     router: React.PropTypes.object
+};
+
+// TODO specifiy params in detail if possible
+ViolationFilters.propTypes = {
+    accounts: React.PropTypes.object,
+    onUpdate: React.PropTypes.func,
+    params: React.PropTypes.object,
+    violationTypes: React.PropTypes.arrayOf(React.PropTypes.string)
 };
 
 export default ViolationFilters;

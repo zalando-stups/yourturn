@@ -3,22 +3,21 @@ import {connect} from 'react-redux';
 import * as Actions from 'common/src/data/notification/notification-actions';
 import 'common/asset/less/yourturn/notification-bar.less';
 
-class Notification extends React.Component {
-    constructor() {
-        super();
-    }
-
-    render() {
-        return <li
-                onClick={this.props.onClick}
-                className={'type-' + (this.props.type || 'default')}>{this.props.message}</li>;
-    }
-}
-Notification.propTypes = {
-    type: React.PropTypes.string,
-    onClick: React.PropTypes.func.isRequired,
-    message: React.PropTypes.string.isRequired
+const Notification = (props) => {
+        return (
+            <li
+                onClick={props.onClick}
+                className={'type-' + (props.type || 'default')}>
+                {props.message}
+            </li>)
 };
+
+Notification.propTypes = {
+    message: React.PropTypes.string.isRequired,
+    onClick: React.PropTypes.func.isRequired,
+    type: React.PropTypes.string
+};
+
 Notification.displayName = 'Notification';
 
 // ========
@@ -93,16 +92,17 @@ class NotificationBar extends React.Component {
         return null;
     }
 }
+
 NotificationBar.displayName = 'NotificationBar';
 
 NotificationBar.propTypes = {
-    notifications: React.PropTypes.shape({
-        type: React.PropTypes.string,
-        message: React.PropTypes.string,
+    dispatch: React.PropTypes.func.isRequired,
+    notifications: React.PropTypes.arrayOf(React.PropTypes.shape({
         id: React.PropTypes.string,
-        created: React.PropTypes.instanceOf(Date)
-    })
-}
+        type: React.PropTypes.string,
+        message: React.PropTypes.string
+    }))
+};
 
 export default connect(state => ({
     notifications: state.notifications

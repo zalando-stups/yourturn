@@ -18,6 +18,8 @@ class Infinity extends React.Component {
         }
     }
 
+    /*eslint-disable react/no-did-mount-set-state */
+    // TODO does it have to be this way?
     componentDidMount() {
         let boundListener = _.debounce(this._scrollHandler.bind(this), this.props.debounceMs || 100);
         window.addEventListener('scroll', boundListener);
@@ -26,6 +28,7 @@ class Infinity extends React.Component {
             listener: boundListener
         });
     }
+    /*eslint-enable react/no-did-mount-set-state */
 
     componentWillUnmount() {
         window.removeEventListener('scroll', this.state.listener);
@@ -42,11 +45,12 @@ var {PropTypes} = React,
     {func, number, object, bool} = PropTypes;
 Infinity.displayName = 'Infinity';
 Infinity.propTypes = {
+    children: React.PropTypes.any,
     debounceMs: number,
-    scrollOffset: number,
     hasMore: bool,
     lastPage: number,
+    loader: object,
     onLoad: func,
-    loader: object
+    scrollOffset: number
 };
 export default Infinity;

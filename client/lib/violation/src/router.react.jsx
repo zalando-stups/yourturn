@@ -1,9 +1,7 @@
 import React from 'react';
 import {Route, IndexRoute} from 'react-router';
-import moment from 'moment';
 import Icon from 'react-fa';
 import lzw from 'lz-string';
-import _ from 'lodash';
 
 import Violation from './violation/violation.jsx';
 import ViolationDetail from './violation-detail/violation-detail.jsx';
@@ -145,8 +143,36 @@ ViolationHandler.fetchData = function(routerState, state) {
     return Promise.all(promises);
 };
 ViolationHandler.displayName = 'ViolationHandler';
+ViolationHandler.propTypes = {
+    fullstopStore: React.PropTypes.shape({
+        getError: React.PropTypes.func,
+        getLoading: React.PropTypes.func,
+        getPagingInfo: React.PropTypes.func,
+        getViolationTypes: React.PropTypes.func,
+        getViolations: React.PropTypes.func
+    }).isRequired,
+    location: React.PropTypes.shape({
+        search: React.PropTypes.any // TODO change
+    }),
+    routing: React.PropTypes.shape({
+        location: React.PropTypes.shape({
+            search: React.PropTypes.any // TODO change
+        })
+    }).isRequired,
+    teamStore: React.PropTypes.shape({
+        getAccounts: React.PropTypes.func
+    }).isRequired,
+    userStore: React.PropTypes.shape({
+        getUserCloudAccounts: React.PropTypes.func
+    }).isRequired
+};
 ViolationHandler.contextTypes = {
-    router: React.PropTypes.object
+    router: React.PropTypes.object,
+    routing: React.PropTypes.object,
+    location: React.PropTypes.object,
+    userStore: React.PropTypes.object,
+    fullstopStore: React.PropTypes.object,
+    teamStore: React.PropTypes.object
 };
 let ConnectedViolationHandler = connect(state => ({
     routing: state.routing,
@@ -155,21 +181,14 @@ let ConnectedViolationHandler = connect(state => ({
     teamStore: bindGettersToState(state.team, TeamGetter)
 }))(ViolationHandler);
 
-class ViolationDetailHandler extends React.Component {
-    constructor() {
-        super();
-    }
-
-    render() {
-        const accounts = this.props.teamStore.getAccounts().reduce((m, a) => {m[a.id] = a; return m; }, {});
-        return <ViolationDetail
-                    violationId={parseInt(this.props.params.violationId, 10)}
-                    accounts={accounts}
-                    fullstopActions={FULLSTOP_ACTIONS}
-                    {...this.props} />;
-    }
-
-}
+const ViolationDetailHandler = (props) => {
+    const accounts = props.teamStore.getAccounts().reduce((m, a) => {m[a.id] = a; return m; }, {});
+    return <ViolationDetail
+                violationId={parseInt(props.params.violationId, 10)}
+                accounts={accounts}
+                fullstopActions={FULLSTOP_ACTIONS}
+                {...props} />;
+};
 ViolationDetailHandler.fetchData = function (routerState, state) {
     FULLSTOP_ACTIONS.fetchViolation(routerState.params.violationId);
     TEAM_ACTIONS.fetchAccounts();
@@ -177,7 +196,10 @@ ViolationDetailHandler.fetchData = function (routerState, state) {
 };
 ViolationDetailHandler.displayName = 'ViolationDetailHandler';
 ViolationDetailHandler.propTypes = {
-    params: React.PropTypes.object.isRequired
+    params: React.PropTypes.object.isRequired,
+    teamStore: React.PropTypes.shape({
+        getAccounts: React.PropTypes.func
+    }).isRequired
 };
 let ConnectedViolationDetailHandler = connect(state => ({
     userStore: bindGettersToState(state.user, UserGetter),

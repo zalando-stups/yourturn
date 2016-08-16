@@ -15,3 +15,9 @@ export default function ViolationViz({priority}) {
                             <Icon key={i} name='circle-thin' />)}
             </span>;
 }
+
+ViolationViz.displayName = 'ViolationViz';
+
+ViolationViz.propTypes = {
+    priority: React.PropTypes.number.isRequired
+};

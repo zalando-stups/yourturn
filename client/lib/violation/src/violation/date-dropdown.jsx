@@ -1,7 +1,6 @@
 import React from 'react';
 import Icon from 'react-fa';
 import Timestamp from 'react-time';
-import Config from 'common/src/config';
 import moment from 'moment';
 import Picker from 'react-date-picker';
 import 'react-date-picker/index.css';
@@ -19,8 +18,7 @@ class DateDropdown extends React.Component {
     }
 
     onHeaderClick() {
-        this.state.visible = !this.state.visible;
-        this.setState(this.state);
+        this.setState({visible: !this.state.visible});
     }
 
     handleClickOutside() {
@@ -82,6 +80,13 @@ class DateDropdown extends React.Component {
                 </div>;
     }
 }
+
 DateDropdown.displayName = 'DateDropdown';
+
+DateDropdown.propTypes = {
+    onUpdate: React.PropTypes.func,
+    range: React.PropTypes.array,
+    title: React.PropTypes.string
+};
 
 export default listenToOutsideClick(DateDropdown);

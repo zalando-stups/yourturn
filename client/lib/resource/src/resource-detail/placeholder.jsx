@@ -4,17 +4,12 @@ import {Link} from 'react-router';
 import * as Routes from 'resource/src/routes';
 import 'common/asset/less/resource/resource-detail.less';
 
-class ResourceDetailPlaceholder extends React.Component {
-    constructor() {
-        super();
-    }
-
-    render() {
-        let {resourceId} = this.props;
+const ResourceDetailPlaceholder = (props) => {
+        const {resourceId} = props;
         const LINK_PARAMS = {
             resourceId: resourceId
         };
-        return <div className='resourceDetail u-placeholder'>
+        return (<div className='resourceDetail u-placeholder'>
                     <h2>{resourceId}</h2>
                     <div className='btn-group'>
                         <Link
@@ -73,10 +68,11 @@ class ResourceDetailPlaceholder extends React.Component {
                         </div>
                     </div>
                     <h4 className='resourceDetail-descriptionTitle'>Description</h4>
-                </div>;
-    }
+                </div>)
 }
+
 ResourceDetailPlaceholder.displayName = 'ResourceDetailPlaceholder';
+
 ResourceDetailPlaceholder.propTypes = {
     resourceId: React.PropTypes.string.isRequired
 };

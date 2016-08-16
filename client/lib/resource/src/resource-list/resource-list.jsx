@@ -73,5 +73,18 @@ class ResourceList extends React.Component {
                 </div>;
     }
 }
+
 ResourceList.displayName = 'ResourceList';
+
+ResourceList.propTypes = {
+    resources: React.PropTypes.arrayOf(
+        React.PropTypes.shape(
+            {
+                id: React.PropTypes.string,
+                name: React.PropTypes.string
+            }
+        )
+    )
+};
+
 export default ResourceList;

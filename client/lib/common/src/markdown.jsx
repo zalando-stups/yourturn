@@ -53,12 +53,14 @@ class Markdown extends React.Component {
     }
 
     render() {
+        /*eslint-disable react/no-danger */
         let preview = <div
                         className={'markdown ' + (this.props.className || '')}
                         data-block={this.props.block || null}
                         dangerouslySetInnerHTML={{
                             __html: this.state.html
                         }} />;
+        /*eslint-enable react/no-danger */
         // this sucks hard, but - i think - because react-tabs
         // is cloning elements outside of its render function
         // React complains that only ReactOwners may have refs.
@@ -82,7 +84,7 @@ class Markdown extends React.Component {
                         onChange={this._updateContent.bind(this)}
                         value={this.state.content}
                         cols='30'
-                        rows='10'/>
+                        rows='10' />
                 </TabPanel>
                 <TabPanel>
                     {preview}
@@ -91,14 +93,16 @@ class Markdown extends React.Component {
         </div>;
     }
 }
+
 Markdown.displayName = 'Markdown';
+
 Markdown.propTypes = {
-    src: React.PropTypes.string,
-    className: React.PropTypes.string,
     block: React.PropTypes.string,
+    className: React.PropTypes.string,
     editable: React.PropTypes.bool,
+    onChange: React.PropTypes.func,
     placeholder: React.PropTypes.string,
-    onChange: React.PropTypes.func
+    src: React.PropTypes.string
 };
 
 export default Markdown;

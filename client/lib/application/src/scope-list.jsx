@@ -95,11 +95,13 @@ class OwnerScopeList extends React.Component {
                 </div>;
     }
 }
+
 OwnerScopeList.displayName = 'OwnerScopeList';
+
 OwnerScopeList.propTypes = {
+    onSelect: React.PropTypes.func.isRequired,
     scopes: React.PropTypes.array.isRequired,
-    selected: React.PropTypes.array,
-    onSelect: React.PropTypes.func.isRequired
+    selected: React.PropTypes.array
 };
 
 export default OwnerScopeList;

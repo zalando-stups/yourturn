@@ -1,7 +1,8 @@
 /* globals expect, $, TestUtils, reset, render, React */
-import * as EssentialsActions from 'common/src/data/essentials/essentials-actions';
 import Detail from 'resource/src/scope-detail/scope-detail.jsx';
 
+/*eslint-disable react/no-deprecated */
+// TODO rework usage of React.findDOMNode
 const RES_ID = 'sales_order',
         SCP_ID = 'read',
         TEST_RES = {
@@ -45,3 +46,4 @@ describe('The scope detail view', () => {
             .to.not.throw;
     });
 });
+/*eslint-enable react/no-deprecated */

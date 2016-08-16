@@ -128,5 +128,8 @@ class ApplicationLifeCycle extends React.Component {
         )
     }
 }
+/*eslint-enable */
+
+ApplicationLifeCycle.displayName = 'ApplicationLifeCycle';
 
 export default ApplicationLifeCycle;

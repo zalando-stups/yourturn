@@ -38,11 +38,17 @@ ViolationDetail.displayName = 'ViolationDetail';
 
 // TODO specify in more detail
 ViolationDetail.propTypes = {
-    violationId: React.PropTypes.number.isRequired,
-    fullstopActions: React.PropTypes.object.isRequired,
-    fullstopStore: React.PropTypes.object.isRequired,
-    userStore: React.PropTypes.object.isRequired,
-    accounts: React.PropTypes.arrayOf(React.PropTypes.object)
+    accounts: React.PropTypes.arrayOf(React.PropTypes.object),
+    fullstopActions: React.PropTypes.shape({
+        resolveViolation: React.PropTypes.func
+    }).isRequired,
+    fullstopStore: React.PropTypes.shape({
+        getViolation: React.PropTypes.func
+    }).isRequired,
+    userStore: React.PropTypes.shape({
+        getUserCloudAccounts: React.PropTypes.func
+    }).isRequired,
+    violationId: React.PropTypes.number.isRequired
 };
 
 export default ViolationDetail;

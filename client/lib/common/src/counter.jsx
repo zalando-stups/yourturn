@@ -47,6 +47,8 @@ class Counter extends React.Component {
         }
     }
 
+    /*eslint-disable react/no-did-mount-set-state */
+    // TODO does it have to be this way?
     componentDidMount() {
         this.setState({
             mounted: true,
@@ -56,6 +58,7 @@ class Counter extends React.Component {
         this._draw();
         raf(this._animate.bind(this));
     }
+    /*eslint-enable react/no-did-mount-set-state */
 
     _draw() {
         if (!this.state.mounted) {
@@ -87,10 +90,15 @@ class Counter extends React.Component {
         return <span className='counter'>{format(Math.round(this.state.value))}</span>;
     }
 }
+
 Counter.displayName = 'Counter';
+
+//TODO fix easing
 Counter.propTypes = {
     begin: React.PropTypes.number,
+    easing: React.PropTypes.any,
     end: React.PropTypes.number,
     time: React.PropTypes.number
 };
+
 export default Counter;

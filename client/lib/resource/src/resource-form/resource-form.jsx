@@ -1,7 +1,6 @@
 /* global ENV_TEST */
 import _ from 'lodash';
 import React from 'react';
-import ReactDOM from 'react-dom';
 import Icon from 'react-fa';
 import {Link} from 'react-router';
 import * as Routes from 'resource/src/routes';
@@ -12,7 +11,7 @@ import 'common/asset/less/resource/resource-form.less';
 class ResourceForm extends React.Component {
     constructor(props) {
         super();
-        let {edit, resourceId} = props;
+        let {edit} = props;
         this.state = {
             resource: edit ? props.resource : {resource_owners: []},
             checkingId: false,
@@ -121,6 +120,8 @@ class ResourceForm extends React.Component {
         }
     }
 
+    /*eslint-disable react/no-direct-mutation-state */
+    // TODO
     update(field, prop, evt) {
         this.state.resource[field] = evt.target[prop];
         this.setState({resource: this.state.resource});
@@ -128,6 +129,7 @@ class ResourceForm extends React.Component {
             this.state.checkIfIdInvalid();
         }
     }
+    /*eslint-enable react/no-direct-mutation-state */
 
     render() {
         const {edit, resourceId} = this.props,
@@ -263,10 +265,21 @@ class ResourceForm extends React.Component {
 ResourceForm.displayName = 'ResourceForm';
 ResourceForm.propTypes = {
     edit: React.PropTypes.bool.isRequired,
-    resourceId: React.PropTypes.string,
     essentialsActions: React.PropTypes.object.isRequired,
+    existingResourceIds: React.PropTypes.array.isRequired,
+    isUserWhitelisted: React.PropTypes.bool,
+    kioActions: React.PropTypes.shape({
+        fetchApplication: React.PropTypes.func
+    }).isRequired,
+    magnificentActions: React.PropTypes.object.isRequired,
     notificationActions: React.PropTypes.object.isRequired,
-    magnificentActions: React.PropTypes.object.isRequired
+    resource: React.PropTypes.shape({
+        id: React.PropTypes.string,
+        description: React.PropTypes.string,
+        name: React.PropTypes.string,
+        resource_owners: React.PropTypes.array
+    }).isRequired,
+    resourceId: React.PropTypes.string
 };
 ResourceForm.contextTypes = {
     router: React.PropTypes.object
