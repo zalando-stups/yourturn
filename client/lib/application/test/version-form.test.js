@@ -45,7 +45,8 @@ describe('The version form view', () => {
                 edit: false,
                 kioActions,
                 application: TEST_APP,
-                approvalCount: 0
+                approvalCount: 0,
+                notificationActions: {}
             };
             form = render(VersionForm, props);
         });
@@ -74,7 +75,8 @@ describe('The version form view', () => {
                 kioActions,
                 version: TEST_VERSION,
                 application: TEST_APP,
-                approvalCount: 2
+                approvalCount: 2,
+                notificationActions: {}
             };
             form = render(VersionForm, props);
         });

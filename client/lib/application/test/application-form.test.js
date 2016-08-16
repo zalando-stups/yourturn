@@ -36,7 +36,8 @@ describe('The application form view', () => {
                 application: TEST_APP,
                 applicationIds: ['foo'],
                 userTeams: ['stups'],
-                kioActions
+                kioActions,
+                notificationActions: {}
             };
 
             form = render(AppForm, props);
@@ -74,7 +75,8 @@ describe('The application form view', () => {
                 application: TEST_APP,
                 applicationIds: ['foo'],
                 userTeams: ['stups'],
-                kioActions
+                kioActions,
+                notificationActions: {}
             };
 
             form = render(AppForm, props);
