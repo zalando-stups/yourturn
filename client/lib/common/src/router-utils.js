@@ -1,3 +1,4 @@
+/* globals Promise */
 import REDUX from 'yourturn/src/redux';
 import FetchResult from 'common/src/fetch-result';
 import * as UserGetter from 'common/src/data/user/user-getter';
