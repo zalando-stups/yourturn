@@ -208,7 +208,8 @@ CreateAppFormHandler.propTypes = {
     }).isRequired,
     params: React.PropTypes.object.isRequired,
     userStore: React.PropTypes.shape({
-        getUserTeams: React.PropTypes.func
+        getUserTeams: React.PropTypes.func,
+        getUserCloudAccounts: React.PropTypes.func
     }).isRequired
 };
 CreateAppFormHandler.fetchData = function(routerState, state) {
@@ -262,7 +263,8 @@ EditAppFormHandler.propTypes = {
     }).isRequired,
     params: React.PropTypes.object.isRequired,
     userStore: React.PropTypes.shape({
-        getUserTeams: React.PropTypes.func
+        getUserTeams: React.PropTypes.func,
+        getUserCloudAccounts: React.PropTypes.func
     }).isRequired
 };
 EditAppFormHandler.fetchData = function(routerState, state) {
