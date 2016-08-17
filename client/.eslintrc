@@ -1,32 +1,24 @@
 {
     "parser": "babel-eslint",
     "extends": "eslint:recommended",
-    "ecmaFeatures": {
-        "arrowFunctions": true,
-        "blockBindings": true,
-        "classes": true,
-        "destructuring": true,
-        "jsx": true,
-        "modules": true,
-        "templateStrings": true,
-        "spread": true
-    },
     "env": {
-        "browser": true,
         "mocha": true,
-        "node": true
+        "browser": true,
+        "node": true,
+        "es6": true
     },
     "parserOptions": {
+        "ecmaVersion": 6,
+        "sourceType": "module",
         "ecmaFeatures": {
-            "arrowFunctions": true,
-            "blockBindings": true,
-            "classes": true,
-            "destructuring": true,
             "jsx": true,
-            "modules": true,
-            "templateStrings": true,
             "spread": true
         }
+    },
+    // not sure why promise is not in default environments
+    "globals": {
+        "Promise": true,
+        "Set": true
     },
     "rules": {
         "no-unused-vars": 1,
@@ -34,7 +26,7 @@
         // never did i understand why there should be a newline
         "eol-last": 0,
         "new-cap": 0,
-        "strict": [ 2, "global" ],
+        "strict": [2, "never"],
         // in tests they are prevalent
         "no-unused-expressions": 0,
         // backbone works this way unfortunately
@@ -82,9 +74,9 @@
         "react"
     ],
     "settings": {
-    "react": {
-      "pragma": "React",
-      "version": "15.0"
-    }
+        "react": {
+          "pragma": "React",
+          "version": "15.0"
+        }
   }
 }
