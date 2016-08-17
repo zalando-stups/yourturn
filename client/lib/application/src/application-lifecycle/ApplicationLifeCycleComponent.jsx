@@ -1,33 +1,30 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { parseArtifact } from 'application/src/util';
 import { bindActionCreators } from 'redux';
 import { bindGettersToState } from 'common/src/util';
 
 import * as KioGetter from 'common/src/data/kio/kio-getter';
 import * as AliceActions from 'common/src/data/alice/alice-action';
-import * as NotificationActions from 'common/src/data/notification/notification-actions';
 
 import ApplicationLifeCycle from './application-lifecycle.jsx'
 
 class ApplicationLifecycleHandler extends React.Component {
     constructor(props) {
         super(props);
-        console.log("constructor props: %O", props);
         this.state = {
             versions: [],
             selectedVersions: []
         };
 
-        this.onVersionsSelect = this.onVersionsSelect.bind(this);
-        this.onVersionReset = this.onVersionReset.bind(this);
+        this.handleVersionsSelect = this.handleVersionsSelect.bind(this);
+        this.handleVersionReset = this.handleVersionReset.bind(this);
     }
 
     // component's lifecycle functions
 
     componentDidMount() {
-        this.props.aliceActions.fetchServerCount('kio');
+        this.props.aliceActions.fetchServerCount(this.props.params.applicationId);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -40,11 +37,11 @@ class ApplicationLifecycleHandler extends React.Component {
 
     // handler functions
 
-    onVersionsSelect(param) {
+    handleVersionsSelect(param) {
         this.setState({selectedVersions: param});
     }
 
-    onVersionReset() {
+    handleVersionReset() {
         this.setState({selectedVersions: this.state.versions});
     }
 
@@ -56,8 +53,8 @@ class ApplicationLifecycleHandler extends React.Component {
                 applicationId    = {this.props.params.applicationId}
                 versions         = {this.state.versions}
                 selectedVersions = {this.state.selectedVersions}
-                onVersionsSelect = {this.onVersionsSelect}
-                onVersionReset   = {this.onVersionReset}
+                onVersionsSelect = {this.handleVersionsSelect}
+                onVersionReset   = {this.handleVersionReset}
                 {...this.props} />
         );
     }
@@ -66,15 +63,15 @@ class ApplicationLifecycleHandler extends React.Component {
 ApplicationLifecycleHandler.displayName = 'ApplicationLifecycleHandler';
 
 ApplicationLifecycleHandler.propTypes = {
-    params: React.PropTypes.object.isRequired
+    aliceActions: React.PropTypes.shape({
+        fetchServerCount: React.PropTypes.func
+    }).isRequired,
+    params: React.PropTypes.shape({
+        applicationId: React.PropTypes.string
+    }).isRequired
 };
 
-const fetchData = function(routerState, state) {
-    const {applicationId} = routerState.params;
-    ALICE_ACTIONS.fetchServerCount(applicationId);
-};
-
-function mapStateToProps(state, ownProps) {
+function mapStateToProps(state) {
     return {
         aliceStore: state.alice,
         kioStore: bindGettersToState(state.kio, KioGetter)
@@ -83,8 +80,7 @@ function mapStateToProps(state, ownProps) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        aliceActions: bindActionCreators(AliceActions, dispatch),
-        notificationActions : bindActionCreators(NotificationActions, dispatch),
+        aliceActions: bindActionCreators(AliceActions, dispatch)
     };
 }
 

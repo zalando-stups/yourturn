@@ -34,16 +34,16 @@ const Chart = (props) => {
 };
 
 Chart.propTypes = {
-    width: React.PropTypes.number,
-    height: React.PropTypes.number,
     dataSet: React.PropTypes.arrayOf(
         React.PropTypes.shape({
             timestamp: React.PropTypes.instanceOf(Date),
             count: React.PropTypes.number,
             instances: React.PropTypes.object
         })).isRequired,
+    endDate: React.PropTypes.instanceOf(Date).isRequired,
+    height: React.PropTypes.number,
     startDate: React.PropTypes.instanceOf(Date).isRequired,
-    endDate: React.PropTypes.instanceOf(Date).isRequired
+    width: React.PropTypes.number
 };
 
 export default Chart;

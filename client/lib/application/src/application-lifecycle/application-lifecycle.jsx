@@ -4,11 +4,11 @@ import ComboBox from 'common/components/pure/ComboBox.jsx';
 import ThreeColumns from 'common/components/pure/ThreeColumns.jsx';
 import moment from 'moment';
 import Dimensions from 'react-dimensions';
-import Toolbar from './components/toolbar.jsx';
-import Head from './components/head.jsx';
-import Error from './components/error.jsx';
-import Loading from './components/loading.jsx';
-import Charts from './components/charts.jsx';
+import Toolbar from './components/Toolbar.jsx';
+import Head from './components/Head.jsx';
+import Error from './components/Error.jsx';
+import Loading from './components/Loading.jsx';
+import Charts from './components/Charts.jsx';
 
 const INITAL_WIDTH = 50;
 
@@ -17,9 +17,9 @@ class ApplicationLifeCycle extends React.Component {
         super(props);
 
         this.state = {
-            startDate : moment().subtract(1, "weeks").startOf('day').toDate(),
+            startDate : moment().subtract(1, 'weeks').startOf('day').toDate(),
             endDate : moment().endOf('day').toDate(),
-            brushExtentStartDate : moment().subtract(1, "weeks").startOf('day').toDate(),
+            brushExtentStartDate : moment().subtract(1, 'weeks').startOf('day').toDate(),
             brushExtentEndDate : moment().endOf('day').toDate(),
             width: INITAL_WIDTH
         };
@@ -28,7 +28,7 @@ class ApplicationLifeCycle extends React.Component {
         this.handleEndDatePicked = this.handleEndDatePicked.bind(this);
         this.handleBrushChanged = this.handleBrushChanged.bind(this);
         this.widthCallback = this.widthCallback.bind(this);
-        this.removeVersion = this.removeVersion.bind(this);
+        this.handleRemoveVersion = this.handleRemoveVersion.bind(this);
     }
 
     widthCallback(param) {
@@ -64,7 +64,7 @@ class ApplicationLifeCycle extends React.Component {
         });
     }
 
-    removeVersion(versionId) {
+    handleRemoveVersion(versionId) {
         const { onVersionsSelect, selectedVersions } = this.props;
         onVersionsSelect(selectedVersions.filter(v => v.id != versionId));
     }
@@ -117,7 +117,7 @@ class ApplicationLifeCycle extends React.Component {
                     :
                     <Charts
                         applicationId   = {applicationId}
-                        onDeselect      = {this.removeVersion}
+                        onDeselect      = {this.handleRemoveVersion}
                         versions        = {this.props.selectedVersions}
                         versionDataSets = {this.props.aliceStore.serverCountData}
                         width           = {this.state.width}
@@ -128,8 +128,27 @@ class ApplicationLifeCycle extends React.Component {
         )
     }
 }
-/*eslint-enable */
 
 ApplicationLifeCycle.displayName = 'ApplicationLifeCycle';
+
+ApplicationLifeCycle.propTypes = {
+    aliceStore: React.PropTypes.shape({
+        error: React.PropTypes.object,
+        isLoading: React.PropTypes.bool,
+        serverCountData: React.PropTypes.object
+    }).isRequired,
+    applicationId: React.PropTypes.string,
+    kioStore: React.PropTypes.shape({
+        getApplication: React.PropTypes.func
+    }).isRequired,
+    onVersionReset: React.PropTypes.func.isRequired,
+    onVersionsSelect: React.PropTypes.func.isRequired,
+    selectedVersions: React.PropTypes.arrayOf(React.PropTypes.shape({
+        id: React.PropTypes.string
+    })),
+    versions: React.PropTypes.arrayOf(React.PropTypes.shape({
+        id: React.PropTypes.string
+    }))
+}
 
 export default ApplicationLifeCycle;

@@ -10,15 +10,12 @@ import ThreeColumns from 'common/components/pure/ThreeColumns.jsx';
 const CHART_HEIGHT = 200;
 
 const Charts = (props) => {
-
-    console.log("charts %O", props);
-
     const arrayOfChartComponets = props.versions.map((version, index) => {
         const versionDataSet = props.versionDataSets.find(e => e.version_id == version.id);
 
         const titleWithButton = <TitleWithButton
             title   = {version.id}
-            onClick = {() => this.onDeselect(version.id)}
+            onClick = {() => props.onDeselect(version.id)}
         />;
 
         const chart = <Chart
@@ -32,7 +29,7 @@ const Charts = (props) => {
         const links = <Link
             to={Routes.verApproval({applicationId: props.applicationId, versionId: version.id})}
             className='btn btn-default btn-small'>
-            <Icon name='check'/>
+            <Icon name='check' />
         </Link>;
 
         return (
@@ -55,11 +52,11 @@ Charts.displayName = 'Charts';
 
 Charts.propTypes = {
     applicationId: React.PropTypes.string,
-    onDeselect: React.PropTypes.func.isRequired,
-    versions: React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
-    versionDataSets: React.PropTypes.array.isRequired,
-    extentStartDate: React.PropTypes.instanceOf(Date).isRequired,
     extentEndDate: React.PropTypes.instanceOf(Date).isRequired,
+    extentStartDate: React.PropTypes.instanceOf(Date).isRequired,
+    onDeselect: React.PropTypes.func.isRequired,
+    versionDataSets: React.PropTypes.array.isRequired,
+    versions: React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
     width: React.PropTypes.number.isRequired
 };
 

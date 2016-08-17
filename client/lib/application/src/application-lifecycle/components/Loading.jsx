@@ -6,7 +6,7 @@ const Loading = () => {
     return (
         <ThreeColumns
             leftChildren   = {<div></div>}
-            middleChildren = {<div><Icon pulse size='5x' name="spinner" /> Loading</div>}
+            middleChildren = {<div><Icon pulse size='5x' name='spinner' /> Loading</div>}
             rightChildren  = {<div></div>}
         />
     )

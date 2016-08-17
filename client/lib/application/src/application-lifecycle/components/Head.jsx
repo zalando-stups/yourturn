@@ -25,4 +25,11 @@ const Head = (props) => {
 
 Head.displayName = 'application-lifecycle-header';
 
+Head.propTypes = {
+    application: React.PropTypes.string.isRequired,
+    linkParams: React.PropTypes.shape({
+        applicationId: React.PropTypes.string
+    }).isRequired
+};
+
 export default Head;

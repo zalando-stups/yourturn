@@ -3,9 +3,9 @@ import React from 'react'
 import 'react-date-picker/index.css'
 import { Calendar } from 'react-date-picker'
 
-const STYLE_LEFT = {width: "1px", height: "1px", position: "relative", top: 0, left: 0, zIndex: 10};
-const STYLE_RIGHT = {width: "1px", height: "1px", position: "relative", top: 0, left: -220, zIndex: 10};
-const DATE_FORMAT = "YYYY-MM-DD";
+const STYLE_LEFT = {width: '1px', height: '1px', position: 'relative', top: 0, left: 0, zIndex: 10};
+const STYLE_RIGHT = {width: '1px', height: '1px', position: 'relative', top: 0, left: -220, zIndex: 10};
+const DATE_FORMAT = 'YYYY-MM-DD';
 
 class DateSelector extends React.Component {
     constructor(props) {
@@ -24,7 +24,7 @@ class DateSelector extends React.Component {
 
     handleDatePicked(dateString, { dateMoment}) {
         this.setState({openDatePicker : false});
-        this.props.datePicked(dateMoment.toDate());
+        this.props.onDatePicked(dateMoment.toDate());
     }
 
     render() {
@@ -61,12 +61,12 @@ class DateSelector extends React.Component {
 
 
 DateSelector.propTypes = {
-    title: React.PropTypes.string,
-    datePicked: React.PropTypes.func.isRequired,
     alignStyle: React.PropTypes.object,
-    minDate: React.PropTypes.instanceOf(Date),
+    defaultValue: React.PropTypes.instanceOf(Date),
     maxDate: React.PropTypes.instanceOf(Date),
-    defaultValue: React.PropTypes.instanceOf(Date)
+    minDate: React.PropTypes.instanceOf(Date),
+    onDatePicked: React.PropTypes.func.isRequired,
+    title: React.PropTypes.string
 };
 
 DateSelector.defaultProps = {

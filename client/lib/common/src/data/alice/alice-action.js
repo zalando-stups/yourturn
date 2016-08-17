@@ -4,7 +4,6 @@ import {Services} from 'common/src/data/services';
 import {Provider, RequestConfig, saveRoute} from 'common/src/oauth-provider';
 
 function fetched(serverCountData) {
-    console.log("fetched %O", serverCountData);
     return {
         type: types.FETCHED_SERVER_COUNT,
         serverCountData
@@ -12,7 +11,6 @@ function fetched(serverCountData) {
 }
 
 function fetching() {
-    console.log("fetching");
     return {
         type: types.BEGIN_FETCH_SERVER_COUNT
     };
@@ -27,7 +25,18 @@ function failed(error) {
 
 export function fetchServerCount(applicationId, startDate, endDate) {
     return function(dispatch) {
-        const url = `${Services.alice.url}${Services.alice.root}instance-count/${applicationId}`;
+        let url = `${Services.alice.url}${Services.alice.root}instance-count/${applicationId}`;
+        if (startDate) {
+            url = url + `?from=${startDate}`;
+        }
+        if (endDate) {
+            if (startDate) {
+                url = url + '&';
+            } else {
+                url = url + '?';
+            }
+            url = url + `to=${endDate}`;
+        }
         dispatch(fetching());
         request
             .get(url)
@@ -37,7 +46,6 @@ export function fetchServerCount(applicationId, startDate, endDate) {
             .then(res => {
                 dispatch(fetched(res.body))
             }, err => {
-                console.log("error: %O", err);
                 const {statusText, statusCode} = err.response;
                 dispatch(failed(`${statusCode}: ${statusText}`));
             });

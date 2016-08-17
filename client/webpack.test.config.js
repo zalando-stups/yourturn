@@ -25,7 +25,6 @@ module.exports = {
         publicPath: '/dist/'
     },
     plugins: [
-        new webpack.NormalModuleReplacementPlugin(/^lodash$/, 'common/src/lodash.custom'),
         new webpack.DefinePlugin({
             'ENV_DEVELOPMENT': false,
             'ENV_TEST': true,
@@ -62,9 +61,9 @@ module.exports = {
         RESOURCE_WHITELIST: 'YTENV_RESOURCE_WHITELIST',
         APPLICATION_WHITELIST: 'YTENV_APPLICATION_WHITELIST',
         MINT_BUCKET_TEMPLATE: 'YTENV_MINT_BUCKET_TEMPLATE',
-        // needed because otherwise two react instances
-        // are running in tests and they trip each other up
-        react: 'var React'
+        'react/addons': true,
+        'react/lib/ExecutionEnvironment': true,
+        'react/lib/ReactContext': true
     },
     eslint: {
         configFile: './.eslintrc'

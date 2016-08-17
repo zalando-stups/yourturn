@@ -20,19 +20,19 @@ const Toolbar = (props) => {
     />;
 
     const startDateSelector = <DateSelector
-        datePicked   = {props.onStartDatePicked}
-        title        = {moment(props.startDate).format(DATE_FORMAT)}
-        defaultValue = {props.startDate}
-        maxDate      = {props.endDate}
+        onDatePicked   = {props.onStartDatePicked}
+        title          = {moment(props.startDate).format(DATE_FORMAT)}
+        defaultValue   = {props.startDate}
+        maxDate        = {props.endDate}
     />;
 
     const endDateSelector = <DateSelector
-        datePicked   = {props.onEndDatePicked}
-        title        = {moment(props.endDate).format(DATE_FORMAT)}
-        alignStyle   = {STYLE_RIGHT}
-        defaultValue = {props.endDate}
-        minDate      = {props.startDate}
-        maxDate      = {moment().endOf('day').toDate()}
+        onDatePicked   = {props.onEndDatePicked}
+        title          = {moment(props.endDate).format(DATE_FORMAT)}
+        alignStyle     = {STYLE_RIGHT}
+        defaultValue   = {props.endDate}
+        minDate        = {props.startDate}
+        maxDate        = {moment().endOf('day').toDate()}
     />;
 
     return (

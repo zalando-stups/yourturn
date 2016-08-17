@@ -34,7 +34,6 @@ import * as MintActions from 'common/src/data/mint/mint-actions';
 import * as EssentialsActions from 'common/src/data/essentials/essentials-actions';
 import * as PieroneActions from 'common/src/data/pierone/pierone-actions';
 import * as MagnificentActions from 'common/src/data/magnificent/magnificent-actions';
-import * as AliceActions from 'common/src/data/alice/alice-action';
 
 import ApplicationList from './application-list/application-list.jsx';
 import ApplicationForm from './application-form/application-form.jsx';
@@ -707,7 +706,7 @@ const ROUTES =
                 {ENV_DEVELOPMENT ?
                     <Route path='lifecycle'>
                         <IndexRoute
-                            component={ConnectedApplicationLifecycleHandler}/>
+                            component={ConnectedApplicationLifecycleHandler} />
                     </Route>
                     : null
                 }

@@ -26,14 +26,14 @@ const ComboBox = (props) => {
 };
 
 ComboBox.propTypes = {
-    valueField: React.PropTypes.string.isRequired,
-    textField: React.PropTypes.string.isRequired,
-    value: React.PropTypes.arrayOf(React.PropTypes.object),
     data: React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
     onChange: React.PropTypes.func.isRequired,
     onReset: React.PropTypes.func.isRequired,
     resetButtonTitle: React.PropTypes.string,
-    title: React.PropTypes.string
+    textField: React.PropTypes.string.isRequired,
+    title: React.PropTypes.string,
+    value: React.PropTypes.arrayOf(React.PropTypes.object),
+    valueField: React.PropTypes.string.isRequired
 };
 
 ComboBox.defaultProps = {

@@ -175,8 +175,6 @@ server.use(function(req, res, next) {
 });
 
 server.get('/instance-count/:application_id', function(req,res) {
-    var startDate = new Date(req.query.from);
-    var endDate = new Date(req.query.to);
     var applicationId = req.params.application_id;
     var startDate = new Date(req.query.from);
     var endDate = new Date(req.query.to);
