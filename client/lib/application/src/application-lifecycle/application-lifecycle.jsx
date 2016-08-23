@@ -1,8 +1,7 @@
 import React from 'react';
-import PropsExposer from 'common/components/pure/PropsExposer.jsx';
-import ComboBox from 'common/components/pure/ComboBox.jsx';
-import ThreeColumns from 'common/components/pure/ThreeColumns.jsx';
-import moment from 'moment';
+import PropsExposer from 'common/src/components/pure/PropsExposer.jsx';
+import ComboBox from 'common/src/components/pure/ComboBox.jsx';
+import ThreeColumns from 'common/src/components/pure/ThreeColumns.jsx';
 import Dimensions from 'react-dimensions';
 import Toolbar from './components/Toolbar.jsx';
 import Head from './components/Head.jsx';
@@ -17,18 +16,10 @@ class ApplicationLifeCycle extends React.Component {
         super(props);
 
         this.state = {
-            startDate : moment().subtract(1, 'weeks').startOf('day').toDate(),
-            endDate : moment().endOf('day').toDate(),
-            brushExtentStartDate : moment().subtract(1, 'weeks').startOf('day').toDate(),
-            brushExtentEndDate : moment().endOf('day').toDate(),
             width: INITAL_WIDTH
         };
 
-        this.handleStartDatePicked = this.handleStartDatePicked.bind(this);
-        this.handleEndDatePicked = this.handleEndDatePicked.bind(this);
-        this.handleBrushChanged = this.handleBrushChanged.bind(this);
         this.widthCallback = this.widthCallback.bind(this);
-        this.handleRemoveVersion = this.handleRemoveVersion.bind(this);
     }
 
     widthCallback(param) {
@@ -38,35 +29,6 @@ class ApplicationLifeCycle extends React.Component {
                 width: newWidth
             })
         }
-    }
-
-    handleStartDatePicked(date) {
-        this.handleDateChanged(moment(date).startOf('day').toDate(), this.state.endDate);
-    }
-
-    handleEndDatePicked(date) {
-        this.handleDateChanged(this.state.startDate, moment(date).endOf('day').toDate());
-    }
-
-    handleDateChanged(startDate, endDate) {
-        this.setState({
-            startDate,
-            endDate,
-            brushExtentStartDate: startDate,
-            brushExtentEndDate: endDate
-        });
-    }
-
-    handleBrushChanged([brushExtentStartDate, brushExtentEndDate]) {
-        this.setState({
-            brushExtentStartDate,
-            brushExtentEndDate
-        });
-    }
-
-    handleRemoveVersion(versionId) {
-        const { onVersionsSelect, selectedVersions } = this.props;
-        onVersionsSelect(selectedVersions.filter(v => v.id != versionId));
     }
 
     render() {
@@ -81,7 +43,7 @@ class ApplicationLifeCycle extends React.Component {
         return (
             <div>
                 {aliceStore.error ?
-                    <Error errorData = {aliceStore.error} />
+                    <Error error = {aliceStore.error} />
                     :
                     null}
                 <Head
@@ -103,26 +65,26 @@ class ApplicationLifeCycle extends React.Component {
                               rightChildren  = {<div></div>}
                 />
                 <Toolbar
-                    brushExtentEndDate   = {this.state.brushExtentEndDate}
-                    brushExtentStartDate = {this.state.brushExtentStartDate}
+                    brushExtentEndDate   = {this.props.brushExtentEndDate}
+                    brushExtentStartDate = {this.props.brushExtentStartDate}
                     brushWidth           = {this.state.width}
-                    endDate              = {this.state.endDate}
-                    startDate            = {this.state.startDate}
-                    onBrushChanged       = {this.handleBrushChanged}
-                    onEndDatePicked      = {this.handleEndDatePicked}
-                    onStartDatePicked    = {this.handleStartDatePicked}
+                    endDate              = {this.props.endDate}
+                    startDate            = {this.props.startDate}
+                    onBrushChanged       = {this.props.onBrushChanged}
+                    onEndDatePicked      = {this.props.onEndDatePicked}
+                    onStartDatePicked    = {this.props.onStartDatePicked}
                 />
                 {aliceStore.isLoading ?
                     <Loading />
                     :
                     <Charts
                         applicationId   = {applicationId}
-                        onDeselect      = {this.handleRemoveVersion}
+                        onDeselect      = {this.props.onRemoveVersion}
                         versions        = {this.props.selectedVersions}
-                        versionDataSets = {this.props.aliceStore.serverCountData}
+                        versionDataSets = {this.props.aliceStore.instanceCountData}
                         width           = {this.state.width}
-                        extentStartDate = {this.state.brushExtentStartDate}
-                        extentEndDate   = {this.state.brushExtentEndDate}
+                        extentStartDate = {this.props.brushExtentStartDate}
+                        extentEndDate   = {this.props.brushExtentEndDate}
                     />}
             </div>
         )
@@ -133,19 +95,27 @@ ApplicationLifeCycle.displayName = 'ApplicationLifeCycle';
 
 ApplicationLifeCycle.propTypes = {
     aliceStore: React.PropTypes.shape({
-        error: React.PropTypes.object,
+        error: React.PropTypes.string,
         isLoading: React.PropTypes.bool,
-        serverCountData: React.PropTypes.object
+        instanceCountData: React.PropTypes.array
     }).isRequired,
     applicationId: React.PropTypes.string,
+    brushExtentEndDate: React.PropTypes.instanceOf(Date),
+    brushExtentStartDate: React.PropTypes.instanceOf(Date),
+    endDate: React.PropTypes.instanceOf(Date),
     kioStore: React.PropTypes.shape({
         getApplication: React.PropTypes.func
     }).isRequired,
+    onBrushChanged: React.PropTypes.func.isRequired,
+    onEndDatePicked: React.PropTypes.func.isRequired,
+    onRemoveVersion: React.PropTypes.func.isRequired,
+    onStartDatePicked: React.PropTypes.func.isRequired,
     onVersionReset: React.PropTypes.func.isRequired,
     onVersionsSelect: React.PropTypes.func.isRequired,
     selectedVersions: React.PropTypes.arrayOf(React.PropTypes.shape({
         id: React.PropTypes.string
     })),
+    startDate: React.PropTypes.instanceOf(Date),
     versions: React.PropTypes.arrayOf(React.PropTypes.shape({
         id: React.PropTypes.string
     }))

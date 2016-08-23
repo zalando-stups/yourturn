@@ -34,12 +34,14 @@ const Chart = (props) => {
 };
 
 Chart.propTypes = {
-    dataSet: React.PropTypes.arrayOf(
-        React.PropTypes.shape({
-            timestamp: React.PropTypes.instanceOf(Date),
-            count: React.PropTypes.number,
-            instances: React.PropTypes.object
-        })).isRequired,
+    dataSet: React.PropTypes.shape({
+        events: React.PropTypes.arrayOf(
+            React.PropTypes.shape({
+                timestamp: React.PropTypes.string,
+                count: React.PropTypes.number,
+                instances: React.PropTypes.array
+            }))
+    }).isRequired,
     endDate: React.PropTypes.instanceOf(Date).isRequired,
     height: React.PropTypes.number,
     startDate: React.PropTypes.instanceOf(Date).isRequired,

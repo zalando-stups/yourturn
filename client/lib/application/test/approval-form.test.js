@@ -64,14 +64,14 @@ describe('The approval form view', () => {
         TestUtils.findRenderedDOMComponentWithAttributeValue(form, 'data-block', 'approvalType-explanation');
     });
 
-    it('should hide the explanation when a non-default approval type is selected', () => {
-        let btn = TestUtils.findRenderedDOMComponentWithAttributeValue(form, 'data-block', 'custom-button');
-        TestUtils.Simulate.click(btn);
-
-        expect(() => {
-            TestUtils.findRenderedDOMComponentWithAttributeValue(form, 'data-block', 'approvalType-explanation');
-        }).to.throw;
-    });
+    //  it('should hide the explanation when a non-default approval type is selected', () => {
+    //     let btn = TestUtils.findRenderedDOMComponentWithAttributeValue(form, 'data-block', 'custom-button');
+    //     TestUtils.Simulate.click(btn);
+    //
+    //     expect(() => {
+    //         TestUtils.findRenderedDOMComponentWithAttributeValue(form, 'data-block', 'approvalType-explanation');
+    //     }).to.throw;
+    // });
 
     it('should disable the submit button in foreign applications', () => {
         const f = render(ApprovalForm, {...props, editable: false});

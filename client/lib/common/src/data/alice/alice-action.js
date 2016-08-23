@@ -3,27 +3,27 @@ import request from 'common/src/superagent';
 import {Services} from 'common/src/data/services';
 import {Provider, RequestConfig, saveRoute} from 'common/src/oauth-provider';
 
-function fetched(serverCountData) {
+function fetched(instanceCountData) {
     return {
-        type: types.FETCHED_SERVER_COUNT,
-        serverCountData
+        type: types.FETCHED_INSTANCE_COUNT,
+        instanceCountData
     };
 }
 
 function fetching() {
     return {
-        type: types.BEGIN_FETCH_SERVER_COUNT
+        type: types.BEGIN_FETCH_INSTANCE_COUNT
     };
 }
 
 function failed(error) {
     return {
-        type: types.FAIL_FETCH_SERVER_COUNT,
+        type: types.FAIL_FETCH_INSTANCE_COUNT,
         error
     };
 }
 
-export function fetchServerCount(applicationId, startDate, endDate) {
+export function fetchInstanceCount(applicationId, startDate, endDate) {
     return function(dispatch) {
         let url = `${Services.alice.url}${Services.alice.root}instance-count/${applicationId}`;
         if (startDate) {

@@ -1,9 +1,9 @@
 import React from 'react';
 import moment from 'moment';
 
-import Brush from 'common/components/pure/Brush.jsx';
-import DateSelector, {STYLE_RIGHT} from 'common/components/functional/DateSelector.jsx';
-import ThreeColumns from 'common/components/pure/ThreeColumns.jsx';
+import Brush from 'common/src/components/pure/Brush.jsx';
+import DateSelector, {STYLE_RIGHT} from 'common/src/components/functional/DateSelector.jsx';
+import ThreeColumns from 'common/src/components/pure/ThreeColumns.jsx';
 
 const DATE_FORMAT = 'Do [of] MMM YY';
 const BRUSH_HEIGHT = 50;

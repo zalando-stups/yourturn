@@ -1,12 +1,12 @@
 /* globals expect */
 
 import React from 'react';
-import { shallow, mount, render } from 'enzyme';
+import { mount } from 'enzyme';
 import moment from 'moment';
 
 import Toolbar from '../../../src/application-lifecycle/components/Toolbar.jsx';
-import DateSelector, {STYLE_RIGHT} from 'common/components/functional/DateSelector.jsx';
-import Brush from 'common/components/pure/Brush.jsx';
+import DateSelector, {STYLE_RIGHT} from 'common/src/components/functional/DateSelector.jsx';
+import Brush from 'common/src/components/pure/Brush.jsx';
 
 describe('application lifecycle\'s <Toolbar />', () => {
 

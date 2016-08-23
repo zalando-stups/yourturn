@@ -1,11 +1,11 @@
-/* globals expect, sinon */
+/* globals expect, sinon, React */
 import {mount} from 'enzyme';
 import moment from 'moment';
 
 import Charts from '../../../src/application-lifecycle/components/Charts.jsx';
 import { Link } from 'react-router';
-import Chart from 'common/components/pure/Chart.jsx';
-import TitleWithButton from 'common/components/pure/TitleWithButton.jsx';
+import Chart from 'common/src/components/pure/Chart.jsx';
+import TitleWithButton from 'common/src/components/pure/TitleWithButton.jsx';
 
 describe('application lifecycle\'s <Charts /> component', () => {
 
@@ -75,9 +75,7 @@ describe('application lifecycle\'s <Charts /> component', () => {
 
         const wrapper = mount(<Charts {...testProps} />);
 
-        const chartNodes = wrapper.find(Chart);
         const twbNodes = wrapper.find(TitleWithButton);
-        const linkNodes = wrapper.find(Link);
 
         let buttonNodes = twbNodes.at(0).find('.btn');
 

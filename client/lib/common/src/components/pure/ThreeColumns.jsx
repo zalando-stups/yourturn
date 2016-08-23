@@ -20,11 +20,11 @@ ThreeColumns.defaultProps = {
 };
 
 ThreeColumns.propTypes = {
-    leftChildren: React.PropTypes.element,
+    leftChildren: React.PropTypes.any,
     leftStyle: React.PropTypes.object,
-    middleChildren: React.PropTypes.element,
+    middleChildren: React.PropTypes.any,
     middleStyle: React.PropTypes.object,
-    rightChildren: React.PropTypes.element,
+    rightChildren: React.PropTypes.any,
     rightStyle: React.PropTypes.object
 };
 

@@ -74,7 +74,7 @@ module.exports = {
         ],
         loaders: [
             {test: /\.jsx?$/, include: /client/, loader: 'babel'},
-            {test: /\.less$/, exclude: /node_modules/, loader: 'null'},
+            {test: /\.less$/, include: /node_modules\/react-widget|client/, loader: 'null'},
             {test: /\.css$/, loader: 'null'},
             {test: /\.(otf|eot|svg|ttf|woff|woff2)(\?v=\d+\.\d+\.\d+)?$/, loader: 'null'},
             {test: /\.json$/, loader: 'json'},
@@ -82,3 +82,5 @@ module.exports = {
         ]
     }
 };
+console.log(__dirname);
+

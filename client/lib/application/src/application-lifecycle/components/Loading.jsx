@@ -1,5 +1,5 @@
 import React from 'react';
-import ThreeColumns from 'common/components/pure/ThreeColumns.jsx';
+import ThreeColumns from 'common/src/components/pure/ThreeColumns.jsx';
 import Icon from 'react-fa';
 
 const Loading = () => {

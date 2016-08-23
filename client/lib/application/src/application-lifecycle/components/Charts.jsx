@@ -2,10 +2,10 @@ import React from 'react';
 
 import { Link } from 'react-router';
 import * as Routes from 'application/src/routes';
-import Chart from 'common/components/pure/Chart.jsx';
+import Chart from 'common/src/components/pure/Chart.jsx';
 import Icon from 'react-fa';
-import TitleWithButton from 'common/components/pure/TitleWithButton.jsx';
-import ThreeColumns from 'common/components/pure/ThreeColumns.jsx';
+import TitleWithButton from 'common/src/components/pure/TitleWithButton.jsx';
+import ThreeColumns from 'common/src/components/pure/ThreeColumns.jsx';
 
 const CHART_HEIGHT = 200;
 
