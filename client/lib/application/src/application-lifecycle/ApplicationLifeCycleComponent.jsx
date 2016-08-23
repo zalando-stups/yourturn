@@ -34,7 +34,7 @@ class ApplicationLifecycleHandler extends React.Component {
     // component's lifecycle functions
 
     componentDidMount() {
-        this.props.aliceActions.fetchInstanceCount(this.props.params.applicationId, startDate, endDate);
+        this.props.aliceActions.fetchInstanceCount(this.props.params.applicationId, this.state.startDate, this.state.endDate);
     }
 
     componentWillReceiveProps(nextProps) {
