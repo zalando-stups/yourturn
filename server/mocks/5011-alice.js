@@ -132,7 +132,7 @@ function limitData(data, start, end) {
             continue;
         }
 
-        if (end && !closestToEnd && moment(currentTimeStamp).isAfter(moment(start))) {
+        if (end && !closestToEnd && moment(currentTimeStamp).isAfter(moment(start)) && moment(currentTimeStamp).isAfter(moment(end))) {
             closestToEnd = data[i];
             continue;
         }
@@ -193,9 +193,12 @@ server.get('/instance-count/:application_id', function(req,res) {
         return;
     }
 
+    console.log("startDate: ", startDate);
+    console.log("endDate: ", endDate);
+
     setTimeout( function() {
         res.status( 200 ).send( getData(applicationId, startDate, endDate) );
-    }, 2000 + Math.random() * 8000 );
+    }, 200 + Math.random() * 8 );
 });
 
 module.exports = server;
