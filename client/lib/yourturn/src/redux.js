@@ -55,7 +55,7 @@ const logger = createLogger(),
                             reduxPromiseMiddleware,
                             // logging, but only in dev
                             // reduxIdentityMiddleware
-                            ENV_DEVELOPMENT && false ? logger : reduxIdentityMiddleware
+                            ENV_DEVELOPMENT ? logger : reduxIdentityMiddleware
                         )(createStore);
 
 export default createWithMiddleware(STORE);
