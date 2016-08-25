@@ -27,7 +27,7 @@ export function fetchInstanceCount(applicationId, startDate, endDate) {
     return function(dispatch) {
         let url = `${Services.alice.url}${Services.alice.root}instance-count/${applicationId}`;
         if (startDate) {
-            url = url + `?from=${startDate}`;
+            url = url + `?from=${startDate.toISOString()}`;
         }
         if (endDate) {
             if (startDate) {
@@ -35,7 +35,7 @@ export function fetchInstanceCount(applicationId, startDate, endDate) {
             } else {
                 url = url + '?';
             }
-            url = url + `to=${endDate}`;
+            url = url + `to=${endDate.toISOString()}`;
         }
         dispatch(fetching());
         request
@@ -46,6 +46,7 @@ export function fetchInstanceCount(applicationId, startDate, endDate) {
             .then(res => {
                 dispatch(fetched(res.body))
             }, err => {
+                console.log("err: %O", err);
                 const {statusText, statusCode} = err.response;
                 dispatch(failed(`${statusCode}: ${statusText}`));
             });
