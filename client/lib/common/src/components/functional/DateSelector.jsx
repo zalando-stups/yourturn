@@ -1,8 +1,7 @@
 import React from 'react'
 
 import 'react-date-picker/index.css'
-import { Calendar } from 'react-date-picker'
-import OutsideClickAwareCalendar from './OutsideClickAwareCalendar';
+import OutsideClickAwareCalendar from './OutsideClickAwareCalendar.jsx';
 
 const STYLE_LEFT = {width: '1px', height: '1px', position: 'relative', top: 0, left: 0, zIndex: 10};
 const STYLE_RIGHT = {width: '1px', height: '1px', position: 'relative', top: 0, left: -220, zIndex: 10};
@@ -36,7 +35,7 @@ class DateSelector extends React.Component {
                     <OutsideClickAwareCalendar
                         minDate             = {this.props.minDate}
                         maxDate             = {this.props.maxDate}
-                        onChange            = {this.handleDatePicked}
+                        onDatePicked        = {this.handleDatePicked}
                         date                = {this.props.defaultValue}
                         onClickOutside      = {this.handleClickOutside}
                     />
