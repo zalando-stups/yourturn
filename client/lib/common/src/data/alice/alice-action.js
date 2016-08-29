@@ -25,18 +25,7 @@ function failed(error) {
 
 export function fetchInstanceCount(applicationId, startDate, endDate) {
     return function(dispatch) {
-        let url = `${Services.alice.url}${Services.alice.root}instance-count/${applicationId}`;
-        if (startDate) {
-            url = url + `?from=${startDate.toISOString()}`;
-        }
-        if (endDate) {
-            if (startDate) {
-                url = url + '&';
-            } else {
-                url = url + '?';
-            }
-            url = url + `to=${endDate.toISOString()}`;
-        }
+        const url = `${Services.alice.url}${Services.alice.root}instance-count/${applicationId}${startDate?'?from='+startDate.toISOString():''}${(startDate && endDate)?'&':'?'}${endDate?'to='+endDate.toISOString():''}`;
         dispatch(fetching());
         request
             .get(url)
@@ -46,7 +35,6 @@ export function fetchInstanceCount(applicationId, startDate, endDate) {
             .then(res => {
                 dispatch(fetched(res.body))
             }, err => {
-                console.log("err: %O", err);
                 const {statusText, statusCode} = err.response;
                 dispatch(failed(`${statusCode}: ${statusText}`));
             });

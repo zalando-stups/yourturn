@@ -9,7 +9,7 @@ import TitleWithButton from 'common/src/components/pure/TitleWithButton.jsx';
 
 describe('application lifecycle\'s <Charts /> component', () => {
 
-    it('should render multiple \'Chart\' components and propagade props', () => {
+    it('should render multiple \'Chart\' components and propagate props', () => {
         const startDate = moment().subtract(1, 'days').toDate();
         const endDate = new Date();
         const eventData = [{timestamp: startDate, count: 2}, {timestamp: endDate, count: 5}];
