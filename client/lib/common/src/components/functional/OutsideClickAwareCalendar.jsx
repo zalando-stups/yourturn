@@ -17,8 +17,11 @@ class OutsideClickAwareCalendar extends React.Component {
             this.props.onDatePicked(dateMoment.toDate());
         }
     }
+
     handleClickOutside() {
-        console.log("handleClickOutside");
+        if (this.props.onClickOutside) {
+            this.props.onClickOutside();
+        }
     }
 
     render() {

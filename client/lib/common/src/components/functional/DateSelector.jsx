@@ -17,6 +17,10 @@ class DateSelector extends React.Component {
         this.state = {openDatePicker : false}
     }
 
+    handleClickOutside() {
+        this.setState({openDatePicker : false});
+    }
+
     handleButtonClick(e) {
         e.preventDefault();
         this.setState({openDatePicker : !this.state.openDatePicker});
