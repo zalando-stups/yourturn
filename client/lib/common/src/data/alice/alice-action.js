@@ -25,10 +25,19 @@ function failed(error) {
 
 export function fetchInstanceCount(applicationId, startDate, endDate) {
     return function(dispatch) {
-        const url = `${Services.alice.url}${Services.alice.root}instance-count/${applicationId}${startDate?'?from='+startDate.toISOString():''}${(startDate && endDate)?'&':'?'}${endDate?'to='+endDate.toISOString():''}`;
+        const parameter = {from: startDate, to: endDate};
+        const urlParameterPart = Object.keys(parameter)
+            .filter(key => parameter[key])
+            .map(key => `${key}=${parameter[key].toISOString()}`)
+            .join("&");
+
+        const baseUrl = `${Services.alice.url}${Services.alice.root}instance-count/${applicationId}`;
+
+        const completeUrl = urlParameterPart ? baseUrl + '?' + urlParameterPart : baseUrl;
+        
         dispatch(fetching());
         request
-            .get(url)
+            .get(completeUrl)
             .accept('json')
             .oauth(Provider, RequestConfig)
             .exec(saveRoute)
