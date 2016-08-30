@@ -36,10 +36,6 @@ const SERVICES = {
         url: PIERONE_BASE_URL,
         root: '/v1/search',
         searchQuery: 'q'
-    },
-    alice: {
-        url: ALICE_BASE_URL,
-        root: '/'
     }
 };
 
