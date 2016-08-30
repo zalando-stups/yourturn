@@ -13,7 +13,7 @@ class OutsideClickAwareCalendar extends React.Component {
     }
 
     handleDatePicked(dateString, { dateMoment}) {
-        if (onDatePicked) {
+        if (this.props.onDatePicked) {
             this.props.onDatePicked(dateMoment.toDate());
         }
     }
@@ -46,8 +46,8 @@ OutsideClickAwareCalendar.propTypes = {
     defaultValue: React.PropTypes.instanceOf(Date),
     maxDate: React.PropTypes.instanceOf(Date),
     minDate: React.PropTypes.instanceOf(Date),
-    onDatePicked: React.PropTypes.func.isRequired,
-    onClickOutside: React.PropTypes.func.isRequired
+    onClickOutside: React.PropTypes.func.isRequired,
+    onDatePicked: React.PropTypes.func.isRequired
 };
 
 

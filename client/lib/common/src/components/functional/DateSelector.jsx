@@ -40,7 +40,7 @@ class DateSelector extends React.Component {
                         minDate             = {this.props.minDate}
                         maxDate             = {this.props.maxDate}
                         onDatePicked        = {this.handleDatePicked}
-                        date                = {this.props.defaultValue}
+                        defaultValue        = {this.props.defaultValue}
                         onClickOutside      = {this.handleClickOutside}
                     />
                 </div>
