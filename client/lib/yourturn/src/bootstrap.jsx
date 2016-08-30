@@ -11,7 +11,6 @@ import * as KioActions from 'common/src/data/kio/kio-actions';
 import * as UserActions from 'common/src/data/user/user-actions';
 import * as FullstopActions from 'common/src/data/fullstop/fullstop-actions';
 import {handleError} from 'common/src/router-utils';
-import token from './inject_token';
 import {Provider as OAuthProvider} from '@zalando/oauth2-client-js';
 
 import 'common/asset/less/base.less';
@@ -24,12 +23,11 @@ let userActions = bindActionsToStore(REDUX, UserActions),
 
 // render the rest
 if (ENV_DEVELOPMENT) {
-    console.log("I was started in DEV MODE token: %O", token);
     const provider = new OAuthProvider({
         id: 'stups',
         authorization_url: 'OAUTH_AUTH_URL'
     });
-    provider.setAccessToken(token);
+    provider.setAccessToken('mytoken');
 }
 
 userActions
