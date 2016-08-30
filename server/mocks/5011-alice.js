@@ -193,9 +193,6 @@ server.get('/instance-count/:application_id', function(req,res) {
         return;
     }
 
-    console.log("startDate: ", startDate);
-    console.log("endDate: ", endDate);
-
     setTimeout( function() {
         res.status( 200 ).send( getData(applicationId, startDate, endDate) );
     }, 200 + Math.random() * 8 );

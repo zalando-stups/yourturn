@@ -5,7 +5,7 @@ import ThreeColumns from 'common/src/components/pure/ThreeColumns.jsx';
 import Dimensions from 'react-dimensions';
 import Toolbar from './components/Toolbar.jsx';
 import Head from './components/Head.jsx';
-import Error from './components/Error.jsx';
+import Error from 'common/src/error.jsx';
 import Loading from './components/Loading.jsx';
 import Charts from './components/Charts.jsx';
 

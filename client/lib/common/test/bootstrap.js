@@ -24,6 +24,7 @@ import './twintip/twintip-store.test';
 import './user/user-getter.test';
 import './user/user-store.test';
 
+import './error.test.jsx';
 import './components/pure/Chart.test.jsx';
 import './components/pure/Brush.test.jsx';
 import './components/functional/DateSelector.test.jsx';

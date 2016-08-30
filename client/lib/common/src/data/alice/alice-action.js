@@ -45,7 +45,7 @@ export function fetchInstanceCount(applicationId, startDate, endDate) {
                 dispatch(fetched(res.body))
             }, err => {
                 const {statusText, statusCode} = err.response;
-                dispatch(failed(`${statusCode}: ${statusText}`));
+                dispatch(failed({status: statusText, message: statusCode}));
             });
     };
 }
