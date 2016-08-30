@@ -29,7 +29,7 @@ export function fetchInstanceCount(applicationId, startDate, endDate) {
         const urlParameterPart = Object.keys(parameter)
             .filter(key => parameter[key])
             .map(key => `${key}=${parameter[key].toISOString()}`)
-            .join("&");
+            .join('&');
 
         const baseUrl = `${Services.alice.url}${Services.alice.root}instance-count/${applicationId}`;
 
