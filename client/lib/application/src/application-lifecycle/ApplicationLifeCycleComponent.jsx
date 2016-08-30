@@ -3,9 +3,7 @@ import { connect } from 'react-redux';
 import moment from 'moment';
 
 import { bindActionCreators } from 'redux';
-import { bindGettersToState } from 'common/src/util';
 
-import * as KioGetter from 'common/src/data/kio/kio-getter';
 import * as AliceActions from 'common/src/data/alice/alice-action';
 
 import ApplicationLifeCycle from './application-lifecycle.jsx'
@@ -28,7 +26,6 @@ class ApplicationLifecycleHandler extends React.Component {
         this.handleEndDatePicked = this.handleEndDatePicked.bind(this);
         this.handleBrushChanged = this.handleBrushChanged.bind(this);
         this.handleRemoveVersion = this.handleRemoveVersion.bind(this);
-
     }
 
     // component's lifecycle functions
@@ -122,7 +119,7 @@ ApplicationLifecycleHandler.propTypes = {
 function mapStateToProps(state) {
     return {
         aliceStore: state.alice,
-        kioStore: bindGettersToState(state.kio, KioGetter)
+        applications: state.kio.applications
     };
 }
 

@@ -8,6 +8,7 @@ import Head from './components/Head.jsx';
 import Error from 'common/src/error.jsx';
 import Loading from './components/Loading.jsx';
 import Charts from './components/Charts.jsx';
+import { getApplication } from 'common/src/data/kio/kio-getter.js'
 
 const INITAL_WIDTH = 50;
 
@@ -32,8 +33,8 @@ class ApplicationLifeCycle extends React.Component {
     }
 
     render() {
-        const {applicationId, kioStore, aliceStore} = this.props,
-            application = kioStore.getApplication(applicationId);
+        const {applicationId, applications, aliceStore} = this.props,
+            application = getApplication({applications}, applicationId);
         const LINK_PARAMS = {
             applicationId: applicationId
         };
@@ -100,12 +101,10 @@ ApplicationLifeCycle.propTypes = {
         instanceCountData: React.PropTypes.array
     }).isRequired,
     applicationId: React.PropTypes.string,
+    applications: React.PropTypes.object.isRequired,
     brushExtentEndDate: React.PropTypes.instanceOf(Date),
     brushExtentStartDate: React.PropTypes.instanceOf(Date),
     endDate: React.PropTypes.instanceOf(Date),
-    kioStore: React.PropTypes.shape({
-        getApplication: React.PropTypes.func
-    }).isRequired,
     onBrushChanged: React.PropTypes.func.isRequired,
     onEndDatePicked: React.PropTypes.func.isRequired,
     onRemoveVersion: React.PropTypes.func.isRequired,
