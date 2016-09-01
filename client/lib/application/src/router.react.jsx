@@ -44,7 +44,7 @@ import VersionList from './version-list/version-list.jsx';
 import VersionForm from './version-form/version-form.jsx';
 import VersionDetail from './version-detail/version-detail.jsx';
 import ApprovalForm from './approval-form/approval-form.jsx';
-import ApplicationLifeCycle from './application-lifecycle/application-lifecycle.jsx'
+import { ConnectedApplicationLifecycleHandler } from './application-lifecycle/ApplicationLifeCycleComponent.jsx';
 
 import {appList} from 'application/src/routes';
 
@@ -691,20 +691,6 @@ let ConnectedApprovalFormHandler = connect(state => ({
     magnificentStore: bindGettersToState(state.magnificent, MagnificentGetter)
 }))(ApprovalFormHandler);
 
-const ApplicationLifecycleHandler = (props) => {
-    return <ApplicationLifeCycle
-        applicationId={props.params.applicationId}
-        {...props} />;
-};
-ApplicationLifecycleHandler.displayName = 'ApplicationLifecycleHandler';
-ApplicationLifecycleHandler.propTypes = {
-    params: React.PropTypes.object.isRequired
-};
-let ConnectedApplicationLifecycleHandler = connect(state => ({
-    kioStore: bindGettersToState(state.kio, KioGetter)
-}))(ApplicationLifecycleHandler);
-
-
 const ROUTES =
         <Route path='application'>
             <IndexRoute
@@ -734,7 +720,6 @@ const ROUTES =
                 {ENV_DEVELOPMENT ?
                     <Route path='lifecycle'>
                         <IndexRoute
-                            onEnter={wrapEnter(ApplicationLifecycleHandler.fetchData)}
                             component={ConnectedApplicationLifecycleHandler} />
                     </Route>
                     : null

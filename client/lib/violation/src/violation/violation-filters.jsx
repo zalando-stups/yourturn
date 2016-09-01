@@ -29,8 +29,8 @@ class ViolationFilters extends React.Component {
             }
         } else if (what === 'date') {
             if (data[1]) {
-                params.from = data[0].toISOString();
-                params.to = data[1].toISOString();
+                params.from = data[0].dateMoment.toISOString();
+                params.to = data[1].dateMoment.toISOString();
                 params.page = 0;
                 this.context.router.push(Routes.violation(params));
                 if (this.props.onUpdate) {

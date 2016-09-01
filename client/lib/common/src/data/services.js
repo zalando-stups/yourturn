@@ -4,6 +4,7 @@ import MINT_BASE_URL from 'MINT_BASE_URL';
 import ESSENTIALS_BASE_URL from 'ESSENTIALS_BASE_URL';
 import PIERONE_BASE_URL from 'PIERONE_BASE_URL';
 import MAGNIFICENT_BASE_URL from 'MAGNIFICENT_BASE_URL';
+import ALICE_BASE_URL from 'ALICE_BASE_URL';
 
 const SERVICES = {
     kio: {
@@ -35,6 +36,10 @@ const SERVICES = {
         url: PIERONE_BASE_URL,
         root: '/v1/search',
         searchQuery: 'q'
+    },
+    alice: {
+        url: ALICE_BASE_URL,
+        root: '/'
     }
 };
 

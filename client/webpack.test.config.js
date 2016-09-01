@@ -25,7 +25,6 @@ module.exports = {
         publicPath: '/dist/'
     },
     plugins: [
-        new webpack.NormalModuleReplacementPlugin(/^lodash$/, 'common/src/lodash.custom'),
         new webpack.DefinePlugin({
             'ENV_DEVELOPMENT': false,
             'ENV_TEST': true,
@@ -56,14 +55,15 @@ module.exports = {
         PIERONE_BASE_URL: 'YTENV_PIERONE_BASE_URL',
         FULLSTOP_BASE_URL: 'YTENV_FULLSTOP_BASE_URL',
         MAGNIFICENT_BASE_URL: 'YTENV_MAGNIFICENT_BASE_URL',
+        ALICE_BASE_URL: 'YTENV_ALICE_BASE_URL',
         DOCKER_REGISTRY: 'YTENV_DOCKER_REGISTRY',
         SERVICE_URL_TLD: 'YTENV_SERVICE_URL_TLD',
         RESOURCE_WHITELIST: 'YTENV_RESOURCE_WHITELIST',
         APPLICATION_WHITELIST: 'YTENV_APPLICATION_WHITELIST',
         MINT_BUCKET_TEMPLATE: 'YTENV_MINT_BUCKET_TEMPLATE',
-        // needed because otherwise two react instances
-        // are running in tests and they trip each other up
-        react: 'var React'
+        'react/addons': true,
+        'react/lib/ExecutionEnvironment': true,
+        'react/lib/ReactContext': true
     },
     eslint: {
         configFile: './.eslintrc'
@@ -74,7 +74,7 @@ module.exports = {
         ],
         loaders: [
             {test: /\.jsx?$/, include: /client/, loader: 'babel'},
-            {test: /\.less$/, exclude: /node_modules/, loader: 'null'},
+            {test: /\.less$/, include: /node_modules\/react-widget|client/, loader: 'null'},
             {test: /\.css$/, loader: 'null'},
             {test: /\.(otf|eot|svg|ttf|woff|woff2)(\?v=\d+\.\d+\.\d+)?$/, loader: 'null'},
             {test: /\.json$/, loader: 'json'},
@@ -82,3 +82,4 @@ module.exports = {
         ]
     }
 };
+

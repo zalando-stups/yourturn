@@ -23,3 +23,13 @@ import './team/team-store.test';
 import './twintip/twintip-store.test';
 import './user/user-getter.test';
 import './user/user-store.test';
+
+import './error.test.jsx';
+import './components/pure/Chart.test.jsx';
+import './components/pure/Brush.test.jsx';
+import './components/functional/DateSelector.test.jsx';
+import './components/pure/ComboBox.test.jsx';
+import './components/pure/ThreeColumns.test.jsx';
+import './components/pure/TitleWithButton.test.jsx';
+
+import './data/alice/alice-reducers.test'

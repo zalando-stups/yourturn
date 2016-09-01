@@ -51,6 +51,7 @@ module.exports = {
         PIERONE_BASE_URL: 'YTENV_PIERONE_BASE_URL',
         FULLSTOP_BASE_URL: 'YTENV_FULLSTOP_BASE_URL',
         MAGNIFICENT_BASE_URL: 'YTENV_MAGNIFICENT_BASE_URL',
+        ALICE_BASE_URL: 'YTENV_ALICE_BASE_URL',
         DOCKER_REGISTRY: 'YTENV_DOCKER_REGISTRY',
         SERVICE_URL_TLD: 'YTENV_SERVICE_URL_TLD',
         RESOURCE_WHITELIST: 'YTENV_RESOURCE_WHITELIST',
@@ -60,7 +61,7 @@ module.exports = {
     module: {
         loaders: [
             {test: /\.jsx?$/, exclude: /node_modules/, loaders: ['react-hot', 'babel']},
-            {test: /\.less$/, exclude: /node_modules/, loaders: ['style', 'css', 'autoprefixer', 'less']},
+            {test: /\.less$/, loaders: ['style', 'css', 'autoprefixer', 'less']},
             {test: /\.css$/, loaders: ['style', 'css']},
             {test: /\.(otf|eot|svg|ttf|woff|woff2)(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=8192&mimetype=application/font-woff'},
             {test: /\.(png|jpg|jpeg|gif)$/, loaders: ['url?limit=8192', 'img']}
