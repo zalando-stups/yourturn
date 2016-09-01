@@ -13,7 +13,10 @@ var fs = require('fs'),
     rename = require('gulp-rename'),
     webpack = require('webpack');
 
-process.on('uncaughtException', console.log.bind(console));
+process.on('uncaughtException', function(e) {
+    console.error(e);
+    process.exit(1);
+});
 
 var LODASH_FUNCS = [
         // own
