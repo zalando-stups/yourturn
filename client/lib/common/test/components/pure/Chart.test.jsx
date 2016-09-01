@@ -13,7 +13,7 @@ describe('<Chart />', () => {
         const startDate = moment().subtract(1, 'days').toDate();
         const endDate = new Date(Date.now());
         const testProps = {
-            dataSet: {events: [{timestamp: startDate, count: 2}]},
+            dataSet: {events: [{timestamp: startDate.toISOString(), count: 2}]},
             endDate: endDate,
             height: 200,
             startDate: startDate,

@@ -7,7 +7,6 @@ import { bindActionCreators } from 'redux';
 import * as AliceActions from 'common/src/data/alice/alice-action';
 
 import ApplicationLifeCycle from './application-lifecycle.jsx'
-import AutoWidthContainer from 'common/src/components/functional/AutoWidthContainer.jsx'
 
 class ApplicationLifecycleHandler extends React.Component {
     constructor(props) {
@@ -86,26 +85,22 @@ class ApplicationLifecycleHandler extends React.Component {
     // render function
 
     render() {
-        const applicationLifeCycle = <ApplicationLifeCycle
-            applicationId        = {this.props.params.applicationId}
-            versions             = {this.state.versions}
-            selectedVersions     = {this.state.selectedVersions}
-            onVersionsSelect     = {this.handleVersionsSelect}
-            onVersionReset       = {this.handleVersionReset}
-            onStartDatePicked    = {this.handleStartDatePicked}
-            onEndDatePicked      = {this.handleEndDatePicked}
-            onBrushChanged       = {this.handleBrushChanged}
-            onRemoveVersion      = {this.handleRemoveVersion}
-            startDate            = {this.state.startDate}
-            endDate              = {this.state.endDate}
-            brushExtentStartDate = {this.state.brushExtentStartDate}
-            brushExtentEndDate   = {this.state.brushExtentEndDate}
-            {...this.props} />;
-
         return (
-            <AutoWidthContainer>
-                {applicationLifeCycle}
-            </AutoWidthContainer>
+            <ApplicationLifeCycle
+                applicationId        = {this.props.params.applicationId}
+                versions             = {this.state.versions}
+                selectedVersions     = {this.state.selectedVersions}
+                onVersionsSelect     = {this.handleVersionsSelect}
+                onVersionReset       = {this.handleVersionReset}
+                onStartDatePicked    = {this.handleStartDatePicked}
+                onEndDatePicked      = {this.handleEndDatePicked}
+                onBrushChanged       = {this.handleBrushChanged}
+                onRemoveVersion      = {this.handleRemoveVersion}
+                startDate            = {this.state.startDate}
+                endDate              = {this.state.endDate}
+                brushExtentStartDate = {this.state.brushExtentStartDate}
+                brushExtentEndDate   = {this.state.brushExtentEndDate}
+                {...this.props} />
         );
     }
 }

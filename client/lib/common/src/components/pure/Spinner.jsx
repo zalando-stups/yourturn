@@ -4,7 +4,7 @@ import Icon from 'react-fa';
 
 const Spinner = (props) => {
     return (
-        <Icon spin size={props.size} name='spinner' />
+        <Icon spin size={props.size} name='circle-o-notch' />
     );
 };
 

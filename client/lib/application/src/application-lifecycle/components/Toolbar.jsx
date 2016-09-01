@@ -4,8 +4,8 @@ import moment from 'moment';
 import Brush from 'common/src/components/pure/Brush.jsx';
 import DateSelector, {STYLE_RIGHT} from 'common/src/components/functional/DateSelector.jsx';
 import ThreeColumns from 'common/src/components/pure/ThreeColumns.jsx';
+import config from 'common/src/config';
 
-const DATE_FORMAT = 'Do [of] MMM YY';
 const BRUSH_HEIGHT = 50;
 
 const Toolbar = (props) => {
@@ -21,14 +21,14 @@ const Toolbar = (props) => {
 
     const startDateSelector = <DateSelector
         onDatePicked   = {props.onStartDatePicked}
-        title          = {moment(props.startDate).format(DATE_FORMAT)}
+        title          = {moment(props.startDate).format(config.DATE_FORMAT_DAY_OF_MONTH_WITH_YEAR)}
         defaultValue   = {props.startDate}
         maxDate        = {props.endDate}
     />;
 
     const endDateSelector = <DateSelector
         onDatePicked   = {props.onEndDatePicked}
-        title          = {moment(props.endDate).format(DATE_FORMAT)}
+        title          = {moment(props.endDate).format(config.DATE_FORMAT_DAY_OF_MONTH_WITH_YEAR)}
         alignStyle     = {STYLE_RIGHT}
         defaultValue   = {props.endDate}
         minDate        = {props.startDate}

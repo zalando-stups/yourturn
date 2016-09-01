@@ -6,64 +6,70 @@ import Error from 'common/src/error.jsx';
 import Loading from './components/Loading.jsx';
 import Charts from './components/Charts.jsx';
 import { getApplication } from 'common/src/data/kio/kio-getter.js'
+import Dimensions from 'react-dimensions';
 
 const SIDES_WIDTH = 400;
 const MINIMUM_WIDTH = 400;
 
-const ApplicationLifeCycle = (props) => {
-    const {applicationId, applications, aliceStore} = props,
-        application = getApplication({applications}, applicationId);
-    const LINK_PARAMS = {
-        applicationId: applicationId
-    };
+/*eslint-disable react/prefer-stateless-function */
+// this needs to be a component class since Dimensions is using refs and refs cannot be used for stateless functional components
+class ApplicationLifeCycle extends React.Component {
+    render () {
+        const props = this.props;
+        const {applicationId, applications, aliceStore} = props,
+            application = getApplication({applications}, applicationId);
+        const LINK_PARAMS = {
+            applicationId: applicationId
+        };
 
-    const chartsWidth = Math.max(props.width - SIDES_WIDTH, MINIMUM_WIDTH);
+        const chartsWidth = Math.max(props.containerWidth - SIDES_WIDTH, MINIMUM_WIDTH);
 
-    return (
-        <div>
-            {aliceStore.error ?
-                <Error error = {aliceStore.error} />
-                :
-                null}
-            <Head
-                linkParams  = {LINK_PARAMS}
-                application = {application.name || applicationId}
-            />
+        return (
             <div>
-                <ComboBox
-                    value            = {props.selectedVersions}
-                    data             = {props.versions}
-                    onChange         = {props.onVersionsSelect}
-                    onReset          = {props.onVersionReset}
-                    resetButtonTitle = 'Reset'
-                    title            = 'Select Versions'
+                {aliceStore.error ?
+                    <Error error={aliceStore.error} />
+                    :
+                    null}
+                <Head
+                    linkParams={LINK_PARAMS}
+                    application={application.name || applicationId}
                 />
+                <div>
+                    <ComboBox
+                        value={props.selectedVersions}
+                        data={props.versions}
+                        onChange={props.onVersionsSelect}
+                        onReset={props.onVersionReset}
+                        resetButtonTitle='Reset'
+                        title='Select Versions'
+                    />
+                </div>
+                <Toolbar
+                    brushExtentEndDate={props.brushExtentEndDate}
+                    brushExtentStartDate={props.brushExtentStartDate}
+                    brushWidth={chartsWidth}
+                    endDate={props.endDate}
+                    startDate={props.startDate}
+                    onBrushChanged={props.onBrushChanged}
+                    onEndDatePicked={props.onEndDatePicked}
+                    onStartDatePicked={props.onStartDatePicked}
+                />
+                {aliceStore.isLoading ?
+                    <Loading />
+                    :
+                    <Charts
+                        applicationId={applicationId}
+                        onDeselect={props.onRemoveVersion}
+                        versions={props.selectedVersions}
+                        versionDataSets={props.aliceStore.instanceCountData}
+                        width={chartsWidth}
+                        extentStartDate={props.brushExtentStartDate}
+                        extentEndDate={props.brushExtentEndDate}
+                    />}
             </div>
-            <Toolbar
-                brushExtentEndDate   = {props.brushExtentEndDate}
-                brushExtentStartDate = {props.brushExtentStartDate}
-                brushWidth           = {chartsWidth}
-                endDate              = {props.endDate}
-                startDate            = {props.startDate}
-                onBrushChanged       = {props.onBrushChanged}
-                onEndDatePicked      = {props.onEndDatePicked}
-                onStartDatePicked    = {props.onStartDatePicked}
-            />
-            {aliceStore.isLoading ?
-                <Loading />
-                :
-                <Charts
-                    applicationId   = {applicationId}
-                    onDeselect      = {props.onRemoveVersion}
-                    versions        = {props.selectedVersions}
-                    versionDataSets = {props.aliceStore.instanceCountData}
-                    width           = {chartsWidth}
-                    extentStartDate = {props.brushExtentStartDate}
-                    extentEndDate   = {props.brushExtentEndDate}
-                />}
-        </div>
-    )
-};
+        )
+    }
+}
 
 ApplicationLifeCycle.displayName = 'ApplicationLifeCycle';
 
@@ -94,4 +100,5 @@ ApplicationLifeCycle.propTypes = {
     width: React.PropTypes.number
 }
 
-export default ApplicationLifeCycle;
+export default Dimensions()(ApplicationLifeCycle);
+/*eslint-enable react/prefer-stateless-function */
