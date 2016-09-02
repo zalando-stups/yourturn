@@ -7,6 +7,8 @@ import 'react-date-picker/index.css';
 import 'common/asset/less/violation/date-dropdown.less';
 import listenToOutsideClick from 'react-onclickoutside/decorator';
 
+const WEEK_START_MONDAY = 1;
+
 class DateDropdown extends React.Component {
     constructor(props) {
         super();
@@ -15,6 +17,8 @@ class DateDropdown extends React.Component {
             visible: false,
             range: props.range
         };
+
+        this.onUpdate = this.onUpdate.bind(this);
     }
 
     onHeaderClick() {
@@ -35,7 +39,7 @@ class DateDropdown extends React.Component {
     onUpdate(_, range) {
         this.setState({range});
         if (this.props.onUpdate && range.length > 1) {
-            this.props.onUpdate(range);
+            this.props.onUpdate(range.map(r => r.dateMoment));
         }
     }
 
@@ -44,6 +48,8 @@ class DateDropdown extends React.Component {
     }
 
     render() {
+        const maxDate = moment().endOf('day');
+
         return <div ref='dropdown' className='date-dropdown'>
                 <header
                     ref='header'
@@ -70,9 +76,11 @@ class DateDropdown extends React.Component {
                             </div>
                             <div className='dateDropdown-container'>
                                 <Picker
-                                    weekStartDay={1}
-                                    range={this.state.range}
-                                    onRangeChange={this.onUpdate.bind(this)} />
+                                    weekStartDay              = {WEEK_START_MONDAY}
+                                    range                     = {this.state.range}
+                                    maxDate                   = {maxDate}
+                                    highlightRangeOnMouseMove = {true}
+                                    onRangeChange             = {this.onUpdate} />
                             </div>
                         </div>
                     </div> :
