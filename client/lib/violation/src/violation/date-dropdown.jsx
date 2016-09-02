@@ -18,7 +18,7 @@ class DateDropdown extends React.Component {
             range: props.range
         };
 
-        this.onUpdate = this.onUpdate.bind(this);
+        this.handleUpdate = this.handleUpdate.bind(this);
     }
 
     onHeaderClick() {
@@ -36,7 +36,7 @@ class DateDropdown extends React.Component {
         this.setState({range});
     }
 
-    onUpdate(_, range) {
+    handleUpdate(_, range) {
         this.setState({range});
         if (this.props.onUpdate && range.length > 1) {
             this.props.onUpdate(range.map(r => r.dateMoment));
@@ -80,7 +80,7 @@ class DateDropdown extends React.Component {
                                     range                     = {this.state.range}
                                     maxDate                   = {maxDate}
                                     highlightRangeOnMouseMove = {true}
-                                    onRangeChange             = {this.onUpdate} />
+                                    onRangeChange             = {this.handleUpdate} />
                             </div>
                         </div>
                     </div> :
