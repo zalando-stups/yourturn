@@ -89,7 +89,7 @@ module.exports = {
         ],
         loaders: [
             {test: /\.jsx?$/, exclude: /node_modules/, loaders: ['babel']},
-            {test: /\.less$/, exclude: /node_modules/, loader: ExtractTextPlugin.extract('css!autoprefixer!less')},
+            {test: /\.less$/, include: /node_modules\/react-widget|client/, loader: ExtractTextPlugin.extract('css!autoprefixer!less')},
             {test: /\.css$/, loader: ExtractTextPlugin.extract('css!autoprefixer')},
             {test: /\.(otf|eot|svg|ttf|woff|woff2)(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=8192&mimetype=application/font-woff'},
             {test: /\.(png|jpg|jpeg|gif)$/, loaders: ['url?limit=8192', 'img']}

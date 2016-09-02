@@ -9,10 +9,10 @@ import TitleWithButton from 'common/src/components/pure/TitleWithButton.jsx';
 
 describe('application lifecycle\'s <Charts /> component', () => {
 
-    it('should render multiple \'Chart\' components and propagade props', () => {
+    it('should render multiple \'Chart\' components and propagate props', () => {
         const startDate = moment().subtract(1, 'days').toDate();
         const endDate = new Date();
-        const eventData = [{timestamp: startDate, count: 2}, {timestamp: endDate, count: 5}];
+        const eventData = [{timestamp: startDate.toISOString(), count: 2}, {timestamp: endDate.toISOString(), count: 5}];
 
         const testProps = {
             applicationId: 'someApplicationId',
@@ -56,10 +56,10 @@ describe('application lifecycle\'s <Charts /> component', () => {
         expect(linkNodes.at(1).prop('to')).to.equal(`/application/detail/${testProps.applicationId}/version/approve/${testProps.versions[1].id}`);
     });
 
-    it('should render multiple Chart components and call onDelete correctly', () => {
+    it('should render multiple \'Chart\' components and call onDelete correctly', () => {
         const startDate = moment().subtract(1, 'days').toDate();
         const endDate = new Date();
-        const eventData = [{timestamp: startDate, count: 2}, {timestamp: endDate, count: 5}];
+        const eventData = [{timestamp: startDate.toISOString(), count: 2}, {timestamp: endDate.toISOString(), count: 5}];
 
         const testProps = {
             applicationId: 'someApplicationId',

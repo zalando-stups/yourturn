@@ -6,7 +6,7 @@ import 'common/asset/less/yourturn/search.less';
 
 const  SearchResult = (props) => {
     /*eslint-disable react/no-danger */
-    let body = <quote dangerouslySetInnerHTML={{__html: this.props.description}} />;
+    let body = <quote dangerouslySetInnerHTML={{__html: props.description}} />;
     /*eslint-disable react/no-danger */
 
     if (!props.link) {

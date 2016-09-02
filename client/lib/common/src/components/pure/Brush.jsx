@@ -1,19 +1,19 @@
 import React from 'react'
 
-import { Brush } from 'react-d3-components';
+import { Brush as D3Brush } from 'react-d3-components';
 import d3 from 'd3';
 
 const BRUSH_MARGIN = {top: 0, bottom: 30, left: 50, right: 20};
 const BRUSH_HORIZONTAL_MARGIN = BRUSH_MARGIN.left + BRUSH_MARGIN.right;
 const BRUSH_STYLE = {float: 'none'};
 
-const ZBrush = (props) => {
+const Brush = (props) => {
     const {width, height, startDate, endDate, startExtent, endExtent, onChange} = props;
     const xScale = d3.time.scale().domain([startDate, endDate]).range([0, width - BRUSH_HORIZONTAL_MARGIN]);
     
     return (
         <div className = 'brush' style = {BRUSH_STYLE}>
-            <Brush
+            <D3Brush
                 width    = {width}
                 height   = {height}
                 margin   = {BRUSH_MARGIN}
@@ -25,7 +25,7 @@ const ZBrush = (props) => {
     )
 };
 
-ZBrush.propTypes = {
+Brush.propTypes = {
     endDate: React.PropTypes.instanceOf(Date).isRequired,
     endExtent: React.PropTypes.instanceOf(Date).isRequired,
     height: React.PropTypes.number,
@@ -35,4 +35,4 @@ ZBrush.propTypes = {
     width: React.PropTypes.number
 };
 
-export default ZBrush;
+export default Brush;

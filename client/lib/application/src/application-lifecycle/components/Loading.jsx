@@ -1,12 +1,12 @@
 import React from 'react';
 import ThreeColumns from 'common/src/components/pure/ThreeColumns.jsx';
-import Icon from 'react-fa';
+import Spinner from 'common/src/components/pure/Spinner.jsx';
 
 const Loading = () => {
     return (
         <ThreeColumns
             leftChildren   = {<div></div>}
-            middleChildren = {<div><Icon pulse size='5x' name='spinner' /> Loading</div>}
+            middleChildren = {<div><Spinner size = '5x' />Loading</div>}
             rightChildren  = {<div></div>}
         />
     )
