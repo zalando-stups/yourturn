@@ -18,6 +18,11 @@ const Charts = (props) => {
             onClick = {() => props.onDeselect(version.id)}
         />;
 
+        const leftElements =
+            <div style={{display: 'flex', flexDirection: 'column'}}>
+
+            </div>;
+
         const chart = <Chart
             height    = {CHART_HEIGHT}
             width     = {props.width}
@@ -31,6 +36,13 @@ const Charts = (props) => {
             className='btn btn-default btn-small'>
             <Icon name='check' />
         </Link>;
+
+        <div
+            className = 'btn btn-danger btn-small'
+            onClick = {props.onClick}>
+            <Icon name='remove' />
+        </div>
+
 
         return (
             <ThreeColumns key = {index}

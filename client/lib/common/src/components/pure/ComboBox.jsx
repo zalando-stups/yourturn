@@ -2,26 +2,24 @@ import React from 'react'
 import Multiselect from 'react-widgets/lib/Multiselect'
 import 'react-widgets/lib/less/react-widgets.less';
 
-const OUTER_STYLE = {display: 'flex'};
-const SELECTOR_DIV_STYLE = {minWidth: '200px'};
+const OUTER_STYLE = {display: 'flex', justifyContent: 'flex-start'};
+const SELECTOR_DIV_STYLE = {minWidth: '200px', marginRight: '5px'};
 
 const ComboBox = (props) => {
     const {title, resetButtonTitle, onReset, ...otherProps} = props;
     return (
-        <div>
-            <h3>{title}</h3>
-            <div style = {OUTER_STYLE}>
-                <div style = {SELECTOR_DIV_STYLE}>
-                    <Multiselect
-                        {...otherProps}
-                    />
-                </div>
-                <div className='btn btn-danger'
-                     onClick = {onReset}>
-                    {resetButtonTitle}
-                </div>
+        <h4 style = {OUTER_STYLE}>
+            <span style = {{marginRight: '5px'}}>{title}:</span>
+            <div style = {SELECTOR_DIV_STYLE}>
+                <Multiselect
+                    {...otherProps}
+                />
             </div>
-        </div>
+            <div className='btn btn-primary'
+                 onClick = {onReset}>
+                {resetButtonTitle}
+            </div>
+        </h4>
     )
 };
 
