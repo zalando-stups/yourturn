@@ -12,7 +12,6 @@ const CHART_INTERPOLATION = 'step-after';
 const GREY = '#D0D0D0';
 const BLUE = '#1f77b4';
 const INSIDE = 'inside';
-const OUTSIDE = 'outside';
 const TOOLTIP_MODE = 'element';
 
 const transformData = function(inData, startDate) {
@@ -21,30 +20,19 @@ const transformData = function(inData, startDate) {
     if (beforeStartDateData.length > 0) {
         const last = beforeStartDateData[beforeStartDateData.length - 1];
         const extraElement = Object.assign({}, last, {timestamp: moment(startDate).toISOString()});
-        beforeStartDateData.push(extraElement);
         restData.unshift(extraElement);
     }
 
     let insideValues = [];
-    let outsideValues = [];
 
-    beforeStartDateData.forEach( e => {
-        const x = Date.parse(e.timestamp);
-        insideValues.push({x, y: 0});
-        outsideValues.push({x, y: e.count});
-    });
     restData.forEach( e => {
         const x = Date.parse(e.timestamp);
         insideValues.push({x, y: e.count});
-        outsideValues.push({x, y: 0});
     });
 
     const dataSeries = [{
         label: INSIDE,
         values: insideValues
-    },{
-        label: OUTSIDE,
-        values: outsideValues
     }];
 
     return dataSeries;
@@ -53,10 +41,7 @@ const transformData = function(inData, startDate) {
 const TOOLTIP = (param) => <div style={{backgroundColor: GREY}}>{param}</div>;
 
 const COLOR_SCALE = function(param) {
-    if (param == INSIDE) {
-        return BLUE;
-    }
-    return GREY;
+    return BLUE;
 };
 
 const FORMATTER_ONLY_INTEGERS = function(number) {
