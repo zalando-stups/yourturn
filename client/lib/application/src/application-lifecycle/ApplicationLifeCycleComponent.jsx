@@ -61,16 +61,6 @@ class ApplicationLifecycleHandler extends React.Component {
         this.props.aliceActions.fetchInstanceCount(this.props.params.applicationId, startDate, endDate);
     }
 
-    handleDateChanged2(startDate, endDate) {
-        this.setState({
-            startDate,
-            endDate,
-            brushExtentStartDate: startDate,
-            brushExtentEndDate: endDate
-        });
-        this.props.aliceActions.fetchInstanceCount(this.props.params.applicationId, startDate, endDate);
-    }
-
     handleBrushChanged([brushExtentStartDate, brushExtentEndDate]) {
         this.setState({
             brushExtentStartDate,
