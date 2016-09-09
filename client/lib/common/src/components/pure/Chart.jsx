@@ -38,11 +38,9 @@ const transformData = function(inData, startDate) {
     return dataSeries;
 };
 
-const TOOLTIP = (param) => <div style={{backgroundColor: GREY}}>{param}</div>;
+const TOOLTIP = param => <div style={{backgroundColor: GREY}}>{param}</div>;
 
-const COLOR_SCALE = function(param) {
-    return BLUE;
-};
+const COLOR_SCALE = () => BLUE;
 
 const FORMATTER_ONLY_INTEGERS = function(number) {
     return number == Math.floor(number) ? number : null;
