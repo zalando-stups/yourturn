@@ -4,6 +4,14 @@ import 'react-widgets/lib/less/react-widgets.less';
 
 const OUTER_STYLE = {display: 'flex', justifyContent: 'flex-start'};
 const SELECTOR_DIV_STYLE = {minWidth: '200px', marginRight: '5px'};
+const TAG_ITEM_STYLE = {marginRight: '5px'};
+
+const TagItem = (props) => <span style={TAG_ITEM_STYLE}>{props.item.id}</span>;
+TagItem.propTypes = {
+    item: React.PropTypes.shape({
+        id: React.PropTypes.string
+    }).isRequired
+};
 
 const ComboBox = (props) => {
     const {title, resetButtonTitle, onReset, ...otherProps} = props;
@@ -13,6 +21,7 @@ const ComboBox = (props) => {
             <div style = {SELECTOR_DIV_STYLE}>
                 <Multiselect
                     {...otherProps}
+                    tagComponent = {TagItem}
                 />
             </div>
             <div className='btn btn-primary'

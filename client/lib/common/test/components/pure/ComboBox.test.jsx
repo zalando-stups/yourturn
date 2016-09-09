@@ -11,7 +11,8 @@ describe('<ComboBox />', () => {
             data: [{}],
             onChange: () => {},
             onReset: () => {},
-            value: [{id: 'someId'}]
+            value: [{id: 'someId'}],
+            title: 'someTitle'
         };
 
         const wrapper = shallow(<ComboBox {...testProps} />);
@@ -19,14 +20,14 @@ describe('<ComboBox />', () => {
         const multiselectNode = multiselectNodes.at(0);
         const buttonNodes = wrapper.find('.btn');
         const buttonNode = buttonNodes.at(0);
-        const titleNodes = wrapper.find('h3');
+        const titleNodes = wrapper.find('span');
         const titleNode = titleNodes.at(0);
 
         expect(multiselectNode.length).to.equal(1);
         expect(buttonNode.length).to.equal(1);
         expect(titleNode.length).to.equal(1);
 
-        expect(titleNode.text()).to.equal('Select');
+        expect(titleNode.text()).to.equal(testProps.title + ':');
         expect(buttonNode.text()).to.equal('Reset');
         expect(multiselectNode.prop('textField')).to.equal('id');
         expect(multiselectNode.prop('valueField')).to.equal('id');
@@ -49,14 +50,14 @@ describe('<ComboBox />', () => {
         const multiselectNode = multiselectNodes.at(0);
         const buttonNodes = wrapper.find('.btn');
         const buttonNode = buttonNodes.at(0);
-        const titleNodes = wrapper.find('h3');
+        const titleNodes = wrapper.find('span');
         const titleNode = titleNodes.at(0);
 
         expect(multiselectNode.length).to.equal(1);
         expect(buttonNode.length).to.equal(1);
         expect(titleNode.length).to.equal(1);
 
-        expect(titleNode.text()).to.equal(testProps.title);
+        expect(titleNode.text()).to.equal(testProps.title + ':');
 
         expect(buttonNode.text()).to.equal(testProps.resetButtonTitle);
         expect(buttonNode.prop('onClick')).to.be.a('function');

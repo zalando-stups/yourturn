@@ -4,8 +4,9 @@ import { Link } from 'react-router';
 import * as Routes from 'application/src/routes';
 import Chart from 'common/src/components/pure/Chart.jsx';
 import Icon from 'react-fa';
-import TitleWithButton from 'common/src/components/pure/TitleWithButton.jsx';
 import ThreeColumns from 'common/src/components/pure/ThreeColumns.jsx';
+import * as utils from './charts_utils.jsx';
+
 
 const CHART_HEIGHT = 200;
 
@@ -13,15 +14,30 @@ const Charts = (props) => {
     const arrayOfChartComponets = props.versions.map((version, index) => {
         const versionDataSet = props.versionDataSets.find(e => e.version_id == version.id);
 
-        const titleWithButton = <TitleWithButton
-            title   = {version.id}
-            onClick = {() => props.onDeselect(version.id)}
-        />;
-
         const leftElements =
-            <div style={{display: 'flex', flexDirection: 'column'}}>
-
+            <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'flex-end'}}>
+                <div>
+                    <Link
+                        to={Routes.verApproval({applicationId: props.applicationId, versionId: version.id})}
+                        className='btn btn-default btn-small'>
+                        <Icon name='check' />
+                    </Link>
+                    Approvals
+                </div>
+                <div>
+                    <utils.ScmShortCut {...props} />
+                </div>
+                <div>
+                    <utils.ServiceShortCut {...props} />
+                </div>
             </div>;
+
+        const rightElements = <div
+            className = 'btn btn-danger btn-small'
+            onClick = {() => props.onDeselect(version.id)}>
+            <Icon size='2x' name='remove' />
+        </div>;
+
 
         const chart = <Chart
             height    = {CHART_HEIGHT}
@@ -31,25 +47,18 @@ const Charts = (props) => {
             dataSet   = {versionDataSet}
         />;
 
-        const links = <Link
-            to={Routes.verApproval({applicationId: props.applicationId, versionId: version.id})}
-            className='btn btn-default btn-small'>
-            <Icon name='check' />
-        </Link>;
-
-        <div
-            className = 'btn btn-danger btn-small'
-            onClick = {props.onClick}>
-            <Icon name='remove' />
-        </div>
-
-
         return (
-            <ThreeColumns key = {index}
-                          leftChildren   = {titleWithButton}
-                          middleChildren = {chart}
-                          rightChildren  = {links}
-            />);
+            <div key = {index}>
+                <ThreeColumns
+                              middleChildren = {<h3>{version.id}</h3>}
+                />
+                <ThreeColumns
+                              leftChildren   = {leftElements}
+                              middleChildren = {chart}
+                              rightChildren  = {rightElements}
+                />
+            </div>
+        );
     });
 
     return (

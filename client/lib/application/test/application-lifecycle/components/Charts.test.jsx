@@ -3,9 +3,9 @@ import {mount} from 'enzyme';
 import moment from 'moment';
 
 import Charts from '../../../src/application-lifecycle/components/Charts.jsx';
-import { Link } from 'react-router';
+import Spinner from 'common/src/components/pure/Spinner.jsx';
 import Chart from 'common/src/components/pure/Chart.jsx';
-import TitleWithButton from 'common/src/components/pure/TitleWithButton.jsx';
+import * as utils from '../../../src/application-lifecycle/components/charts_utils.jsx';
 
 describe('application lifecycle\'s <Charts /> component', () => {
 
@@ -18,6 +18,7 @@ describe('application lifecycle\'s <Charts /> component', () => {
             applicationId: 'someApplicationId',
             extentEndDate: endDate,
             extentStartDate: startDate,
+            application: {status: 'PENDING'},
             onDeselect: () => {},
             width: 400,
             versions: [{id: '1'}, {id: '0.9'}],
@@ -29,12 +30,28 @@ describe('application lifecycle\'s <Charts /> component', () => {
         const wrapper = mount(<Charts {...testProps} />);
 
         const chartNodes = wrapper.find(Chart);
-        const twbNodes = wrapper.find(TitleWithButton);
-        const linkNodes = wrapper.find(Link);
+        const scmNodes = wrapper.find(utils.ScmShortCut);
+        const serviceNodes = wrapper.find(utils.ServiceShortCut);
 
         expect(chartNodes.length).to.equal(2);
-        expect(twbNodes.length).to.equal(2);
-        expect(linkNodes.length).to.equal(2);
+        expect(scmNodes.length).to.equal(2);
+        expect(serviceNodes.length).to.equal(2);
+
+        let spinnerNodes = serviceNodes.at(0).find(Spinner);
+        expect(spinnerNodes.length).to.equal(1);
+        spinnerNodes = serviceNodes.at(1).find(Spinner);
+        expect(spinnerNodes.length).to.equal(1);
+
+        spinnerNodes = scmNodes.at(0).find(Spinner);
+        expect(spinnerNodes.length).to.equal(1);
+        spinnerNodes = scmNodes.at(1).find(Spinner);
+        expect(spinnerNodes.length).to.equal(1);
+
+        expect(serviceNodes.at(0).text()).to.equal('Service');
+        expect(serviceNodes.at(1).text()).to.equal('Service');
+
+        expect(scmNodes.at(0).text()).to.equal('SCM');
+        expect(scmNodes.at(1).text()).to.equal('SCM');
 
         expect(chartNodes.at(0).prop('width')).to.equal(testProps.width);
         expect(chartNodes.at(0).prop('startDate')).to.equal(testProps.extentStartDate);
@@ -46,14 +63,6 @@ describe('application lifecycle\'s <Charts /> component', () => {
         expect(chartNodes.at(1).prop('endDate')).to.equal(testProps.extentEndDate);
         expect(chartNodes.at(1).prop('dataSet')).to.equal(testProps.versionDataSets[1]);
 
-        expect(twbNodes.at(0).prop('title')).to.equal(testProps.versions[0].id);
-        expect(twbNodes.at(0).prop('onClick')).to.be.a('function');
-
-        expect(twbNodes.at(1).prop('title')).to.equal(testProps.versions[1].id);
-        expect(twbNodes.at(1).prop('onClick')).to.be.a('function');
-
-        expect(linkNodes.at(0).prop('to')).to.equal(`/application/detail/${testProps.applicationId}/version/approve/${testProps.versions[0].id}`);
-        expect(linkNodes.at(1).prop('to')).to.equal(`/application/detail/${testProps.applicationId}/version/approve/${testProps.versions[1].id}`);
     });
 
     it('should render multiple \'Chart\' components and call onDelete correctly', () => {
@@ -66,6 +75,7 @@ describe('application lifecycle\'s <Charts /> component', () => {
             extentEndDate: endDate,
             extentStartDate: startDate,
             onDeselect: sinon.spy(),
+            application: {status: 'PENDING'},
             width: 400,
             versions: [{id: '1'}, {id: '0.9'}],
             versionDataSets: [
@@ -75,20 +85,14 @@ describe('application lifecycle\'s <Charts /> component', () => {
 
         const wrapper = mount(<Charts {...testProps} />);
 
-        const twbNodes = wrapper.find(TitleWithButton);
+        let buttonNodes = wrapper.find('.btn-danger');
 
-        let buttonNodes = twbNodes.at(0).find('.btn');
-
-        expect(buttonNodes.length).to.equal(1);
+        expect(buttonNodes.length).to.equal(2);
 
         buttonNodes.at(0).simulate('click');
         expect(testProps.onDeselect.calledWith(testProps.versions[0].id)).to.be.true;
 
-        buttonNodes = twbNodes.at(1).find('.btn');
-
-        expect(buttonNodes.length).to.equal(1);
-
-        buttonNodes.at(0).simulate('click');
+        buttonNodes.at(1).simulate('click');
         expect(testProps.onDeselect.calledWith(testProps.versions[1].id)).to.be.true;
 
     });

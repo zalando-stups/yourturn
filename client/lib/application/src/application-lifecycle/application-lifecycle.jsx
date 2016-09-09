@@ -51,13 +51,13 @@ class ApplicationLifeCycle extends React.Component {
                     endDate={props.endDate}
                     startDate={props.startDate}
                     onBrushChanged={props.onBrushChanged}
-                    onEndDatePicked={props.onEndDatePicked}
-                    onStartDatePicked={props.onStartDatePicked}
+                    onDateChanged={props.onDateChanged}
                 />
                 {aliceStore.isLoading ?
                     <Loading />
                     :
                     <Charts
+                        application ={application}
                         applicationId={applicationId}
                         onDeselect={props.onRemoveVersion}
                         versions={props.selectedVersions}
@@ -85,9 +85,8 @@ ApplicationLifeCycle.propTypes = {
     brushExtentStartDate: React.PropTypes.instanceOf(Date),
     endDate: React.PropTypes.instanceOf(Date),
     onBrushChanged: React.PropTypes.func.isRequired,
-    onEndDatePicked: React.PropTypes.func.isRequired,
+    onDateChanged: React.PropTypes.func.isRequired,
     onRemoveVersion: React.PropTypes.func.isRequired,
-    onStartDatePicked: React.PropTypes.func.isRequired,
     onVersionReset: React.PropTypes.func.isRequired,
     onVersionsSelect: React.PropTypes.func.isRequired,
     selectedVersions: React.PropTypes.arrayOf(React.PropTypes.shape({
