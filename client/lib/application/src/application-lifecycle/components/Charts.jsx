@@ -21,8 +21,7 @@ const Charts = (props) => {
                         to={Routes.verApproval({applicationId: props.applicationId, versionId: version.id})}
                         className='btn btn-default btn-small'>
                         <Icon fixedWidth name='check' />
-                    </Link>
-                    Approvals
+                    </Link> Approvals
                 </div>
                 <div>
                     <utils.ScmShortCut {...props} />
