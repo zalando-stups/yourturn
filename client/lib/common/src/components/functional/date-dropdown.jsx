@@ -19,9 +19,10 @@ class DateDropdown extends React.Component {
         };
 
         this.handleUpdate = this.handleUpdate.bind(this);
+        this.handleHeaderClick = this.handleHeaderClick.bind(this);
     }
 
-    onHeaderClick() {
+    handleHeaderClick() {
         this.setState({visible: !this.state.visible});
     }
 
@@ -39,12 +40,15 @@ class DateDropdown extends React.Component {
     handleUpdate(_, range) {
         this.setState({range});
         if (this.props.onUpdate && range.length > 1) {
-            this.props.onUpdate(range.map(r => r.dateMoment));
+            const [{dateMoment: firstDateMoment}, {dateMoment: secondDateMoment}] = range;
+            this.props.onUpdate([firstDateMoment.startOf('day'), secondDateMoment.endOf('day')]);
         }
     }
 
     updateWithMinus(howMany, what) {
-        this.props.onUpdate([moment().subtract(howMany, what).startOf('day'), moment()]);
+        if (this.props.onUpdate) {
+            this.props.onUpdate([moment().subtract(howMany, what).startOf('day'), moment().endOf('day')]);
+        }
     }
 
     render() {
@@ -53,8 +57,8 @@ class DateDropdown extends React.Component {
         return <div ref='dropdown' className='date-dropdown'>
                 <header
                     ref='header'
-                    onClick={this.onHeaderClick.bind(this)}>
-                    <Icon name='filter' fixedWidth />
+                    onClick={this.handleHeaderClick}>
+                    {this.props.prefixIconName ? <Icon name={this.props.prefixIconName} fixedWidth /> : null}
                     <span>{this.props.title}</span>
                     <Icon name='caret-down' fixedWidth />
                 </header>
@@ -93,6 +97,7 @@ DateDropdown.displayName = 'DateDropdown';
 
 DateDropdown.propTypes = {
     onUpdate: React.PropTypes.func,
+    prefixIconName: React.PropTypes.string,
     range: React.PropTypes.array,
     title: React.PropTypes.string
 };

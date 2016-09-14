@@ -34,6 +34,15 @@ class ApplicationLifeCycle extends React.Component {
                     linkParams={LINK_PARAMS}
                     application={application.name || applicationId}
                 />
+                <Toolbar
+                    brushExtentEndDate={props.brushExtentEndDate}
+                    brushExtentStartDate={props.brushExtentStartDate}
+                    brushWidth={chartsWidth}
+                    endDate={props.endDate}
+                    startDate={props.startDate}
+                    onBrushChanged={props.onBrushChanged}
+                    onDateChanged={props.onDateChanged}
+                />
                 <div>
                     <ComboBox
                         value={props.selectedVersions}
@@ -44,20 +53,11 @@ class ApplicationLifeCycle extends React.Component {
                         title='Select Versions'
                     />
                 </div>
-                <Toolbar
-                    brushExtentEndDate={props.brushExtentEndDate}
-                    brushExtentStartDate={props.brushExtentStartDate}
-                    brushWidth={chartsWidth}
-                    endDate={props.endDate}
-                    startDate={props.startDate}
-                    onBrushChanged={props.onBrushChanged}
-                    onEndDatePicked={props.onEndDatePicked}
-                    onStartDatePicked={props.onStartDatePicked}
-                />
                 {aliceStore.isLoading ?
                     <Loading />
                     :
                     <Charts
+                        application ={application}
                         applicationId={applicationId}
                         onDeselect={props.onRemoveVersion}
                         versions={props.selectedVersions}
@@ -85,9 +85,8 @@ ApplicationLifeCycle.propTypes = {
     brushExtentStartDate: React.PropTypes.instanceOf(Date),
     endDate: React.PropTypes.instanceOf(Date),
     onBrushChanged: React.PropTypes.func.isRequired,
-    onEndDatePicked: React.PropTypes.func.isRequired,
+    onDateChanged: React.PropTypes.func.isRequired,
     onRemoveVersion: React.PropTypes.func.isRequired,
-    onStartDatePicked: React.PropTypes.func.isRequired,
     onVersionReset: React.PropTypes.func.isRequired,
     onVersionsSelect: React.PropTypes.func.isRequired,
     selectedVersions: React.PropTypes.arrayOf(React.PropTypes.shape({

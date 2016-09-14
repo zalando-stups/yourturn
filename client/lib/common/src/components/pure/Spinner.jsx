@@ -14,8 +14,4 @@ Spinner.propTypes = {
     size: React.PropTypes.string
 };
 
-Spinner.defaultProps = {
-    size: '1x'
-};
-
 export default Spinner;
