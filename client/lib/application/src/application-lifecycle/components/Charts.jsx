@@ -20,7 +20,7 @@ const Charts = (props) => {
                     <Link
                         to={Routes.verApproval({applicationId: props.applicationId, versionId: version.id})}
                         className='btn btn-default btn-small'>
-                        <Icon name='check' />
+                        <Icon fixedWidth name='check' />
                     </Link> Approvals
                 </div>
                 <div>
