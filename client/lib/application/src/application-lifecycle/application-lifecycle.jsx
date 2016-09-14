@@ -34,6 +34,15 @@ class ApplicationLifeCycle extends React.Component {
                     linkParams={LINK_PARAMS}
                     application={application.name || applicationId}
                 />
+                <Toolbar
+                    brushExtentEndDate={props.brushExtentEndDate}
+                    brushExtentStartDate={props.brushExtentStartDate}
+                    brushWidth={chartsWidth}
+                    endDate={props.endDate}
+                    startDate={props.startDate}
+                    onBrushChanged={props.onBrushChanged}
+                    onDateChanged={props.onDateChanged}
+                />
                 <div>
                     <ComboBox
                         value={props.selectedVersions}
@@ -44,15 +53,6 @@ class ApplicationLifeCycle extends React.Component {
                         title='Select Versions'
                     />
                 </div>
-                <Toolbar
-                    brushExtentEndDate={props.brushExtentEndDate}
-                    brushExtentStartDate={props.brushExtentStartDate}
-                    brushWidth={chartsWidth}
-                    endDate={props.endDate}
-                    startDate={props.startDate}
-                    onBrushChanged={props.onBrushChanged}
-                    onDateChanged={props.onDateChanged}
-                />
                 {aliceStore.isLoading ?
                     <Loading />
                     :

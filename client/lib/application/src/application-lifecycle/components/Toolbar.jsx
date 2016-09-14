@@ -3,6 +3,7 @@ import React from 'react';
 import Brush from 'common/src/components/pure/Brush.jsx';
 import ThreeColumns from 'common/src/components/pure/ThreeColumns.jsx';
 import DateDropdown from 'common/src/components/functional/date-dropdown.jsx';
+import moment from 'moment';
 
 const BRUSH_HEIGHT = 80;
 
@@ -17,10 +18,12 @@ const Toolbar = (props) => {
         onChange    = {props.onBrushChanged}
     />;
 
+    const titleString = moment(props.startDate).format('YYYY-MM-DD') + moment(props.endDate).format('YYYY-MM-DD');
+
     const dateSelector = <DateDropdown
             onUpdate={props.onDateChanged}
             range={[props.startDate, props.endDate]}
-            title='Date range' />;
+            title={titleString} />;
 
     return (
         <ThreeColumns leftChildren   = {dateSelector}
