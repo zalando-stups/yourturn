@@ -9,13 +9,13 @@ const iconNameByRepo = function (url) {
     if (!url) {
         return '';
     }
-    if (url.includes('stash')) {
-        return 'external-link-square';
+    if (url.includes('github.com')) {
+        return 'github';
     }
-    if (url.includes('github.bus.zalan.do')) {
+    if (url.includes('github')) {
         return 'github-square';
     }
-    return 'github';
+    return 'external-link-square';
 };
 
 const isKioLoading = props => props.application['status'] && props.application['status'] == 'PENDING';
@@ -26,7 +26,7 @@ const ScmDisplay = props =>
     <div>
         <a className='btn btn-default btn-small'
            href={props.application.scm_url}>
-            <Icon name={iconNameByRepo(props.application.scm_url)} />
+            <Icon fixedWidth name={iconNameByRepo(props.application.scm_url)} />
         </a> SCM
     </div>;
 ScmDisplay.displayName = 'ScmDisplay';
@@ -40,7 +40,7 @@ const ServiceDisplay = props =>
     <div>
         <a className='btn btn-default btn-small'
            href={props.application.service_url}>
-            <Icon name='external-link-square' />
+            <Icon fixedWidth name='external-link-square' />
         </a> Service
     </div>;
 
