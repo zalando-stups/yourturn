@@ -15,7 +15,7 @@ const Charts = (props) => {
         const versionDataSet = props.versionDataSets.find(e => e.version_id == version.id);
 
         const leftElements =
-            <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'flex-end'}}>
+            <div style={{display: 'flex', flexDirection: 'column'}}>
                 <div>
                     <Link
                         to={Routes.verApproval({applicationId: props.applicationId, versionId: version.id})}
@@ -34,7 +34,7 @@ const Charts = (props) => {
         const rightElements = <div
             className = 'btn btn-danger btn-small'
             onClick = {() => props.onDeselect(version.id)}>
-            <Icon size='2x' name='remove' />
+            <Icon size='2x' fixedWidth name='remove' />
         </div>;
 
 
@@ -48,11 +48,9 @@ const Charts = (props) => {
 
         return (
             <div key = {index}>
-                <ThreeColumns
-                              middleChildren = {<h3>{version.id}</h3>}
-                />
-                <ThreeColumns
-                              leftChildren   = {leftElements}
+                <hr />
+                <ThreeColumns leftChildren = {<h3>{version.id}</h3>} />
+                <ThreeColumns leftChildren   = {leftElements}
                               middleChildren = {chart}
                               rightChildren  = {rightElements}
                 />

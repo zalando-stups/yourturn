@@ -4,6 +4,7 @@ import Brush from 'common/src/components/pure/Brush.jsx';
 import ThreeColumns from 'common/src/components/pure/ThreeColumns.jsx';
 import DateDropdown from 'common/src/components/functional/date-dropdown.jsx';
 import moment from 'moment';
+import Config from 'common/src/config.js';
 
 const BRUSH_HEIGHT = 80;
 
@@ -18,7 +19,7 @@ const Toolbar = (props) => {
         onChange    = {props.onBrushChanged}
     />;
 
-    const titleString = moment(props.startDate).format('YYYY-MM-DD') + moment(props.endDate).format('YYYY-MM-DD');
+    const titleString = <span>From:{moment(props.startDate).format(Config.DATE_FORMAT_NO_TIME)}<br />To:{moment(props.endDate).format(Config.DATE_FORMAT_NO_TIME)}</span>;
 
     const dateSelector = <DateDropdown
             onUpdate={props.onDateChanged}

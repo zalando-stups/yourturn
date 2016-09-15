@@ -1,7 +1,7 @@
 import React from 'react';
 
 const ThreeColumns = (props) =>
-        <div style={{display: 'flex', justifyContent: 'flex-center'}}>
+        <div style={{display: 'flex', justifyContent: 'flex-end'}}>
             <div style = {props.leftStyle}>
                 {props.leftChildren}
             </div>
@@ -16,7 +16,7 @@ const ThreeColumns = (props) =>
 ThreeColumns.defaultProps = {
     leftStyle: {width: '200px'},
     middleStyle: {flex: 'auto'},
-    rightStyle: {width: '200px'}
+    rightStyle: {height: '100%', width: '200px', display: 'flex', justifyContent: 'flex-end'}
 };
 
 ThreeColumns.propTypes = {

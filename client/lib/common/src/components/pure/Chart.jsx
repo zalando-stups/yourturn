@@ -4,13 +4,14 @@ import { AreaChart } from 'react-d3-components';
 import d3 from 'd3';
 import moment from 'moment';
 import _ from 'lodash';
+import Config from 'common/src/config.js';
 
 const MARGINS = {top: 10, bottom: 50, left: 50, right: 20};
 const CHART_HORIZONTAL_MARGINS = MARGINS.left + MARGINS.right;
 const CHART_INTERPOLATION = 'step-after';
 
 const GREY = '#D0D0D0';
-const BLUE = '#1f77b4';
+const BLUE = '#6f6fff';
 const INSIDE = 'inside';
 const TOOLTIP_MODE = 'element';
 
@@ -38,7 +39,10 @@ const transformData = function(inData, startDate) {
     return dataSeries;
 };
 
-const TOOLTIP = param => <div style={{backgroundColor: GREY}}>{param}</div>;
+const TOOLTIP = (...param) =>
+    <div style={{backgroundColor: GREY}}>
+        I: {param[0]} / D: {moment(param[2]).format(Config.DATE_FORMAT_NO_TIME)}
+    </div>;
 
 const COLOR_SCALE = () => BLUE;
 
