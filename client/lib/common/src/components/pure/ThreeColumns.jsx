@@ -3,13 +3,13 @@ import React from 'react';
 const ThreeColumns = (props) =>
         <div style={{display: 'flex', justifyContent: 'flex-center'}}>
             <div style = {props.leftStyle}>
-                {props.leftChildren ? props.leftChildren : null}
+                {props.leftChildren}
             </div>
             <div style = {props.middleStyle}>
-                {props.middleChildren ? props.middleChildren : null}
+                {props.middleChildren}
             </div>
             <div style = {props.rightStyle}>
-                {props.rightChildren ? props.rightChildren : null}
+                {props.rightChildren}
             </div>
         </div>;
 

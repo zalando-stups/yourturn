@@ -1,12 +1,10 @@
 import React from 'react';
-import moment from 'moment';
 
 import Brush from 'common/src/components/pure/Brush.jsx';
-import DateSelector, {STYLE_RIGHT} from 'common/src/components/functional/DateSelector.jsx';
 import ThreeColumns from 'common/src/components/pure/ThreeColumns.jsx';
+import DateDropdown from 'common/src/components/functional/date-dropdown.jsx';
 
-const DATE_FORMAT = 'Do [of] MMM YY';
-const BRUSH_HEIGHT = 50;
+const BRUSH_HEIGHT = 80;
 
 const Toolbar = (props) => {
     const brush = <Brush
@@ -19,26 +17,14 @@ const Toolbar = (props) => {
         onChange    = {props.onBrushChanged}
     />;
 
-    const startDateSelector = <DateSelector
-        onDatePicked   = {props.onStartDatePicked}
-        title          = {moment(props.startDate).format(DATE_FORMAT)}
-        defaultValue   = {props.startDate}
-        maxDate        = {props.endDate}
-    />;
-
-    const endDateSelector = <DateSelector
-        onDatePicked   = {props.onEndDatePicked}
-        title          = {moment(props.endDate).format(DATE_FORMAT)}
-        alignStyle     = {STYLE_RIGHT}
-        defaultValue   = {props.endDate}
-        minDate        = {props.startDate}
-        maxDate        = {moment().endOf('day').toDate()}
-    />;
+    const dateSelector = <DateDropdown
+            onUpdate={props.onDateChanged}
+            range={[props.startDate, props.endDate]}
+            title='Date range' />;
 
     return (
-        <ThreeColumns leftChildren   = {startDateSelector}
+        <ThreeColumns leftChildren   = {dateSelector}
                       middleChildren = {brush}
-                      rightChildren  = {endDateSelector}
         />
     );
 };
@@ -51,8 +37,7 @@ Toolbar.propTypes = {
     brushWidth: React.PropTypes.number.isRequired,
     endDate: React.PropTypes.instanceOf(Date).isRequired,
     onBrushChanged: React.PropTypes.func.isRequired,
-    onEndDatePicked: React.PropTypes.func.isRequired,
-    onStartDatePicked: React.PropTypes.func.isRequired,
+    onDateChanged: React.PropTypes.func.isRequired,
     startDate: React.PropTypes.instanceOf(Date).isRequired
 };
 

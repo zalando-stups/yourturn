@@ -1,11 +1,10 @@
 import React from 'react'
 
 import 'react-date-picker/index.css'
-import { Calendar } from 'react-date-picker'
+import OutsideClickAwareCalendar from './OutsideClickAwareCalendar.jsx';
 
 const STYLE_LEFT = {width: '1px', height: '1px', position: 'relative', top: 0, left: 0, zIndex: 10};
 const STYLE_RIGHT = {width: '1px', height: '1px', position: 'relative', top: 0, left: -220, zIndex: 10};
-const DATE_FORMAT = 'YYYY-MM-DD';
 
 class DateSelector extends React.Component {
     constructor(props) {
@@ -13,8 +12,13 @@ class DateSelector extends React.Component {
 
         this.handleButtonClick = this.handleButtonClick.bind(this);
         this.handleDatePicked = this.handleDatePicked.bind(this);
+        this.handleClickOutside = this.handleClickOutside.bind(this);
 
         this.state = {openDatePicker : false}
+    }
+
+    handleClickOutside() {
+        this.setState({openDatePicker : false});
     }
 
     handleButtonClick(e) {
@@ -22,9 +26,9 @@ class DateSelector extends React.Component {
         this.setState({openDatePicker : !this.state.openDatePicker});
     }
 
-    handleDatePicked(dateString, { dateMoment}) {
+    handleDatePicked(date) {
         this.setState({openDatePicker : false});
-        this.props.onDatePicked(dateMoment.toDate());
+        this.props.onDatePicked(date);
     }
 
     render() {
@@ -32,16 +36,12 @@ class DateSelector extends React.Component {
         if (this.state.openDatePicker) {
             dateFieldComponent =
                 <div style = {this.props.alignStyle}>
-                    <Calendar
-                        updateOnDateClick   = {true}
-                        collapseOnDateClick = {true}
-                        footer              = {false}
-                        forceValidDate      = {true}
-                        dateFormat          = {DATE_FORMAT}
+                    <OutsideClickAwareCalendar
                         minDate             = {this.props.minDate}
                         maxDate             = {this.props.maxDate}
-                        onChange            = {this.handleDatePicked}
-                        date                = {this.props.defaultValue}
+                        onDatePicked        = {this.handleDatePicked}
+                        defaultValue        = {this.props.defaultValue}
+                        onClickOutside      = {this.handleClickOutside}
                     />
                 </div>
         }

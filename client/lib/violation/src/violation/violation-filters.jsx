@@ -1,5 +1,5 @@
 import React from 'react';
-import DateDropdown from './date-dropdown.jsx';
+import DateDropdown from 'common/src/components/functional/date-dropdown.jsx';
 import * as Routes from 'violation/src/routes';
 import FilterDropdown from './filter-dropdown.jsx';
 import ViolationViz from 'violation/src/violation-viz.jsx';
@@ -108,6 +108,7 @@ class ViolationFilters extends React.Component {
                             <td>
                                 <DateDropdown
                                     onUpdate={this.onUpdate.bind(this, 'date')}
+                                    prefixIconName='filter'
                                     range={[this.props.params.from, this.props.params.to]}
                                     title='Filter' />
                             </td>

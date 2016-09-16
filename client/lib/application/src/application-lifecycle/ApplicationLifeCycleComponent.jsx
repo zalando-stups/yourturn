@@ -3,10 +3,9 @@ import { connect } from 'react-redux';
 import moment from 'moment';
 
 import { bindActionCreators } from 'redux';
-import { bindGettersToState } from 'common/src/util';
 
-import * as KioGetter from 'common/src/data/kio/kio-getter';
 import * as AliceActions from 'common/src/data/alice/alice-action';
+import * as KioActions from 'common/src/data/kio/kio-actions';
 
 import ApplicationLifeCycle from './application-lifecycle.jsx'
 
@@ -24,17 +23,16 @@ class ApplicationLifecycleHandler extends React.Component {
 
         this.handleVersionsSelect = this.handleVersionsSelect.bind(this);
         this.handleVersionReset = this.handleVersionReset.bind(this);
-        this.handleStartDatePicked = this.handleStartDatePicked.bind(this);
-        this.handleEndDatePicked = this.handleEndDatePicked.bind(this);
+        this.handleDateChanged = this.handleDateChanged.bind(this);
         this.handleBrushChanged = this.handleBrushChanged.bind(this);
         this.handleRemoveVersion = this.handleRemoveVersion.bind(this);
-
     }
 
     // component's lifecycle functions
 
     componentDidMount() {
         this.props.aliceActions.fetchInstanceCount(this.props.params.applicationId, this.state.startDate, this.state.endDate);
+        this.props.kioActions.fetchApplication(this.props.params.applicationId);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -47,15 +45,13 @@ class ApplicationLifecycleHandler extends React.Component {
 
     // handler functions
 
-    handleStartDatePicked(date) {
-        this.handleDateChanged(moment(date).startOf('day').toDate(), this.state.endDate);
-    }
+    handleDateChanged(range) {
+        if (!range || range.length < 1) {
+            return;
+        }
 
-    handleEndDatePicked(date) {
-        this.handleDateChanged(this.state.startDate, moment(date).endOf('day').toDate());
-    }
-
-    handleDateChanged(startDate, endDate) {
+        const startDate = range[0].toDate();
+        const endDate = range[1].toDate();
         this.setState({
             startDate,
             endDate,
@@ -78,7 +74,8 @@ class ApplicationLifecycleHandler extends React.Component {
     }
 
     handleVersionsSelect(param) {
-        this.setState({selectedVersions: param});
+        const selectedVersions = this.state.versions.filter( v => param.indexOf(v) > -1);
+        this.setState({selectedVersions});
     }
 
     handleVersionReset() {
@@ -95,8 +92,7 @@ class ApplicationLifecycleHandler extends React.Component {
                 selectedVersions     = {this.state.selectedVersions}
                 onVersionsSelect     = {this.handleVersionsSelect}
                 onVersionReset       = {this.handleVersionReset}
-                onStartDatePicked    = {this.handleStartDatePicked}
-                onEndDatePicked      = {this.handleEndDatePicked}
+                onDateChanged        = {this.handleDateChanged}
                 onBrushChanged       = {this.handleBrushChanged}
                 onRemoveVersion      = {this.handleRemoveVersion}
                 startDate            = {this.state.startDate}
@@ -114,6 +110,9 @@ ApplicationLifecycleHandler.propTypes = {
     aliceActions: React.PropTypes.shape({
         fetchInstanceCount: React.PropTypes.func
     }).isRequired,
+    kioActions: React.PropTypes.shape({
+        fetchApplication: React.PropTypes.func
+    }).isRequired,
     params: React.PropTypes.shape({
         applicationId: React.PropTypes.string
     }).isRequired
@@ -122,13 +121,15 @@ ApplicationLifecycleHandler.propTypes = {
 function mapStateToProps(state) {
     return {
         aliceStore: state.alice,
-        kioStore: bindGettersToState(state.kio, KioGetter)
+        applications: state.kio.applications,
+        kio: state.kio
     };
 }
 
 function mapDispatchToProps(dispatch) {
     return {
-        aliceActions: bindActionCreators(AliceActions, dispatch)
+        aliceActions: bindActionCreators(AliceActions, dispatch),
+        kioActions: bindActionCreators(KioActions, dispatch)
     };
 }
 

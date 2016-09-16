@@ -186,11 +186,17 @@ var ConnectedAppListHandler =
         }))(AppListHandler);
 
 const CreateAppFormHandler = (props) => {
-    const userTeams = props.userStore.getUserTeams().map(t => t.id),
+    const userTeams = props.userStore
+                        .getUserTeams()
+                        .map(t => t.id),
+        userAccounts = props.userStore
+                        .getUserCloudAccounts()
+                        .map(acc => acc.owner),
+        availableTeams = [...new Set([...userTeams, ...userAccounts])].sort(),
         applicationIds = props.kioStore.getApplications().map(a => a.id);
     return  <ApplicationForm
                 edit={false}
-                userTeams={userTeams}
+                userTeams={availableTeams}
                 applicationIds={applicationIds}
                 notificationActions={NOTIFICATION_ACTIONS}
                 kioActions={KIO_ACTIONS} />;
@@ -202,7 +208,8 @@ CreateAppFormHandler.propTypes = {
     }).isRequired,
     params: React.PropTypes.object.isRequired,
     userStore: React.PropTypes.shape({
-        getUserTeams: React.PropTypes.func
+        getUserTeams: React.PropTypes.func,
+        getUserCloudAccounts: React.PropTypes.func
     }).isRequired
 };
 CreateAppFormHandler.fetchData = function(routerState, state) {
@@ -219,9 +226,15 @@ var ConnectedCreateAppFormHandler =
 
 const EditAppFormHandler = (props) => {
     const {applicationId} = props.params,
-          userTeams = props.userStore.getUserTeams().map(t => t.id),
           application = props.kioStore.getApplication(applicationId),
-          teamsAndPreviousValue = new Set([...userTeams, application.team_id]),
+          userTeams = props.userStore.
+                        getUserTeams()
+                        .map(t => t.id),
+          userAccounts = props.userStore
+                        .getUserCloudAccounts()
+                        .map(acc => acc.owner),
+          availableTeams = [...new Set([...userTeams, ...userAccounts])].sort(),
+          teamsAndPreviousValue = new Set([...availableTeams, application.team_id]),
           applicationIds = props.kioStore.getApplications().map(a => a.id);
 
     return <ApplicationForm
@@ -250,7 +263,8 @@ EditAppFormHandler.propTypes = {
     }).isRequired,
     params: React.PropTypes.object.isRequired,
     userStore: React.PropTypes.shape({
-        getUserTeams: React.PropTypes.func
+        getUserTeams: React.PropTypes.func,
+        getUserCloudAccounts: React.PropTypes.func
     }).isRequired
 };
 EditAppFormHandler.fetchData = function(routerState, state) {
