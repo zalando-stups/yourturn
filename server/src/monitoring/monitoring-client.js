@@ -16,7 +16,7 @@ if (fs.existsSync(APPDYNAMICS_SCRIPT)) {
     } catch (err) {
         winston.error('Could not read appdynamics js file.', err.message);
     }
-    var adScriptInjectedKey = adScript.replace('a.appKey=', 'a.appKey="' + appKey + '"');
+    var adScriptInjectedKey = adScript.replace('a.appKey=""', 'a.appKey="' + appKey + '"');
     fs.writeFileSync('./dist/adrum.js', adScriptInjectedKey);
 } else {
     winston.error('appdynamics js file not found');
