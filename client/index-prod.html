@@ -8,7 +8,22 @@
         <link rel="icon" type="image/png" href="/dist/stups_favicon.png" />
         <style>${inline}</style>
     </head>
-    <script src="/dist/adrum.js?v=${timestamp}"></script>
+    <script src="/dist/env.js?v=${timestamp}"></script>
+    <script>
+        var head = document.getElementsByTagName('head')[0],
+                js = document.createElement('script');
+        if (window.APPDYNAMICS_RUM_KEY) {
+            // load appdynamics
+            js.src = '/dist/adrum.js?v=${timestamp}';
+        } else if (window.YTENV_NEW_RELIC_BROWSER_APP_ID) {
+            // load new relic
+            js.src = '/dist/newrelic-browser.js?v=${timestamp}';
+        }
+        if (js.src && js.src.length != 0) {
+            head.appendChild(js);
+        }
+    </script>
+
     <body>
         <div id="yourturn-container">
             <div class="yourturn">
@@ -78,23 +93,8 @@
                 </div>
             </div>
         </div>
-        <script src="/dist/env.js?v=${timestamp}"></script>
         <script src="/dist/bundle.js?v=${timestamp}"></script>
 
-        <script>
-            var head = document.getElementsByTagName('head')[0],
-                js = document.createElement('script');
-            if (window.YTENV_APPDYNAMICS_EUM) {
-                // load appdynamics
-                js.src = '/dist/appdynamics.js?v=${timestamp}';
-            } else if (window.YTENV_NEW_RELIC_BROWSER_APP_ID) {
-                // load new relic
-                js.src = '/dist/newrelic-browser.js?v=${timestamp}';
-            }
-            if (js.src && js.src.length != 0) {
-                head.appendChild(js);
-            }
-        </script>
         <script>
             var cb = function() {
                 var f = document.createElement('link');

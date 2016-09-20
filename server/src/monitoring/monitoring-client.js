@@ -2,10 +2,10 @@ var winston = require('winston'),
     fs = require('fs'),
     APPDYNAMICS_SCRIPT = './monitoring/appdynamics-client.js';
 
-var appKey = process.env.APPDYNAMICS_APPKEY;
+var appKey = process.env.APPDYNAMICS_RUM_KEY;
 
 if (!appKey) {
-    winston.error('APPDYNAMICS_APPKEY not set in environment');
+    winston.error('APPDYNAMICS_RUM_KEY not set in environment');
     return;
 }
 
@@ -19,6 +19,6 @@ if (fs.existsSync(APPDYNAMICS_SCRIPT)) {
     var adScriptInjectedKey = adScript.replace('a.appKey=""', 'a.appKey="' + appKey + '"');
     fs.writeFileSync('./dist/adrum.js', adScriptInjectedKey);
 } else {
-    winston.error('appdynamics js file not found');
+    winston.error('appdynamics-client.js file not found');
     return;
 }
