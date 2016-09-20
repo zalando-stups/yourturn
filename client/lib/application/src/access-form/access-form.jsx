@@ -125,7 +125,7 @@ class AccessForm extends React.Component {
                                 onChange={this.updateBuckets.bind(this)}
                                 items={this.state.s3_buckets}
                                 markedItems={_.difference(this.state.s3_buckets, oauthConfig.s3_buckets)}
-                                pattern={'^[a-z0-9][a-z0-9\-\.]*[a-z0-9]$'} />
+                                pattern={'^(gs://)?[a-z0-9][a-z0-9\-\.]*[a-z0-9]$'} />
                         </div>
                         <div className='btn-group'>
                             <button
