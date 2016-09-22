@@ -13,11 +13,11 @@ if (fs.existsSync(APPDYNAMICS_SCRIPT)) {
     var adScript;
     try {
         adScript = String(fs.readFileSync(APPDYNAMICS_SCRIPT));
+        var adScriptInjectedKey = adScript.replace('a.appKey=""', 'a.appKey="' + appKey + '"');
+        fs.writeFileSync('./dist/adrum.js', adScriptInjectedKey);
     } catch (err) {
-        winston.error('Could not read appdynamics js file.', err.message);
+        winston.error('Could not read appdynamics-client.js file or error processing it.', err.message);
     }
-    var adScriptInjectedKey = adScript.replace('a.appKey=""', 'a.appKey="' + appKey + '"');
-    fs.writeFileSync('./dist/adrum.js', adScriptInjectedKey);
 } else {
     winston.error('appdynamics-client.js file not found');
     return;
