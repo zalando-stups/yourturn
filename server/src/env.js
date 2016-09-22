@@ -17,7 +17,7 @@ function getEnvironment() {
         }
     }
 
-    if (process.env.APPDYNAMICS_RUM_KEY) {
+    if (process.env.APPDYNAMICS_EUM_KEY) {
         env['APPDYNAMICS_ENABLED'] = true;
     }
         // read client id from mint
