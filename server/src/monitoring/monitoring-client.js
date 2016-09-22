@@ -1,19 +1,21 @@
 var winston = require('winston'),
     fs = require('fs'),
-    APPDYNAMICS_SCRIPT = './monitoring/appdynamics-client.js';
+    APPDYNAMICS_SCRIPT = './monitoring/appdynamics-client.js',
+    appdBeacon = process.env.APPDYNAMICS_EUM_BEACON,
+    appdEumKey = process.env.APPDYNAMICS_EUM_KEY;
 
-var appKey = process.env.APPDYNAMICS_RUM_KEY;
 
-if (!appKey) {
-    winston.error('APPDYNAMICS_RUM_KEY not set in environment');
+if (!appdEumKey || !appdBeacon) {
+    winston.error('APPDYNAMICS_EUM_KEY or APPDYNAMICS_EUM_BEACON not set in environment');
     return;
 }
 
 if (fs.existsSync(APPDYNAMICS_SCRIPT)) {
-    var adScript;
     try {
-        adScript = String(fs.readFileSync(APPDYNAMICS_SCRIPT));
-        var adScriptInjectedKey = adScript.replace('a.appKey=""', 'a.appKey="' + appKey + '"');
+        var adScript = String(fs.readFileSync(APPDYNAMICS_SCRIPT));
+        var adScriptInjectedKey = adScript
+                                    .replace(/\$\{APPDYNAMICS_EUM_KEY\}/g, appdEumKey)
+                                    .replace(/\$\{APPDYNAMICS_EUM_BEACON\}/g, appdBeacon);
         fs.writeFileSync('./dist/adrum.js', adScriptInjectedKey);
     } catch (err) {
         winston.error('Could not read appdynamics-client.js file or error processing it.', err.message);
