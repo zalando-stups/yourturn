@@ -83,9 +83,9 @@
         <script>
             var head = document.getElementsByTagName('head')[0],
                 js = document.createElement('script');
-            if (window.YTENV_APPDYNAMICS_EUM) {
+            if (window.APPDYNAMICS_ENABLED) {
                 // load appdynamics
-                js.src = '/dist/appdynamics.js?v=${timestamp}';
+                js.src = '/dist/adrum.js?v=${timestamp}';
             } else if (window.YTENV_NEW_RELIC_BROWSER_APP_ID) {
                 // load new relic
                 js.src = '/dist/newrelic-browser.js?v=${timestamp}';
