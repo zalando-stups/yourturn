@@ -10,8 +10,8 @@ ADD /scm-source.json /scm-source.json
 # copy static resources for client
 COPY ./client/dist/ /www/dist/
 COPY ./server/src/monitoring/newrelic-browser.js /www/dist/
-COPY ./server/src/monitoring/appdynamics.js /www/dist/
 COPY ./client/dist/index.html /www/
+RUN chmod -R 0666 /www/dist/
 
 # copy server
 COPY ./server/src/data/ /www/data/
@@ -23,9 +23,6 @@ COPY ./server/src/redis.js /www/
 COPY ./server/src/tokens.js /www/
 COPY ./server/src/yourturn.js /www/
 COPY ./server/src/redis-utils.js /www/
-
-# create env.js as user
-RUN touch /www/dist/env.js && chmod 0666 /www/dist/env.js
 
 # create appdynamics directory
 RUN mkdir -p /tmp/appd && chmod -R 0777 /tmp/appd
