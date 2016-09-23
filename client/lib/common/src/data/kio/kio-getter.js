@@ -136,7 +136,6 @@ function getTabAccounts(state) {
 export {
     getApprovals,
     getApprovalTypes,
-    getApplicationVersion,
     getApplications,
     getApplicationsFetchStatus,
     getApplication,
