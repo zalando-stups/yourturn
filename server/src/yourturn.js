@@ -23,9 +23,14 @@ require('./env');
 var fs = require('fs'),
     express = require('express'),
     compression = require('compression'),
+    moment = require('moment'),
     server = express(),
     routes = require('./routes/index'),
     oauth = require('./middleware/oauth'),
+    uniqueLogins = require('./middleware/unique-logins'),
+    redis = require('./redis'),
+    stores = require('./data/stores/distinct'),
+    metrics = require('./metrics'),
     index = fs.readFileSync('./index.html'),
     ONE_WEEK =  1000 *    // 1s
                   60 *    // 1m
@@ -44,15 +49,35 @@ server.use(function(req, res, next) {
     next();
 });
 
+const inMemoryStore = stores.inMemoryStore({
+    keyExpiration: moment.duration(1, 'day')
+});
+const redisStore = stores.redisStore({
+    redis,
+    key: 'unique-logins'
+});
+const store = stores.storeWithFallback(redisStore, inMemoryStore);
+const report = metrics.report({
+    providers: {
+        'count.unique.logins': metrics.cachedProvider(() => store.size, 0),
+        'count.inmemory.logins': metrics.cachedProvider(() => inMemoryStore.size, 0)
+    }
+});
+
 // EXPRESS ROUTES BELOW
 server.get('/accounts/?', routes.team.accounts);
 server.get('/teams/?', routes.team.teams);
 server.get('/teams/:teamId', routes.team.team);
-server.get('/users/:userId', routes.user.detail);
+server.get('/users/:userId', oauth, uniqueLogins(store), routes.user.detail);
 server.get('/users/:userId/teams', routes.user.teams)
 server.get('/users/:userId/accounts', routes.user.accounts);
-server.get('/latestVersions/:team', oauth, routes.kio.latestVersions);
+server.get('/latestVersions/:team', routes.kio.latestVersions);
 server.get('/tokeninfo', routes.tokeninfo.info);
+server.get('/metrics', (req, res) => {
+    report.generate().then(report => {
+        res.json(report);
+    });
+});
 // default route just responds with index.html
 server.get('/*', function(req, res) {
     res
