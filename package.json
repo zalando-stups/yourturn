@@ -10,7 +10,8 @@
     "lint": "cd client && gulp lint",
     "format": "cd client && gulp format",
     "lodash": "cd client && gulp lodash",
-    "test-server": "cd server && npm install && mocha -r test/mocha-globals.js test/**/*.test.js",
+    "test-server": "cd server && npm install && mocha -r test/mocha-globals.js --recursive test",
+    "test-server-watch": "mocha --watch -r server/test/mocha-globals.js --recursive server/test",
     "test": "cd client && webpack --config webpack.test.config.js && mocha -r mocha-globals.js dist/test.js",
     "test-coverage": "cd client && webpack --config webpack.test.config.js && istanbul cover ../node_modules/mocha/bin/_mocha --report lcovonly -- -r mocha-globals.js dist/test.js && cat ./coverage/lcov.info | ../node_modules/coveralls/bin/coveralls.js",
     "test-coverage-local": "cd client && webpack --config webpack.test.config.js && istanbul cover ../node_modules/mocha/bin/_mocha --report html -- -r mocha-globals.js dist/test.js"
