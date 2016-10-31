@@ -1,3 +1,5 @@
+'use strict';
+
 const sinon = require('sinon');
 const redis = require('redis');
 const moment = require('moment');
@@ -200,12 +202,15 @@ describe('stores/distinct', () => {
                         main.items,
                         fallback.items
                     ]))
-                    .then(([storeItems, mainItems, fallbackItems]) => {
+                    .then(res => {
+                        const storeItems = res[0];
+                        const mainItems = res[1];
+                        const fallbackItems = res[2];
+
                         expect(storeItems).to.have.members([42]);
                         expect(mainItems).to.have.members([42]);
                         expect(fallbackItems).to.be.empty;
-                    })
-
+                    });
             });
 
             it('should add items to fallback store if main store fails', () => {
@@ -222,7 +227,11 @@ describe('stores/distinct', () => {
                         main.items,
                         fallback.items
                     ]))
-                    .then(([storeItems, mainItems, fallbackItems]) => {
+                    .then(res => {
+                        const storeItems = res[0];
+                        const mainItems = res[1];
+                        const fallbackItems = res[2];
+
                         expect(storeItems).to.be.empty;
                         expect(mainItems).to.be.empty;
                         expect(fallbackItems).to.have.members([42]);
@@ -248,7 +257,11 @@ describe('stores/distinct', () => {
                         main.items,
                         fallback.items
                     ]))
-                    .then(([storeItems, mainItems, fallbackItems]) => {
+                    .then(res => {
+                        const storeItems = res[0];
+                        const mainItems = res[1];
+                        const fallbackItems = res[2];
+
                         expect(storeItems).to.have.members([42, 'foo', 'bar']);
                         expect(mainItems).to.have.members([42, 'foo', 'bar']);
                         expect(fallbackItems).to.have.members([42, 'foo']);
@@ -267,7 +280,10 @@ describe('stores/distinct', () => {
                     .returns(Promise.reject(new Error('fallback error')));
 
                 return store.add(42)
-                    .catch(([mainError, fallbackError]) => {
+                    .catch(res => {
+                        const mainError = res[0];
+                        const fallbackError = res[1];
+
                         expect(mainError).to.be.an('error');
                         expect(mainError.message).to.equal('main error');
                         expect(fallbackError).to.be.an('error');

@@ -1,3 +1,5 @@
+'use strict';
+
 const bluebird = require('bluebird');
 const isFunction = require('lodash.isfunction');
 const winston = require('winston');
@@ -22,20 +24,21 @@ const cachedProvider = (provider, defaultResult) => {
         })
 };
 
-const report = ({
-    providers = {}
-} = {}) => Object.freeze({
-    generate() {
-        return bluebird.props(Object.keys(providers || {})
-            .reduce((report, name) => {
-                const provider = providers[name];
-                report[name] = new Promise(resolve => {
-                    resolve(isFunction(provider) ? provider() : provider);
-                });
-                return report;
-            }, {}));
-    },
-});
+const report = (options) => {
+    const providers = (options || {}).providers || {};
+    return Object.freeze({
+        generate() {
+            return bluebird.props(Object.keys(providers)
+                .reduce((report, name) => {
+                    const provider = providers[name];
+                    report[name] = new Promise(resolve => {
+                        resolve(isFunction(provider) ? provider() : provider);
+                    });
+                    return report;
+                }, {}));
+        },
+    });
+};
 
 module.exports = {
     report,

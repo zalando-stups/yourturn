@@ -1,3 +1,5 @@
+'use strict';
+
 const bluebird = require('bluebird');
 const moment = require('moment');
 const winston = require('winston');
@@ -5,9 +7,12 @@ const winston = require('winston');
 const DEFAULT_EXPIRATION_TIME = moment.duration(1, 'week');
 const lastElement = arr => arr[arr.length - 1];
 
-const inMemoryStore = ({
-    keyExpiration = DEFAULT_EXPIRATION_TIME
-} = {}) => {
+const inMemoryStore = (options) => {
+    let keyExpiration = (options || {}).keyExpiration;
+    if (keyExpiration === undefined) {
+        keyExpiration = DEFAULT_EXPIRATION_TIME;
+    }
+
     const store = new Map();
 
     const cleanup = () => {
@@ -15,11 +20,12 @@ const inMemoryStore = ({
             return;
         }
         const keysExpirationTime = moment().subtract(keyExpiration);
-        for (let [key, keyAdditionTime] of store) {
+        [...store.keys()].forEach(key => {
+            const keyAdditionTime = store.get(key);
             if (keyAdditionTime < keysExpirationTime) {
                 store.delete(key);
             }
-        }
+        });
     };
 
     // TODO: find a way to use freeze here and not break tests
@@ -39,11 +45,14 @@ const inMemoryStore = ({
     });
 };
 
-const redisStore = ({
-    redis,
-    key = 'distinct-items',
-    keyExpiration = DEFAULT_EXPIRATION_TIME
-} = {}) => {
+const redisStore = (options) => {
+    const redis = (options || {}).redis;
+    const key = (options || {}).key || 'distinct-items';
+    let keyExpiration = (options || {}).keyExpiration;
+    if (keyExpiration === undefined) {
+        keyExpiration = DEFAULT_EXPIRATION_TIME;
+    }
+
     if (!redis) {
         throw new Error('redis should be not null');
     }
