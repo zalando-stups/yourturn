@@ -27,6 +27,7 @@ module.exports = function(req, res, next) {
             access_token: token
         })
         .then(tokeninfo => {
+            req.tokeninfo = tokeninfo.body;
             if (tokeninfo.body.realm === '/employees' ||
                 tokeninfo.body.realm === '/services') {
                 return next();
