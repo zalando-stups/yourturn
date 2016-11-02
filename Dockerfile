@@ -7,22 +7,14 @@ ADD ./server/package.json /www/package.json
 # add scm-source
 ADD /scm-source.json /scm-source.json
 
+# copy server
+COPY ./server/src /www/
+
 # copy static resources for client
 COPY ./client/dist/ /www/dist/
 COPY ./server/src/monitoring/newrelic-browser.js /www/dist/
 COPY ./client/dist/index.html /www/
 RUN chmod -R 0666 /www/dist/
-
-# copy server
-COPY ./server/src/data/ /www/data/
-COPY ./server/src/middleware/ /www/middleware/
-COPY ./server/src/monitoring/ /www/monitoring/
-COPY ./server/src/routes/ /www/routes/
-COPY ./server/src/env.js /www/
-COPY ./server/src/redis.js /www/
-COPY ./server/src/tokens.js /www/
-COPY ./server/src/yourturn.js /www/
-COPY ./server/src/redis-utils.js /www/
 
 # create appdynamics directory
 RUN mkdir -p /tmp/appd && chmod -R 0777 /tmp/appd
