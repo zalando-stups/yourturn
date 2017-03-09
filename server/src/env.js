@@ -28,7 +28,7 @@ function getEnvironment() {
         try {
             // try to read it
             clientIdFile = fs.readFileSync(clientIdPath);
-            env['YTENV_OAUTH_CLIENT_ID'] = clientIdFile.trim();
+            env['YTENV_OAUTH_CLIENT_ID'] = String(clientIdFile).trim();
             return env;
         } catch(err) {
             winston.error('Could not read client-id: %s', err.message);
