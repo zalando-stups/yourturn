@@ -22,6 +22,18 @@ function getEnvironment() {
     }
         // read client id from mint
     if (process.env.CREDENTIALS_DIR) {
+        var clientIdPath = path.join(process.env.CREDENTIALS_DIR, 'implicit-client-id'),
+            clientIdFile;
+
+        try {
+            // try to read it
+            clientIdFile = fs.readFileSync(clientIdPath);
+            env['YTENV_OAUTH_CLIENT_ID'] = clientIdFile.trim();
+            return env;
+        } catch(err) {
+            winston.error('Could not read client-id: %s', err.message);
+        }
+
         var clientJsonPath = path.join(process.env.CREDENTIALS_DIR, 'client.json'),
             clientJsonFile,
             clientJson;
