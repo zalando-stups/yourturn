@@ -255,6 +255,7 @@ class ApplicationForm extends React.Component {
                                 title='Please provide an URL with http or https.'
                                 onChange={this.update.bind(this, 'scm_url', 'value')}
                                 name='yourturn_app_scm_url'
+                                required={true}
                                 type='url' />
                         </div>
                         <div className='form-group'>
@@ -268,6 +269,7 @@ class ApplicationForm extends React.Component {
                                 value={app.documentation_url}
                                 onChange={this.update.bind(this, 'documentation_url', 'value')}
                                 name='yourturn_app_documentation_url'
+                                required={true}
                                 type='url' />
                         </div>
                         <div className='form-group'>
@@ -281,6 +283,7 @@ class ApplicationForm extends React.Component {
                                 value={app.specification_url}
                                 onChange={this.update.bind(this, 'specification_url', 'value')}
                                 name='yourturn_app_specification_url'
+                                required={true}
                                 type='url' />
                         </div>
                         <div className='form-group'>
