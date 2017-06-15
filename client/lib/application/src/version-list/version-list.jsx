@@ -28,7 +28,13 @@ class VersionList extends React.Component {
             applicationId: applicationId
         };
         return <div className='versionList'>
-                    <h2>
+            <div style={{backgroundColor: '#f08532'}}>
+                <h4 style={{color: '#FFF', margin: '20px'}}>
+                    Please note that the GitHub approval flow obsoletes Kio versions, i.e. you don't have to maintain version information in Kio anymore. The corresponding API endpoints will be disabled on July 31st, 2017.
+                </h4>
+            </div>
+
+            <h2>
                         <Link
                             to={Routes.appDetail(LINK_PARAMS)}>
                             {application.name || applicationId}
