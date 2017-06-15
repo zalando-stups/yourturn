@@ -1,6 +1,7 @@
 import React from 'react';
 import Sidebar from './sidebar/sidebar.jsx';
 import NotificationBar from './notification-bar/notification-bar.jsx';
+import DeprecationWarning from '../../common/src/components/DeprecationWarning.jsx'
 
 class YourTurn extends React.Component {
 
@@ -24,14 +25,9 @@ class YourTurn extends React.Component {
                             activeRoute={this.props.location.pathname} />
                     </div>
                     <div className='grid-col'>
-                        {this.state.show ?
-                            <div style={{backgroundColor: '#f08532'}} onClick={this.dismiss}>
-                                <h4 style={{color: '#FFF', margin: '20px'}}>
-                                    Please note that the GitHub approval flow obsoletes Kio versions, i.e. you don't have to maintain version information in Kio anymore. The corresponding API endpoints will be disabled on July 31st, 2017.<br />
-                                    Click to dismiss!
-                                </h4>
-                            </div> : null
-                        }
+                        <DeprecationWarning
+                            dismissable={true}
+                        />
                         <div className='yourturn-view'>
                             {this.props.children}
                         </div>

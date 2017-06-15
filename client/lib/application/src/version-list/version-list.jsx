@@ -3,6 +3,7 @@ import Icon from 'react-fa';
 import {Link} from 'react-router';
 import * as Routes from 'application/src/routes';
 import 'common/asset/less/application/version-list.less';
+import DeprecationWarning from '../../../common/src/components/DeprecationWarning.jsx';
 
 class VersionList extends React.Component {
     constructor() {
@@ -28,13 +29,8 @@ class VersionList extends React.Component {
             applicationId: applicationId
         };
         return <div className='versionList'>
-            <div style={{backgroundColor: '#f08532'}}>
-                <h4 style={{color: '#FFF', margin: '20px'}}>
-                    Please note that the GitHub approval flow obsoletes Kio versions, i.e. you don't have to maintain version information in Kio anymore. The corresponding API endpoints will be disabled on July 31st, 2017.
-                </h4>
-            </div>
-
-            <h2>
+                    <DeprecationWarning />
+                    <h2>
                         <Link
                             to={Routes.appDetail(LINK_PARAMS)}>
                             {application.name || applicationId}

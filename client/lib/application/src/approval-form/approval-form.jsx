@@ -6,6 +6,7 @@ import {Typeahead} from 'react-typeahead';
 import Markdown from 'common/src/markdown.jsx';
 import Collapsible from 'common/src/collapsible.jsx';
 import ApprovalCard from './approval-card.jsx';
+import DeprecationWarning from '../../../common/src/components/DeprecationWarning.jsx';
 import 'common/asset/less/application/approval-form.less';
 
 const EXPLANATIONS = {
@@ -133,11 +134,7 @@ class ApprovalForm extends React.Component {
         const {applicationId, versionId, application, approvalTypes, approvals, editable, userInfos} = this.props,
         LINK_PARAMS = {applicationId, versionId};
         return <div className='approvalForm'>
-                    <div style={{backgroundColor: '#f08532'}}>
-                        <h4 style={{color: '#FFF', margin: '20px'}}>
-                            Please note that the GitHub approval flow obsoletes Kio versions, i.e. you don't have to maintain version information in Kio anymore. The corresponding API endpoints will be disabled on July 31st, 2017.
-                        </h4>
-                    </div>
+                    <DeprecationWarning />
                     <h2>
                         <Link
                             to={Routes.appDetail(LINK_PARAMS)}>{application.name || applicationId}</Link> <Link
