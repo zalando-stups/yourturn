@@ -25,9 +25,9 @@ class YourTurn extends React.Component {
                             activeRoute={this.props.location.pathname} />
                     </div>
                     <div className='grid-col'>
-                        <DeprecationWarning
-                            dismissable={true}
-                        />
+                        {this.props.location.pathname === '/' ?
+                            <DeprecationWarning dismissable={true}/> : null
+                        }
                         <div className='yourturn-view'>
                             {this.props.children}
                         </div>
