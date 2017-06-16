@@ -26,7 +26,7 @@ class YourTurn extends React.Component {
                     </div>
                     <div className='grid-col'>
                         {this.props.location.pathname === '/' ?
-                            <DeprecationWarning dismissable={true}/> : null
+                            <DeprecationWarning dismissable={true} /> : null
                         }
                         <div className='yourturn-view'>
                             {this.props.children}
@@ -35,7 +35,7 @@ class YourTurn extends React.Component {
                 </div>
             </div>)
     }
-};
+}
 
 YourTurn.displayName = 'YourTurn';
 

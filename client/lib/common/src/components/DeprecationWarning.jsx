@@ -6,10 +6,10 @@ class DeprecationWarning extends React.Component {
         super(props);
 
         this.state = {show: true};
-        this.dismiss = this.dismiss.bind(this);
+        this.handleDismiss = this.handleDismiss.bind(this);
     }
 
-    dismiss() {
+    handleDismiss() {
         this.setState({show:false});
     }
 
@@ -23,7 +23,7 @@ class DeprecationWarning extends React.Component {
                             Please note that the GitHub approval flow obsoletes Kio versions, i.e. you don't have to maintain version information in Kio anymore. The corresponding API endpoints will be disabled on July 31st, 2017.
                         </h4>
                         {this.props.dismissable ?
-                            <div onClick={this.dismiss} >
+                            <div onClick={this.handleDismiss} >
                                 <Icon fixedWidth name='times' />
                             </div> : null}
                     </div>
@@ -31,5 +31,11 @@ class DeprecationWarning extends React.Component {
         )
     }
 }
+
+DeprecationWarning.displayName = 'DeprecationWarning';
+
+DeprecationWarning.propTypes = {
+    dismissable: React.PropTypes.bool
+};
 
 export default DeprecationWarning;
