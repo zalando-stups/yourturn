@@ -6,6 +6,7 @@ import {Typeahead} from 'react-typeahead';
 import Markdown from 'common/src/markdown.jsx';
 import Collapsible from 'common/src/collapsible.jsx';
 import ApprovalCard from './approval-card.jsx';
+import DeprecationWarning from '../../../common/src/components/DeprecationWarning.jsx';
 import 'common/asset/less/application/approval-form.less';
 
 const EXPLANATIONS = {
@@ -133,6 +134,7 @@ class ApprovalForm extends React.Component {
         const {applicationId, versionId, application, approvalTypes, approvals, editable, userInfos} = this.props,
         LINK_PARAMS = {applicationId, versionId};
         return <div className='approvalForm'>
+                    <DeprecationWarning />
                     <h2>
                         <Link
                             to={Routes.appDetail(LINK_PARAMS)}>{application.name || applicationId}</Link> <Link

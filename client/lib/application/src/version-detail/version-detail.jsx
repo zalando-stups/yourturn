@@ -10,6 +10,7 @@ import FetchResult from 'common/src/fetch-result';
 import Placeholder from './placeholder.jsx';
 import DefaultError from 'common/src/error.jsx';
 import Badge from 'common/src/badge.jsx';
+import DeprecationWarning from '../../../common/src/components/DeprecationWarning.jsx';
 import 'common/asset/less/application/version-detail.less';
 
 const ScmCommitInfo = (props) =>{
@@ -88,7 +89,9 @@ const VersionDetail = (props) => {
                             versionId={versionId} /> :
                     <DefaultError error={version.getResult()} />;
     }
-    return (<div className='versionDetail'>
+    return (
+            <div className='versionDetail'>
+                <DeprecationWarning />
                 <h2>
                     <Link
                         to={Routes.appDetail(LINK_PARAMS)}>

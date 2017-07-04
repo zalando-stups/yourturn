@@ -3,6 +3,7 @@ import Icon from 'react-fa';
 import {Link} from 'react-router';
 import * as Routes from 'application/src/routes';
 import 'common/asset/less/application/version-list.less';
+import DeprecationWarning from '../../../common/src/components/DeprecationWarning.jsx';
 
 class VersionList extends React.Component {
     constructor() {
@@ -28,6 +29,7 @@ class VersionList extends React.Component {
             applicationId: applicationId
         };
         return <div className='versionList'>
+                    <DeprecationWarning />
                     <h2>
                         <Link
                             to={Routes.appDetail(LINK_PARAMS)}>
