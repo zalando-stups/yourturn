@@ -152,6 +152,8 @@ Violation.propTypes = {
         id: React.PropTypes.number,
         account_id: React.PropTypes.string,
         region: React.PropTypes.string,
+        application_id: React.PropTypes.string,
+        version_id: React.PropTypes.string,
         instance_id: React.PropTypes.string,
         username: React.PropTypes.string,
         message: React.PropTypes.string,

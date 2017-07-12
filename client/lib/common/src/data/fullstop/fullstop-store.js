@@ -84,13 +84,8 @@ function FullstopStore(state, action) {
                     v.violation_type_id = v.violation_type.id;
                     v.violation_name = v.violation_type.violation_name;
                     v.is_whitelisted = v.rule_id != null;
-                    if (v.meta_info) {
-                        v.application_id = v.meta_info.application_id;
-                        v.version_id = v.meta_info.version_id;
-                    } else {
-                        v.application_id = null;
-                        v.version_id = null;
-                    }
+                    v.application_id = v.application_id || null;
+                    v.version_id = v.application_version_id || null;
                     return coll.push(Immutable.fromJS(v));
                 },
                 Immutable.List());
