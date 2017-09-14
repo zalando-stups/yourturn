@@ -14,7 +14,7 @@ function detail(req, res) {
             winston.error('Could not GET /employees/%s: %d %s', req.params.userId, err.status || 0, err.message);
             return res.status(err.status || 0).send(err);
         });
-};
+}
 
 function teams(req, res) {
     request
@@ -23,9 +23,9 @@ function teams(req, res) {
         // take OAuth token from request
         .set('Authorization', req.get('Authorization'))
         .then(response => res
-                    .status(200)
-                    .type('json')
-                    .send(response.text))
+                            .status(200)
+                            .type('json')
+                            .send(response.text))
         .catch(err => {
             winston.error('Could not GET /teams?member=%s: %d %s', req.params.userId, err.status || 0, err.message);
             return res.status(err.status || 0).send(err);
@@ -33,19 +33,28 @@ function teams(req, res) {
 }
 
 function accounts(req, res) {
-    request
+    const authorization = req.get('Authorization')
+    const accountsReq1 = request
         .get(process.env.YTENV_TEAM_BASE_URL + '/accounts/aws?member=' + req.params.userId)
         .accept('json')
         // take OAuth token from request
-        .set('Authorization', req.get('Authorization'))
-        .then(response => res
-                    .status(200)
-                    .type('json')
-                    .send(response.text))
+        .set('Authorization', authorization)
+    const accountsReq2 = request
+        .get(process.env.YTENV_TEAM_BASE_URL + '/accounts/kubernetes?role=PowerUser&member=' + req.params.userId)
+        .accept('json')
+        // take OAuth token from request
+        .set('Authorization', authorization)
+
+    Promise.all([accountsReq1, accountsReq2])
+        .then(results => res
+                           .status(200)
+                           .type('json')
+                           .send([...results[0].body, ...results[1].body])
+        )
         .catch(err => {
-            winston.error('Could not GET /accounts/%s: %d %s', req.params.userId, err.status || 0, err.message);
+            winston.error('Could not GET /accounts/[aws/kubernetes]/%s: %d %s', req.params.userId, err.status || 0, err.message);
             return res.status(err.status || 0).send(err);
-        });
+        })
 }
 
 module.exports = {
