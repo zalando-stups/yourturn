@@ -41,11 +41,17 @@ function accounts(req, res) {
                .set('Authorization', authorization));
     Promise.all(requests)
         .then(results => {
-            const response = [];
-            results.forEach(result => response.push(body));
+            const accounts = [];
+            results.forEach(result =>
+                result.body.forEach(account => {
+                    if (accounts.every(existingAccount => existingAccount.id !== account.id)){
+                        accounts.push(account);
+                    }
+                })
+            );
             return res.status(200)
                 .type('json')
-                .send(response)
+                .send(accounts)
         })
         .catch(err => {
             winston.error('Could not GET /accounts/aws/%s: %d %s', req.params.userId, err.status || 0, err.message);
