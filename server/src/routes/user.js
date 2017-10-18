@@ -33,28 +33,24 @@ function teams(req, res) {
 }
 
 function accounts(req, res) {
-    const authorization = req.get('Authorization')
-    const accountsReq1 = request
-        .get(process.env.YTENV_TEAM_BASE_URL + '/accounts/aws?member=' + req.params.userId)
-        .accept('json')
-        // take OAuth token from request
-        .set('Authorization', authorization)
-    const accountsReq2 = request
-        .get(process.env.YTENV_TEAM_BASE_URL + '/accounts/kubernetes?role=PowerUser&member=' + req.params.userId)
-        .accept('json')
-        // take OAuth token from request
-        .set('Authorization', authorization)
-
-    Promise.all([accountsReq1, accountsReq2])
-        .then(results => res
-                           .status(200)
-                           .type('json')
-                           .send([...results[0].body, ...results[1].body])
-        )
-        .catch(err => {
-            winston.error('Could not GET /accounts/[aws/kubernetes]/%s: %d %s', req.params.userId, err.status || 0, err.message);
-            return res.status(err.status || 0).send(err);
+    const authorization = req.get('Authorization');
+    const roles = ["PowerUser", "Deployer"];
+    const requests = roles.map(role =>
+        request.get(process.env.YTENV_TEAM_BASE_URL + '/accounts/aws?member=' + req.params.userId + '&role=' + role)
+               .accept('json')
+               .set('Authorization', authorization));
+    Promise.all(requests)
+        .then(results => {
+            const response = [];
+            results.forEach(result => response.push(body));
+            return res.status(200)
+                .type('json')
+                .send(response)
         })
+        .catch(err => {
+            winston.error('Could not GET /accounts/aws/%s: %d %s', req.params.userId, err.status || 0, err.message);
+            return res.status(err.status || 0).send(err);
+        });
 }
 
 module.exports = {
