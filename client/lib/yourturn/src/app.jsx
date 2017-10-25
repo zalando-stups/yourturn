@@ -1,7 +1,6 @@
 import React from 'react';
 import Sidebar from './sidebar/sidebar.jsx';
 import NotificationBar from './notification-bar/notification-bar.jsx';
-import DeprecationWarning from '../../common/src/components/DeprecationWarning.jsx'
 
 const YourTurn = (props) => {
     return (<div className='yourturn'>
@@ -11,9 +10,6 @@ const YourTurn = (props) => {
                 <Sidebar activeRoute={props.location.pathname} />
             </div>
             <div className='grid-col'>
-                {props.location.pathname === '/' ?
-                    <DeprecationWarning /> : null
-                }
                 <div className='yourturn-view'>
                     {props.children}
                 </div>
