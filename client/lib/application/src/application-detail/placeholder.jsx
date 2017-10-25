@@ -32,11 +32,6 @@ const ApplicationDetailPlaceholder = (props) => {
                         className='btn btn-default'>
                         <Icon name='key' /> Access Control
                     </Link>
-                    <Link
-                        to={Routes.verList(LINK_PARAMS)}
-                        className='btn btn-primary'>
-                        <Icon name='list' /> Versions
-                    </Link>
                 </div>
 
                 <h4>

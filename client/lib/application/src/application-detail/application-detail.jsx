@@ -41,11 +41,6 @@ export default function ApplicationDetail({applicationId, application, versions,
                         className='btn btn-default'>
                         <Icon name='key' /> Access Control
                     </Link>
-                    <Link
-                        to={Routes.verList(LINK_PARAMS)}
-                        className='btn btn-primary'>
-                        <Icon name='list' /> Versions
-                    </Link>
                     {ENV_DEVELOPMENT ?
                         <Link
                             to={Routes.lifecycle(LINK_PARAMS)}
