@@ -46,7 +46,7 @@ AccountAppList.displayName = 'AccountAppList';
 AccountAppList.propTypes = {
     account: React.PropTypes.string,
     kioStore: React.PropTypes.shape({
-        getApplications: React.PropTypes.func,
+        getApplications: React.PropTypes.func
     }).isRequired,
     search: React.PropTypes.string,
     showInactive: React.PropTypes.bool

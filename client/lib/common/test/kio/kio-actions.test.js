@@ -5,8 +5,7 @@ import {
     saveApplication
 } from 'common/src/data/kio/kio-actions';
 
-const APP_ID = 'kio',
-      VER_ID = '0.1';
+const APP_ID = 'kio';
 
 function assertOAuthHeader(req) {
     expect(req.headers.authorization).to.be.defined;

@@ -1,4 +1,3 @@
-/* global ENV_DEVELOPMENT */
 import _ from 'lodash';
 import {createAction} from 'redux-actions';
 import Type from './kio-types';

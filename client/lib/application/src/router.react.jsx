@@ -2,7 +2,6 @@
 import _ from 'lodash';
 import React from 'react';
 import {Route, IndexRoute} from 'react-router';
-import {parseArtifact} from 'application/src/util';
 import REDUX from 'yourturn/src/redux';
 import {
     bindGettersToState,
