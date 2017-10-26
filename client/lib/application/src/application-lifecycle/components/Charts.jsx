@@ -1,7 +1,6 @@
 import React from 'react';
 
 import { Link } from 'react-router';
-import * as Routes from 'application/src/routes';
 import Chart from 'common/src/components/pure/Chart.jsx';
 import Icon from 'react-fa';
 import ThreeColumns from 'common/src/components/pure/ThreeColumns.jsx';
@@ -18,7 +17,7 @@ const Charts = (props) => {
             <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'flex-end'}}>
                 <div>
                     <Link
-                        to={Routes.verApproval({applicationId: props.applicationId, versionId: version.id})}
+                        to='i/do/not/exist'
                         className='btn btn-default btn-small'>
                         <Icon fixedWidth name='check' />
                     </Link> Approvals
