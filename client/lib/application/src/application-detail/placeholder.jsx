@@ -88,32 +88,6 @@ const ApplicationDetailPlaceholder = (props) => {
                             <th>Criticality Level</th>
                             <td className='u-placeholder-text'>1</td>
                         </tr>
-                        <tr>
-                            <th>Recently updated versions</th>
-                            <td>
-                                <div>
-                                    <a className='btn btn-disabled btn-small'>
-                                        <Icon name='check' />
-                                    </a> <span className='u-placeholder-text'>0.1</span>
-                                </div>
-                                <div>
-                                    <a className='btn btn-disabled btn-small'>
-                                        <Icon name='check' />
-                                    </a> <span className='u-placeholder-text'>0.1</span>
-                                </div>
-                                <div>
-                                    <a className='btn btn-disabled btn-small'>
-                                        <Icon name='check' />
-                                    </a> <span className='u-placeholder-text'>0.1</span>
-                                </div>
-
-                                <Link
-                                    to={Routes.verCreate(LINK_PARAMS)}
-                                    className='btn btn-default applicationDetail-newVersion btn-disabled'>
-                                    <Icon name='plus' /> New version
-                                </Link>
-                            </td>
-                        </tr>
                     </tbody>
                 </table>
                 <h4 className='applicationDetail-descriptionTitle'>Description</h4>
