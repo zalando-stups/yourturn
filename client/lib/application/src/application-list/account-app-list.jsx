@@ -4,8 +4,7 @@ import * as Routes from 'application/src/routes';
 
 const AccountAppList = (props) => {
     let {account, kioStore, showInactive, search} = props,
-        apps = kioStore.getApplications(search, account),
-        latestVersions = kioStore.getLatestApplicationVersions(account);
+        apps = kioStore.getApplications(search, account);
 
     return <div className='teamAppList'>
                 {apps.length ?
@@ -48,7 +47,6 @@ AccountAppList.propTypes = {
     account: React.PropTypes.string,
     kioStore: React.PropTypes.shape({
         getApplications: React.PropTypes.func,
-        getLatestApplicationVersions: React.PropTypes.func
     }).isRequired,
     search: React.PropTypes.string,
     showInactive: React.PropTypes.bool

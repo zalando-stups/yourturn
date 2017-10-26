@@ -17,7 +17,6 @@ import {
 import NotificationStore from 'common/src/data/notification/notification-store';
 import KioStore from 'common/src/data/kio/kio-store';
 import TwintipStore from 'common/src/data/twintip/twintip-store';
-import PieroneStore from 'common/src/data/pierone/pierone-store';
 import UserStore from 'common/src/data/user/user-store';
 import MintStore from 'common/src/data/mint/mint-store';
 import MagnificentStore from 'common/src/data/magnificent/magnificent-store';
@@ -32,7 +31,6 @@ const logger = createLogger(),
         notifications: NotificationStore,
         user: UserStore,
         kio: KioStore,
-        pierone: PieroneStore,
         twintip: TwintipStore,
         mint: MintStore,
         magnificent: MagnificentStore,
