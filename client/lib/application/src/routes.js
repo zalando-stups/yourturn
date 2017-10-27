@@ -26,26 +26,6 @@ function appDetail({applicationId}) {
     return `/application/detail/${applicationId}`;
 }
 
-function verList({applicationId}) {
-    return `/application/detail/${applicationId}/version`;
-}
-
-function verCreate({applicationId}) {
-    return `/application/detail/${applicationId}/version/create`;
-}
-
-function verApproval({applicationId, versionId}) {
-    return `/application/detail/${applicationId}/version/approve/${versionId}`;
-}
-
-function verDetail({applicationId, versionId}) {
-    return `/application/detail/${applicationId}/version/detail/${versionId}`;
-}
-
-function verEdit({applicationId, versionId}) {
-    return `/application/detail/${applicationId}/version/edit/${versionId}`;
-}
-
 function lifecycle({applicationId}) {
     return `/application/detail/${applicationId}/lifecycle`;
 }
@@ -57,10 +37,5 @@ export {
     appOAuth,
     appAccess,
     appDetail,
-    verList,
-    verCreate,
-    verApproval,
-    verDetail,
-    verEdit,
     lifecycle
 };

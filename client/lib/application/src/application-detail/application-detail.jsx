@@ -9,7 +9,7 @@ import Placeholder from './placeholder.jsx';
 import DefaultError from 'common/src/error.jsx';
 import 'common/asset/less/application/application-detail.less';
 
-export default function ApplicationDetail({applicationId, application, versions, editable, api}) {
+export default function ApplicationDetail({applicationId, application, editable, api}) {
     const LINK_PARAMS = { applicationId };
 
     if (application instanceof FetchResult) {
@@ -40,11 +40,6 @@ export default function ApplicationDetail({applicationId, application, versions,
                         to={Routes.appAccess(LINK_PARAMS)}
                         className='btn btn-default'>
                         <Icon name='key' /> Access Control
-                    </Link>
-                    <Link
-                        to={Routes.verList(LINK_PARAMS)}
-                        className='btn btn-primary'>
-                        <Icon name='list' /> Versions
                     </Link>
                     {ENV_DEVELOPMENT ?
                         <Link
@@ -147,37 +142,6 @@ export default function ApplicationDetail({applicationId, application, versions,
                                 </span>
                             </td>
                         </tr>
-                        <tr>
-                            <th>Recently updated versions</th>
-                            <td>
-                                {versions.length ?
-                                    versions.map(
-                                        v => <div key={v.id}>
-                                                <Link
-                                                    to={Routes.verApproval({
-                                                        applicationId: applicationId,
-                                                        versionId: v.id
-                                                    })}
-                                                    className='btn btn-default btn-small'>
-                                                    <Icon name='check' />
-                                                </Link> <Link
-                                                    to={Routes.verDetail({
-                                                        applicationId: applicationId,
-                                                        versionId: v.id
-                                                    })}>
-                                                    {v.id}
-                                                </Link>
-                                             </div>)
-                                    :
-                                    <div>No versions yet.</div>
-                                }
-                                <Link
-                                    to={Routes.verCreate(LINK_PARAMS)}
-                                    className={`btn btn-default applicationDetail-newVersion ${editable ? '' : 'btn-disabled'}`}>
-                                    <Icon name='plus' /> New version
-                                </Link>
-                            </td>
-                        </tr>
                     </tbody>
                 </table>
                 <h4 className='applicationDetail-descriptionTitle'>Description</h4>
@@ -199,9 +163,6 @@ ApplicationDetail.propTypes = {
     applicationId: React.PropTypes.string.isRequired,
     editable: React.PropTypes.bool,
     kioActions: React.PropTypes.object.isRequired,
-    notificationActions: React.PropTypes.object.isRequired,
-    versions: React.PropTypes.arrayOf(React.PropTypes.shape({
-        id: React.PropTypes.string
-    }))
+    notificationActions: React.PropTypes.object.isRequired
 };
 

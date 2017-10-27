@@ -2,17 +2,10 @@
 import {
     fetchApplications,
     fetchApplication,
-    saveApplication,
-    fetchApplicationVersions,
-    fetchApplicationVersion,
-    saveApplicationVersion,
-    fetchApprovalTypes,
-    fetchApprovals,
-    saveApproval
+    saveApplication
 } from 'common/src/data/kio/kio-actions';
 
-const APP_ID = 'kio',
-      VER_ID = '0.1';
+const APP_ID = 'kio';
 
 function assertOAuthHeader(req) {
     expect(req.headers.authorization).to.be.defined;
@@ -44,36 +37,6 @@ describe('The kio actions', () => {
         it('#fetchApplication', () => {
             mitm.on('request', assertOAuthHeader);
             fetchApplication(APP_ID);
-        });
-
-        it('#fetchApplicationVersions', () => {
-            mitm.on('request', assertOAuthHeader);
-            fetchApplicationVersions(APP_ID);
-        });
-
-        it('#fetchApplicationVersion', () => {
-            mitm.on('request', assertOAuthHeader);
-            fetchApplicationVersion(APP_ID, VER_ID);
-        });
-
-        it('#saveApplicationVersion', () => {
-            mitm.on('request', assertOAuthHeader);
-            saveApplicationVersion(APP_ID, VER_ID, {});
-        });
-
-        it('#fetchApprovalTypes', () => {
-            mitm.on('request', assertOAuthHeader);
-            fetchApprovalTypes(APP_ID);
-        });
-
-        it('#fetchApprovals', () => {
-            mitm.on('request', assertOAuthHeader);
-            fetchApprovals(APP_ID, VER_ID);
-        });
-
-        it('#saveApproval', () => {
-            mitm.on('request', assertOAuthHeader);
-            saveApproval(APP_ID, VER_ID, {});
         });
     });
 });

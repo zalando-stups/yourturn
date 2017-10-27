@@ -30,7 +30,6 @@ describe('The application detail view', () => {
             application: TEST_APP,
             editable: true,
             api: {},
-            versions: [],
             notificationActions: {},
             kioActions: {}
         };
