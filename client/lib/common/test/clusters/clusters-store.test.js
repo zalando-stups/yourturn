@@ -55,7 +55,8 @@ const clusters = [
     'alias': 'tp',
     'environment': 't',
     'id': 'c-10'
-  }  ];
+  }  
+];
 
 describe('The redux clusters store', () => {
     it('should receive clusters', () => {
