@@ -13,3 +13,4 @@ stats.json
 .DS_Store
 .vagrant
 .idea
+package-lock.json
