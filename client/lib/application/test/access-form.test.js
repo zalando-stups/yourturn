@@ -41,6 +41,8 @@ describe('The access control form view', () => {
             mintActions,
             application: APP_KIO,
             allScopes: [],
+            allClusters: [],
+            clusters: [],
             applicationScopes: [],
             oauthConfig: OAUTH_KIO,
             defaultAccount: 'foo',

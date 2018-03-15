@@ -12,6 +12,7 @@ docker run \
     -e YTENV_TEAM_BASE_URL=http://localhost:5005 \
     -e YTENV_MINT_BASE_URL=http://localhost:5004 \
     -e YTENV_ESSENTIALS_BASE_URL=http://localhost:5003 \
+    -e YTENV_CLUSTERS_BASE_URL=http://localhost:5012 \
     -e YTENV_PIERONE_BASE_URL=http://localhost:5007/v1 \
     -p 8080:8080 \
     -u 998 \

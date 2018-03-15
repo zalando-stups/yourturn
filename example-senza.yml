@@ -45,6 +45,7 @@ SenzaComponents:
           YTENV_TWINTIP_BASE_URL: https://twintip.example.com
           YTENV_MINT_BASE_URL: https://mint.example.com
           YTENV_ESSENTIALS_BASE_URL: https://essentials.example.com
+          YTENV_CLUSTERS_BASE_URL: https://clusters.example.com
           YTENV_TEAM_BASE_URL: https://teams.authentication.example.com
           YTENV_PIERONE_BASE_URL: https://pierone.example.com
           YTENV_FULLSTOP_BASE_URL: https://fullstop.example.com/api

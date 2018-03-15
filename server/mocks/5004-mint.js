@@ -19,6 +19,11 @@ var apps = {
         s3_buckets: [
             'kio-stups-bucket'
         ],
+        kubernetes_clusters:[
+          "c-3",
+          "c-5",
+          "c-7"
+        ],
         scopes: [{
             resource_type_id: 'customer',
             scope_id: 'read_all'

@@ -21,6 +21,7 @@ import UserStore from 'common/src/data/user/user-store';
 import MintStore from 'common/src/data/mint/mint-store';
 import MagnificentStore from 'common/src/data/magnificent/magnificent-store';
 import EssentialsStore from 'common/src/data/essentials/essentials-store';
+import ClustersStore from 'common/src/data/clusters/clusters-store';
 import FullstopStore from 'common/src/data/fullstop/fullstop-store';
 import TeamStore from 'common/src/data/team/team-store';
 import SearchStore from 'common/src/data/search/search-store';
@@ -35,6 +36,7 @@ const logger = createLogger(),
         mint: MintStore,
         magnificent: MagnificentStore,
         essentials: EssentialsStore,
+        kubernetes_clusters: ClustersStore,
         fullstop: FullstopStore,
         team: TeamStore,
         search: SearchStore,
