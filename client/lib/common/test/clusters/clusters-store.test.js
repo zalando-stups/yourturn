@@ -7,53 +7,53 @@ import Store from 'common/src/data/clusters/clusters-store';
 
 const clusters = [
   {
-    'alias': 'playground',
-    'environment': 'playground',
+    'alias': 'st',
+    'environment': 'pg',
     'id': 'c-1'
   },
   {
-    'alias': 'stups-test',
-    'environment': 'test',
+    'alias': 'st-t',
+    'environment': 't',
     'id': 'c-2'
   },
   {
-    'alias': 'stups',
+    'alias': 'st',
     'environment': 'production',
     'id': 'c-3'
   },
   {
-    'alias': 'overarching',
+    'alias': 'ovra',
     'environment': 'production',
     'id': 'c-4'
   },
   {
-    'alias': 'db',
+    'alias': 'database',
     'environment': 'production',
     'id': 'c-5'
   },
   {
-    'alias': 'fashion-store',
+    'alias': 'f-store',
     'environment': 'production',
     'id': 'c-6'
   },
   {
-    'alias': 'fashion-store-test',
-    'environment': 'test',
+    'alias': 'f-store-test',
+    'environment': 't',
     'id': 'c-7'
   },
   {
-    'alias': 'distributed-commerce',
+    'alias': 'dist',
     'environment': 'production',
     'id': 'c-8'
   },
   {
-    'alias': 'distributed-commerce-test',
-    'environment': 'test',
+    'alias': 'dist-test',
+    'environment': 't',
     'id': 'c-9'
   },
   {
-    'alias': 'teapot',
-    'environment': 'test',
+    'alias': 'tp',
+    'environment': 't',
     'id': 'c-10'
   }  ];
 
