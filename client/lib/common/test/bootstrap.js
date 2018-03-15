@@ -1,5 +1,9 @@
 import './fetch-result.test';
 
+import './clusters/clusters-store.test';
+import './clusters/clusters-actions.test';
+import './clusters/clusters-getter.test';
+import './clusters/cluster-store.test';
 import './essentials/application-store.test';
 import './essentials/essentials-actions.test';
 import './essentials/essentials-getter.test';

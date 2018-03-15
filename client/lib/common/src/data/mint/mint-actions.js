@@ -30,6 +30,7 @@ function fetchOAuthConfig(applicationId) {
 function saveOAuthConfig(applicationId, config) {
     let configToSend = {
         scopes: config.scopes && config.scopes.length ? config.scopes : undefined,
+        kubernetes_clusters: config.kubernetes_clusters && config.kubernetes_clusters.length ? config.kubernetes_clusters : undefined,
         s3_buckets: config.s3_buckets && config.s3_buckets.length ? config.s3_buckets : undefined,
         is_client_confidential: config.is_client_confidential,
         redirect_url: config.redirect_url

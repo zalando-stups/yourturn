@@ -2,6 +2,7 @@ import TWINTIP_BASE_URL from 'TWINTIP_BASE_URL';
 import KIO_BASE_URL from 'KIO_BASE_URL';
 import MINT_BASE_URL from 'MINT_BASE_URL';
 import ESSENTIALS_BASE_URL from 'ESSENTIALS_BASE_URL';
+import CLUSTERS_BASE_URL from 'CLUSTERS_BASE_URL';
 import PIERONE_BASE_URL from 'PIERONE_BASE_URL';
 import MAGNIFICENT_BASE_URL from 'MAGNIFICENT_BASE_URL';
 import ALICE_BASE_URL from 'ALICE_BASE_URL';
@@ -31,6 +32,10 @@ const SERVICES = {
         url: ESSENTIALS_BASE_URL,
         root: '/resource-types',
         id: 'id'
+    },
+    clusters: {
+      url: CLUSTERS_BASE_URL,
+      root: '/kubernetes-clusters'
     },
     pierone: {
         url: PIERONE_BASE_URL,

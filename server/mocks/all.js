@@ -10,6 +10,7 @@ var kio = require('./5000-kio'),
     user = require('./5009-user'),
     magnificent = require('./5010-magnificent');
     alice = require('./5011-alice');
+    clusters = require('./5012-clusters');
 
 kio.listen(5000);
 console.log('kio on 5000');
@@ -35,3 +36,5 @@ magnificent.listen(5010);
 console.log('magnificent on 5010');
 alice.listen(5011);
 console.log('alice on 5011');
+clusters.listen(5012);
+console.log('clusters on 5012');

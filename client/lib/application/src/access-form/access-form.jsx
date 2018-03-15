@@ -5,6 +5,7 @@ import {Link} from 'react-router';
 import * as Routes from 'application/src/routes';
 import OAuthSyncInfo from 'application/src/oauth-sync-info.jsx';
 import ScopeList from 'application/src/scope-list.jsx';
+import ClusterList from 'application/src/cluster-list.jsx';
 import EditableList from 'application/src/editable-list.jsx';
 import 'common/asset/less/application/access-form.less';
 import MINT_BUCKET_TEMPLATE from 'MINT_BUCKET_TEMPLATE';
@@ -19,6 +20,7 @@ class AccessForm extends React.Component {
         super();
         const {oauthConfig} = props;
         this.state = {
+            kubernetes_clusters: oauthConfig.kubernetes_clusters,
             s3_buckets: oauthConfig.s3_buckets,
             scopes: oauthConfig.scopes
         };
@@ -42,6 +44,12 @@ class AccessForm extends React.Component {
         });
     }
 
+    updateKubernetesClusters(selectedClusters) {
+        this.setState({
+          kubernetes_clusters: selectedClusters
+        });
+    }
+
     onRenewCredentials() {
         return this.props.mintActions
                 .renewCredentials(this.props.applicationId);
@@ -56,9 +64,11 @@ class AccessForm extends React.Component {
                             .scopes
                             .filter(s => allScopes.some(scp => scp.id === s.id &&
                                                             scp.resource_type_id === s.resource_type_id &&
-                                                            scp.is_resource_owner_scope ));
+                                                            scp.is_resource_owner_scope )),
+            clusters = this.state.kubernetes_clusters;
 
         oauthConfig.scopes = ownerscopes.concat(appscopes);
+        oauthConfig.kubernetes_clusters = clusters;
         oauthConfig.s3_buckets = this.state.s3_buckets;
 
         this.props.mintActions
@@ -77,6 +87,7 @@ class AccessForm extends React.Component {
             applicationId,
             application,
             applicationScopes,
+            allClusters,
             oauthConfig,
             defaultAccount,
             editable } = this.props,
@@ -136,6 +147,21 @@ class AccessForm extends React.Component {
                             </button>
                         </div>
                         <div className='form-group'>
+                            <label>Kubernetes Clusters</label>
+                            <ClusterList
+                                selected={this.state.kubernetes_clusters}
+                                clusters={allClusters}
+                                onSelect={this.updateKubernetesClusters.bind(this)} />
+                        </div>
+                        <div className='btn-group'>
+                            <button
+                                type='submit'
+                                data-block='save-button'
+                                className={`btn btn-primary ${editable ? '' : 'btn-disabled'}`}>
+                                <Icon name='save' /> Save
+                            </button>
+                        </div>
+                        <div className='form-group'>
                             <label>Application Scopes</label>
                             <small>{application.name} has the permission to access data with these scopes:</small>
                             <ScopeList
@@ -160,12 +186,14 @@ class AccessForm extends React.Component {
 AccessForm.displayName = 'AccessForm';
 
 AccessForm.propTypes = {
+    allClusters: React.PropTypes.array.isRequired,
     allScopes: React.PropTypes.array.isRequired,
     application: React.PropTypes.object.isRequired,
     applicationId: React.PropTypes.string.isRequired,
     applicationScopes: React.PropTypes.array.isRequired,
     defaultAccount: React.PropTypes.string.isRequired,
     editable: React.PropTypes.bool.isRequired,
+    kubernetesClusters: React.PropTypes.array,
     mintActions: React.PropTypes.object.isRequired,
     notificationActions: React.PropTypes.object.isRequired,
     oauthConfig: React.PropTypes.object.isRequired

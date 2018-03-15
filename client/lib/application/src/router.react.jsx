@@ -21,6 +21,7 @@ import * as TeamGetter from 'common/src/data/team/team-getter';
 import * as TwintipGetter from 'common/src/data/twintip/twintip-getter';
 import * as MintGetter from 'common/src/data/mint/mint-getter';
 import * as EssentialsGetter from 'common/src/data/essentials/essentials-getter';
+import * as ClustersGetter from 'common/src/data/clusters/clusters-getter';
 import * as MagnificentGetter from 'common/src/data/magnificent/magnificent-getter';
 
 import * as NotificationActions from 'common/src/data/notification/notification-actions';
@@ -30,6 +31,7 @@ import * as TeamActions from 'common/src/data/team/team-actions';
 import * as TwintipActions from 'common/src/data/twintip/twintip-actions';
 import * as MintActions from 'common/src/data/mint/mint-actions';
 import * as EssentialsActions from 'common/src/data/essentials/essentials-actions';
+import * as ClustersActions from 'common/src/data/clusters/clusters-actions';
 import * as MagnificentActions from 'common/src/data/magnificent/magnificent-actions';
 
 import ApplicationList from './application-list/application-list.jsx';
@@ -45,6 +47,7 @@ const MINT_ACTIONS = bindActionsToStore(REDUX, MintActions),
       USER_ACTIONS = bindActionsToStore(REDUX, UserActions),
       KIO_ACTIONS = bindActionsToStore(REDUX, KioActions),
       ESSENTIALS_ACTIONS = bindActionsToStore(REDUX, EssentialsActions),
+      CLUSTERS_ACTIONS = bindActionsToStore(REDUX, ClustersActions),
       NOTIFICATION_ACTIONS = bindActionsToStore(REDUX, NotificationActions),
       TEAM_ACTIONS = bindActionsToStore(REDUX, TeamActions),
       TWINTIP_ACTIONS = bindActionsToStore(REDUX, TwintipActions),
@@ -362,17 +365,20 @@ let ConnectedOAuthFormHandler = connect(state => ({
     mintStore: bindGettersToState(state.mint, MintGetter),
     userStore: bindGettersToState(state.user, UserGetter),
     essentialsStore: bindGettersToState(state.essentials, EssentialsGetter),
+    clustersStore: bindGettersToState(state.kuibernetes_clusters, ClustersGetter),
     magnificentStore: bindGettersToState(state.magnificent, MagnificentGetter)
 }))(OAuthFormHandler);
 
 const AccessFormHandler = (props) => {
     const {applicationId} = props.params,
-        {magnificentStore, kioStore, mintStore, essentialsStore, userStore} = props,
+        {magnificentStore, kioStore, mintStore, essentialsStore, clustersStore, userStore} = props,
         application = kioStore.getApplication(applicationId),
         oauthConfig = mintStore.getOAuthConfig(applicationId),
         cloudAccounts = userStore.getUserCloudAccounts(),
         defaultAccount = cloudAccounts.length ? cloudAccounts[0].id : false,
         allScopes = essentialsStore.getAllScopes(),
+        allClusters = clustersStore.getAllClusters(),
+        kubernetesClusters = allClusters,
         applicationScopes = allScopes.filter(s => !s.is_resource_owner_scope),
         editable = magnificentStore.getAuth(application.team_id);
     return <AccessForm
@@ -382,12 +388,17 @@ const AccessFormHandler = (props) => {
             mintActions={MINT_ACTIONS}
             defaultAccount={defaultAccount}
             applicationScopes={applicationScopes}
+            kubernetesClusters={kubernetesClusters}
             notificationActions={NOTIFICATION_ACTIONS}
             application={application}
+            allClusters={allClusters}
             allScopes={allScopes} />;
 };
 AccessFormHandler.displayName = 'AccessFormHandler';
 AccessFormHandler.propTypes = {
+    clustersStore: React.PropTypes.shape({
+        getAllClusters: React.PropTypes.func
+    }).isRequired,
     essentialsStore: React.PropTypes.shape({
         getAllScopes: React.PropTypes.func
     }).isRequired,
@@ -408,6 +419,7 @@ AccessFormHandler.propTypes = {
 AccessFormHandler.fetchData = function(routerState, state) {
     let id = routerState.params.applicationId;
     ESSENTIALS_ACTIONS.fetchAllScopes();
+    CLUSTERS_ACTIONS.fetchAllClusters();
     const application = KioGetter.getApplication(state.kio, id);
     if (!application) {
         KIO_ACTIONS
@@ -424,6 +436,7 @@ let ConnectedAccessFormHandler = connect(state => ({
     kioStore: bindGettersToState(state.kio, KioGetter),
     userStore: bindGettersToState(state.user, UserGetter),
     essentialsStore: bindGettersToState(state.essentials, EssentialsGetter),
+    clustersStore: bindGettersToState(state.kubernetes_clusters, ClustersGetter),
     magnificentStore: bindGettersToState(state.magnificent, MagnificentGetter)
 }))(AccessFormHandler);
 
