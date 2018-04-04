@@ -110,7 +110,7 @@ class OAuthForm extends React.Component {
                         className='form'>
                         <div className='form-group'>
                             <label htmlFor='oauth_redirect_url'>Redirect URL</label>
-                            <small>Where you expect users to come back to after logging in.</small>
+                            <small>Where you expect users to come back to after logging in. NOTE: this field is not relevant when using the Kubernetes OAuth/IAM integration (PlatformCredentialsSet).</small>
                             <input
                                 value={this.state.redirectUrl}
                                 onChange={this.updateRedirectUrl.bind(this)}
