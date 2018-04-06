@@ -18,6 +18,36 @@ var resourceTypes = {
         'name': 'Customer',
         'description': 'Customer',
         'resource_owners': []
+    },
+    'customer1': {
+        'id': 'customer1',
+        'name': 'Customer1',
+        'description': 'Customer1',
+        'resource_owners': []
+    },
+    'customer2': {
+        'id': 'customer2',
+        'name': 'Customer2',
+        'description': 'Customer2',
+        'resource_owners': []
+    },
+    'customer3': {
+        'id': 'customer3',
+        'name': 'Customer3',
+        'description': 'Customer3',
+        'resource_owners': []
+    },
+    'customer4': {
+        'id': 'customer4',
+        'name': 'Customer4',
+        'description': 'Customer4',
+        'resource_owners': []
+    },
+    'customer5': {
+        'id': 'customer5',
+        'name': 'Customer5',
+        'description': 'Customer5',
+        'resource_owners': []
     }
 };
 var resourceScopes = {
@@ -31,6 +61,86 @@ var resourceScopes = {
         }
     },
     'customer': {
+        'read_all': {
+            'id': 'read_all',
+            'summary': 'Grants read-access to all customer data',
+            'description': 'Description',
+            'user_information': 'Read all base information',
+            'is_resource_owner_scope': false
+        },
+        'write_all': {
+            'id': 'write_all',
+            'summary': 'Grants write-access to all customer data',
+            'description': 'Description',
+            'user_information': 'Write all base information',
+            'is_resource_owner_scope': false
+        }
+    },
+    'customer1': {
+        'read': {
+            'id': 'read',
+            'summary': 'Grants read-access to all customer data',
+            'description': 'Description',
+            'user_information': 'Read all base information',
+            'is_resource_owner_scope': false
+        },
+        'write': {
+            'id': 'write',
+            'summary': 'Grants write-access to all customer data',
+            'description': 'Description',
+            'user_information': 'Write all base information',
+            'is_resource_owner_scope': false
+        }
+    },
+    'customer2': {
+        'read_all': {
+            'id': 'read_all',
+            'summary': 'Grants read-access to all customer data',
+            'description': 'Description',
+            'user_information': 'Read all base information',
+            'is_resource_owner_scope': false
+        },
+        'write_all': {
+            'id': 'write_all',
+            'summary': 'Grants write-access to all customer data',
+            'description': 'Description',
+            'user_information': 'Write all base information',
+            'is_resource_owner_scope': false
+        }
+    },
+    'customer3': {
+        'read_all': {
+            'id': 'read_all',
+            'summary': 'Grants read-access to all customer data',
+            'description': 'Description',
+            'user_information': 'Read all base information',
+            'is_resource_owner_scope': false
+        },
+        'write_all': {
+            'id': 'write_all',
+            'summary': 'Grants write-access to all customer data',
+            'description': 'Description',
+            'user_information': 'Write all base information',
+            'is_resource_owner_scope': false
+        }
+    },
+    'customer4': {
+        'read_all': {
+            'id': 'read_all',
+            'summary': 'Grants read-access to all customer data',
+            'description': 'Description',
+            'user_information': 'Read all base information',
+            'is_resource_owner_scope': false
+        },
+        'write_all': {
+            'id': 'write_all',
+            'summary': 'Grants write-access to all customer data',
+            'description': 'Description',
+            'user_information': 'Write all base information',
+            'is_resource_owner_scope': false
+        }
+    },
+    'customer5': {
         'read_all': {
             'id': 'read_all',
             'summary': 'Grants read-access to all customer data',

@@ -1,5 +1,6 @@
 /* global ENV_DEVELOPMENT */
 import _ from 'lodash';
+import Immutable from 'immutable';
 import React from 'react';
 import {Route, IndexRoute} from 'react-router';
 import REDUX from 'yourturn/src/redux';
@@ -376,23 +377,25 @@ const AccessFormHandler = (props) => {
         oauthConfig = mintStore.getOAuthConfig(applicationId),
         cloudAccounts = userStore.getUserCloudAccounts(),
         defaultAccount = cloudAccounts.length ? cloudAccounts[0].id : false,
-        allScopes = essentialsStore.getAllScopes(),
+        allResources = essentialsStore.getResources(),
+        resources = allResources.reduce((map, res) => map.set(res.id, Immutable.Map(res)), Immutable.Map()),
         allClusters = clustersStore.getAllClusters(),
         kubernetesClusters = allClusters,
-        applicationScopes = allScopes.filter(s => !s.is_resource_owner_scope),
+        applicationScopes = allResources.reduce((map, res) => map.set(res.id, Immutable.Map()), Immutable.Map()),
         editable = magnificentStore.getAuth(application.team_id);
     return <AccessForm
             applicationId={props.params.applicationId}
             editable={editable}
             oauthConfig={oauthConfig}
             mintActions={MINT_ACTIONS}
+            essentialsActions={ESSENTIALS_ACTIONS}
             defaultAccount={defaultAccount}
             applicationScopes={applicationScopes}
             kubernetesClusters={kubernetesClusters}
             notificationActions={NOTIFICATION_ACTIONS}
             application={application}
             allClusters={allClusters}
-            allScopes={allScopes} />;
+            allResources={resources} />;
 };
 AccessFormHandler.displayName = 'AccessFormHandler';
 AccessFormHandler.propTypes = {
@@ -418,7 +421,7 @@ AccessFormHandler.propTypes = {
 };
 AccessFormHandler.fetchData = function(routerState, state) {
     let id = routerState.params.applicationId;
-    ESSENTIALS_ACTIONS.fetchAllScopes();
+    ESSENTIALS_ACTIONS.fetchResources();
     CLUSTERS_ACTIONS.fetchAllClusters();
     const application = KioGetter.getApplication(state.kio, id);
     if (!application) {

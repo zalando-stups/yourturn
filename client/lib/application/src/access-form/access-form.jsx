@@ -1,4 +1,5 @@
 import React from 'react';
+import Immutable from 'immutable';
 import Icon from 'react-fa';
 import _ from 'lodash';
 import {Link} from 'react-router';
@@ -22,7 +23,8 @@ class AccessForm extends React.Component {
         this.state = {
             kubernetes_clusters: oauthConfig.kubernetes_clusters,
             s3_buckets: oauthConfig.s3_buckets,
-            scopes: oauthConfig.scopes
+            scopes: oauthConfig.scopes,
+            applicationScopes: props.applicationScopes
         };
     }
 
@@ -58,13 +60,13 @@ class AccessForm extends React.Component {
     save(evt) {
         evt.preventDefault();
 
-        let {applicationId, allScopes, oauthConfig} = this.props,
+        let {applicationId, oauthConfig} = this.props,
             appscopes = this.state.scopes,
             ownerscopes = oauthConfig
                             .scopes
-                            .filter(s => allScopes.some(scp => scp.id === s.id &&
+                            .filter(s => this.state.applicationScopes.some(scp => scp.id === s.id &&
                                                             scp.resource_type_id === s.resource_type_id &&
-                                                            scp.is_resource_owner_scope )),
+                                                            scp.is_resource_owner_scope)),
             clusters = this.state.kubernetes_clusters;
 
         oauthConfig.scopes = ownerscopes.concat(appscopes);
@@ -82,15 +84,24 @@ class AccessForm extends React.Component {
         });
     }
 
+    fetchScopes(resourceType) {
+      this.props.essentialsActions.fetchScopes(resourceType).then(val => {
+        const state = this.state;
+        state.applicationScopes = state.applicationScopes.set(val[0], val[1].reduce((map, res) => map.set(res.id, Immutable.fromJS(res)), Immutable.Map()));
+        this.setState(state);
+      });
+    }
+
     render() {
         const {
             applicationId,
             application,
-            applicationScopes,
             allClusters,
+            allResources,
             oauthConfig,
             defaultAccount,
             editable } = this.props,
+            applicationScopes = this.state.applicationScopes,
             LINK_PARAMS = {applicationId};
         return <div className='accessForm'>
                     <h2>
@@ -165,8 +176,10 @@ class AccessForm extends React.Component {
                             <label>Application Scopes</label>
                             <small>{application.name} has the permission to access data with these scopes:</small>
                             <ScopeList
+                                allResources={allResources}
                                 selected={this.state.scopes}
                                 scopes={applicationScopes}
+                                onFold={this.fetchScopes.bind(this)}
                                 onSelect={this.updateScopes.bind(this)} />
                         </div>
                         <div className='btn-group'>
@@ -187,6 +200,7 @@ AccessForm.displayName = 'AccessForm';
 
 AccessForm.propTypes = {
     allClusters: React.PropTypes.array.isRequired,
+    allResources: React.PropTypes.array.isRequired,
     allScopes: React.PropTypes.array.isRequired,
     application: React.PropTypes.object.isRequired,
     applicationId: React.PropTypes.string.isRequired,
