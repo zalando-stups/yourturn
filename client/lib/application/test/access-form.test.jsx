@@ -1,6 +1,11 @@
 /* globals expect, reset, render, sinon, Promise, TestUtils */
+import React from 'react';
 import * as MintActions from 'common/src/data/mint/mint-actions';
+import * as EssentialsActions from 'common/src/data/essentials/essentials-actions';
 import AccessForm from 'application/src/access-form/access-form.jsx';
+import Immutable from 'immutable';
+import { shallow } from 'enzyme';
+import { resourceTypes } from '../../../../server/mocks/5003-essentials.js';
 
 const OAUTH_KIO = {
     id: 'kio',
@@ -25,25 +30,30 @@ APP_KIO = {
 
 describe('The access control form view', () => {
     var actionSpy,
+        fetchScopesStub,
         props,
         form;
 
     beforeEach(() => {
         reset();
 
+        let essentialsActions = Object.assign({}, EssentialsActions);
         let mintActions = Object.assign({}, MintActions);
         actionSpy = sinon.stub(mintActions, 'saveOAuthConfig', () => {
             return Promise.resolve();
         });
+        fetchScopesStub = sinon.stub(essentialsActions, 'fetchScopes').returns(Promise.resolve());
 
         props = {
             applicationId: 'kio',
+            essentialsActions,
             mintActions,
             application: APP_KIO,
             allScopes: [],
             allClusters: [],
+            allResources: Object.keys( resourceTypes ).map( k => resourceTypes[k] ).reduce((map, res) => map.set(res.id, Immutable.Map(res)), Immutable.Map()),
             clusters: [],
-            applicationScopes: [],
+            applicationScopes: Immutable.Map(),
             oauthConfig: OAUTH_KIO,
             defaultAccount: 'foo',
             editable: true,
@@ -56,6 +66,17 @@ describe('The access control form view', () => {
         let f = TestUtils.findRenderedDOMComponentWithAttributeValue(form, 'data-block', 'form');
         TestUtils.Simulate.submit(f);
         expect(actionSpy.calledOnce).to.be.true;
+    });
+
+    it.only('should fetch scopes', () => {
+      const wrapper = shallow(<AccessForm {...props} />);
+      const element = wrapper.find('a.scope');
+      expect(element).to.have.length.gt(0);
+      console.log(wrapper, element);
+
+      element.simulate('click');
+      element.simulate('click');
+      expect(fetchScopesStub.calledOnce).to.be.true;
     });
 
     it('should suggest a mint bucket', () => {

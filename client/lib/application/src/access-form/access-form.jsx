@@ -5,7 +5,7 @@ import _ from 'lodash';
 import {Link} from 'react-router';
 import * as Routes from 'application/src/routes';
 import OAuthSyncInfo from 'application/src/oauth-sync-info.jsx';
-import ScopeList from 'application/src/scope-list.jsx';
+import FoldedScopeList from 'application/src/folded-scope-list.jsx';
 import ClusterList from 'application/src/cluster-list.jsx';
 import EditableList from 'application/src/editable-list.jsx';
 import 'common/asset/less/application/access-form.less';
@@ -175,9 +175,10 @@ class AccessForm extends React.Component {
                         <div className='form-group'>
                             <label>Application Scopes</label>
                             <small>{application.name} has the permission to access data with these scopes:</small>
-                            <ScopeList
+                            <FoldedScopeList
                                 allResources={allResources}
                                 selected={this.state.scopes}
+                                saved={this.props.oauthConfig.scopes.map(s => {s.saved = true; return s;})}
                                 scopes={applicationScopes}
                                 onFold={this.fetchScopes.bind(this)}
                                 onSelect={this.updateScopes.bind(this)} />
@@ -200,13 +201,14 @@ AccessForm.displayName = 'AccessForm';
 
 AccessForm.propTypes = {
     allClusters: React.PropTypes.array.isRequired,
-    allResources: React.PropTypes.array.isRequired,
+    allResources: React.PropTypes.object.isRequired,
     allScopes: React.PropTypes.array.isRequired,
     application: React.PropTypes.object.isRequired,
     applicationId: React.PropTypes.string.isRequired,
-    applicationScopes: React.PropTypes.array.isRequired,
+    applicationScopes: React.PropTypes.object.isRequired,
     defaultAccount: React.PropTypes.string.isRequired,
     editable: React.PropTypes.bool.isRequired,
+    essentialsActions: React.PropTypes.object.isRequired,
     kubernetesClusters: React.PropTypes.array,
     mintActions: React.PropTypes.object.isRequired,
     notificationActions: React.PropTypes.object.isRequired,

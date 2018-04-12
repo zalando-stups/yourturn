@@ -1,45 +1,23 @@
 import React from 'react';
-import styled from 'styled-components';
 import _ from 'lodash';
 import Icon from 'react-fa';
 import 'common/asset/less/application/scope-list.less';
 
-const Folder = styled.a`
-  span{
-    display:inline-flex;
-    width:15px;
-    height:15px;
-    font-weight:900;
-    padding:2px;
-  }
-  text-decoration: none;
-  background-image:none;
-`;
 class OwnerScopeList extends React.Component {
     constructor(props) {
         super();
         this.state = {
-            allResources: props.allResources,
-            foldings:{},
             term: '',
             filtered: props.scopes,
             selected: props.selected || []
         };
-
-      }
-
-      componentWillMount(){
-        this.state.selected.map(selected => {
-          this.toggleFolding(selected.resource_type_id);
-        });
-      }
+    }
 
     componentWillReceiveProps(nextProps) {
         if (!this.state.term.length) {
             this.setState({
                 filtered: nextProps.scopes,
-                selected: nextProps.selected,
-                allResources: nextProps.allResources,
+                selected: nextProps.selected
             });
         }
     }
@@ -62,34 +40,20 @@ class OwnerScopeList extends React.Component {
         this.props.onSelect(this.state.selected);
     }
 
-    toggleFolding(resourceType) {
-      let state = this.state;
-      if (! state.foldings[resourceType]){
-        state.foldings[resourceType] = true;
-        this.props.onFold(resourceType);
-      } else {
-        delete state.foldings[resourceType];
-      }
-      this.setState(state);
-  }
-
     filter(evt) {
         let term = evt.target.value;
         this.setState({
             term: term,
             filtered: term.length ?
-                this.props.scopes.filter(
-                  (s, key) => key.toLowerCase().indexOf(term) >= 0 
-                  || s.some(item => item.get('id').toLowerCase().indexOf(term) >= 0 
-                  || item.get('resource_type_id').toLowerCase().indexOf(term) >= 0 
-                  || this.state.selected.some(selected => selected.scope_id && selected.resource_type_id === item.get('resource_type_id') && selected.scope_id === item.get('id')))) :
-                this.props.scopes
+                        this.props.scopes.filter(s => s.id.indexOf(term) >= 0 || s.resource_type_id.indexOf(term) >= 0) :
+                        this.props.scopes
         });
     }
 
     render() {
-      let {term, selected, filtered, allResources, foldings} = this.state;
-            return <div className='scopeList'>
+        let {term, selected, filtered} = this.state,
+            resourceTypes = _.groupBy(filtered, 'resource_type_id');
+        return <div className='scopeList'>
                     <div className='input-group'>
                         <div className='input-addon'>
                             <Icon name='search' />
@@ -100,37 +64,33 @@ class OwnerScopeList extends React.Component {
                             defaultValue={term}
                             type='search' />
                     </div>
-                    {allResources
-                        .valueSeq()
+                    <small>Showing {filtered.length} of {this.props.scopes.length} scopes.</small>
+                    {Object
+                        .keys(resourceTypes)
+                        .sort()
                         .map(
                             rt =>
-                            filtered.get(rt.get('id')) && (<div key={rt.get('id')}>
-                                    
-                                      {!foldings[rt.get('id')] && (<Folder href="javascript:void(0)" onClick={this.toggleFolding.bind(this, rt.get('id'))}><span>+</span></Folder>)}
-                                      { foldings[rt.get('id')] && (<Folder href="javascript:void(0)" onClick={this.toggleFolding.bind(this, rt.get('id'))}><span>−</span></Folder>)}
-                                    
-                                    <strong>{rt.get('name')}</strong>
-                                    {foldings[rt.get('id')] && (!filtered.get(rt.get('id')) || !filtered.get(rt.get('id')).size) && (<span>Loading...</span>)}
-                                    {foldings[rt.get('id')] && filtered.get(rt.get('id')) && filtered.get(rt.get('id'))
+                                <div key={rt}>
+                                    <strong>{rt}</strong>
+                                    {filtered
+                                        .filter(s => s.resource_type_id === rt)
                                         .map(
                                             scope =>
-                                                <div key={scope.get('id')} data-block='scope-list-item'>
+                                                <div key={scope.scope_id} data-block='scope-list-item'>
                                                     <label>
-                                                        {!scope.get('is_resource_owner_scope') && <input
+                                                        <input
                                                             checked={
                                                                 selected.some(
-                                                                    s => s.scope_id === scope.get('id') &&
-                                                                         s.resource_type_id === scope.get('resource_type_id'))
+                                                                    s => s.scope_id === scope.id &&
+                                                                         s.resource_type_id === scope.resource_type_id)
                                                             }
-                                                            onChange={this.toggleSelection.bind(this, {id: scope.get('id'), resource_type_id: scope.get('resource_type_id')})}
+                                                            onChange={this.toggleSelection.bind(this, scope)}
                                                             type='checkbox'
-                                                          value={scope.get('id')} />} 
-                                                        {scope.get('id')} 
-                                                        <small>({scope.get('summary')})</small>{scope.get('is_resource_owner_scope') && <span> &nbsp;you already own this scope</span>}
+                                                            value={scope.id} /> {scope.id} <small>({scope.summary})</small>
                                                     </label>
                                                 </div>
-                                        )}
-                                </div>)
+                                    )}
+                                </div>
                     )}
                 </div>;
     }
@@ -139,8 +99,6 @@ class OwnerScopeList extends React.Component {
 OwnerScopeList.displayName = 'OwnerScopeList';
 
 OwnerScopeList.propTypes = {
-    allResources: React.PropTypes.array.isRequired,
-    onFold: React.PropTypes.func.isRequired,
     onSelect: React.PropTypes.func.isRequired,
     scopes: React.PropTypes.array.isRequired,
     selected: React.PropTypes.array

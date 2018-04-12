@@ -240,3 +240,5 @@ server.put('/resource-types/:id/scopes/:scopeId', function(req,res){
 });
 
 module.exports = server;
+
+module.exports.resourceTypes = resourceTypes;

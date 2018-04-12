@@ -1,6 +1,5 @@
 /* global expect */
 
-import Immutable from 'immutable';
 import Types from 'common/src/data/clusters/clusters-types';
 import * as Getter from 'common/src/data/clusters/clusters-getter';
 import Store from 'common/src/data/clusters/clusters-store';
