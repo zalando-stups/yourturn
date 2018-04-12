@@ -28,7 +28,7 @@ class OwnerScopeList extends React.Component {
             this.setState({
                 filtered: nextProps.scopes,
                 selected: nextProps.selected,
-                allResources: nextProps.allResources,
+                allResources: nextProps.allResources
             });
         }
     }
