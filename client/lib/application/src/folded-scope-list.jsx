@@ -93,7 +93,7 @@ class OwnerScopeList extends React.Component {
                     {allResources
                         .valueSeq()
                         .map(
-                            rt => filtered.get(rt.get('id')) && saved.some( s => s.resource_type_id === rt.get('id') && s.saved) && (<div key={rt.get('id')}>
+                            rt => filtered.get(rt.get('id')) && saved.some( s => s.resource_type_id === rt.get('id') && s.saved) && (<div className='resource-type-item' key={rt.get('id')}>
                                     
                                       {!foldings[rt.get('id')] && (<a className='scope' href='javascript:void(0)' onClick={this.toggleFolding.bind(this, rt.get('id'))}><span>+</span></a>)}
                                       { foldings[rt.get('id')] && (<a className='scope' href='javascript:void(0)' onClick={this.toggleFolding.bind(this, rt.get('id'))}><span>−</span></a>)}
@@ -102,7 +102,7 @@ class OwnerScopeList extends React.Component {
                                     {foldings[rt.get('id')] && (!filtered.get(rt.get('id')) || !filtered.get(rt.get('id')).size) && (<span>Loading...</span>)}
                                     {foldings[rt.get('id')] && filtered.get(rt.get('id')) && filtered.get(rt.get('id'))
                                         .map(
-                                            scope =>
+                                            scope => scope.get &&
                                                 <div key={scope.get('id')} data-block='scope-list-item'>
                                                     <label>
                                                         {!scope.get('is_resource_owner_scope') && <input
@@ -124,16 +124,16 @@ class OwnerScopeList extends React.Component {
                     {allResources
                         .valueSeq()
                         .map(
-                            rt => filtered.get(rt.get('id')) && !saved.some( s => s.resource_type_id === rt.get('id') && s.saved) && (<div key={rt.get('id')}>
+                            rt => filtered.get(rt.get('id')) && !saved.some( s => s.resource_type_id === rt.get('id') && s.saved) && (<div className='resource-type-item' key={rt.get('id')}>
                                     
-                                      {!foldings[rt.get('id')] && (<a className='scope' href='javascript:void(0)' onClick={this.toggleFolding.bind(this, rt.get('id'))}><span>+</span></a>)}
-                                      { foldings[rt.get('id')] && (<a className='scope' href='javascript:void(0)' onClick={this.toggleFolding.bind(this, rt.get('id'))}><span>−</span></a>)}
+                                      {!foldings[rt.get('id')] && (<a className='scope' data-block='resource-type-expand' href='javascript:void(0)' onClick={this.toggleFolding.bind(this, rt.get('id'))}><span>+</span></a>)}
+                                      { foldings[rt.get('id')] && (<a className='scope' data-block='resource-type-expand' href='javascript:void(0)' onClick={this.toggleFolding.bind(this, rt.get('id'))}><span>−</span></a>)}
                                     
                                     <strong>{rt.get('name')}</strong>
                                     {foldings[rt.get('id')] && (!filtered.get(rt.get('id')) || !filtered.get(rt.get('id')).size) && (<span>Loading...</span>)}
                                     {foldings[rt.get('id')] && filtered.get(rt.get('id')) && filtered.get(rt.get('id'))
                                         .map(
-                                            scope =>
+                                            scope => scope.get && 
                                                 <div key={scope.get('id')} data-block='scope-list-item'>
                                                     <label>
                                                         {!scope.get('is_resource_owner_scope') && <input

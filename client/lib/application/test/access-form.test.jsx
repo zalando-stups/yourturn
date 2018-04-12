@@ -1,10 +1,8 @@
 /* globals expect, reset, render, sinon, Promise, TestUtils */
-import React from 'react';
 import * as MintActions from 'common/src/data/mint/mint-actions';
 import * as EssentialsActions from 'common/src/data/essentials/essentials-actions';
 import AccessForm from 'application/src/access-form/access-form.jsx';
 import Immutable from 'immutable';
-import { shallow } from 'enzyme';
 import { resourceTypes } from '../../../../server/mocks/5003-essentials.js';
 
 const OAUTH_KIO = {
@@ -62,21 +60,14 @@ describe('The access control form view', () => {
         form = render(AccessForm, props);
     });
 
+    it('should fetch selected scopes automatically ', () => {
+        expect(fetchScopesStub.calledOnce).to.be.true;
+    });
+
     it('should call the correct action', () => {
         let f = TestUtils.findRenderedDOMComponentWithAttributeValue(form, 'data-block', 'form');
         TestUtils.Simulate.submit(f);
         expect(actionSpy.calledOnce).to.be.true;
-    });
-
-    it.only('should fetch scopes', () => {
-      const wrapper = shallow(<AccessForm {...props} />);
-      const element = wrapper.find('a.scope');
-      expect(element).to.have.length.gt(0);
-      console.log(wrapper, element);
-
-      element.simulate('click');
-      element.simulate('click');
-      expect(fetchScopesStub.calledOnce).to.be.true;
     });
 
     it('should suggest a mint bucket', () => {

@@ -172,7 +172,7 @@ class AccessForm extends React.Component {
                                 <Icon name='save' /> Save
                             </button>
                         </div>
-                        <div className='form-group'>
+                        <div className='form-group' data-block='folded-scope-list'>
                             <label>Application Scopes</label>
                             <small>{application.name} has the permission to access data with these scopes:</small>
                             <FoldedScopeList
