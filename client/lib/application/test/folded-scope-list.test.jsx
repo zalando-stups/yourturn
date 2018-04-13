@@ -20,7 +20,7 @@ describe('Folded scope list tests', () => {
     before(() => {
       Object.keys(resourceScopes).forEach(key => {
         const value = resourceScopes[key];
-        scopes = allResources.set(key, Object.values(value).reduce((map, res) => map.set(res.id, Immutable.fromJS(res)), Immutable.Map()));
+        scopes = allResources.set(key, Object.keys(value).map(key => value[key]).reduce((map, res) => map.set(res.id, Immutable.fromJS(res)), Immutable.Map()));
       });
       props = {
         saved: [
