@@ -5,7 +5,7 @@ import 'common/asset/less/application/scope-list.less';
 
 class OwnerScopeList extends React.Component {
     constructor(props) {
-        super();
+        super(props);
         this.state = {
             allResources: props.allResources,
             foldings:{},
@@ -52,7 +52,7 @@ class OwnerScopeList extends React.Component {
     }
 
     toggleFolding(resourceType) {
-      let state = this.state;
+      let state = Object.assign({}, this.state);
       if (! state.foldings[resourceType]){
         state.foldings[resourceType] = true;
         this.props.onFold(resourceType);
