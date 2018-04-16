@@ -86,9 +86,8 @@ class AccessForm extends React.Component {
 
     fetchScopes(resourceType) {
       this.props.essentialsActions.fetchScopes(resourceType).then(val => {
-        const state = Object.assign({}, this.state);
-        state.applicationScopes = state.applicationScopes.set(val[0], val[1].reduce((map, res) => map.set(res.id, Immutable.fromJS(res)), Immutable.Map()));
-        this.setState(state);
+        const applicationScopes = this.state.applicationScopes.set(val[0], val[1].reduce((map, res) => map.set(res.id, Immutable.fromJS(res)), Immutable.Map()));
+        this.setState({ applicationScopes });
       });
     }
 
@@ -202,7 +201,6 @@ AccessForm.displayName = 'AccessForm';
 AccessForm.propTypes = {
     allClusters: React.PropTypes.array.isRequired,
     allResources: React.PropTypes.object.isRequired,
-    allScopes: React.PropTypes.array.isRequired,
     application: React.PropTypes.object.isRequired,
     applicationId: React.PropTypes.string.isRequired,
     applicationScopes: React.PropTypes.object.isRequired,

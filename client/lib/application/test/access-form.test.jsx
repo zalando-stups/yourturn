@@ -27,7 +27,7 @@ APP_KIO = {
 };
 
 describe('The access control form view', () => {
-    var actionSpy,
+    let actionSpy,
         fetchScopesStub,
         props,
         form;
