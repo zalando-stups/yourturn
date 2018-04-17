@@ -126,7 +126,7 @@ class OAuthForm extends React.Component {
                                     data-block='confidentiality-checkbox'
                                     id='oauth_is_client_non_confidential'
                                     name='yourturn_oauth_is_client_non_confidential'
-                                    type='checkbox' /> Client is <a href="https://tools.ietf.org/html/rfc6749#section-2.1">public</a>
+                                    type='checkbox' /> Client is <a href='https://tools.ietf.org/html/rfc6749#section-2.1'>public</a>
                             </label>
                             <small>Public clients (e.g. native or SPAs) are only allowed to perform the OAuth2 Implicit Flow</small>
                         </div>

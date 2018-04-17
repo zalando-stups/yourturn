@@ -8,7 +8,7 @@ import {Provider, RequestConfig, saveRoute} from 'common/src/oauth-provider';
 function fetchAllClusters(resourceId) {
   
   return request
-          .get(`${Services.clusters.url}${Services.clusters.root}?lifecycle_status=ready`)
+          .get(`${Services.clusters.url}${Services.clusters.root}?lifecycle_status=ready&verbose=false`)
           .accept('json')
           .oauth(Provider, RequestConfig)
           .exec(saveRoute)

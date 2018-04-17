@@ -1,6 +1,9 @@
 /* globals expect, reset, render, sinon, Promise, TestUtils */
 import * as MintActions from 'common/src/data/mint/mint-actions';
+import * as EssentialsActions from 'common/src/data/essentials/essentials-actions';
 import AccessForm from 'application/src/access-form/access-form.jsx';
+import Immutable from 'immutable';
+import { resourceTypes } from '../../../../server/mocks/5003-essentials.js';
 
 const OAUTH_KIO = {
     id: 'kio',
@@ -24,32 +27,41 @@ APP_KIO = {
 };
 
 describe('The access control form view', () => {
-    var actionSpy,
+    let actionSpy,
+        fetchScopesStub,
         props,
         form;
 
     beforeEach(() => {
         reset();
 
+        let essentialsActions = Object.assign({}, EssentialsActions);
         let mintActions = Object.assign({}, MintActions);
         actionSpy = sinon.stub(mintActions, 'saveOAuthConfig', () => {
             return Promise.resolve();
         });
+        fetchScopesStub = sinon.stub(essentialsActions, 'fetchScopes').returns(Promise.resolve());
 
         props = {
             applicationId: 'kio',
+            essentialsActions,
             mintActions,
             application: APP_KIO,
             allScopes: [],
             allClusters: [],
+            allResources: Object.keys( resourceTypes ).map( k => resourceTypes[k] ).reduce((map, res) => map.set(res.id, Immutable.Map(res)), Immutable.Map()),
             clusters: [],
-            applicationScopes: [],
+            applicationScopes: Immutable.Map(),
             oauthConfig: OAUTH_KIO,
             defaultAccount: 'foo',
             editable: true,
             notificationActions: {}
         };
         form = render(AccessForm, props);
+    });
+
+    it('should fetch selected scopes automatically ', () => {
+        expect(fetchScopesStub.calledOnce).to.be.true;
     });
 
     it('should call the correct action', () => {
