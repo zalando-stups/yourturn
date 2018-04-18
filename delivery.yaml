@@ -1,23 +1,28 @@
 version: "2017-09-20"
 pipeline:
-  - desc: Install Docker
-    cmd: |
-      # This won't be necessary once --latest is implemented
-      # https://github.bus.zalan.do/continuous-delivery/cdp-docs/issues/633
-      # curl -fLOsS https://delivery.cloud.zalando.com/utils/ensure-docker && sh ensure-docker && rm ensure-docker
-      curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
-      apt-key fingerprint 0EBFCD88
-      add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-      apt-get update -yq && apt-get install -yq docker-ce
-      docker -v
-  - desc: Build and push Docker image
-    cmd: |
-      time docker build -t ${IMAGE}-test:${CDP_BUILD_VERSION} \
-                        -t ${IMAGE}:${CDP_BUILD_VERSION} .
+  - id: build
+    type: script
+    env:
+      IMAGE: pierone.stups.zalan.do/pitchfork/yourturn
+    commands: 
+      - desc: Install Docker
+        cmd: |
+          # This won't be necessary once --latest is implemented
+          # https://github.bus.zalan.do/continuous-delivery/cdp-docs/issues/633
+          # curl -fLOsS https://delivery.cloud.zalando.com/utils/ensure-docker && sh ensure-docker && rm ensure-docker
+          curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+          apt-key fingerprint 0EBFCD88
+          add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+          apt-get update -yq && apt-get install -yq docker-ce
+          docker -v
+      - desc: Build and push Docker image
+        cmd: |
+          time docker build -t ${IMAGE}-test:${CDP_BUILD_VERSION} \
+                            -t ${IMAGE}:${CDP_BUILD_VERSION} .
 
-      docker push ${IMAGE}-test:${CDP_BUILD_VERSION}
+          docker push ${IMAGE}-test:${CDP_BUILD_VERSION}
 
-      IS_PR_BUILD=${CDP_PULL_REQUEST_NUMBER+"true"}
-      if [[ ${CDP_TARGET_BRANCH} == "master" && ${IS_PR_BUILD} != "true" ]]; then
-          docker push ${IMAGE}:${CDP_BUILD_VERSION}
-      fi
+          IS_PR_BUILD=${CDP_PULL_REQUEST_NUMBER+"true"}
+          if [[ ${CDP_TARGET_BRANCH} == "master" && ${IS_PR_BUILD} != "true" ]]; then
+              docker push ${IMAGE}:${CDP_BUILD_VERSION}
+          fi
