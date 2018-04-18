@@ -21,6 +21,7 @@ pipeline:
         cmd: |
           scm-source
 
+          npm install --global gulp-cli
           npm i
 
           cd client
