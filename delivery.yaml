@@ -19,6 +19,14 @@ pipeline:
       - desc: Build and push Docker image
         cmd: |
           scm-source
+
+          npm i
+
+          cd client
+          gulp build
+          gulp lint
+          gulp format
+
           time docker build -t ${IMAGE}-test:${CDP_BUILD_VERSION} \
                             -t ${IMAGE}:${CDP_BUILD_VERSION} .
 
