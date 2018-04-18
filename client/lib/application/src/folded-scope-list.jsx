@@ -25,13 +25,11 @@ class OwnerScopeList extends ScopeList {
       }
 
     componentWillReceiveProps(nextProps) {
-        if (!this.state.term.length) {
-            this.setState({
-                filtered: nextProps.scopes,
-                selected: nextProps.selected,
-                allResources: nextProps.allResources
-            });
-        }
+      this.setState({
+          filtered: nextProps.scopes,
+          selected: nextProps.selected,
+          allResources: nextProps.allResources
+      });
     }
 
     toggleFolding(resourceType) {
