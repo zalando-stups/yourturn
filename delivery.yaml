@@ -21,3 +21,4 @@ pipeline:
       if [[ ${CDP_TARGET_BRANCH} == "master" && ${IS_PR_BUILD} != "true" ]]; then
           docker push ${IMAGE}:${CDP_BUILD_VERSION}
       fi
+
