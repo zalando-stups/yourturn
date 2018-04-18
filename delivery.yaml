@@ -10,10 +10,11 @@ pipeline:
           # This won't be necessary once --latest is implemented
           # https://github.bus.zalan.do/continuous-delivery/cdp-docs/issues/633
           # curl -fLOsS https://delivery.cloud.zalando.com/utils/ensure-docker && sh ensure-docker && rm ensure-docker
+          curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
           curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
           apt-key fingerprint 0EBFCD88
           add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-          apt-get update -yq && apt-get install -yq docker-ce python3-pip
+          apt-get update -yq && apt-get install -yq docker-ce python3-pip nodejs
           docker -v
           pip3 install -U scm-source
       - desc: Build and push Docker image
