@@ -29,6 +29,7 @@ pipeline:
           gulp lint
           gulp format
 
+          cd ..
           time docker build -t ${IMAGE}-test:${CDP_BUILD_VERSION} \
                             -t ${IMAGE}:${CDP_BUILD_VERSION} .
 
