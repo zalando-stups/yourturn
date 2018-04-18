@@ -15,8 +15,10 @@ pipeline:
           add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
           apt-get update -yq && apt-get install -yq docker-ce
           docker -v
+          pip3 install -U scm-source
       - desc: Build and push Docker image
         cmd: |
+          scm-source
           time docker build -t ${IMAGE}-test:${CDP_BUILD_VERSION} \
                             -t ${IMAGE}:${CDP_BUILD_VERSION} .
 
