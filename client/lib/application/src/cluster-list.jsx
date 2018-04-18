@@ -7,7 +7,7 @@ class ClusterList extends React.Component {
         super();
         this.state = {
             term: '',
-            filtered: props.clusters,
+            filtered: props.clusters || [],
             selected: props.selected || []
         };
     }
@@ -42,7 +42,7 @@ class ClusterList extends React.Component {
         this.setState({
             term: term,
             filtered: term.length ?
-                        this.props.clusters.filter(c => c.alias.indexOf(term) >= 0 || this.state.selected.some(s => s === c.id)) :
+                        this.props.clusters.filter(c => c.alias.indexOf(term) >= 0 || (this.state.selected && this.state.selected.some(s => s === c.id))) :
                         this.props.clusters
         });
     }
