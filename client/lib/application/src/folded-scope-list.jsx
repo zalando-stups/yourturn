@@ -3,12 +3,12 @@ import ScopeList from './scope-list.jsx';
 import Icon from 'react-fa';
 import 'common/asset/less/application/scope-list.less';
 
-class OwnerScopeList extends ScopeList {
+class FoldedScopeList extends ScopeList {
     constructor(props) {
         super(props);
         const {allResources, scopes: filtered, selected} = props;
         this.state = {
-            allResources: allResources,
+            allResources,
             foldings:{},
             term: '',
             filtered,
@@ -119,9 +119,9 @@ class OwnerScopeList extends ScopeList {
     }
 }
 
-OwnerScopeList.displayName = 'OwnerScopeList';
+FoldedScopeList.displayName = 'FoldedScopeList';
 
-OwnerScopeList.propTypes = {
+FoldedScopeList.propTypes = {
     allResources: React.PropTypes.object.isRequired,
     onFold: React.PropTypes.func.isRequired,
     onSelect: React.PropTypes.func.isRequired,
@@ -130,4 +130,4 @@ OwnerScopeList.propTypes = {
     selected: React.PropTypes.array
 };
 
-export default OwnerScopeList;
+export default FoldedScopeList;
