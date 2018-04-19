@@ -25,8 +25,15 @@ class OwnerScopeList extends ScopeList {
       }
 
     componentWillReceiveProps(nextProps) {
+      const term = this.state.term;
       this.setState({
-          filtered: nextProps.scopes,
+        filtered: term.length ?
+        nextProps.scopes.filter(
+          (s, key) => key.toLowerCase().indexOf(term) >= 0 
+          || s.some(item => item.get('id').toLowerCase().indexOf(term) >= 0 
+          || item.get('resource_type_id').toLowerCase().indexOf(term) >= 0 
+          || this.state.selected.some(selected => selected.scope_id && selected.resource_type_id === item.get('resource_type_id') && selected.scope_id === item.get('id')))) :
+          nextProps.scopes,
           selected: nextProps.selected,
           allResources: nextProps.allResources
       });
@@ -44,7 +51,7 @@ class OwnerScopeList extends ScopeList {
   }
 
     filter(evt) {
-        let term = evt.target.value;
+        const term = evt.target.value;
         this.setState({
             term: term,
             filtered: term.length ?
