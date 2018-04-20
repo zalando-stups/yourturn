@@ -25,7 +25,7 @@ class FoldedScopeList extends ScopeList {
       }
 
     componentWillReceiveProps(nextProps) {
-      const term = this.state.term;
+      const term = this.state.term.toLowerCase();
       this.setState({
         filtered: term.length ?
         nextProps.scopes.filter(
@@ -58,7 +58,7 @@ class FoldedScopeList extends ScopeList {
   }
 
     filter(evt) {
-        const term = evt.target.value;
+        const term = evt.target.value.toLowerCase();
         this.setState({
             term: term,
             filtered: term.length ?

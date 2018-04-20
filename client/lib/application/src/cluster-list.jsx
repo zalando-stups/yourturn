@@ -38,7 +38,7 @@ class ClusterList extends React.Component {
     }
 
     filter(evt) {
-        let term = evt.target.value;
+        let term = evt.target.value.toLowerCase();
         this.setState({
             term: term,
             filtered: term.length ?
