@@ -90,10 +90,11 @@ class AccessForm extends React.Component {
         });
     }
 
-    fetchScopes(resourceType) {
+    fetchScopes(resourceType, callback) {
       this.props.essentialsActions.fetchScopes(resourceType).then(val => {
         const applicationScopes = this.state.applicationScopes.set(val[0], val[1].reduce((map, res) => map.set(res.id, Immutable.fromJS(res)), Immutable.Map()));
         this.setState({ applicationScopes });
+        callback && callback(resourceType)
       });
     }
 
