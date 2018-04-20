@@ -75,7 +75,7 @@ class AccessForm extends React.Component {
                                                             scp.is_resource_owner_scope)),
             clusters = this.state.kubernetes_clusters;
 
-        oauthConfig.scopes = ownerscopes.concat(appscopes);
+        oauthConfig.scopes = ownerscopes.concat(appscopes).map(s => {return {scope_id: s.scope_id, resource_type_id: s.resource_type_id}});
         oauthConfig.kubernetes_clusters = clusters;
         oauthConfig.s3_buckets = this.state.s3_buckets;
 
@@ -183,7 +183,7 @@ class AccessForm extends React.Component {
                             <FoldedScopeList
                                 allResources={allResources}
                                 selected={this.state.scopes}
-                                saved={this.props.oauthConfig.scopes.map(s => s)}
+                                saved={this.props.oauthConfig.scopes.map(s => {s.saved = true; return s;})}
                                 scopes={applicationScopes}
                                 onFold={this.fetchScopes.bind(this)}
                                 onSelect={this.updateScopes.bind(this)} />
