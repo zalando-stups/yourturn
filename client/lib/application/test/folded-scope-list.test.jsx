@@ -49,14 +49,14 @@ describe('Folded scope list tests', () => {
         const list = shallow(<FoldedScopeList {...props} />);
         expect(list).to.have.lengthOf(1);
     });
-    it('should have 7 resoutce types', () => {
+    it('should have 8 resoutce types', () => {
         const list = shallow(<FoldedScopeList {...props} />);
-        expect(list.find('a.scope')).to.have.lengthOf(7);
+        expect(list.find('a.scope')).to.have.lengthOf(8);
     });
     it('first 2 resource types should be expanded, all the rest should be collapsed', () => {
         const list = shallow(<FoldedScopeList {...props} />);
         const values = list.find('a.scope span');
-        expect(values).to.have.lengthOf(7);
+        expect(values).to.have.lengthOf(8);
         values.forEach((element, index) => {
           if(index < 2){
             expect(element.text()).to.equal('−');
