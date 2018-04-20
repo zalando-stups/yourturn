@@ -43,7 +43,14 @@ class FoldedScopeList extends ScopeList {
       let state = Object.assign({}, this.state);
       if (! state.foldings[resourceType]){
         state.foldings[resourceType] = true;
-        this.props.onFold(resourceType);
+        this.props.onFold(resourceType, type => {
+          let state = Object.assign({}, this.state);
+          if(!state.foldings[type]){
+            return
+          }
+          state.foldings[type] = 1;
+          this.setState(state);
+        });
       } else {
         delete state.foldings[resourceType];
       }
@@ -76,7 +83,8 @@ class FoldedScopeList extends ScopeList {
                       { foldings[rt.get('id')] && (<a className='scope' onClick={this.toggleFolding.bind(this, rt.get('id'))}><span>−</span></a>)}
                     
                     <strong>{rt.get('name')}</strong>
-                    {foldings[rt.get('id')] && (!filtered.get(rt.get('id')) || !filtered.get(rt.get('id')).size) && (<span>Loading...</span>)}
+                    {foldings[rt.get('id')] === true && (!filtered.get(rt.get('id')) || !filtered.get(rt.get('id')).size) && (<span>&nbsp;Loading...</span>)}
+                    {foldings[rt.get('id')] === 1 && (!filtered.get(rt.get('id')) || !filtered.get(rt.get('id')).size) && (<span>&nbsp;No Data</span>)}
                     {foldings[rt.get('id')] && filtered.get(rt.get('id')) && filtered.get(rt.get('id'))
                         .map(
                             scope => scope.get &&
@@ -92,7 +100,7 @@ class FoldedScopeList extends ScopeList {
                                             type='checkbox'
                                           value={scope.get('id')} />} 
                                         {scope.get('id')} 
-                                        <small>({scope.get('summary')})</small>{scope.get('is_resource_owner_scope') && <span> &nbsp;you already own this scope</span>}
+                                        &nbsp;<small>({scope.get('summary')})</small>{scope.get('is_resource_owner_scope') && <span>&nbsp;you own this scope</span>}
                                     </label>
                                 </div>
                         )}

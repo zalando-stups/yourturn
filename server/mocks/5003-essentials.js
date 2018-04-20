@@ -48,6 +48,12 @@ var resourceTypes = {
         'name': 'Customer5',
         'description': 'Customer5',
         'resource_owners': []
+    },
+    'empty': {
+        'id': 'empty',
+        'name': 'Empty',
+        'description': 'Empty',
+        'resource_owners': []
     }
 };
 var resourceScopes = {
