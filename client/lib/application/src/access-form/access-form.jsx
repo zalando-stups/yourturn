@@ -34,6 +34,12 @@ class AccessForm extends React.Component {
         });
     }
 
+    componentWillReceiveProps(nextProps) {
+      this.setState({
+        applicationScopes: this.state.applicationScopes.mergeDeep(nextProps.applicationScopes)
+      });
+    }
+
     addBucket(bucket) {
         this.setState({
             s3_buckets: this.state.s3_buckets.concat([bucket])
@@ -177,7 +183,7 @@ class AccessForm extends React.Component {
                             <FoldedScopeList
                                 allResources={allResources}
                                 selected={this.state.scopes}
-                                saved={this.props.oauthConfig.scopes.map(s => {s.saved = true; return s;})}
+                                saved={this.props.oauthConfig.scopes.map(s => s)}
                                 scopes={applicationScopes}
                                 onFold={this.fetchScopes.bind(this)}
                                 onSelect={this.updateScopes.bind(this)} />
