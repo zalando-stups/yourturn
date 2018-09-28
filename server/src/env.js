@@ -17,10 +17,7 @@ function getEnvironment() {
         }
     }
 
-    if (process.env.APPDYNAMICS_EUM_KEY) {
-        env['APPDYNAMICS_ENABLED'] = true;
-    }
-        // read client id from mint
+    // read client id from mint
     if (process.env.CREDENTIALS_DIR) {
         var clientIdPath = path.join(process.env.CREDENTIALS_DIR, 'implicit-client-id'),
             clientIdFile;
