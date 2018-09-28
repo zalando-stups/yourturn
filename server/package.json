@@ -14,7 +14,6 @@
   },
   "homepage": "https://github.com/zalando-stups/yourturn",
   "dependencies": {
-    "appdynamics": "4.2.12",
     "bluebird": "3.1.1",
     "camel-case": "1.2.2",
     "compression": "1.6.0",

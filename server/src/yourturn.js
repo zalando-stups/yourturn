@@ -13,12 +13,6 @@ winston.add(winston.transports.Console, {
                 opts => `${opts.timestamp()} ${opts.level.toUpperCase()} ${opts.message || ''} ${opts.meta ? '[' + JSON.stringify(opts.meta) + ']' : ''}`
 });
 
-// set up 3rd party monitoring
-// and set environment variables for browser
-require('./monitoring/monitoring');
-require('./monitoring/monitoring-client');
-require('./env');
-
 // this is the actual server code
 var fs = require('fs'),
     express = require('express'),
