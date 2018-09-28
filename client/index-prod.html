@@ -83,13 +83,6 @@
         <script>
             var head = document.getElementsByTagName('head')[0],
                 js = document.createElement('script');
-            if (window.APPDYNAMICS_ENABLED) {
-                // load appdynamics
-                js.src = '/dist/adrum.js?v=${timestamp}';
-            } else if (window.YTENV_NEW_RELIC_BROWSER_APP_ID) {
-                // load new relic
-                js.src = '/dist/newrelic-browser.js?v=${timestamp}';
-            }
             if (js.src && js.src.length != 0) {
                 head.appendChild(js);
             }

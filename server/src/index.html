@@ -8,14 +8,5 @@
             Note that this is completely fake and exists only to be able to do <code>node yourturn.js</code>
         </div>
         <script src="/dist/env.js?v=${timestamp}"></script>
-        <script>
-            if (window.YTENV_NEW_RELIC_BROWSER_APP_ID) {
-                // load new relic
-                var head = document.getElementsByTagName('head')[0],
-                    js = document.createElement('script');
-                js.src = '/dist/newrelic-browser.js?v=${timestamp}';
-                head.appendChild(js);
-            }
-        </script>
     </body>
 </html>
