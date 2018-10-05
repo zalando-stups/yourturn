@@ -13,6 +13,7 @@ winston.add(winston.transports.Console, {
                 opts => `${opts.timestamp()} ${opts.level.toUpperCase()} ${opts.message || ''} ${opts.meta ? '[' + JSON.stringify(opts.meta) + ']' : ''}`
 });
 
+require('./env');
 // this is the actual server code
 var fs = require('fs'),
     express = require('express'),
