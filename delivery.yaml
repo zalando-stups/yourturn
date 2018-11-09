@@ -5,6 +5,10 @@ pipeline:
     env:
       IMAGE: pierone.stups.zalan.do/pitchfork/yourturn
     commands: 
+      - desc: Install Docker
+        cmd: |
+          curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
+          apt-get update -yq && apt-get install -yq python3-pip nodejs
       - desc: Build and push Docker image
         cmd: |
           npm install --global gulp-cli
