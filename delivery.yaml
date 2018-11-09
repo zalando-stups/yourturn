@@ -9,8 +9,11 @@ pipeline:
         cmd: |
           curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
           apt-get update -yq && apt-get install -yq python3-pip nodejs
+          pip3 install -U scm-source
       - desc: Build and push Docker image
         cmd: |
+          scm-source
+
           npm install --global gulp-cli
           npm i
 
