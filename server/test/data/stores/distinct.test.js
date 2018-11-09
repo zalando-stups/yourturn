@@ -1,7 +1,6 @@
 'use strict';
 
 const sinon = require('sinon');
-const redis = require('redis');
 const moment = require('moment');
 const bluebird = require('bluebird');
 
@@ -124,65 +123,6 @@ describe('stores/distinct', () => {
                     .then(() => store.items)
                     .then(items => {
                         expect(items).to.be.empty;
-                    });
-            });
-        });
-    });
-
-    // First I've started with sinon stubs and all that stuff, but ended
-    // up mocking entire responses which is stupid and have no relation
-    // to code under test
-    describe('redis', () => {
-        let redisClient;
-
-        before(() => {
-            bluebird.promisifyAll(redis.RedisClient.prototype);
-            bluebird.promisifyAll(redis.Multi.prototype);
-        });
-
-        beforeEach(() => {
-            redisClient = sinon.createStubInstance(redis.RedisClient);
-            redisClient.multi
-                .withArgs()
-                .returnsThis();
-        });
-
-        describe('#items', () => {
-            it('should store encoded and return decoded items', () => {
-                const store = stores.redisStore({
-                    redis: redisClient,
-                    keyExpiration: null
-                });
-
-                const first = 42;
-                const second = '42';
-                const third = { key: 'value' };
-
-                redisClient.zaddAsync
-                    .withArgs('distinct-items', sinon.match.number, JSON.stringify(first))
-                    .returns(Promise.resolve())
-                    .withArgs('distinct-items', sinon.match.number, JSON.stringify(second))
-                    .returns(Promise.resolve())
-                    .withArgs('distinct-items', sinon.match.number, JSON.stringify(third))
-                    .returns(Promise.resolve());
-                redisClient.zrange
-                    .withArgs('distinct-items', 0, -1)
-                    .returnsThis();
-                redisClient.execAsync
-                    .returns(Promise.resolve([0, [
-                        JSON.stringify(first),
-                        JSON.stringify(second),
-                        JSON.stringify(third)
-                    ]]));
-
-                return Promise.all([
-                    store.add(first),
-                    store.add(second),
-                    store.add(third)
-                ])
-                    .then(() => store.items)
-                    .then(items => {
-                        expect(items).to.eql([42, '42', { key: 'value' }]);
                     });
             });
         });

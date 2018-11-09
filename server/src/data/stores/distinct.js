@@ -45,45 +45,6 @@ const inMemoryStore = (options) => {
     });
 };
 
-const redisStore = (options) => {
-    const redis = (options || {}).redis;
-    const key = (options || {}).key || 'distinct-items';
-    let keyExpiration = (options || {}).keyExpiration;
-    if (keyExpiration === undefined) {
-        keyExpiration = DEFAULT_EXPIRATION_TIME;
-    }
-
-    if (!redis) {
-        throw new Error('redis should be not null');
-    }
-
-    const cleanup = () => {
-        if (!keyExpiration) {
-            return redis.multi();
-        } else {
-            const keysExpirationTime = moment().subtract(keyExpiration);
-            return redis.multi().zremrangebyscore(key, 0, keysExpirationTime.valueOf());
-        }
-    }
-
-    return Object.freeze({
-        add(item) {
-            // I don't wan't to swallow result here, but what should I return?
-            return redis.zaddAsync(key, moment().valueOf(),
-                JSON.stringify(item)).then(() => Promise.resolve());
-        },
-        get size() {
-            return cleanup().zcard(key).execAsync()
-                .then(lastElement);
-        },
-        get items() {
-            return cleanup().zrange(key, 0, -1).execAsync()
-                .then(lastElement)
-                .then(items => items.map(JSON.parse));
-        }
-    });
-};
-
 /**
  * Would try to use fallbackStore as temporary storage for items while
  * mainStore is not able to store items.
@@ -130,6 +91,5 @@ const storeWithFallback = (mainStore, fallbackStore) => {
 
 module.exports = {
     inMemoryStore,
-    redisStore,
     storeWithFallback
 };

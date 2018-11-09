@@ -23,7 +23,6 @@ var fs = require('fs'),
     routes = require('./routes/index'),
     oauth = require('./middleware/oauth'),
     uniqueLogins = require('./middleware/unique-logins'),
-    redis = require('./redis'),
     stores = require('./data/stores/distinct'),
     metrics = require('./metrics'),
     index = fs.readFileSync('./index.html'),
@@ -47,11 +46,7 @@ server.use(function(req, res, next) {
 const inMemoryStore = stores.inMemoryStore({
     keyExpiration: moment.duration(1, 'day')
 });
-const redisStore = stores.redisStore({
-    redis,
-    key: 'unique-logins'
-});
-const store = stores.storeWithFallback(redisStore, inMemoryStore);
+const store = stores.storeWithFallback(inMemoryStore, inMemoryStore);
 const report = metrics.report({
     providers: {
         'count.unique.logins': metrics.cachedProvider(() => store.size, 0),
