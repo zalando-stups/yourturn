@@ -180,14 +180,14 @@ class ScopeForm extends React.Component {
                                                     (owner, i, all) => <span key={i}>
                                                                             <strong>{owner}</strong>
                                                                             {i === all.length - 1 ? '' : ', '}
-                                                                        </span>)} can grant <strong>{scope.id}</strong> access on his <strong>{resource.name}</strong> data to applications.
+                                                                        </span>)} can grant <strong>{scope.id}</strong> access on their <strong>{resource.name}</strong> data to applications.
                                             </small>
                                         </p>
                                         <p>
                                             <small>A Resource Owner Scope can be granted by the resource owners to others. The resource owner automatically has the permission to grant this scope without further actions. Resource Owner Scopes always authorize only in the context of the resource owner’s resources.</small>
                                         </p>
                                         <p>
-                                            <small>For instance: A customer can grant an application <strong>read</strong> access to <strong>his</strong> sales order data.</small>
+                                            <small>For instance: A customer can grant an application <strong>read</strong> access to <strong>their</strong> sales order data.</small>
                                         </p>
                                     </div>
                                     :
