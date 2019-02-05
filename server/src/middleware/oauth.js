@@ -24,7 +24,7 @@ module.exports = function(req, res, next) {
     .post(process.env.YTENV_OAUTH_TOKENINFO_URL)
     .accept("json")
     .send({
-      access_token: req.query.access_token
+      access_token: req.body.access_token
     })
     .then(tokeninfo => {
       req.tokeninfo = tokeninfo.body;
