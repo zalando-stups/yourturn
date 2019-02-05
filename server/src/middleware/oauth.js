@@ -1,5 +1,7 @@
 var request = require("superagent-bluebird-promise");
 
+var BPI = process.env.BUSINESS_PARTNER_ID;
+
 function sendGenericError(res) {
   return res
     .status(401)
@@ -23,8 +25,9 @@ module.exports = function(req, res, next) {
   request
     .post(process.env.YTENV_OAUTH_TOKENINFO_URL)
     .accept("json")
+    .set({ Authorization: `Bearer ${req.body.access_token}` })
     .send({
-      access_token: req.body.access_token
+      business_partner_id: BPI
     })
     .then(tokeninfo => {
       req.tokeninfo = tokeninfo.body;
