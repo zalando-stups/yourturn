@@ -1,5 +1,4 @@
 var express = require('express'),
-    bodyParser = require('body-parser'),
     server = express();
 
 var tokeninfo = {
@@ -19,14 +18,12 @@ server.use(function(req, res, next) {
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
     next();
 });
-server.use(bodyParser.json())
 
-
-server.post('/tokeninfo', function(req,res) {
-    if (!req.body.access_token) {
+server.get('/tokeninfo', function(req,res) {
+    if (!req.query.access_token) {
         return res.status(400).send();
     }
-    tokeninfo.access_token = req.body.access_token;
+    tokeninfo.access_token = req.query.access_token;
     res.status(200).send(tokeninfo);
 });
 
