@@ -20,10 +20,11 @@ server.use(function(req, res, next) {
 });
 
 server.get('/tokeninfo', function(req,res) {
-    if (!req.query.access_token) {
+    var accessToken = req.get("authorization");
+    if (!accessToken) {
         return res.status(400).send();
     }
-    tokeninfo.access_token = req.query.access_token;
+    tokeninfo.access_token = accessToken;
     res.status(200).send(tokeninfo);
 });
 

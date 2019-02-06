@@ -11,8 +11,8 @@ function fetchTokenInfo() {
     }
     return request
             .get(`${ENV_DEVELOPMENT ? 'http://localhost:5006' : ''}/tokeninfo`)
-            .query({
-                access_token: token
+            .set({
+                "Authorization": `Bearer ${token}`
             })
             .accept('json')
             .exec()

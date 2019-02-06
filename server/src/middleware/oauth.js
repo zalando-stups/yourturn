@@ -23,7 +23,7 @@ module.exports = function(req, res, next) {
     // verify token
     request
         .get(process.env.YTENV_OAUTH_TOKENINFO_URL)
-        .query({
+        .set({
             access_token: token
         })
         .then(tokeninfo => {
