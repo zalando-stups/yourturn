@@ -12,7 +12,7 @@ function fetchTokenInfo() {
     return request
             .get(`${ENV_DEVELOPMENT ? 'http://localhost:5006' : ''}/tokeninfo`)
             .set({
-                "Authorization": `Bearer ${token}`
+                'Authorization': `Bearer ${token}`
             })
             .accept('json')
             .exec()
