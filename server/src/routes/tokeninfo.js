@@ -3,6 +3,7 @@ var winston = require("winston"),
 
 function info(req, res) {
   var accessToken = req.get("authorization");
+  console.log("accessToken", accessToken);
   request
     .get(process.env.YTENV_OAUTH_TOKENINFO_URL)
     .accept("json")
