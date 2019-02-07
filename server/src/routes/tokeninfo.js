@@ -20,7 +20,7 @@ function info(req, res) {
     }
     )
     .catch(err => {
-      console.log("response", response);
+      console.log("err", err);
       if (err.status !== 400) {
         winston.error("Could not GET /tokeninfo: %d %s", err.status || 0, err.message);
       }
