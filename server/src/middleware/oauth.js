@@ -17,15 +17,14 @@ module.exports = function(req, res, next) {
         return sendGenericError(res);
     }
 
-    var header = req.headers.authorization,
-        token = header.substring('Bearer '.length);
+    var accessToken = req.get("authorization");
 
     // verify token
     request
         .get(process.env.YTENV_OAUTH_TOKENINFO_URL)
         .set({
-            access_token: token
-        })
+            "Authentication": accessToken
+          })
         .then(tokeninfo => {
             req.tokeninfo = tokeninfo.body;
             if (tokeninfo.body.realm === '/employees' ||
