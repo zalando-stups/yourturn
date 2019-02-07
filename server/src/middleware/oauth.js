@@ -23,7 +23,7 @@ module.exports = function(req, res, next) {
     request
         .get(process.env.YTENV_OAUTH_TOKENINFO_URL)
         .set({
-            "Authentication": accessToken
+            "Authorization": accessToken
           })
         .then(tokeninfo => {
             req.tokeninfo = tokeninfo.body;

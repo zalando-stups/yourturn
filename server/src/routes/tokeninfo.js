@@ -9,7 +9,7 @@ function info(req, res) {
     .get(process.env.YTENV_OAUTH_TOKENINFO_URL)
     .accept("json")
     .set({
-      "Authentication": accessToken
+      "Authorization": accessToken
     })
     .then(response => {
 
