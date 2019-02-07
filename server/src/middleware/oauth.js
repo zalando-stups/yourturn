@@ -17,7 +17,7 @@ module.exports = function(req, res, next) {
         return sendGenericError(res);
     }
 
-    var accessToken = req.get("authorization");
+    var accessToken = req.get("Authorization");
 
     // verify token
     request
