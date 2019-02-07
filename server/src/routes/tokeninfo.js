@@ -10,13 +10,17 @@ function info(req, res) {
     .query({
       access_token: accessToken
     })
-    .then(response =>
-      res
+    .then(response => {
+
+      console.log("response", response);
+      return res
         .status(200)
         .type("json")
         .send(response.text)
+    }
     )
     .catch(err => {
+      console.log("response", response);
       if (err.status !== 400) {
         winston.error("Could not GET /tokeninfo: %d %s", err.status || 0, err.message);
       }
