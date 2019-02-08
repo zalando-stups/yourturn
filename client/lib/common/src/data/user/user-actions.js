@@ -10,9 +10,9 @@ function fetchTokenInfo() {
         return Promise.reject();
     }
     return request
-            .post(`${ENV_DEVELOPMENT ? 'http://localhost:5006' : ''}/tokeninfo`)
-            .send({
-                access_token: token
+            .get(`${ENV_DEVELOPMENT ? 'http://localhost:5006' : ''}/tokeninfo`)
+            .set({
+                'Authorization': `Bearer ${token}`
             })
             .accept('json')
             .exec()

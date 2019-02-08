@@ -2,22 +2,23 @@ var winston = require("winston"),
   request = require("superagent-bluebird-promise");
 
 function info(req, res) {
+  var accessToken = req.get("authorization");
+  accessToken
   request
-    .post(process.env.YTENV_OAUTH_TOKENINFO_URL)
+    .get(process.env.YTENV_OAUTH_TOKENINFO_URL)
     .accept("json")
-    .send({
-      access_token: req.query.access_token
+    .set({
+      "Authorization": accessToken
     })
-    .then(response =>
-      res
+    .then(response => {
+      return res
         .status(200)
         .type("json")
         .send(response.text)
+    }
     )
     .catch(err => {
       if (err.status !== 400) {
-        // log error on tokeninfo only if it's not
-        // because of an invalid token
         winston.error("Could not GET /tokeninfo: %d %s", err.status || 0, err.message);
       }
       return res.status(err.status || 0).send(err);
