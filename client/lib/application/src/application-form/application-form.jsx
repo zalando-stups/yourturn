@@ -306,6 +306,18 @@ class ApplicationForm extends React.Component {
                             </select>
                         </div>
                         <div className='form-group'>
+                            <label htmlFor='incident_contact'>24x7 Incident Contact</label>
+                            <small>Name of the responsible 24x7 on-call team</small>
+                            <input
+                                maxLength='140'
+                                placeholder='My On-Call Team'
+                                id='incident_contact'
+                                value={app.incident_contact}
+                                onChange={this.update.bind(this, 'incident_contact', 'value')}
+                                name='yourturn_app_incident_contact'
+                                type='text' />
+                        </div>
+                        <div className='form-group'>
                             <label htmlFor='description'>Description</label>
                             <small>A more elaborate description than subtitle. You can use <a href='http://www.unexpected-vortices.com/sw/rippledoc/quick-markdown-example.html'>Markdown</a>.</small>
                             <Markdown
