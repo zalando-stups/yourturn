@@ -84,6 +84,10 @@ export default function ApplicationDetail({applicationId, application, editable,
                             <td>{application.team_id}</td>
                         </tr>
                         <tr>
+                            <th>24x7 Incident Contact</th>
+                            <td>{application.incident_contact}</td>
+                        </tr>
+                        <tr>
                             <th>URL</th>
                             <td>
                                 <a href={application.service_url}>
