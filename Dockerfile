@@ -4,9 +4,6 @@ MAINTAINER Zalando SE
 
 ADD ./server/package.json /www/package.json
 
-# add scm-source
-ADD /scm-source.json /scm-source.json
-
 # copy server
 COPY ./server/src /www/
 
