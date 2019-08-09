@@ -62,6 +62,8 @@ module.exports = {
         RESOURCE_WHITELIST: 'YTENV_RESOURCE_WHITELIST',
         APPLICATION_WHITELIST: 'YTENV_APPLICATION_WHITELIST',
         MINT_BUCKET_TEMPLATE: 'YTENV_MINT_BUCKET_TEMPLATE',
+        APPLICATION_BASE_URL: 'YTENV_APPLICATION_BASE_URL',
+        APPLICATION_LINK_TITLE: 'YTENV_APPLICATION_LINK_TITLE',
         'react/addons': true,
         'react/lib/ExecutionEnvironment': true,
         'react/lib/ReactContext': true
