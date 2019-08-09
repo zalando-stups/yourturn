@@ -8,6 +8,8 @@ import FetchResult from 'common/src/fetch-result';
 import Placeholder from './placeholder.jsx';
 import DefaultError from 'common/src/error.jsx';
 import 'common/asset/less/application/application-detail.less';
+import APPLICATION_BASE_URL from 'APPLICATION_BASE_URL';
+import APPLICATION_LINK_TITLE from 'APPLICATION_LINK_TITLE';
 
 export default function ApplicationDetail({applicationId, application, editable, api}) {
     const LINK_PARAMS = { applicationId };
