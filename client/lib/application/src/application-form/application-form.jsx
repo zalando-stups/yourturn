@@ -295,14 +295,14 @@ class ApplicationForm extends React.Component {
                                 type='text' />
                         </div>
                         <div className='form-group'>
-                            <label htmlFor='criticality_level'>Criticality Level</label>
+                            <label htmlFor='criticality_level'>Criticality Level / Application Tier</label>
                             <small>How critical your application is.</small>
                             <select
                                 id='criticality_level'
                                 value={app.criticality_level}
                                 onChange={this.update.bind(this, 'criticality_level', 'value')}
                                 name='yourturn_app_criticality_level'>
-                                {[1, 2, 3].map(i => <option key={i} value={i}>{i}</option>)}
+                                {[1, 2, 3].map(i => <option key={i} value={i}>Tier-{i}</option>)}
                             </select>
                         </div>
                         <div className='form-group'>
