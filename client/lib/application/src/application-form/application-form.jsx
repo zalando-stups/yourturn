@@ -302,7 +302,11 @@ class ApplicationForm extends React.Component {
                                 value={app.criticality_level}
                                 onChange={this.update.bind(this, 'criticality_level', 'value')}
                                 name='yourturn_app_criticality_level'>
-                                {[1, 2, 3, 4].map(i => <option key={i} value={i}>Tier-{i}</option>)}
+                                    <option key='' value=''>Not Classified</option>
+                                    <option key='1' value='1'>Tier-1</option>
+                                    <option key='2' value='2'>Tier-2</option>
+                                    <option key='3' value='3'>Tier-3</option>
+                                    <option key='4' value='4'>Not Relevant</option>
                             </select>
                         </div>
                         <div className='form-group'>
