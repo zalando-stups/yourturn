@@ -25,7 +25,7 @@ class ApplicationForm extends React.Component {
             const {userTeams} = props;
             this.state.app = {
                 active: true,
-                criticality_level: 2,
+                criticality_level: undefined,
                 publicly_accessible: false,
                 team_id: userTeams.length ? userTeams[0] : undefined
             };
@@ -302,7 +302,7 @@ class ApplicationForm extends React.Component {
                                 value={app.criticality_level}
                                 onChange={this.update.bind(this, 'criticality_level', 'value')}
                                 name='yourturn_app_criticality_level'>
-                                {[1, 2, 3].map(i => <option key={i} value={i}>Tier-{i}</option>)}
+                                {[1, 2, 3, 4].map(i => <option key={i} value={i}>Tier-{i}</option>)}
                             </select>
                         </div>
                         <div className='form-group'>
