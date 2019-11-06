@@ -25,7 +25,7 @@ class ApplicationForm extends React.Component {
             const {userTeams} = props;
             this.state.app = {
                 active: true,
-                criticality_level: 2,
+                criticality_level: undefined,
                 publicly_accessible: false,
                 team_id: userTeams.length ? userTeams[0] : undefined
             };
@@ -295,14 +295,18 @@ class ApplicationForm extends React.Component {
                                 type='text' />
                         </div>
                         <div className='form-group'>
-                            <label htmlFor='criticality_level'>Criticality Level</label>
+                            <label htmlFor='criticality_level'>Criticality Level / Application Tier</label>
                             <small>How critical your application is.</small>
                             <select
                                 id='criticality_level'
                                 value={app.criticality_level}
                                 onChange={this.update.bind(this, 'criticality_level', 'value')}
                                 name='yourturn_app_criticality_level'>
-                                {[1, 2, 3].map(i => <option key={i} value={i}>{i}</option>)}
+                                    <option key='' value=''>Not Classified</option>
+                                    <option key='1' value='1'>Tier-1</option>
+                                    <option key='2' value='2'>Tier-2</option>
+                                    <option key='3' value='3'>Tier-3</option>
+                                    <option key='4' value='4'>Not Relevant</option>
                             </select>
                         </div>
                         <div className='form-group'>
