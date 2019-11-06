@@ -85,7 +85,7 @@ const ApplicationDetailPlaceholder = (props) => {
                             </td>
                         </tr>
                         <tr>
-                            <th>Criticality Level</th>
+                            <th>Criticality Level / Tier</th>
                             <td className='u-placeholder-text'>1</td>
                         </tr>
                     </tbody>
