@@ -148,7 +148,7 @@ export default function ApplicationDetail({applicationId, application, editable,
                             </td>
                         </tr>
                         <tr>
-                            <th>Criticality Level</th>
+                            <th>Criticality Level / Tier</th>
                             <td>
                                 <span className='applicationDetail-criticality'
                                       data-criticality={application.criticality_level}>

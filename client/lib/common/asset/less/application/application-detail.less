@@ -42,7 +42,13 @@
         vertical-align: baseline;
         border-radius: 50%;
 
-        &[data-criticality="1"] {
+        &[data-criticality="4"] {
+            background: @gray-lighter;
+            color: @white;
+            height: 100%;
+        }
+
+        &[data-criticality="3"] {
             background: @green;
             color: @white;
             height: 100%;
@@ -54,7 +60,7 @@
             height: 100%;
         }
 
-        &[data-criticality="3"] {
+        &[data-criticality="1"] {
             background: @red;
             color: @white;
             height: 100%;
