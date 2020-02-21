@@ -204,7 +204,8 @@ class ApplicationForm extends React.Component {
                         </div>
                         <div className='form-group'>
                             <label htmlFor='name'>Name</label>
-                            <small>The full name of your application.</small>
+                            <small>The full name of your application.
+                            The application MUST have a human-readable name. The name SHOULD be meaningful and reflect the purpose of the application.</small>
                             <input
                                 required={true}
                                 id='name'
@@ -217,10 +218,11 @@ class ApplicationForm extends React.Component {
                         </div>
                         <div className='form-group'>
                             <label htmlFor='subtitle'>Subtitle</label>
-                            <small>A few words on what it is.</small>
+                            <small>A few words on what it is.
+                            The application SHOULD have a meaningful and short subtitle. The subtitle can be a tagline. Example: subtitle 'Checks customer addresses' for an app 'Address Service'.</small>
                             <input
                                 maxLength='140'
-                                placeholder='The Docker registry'
+                                placeholder='Checks foo bar items'
                                 id='subtitle'
                                 value={app.subtitle}
                                 onChange={this.update.bind(this, 'subtitle', 'value')}
@@ -246,12 +248,13 @@ class ApplicationForm extends React.Component {
                         </div>
                         <div className='form-group'>
                             <label htmlFor='scm_url'>SCM URL</label>
-                            <small>Where you manage your source code.</small>
+                            <small>Where you manage your source code.
+                            The application SHOULD have a link to the main source code repository (git repo).</small>
                             <input
-                                placeholder='https://github.com/zalando-stups/pierone.git'
+                                placeholder='https://github.com/zalando-stups/pierone'
                                 id='scm_url'
                                 value={app.scm_url}
-                                pattern='^https?://.*'
+                                pattern='^https://.*'
                                 title='Please provide an URL with http or https.'
                                 onChange={this.update.bind(this, 'scm_url', 'value')}
                                 name='yourturn_app_scm_url'
@@ -259,11 +262,12 @@ class ApplicationForm extends React.Component {
                         </div>
                         <div className='form-group'>
                             <label htmlFor='documentation_url'>Documentation URL</label>
-                            <small>Where your documentation is.</small>
+                            <small>Where your documentation is.
+                            The application SHOULD have a link to its documentation.</small>
                             <input
                                 placeholder='https://github.com/zalando-stups/pierone/docs'
                                 id='documentation_url'
-                                pattern='^https?://.*'
+                                pattern='^https://.*'
                                 title='Please provide an URL with http or https.'
                                 value={app.documentation_url}
                                 onChange={this.update.bind(this, 'documentation_url', 'value')}
@@ -276,23 +280,12 @@ class ApplicationForm extends React.Component {
                             <input
                                 placeholder='https://github.com/zalando-stups/pierone/issues'
                                 id='specification_url'
-                                pattern='^https?://.*'
+                                pattern='^https://.*'
                                 title='Please provide an URL with http or https.'
                                 value={app.specification_url}
                                 onChange={this.update.bind(this, 'specification_url', 'value')}
                                 name='yourturn_app_specification_url'
                                 type='url' />
-                        </div>
-                        <div className='form-group'>
-                            <label htmlFor='specification_type'>Specification Type</label>
-                            <small>What system you use for managing your specifications.</small>
-                            <input
-                                placeholder='JIRA'
-                                id='specification_type'
-                                value={app.specification_type}
-                                onChange={this.update.bind(this, 'specification_type', 'value')}
-                                name='yourturn_app_specification_type'
-                                type='text' />
                         </div>
                         <div className='form-group'>
                             <label htmlFor='criticality_level'>Criticality Level / Application Tier</label>
@@ -323,7 +316,8 @@ class ApplicationForm extends React.Component {
                         </div>
                         <div className='form-group'>
                             <label htmlFor='description'>Description</label>
-                            <small>A more elaborate description than subtitle. You can use <a href='http://www.unexpected-vortices.com/sw/rippledoc/quick-markdown-example.html'>Markdown</a>.</small>
+                            <small>A more elaborate description than subtitle. You can use <a href='http://www.unexpected-vortices.com/sw/rippledoc/quick-markdown-example.html'>Markdown</a>.
+                            The application MUST have a textual description. The description MUST contain the purpose of the application (why the application exists, what its business value is).</small>
                             <Markdown
                                 editable={true}
                                 src={app.description}
