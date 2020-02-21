@@ -254,8 +254,8 @@ class ApplicationForm extends React.Component {
                                 placeholder='https://github.com/zalando-stups/pierone'
                                 id='scm_url'
                                 value={app.scm_url}
-                                pattern='^https://.*'
-                                title='Please provide an URL with HTTPS.'
+                                pattern='^https://[^/]+/[^/]+/[^/]+$'
+                                title='Please provide an URL with HTTPS in the form https://<host>/<org>/<repo>.'
                                 onChange={this.update.bind(this, 'scm_url', 'value')}
                                 name='yourturn_app_scm_url'
                                 type='url' />
