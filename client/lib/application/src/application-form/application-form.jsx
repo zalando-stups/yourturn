@@ -255,7 +255,7 @@ class ApplicationForm extends React.Component {
                                 id='scm_url'
                                 value={app.scm_url}
                                 pattern='^https://.*'
-                                title='Please provide an URL with http or https.'
+                                title='Please provide an URL with HTTPS.'
                                 onChange={this.update.bind(this, 'scm_url', 'value')}
                                 name='yourturn_app_scm_url'
                                 type='url' />
@@ -268,7 +268,7 @@ class ApplicationForm extends React.Component {
                                 placeholder='https://github.com/zalando-stups/pierone/docs'
                                 id='documentation_url'
                                 pattern='^https://.*'
-                                title='Please provide an URL with http or https.'
+                                title='Please provide an URL with HTTPS.'
                                 value={app.documentation_url}
                                 onChange={this.update.bind(this, 'documentation_url', 'value')}
                                 name='yourturn_app_documentation_url'
@@ -281,7 +281,7 @@ class ApplicationForm extends React.Component {
                                 placeholder='https://github.com/zalando-stups/pierone/issues'
                                 id='specification_url'
                                 pattern='^https://.*'
-                                title='Please provide an URL with http or https.'
+                                title='Please provide an URL with HTTPS.'
                                 value={app.specification_url}
                                 onChange={this.update.bind(this, 'specification_url', 'value')}
                                 name='yourturn_app_specification_url'
