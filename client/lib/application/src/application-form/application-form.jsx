@@ -261,6 +261,19 @@ class ApplicationForm extends React.Component {
                                 type='url' />
                         </div>
                         <div className='form-group'>
+                            <label htmlFor='support_url'>Support</label>
+                            <small>Where you can file for support issues or feature requests. Must be an HTTPS URL or an email address</small>
+                            <input
+                                placeholder='https://github.com/zalando-stups/pierone/issues'
+                                id='support_url'
+                                value={app.support_url}
+                                pattern='((^https:\/\/.*$)|(^[\S]+@[\S]+$))'
+                                title='Please provide a URL with HTTPS or an email address'
+                                onChange={this.update.bind(this, 'support_url', 'value')}
+                                name='yourturn_app_support_url'
+                                type='text' />
+                        </div>
+                        <div className='form-group'>
                             <label htmlFor='documentation_url'>Documentation URL</label>
                             <small>Where your documentation is.
                             The application SHOULD have a link to its documentation.</small>
