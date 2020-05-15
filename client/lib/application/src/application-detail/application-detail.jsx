@@ -130,6 +130,14 @@ export default function ApplicationDetail({applicationId, application, editable,
                             </td>
                         </tr>
                         <tr>
+                            <th>Support</th>
+                            <td>
+                                <a href={application.support_url}>
+                                    {application.support_url}
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
                             <th>Specification Type</th>
                             <td>
                                 {application.specification_type}

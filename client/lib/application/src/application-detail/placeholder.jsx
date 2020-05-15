@@ -73,6 +73,12 @@ const ApplicationDetailPlaceholder = (props) => {
                             </td>
                         </tr>
                         <tr>
+                            <th>Support</th>
+                            <td className='u-placeholder-text'>
+                                verlongissues
+                            </td>
+                        </tr>
+                        <tr>
                             <th>Specification Type</th>
                             <td className='u-placeholder-text'>
                                 verlongissues
