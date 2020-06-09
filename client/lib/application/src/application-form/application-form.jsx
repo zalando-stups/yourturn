@@ -71,7 +71,21 @@ class ApplicationForm extends React.Component {
     /*eslint-disable react/no-direct-mutation-state */
     // TODO fix direct mutation of state here if possible
     update(field, prop, evt) {
-        if (field === 'criticality_level') {
+        
+        //Add an explicit warning if User unchecks the Active Application field
+        if (field === 'active') {
+                let application_active = evt.target[prop];
+                let confirmed = false;
+                if (application_active === false) {
+                   confirmed = confirm('Deactivating Applications can cause Deployments to fail and or runtime failures. Please make sure you understand the risks of deactivating an application. Deactivate ?');
+                }
+
+                //Either application has been made active or (application was deactivated AND confirmed)
+                if (application_active || confirmed) {
+                  this.state.app[field] = evt.target[prop];
+                }
+
+        } else if (field === 'criticality_level') {
             this.state.app[field] = parseInt(evt.target[prop], 10);
         } else {
             this.state.app[field] = evt.target[prop];
