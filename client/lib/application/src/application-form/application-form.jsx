@@ -71,7 +71,7 @@ class ApplicationForm extends React.Component {
     /*eslint-disable react/no-direct-mutation-state */
     // TODO fix direct mutation of state here if possible
     update(field, prop, evt) {
-        
+
         //Add an explicit warning if User unchecks the Active Application field
         if (field === 'active') {
                 let application_active = evt.target[prop];
@@ -183,7 +183,7 @@ class ApplicationForm extends React.Component {
                         </div>
                         <div className='form-group createApplication-applicationId'>
                             <label htmlFor='app_id'>Application ID</label>
-                            <small>The ID of the application.</small>
+                            <small>The ID of the application. The ID cannot be changed later and must follow Zalando naming guidelines (no offensive terms, no org identifiers, describe purpose/functionality, no codenames, ..).</small>
                             <div className='input-group'>
                                 <div className='input-addon'>
                                     {this.state.appIdTaken && !edit ?
@@ -212,7 +212,7 @@ class ApplicationForm extends React.Component {
                                     data-block='id-input'
                                     title='Starts with character, may end with digit, may have dashes in between.'
                                     pattern='[a-z][a-z0-9\-]*[a-z0-9]'
-                                    placeholder='pierone'
+                                    placeholder='todo-list-manager'
                                     type='text' />
                             </div>
                         </div>
@@ -227,7 +227,7 @@ class ApplicationForm extends React.Component {
                                 value={app.name}
                                 onChange={this.update.bind(this, 'name', 'value')}
                                 name='yourturn_app_name'
-                                placeholder='Pier One'
+                                placeholder='To-Do List Manager'
                                 type='text' />
                         </div>
                         <div className='form-group'>
