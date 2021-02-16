@@ -1,4 +1,4 @@
-FROM registry.opensource.zalan.do/stups/node:6.9-cd32
+FROM registry.opensource.zalan.do/library/node-12.20-alpine:latest	
 
 MAINTAINER Zalando SE
 
