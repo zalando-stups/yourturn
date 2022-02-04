@@ -59,8 +59,19 @@ function accounts(req, res) {
         });
 }
 
+/**
+ * @type {import('express').RequestParamHandler}
+ */
+const allowList = function (req, res) {
+  const allowListOfUsers = (process.env.YTENV_RESOURCE_WHITELIST || '')
+    .split(/\s/)
+    .filter(i => !!i);
+  res.status(200).json(allowListOfUsers);
+}
+
 module.exports = {
     accounts,
     detail,
-    teams
+    teams,
+    allowList
 };

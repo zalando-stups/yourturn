@@ -61,6 +61,7 @@ server.get('/teams/:teamId', routes.team.team);
 server.get('/users/:userId', oauth, uniqueLogins(store), routes.user.detail);
 server.get('/users/:userId/teams', routes.user.teams)
 server.get('/users/:userId/accounts', routes.user.accounts);
+server.get('/allowed-list', routes.user.allowList);
 server.get('/tokeninfo', routes.tokeninfo.info);
 server.get('/metrics', (req, res) => {
     report.generate().then(report => {
