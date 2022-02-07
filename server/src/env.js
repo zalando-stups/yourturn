@@ -13,7 +13,7 @@ function getEnvironment() {
         if (process.env.hasOwnProperty(key)) {
             if (key.startsWith( 'YTENV_' )) {
                 // The use of whitelists have been deprecated
-                env[key] = key.endsWith('WHITELIST') ? '' : process.env[key];
+                env[key] = key.includes('WHITELIST') ? '' : process.env[key];
             }
         }
     }
