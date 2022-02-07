@@ -26,12 +26,16 @@ function getTokenInfo(state) {
     return info ? info.toJS() : false;
 }
 
-// QUICKFIX #133
+/**
+ * QUICKFIX #133
+ * @deprecated No user is whitelisted anymore
+ */
 function isWhitelisted(state) {
     let token = state.get('tokeninfo').toJS();
     return isTokenWhitelisted(token);
 }
 
+/** @deprecated */
 function isTokenWhitelisted(token) {
     // ignore whitelist if it's empty
     if (Config.RESOURCE_WHITELIST.length === 0) {
