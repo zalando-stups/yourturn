@@ -18,7 +18,7 @@
     "camel-case": "1.2.2",
     "compression": "1.6.0",
     "express": "4.13.3",
-    "js-yaml": "3.4.6",
+    "js-yaml": "3.13.1",
     "lodash.isempty": "4.4.0",
     "lodash.isfunction": "3.0.8",
     "moment": "^2.14.1",
