@@ -11,8 +11,9 @@ function getEnvironment() {
     var env = {};
     for(key in process.env) {
         if (process.env.hasOwnProperty(key)) {
-            if (key.indexOf( 'YTENV_' ) === 0 ) {
-                env[key] = process.env[key];
+            if (key.startsWith( 'YTENV_' )) {
+                // The use of whitelists have been deprecated
+                env[key] = key.includes('WHITELIST') ? '' : process.env[key];
             }
         }
     }
